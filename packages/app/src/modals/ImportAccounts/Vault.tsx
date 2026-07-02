@@ -6,6 +6,7 @@ import { useVaultAccounts } from '@polkadot-cloud/connect-vault'
 import PolkadotVaultSVG from '@w3ux/extension-assets/PolkadotVault.svg?react'
 import { Polkicon } from '@w3ux/react-polkicon'
 import { getStakingChainData } from 'consts/util'
+import { emitNotification } from 'global-bus'
 import { useNetwork } from 'hooks/useNetwork'
 import { QrReader } from 'library/QrReader'
 import type { CSSProperties } from 'react'
@@ -39,6 +40,10 @@ export const Vault = () => {
 	// Handle renaming a vault address
 	const handleRename = (address: string, newName: string) => {
 		renameVaultAccount(address, newName)
+		emitNotification({
+			title: t('accountRenamed', { ns: 'modals' }),
+			subtitle: newName,
+		})
 	}
 
 	// Handle removing a vault address

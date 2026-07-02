@@ -3,6 +3,7 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { planckToUnit } from '@w3ux/utils'
+import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import type { SubmittableExtrinsic } from 'dedot'
 import { useActivePool } from 'hooks/useActivePool'
@@ -39,6 +40,11 @@ export const ClaimReward = () => {
 	const { claimType } = options
 	const { unit, units } = getStakingChainData(network)
 	const pendingRewards = getPendingPoolRewards(activeAddress)
+	const pendingRewardsFormatted = new BigNumber(
+		planckToUnit(pendingRewards.toString(), units),
+	)
+		.decimalPlaces(3)
+		.toFormat()
 
 	// ensure selected payout is valid
 	useEffect(() => {
@@ -97,12 +103,7 @@ export const ClaimReward = () => {
 						))}
 					</Warnings>
 				) : null}
-				<ActionItem
-					text={`${t('claim')} ${`${planckToUnit(
-						pendingRewards.toString(),
-						units,
-					)} ${unit}`}`}
-				/>
+				<ActionItem text={`${t('claim')} ${pendingRewardsFormatted} ${unit}`} />
 				{claimType === 'bond' ? (
 					<p>{t('claimReward1')}</p>
 				) : (
@@ -110,7 +111,7 @@ export const ClaimReward = () => {
 				)}
 			</Padding>
 			<SubmitTx
-				submitText={t(claimType === 'bond' ? 'compound' : 'claim', {
+				submitText={t(claimType === 'bond' ? 'compound' : 'withdraw', {
 					ns: 'modals',
 				})}
 				valid={valid}

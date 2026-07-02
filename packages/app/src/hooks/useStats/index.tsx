@@ -92,7 +92,7 @@ export const useValidatorStats = (): StatPick<
 > => {
 	const { t } = useTranslation('pages')
 	const { activeValidators } = useEraStakers()
-	const { avgCommission } = useValidators()
+	const { avgCommission, validatorsFetched } = useValidators()
 	const { validatorCount, counterForValidators, maxValidatorsCount } =
 		useStakingMetrics()
 
@@ -140,6 +140,8 @@ export const useValidatorStats = (): StatPick<
 			label: t('averageCommission'),
 			value: `${String(avgCommission)}%`,
 			helpKey: 'Average Commission',
+			// Avoid flashing a misleading "0%" before validator data has synced
+			isPreloading: validatorsFetched !== 'synced',
 		},
 	}
 }

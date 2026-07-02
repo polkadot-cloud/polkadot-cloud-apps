@@ -74,7 +74,7 @@ export const Chunk = ({ chunk, bondFor, onRebond }: ChunkProps) => {
 		<ChunkWrapper>
 			<div>
 				<div className="chunk-header">
-					<h2>{`${planckToUnitBn(new BigNumber(value), units)} ${unit}`}</h2>
+					<h2>{`${planckToUnitBn(new BigNumber(value), units).decimalPlaces(3).toFormat()} ${unit}`}</h2>
 					{isStaking && (
 						<ButtonSubmit text={t('rebond')} onClick={() => onRebond(chunk)} />
 					)}

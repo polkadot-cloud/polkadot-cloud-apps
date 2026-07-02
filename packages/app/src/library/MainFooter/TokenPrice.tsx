@@ -5,32 +5,24 @@ import { getStakingChainData } from 'consts/util'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTokenPrices } from 'hooks/useTokenPrices'
-import { useMemo } from 'react'
+import { formatFiatCurrency } from 'locales/util'
 
 export const TokenPrice = () => {
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
 	const { price, change } = useTokenPrices()
 	const { unit } = getStakingChainData(network)
-	const priceFormatter = useMemo(
-		() =>
-			new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency,
-			}),
-		[currency],
-	)
 	return (
 		<>
 			<div className="stat">
-				1 {unit} / {priceFormatter.format(price)}
+				1 {unit} / {formatFiatCurrency(price, currency)}
 			</div>
 			<div className="stat">
 				<span
 					className={`change${change < 0 ? ' neg' : change > 0 ? ' pos' : ''}`}
 				>
 					{change < 0 ? '' : change > 0 ? '+' : ''}
-					{change}%
+					{change.toFixed(2)}%
 				</span>
 			</div>
 		</>

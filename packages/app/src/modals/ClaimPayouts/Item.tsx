@@ -35,7 +35,8 @@ export const Item = ({
 						</span>
 					</h4>
 					<h2>
-						{planckToUnitBn(totalPayout, units).toString()} {unit}
+						{planckToUnitBn(totalPayout, units).decimalPlaces(3).toFormat()}{' '}
+						{unit}
 					</h2>
 				</section>
 				<section>
