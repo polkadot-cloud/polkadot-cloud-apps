@@ -51,7 +51,7 @@ export const AccountInput = ({
 	const [successLock, setSuccessLocked] = useState<boolean>(locked)
 
 	const handleChange = (e: FormEvent<HTMLInputElement>) => {
-		const newValue = e.currentTarget.value
+		const newValue = e.currentTarget.value.trim()
 		// set value on key change
 		setValue(newValue)
 
