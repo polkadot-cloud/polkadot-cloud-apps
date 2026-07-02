@@ -12,7 +12,7 @@ import { setActiveProxy } from '@polkadot-cloud/connect-proxies'
 import { useOutsideAlerter } from '@w3ux/hooks'
 import { ellipsisFn } from '@w3ux/utils'
 import SubscanSVG from 'assets/brands/subscan.svg?react'
-import { AssetHubPolkadotSubscanURL } from 'consts'
+import { getSubscanBalanceChainId } from 'consts/util'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useNetwork } from 'hooks/useNetwork'
 import { type Dispatch, type SetStateAction, useRef } from 'react'
@@ -87,7 +87,7 @@ export const AccountPopover = ({
 				onClick={() => {
 					setOpen(false)
 					window.open(
-						`${AssetHubPolkadotSubscanURL}/account/${activeAddress}`,
+						`https://${getSubscanBalanceChainId(network)}.subscan.io/account/${activeAddress}`,
 						'_blank',
 					)
 				}}
