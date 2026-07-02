@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useExternalAccounts } from '@polkadot-cloud/connect'
+import { emitNotification } from 'global-bus'
 import { AccountDropdown } from 'library/AccountDropdown'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,9 +20,18 @@ export const Add = () => {
 	const handleSubmit = async () => {
 		if (selectedAccount) {
 			const result = addReadOnlyAccount(selectedAccount.address)
-			// Reset state on successful import
 			if (result) {
+				// Reset state on successful import
+				emitNotification({
+					title: t('accountImported'),
+					subtitle: selectedAccount.address,
+				})
 				setSelectedAccount(null)
+			} else {
+				emitNotification({
+					title: t('alreadyImported', { ns: 'app' }),
+					subtitle: selectedAccount.address,
+				})
 			}
 		}
 	}
