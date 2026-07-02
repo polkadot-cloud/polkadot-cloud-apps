@@ -51,8 +51,6 @@ export const AccountInput = ({
 	const [successLock, setSuccessLocked] = useState<boolean>(locked)
 
 	const handleChange = (e: FormEvent<HTMLInputElement>) => {
-		// Trim surrounding whitespace so addresses pasted from an explorer/wallet
-		// (which often carry a leading/trailing space) still validate and import.
 		const newValue = e.currentTarget.value.trim()
 		// set value on key change
 		setValue(newValue)
