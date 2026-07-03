@@ -63,7 +63,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 
 	// Whether to include incoming payout account projections in totals
 	const [includeIncomingProjection, setIncludeIncomingProjection] =
-		useState<boolean>(false)
+		useState<boolean>(true)
 
 	const currentStake = stakedBalance.toNumber()
 	const annualRewardBase = currentStake * (getAverageRewardRate() / 100) || 0
