@@ -12,7 +12,7 @@ A command-line tool for adding locale keys with LLM-powered translations to the 
 
 ## Installation
 
-From the root of the polkadot-staking-dashboard repository:
+From the root of the polkadot-cloud-apps repository:
 
 ```bash
 pnpm install
@@ -26,7 +26,7 @@ Set your OpenAI API key as an environment variable:
 export OPENAI_API_KEY=your_api_key_here
 ```
 
-Alternatively, create a `.env` file in the **workspace root** (the root of the `polkadot-staking-dashboard` repository):
+Alternatively, create a `.env` file in the **workspace root** (the root of the `polkadot-cloud-apps` repository):
 
 ```
 OPENAI_API_KEY=your_api_key_here
