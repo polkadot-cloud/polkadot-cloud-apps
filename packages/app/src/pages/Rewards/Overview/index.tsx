@@ -36,7 +36,7 @@ import { AccountPayouts } from './PayoutGraph'
 import { RewardTrend } from './RewardTrend'
 
 export const Overview = (props: PayoutHistoryProps) => {
-	const { t } = useTranslation('pages')
+	const { t } = useTranslation(['pages', 'app'])
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
 	const { pluginEnabled } = usePlugins()
@@ -223,9 +223,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 												}}
 												transform={'grow-6'}
 											/>
-											{t('includeIncomingProjection', {
-												defaultValue: 'Include incoming payouts',
-											})}
+											{t('app:includeIncomingProjection')}
 										</button>
 									</h3>
 								</div>

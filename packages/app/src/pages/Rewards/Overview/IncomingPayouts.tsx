@@ -27,7 +27,7 @@ export const IncomingPayouts = ({
 	currency,
 	totalIncoming30d,
 }: IncomingPayoutsProps) => {
-	const { i18n, t } = useTranslation('pages')
+	const { i18n, t } = useTranslation(['pages', 'app'])
 	const { network } = useNetwork()
 	const Token = getChainIcons(network).token
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
@@ -38,7 +38,7 @@ export const IncomingPayouts = ({
 
 	const announcements: AnnouncementItem[] = [
 		{
-			label: t('last30dIncoming', { defaultValue: 'Last 30 Days' }),
+			label: t('app:last30dIncoming'),
 			value: '',
 			valueNode: (
 				<Balance.WithFiat
