@@ -10,30 +10,31 @@ import type { AnnouncementItem } from 'library/Announcements/types'
 import { Balance } from 'library/Balance'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { NominatorList } from 'library/NominatorList'
+import type { NominatorListItemData } from 'library/NominatorList/types'
 import { useTranslation } from 'react-i18next'
 import { CardHeader, Separator } from 'ui-core/base'
-import type { IncomingProjectionAccount } from './mockIncomingProjection'
 
 interface IncomingPayoutsProps {
-	accounts: IncomingProjectionAccount[]
+	accounts: NominatorListItemData[]
 	unit: string
 	currency: string
+	totalIncoming30d?: number
 }
 
 export const IncomingPayouts = ({
 	accounts,
 	unit,
 	currency,
+	totalIncoming30d,
 }: IncomingPayoutsProps) => {
 	const { i18n, t } = useTranslation('pages')
 	const { network } = useNetwork()
 	const Token = getChainIcons(network).token
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 
-	const totalIncoming30d = accounts.reduce(
-		(acc, item) => acc + item.incomingPayouts30d,
-		0,
-	)
+	const totalIncoming =
+		totalIncoming30d ??
+		accounts.reduce((acc, item) => acc + item.incomingPayouts30d, 0)
 
 	const announcements: AnnouncementItem[] = [
 		{
@@ -42,7 +43,7 @@ export const IncomingPayouts = ({
 			valueNode: (
 				<Balance.WithFiat
 					Token={<Token />}
-					value={totalIncoming30d}
+					value={totalIncoming}
 					currency={currency}
 					caretAsUnit
 				/>

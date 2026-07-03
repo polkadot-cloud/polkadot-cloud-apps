@@ -8,7 +8,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
+import { planckToUnit } from '@w3ux/utils'
 import { getChainIcons } from 'assets'
+import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useAccountBalances } from 'hooks/useAccountBalances'
@@ -21,14 +23,15 @@ import { useTokenPrices } from 'hooks/useTokenPrices'
 import { AnnouncementsList } from 'library/Announcements/AnnouncementsList'
 import { Balance } from 'library/Balance'
 import { CardWrapper } from 'library/Card/Wrappers'
+import type { NominatorListItemData } from 'library/NominatorList/types'
 import { Stats } from 'library/Stats'
 import { formatFiatCurrency } from 'locales/util'
-import { useState } from 'react'
+import { usePayeeNominatorRewards } from 'plugin-staking-api'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardHeader, Page, RewardGrid, Separator, Stat } from 'ui-core/base'
 import type { PayoutHistoryProps } from '../types'
 import { IncomingPayouts } from './IncomingPayouts'
-import { mockIncomingProjectionAccounts } from './mockIncomingProjection'
 import { AccountPayouts } from './PayoutGraph'
 import { RewardTrend } from './RewardTrend'
 
@@ -44,8 +47,18 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const { averageRewardRate, rewardCalculator } = useRewardOverviewStats()
 	const { stakedBalance } = useAccountBalances(activeAddress)
 
-	const { unit } = getStakingChainData(network)
+	const { unit, units } = getStakingChainData(network)
 	const Token = getChainIcons(network).token
+	const stakingApiEnabled = pluginEnabled('staking_api')
+
+	const { data: incomingProjectionData } = usePayeeNominatorRewards({
+		network,
+		payee: activeAddress || '',
+		days: 30,
+		skip: !stakingApiEnabled || !activeAddress,
+	})
+
+	console.log(incomingProjectionData)
 
 	// Whether to show base or commission-adjusted rewards
 	const [showAdjusted, setShowCommissionAdjusted] = useState<boolean>(true)
@@ -60,11 +73,31 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const annualRewardAfterCommission =
 		annualRewardBase * (1 - avgCommission / 100)
 
-	const incomingAnnualProjection = mockIncomingProjectionAccounts.reduce(
+	const incomingProjectionAccounts = useMemo<NominatorListItemData[]>(
+		() =>
+			incomingProjectionData.payeeNominatorRewards.active.map((item) => ({
+				address: item.address,
+				label: item.label || item.address,
+				stakedBalance: new BigNumber(
+					planckToUnit(item.stakedBalance, units),
+				).toNumber(),
+				validatorApy: item.validatorApy,
+				incomingPayouts30d: new BigNumber(
+					planckToUnit(item.incomingPayouts, units),
+				).toNumber(),
+			})),
+		[incomingProjectionData.payeeNominatorRewards.active, units],
+	)
+
+	const totalIncoming30d = new BigNumber(
+		planckToUnit(incomingProjectionData.payeeNominatorRewards.total, units),
+	).toNumber()
+
+	const incomingAnnualProjection = incomingProjectionAccounts.reduce(
 		(acc, item) => acc + item.stakedBalance * (item.validatorApy / 100),
 		0,
 	)
-	const incomingStakedBalance = mockIncomingProjectionAccounts.reduce(
+	const incomingStakedBalance = incomingProjectionAccounts.reduce(
 		(acc, item) => acc + item.stakedBalance,
 		0,
 	)
@@ -110,13 +143,14 @@ export const Overview = (props: PayoutHistoryProps) => {
 					<AccountPayouts {...props} />
 				</CardWrapper>
 			</Page.Row>
-			{pluginEnabled('staking_api') && (
+			{stakingApiEnabled && (
 				<>
 					<Page.Row>
 						<IncomingPayouts
-							accounts={mockIncomingProjectionAccounts}
+							accounts={incomingProjectionAccounts}
 							unit={unit}
 							currency={currency}
+							totalIncoming30d={totalIncoming30d}
 						/>
 					</Page.Row>
 					<Page.Row>
