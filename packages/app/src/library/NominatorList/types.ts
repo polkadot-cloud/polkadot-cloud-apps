@@ -22,4 +22,5 @@ export interface NominatorListItemProps {
 
 export interface VerticalPayoutPerformanceProps {
 	amounts: number[]
+	tooltipText?: string
 }

@@ -5,14 +5,21 @@ import BigNumber from 'bignumber.js'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { Wrapper } from 'library/ListItem/Wrappers'
+import { useTranslation } from 'react-i18next'
 import { HeaderButtonRow, Label, LabelRow, Separator } from 'ui-core/list'
 import { NominationStatus } from '../ListItem/Labels/NominationStatus'
 import type { NominatorListItemProps } from './types'
 import { VerticalPayoutPerformance } from './VerticalPayoutPerformance'
 
 export const Item = ({ item, unit }: NominatorListItemProps) => {
+	const { t } = useTranslation('pages')
 	const address = item.address || ''
 	const formattedStake = `${new BigNumber(item.stakedBalance).toFormat(3)} ${unit}`
+	const tooltipText = `${t('last30DayReward')}: ${new BigNumber(
+		item.incomingPayouts30d,
+	)
+		.decimalPlaces(3)
+		.toFormat()} ${unit}`
 
 	if (!item.address) {
 		return null
@@ -34,7 +41,10 @@ export const Item = ({ item, unit }: NominatorListItemProps) => {
 
 				<div className="row bottom lg">
 					<div>
-						<VerticalPayoutPerformance amounts={item.performance30d} />
+						<VerticalPayoutPerformance
+							amounts={item.performance30d}
+							tooltipText={tooltipText}
+						/>
 					</div>
 					<div>
 						<LabelRow inline>

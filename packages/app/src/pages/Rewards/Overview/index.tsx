@@ -159,7 +159,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 					<AccountPayouts {...props} />
 				</CardWrapper>
 			</Page.Row>
-			{stakingApiEnabled && (
+			{stakingApiEnabled && incomingProjectionAccounts.length > 0 && (
 				<>
 					<Page.Row>
 						<IncomingPayouts
