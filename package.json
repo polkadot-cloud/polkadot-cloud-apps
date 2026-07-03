@@ -5,7 +5,7 @@
 	"license": "GPL-3.0-only",
 	"scripts": {
 		"clear": "pnpm -r --if-present clear && rm -rf build dist tsconfig.tsbuildinfo node_modules",
-		"dev": "cd packages/app && pnpm dev",
+		"dev": "cd packages/app-staking && pnpm dev",
 		"check": "pnpm -r --if-present run check && stylelint '**/*.{css,scss}' --allow-empty-input",
 		"lint": "pnpm -r --if-present run lint && stylelint '**/*.{css,scss}' --fix --allow-empty-input",
 		"test": "pnpm -r --if-present test",
