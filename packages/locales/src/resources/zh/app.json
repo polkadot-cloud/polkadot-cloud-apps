@@ -172,6 +172,7 @@
 		"inBlock": "己在区块中",
 		"inactive": "未激活",
 		"include": "包含",
+		"includeIncomingProjection": "包含预计入账",
 		"initializing": "初始化中",
 		"insertPayoutAddress": "输入收益到账地址",
 		"insufficientFunds": "余额不足",
@@ -184,6 +185,7 @@
 		"issuance": "发行量",
 		"join": "加入提名池",
 		"language": "语言",
+		"last30dIncoming": "过去30天",
 		"ledgerAccount": "Ledger帐户",
 		"ledgerAccountFetched": "己获得Ledger账户",
 		"ledgerAccountImported": "已导入Ledger账户",
@@ -413,6 +415,7 @@
 		"webExtensions": "浏览器扩展",
 		"whenActivelyNominating": "当活跃提名时",
 		"wrongTransaction": "错误交易，请重新签名",
-		"year": "年"
+		"year": "年",
+		"yourPayouts": "您的收益"
 	}
 }

@@ -16,6 +16,7 @@ export const NominationStatus = ({
 	nominator,
 	bondFor,
 	noMargin = false,
+	asIncoming = false,
 	status,
 }: NominationStatusProps) => {
 	const { t } = useTranslation('app')
@@ -47,7 +48,11 @@ export const NominationStatus = ({
 
 	let statusTKey
 	if (status === 'active') {
-		statusTKey = 'backing'
+		if (asIncoming) {
+			statusTKey = 'activelyNominating'
+		} else {
+			statusTKey = 'backing'
+		}
 	} else if (status === 'inactive') {
 		statusTKey = 'notBacking'
 	} else {

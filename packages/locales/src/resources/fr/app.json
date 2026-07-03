@@ -173,6 +173,7 @@
 		"inBlock": "Dans le bloc",
 		"inactive": "Inactif",
 		"include": "Inclure",
+		"includeIncomingProjection": "Inclure la projection entrante",
 		"initializing": "Initialisation en cours",
 		"insertPayoutAddress": "Insérez une adresse de paiement",
 		"insufficientFunds": "Fonds insuffisants",
@@ -185,6 +186,7 @@
 		"issuance": "Émission",
 		"join": "Rejoindre",
 		"language": "Langue",
+		"last30dIncoming": "30 derniers jours",
 		"ledgerAccount": "Compte Ledger",
 		"ledgerAccountFetched": "Compte Ledger récupéré",
 		"ledgerAccountImported": "Compte Ledger importé",
@@ -423,6 +425,7 @@
 		"webExtensions": "Extensions de navigateur",
 		"whenActivelyNominating": "lorsque vous êtes en train de nominer.",
 		"wrongTransaction": "Transaction incorrecte, veuillez signer à nouveau.",
-		"year": "année"
+		"year": "année",
+		"yourPayouts": "Vos paiements"
 	}
 }
