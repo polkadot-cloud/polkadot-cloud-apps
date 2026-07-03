@@ -63,7 +63,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 
 	// Whether to include incoming payout account projections in totals
 	const [includeIncomingProjection, setIncludeIncomingProjection] =
-		useState<boolean>(true)
+		useState<boolean>(false)
 
 	const currentStake = stakedBalance.toNumber()
 	const annualRewardBase = currentStake * (getAverageRewardRate() / 100) || 0
@@ -148,6 +148,9 @@ export const Overview = (props: PayoutHistoryProps) => {
 		},
 	]
 
+	const showIncomingPayouts =
+		incomingProjectionAccounts.length > 0 && stakingApiEnabled
+
 	return (
 		<>
 			<Stat.Row>
@@ -159,16 +162,18 @@ export const Overview = (props: PayoutHistoryProps) => {
 					<AccountPayouts {...props} />
 				</CardWrapper>
 			</Page.Row>
-			{stakingApiEnabled && incomingProjectionAccounts.length > 0 && (
+			{stakingApiEnabled && (
 				<>
-					<Page.Row>
-						<IncomingPayouts
-							accounts={incomingProjectionAccounts}
-							unit={unit}
-							currency={currency}
-							totalIncoming30d={totalIncoming30d}
-						/>
-					</Page.Row>
+					{showIncomingPayouts && (
+						<Page.Row>
+							<IncomingPayouts
+								accounts={incomingProjectionAccounts}
+								unit={unit}
+								currency={currency}
+								totalIncoming30d={totalIncoming30d}
+							/>
+						</Page.Row>
+					)}
 					<Page.Row>
 						<CardWrapper>
 							<CardHeader>
@@ -197,32 +202,34 @@ export const Overview = (props: PayoutHistoryProps) => {
 									</button>
 								</h3>
 							</div>
-							<div style={{ padding: '0 0.5rem 0.5rem 0.5rem' }}>
-								<h3>
-									<button
-										type="button"
-										onClick={() =>
-											setIncludeIncomingProjection(!includeIncomingProjection)
-										}
-									>
-										<FontAwesomeIcon
-											icon={
-												includeIncomingProjection ? faToggleOn : faToggleOff
+							{showIncomingPayouts && (
+								<div style={{ padding: '0 0.5rem 0.5rem 0.5rem' }}>
+									<h3>
+										<button
+											type="button"
+											onClick={() =>
+												setIncludeIncomingProjection(!includeIncomingProjection)
 											}
-											style={{
-												color: includeIncomingProjection
-													? 'var(--gray-1000)'
-													: 'var(--text-tertiary)',
-												marginRight: '0.8rem',
-											}}
-											transform={'grow-6'}
-										/>
-										{t('includeIncomingProjection', {
-											defaultValue: 'Include incoming payouts',
-										})}
-									</button>
-								</h3>
-							</div>
+										>
+											<FontAwesomeIcon
+												icon={
+													includeIncomingProjection ? faToggleOn : faToggleOff
+												}
+												style={{
+													color: includeIncomingProjection
+														? 'var(--gray-1000)'
+														: 'var(--text-tertiary)',
+													marginRight: '0.8rem',
+												}}
+												transform={'grow-6'}
+											/>
+											{t('includeIncomingProjection', {
+												defaultValue: 'Include incoming payouts',
+											})}
+										</button>
+									</h3>
+								</div>
+							)}
 							<Separator transparent />
 							<AnnouncementsList items={projectedRewardAnnouncements} />
 							<Separator transparent />
