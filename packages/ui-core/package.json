@@ -20,15 +20,15 @@
 		"./types": "./src/types.ts"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^7.2.0",
-		"@fortawesome/free-solid-svg-icons": "^7.2.0",
+		"@fortawesome/fontawesome-svg-core": "^7.3.0",
+		"@fortawesome/free-solid-svg-icons": "^7.3.0",
 		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/react-polkicon": "^4.0.2",
 		"@w3ux/utils": "3.1.1",
 		"classnames": "^2.5.1",
 		"motion": "12.23.24",
-		"radix-ui": "^1.5.0",
+		"radix-ui": "^1.6.0",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
 		"simplebar": "6.3.3",

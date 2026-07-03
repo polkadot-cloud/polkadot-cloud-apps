@@ -1,10 +1,11 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { extractUrlValue } from '@w3ux/utils'
-import { useCallback, useEffect, useSyncExternalStore } from 'react'
+import { useCallback, useEffect } from 'react'
 import type { NetworkId } from 'types'
 import { useNetwork } from '../useNetwork'
+import { createSingletonStore, useSingletonStore } from '../util'
 import {
 	acknowledgeLocalInvite,
 	getLocalInviteConfig,
@@ -31,7 +32,6 @@ type InvitesState = {
 	inviteConfig: InviteConfig | undefined
 }
 
-const listeners = new Set<() => void>()
 let inviteUrlSynced = false
 
 const toInviteConfig = ({
@@ -47,20 +47,17 @@ const getInitialInvitesState = (): InvitesState => {
 	}
 }
 
-let currentInvitesState = getInitialInvitesState()
-
-const emitInvitesChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
+const serverInvitesSnapshot: InvitesState = {
+	acknowledged: true,
+	inviteConfig: undefined,
 }
 
-const getInvitesSnapshot = () => currentInvitesState
-
-const setInvitesState = (state: InvitesState) => {
-	currentInvitesState = state
-	emitInvitesChange()
-}
+const invitesStore = createSingletonStore<InvitesState>(
+	getInitialInvitesState,
+	{
+		serverSnapshot: serverInvitesSnapshot,
+	},
+)
 
 const syncInviteFromUrl = (network: NetworkId) => {
 	if (inviteUrlSynced) {
@@ -82,32 +79,16 @@ const syncInviteFromUrl = (network: NetworkId) => {
 			...inviteConfig,
 			acknowledged: false,
 		})
-		setInvitesState({
+		invitesStore.setSnapshot({
 			acknowledged: false,
 			inviteConfig,
 		})
 	}
 }
 
-const subscribeInvites = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
-	}
-}
-
-const serverInvitesSnapshot: InvitesState = {
-	acknowledged: true,
-	inviteConfig: undefined,
-}
-
 export const useInvites = (): InvitesHookInterface => {
 	const { network } = useNetwork()
-	const { acknowledged, inviteConfig } = useSyncExternalStore(
-		subscribeInvites,
-		getInvitesSnapshot,
-		() => serverInvitesSnapshot,
-	)
+	const { acknowledged, inviteConfig } = useSingletonStore(invitesStore)
 
 	useEffect(() => {
 		syncInviteFromUrl(network)
@@ -115,18 +96,12 @@ export const useInvites = (): InvitesHookInterface => {
 
 	const setAcknowledged = useCallback((ack: boolean) => {
 		acknowledgeLocalInvite(ack)
-		setInvitesState({
-			...getInvitesSnapshot(),
-			acknowledged: ack,
-		})
+		invitesStore.patchSnapshot({ acknowledged: ack })
 	}, [])
 
 	const dismissInvite = useCallback(() => {
 		removeLocalInviteConfig()
-		setInvitesState({
-			...getInvitesSnapshot(),
-			inviteConfig: undefined,
-		})
+		invitesStore.patchSnapshot({ inviteConfig: undefined })
 	}, [])
 
 	return {

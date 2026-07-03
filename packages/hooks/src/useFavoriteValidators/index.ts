@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { getRelayChainData } from 'consts/util'
@@ -7,6 +7,7 @@ import type { NetworkId, Validator } from 'types'
 import { perbillToPercent } from 'utils'
 import { useApi } from '../useApi'
 import { useNetwork } from '../useNetwork'
+import { createSingletonSignal } from '../util'
 import type { FavoriteValidatorsHookInterface } from './types'
 
 export type { FavoriteValidatorsHookInterface } from './types'
@@ -16,15 +17,9 @@ type FavoriteValidatorsStore = {
 	favoritesList: Validator[] | null
 }
 
-const listeners = new Set<() => void>()
+const favoriteValidatorsSignal = createSingletonSignal()
 const storesByNetwork: Partial<Record<NetworkId, FavoriteValidatorsStore>> = {}
 let currentFetchKey: string | null = null
-
-const emitFavoriteValidatorsChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
 
 const getFavoriteValidatorsKey = (network: NetworkId) => `${network}_favorites`
 
@@ -76,7 +71,7 @@ const setFavoriteValidators = (network: NetworkId, favorites: string[]) => {
 		favoritesList: null,
 	}
 	setLocalFavoriteValidators(network, favorites)
-	emitFavoriteValidatorsChange()
+	favoriteValidatorsSignal.emit()
 }
 
 const setFavoriteValidatorsList = (
@@ -88,7 +83,7 @@ const setFavoriteValidatorsList = (
 		...current,
 		favoritesList,
 	}
-	emitFavoriteValidatorsChange()
+	favoriteValidatorsSignal.emit()
 }
 
 const syncFavoriteValidators = (network: NetworkId) => {
@@ -99,7 +94,7 @@ const syncFavoriteValidators = (network: NetworkId) => {
 			favorites: localFavorites,
 			favoritesList: null,
 		}
-		emitFavoriteValidatorsChange()
+		favoriteValidatorsSignal.emit()
 	}
 }
 
@@ -141,13 +136,6 @@ const fetchFavoriteValidatorsList = async (
 	)
 }
 
-const subscribeFavoriteValidators = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
-	}
-}
-
 const serverFavoriteValidatorsSnapshot: FavoriteValidatorsStore = {
 	favorites: [],
 	favoritesList: null,
@@ -158,7 +146,7 @@ export const useFavoriteValidators = (): FavoriteValidatorsHookInterface => {
 	const { network } = useNetwork()
 	const { name } = getRelayChainData(network)
 	const { favorites, favoritesList } = useSyncExternalStore(
-		subscribeFavoriteValidators,
+		favoriteValidatorsSignal.subscribe,
 		() => getFavoriteValidatorsSnapshot(name),
 		() => serverFavoriteValidatorsSnapshot,
 	)

@@ -1,21 +1,16 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useCallback, useEffect, useSyncExternalStore } from 'react'
 import type { NetworkId } from 'types'
 import { useNetwork } from '../useNetwork'
+import { createSingletonSignal } from '../util'
 import type { FavoritePoolsHookInterface } from './types'
 
 export type { FavoritePoolsHookInterface } from './types'
 
-const listeners = new Set<() => void>()
+const favoritePoolsSignal = createSingletonSignal()
 const favoritesByNetwork: Partial<Record<NetworkId, string[]>> = {}
-
-const emitFavoritePoolsChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
 
 const getFavoritePoolsKey = (network: NetworkId) => `${network}_favorite_pools`
 
@@ -47,7 +42,7 @@ const getFavoritePoolsSnapshot = (network: NetworkId) => {
 const setFavoritePools = (network: NetworkId, favorites: string[]) => {
 	favoritesByNetwork[network] = favorites
 	setLocalFavoritePools(network, favorites)
-	emitFavoritePoolsChange()
+	favoritePoolsSignal.emit()
 }
 
 const syncFavoritePools = (network: NetworkId) => {
@@ -57,14 +52,7 @@ const syncFavoritePools = (network: NetworkId) => {
 		JSON.stringify(localFavorites)
 	) {
 		favoritesByNetwork[network] = localFavorites
-		emitFavoritePoolsChange()
-	}
-}
-
-const subscribeFavoritePools = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
+		favoritePoolsSignal.emit()
 	}
 }
 const serverFavoritePoolsSnapshot: string[] = []
@@ -72,7 +60,7 @@ const serverFavoritePoolsSnapshot: string[] = []
 export const useFavoritePools = (): FavoritePoolsHookInterface => {
 	const { network } = useNetwork()
 	const favorites = useSyncExternalStore(
-		subscribeFavoritePools,
+		favoritePoolsSignal.subscribe,
 		() => getFavoritePoolsSnapshot(network),
 		() => serverFavoritePoolsSnapshot,
 	)

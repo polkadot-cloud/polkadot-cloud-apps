@@ -1,7 +1,8 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback } from 'react'
+import { createSingletonStore, useSingletonStore } from '../util'
 import type { TooltipHookInterface, TooltipHookState } from './types'
 
 export type { TooltipHookInterface, TooltipHookState } from './types'
@@ -13,75 +14,45 @@ const defaultTooltipState: TooltipHookState = {
 	text: '',
 }
 
-const listeners = new Set<() => void>()
-let currentTooltipState: TooltipHookState = defaultTooltipState
-
-const emitTooltipChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
-
-const subscribeTooltip = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
-	}
-}
-
-const getTooltipSnapshot = () => currentTooltipState
-
-const setTooltipState = (state: TooltipHookState) => {
-	currentTooltipState = state
-	emitTooltipChange()
-}
+const tooltipStore = createSingletonStore<TooltipHookState>(defaultTooltipState)
 
 export const useTooltip = (): TooltipHookInterface => {
-	const state = useSyncExternalStore(
-		subscribeTooltip,
-		getTooltipSnapshot,
-		getTooltipSnapshot,
-	)
+	const state = useSingletonStore(tooltipStore)
 
 	const openTooltip = useCallback(() => {
-		if (currentTooltipState.open) {
+		if (tooltipStore.getSnapshot().open) {
 			return
 		}
-		setTooltipState({
-			...currentTooltipState,
+		tooltipStore.patchSnapshot({
 			open: 1,
 		})
 	}, [])
 
 	const closeTooltip = useCallback(() => {
-		setTooltipState({
-			...currentTooltipState,
+		tooltipStore.patchSnapshot({
 			open: 0,
 			show: 0,
 		})
 	}, [])
 
 	const setTooltipPosition = useCallback((x: number, y: number) => {
-		setTooltipState({
-			...currentTooltipState,
-			open: currentTooltipState.open || 1,
+		tooltipStore.patchSnapshot((current) => ({
+			open: current.open || 1,
 			position: [x, y],
-		})
+		}))
 	}, [])
 
 	const showTooltip = useCallback(() => {
-		setTooltipState({
-			...currentTooltipState,
+		tooltipStore.patchSnapshot({
 			show: 1,
 		})
 	}, [])
 
 	const setTooltipTextAndOpen = useCallback((text: string) => {
-		if (currentTooltipState.open) {
+		if (tooltipStore.getSnapshot().open) {
 			return
 		}
-		setTooltipState({
-			...currentTooltipState,
+		tooltipStore.patchSnapshot({
 			open: 1,
 			text,
 		})

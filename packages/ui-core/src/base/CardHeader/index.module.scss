@@ -1,60 +1,60 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .cardHeader {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  padding: 0 0.25rem;
-  width: 100%;
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: center;
+	padding: 0 0.25rem;
+	width: 100%;
 
-  &.action {
-    flex-direction: row;
-    align-items: center;
-    justify-content: none;
-  }
+	&.action {
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+	}
 
-  &.margin {
-    margin-bottom: 1rem;
-  }
+	&.margin {
+		margin-bottom: 1rem;
+	}
 
-  > h2 {
-    font-family: var(--font-family-mono);
-    margin-bottom: 1rem;
+	> h2 {
+		font-family: var(--font-family-mono);
+		margin-bottom: 1rem;
 
-    > svg {
-      width: 2.2rem;
-      height: 2.2rem;
-      margin-right: 0.55rem;
-    }
-  }
+		> svg {
+			width: 2.2rem;
+			height: 2.2rem;
+			margin-right: 0.55rem;
+		}
+	}
 
-  > h2,
-  > h3 {
-    color: var(--gray-1000);
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    flex-grow: 1;
+	> h2,
+	> h3 {
+		color: var(--gray-1000);
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		flex-grow: 1;
 
-    @media (max-width: $page-width-medium-threshold) {
-      margin-top: 0.5rem;
-    }
-  }
+		@media (max-width: $page-width-medium-threshold) {
+			margin-top: 0.5rem;
+		}
+	}
 
-  > h3,
-  > h4 {
-    font-family: var(--font-family-semibold);
-  }
+	> h3,
+	> h4 {
+		font-family: var(--font-family-semibold);
+	}
 
-  > h4 {
-    margin-top: 0;
-    margin-bottom: 0.4rem;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    flex-grow: 1;
-  }
+	> h4 {
+		margin-top: 0;
+		margin-bottom: 0.4rem;
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		flex-grow: 1;
+	}
 }

@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ActivePool } from 'types'
@@ -13,10 +13,13 @@ export const resetActivePools = () => {
 export const getActivePool = (poolId: number) =>
 	_activePools.getValue().find((pool) => pool.id === poolId)
 
-export const addActivePool = (value: ActivePool) => {
+export const setActivePool = (value: ActivePool) => {
 	const next = [..._activePools.getValue()]
-	if (!next.find((pool) => pool.id === value.id)) {
+	const index = next.findIndex((pool) => pool.id === value.id)
+	if (index === -1) {
 		next.push(value)
+	} else {
+		next[index] = value
 	}
 	_activePools.next(next)
 }

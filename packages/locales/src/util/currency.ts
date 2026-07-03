@@ -1,22 +1,23 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { FiatCurrencyKey } from 'consts'
 import { SupportedCountries } from 'consts/countries'
 import { SupportedCurrencies } from 'consts/currencies'
 
+const FallbackFiatCurrency = 'USD'
+
+const isSupportedCurrency = (currency: string) =>
+	Object.keys(SupportedCurrencies).includes(currency)
+
 /**
- * Get the user's preferred fiat currency from local storage or browser locale
+ * Get the user's default fiat currency from their browser locale.
  */
-export const getUserFiatCurrency = (): string => {
-	// Try to get from local storage first
-	const storedCurrency = localStorage.getItem(FiatCurrencyKey)
-	if (
-		storedCurrency &&
-		Object.keys(SupportedCurrencies).includes(storedCurrency)
-	) {
-		return storedCurrency
+export const getDefaultFiatCurrency = (): string => {
+	if (typeof navigator === 'undefined') {
+		return FallbackFiatCurrency
 	}
+
 	const locale = navigator.language
 
 	// Get country from locale (e.g., en-US -> US)
@@ -24,7 +25,7 @@ export const getUserFiatCurrency = (): string => {
 	if (parts.length > 1) {
 		const countryCode = parts[1].toUpperCase()
 		const fiat = SupportedCountries[countryCode]?.defaultCurrency
-		if (fiat && Object.keys(SupportedCurrencies).includes(fiat)) {
+		if (fiat && isSupportedCurrency(fiat)) {
 			return fiat
 		}
 	}
@@ -35,12 +36,30 @@ export const getUserFiatCurrency = (): string => {
 	)?.[0]
 	if (countryFromLang) {
 		const fiat = SupportedCountries[countryFromLang]?.defaultCurrency
-		if (fiat && Object.keys(SupportedCurrencies).includes(fiat)) {
+		if (fiat && isSupportedCurrency(fiat)) {
 			return fiat
 		}
 	}
+
 	// Fallback 2: Default to USD
-	return 'USD'
+	return FallbackFiatCurrency
+}
+
+/**
+ * Get the user's preferred fiat currency from local storage or browser locale.
+ */
+export const getUserFiatCurrency = (): string => {
+	try {
+		// Try to get from local storage first
+		const storedCurrency = localStorage.getItem(FiatCurrencyKey)
+		if (storedCurrency && isSupportedCurrency(storedCurrency)) {
+			return storedCurrency
+		}
+	} catch {
+		// Fall back to the browser-locale default if storage access is blocked.
+	}
+
+	return getDefaultFiatCurrency()
 }
 
 /**
@@ -51,7 +70,8 @@ export const formatFiatCurrency = (
 	currency?: string,
 ): string => {
 	const currencyCode = currency || getUserFiatCurrency()
-	const locale = navigator.language || 'en-US'
+	const locale =
+		typeof navigator === 'undefined' ? 'en-US' : navigator.language || 'en-US'
 
 	const decimals: number = SupportedCurrencies[currencyCode]?.noDecimals ? 0 : 2
 

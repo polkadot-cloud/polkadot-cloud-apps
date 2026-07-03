@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -35,6 +35,13 @@ export interface TipDisplay {
 	format?: 'warning' | 'danger'
 	s: number
 	subtitle: string
-	description: string
-	page: string
+	description: string[]
+	page?: string
+}
+
+export interface TipProps {
+	title: string
+	description: string[]
+	page?: string
+	onPromptClick: () => void
 }

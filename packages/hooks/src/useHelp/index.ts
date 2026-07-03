@@ -1,7 +1,8 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback } from 'react'
+import { createSingletonStore, useSingletonStore } from '../util'
 import type { HelpHookInterface, HelpHookState } from './types'
 
 export type { HelpHookInterface, HelpHookState } from './types'
@@ -12,39 +13,14 @@ const defaultHelpState: HelpHookState = {
 	tooltipAnchor: null,
 }
 
-const listeners = new Set<() => void>()
-let currentHelpState: HelpHookState = defaultHelpState
-
-const emitHelpChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
-
-const subscribeHelp = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
-	}
-}
-
-const getHelpSnapshot = () => currentHelpState
-
-const setHelpState = (state: HelpHookState) => {
-	currentHelpState = state
-	emitHelpChange()
-}
+const helpStore = createSingletonStore<HelpHookState>(defaultHelpState)
 
 export const useHelp = (): HelpHookInterface => {
-	const state = useSyncExternalStore(
-		subscribeHelp,
-		getHelpSnapshot,
-		getHelpSnapshot,
-	)
+	const state = useSingletonStore(helpStore)
 
 	const openHelpTooltip = useCallback(
 		(definition: string | null, anchor: HTMLButtonElement | null) => {
-			setHelpState({
+			helpStore.setSnapshot({
 				isTooltipOpen: true,
 				tooltipDefinition: definition,
 				tooltipAnchor: anchor,
@@ -54,7 +30,7 @@ export const useHelp = (): HelpHookInterface => {
 	)
 
 	const closeHelpTooltip = useCallback(() => {
-		setHelpState(defaultHelpState)
+		helpStore.resetSnapshot()
 	}, [])
 
 	return {

@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
@@ -21,6 +21,7 @@ import type {
 import { createObservableStore } from 'utils'
 import { useApi } from '../useApi'
 import { useNetwork } from '../useNetwork'
+import { createSingletonSignal } from '../util'
 import type { BalancesHookInterface } from './types'
 import { getLocalFeeReserve, setLocalFeeReserve } from './util'
 
@@ -43,18 +44,7 @@ const poolMembershipsStore = createObservableStore<PoolMemberships>(
 	{},
 )
 
-const feeReserveListeners = new Set<() => void>()
-const subscribeFeeReserve = (listener: () => void) => {
-	feeReserveListeners.add(listener)
-	return () => {
-		feeReserveListeners.delete(listener)
-	}
-}
-const emitFeeReserveChange = () => {
-	for (const listener of feeReserveListeners) {
-		listener()
-	}
-}
+const feeReserveSignal = createSingletonSignal()
 
 export const useBalances = (): BalancesHookInterface => {
 	const { network } = useNetwork()
@@ -80,7 +70,7 @@ export const useBalances = (): BalancesHookInterface => {
 		poolMembershipsStore.getSnapshot,
 	)
 	const feeReserve = useSyncExternalStore(
-		subscribeFeeReserve,
+		feeReserveSignal.subscribe,
 		() =>
 			getLocalFeeReserve(activeAddress, defaultFeeReserve, {
 				network,
@@ -95,7 +85,7 @@ export const useBalances = (): BalancesHookInterface => {
 				return
 			}
 			setLocalFeeReserve(activeAddress, amount, network)
-			emitFeeReserveChange()
+			feeReserveSignal.emit()
 		},
 		[activeAddress, network],
 	)
@@ -157,7 +147,7 @@ export const useBalances = (): BalancesHookInterface => {
 	)
 
 	useEffect(() => {
-		emitFeeReserveChange()
+		feeReserveSignal.emit()
 	}, [activeAddress, network])
 
 	return {

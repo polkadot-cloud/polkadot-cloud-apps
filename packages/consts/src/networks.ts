@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { NetworkId, Networks, SystemChain } from 'types'
@@ -202,8 +202,8 @@ export const SystemChainList: Record<string, SystemChain> = {
 				// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
 				StakeWorld: 'wss://dot-rpc.stakeworld.io/assethub',
 				// Dwellir: 'wss://asset-hub-polkadot-rpc.dwellir.com',
-				IBP1: 'wss://sys.ibp.network/asset-hub-polkadot',
-				IBP2: 'wss://asset-hub-polkadot.dotters.network',
+				// IBP1: 'wss://sys.ibp.network/asset-hub-polkadot',
+				// IBP2: 'wss://asset-hub-polkadot.dotters.network',
 			},
 		},
 		relayChain: 'polkadot',

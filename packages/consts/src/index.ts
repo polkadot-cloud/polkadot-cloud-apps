@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 // Global Constants
@@ -11,7 +11,7 @@ export const PlatformPrivacyURL = 'https://polkadot.cloud/privacy'
 export const PlatformDisclaimerURL = 'https://polkadot.cloud/disclaimer'
 export const PlatformSupportEmail = 'staking@polkadot.cloud'
 export const PlatformGitHubURL =
-	'https://github.com/polkadot-cloud/polkadot-staking-dashboard'
+	'https://github.com/polkadot-cloud/polkadot-cloud-apps'
 export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
 export const AssetHubPolkadotSubscanURL = 'https://assethub-polkadot.subscan.io'
 export const ManualSigners = ['ledger', 'vault', 'wallet_connect']
