@@ -19,13 +19,13 @@ import { formatSize } from 'utils'
 import { ActiveGraph } from './ActiveGraph'
 import { InactiveGraph } from './InactiveGraph'
 
-export const RecentPayouts = ({
+export const AccountPayouts = ({
 	payoutsList,
 	setPayoutsList,
 	payoutGraphData,
 	loading,
 }: PayoutHistoryProps) => {
-	const { i18n, t } = useTranslation('pages')
+	const { i18n, t } = useTranslation(['pages', 'app'])
 	const { syncing } = useSyncing()
 	const { containerRefs } = useUi()
 	const { inPool } = useActivePool()
@@ -53,7 +53,7 @@ export const RecentPayouts = ({
 	return (
 		<>
 			<CardHeader>
-				<h4>{t('recentPayouts')}</h4>
+				<h4>{t('app:yourPayouts')}</h4>
 				<h2>
 					{payoutsFromDate && payoutsToDate ? (
 						<>

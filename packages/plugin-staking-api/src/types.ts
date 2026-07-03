@@ -98,6 +98,29 @@ export interface PoolRewardTrendData {
 	poolRewardTrend: RewardTrend
 }
 
+export interface PayeeNominatorRewardsData {
+	payeeNominatorRewards: PayeeNominatorRewardsResult
+}
+
+export interface PayeeNominatorRewardsResult {
+	total: string
+	rewards: PayeeEraReward[]
+	active: PayeeNominatorReward[]
+}
+
+export interface PayeeEraReward {
+	era: number
+	reward: string
+}
+
+export interface PayeeNominatorReward {
+	address: string
+	label: string | null
+	stakedBalance: string
+	validatorApy: number
+	incomingPayouts: string
+}
+
 export interface RewardTrend {
 	reward: string
 	previous: string

@@ -50,6 +50,7 @@ export interface NominationStatusProps {
 	bondFor: BondFor
 	nominator: MaybeAddress
 	status?: NominationStatus
+	asIncoming?: boolean
 	noMargin?: boolean
 }
 

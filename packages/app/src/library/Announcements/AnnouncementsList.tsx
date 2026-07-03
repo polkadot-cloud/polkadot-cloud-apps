@@ -37,28 +37,53 @@ export const AnnouncementsList = ({
 		item === null ? (
 			<AnnouncementLoader key={key} />
 		) : (
-			<Item key={key} variants={listItem}>
-				<h2>
-					{item.icon && <FontAwesomeIcon icon={item.icon} />}
-					{item.value}
-					{item.button && (
-						<ButtonTertiary
-							text={item.button.text}
-							onClick={() => item.button?.onClick()}
-							disabled={item.button.disabled}
-						/>
-					)}
-				</h2>
-				<h4>
-					{item.label}
-					{item.helpKey && (
-						<ButtonHelpTooltip
-							marginLeft
-							definition={item.helpKey}
-							openHelp={openHelpTooltip}
-						/>
-					)}
-				</h4>
+			<Item
+				key={key}
+				variants={listItem}
+				className={item.valueNode ? 'value-node-layout' : undefined}
+			>
+				{item.valueNode ? (
+					<>
+						<h4>
+							{item.label}
+							{item.helpKey && (
+								<ButtonHelpTooltip
+									marginLeft
+									definition={item.helpKey}
+									openHelp={openHelpTooltip}
+								/>
+							)}
+						</h4>
+						<div className="value-node">{item.valueNode}</div>
+					</>
+				) : (
+					<>
+						<h2>
+							{item.icon && <FontAwesomeIcon icon={item.icon} />}
+							{item.value}
+							{item.button && (
+								<ButtonTertiary
+									text={item.button.text}
+									onClick={() => item.button?.onClick()}
+									disabled={item.button.disabled}
+								/>
+							)}
+						</h2>
+						{item.secondaryValue && <h3>{item.secondaryValue}</h3>}
+					</>
+				)}
+				{!item.valueNode && (
+					<h4>
+						{item.label}
+						{item.helpKey && (
+							<ButtonHelpTooltip
+								marginLeft
+								definition={item.helpKey}
+								openHelp={openHelpTooltip}
+							/>
+						)}
+					</h4>
+				)}
 			</Item>
 		)
 

@@ -133,7 +133,22 @@ export const Item = styled(motion.div)`
     background: var(--background-primary);
   }
 
-  h2 {
+  .value-node {
+    margin-bottom: 0.75rem;
+  }
+
+  &.value-node-layout {
+    > h4 {
+      font-family: var(--font-family-semibold);
+      margin-bottom: 0.75rem;
+    }
+
+    .value-node {
+      margin-bottom: 0;
+    }
+  }
+
+  > h2 {
     font-family: var(--font-family-mono);
     display: flex;
     align-items: center;
@@ -150,7 +165,16 @@ export const Item = styled(motion.div)`
     }
   }
 
-  h4 {
+  > h3 {
+    font-family: var(--font-family-mono);
+    color: var(--gray-900);
+    font-size: 1.2rem;
+    margin: -0.2rem 0 0.75rem;
+    font-weight: normal;
+    line-height: 1.1;
+  }
+
+  > h4 {
     font-family: var(--font-family-default);
     color: var(--gray-900);
     margin: 0;
