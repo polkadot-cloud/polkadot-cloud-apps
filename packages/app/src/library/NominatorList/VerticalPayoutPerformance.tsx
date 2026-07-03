@@ -27,9 +27,8 @@ export const VerticalPayoutPerformance = ({
 
 	return (
 		<Graph
-			syncing={!points.length}
+			syncing={!amounts.length}
 			Inner={
-				<>
 					{tooltipText && (
 						<TooltipArea
 							text={tooltipText}
