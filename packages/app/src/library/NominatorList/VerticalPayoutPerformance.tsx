@@ -7,12 +7,16 @@ import type { VerticalPayoutPerformanceProps } from './types'
 export const VerticalPayoutPerformance = ({
 	amounts,
 }: VerticalPayoutPerformanceProps) => {
-	const safeAmounts = amounts.slice(0, 30)
-	const points = safeAmounts.map((value, day) => ({
+	const safeAmounts = amounts.slice(-30)
+	const paddedAmounts = Array.from(
+		{ length: Math.max(30 - safeAmounts.length, 0) },
+		() => 0,
+	).concat(safeAmounts)
+	const points = paddedAmounts.map((value, day) => ({
 		id: `${day}-${Math.round(value * 1000)}`,
 		value,
 	}))
-	const max = safeAmounts.reduce((acc, value) => Math.max(acc, value), 0)
+	const max = paddedAmounts.reduce((acc, value) => Math.max(acc, value), 0)
 	const chartWidth = 240
 	const chartHeight = 64
 	const xStep = chartWidth / Math.max(points.length, 1)

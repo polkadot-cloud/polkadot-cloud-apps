@@ -104,7 +104,13 @@ export interface PayeeNominatorRewardsData {
 
 export interface PayeeNominatorRewardsResult {
 	total: string
+	rewards: PayeeEraReward[]
 	active: PayeeNominatorReward[]
+}
+
+export interface PayeeEraReward {
+	era: number
+	reward: string
 }
 
 export interface PayeeNominatorReward {

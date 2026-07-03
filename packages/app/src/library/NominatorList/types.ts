@@ -7,7 +7,7 @@ export interface NominatorListItemData {
 	stakedBalance: number
 	validatorApy: number
 	incomingPayouts30d: number
-	performance30d?: number[]
+	performance30d: number[]
 }
 
 export interface NominatorListProps {

@@ -19,6 +19,10 @@ const QUERY = gql`
       fromEra: $fromEra
     ) {
       total
+      rewards {
+        era
+        reward
+      }
       active {
         address
         label
@@ -33,6 +37,7 @@ const QUERY = gql`
 const DEFAULT: PayeeNominatorRewardsData = {
 	payeeNominatorRewards: {
 		total: '0',
+		rewards: [],
 		active: [],
 	},
 }

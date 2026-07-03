@@ -58,8 +58,6 @@ export const Overview = (props: PayoutHistoryProps) => {
 		skip: !stakingApiEnabled || !activeAddress,
 	})
 
-	console.log(incomingProjectionData)
-
 	// Whether to show base or commission-adjusted rewards
 	const [showAdjusted, setShowCommissionAdjusted] = useState<boolean>(true)
 
@@ -73,6 +71,19 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const annualRewardAfterCommission =
 		annualRewardBase * (1 - avgCommission / 100)
 
+	const incomingPerformance30d = useMemo(() => {
+		const rewards = incomingProjectionData.payeeNominatorRewards.rewards
+			.slice()
+			.sort((a, b) => a.era - b.era)
+			.slice(-30)
+			.map((item) => new BigNumber(planckToUnit(item.reward, units)).toNumber())
+
+		return Array.from(
+			{ length: Math.max(30 - rewards.length, 0) },
+			() => 0,
+		).concat(rewards)
+	}, [incomingProjectionData.payeeNominatorRewards.rewards, units])
+
 	const incomingProjectionAccounts = useMemo<NominatorListItemData[]>(
 		() =>
 			incomingProjectionData.payeeNominatorRewards.active.map((item) => ({
@@ -85,8 +96,13 @@ export const Overview = (props: PayoutHistoryProps) => {
 				incomingPayouts30d: new BigNumber(
 					planckToUnit(item.incomingPayouts, units),
 				).toNumber(),
+				performance30d: incomingPerformance30d,
 			})),
-		[incomingProjectionData.payeeNominatorRewards.active, units],
+		[
+			incomingProjectionData.payeeNominatorRewards.active,
+			incomingPerformance30d,
+			units,
+		],
 	)
 
 	const totalIncoming30d = new BigNumber(
