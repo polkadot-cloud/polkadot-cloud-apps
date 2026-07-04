@@ -3,3 +3,4 @@
 
 export * from './AccountDropdown'
 export * from './AccountInput'
+export * from './Menu'

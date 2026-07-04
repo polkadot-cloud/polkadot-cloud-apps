@@ -27,7 +27,6 @@ import { ErrorFallbackApp, ErrorFallbackRoutes } from 'library/ErrorBoundary'
 import { Headers } from 'library/Headers'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { MainFooter } from 'library/MainFooter'
-import { Menu } from 'library/Menu'
 import { NotificationPrompts } from 'library/NotificationPrompts'
 import { PageWithTitle } from 'library/PageWithTitle'
 import { SideMenu } from 'library/SideMenu'
@@ -45,6 +44,7 @@ import {
 	useNavigate,
 } from 'react-router-dom'
 import { Page } from 'ui-core/base'
+import { Menu } from 'ui-input/Menu'
 import { Prompt } from 'ui-overlay'
 import { getPagesConfig } from 'utils'
 
