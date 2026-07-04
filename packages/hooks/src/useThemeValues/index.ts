@@ -1,8 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback, useEffect, useState } from 'react'
-import { useTheme } from '../useTheme'
+import { useCallback } from 'react'
+import { getThemeElement } from '../useTheme'
+import {
+	createSingletonStore,
+	type SingletonStore,
+	useSingletonStore,
+} from '../util'
 import type { ThemeValuesHookInterface } from './types'
 
 export type { ThemeValuesHookInterface } from './types'
@@ -10,41 +15,96 @@ export type { ThemeValuesHookInterface } from './types'
 const getClassListString = (element: HTMLDivElement | null) =>
 	element?.classList.toString() ?? ''
 
-export const useThemeValues = (): ThemeValuesHookInterface => {
-	const { mode, themeElementRef } = useTheme()
-	const [classListString, setClassListString] = useState<string>(() =>
-		getClassListString(themeElementRef.current),
-	)
+const getThemeClassListString = () => getClassListString(getThemeElement())
 
-	useEffect(() => {
-		const element = themeElementRef.current
-		if (!element) {
-			return
+let themeValuesStore: SingletonStore<string>
+let observer: MutationObserver | undefined
+let observedElement: HTMLDivElement | null = null
+let retryAnimationFrame: number | undefined
+
+const hasWindow = () => typeof window !== 'undefined'
+const hasMutationObserver = () => typeof MutationObserver !== 'undefined'
+
+const setClassListSnapshot = () => {
+	const nextClassList = getThemeClassListString()
+	if (themeValuesStore.getSnapshot() !== nextClassList) {
+		themeValuesStore.setSnapshot(nextClassList)
+	}
+}
+
+const cancelObserverRetry = () => {
+	if (retryAnimationFrame === undefined || !hasWindow()) {
+		return
+	}
+	window.cancelAnimationFrame(retryAnimationFrame)
+	retryAnimationFrame = undefined
+}
+
+const scheduleObserverRetry = () => {
+	if (!hasWindow() || retryAnimationFrame !== undefined) {
+		return
+	}
+	retryAnimationFrame = window.requestAnimationFrame(() => {
+		retryAnimationFrame = undefined
+		if (themeValuesStore.getListenerCount() > 0) {
+			attachThemeValuesObserver()
 		}
+	})
+}
 
-		setClassListString(getClassListString(element))
+const disconnectThemeValuesObserver = () => {
+	cancelObserverRetry()
+	observer?.disconnect()
+	observer = undefined
+	observedElement = null
+}
 
-		const observer = new MutationObserver(() => {
-			setClassListString(getClassListString(element))
-		})
+const attachThemeValuesObserver = () => {
+	setClassListSnapshot()
 
-		observer.observe(element, {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
+	if (!hasMutationObserver()) {
+		return
+	}
 
-		return () => observer.disconnect()
-	}, [mode, themeElementRef])
+	const element = getThemeElement()
+	if (!element) {
+		scheduleObserverRetry()
+		return
+	}
 
+	if (observer && observedElement === element) {
+		return
+	}
+
+	disconnectThemeValuesObserver()
+	observedElement = element
+	observer = new MutationObserver(setClassListSnapshot)
+	observer.observe(element, {
+		attributes: true,
+		attributeFilter: ['class'],
+	})
+}
+
+themeValuesStore = createSingletonStore<string>(getThemeClassListString, {
+	onBeforeFirstSubscribe: () => {
+		themeValuesStore.refreshSnapshot()
+	},
+	onFirstSubscribe: attachThemeValuesObserver,
+	onLastUnsubscribe: disconnectThemeValuesObserver,
+	serverSnapshot: '',
+})
+
+export const useThemeValues = (): ThemeValuesHookInterface => {
+	const classListString = useSingletonStore(themeValuesStore)
 	const getThemeValue = useCallback(
 		(variable: string) => {
-			const element = themeElementRef.current
+			const element = getThemeElement()
 			if (!element) {
 				return ''
 			}
 			return getComputedStyle(element).getPropertyValue(variable).trim()
 		},
-		[classListString, themeElementRef],
+		[classListString],
 	)
 
 	return { getThemeValue }
