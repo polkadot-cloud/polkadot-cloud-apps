@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { getStakingChainData } from 'consts/util'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
+import { useThemeValues } from 'hooks/useThemeValues'
 import type { NominatorReward } from 'plugin-staking-api/types'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'

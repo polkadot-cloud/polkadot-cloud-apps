@@ -14,6 +14,8 @@ const defaultTheme: Theme = 'light'
 
 const themeElementRef = createRef<HTMLDivElement>()
 
+export const getThemeElement = () => themeElementRef.current
+
 let mediaListenerAttached = false
 let storageListenerAttached = false
 let themeStore: SingletonStore<Theme>

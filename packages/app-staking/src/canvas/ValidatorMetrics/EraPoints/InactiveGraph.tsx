@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useDateFormat } from 'hooks/useDateFormat'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { useTranslation } from 'react-i18next'
 import { EraPointsLine } from 'ui-graphs'
 

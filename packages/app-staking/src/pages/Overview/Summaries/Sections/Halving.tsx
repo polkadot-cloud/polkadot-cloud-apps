@@ -3,10 +3,10 @@
 
 import { useSize } from '@w3ux/hooks'
 import { getStakingChainData } from 'consts/util/chains'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useHalving } from 'hooks/useHalving'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { useUi } from 'hooks/useUi'
 import { Countdown } from 'library/Countdown'
 import { useRef } from 'react'

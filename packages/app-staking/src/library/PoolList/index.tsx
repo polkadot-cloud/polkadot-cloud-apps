@@ -7,11 +7,11 @@ import { useEffectIgnoreInitial } from '@w3ux/hooks'
 import { useFilters } from 'contexts/Filters'
 import { useList } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePoolFilters } from 'hooks/usePoolFilters'
 import { useSyncing } from 'hooks/useSyncing'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { Tabs } from 'library/Filter/Tabs'
 import {
 	FilterHeaderWrapper,
