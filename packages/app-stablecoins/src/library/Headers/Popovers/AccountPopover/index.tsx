@@ -1,11 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
-// SPDX-License-Identifier: GPL-3.0-only
-
-import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
-import {
-	faChevronRight,
-	faExternalLinkAlt,
-} from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { useOutsideAlerter } from '@w3ux/hooks'
@@ -44,24 +37,6 @@ export const AccountPopover = ({
 	return (
 		<div ref={popoverRef} className={classes.popover}>
 			<Account address={activeAddress || ''} label={accountLabel} />
-
-			<MenuItemButton
-				style={{ border: 'none' }}
-				onClick={() => {
-					setOpen(false)
-					openModal({ key: 'Transfer', size: 'sm' })
-				}}
-			>
-				<div>
-					<FontAwesomeIcon icon={faPaperPlane} transform="shrink-2" />
-				</div>
-				<div>
-					<h3>{t('send', { ns: 'app' })}</h3>
-					<div>
-						<FontAwesomeIcon icon={faChevronRight} transform="shrink-3" />
-					</div>
-				</div>
-			</MenuItemButton>
 
 			<ConnectItem.Container>
 				<h4>Account Details</h4>

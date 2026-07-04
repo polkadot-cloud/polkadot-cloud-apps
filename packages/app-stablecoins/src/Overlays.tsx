@@ -43,10 +43,9 @@ const modals = lazyOverlayComponents({
 		import('ui-modals/Accounts').then(({ Accounts: AccountsModal }) => ({
 			Accounts: () => <AccountsModal useCategories={useDefaultCategories} />,
 		})),
-	ExternalAccounts: () => import('./modals/ExternalAccounts'),
-	ImportAccounts: () => import('./modals/ImportAccounts'),
-	SelectCurrency: () => import('./modals/SelectCurrency'),
-	Transfer: () => import('./modals/Transfer'),
+	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
+	ImportAccounts: () => import('ui-modals/ImportAccounts'),
+	SelectCurrency: () => import('ui-modals/SelectCurrency'),
 })
 
 const ErrorFallbackModal = () => null
