@@ -9,13 +9,12 @@ import {
 	useLedgerTxSubmit,
 } from '@polkadot-cloud/connect-ledger'
 import { useHelp } from 'hooks/useHelp'
-import { EstimatedTxFee } from 'library/EstimatedTxFee'
-import { SubmitButton } from 'library/SubmitTx/Signers/SubmitButton'
-import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount, DisplayFor } from 'types'
-import { ButtonHelp } from 'ui-buttons'
+import { ButtonHelp, ButtonSubmitWithFee } from 'ui-buttons'
 import { useOverlay } from 'ui-overlay'
+import { EstimatedTxFee } from '../../EstimatedTxFee'
+import { SubmitButtonWrapper } from '../../Tx'
 
 interface LedgerProps {
 	uid: number
@@ -63,8 +62,8 @@ export const LedgerSubmit = ({
 
 	return (
 		<SubmitButtonWrapper>
-			<SubmitButton
-				text={translatedButtonText}
+			<ButtonSubmitWithFee
+				submitText={translatedButtonText}
 				icon={buttonIcon}
 				iconTransform="shrink-3"
 				onSubmit={buttonOnClick}

@@ -16,10 +16,10 @@ import { formatFromProp } from 'hooks/useSubmitExtrinsic/util'
 import { GenerateNominations } from 'library/GenerateNominations'
 import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { MenuControls } from 'library/GenerateNominations/Controls/MenuControls'
-import { SubmitTx } from 'library/SubmitTx'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor, NominationSelection } from 'types'
+import { SubmitTx } from 'ui-app/SubmitTx'
 import {
 	Footer,
 	FootFullWidth,

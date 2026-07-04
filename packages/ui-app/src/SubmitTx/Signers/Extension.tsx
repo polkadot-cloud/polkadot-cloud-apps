@@ -1,10 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { EstimatedTxFee } from 'library/EstimatedTxFee'
-import { SubmitButton } from 'library/SubmitTx/Signers/SubmitButton'
-import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import type { DisplayFor } from 'types'
+import { ButtonSubmitWithFee } from 'ui-buttons'
+import { EstimatedTxFee } from '../../EstimatedTxFee'
+import { SubmitButtonWrapper } from '../../Tx'
 
 interface ExtensionProps {
 	uid: number
@@ -30,8 +30,8 @@ export const Extension = ({
 
 	return (
 		<SubmitButtonWrapper>
-			<SubmitButton
-				text={submitText}
+			<ButtonSubmitWithFee
+				submitText={submitText}
 				onSubmit={onSubmit}
 				disabled={buttonDisabled}
 				pulse={!buttonDisabled}

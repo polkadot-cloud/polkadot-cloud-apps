@@ -12,7 +12,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useStakingMetrics } from 'hooks/useStakingMetrics'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BalanceInput } from '../BalanceInput'
+import { BalanceInput } from 'ui-app/BalanceInput'
 import type { BondFeedbackProps } from '../types'
 import { Warning } from '../Warning'
 
