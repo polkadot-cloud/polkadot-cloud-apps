@@ -215,6 +215,9 @@ importers:
       styled-components:
         specifier: ^6.4.3
         version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      ui-app:
+        specifier: workspace:*
+        version: link:../ui-app
       ui-buttons:
         specifier: workspace:*
         version: link:../ui-buttons
@@ -224,9 +227,6 @@ importers:
       ui-graphs:
         specifier: workspace:*
         version: link:../ui-graphs
-      ui-app:
-        specifier: workspace:*
-        version: link:../ui-app
       ui-modals:
         specifier: workspace:*
         version: link:../ui-modals
@@ -574,6 +574,73 @@ importers:
         specifier: ^11.1.4
         version: 11.1.4
 
+  packages/ui-app:
+    dependencies:
+      '@fortawesome/fontawesome-svg-core':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/react-fontawesome':
+        specifier: ^3.3.1
+        version: 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
+      '@polkadot-cloud/connect':
+        specifier: ^1.0.9
+        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
+      '@w3ux/extension-assets':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.7)
+      '@w3ux/hooks':
+        specifier: ^2.4.4
+        version: 2.4.4(react@19.2.7)
+      '@w3ux/react-polkicon':
+        specifier: ^4.0.2
+        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@w3ux/util-dedot':
+        specifier: ^1.0.0
+        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+      '@w3ux/utils':
+        specifier: ^3.1.1
+        version: 3.1.1
+      bignumber.js:
+        specifier: ^11.1.4
+        version: 11.1.4
+      consts:
+        specifier: workspace:*
+        version: link:../consts
+      hooks:
+        specifier: workspace:*
+        version: link:../hooks
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.8
+        version: 17.0.8(i18next@26.3.4(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      simplebar-react:
+        specifier: 3.3.2
+        version: 3.3.2(react@19.2.7)
+      types:
+        specifier: workspace:*
+        version: link:../types
+      ui-buttons:
+        specifier: workspace:*
+        version: link:../ui-buttons
+      ui-core:
+        specifier: workspace:*
+        version: link:../ui-core
+      ui-overlay:
+        specifier: workspace:*
+        version: link:../ui-overlay
+      utils:
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      vite-plugin-svgr:
+        specifier: ^5.2.0
+        version: 5.2.0(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.22.4))
+
   packages/ui-buttons:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
@@ -721,9 +788,15 @@ importers:
         specifier: workspace:*
         version: link:../types
 
-  packages/ui-app:
+  packages/ui-modals:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/free-brands-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/free-regular-svg-icons':
         specifier: ^7.3.0
         version: 7.3.0
       '@fortawesome/free-solid-svg-icons':
@@ -735,6 +808,15 @@ importers:
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
         version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-ledger':
+        specifier: ^1.0.2
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@polkadot-cloud/connect-proxies':
+        specifier: ^0.2.3
+        version: 0.2.3(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)(typescript@6.0.3)
+      '@polkadot-cloud/connect-vault':
+        specifier: ^1.0.2
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@w3ux/extension-assets':
         specifier: ^2.3.1
         version: 2.3.1(react@19.2.7)
@@ -750,70 +832,9 @@ importers:
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
-      bignumber.js:
-        specifier: ^11.1.4
-        version: 11.1.4
-      consts:
+      assets:
         specifier: workspace:*
-        version: link:../consts
-      hooks:
-        specifier: workspace:*
-        version: link:../hooks
-      react:
-        specifier: ^19.2.7
-        version: 19.2.7
-      react-i18next:
-        specifier: ^17.0.8
-        version: 17.0.8(i18next@26.3.4(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-      simplebar-react:
-        specifier: 3.3.2
-        version: 3.3.2(react@19.2.7)
-      types:
-        specifier: workspace:*
-        version: link:../types
-      ui-buttons:
-        specifier: workspace:*
-        version: link:../ui-buttons
-      ui-core:
-        specifier: workspace:*
-        version: link:../ui-core
-      ui-overlay:
-        specifier: workspace:*
-        version: link:../ui-overlay
-      utils:
-        specifier: workspace:*
-        version: link:../utils
-    devDependencies:
-      vite-plugin-svgr:
-        specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.22.4))
-
-  packages/ui-modals:
-    dependencies:
-      '@fortawesome/fontawesome-svg-core':
-        specifier: ^7.3.0
-        version: 7.3.0
-      '@fortawesome/free-solid-svg-icons':
-        specifier: ^7.3.0
-        version: 7.3.0
-      '@fortawesome/react-fontawesome':
-        specifier: ^3.3.1
-        version: 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
-      '@polkadot-cloud/connect':
-        specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-proxies':
-        specifier: ^0.2.3
-        version: 0.2.3(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)(typescript@6.0.3)
-      '@w3ux/extension-assets':
-        specifier: ^2.3.1
-        version: 2.3.1(react@19.2.7)
-      '@w3ux/react-polkicon':
-        specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+        version: link:../assets
       bignumber.js:
         specifier: ^11.1.4
         version: 11.1.4
@@ -835,6 +856,12 @@ importers:
       types:
         specifier: workspace:*
         version: link:../types
+      ui-app:
+        specifier: workspace:*
+        version: link:../ui-app
+      ui-buttons:
+        specifier: workspace:*
+        version: link:../ui-buttons
       ui-core:
         specifier: workspace:*
         version: link:../ui-core
@@ -842,6 +869,9 @@ importers:
         specifier: workspace:*
         version: link:../ui-overlay
     devDependencies:
+      '@w3ux/types':
+        specifier: ^2.4.2
+        version: 2.4.2
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.22.4))
