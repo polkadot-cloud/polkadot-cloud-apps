@@ -1,9 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { SubmitTxProps } from 'library/SubmitTx/types'
 import type { ReactElement } from 'react'
-import type { DisplayFor } from 'types'
+import type { DisplayFor, SubmitTxProps } from 'types'
 
 export interface SignerProps extends SubmitTxProps {
 	notEnoughFunds: boolean

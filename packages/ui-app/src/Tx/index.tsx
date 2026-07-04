@@ -1,10 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import classNames from 'classnames'
 import { Signer } from './Signer'
 import type { TxProps } from './types'
-import { PromptWrapper, Wrapper } from './Wrapper'
+import { PromptWrapper, txClasses, Wrapper } from './Wrapper'
+
+export type { SignerProps, TxProps } from './types'
+export { SubmitButtonWrapper } from './Wrapper'
 
 /**
  * @name Tx
@@ -22,16 +24,19 @@ export const Tx = (props: TxProps) => {
 		stacked = false,
 	} = props
 
-	const innerClasses = classNames('inner', {
-		[displayFor]: ['canvas', 'card'].includes(displayFor),
-		transparent: !!transparent,
-		stacked: !!stacked,
-	})
+	const innerClasses = [
+		txClasses.inner,
+		['canvas', 'card'].includes(displayFor) ? txClasses[displayFor] : undefined,
+		transparent ? txClasses.transparent : undefined,
+		stacked ? txClasses.stacked : undefined,
+	]
+		.filter(Boolean)
+		.join(' ')
 
 	return (
-		<Wrapper className={margin ? 'margin' : undefined}>
+		<Wrapper className={margin ? txClasses.margin : undefined}>
 			<div className={innerClasses}>
-				<div className="signer">
+				<div className={txClasses.signer}>
 					<Signer
 						{...props}
 						dangerMessage={dangerMessage}
@@ -40,7 +45,7 @@ export const Tx = (props: TxProps) => {
 					/>
 					<PromptWrapper>{PromptComponent}</PromptWrapper>
 				</div>
-				<div className="submit">{SubmitComponent}</div>
+				<div className={txClasses.submit}>{SubmitComponent}</div>
 			</div>
 		</Wrapper>
 	)

@@ -17,6 +17,8 @@
 		"@fortawesome/free-solid-svg-icons": "^7.3.0",
 		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@polkadot-cloud/connect": "^1.0.9",
+		"@polkadot-cloud/connect-ledger": "^1.0.2",
+		"@polkadot-cloud/connect-vault": "^1.0.2",
 		"@w3ux/extension-assets": "^2.3.1",
 		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/react-polkicon": "^4.0.2",
