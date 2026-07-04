@@ -5,15 +5,15 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import DiscordOutlineSvg from 'assets/brands/discordOutline.svg?react'
 import { DiscordSupportURL } from 'consts'
-import { Title } from 'library/Modal/Title'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding, Support } from 'ui-core/modal'
 
 export const DiscordSupport = () => {
 	const { t } = useTranslation('modals')
 	return (
 		<>
-			<Title />
+			<ModalTitle />
 			<Padding verticalOnly>
 				<Support>
 					<DiscordOutlineSvg />

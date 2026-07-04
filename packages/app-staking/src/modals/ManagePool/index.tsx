@@ -3,9 +3,9 @@
 
 import { useLedger } from '@polkadot-cloud/connect-ledger'
 import { useActivePool } from 'hooks/useActivePool'
-import { Title } from 'library/Modal/Title'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { FixedTitle, Multi, MultiTwo, Padding, Section } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 import { Forms } from './Forms'
@@ -63,7 +63,7 @@ export const ManagePool = () => {
 	return (
 		<Section type="carousel">
 			<FixedTitle ref={headerRef}>
-				<Title title={`${t('managePool')}`} fixed />
+				<ModalTitle title={`${t('managePool')}`} fixed />
 			</FixedTitle>
 			<MultiTwo
 				style={{

@@ -3,9 +3,9 @@
 
 import { SupportedCurrencies } from 'consts/currencies'
 import { useCurrency } from 'hooks/useCurrency'
-import { Title } from 'library/Modal/Title'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { ButtonModal } from 'ui-buttons'
 import { ButtonList, Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
@@ -55,7 +55,7 @@ export const SelectCurrency = () => {
 
 	return (
 		<>
-			<Title title={t('selectCurrency')} />
+			<ModalTitle title={t('selectCurrency')} />
 			<SearchInput>
 				<input
 					type="text"
