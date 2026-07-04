@@ -2,3 +2,4 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './AccountDropdown'
+export * from './AccountInput'

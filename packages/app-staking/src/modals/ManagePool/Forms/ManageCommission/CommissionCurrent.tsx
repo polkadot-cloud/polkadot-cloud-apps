@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useApi } from 'hooks/useApi'
-import { AccountInput } from 'library/AccountInput'
 import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
 import { useTranslation } from 'react-i18next'
+import { AccountInput } from 'ui-input/AccountInput'
 import { perbillToPercent } from 'utils'
 import { usePoolCommission } from './provider'
 

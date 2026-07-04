@@ -13,7 +13,10 @@
 		"./*": "./src/*/index.tsx"
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^7.3.0",
 		"@fortawesome/free-solid-svg-icons": "^7.3.0",
+		"@fortawesome/react-fontawesome": "^3.3.1",
+		"@polkadot-cloud/connect": "^1.0.9",
 		"@w3ux/extension-assets": "^2.3.1",
 		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/react-polkicon": "^4.0.2",
@@ -26,7 +29,9 @@
 		"react-i18next": "^17.0.8",
 		"simplebar-react": "3.3.2",
 		"types": "workspace:*",
+		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
+		"ui-overlay": "workspace:*",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
