@@ -21,7 +21,7 @@ import {
 	PlatformURL,
 } from 'consts'
 import { useCurrency } from 'contexts/Currency'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks'
 import { type Dispatch, type SetStateAction, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MenuItem, MenuItemButton } from 'ui-core/popover'

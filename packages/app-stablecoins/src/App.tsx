@@ -3,16 +3,13 @@
 
 import { i18next } from 'locales'
 import { I18nextProvider } from 'react-i18next'
-import { ThemesProvider } from './contexts/Themes'
 import { ThemeValuesProvider } from './contexts/ThemeValues'
 import { Providers } from './Providers'
 
 export const App = () => (
 	<I18nextProvider i18n={i18next}>
-		<ThemesProvider>
-			<ThemeValuesProvider>
-				<Providers />
-			</ThemeValuesProvider>
-		</ThemesProvider>
+		<ThemeValuesProvider>
+			<Providers />
+		</ThemeValuesProvider>
 	</I18nextProvider>
 )

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks'
 import { useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'

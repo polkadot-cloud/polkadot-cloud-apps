@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemeProvider } from 'styled-components'

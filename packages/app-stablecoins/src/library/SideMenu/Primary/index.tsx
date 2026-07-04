@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTheme } from 'contexts/Themes'
 import { useUi } from 'contexts/UI'
+import { useTheme } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { Tooltip } from 'ui-core/base'
 import type { PrimaryProps } from '../types'
