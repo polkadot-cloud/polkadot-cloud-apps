@@ -38,7 +38,7 @@ const lazyOverlayComponents = <
 	) as Record<keyof T, ReturnType<typeof lazyNamed>>
 
 const modals = lazyOverlayComponents({
-	Accounts: () => import('modals/Accounts'),
+	Accounts: () => import('ui-modals/Accounts'),
 	Bio: () => import('modals/Bio'),
 	Bond: () => import('modals/Bond'),
 	ChangePoolRoles: () => import('modals/ChangePoolRoles'),
