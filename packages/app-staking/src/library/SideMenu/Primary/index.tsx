@@ -3,9 +3,9 @@
 
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTheme } from 'contexts/Themes'
 import { onPageNavigationEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
+import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
