@@ -66,6 +66,7 @@
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-graphs": "workspace:*",
+		"ui-modals": "workspace:*",
 		"ui-overlay": "workspace:*",
 		"ui-styles": "workspace:*",
 		"ui-tips": "workspace:*",

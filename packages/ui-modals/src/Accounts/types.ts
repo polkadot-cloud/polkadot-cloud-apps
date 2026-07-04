@@ -2,7 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { Proxy } from '@polkadot-cloud/connect-proxies'
-import type { PoolMembership } from 'types'
+import type {
+	AccountCategoryItem,
+	UseAccountListCategories,
+} from 'hooks/useStakingAccountCategories'
+
+export type {
+	AccountCategoryItem,
+	AccountListCategory,
+	UseAccountListCategories,
+} from 'hooks/useStakingAccountCategories'
+
+export interface AccountsProps {
+	useCategories?: UseAccountListCategories
+}
 
 export interface AccountButtonProps {
 	address: string
@@ -21,15 +34,4 @@ export interface DelegatesProps {
 	delegates: Proxy | undefined
 }
 
-export interface AccountInPoolProps extends PoolMembership {
-	source: string
-	delegates?: Proxy
-}
-
-export interface AccountItemProps {
-	address: string
-	source: string
-	delegates?: Proxy
-}
-
-export type AccountNominatingInPoolProps = AccountItemProps & AccountInPoolProps
+export type AccountItemProps = AccountCategoryItem
