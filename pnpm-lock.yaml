@@ -224,6 +224,9 @@ importers:
       ui-graphs:
         specifier: workspace:*
         version: link:../ui-graphs
+      ui-input:
+        specifier: workspace:*
+        version: link:../ui-input
       ui-modals:
         specifier: workspace:*
         version: link:../ui-modals
@@ -717,6 +720,58 @@ importers:
       types:
         specifier: workspace:*
         version: link:../types
+
+  packages/ui-input:
+    dependencies:
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@w3ux/extension-assets':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.7)
+      '@w3ux/hooks':
+        specifier: ^2.4.4
+        version: 2.4.4(react@19.2.7)
+      '@w3ux/react-polkicon':
+        specifier: ^4.0.2
+        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@w3ux/util-dedot':
+        specifier: ^1.0.0
+        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+      '@w3ux/utils':
+        specifier: ^3.1.1
+        version: 3.1.1
+      bignumber.js:
+        specifier: ^11.1.4
+        version: 11.1.4
+      consts:
+        specifier: workspace:*
+        version: link:../consts
+      hooks:
+        specifier: workspace:*
+        version: link:../hooks
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.8
+        version: 17.0.8(i18next@26.3.4(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      simplebar-react:
+        specifier: 3.3.2
+        version: 3.3.2(react@19.2.7)
+      types:
+        specifier: workspace:*
+        version: link:../types
+      ui-core:
+        specifier: workspace:*
+        version: link:../ui-core
+      utils:
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      vite-plugin-svgr:
+        specifier: ^5.2.0
+        version: 5.2.0(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.22.4))
 
   packages/ui-modals:
     dependencies:

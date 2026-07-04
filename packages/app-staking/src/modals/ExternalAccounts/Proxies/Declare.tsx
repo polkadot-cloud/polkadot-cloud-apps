@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useProxies } from '@polkadot-cloud/connect-proxies'
-import { AccountDropdown } from 'library/AccountDropdown'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
 import { ButtonSecondary } from 'ui-buttons'
 import { Padding } from 'ui-core/modal'
+import { AccountDropdown } from 'ui-input/AccountDropdown'
 
 export const Declare = () => {
 	const { t } = useTranslation('modals')

@@ -1,0 +1,35 @@
+{
+	"name": "ui-input",
+	"version": "0.1.0",
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"scripts": {
+		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
+		"check": "biome check .",
+		"lint": "biome check --write ."
+	},
+	"exports": {
+		".": "./src/index.tsx",
+		"./*": "./src/*/index.tsx"
+	},
+	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^7.3.0",
+		"@w3ux/extension-assets": "^2.3.1",
+		"@w3ux/hooks": "^2.4.4",
+		"@w3ux/react-polkicon": "^4.0.2",
+		"@w3ux/util-dedot": "^1.0.0",
+		"@w3ux/utils": "^3.1.1",
+		"bignumber.js": "^11.1.4",
+		"consts": "workspace:*",
+		"hooks": "workspace:*",
+		"react": "^19.2.7",
+		"react-i18next": "^17.0.8",
+		"simplebar-react": "3.3.2",
+		"types": "workspace:*",
+		"ui-core": "workspace:*",
+		"utils": "workspace:*"
+	},
+	"devDependencies": {
+		"vite-plugin-svgr": "^5.2.0"
+	}
+}

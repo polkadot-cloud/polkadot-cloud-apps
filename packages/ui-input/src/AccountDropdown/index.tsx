@@ -34,12 +34,10 @@ export const AccountDropdown = ({
 	const { network } = useNetwork()
 	const { units, unit, ss58 } = getStakingChainData(network)
 
-	// Generate unique ID for this component instance
 	const instanceId = useId()
 	const containerClass = `selected-account-${instanceId}`
 	const dropdownClass = `account-input-dropdown-${instanceId}`
 
-	// Manage internal state for selected account
 	const [selectedAccount, setSelectedAccount] =
 		useState<ImportedAccount | null>(
 			initialAccount !== undefined
@@ -49,22 +47,11 @@ export const AccountDropdown = ({
 					: null,
 		)
 
-	// The currently selected address of this input
 	const selectedAddress = selectedAccount?.address || ''
-
-	// Fetch account balance asynchronously
 	const [transferableBalance, setTransferableBalance] = useState<bigint>(0n)
-
-	// Whether the dropdown is open
 	const [isOpen, setIsOpen] = useState(false)
-
-	// Search term for filtering accounts
 	const [searchTerm, setSearchTerm] = useState('')
-
-	// Whether the input is currently focused
 	const [isInputFocused, setIsInputFocused] = useState(false)
-
-	// Dropdown position calculated from button bounds
 	const [dropdownPosition, setDropdownPosition] = useState<{
 		top: number
 		left: number
@@ -82,7 +69,6 @@ export const AccountDropdown = ({
 	const menuRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	// Calculate dropdown position when opened
 	useEffect(() => {
 		if (isOpen && dropdownRef.current) {
 			const rect = dropdownRef.current.getBoundingClientRect()
@@ -94,7 +80,6 @@ export const AccountDropdown = ({
 		}
 	}, [isOpen])
 
-	// Close dropdown on window resize to prevent position desync
 	useEffect(() => {
 		const handleResize = () => {
 			if (isOpen) {
@@ -107,10 +92,8 @@ export const AccountDropdown = ({
 		}
 	}, [isOpen])
 
-	// Close dropdown on window scroll to prevent position desync
 	useEffect(() => {
 		const handleScroll = (e: Event) => {
-			// Only close if the scroll target is not the dropdown menu
 			if (
 				isOpen &&
 				menuRef.current &&
@@ -121,13 +104,12 @@ export const AccountDropdown = ({
 				setIsInputFocused(false)
 			}
 		}
-		window.addEventListener('scroll', handleScroll, true) // Use capture phase
+		window.addEventListener('scroll', handleScroll, true)
 		return () => {
 			window.removeEventListener('scroll', handleScroll, true)
 		}
 	}, [isOpen])
 
-	// Notify parent when dropdown state changes
 	useEffect(() => {
 		onOpenChange?.(isOpen)
 	}, [isOpen, accounts.map((acc) => acc.address).join(',')])
@@ -136,7 +118,6 @@ export const AccountDropdown = ({
 		handleFetchBalance(selectedAddress)
 	}, [selectedAddress])
 
-	// Sync internal state when accounts change
 	useEffect(() => {
 		if (
 			initialAccount === undefined &&
@@ -147,29 +128,24 @@ export const AccountDropdown = ({
 		}
 	}, [accounts, selectedAccount, initialAccount])
 
-	// Helper function to check if there will be any filtered accounts for a given search term
 	const hasFilteredAccounts = (term: string): boolean => {
-		// Check if any accounts match the search term
 		const hasMatchingAccounts = accounts.some(
 			(account) =>
 				account.address.toLowerCase().includes(term.toLowerCase()) ||
 				account.name?.toLowerCase().includes(term.toLowerCase()),
 		)
-		// Check if the term is a valid address (which would be added to the list)
 		if (isValidAddress(term)) {
 			return true
 		}
 		return hasMatchingAccounts
 	}
 
-	// Filter accounts based on search term
 	let filteredAccounts = accounts.filter(
 		(account) =>
 			account.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			account.name?.toLowerCase().includes(searchTerm.toLowerCase()),
 	)
 
-	// If search term is a valid address and not already in accounts, add it as a temporary entry
 	const validAddress = isValidAddress(searchTerm)
 	if (validAddress) {
 		const formattedAddress = formatAccountSs58(searchTerm, ss58)
@@ -188,17 +164,14 @@ export const AccountDropdown = ({
 		}
 	}
 
-	// Handle opening of dropdown if there are accounts to choose from
 	const handleOpenDropdown = (term = searchTerm) => {
 		if (hasFilteredAccounts(term) && !disabled) {
 			setIsOpen(true)
 		}
 	}
 
-	// Handle account selection
 	const handleSelect = (account: ImportedAccount) => {
 		setSelectedAccount(account)
-		// Call callback
 		onSelect?.(account)
 
 		setIsOpen(false)
@@ -207,17 +180,13 @@ export const AccountDropdown = ({
 		inputRef.current?.blur()
 	}
 
-	// Close dropdown menu if clicked outside of its container
 	useOutsideAlerter(dropdownRef, () => {
 		setIsOpen(false)
 		setSearchTerm('')
 		setIsInputFocused(false)
 	}, [containerClass, dropdownClass])
 
-	// Display value for the input field
 	const inputValue = isInputFocused ? searchTerm : selectedAccount?.name || ''
-
-	// Determine selected account source icon
 	const SelectedSourceIcon = getAccountSourceIcon(selectedAccount?.source)
 
 	return (
@@ -275,7 +244,6 @@ export const AccountDropdown = ({
 						}}
 						onBlur={() => {
 							if (disabled) return
-							// Small delay to allow click events to fire
 							setTimeout(() => {
 								setIsInputFocused(false)
 							}, 150)
