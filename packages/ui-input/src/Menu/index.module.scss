@@ -30,6 +30,10 @@
 	flex-flow: row wrap;
 	align-items: center;
 
+	&.secondaryBg {
+		background: var(--bg-primary);
+	}
+
 	&:hover {
 		opacity: 0.75;
 	}
