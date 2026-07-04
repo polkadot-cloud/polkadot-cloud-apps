@@ -10,13 +10,13 @@
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
-		"date-fns": "^4.3.0",
+		"date-fns": "^4.4.0",
 		"ui-graphs": "workspace:*",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*",
 		"typescript": "^6.0.3",
-		"vitest": "^4.1.7"
+		"vitest": "^4.1.9"
 	}
 }

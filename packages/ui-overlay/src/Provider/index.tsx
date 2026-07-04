@@ -1,10 +1,10 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
 import { setStateWithRef } from '@w3ux/utils'
 import type { ReactNode, RefObject } from 'react'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type {
 	ActiveOverlayInstance,
 	CanvasStatus,
@@ -16,10 +16,15 @@ import type {
 	CanvasConfig,
 	ModalConfig,
 	OverlayContextInterface,
+	PromptContent,
+	PromptSize,
+	PromptState,
 } from './types'
 
 export const [OverlayContext, useOverlay] =
 	createSafeContext<OverlayContextInterface>()
+
+export const usePrompt = () => useOverlay().prompt
 
 export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 	// Store the modal status
@@ -189,6 +194,44 @@ export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 		setCanvasStatus('closing')
 	}
 
+	// Store prompt state
+	const [promptState, setPromptState] = useState<PromptState>({
+		size: 'lg',
+		status: 0,
+		Prompt: null,
+		onClosePrompt: null,
+	})
+
+	// Whether prompt can be closed by clicking outside on container
+	const [closeOnOutsideClick, setCloseOnOutsideClick] = useState(false)
+
+	const setPrompt = useCallback((Prompt: PromptContent) => {
+		setPromptState((prev) => ({ ...prev, Prompt }))
+	}, [])
+
+	const setPromptStatus = useCallback((status: number) => {
+		setPromptState((prev) => ({ ...prev, status }))
+	}, [])
+
+	const openPromptWith = useCallback(
+		(Prompt: PromptContent, size: PromptSize = 'sm', closeOutside = true) => {
+			setPromptState((prev) => ({ ...prev, size, Prompt, status: 1 }))
+			setCloseOnOutsideClick(closeOutside)
+		},
+		[],
+	)
+
+	const closePrompt = useCallback(() => {
+		setPromptState((prev) => {
+			prev.onClosePrompt?.()
+			return { ...prev, status: 0, Prompt: null, onClosePrompt: null }
+		})
+	}, [])
+
+	const setOnClosePrompt = useCallback((onClosePrompt: (() => void) | null) => {
+		setPromptState((prev) => ({ ...prev, onClosePrompt }))
+	}, [])
+
 	// Update modal height and open modal once refs are initialised
 	useEffectIgnoreInitial(() => {
 		const height = modalRef?.current?.clientHeight || 0
@@ -236,6 +279,18 @@ export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 					setModalStatus,
 					setModalRef,
 					setModalHeightRef,
+				},
+				prompt: {
+					setOnClosePrompt,
+					openPromptWith,
+					closePrompt,
+					setStatus: setPromptStatus,
+					setPrompt,
+					setCloseOnOutsideClick,
+					size: promptState.size,
+					status: promptState.status,
+					Prompt: promptState.Prompt,
+					closeOnOutsideClick,
 				},
 			}}
 		>

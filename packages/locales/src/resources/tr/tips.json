@@ -1,0 +1,106 @@
+{
+	"tips": {
+		"connectExtensions": [
+			"Uzantıları Bağla",
+			"Polkadot Cloud Staking'i kullanmaya başlamak için hesaplarınızı bağlayın.",
+			[
+				"Polkadot Cloud Staking'i kullanmaya başlamak için hesaplarınızı bağlayın.",
+				"Hesaplara, cüzdan görevi gören web uzantıları aracılığıyla erişilir. Cüzdanınız, pano içinde gönderdiğiniz işlemleri imzalamak için kullanılır.",
+				"Cüzdanlarınızı panonun sağ üst köşesindeki Bağlan düğmesinden bağlayın ve devam etmek için stake yapmak istediğiniz hesabı seçin.",
+				"Cloud Staking çeşitli uzantıları ve cüzdanları destekler."
+			]
+		],
+		"howToStake": [
+			"Nasıl Stake Etmek İstersiniz?",
+			"Ya nominatör olun ya da bir havuzun üyesi olun.",
+			[
+				"{NETWORK_NAME} üzerinde stake etmenin birden fazla yolu vardır.",
+				"Ya nominatör olabilir ya da bir havuzun üyesi olabilirsiniz.",
+				"Doğrudan nominasyon yapmak, {NETWORK_UNIT} bağlamanızı, desteklemek istediğiniz validatörleri seçmenizi ve en fazla {MAX_NOMINATIONS} tanesine nominasyon yapmanızı gerektirir. Nominatör olarak ödül kazanmak için şu anda en az {MIN_ACTIVE_STAKE} {NETWORK_UNIT} bağlamanız gerekir.",
+				"Bir havuza katılmak çok daha ucuzdur ve minimum {MIN_POOL_JOIN_BOND} {NETWORK_UNIT} mevduat gerektirir. Validatörlere nominasyon sizin adınıza yapılır ve siz yalnızca havuzdan ödülleri talep edersiniz.",
+				"Bir havuz oluşturmak da mümkündür ve minimum {MIN_POOL_CREATE_BOND} {NETWORK_UNIT} gerektirir."
+			]
+		],
+		"joinAnotherPool": [
+			"Başka Bir Havuza Katılma",
+			"Başka bir havuza katılmak için farklı bir hesaba geçin.",
+			[
+				"{NETWORK_NAME} üzerinde hesap başına yalnızca bir havuza katılınabilir. Daha fazla havuza katılmak için önce başka bir hesaba geçin."
+			]
+		],
+		"keepPoolNominating": [
+			"Havuzunuzu Yönetme",
+			"Havuzunuzu aktif olarak nominasyon yapar durumda tutmak önemlidir.",
+			[
+				"Havuzunuzu aktif olarak nominasyon yapar durumda tutmak önemlidir.",
+				"Havuzunuz ödül kazanmıyorsa, üyeler ayrılıp başka bir havuza katılmaya meyilli olacaktır.",
+				"Root ve nominatör rolleriniz nominasyonlarınızı yönetmek için önemlidir. Nominasyonlar iyi performans göstermiyorsa, havuzunuzun ödül kazanma şansını artırmak için farklılarını seçin."
+			]
+		],
+		"managingNominations": [
+			"Nominasyonları Yönetme",
+			"Nominasyonlarınızın performansını düzenli olarak kontrol ettiğinizden emin olun.",
+			[
+				"Nominasyonlarınızın performansını düzenli olarak kontrol ettiğinizden emin olun.",
+				"Çeşitliliği ve validatörlerin merkeziyetsiz bir karışımını en üst düzeye çıkarmak için çeşitli varlıklardan validatörler seçin."
+			]
+		],
+		"module": {
+			"cancel": "İptal",
+			"close": "Kapat",
+			"of": "/",
+			"oneMoment": "Bir dakika lütfen",
+			"syncingWith": "{{network}} ile senkronize ediliyor",
+			"tips": "İpuçları"
+		},
+		"monitoringPool": [
+			"Havuz Üyeliğini Yönetme",
+			"Havuzunuzun aktif olarak ödül kazanıp kazanmadığını düzenli olarak kontrol etmek iyi bir fikirdir.",
+			[
+				"Havuzlar nominasyonları sizin adınıza yönetir, ancak yine de havuzunuzun aktif olarak ödül kazanıp kazanmadığını düzenli olarak kontrol etmek iyi bir fikirdir.",
+				"Düzenli olarak iyi performans gösterdiğinden emin olmak için havuzunuzun durumunu izleyin ve herhangi bir ödül almıyorsanız başka bir havuza katılmayı düşünün."
+			]
+		],
+		"recommendedJoinPool": [
+			"Önerilen: Bir Havuza Katılın",
+			"Hesabınız bir havuza katılmak için en uygun olanıdır.",
+			[
+				"Hesabınızın şu anda tuttuğu {NETWORK_UNIT} miktarına göre, bir havuza katılmak stake etmeye başlamanın en iyi yoludur.",
+				"Bir havuza katılmak minimum {MIN_POOL_JOIN_BOND} {NETWORK_UNIT} mevduat gerektirir."
+			]
+		],
+		"recommendedNominator": [
+			"Önerilen: Nominatör Olun",
+			"Nominatör olmak için yeterli {NETWORK_UNIT}'iniz var.",
+			[
+				"Nominatör olmak ve ödül kazanmaya başlamak için yeterli {NETWORK_UNIT}'iniz var.",
+				"Ancak doğrudan nominasyon yapmak, desteklediğiniz validatörleri aktif olarak kontrol etmenizi gerektirir."
+			]
+		],
+		"reviewingPayouts": [
+			"Ödemeleri İnceleme",
+			"Ödemelerinizi düzenli olarak incelemek, nominasyonlarınızın ne kadar iyi performans gösterdiğini ölçmenin iyi bir yoludur.",
+			[
+				"Ödemelerinizi düzenli olarak incelemek, nominasyonlarınızın ne kadar iyi performans gösterdiğini ölçmenin iyi bir yoludur.",
+				"Aldığınız her ödemenin ayrıntılı dökümünü ve ödemenin hangi validatörden (veya havuzdan) geldiğini görmek için Ödemeler sayfasına gidin."
+			]
+		],
+		"switchPool": [
+			"Havuz Değiştir",
+			"Havuz uyarılarından kaçınmak için yeni bir havuza geçin.",
+			[
+				"Mevcut havuzunuzda ödüllerinizi etkileyebilecek sorunlar var.",
+				"Stake ödüllerinizi en üst düzeye çıkarmak için mevcut havuzunuzdan ayrılıp farklı bir havuza katılmayı düşünün."
+			]
+		],
+		"understandingValidatorPerformance": [
+			"Validatör Performansını Ölçme",
+			"Validatörlerin ne kadar ödüllendirildiğini çeşitli faktörler etkiler.",
+			[
+				"Validatörlerin ne kadar ödüllendirildiğini, ürettiği Era puanı miktarı ve kaç nominatörün onu desteklediği gibi çeşitli faktörler etkiler.",
+				"Tüm bu metrikler zaman içinde, bazen öngörülemeyen bir şekilde değişir. Bu nedenle nominatörlerin validatörleri ve performanslarını aktif olarak izlemesi önemlidir.",
+				"Cloud Staking, bir validatörün nasıl performans gösterdiğini anlamanıza yardımcı olmak için çeşitli metrikler sunar."
+			]
+		]
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"name": "workers",
+	"version": "0.1.0",
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"exports": {
+		"./stakers": "./src/stakers.ts",
+		"./types": "./src/types.ts"
+	},
+	"scripts": {
+		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
+		"check": "biome check .",
+		"lint": "biome check --write ."
+	},
+	"dependencies": {
+		"@w3ux/utils": "^3.1.1",
+		"bignumber.js": "^11.1.4"
+	},
+	"devDependencies": {
+		"types": "workspace:*"
+	}
+}

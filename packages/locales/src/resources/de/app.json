@@ -173,6 +173,7 @@
 		"inBlock": "Im Block",
 		"inactive": "Inaktiv",
 		"include": "Einbeziehen",
+		"includeIncomingProjection": "Eingehende Prognose einbeziehen",
 		"initializing": "Wird initialisiert",
 		"insertPayoutAddress": "Auszahlungsadresse eingeben",
 		"insufficientFunds": "Nicht genug Guthaben",
@@ -185,6 +186,7 @@
 		"issuance": "Emission",
 		"join": "Beitreten",
 		"language": "Sprache",
+		"last30dIncoming": "Letzte 30 Tage",
 		"ledgerAccount": "Ledger-Konto",
 		"ledgerAccountFetched": "Ledger-Konto abgerufen",
 		"ledgerAccountImported": "Ledger-Konto importiert",
@@ -423,6 +425,7 @@
 		"webExtensions": "Web-Erweiterungen",
 		"whenActivelyNominating": "wenn du aktiv nominierst.",
 		"wrongTransaction": "Falsche Transaktion, bitte signiere erneut.",
-		"year": "Jahr"
+		"year": "Jahr",
+		"yourPayouts": "Deine Auszahlungen"
 	}
 }

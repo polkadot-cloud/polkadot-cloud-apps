@@ -1,0 +1,347 @@
+{
+	"help": {
+		"definitions": {
+			"activeNominators": [
+				"Aktif Nominatörler",
+				["Mevcut oturumda aktif olan nominatörler."]
+			],
+			"activePools": [
+				"Aktif Havuzlar",
+				["{NETWORK_NAME} üzerindeki mevcut aktif nominasyon havuzu sayısı."]
+			],
+			"activeStakeThreshold": [
+				"Aktif Stake Eşiği",
+				[
+					"Bir Era'da aktif olarak nominasyon yapabilmek için gereken {NETWORK_UNIT} miktarı."
+				]
+			],
+			"activeValidator": [
+				"Aktif Validatör",
+				[
+					"Blokları aktif olarak doğrulayan bir validatör. Ödüller, validatörün aktivitesine göre birikir."
+				]
+			],
+			"averageCommission": [
+				"Ortalama Komisyon",
+				["{NETWORK_NAME} üzerindeki ortalama validatör komisyon oranı."]
+			],
+			"averageRewardRate": [
+				"Ortalama Ödül Oranı",
+				["Ortalama Ödül Oranı, stake ödüllerinin tahmini yıllık getirisidir."]
+			],
+			"blockedNominations": [
+				"Engellenmiş Nominasyonlar",
+				[
+					"Bir validatör nominasyonları engellediğinde, nominatörler o validatöre nominasyon yapamaz."
+				]
+			],
+			"bondedInPool": [
+				"Havuza Bağlı",
+				[
+					"Şu anda bir havuza bağlı olan {NETWORK_UNIT} miktarı.",
+					"Bağlı fonlarınızın hesabınızda kalıp kilitlendiği doğrudan nominasyonun aksine, bir havuza bağladığınız {NETWORK_UNIT}, havuzun stash hesabına aktarılır. Yine de havuz üyeleri istedikleri zaman fonlarının bağını çözebilirler."
+				]
+			],
+			"bonding": [
+				"Bağlama",
+				[
+					"Fonları bağlamak, {NETWORK_UNIT}'i 'kilitleme' (veya stake etme) işlemidir. Bağlanan {NETWORK_UNIT} daha sonra otomatik olarak nominasyon yaptığınız bir veya daha fazla validatöre tahsis edilir."
+				]
+			],
+			"decentralizationAnalyticsPeriod": [
+				"Merkeziyetsizlik Analiz Dönemi",
+				[
+					"Nominasyonunuzun merkeziyetsizliği, son 30 günde yapılan ödemeler analiz edilerek hesaplanır. Ağa bağlı olarak bu, belirli sayıda Era'ya karşılık gelir.",
+					"30 gün, derlemenin anlamlı olması için yeterli bilgi sağlar ve aynı zamanda nominasyonlardaki değişikliklerin birkaç gün içinde bu analizi etkilemeye başlaması için yeterince kısadır."
+				]
+			],
+			"epoch": [
+				"Epoch",
+				[
+					"Epoch, {NETWORK_NAME} üzerindeki oturumun (session) başka bir adıdır. Her Era, validatörlerin belirli zaman dilimlerine veya slotlara blok üreticisi olarak atandığı 6 epoch'a bölünür.",
+					"1 epoch şu anda Polkadot'ta 4 saattir."
+				]
+			],
+			"era": [
+				"Era",
+				[
+					"Her Era'nın sonunda validatörler, o Era'da biriktirdikleri Era puanı sayısına göre {NETWORK_UNIT} ile ödüllendirilir. Bu {NETWORK_UNIT} ödülü daha sonra bir ödeme yoluyla validatörün nominatörleri arasında dağıtılır.",
+					"1 Era şu anda Polkadot'ta 24 saattir."
+				]
+			],
+			"eraPoints": [
+				"Era Puanları",
+				[
+					"Era Puanları, bir validatörün mevcut Era'da ne kadar iyi performans gösterdiğinin bir ölçüsüdür. Bir validatörün Era Puanı ne kadar fazlaysa, Era'nın sonunda o kadar fazla ödül alır."
+				]
+			],
+			"geolocationOfEachNomination": [
+				"Her Nominasyonun Coğrafi Konumu",
+				[
+					"Nominasyon yapılan her validatör, IP adresine göre coğrafi olarak konumlandırılabilen belirli bir veri merkezinde çalışır.",
+					"Tablo, nominasyon yapılan her validatörün coğrafi olarak konumlandırıldığı son bölgeyi, ülkeyi ve ağı gösterir.",
+					"Validatör, analiz döneminde birden fazla konumda bulunduğunda bir ++ işareti görüntülenir.",
+					"Gösterilen yüzde, bu validatörün analiz döneminde size ödediği ödüllerin oranıdır."
+				]
+			],
+			"halving": [
+				"Halving",
+				[
+					"Halving, nominatörlerin ve validatörlerin kazandığı stake ödüllerini %50 oranında azaltan bir olaydır. Halving'ler, enflasyonu kontrol etmek ve ağın uzun vadeli sürdürülebilirliğini sağlamak için Polkadot'ta her 2 yılda bir gerçekleşir."
+				]
+			],
+			"idealStaked": [
+				"İdeal Stake Edilen",
+				["İdeal ağ koşullarında stake edilen toplam arzın yüzdesi."]
+			],
+			"inactiveNominations": [
+				"Pasif Nominasyonlar",
+				[
+					"Mevcut Era için aktif validatör setinde yer alan, ancak bağlı fonların atanmadığı nominasyonlar."
+				]
+			],
+			"lastEraPayout": [
+				"Son Era Ödemesi",
+				["Son aktif Era için ödenen toplam {NETWORK_UNIT} miktarı."]
+			],
+			"ledgerAppNotOnLatestRuntimeVersion": [
+				"Ledger Uygulaması En Son Runtime Sürümünde Değil",
+				[
+					"Bu mesaj, Ledger uygulamanız en son runtime meta verisine göre yapılandırılmadığında görünür. İşleminizi yine de göndermeyi deneyebilirsiniz, ancak başarısız olabilir.",
+					"Bu uyarıyı önlemek için Ledger cihazınızı en son sürüme güncelleyin.",
+					"Runtime yükseltmelerinin dağıtımı ile Ledger uygulama güncellemeleri arasında genellikle bir gecikme olur. Bir uygulama güncellemesi mevcut olduğunda, uygulamanızı Ledger Live'da güncelleyebilirsiniz."
+				]
+			],
+			"ledgerHardwareWallets": [
+				"Ledger Donanım Cüzdanları",
+				[
+					"Uyumlu Ledger cihazları staking dashboard'da tam olarak desteklenir. {NETWORK_NAME} üzerindeki stake aktivitenizi yönetmek için Ledger'ınızı kullanın.",
+					"Bir donanım cüzdanı kullanmak, anahtarlarınızın her zaman donanım cihazında kalmasını sağlayarak güvenli bir deneyim sunar. Cüzdanınıza aktif bir internet bağlantısı olmadığından buna soğuk depolama da denir.",
+					"Ledger cihazınızla işlemleri içe aktarmak ve imzalamak için cihazınızda {NETWORK_NAME} Ledger uygulamasının yüklü olması gerekir. {NETWORK_NAME} uygulaması, Ledger'ın kendi Ledger Live uygulaması aracılığıyla yüklenebilir.",
+					"Ledger hakkında daha fazla bilgiyi resmi web sitesi ledger.com'da bulabilirsiniz."
+				]
+			],
+			"ledgerRejectedTransaction": [
+				"Ledger İşlemi Reddetti",
+				[
+					"İşlem Ledger cihazında reddedildi ve gönderilmeyecek.",
+					"İşlemi Ledger cihazında onaylayarak gönderin."
+				]
+			],
+			"ledgerRequestTimeout": [
+				"Ledger İstek Zaman Aşımı",
+				[
+					"Zaman aşımı hataları, Ledger cihazı meşgul olduğunda veya bir işlem zamanında tamamlanamadığında ortaya çıkabilir.",
+					"İşlemi tekrar gerçekleştirmeyi deneyin ve hata devam ederse Ledger cihazını yeniden başlatmayı deneyin."
+				]
+			],
+			"lockedBalance": [
+				"Kilitli Bakiye",
+				[
+					"Staking dashboard'da görüntülenen kilitli bakiye miktarı, stake kilidi dışındaki tüm kilitlerinizi temsil eder; dolayısıyla nominasyon yapmak için kullanabileceğiniz tüm kilitli bakiyeyi gösterir."
+				]
+			],
+			"minimumToCreatePool": [
+				"Havuz Oluşturmak İçin Minimum",
+				[
+					"Bir havuz oluşturmak için bağlanması gereken minimum {NETWORK_UNIT} miktarı.",
+					"Bir havuz oluşturmak, bir havuza katılmaktan daha büyük bir mevduat gerektirir."
+				]
+			],
+			"minimumToJoinPool": [
+				"Havuza Katılmak İçin Minimum",
+				[
+					"Bir havuza katılmak için bağlanması gereken minimum {NETWORK_UNIT} miktarı.",
+					"Bu miktar, bir havuz oluşturmak için gereken bağlama miktarından farklıdır."
+				]
+			],
+			"nominating": [
+				"Nominasyon Yapma",
+				[
+					"Nominasyon yapma, {NETWORK_UNIT}'inizi stake etmek istediğiniz validatörleri seçme işlemidir. Her hesabınız için en fazla 16 validatöre nominasyon yapmayı seçebilirsiniz.",
+					"Seçtiğiniz validatörlere nominasyon yaptığınızda, bunlar nominasyonlarınız haline gelir."
+				]
+			],
+			"nominationPayoutDistribution": [
+				"Nominasyon Ödeme Dağılımı",
+				[
+					"Nominasyonunuzun merkeziyetsizliği.",
+					"Aşağıdaki grafikler, ödülü ödeyen validatörün bölgesine, ülkesine ve IP ağına göre derlenen ödül dağılımını gösterir."
+				]
+			],
+			"nominationPools": [
+				"Nominasyon Havuzları",
+				[
+					"Nominasyon havuzları, kullanıcıların {NETWORK_UNIT} katkıda bulunmasına ve stake ödülleri kazanmasına olanak tanır.",
+					"Nominasyonun aksine, havuzları kullanarak stake etmek az miktarda {NETWORK_UNIT} gerektirir ve havuz, adayları sizin adınıza yönetir."
+				]
+			],
+			"nominationStatus": [
+				"Nominasyon Durumu",
+				["Aktif olarak nominasyon yapıp ödül kazanıp kazanmadığınız."]
+			],
+			"nominations": [
+				"Nominasyonlar",
+				[
+					"Nominasyonlar, bir stake edenin nominasyon yapmayı seçtiği validatörlerdir. {NETWORK_NAME} üzerinde en fazla {MAX_NOMINATIONS} validatöre nominasyon yapabilirsiniz."
+				]
+			],
+			"nominatorStake": [
+				"Nominatör Stake'i",
+				["Validatörü nominatörlerinden destekleyen {NETWORK_UNIT} miktarı."]
+			],
+			"openAppOnLedger": [
+				"Ledger'da Uygulamayı Aç",
+				[
+					"Bu mesaj, {NETWORK_NAME} Ledger uygulaması bağlı cihazda açık olmadığında görünür.",
+					"Ledger cihazında Polkadot uygulamasını açın ve tekrar deneyin."
+				]
+			],
+			"payout": [
+				"Ödeme",
+				[
+					"Ödemeler, {NETWORK_NAME} üzerindeki stake ödülleridir. Nominasyon yaptığınız validatörlerin zaman içinde biriktirdiği 'Era Puanı' sayısına bağlıdırlar. Ödüller her Era'nın sonunda belirlenir."
+				]
+			],
+			"payoutDestination": [
+				"Ödeme Hedefi",
+				[
+					"Ödeme hedefiniz, ödemelerinizin hangi hesaba gönderileceğini belirler."
+				]
+			],
+			"payoutHistory": [
+				"Ödeme Geçmişi",
+				[
+					"Aktif bir nominatör olduğunuz için yapılan ödemelerin geçmiş kayıtları."
+				]
+			],
+			"polkadotVault": [
+				"Polkadot Vault",
+				[
+					"Polkadot Vault (eski adıyla Parity Signer), uçak modundaki bir telefonu air-gapped (internet bağlantısı olmayan) bir cüzdan olarak kullanmanıza olanak tanıyan bir soğuk depolama çözümüdür."
+				]
+			],
+			"poolCommissionChangeRate": [
+				"Havuz Komisyon Değişim Oranı",
+				[
+					"Komisyon değişim oranı havuzun Root'u tarafından belirlenir ve komisyonun ne kadar ve ne sıklıkla artırılabileceğini düzenler."
+				]
+			],
+			"poolCommissionRate": [
+				"Havuz Komisyon Oranı",
+				[
+					"Havuzun komisyon oranı. Bu değer havuzun Root'u tarafından belirlenir ve havuzun üyelerinden alacağı ödül yüzdesidir."
+				]
+			],
+			"poolMaxCommission": [
+				"Havuz Maksimum Komisyonu",
+				[
+					"Bir havuz sahibinin havuz için belirleyebileceği maksimum komisyon oranı."
+				]
+			],
+			"poolMembership": [
+				"Havuz Üyeliği",
+				[
+					"Havuz üyeliği durumunuz, bir havuzun üyesi olup olmadığınızı yansıtır."
+				]
+			],
+			"poolRewardHistory": [
+				"Havuz Ödül Geçmişi",
+				[
+					"Havuzun Era başına ürettiği toplam ödül. Bu ödüller, her üyenin havuzdaki payına göre havuz üyeleri arasında dağıtılır."
+				]
+			],
+			"poolRewards": [
+				"Havuz Ödülleri",
+				["Bir havuzda aktif katılımcı olarak üretilen {NETWORK_UNIT} miktarı."]
+			],
+			"poolRoles": [
+				"Havuz Rolleri",
+				[
+					"Bir havuz, her biri havuzun işletilmesini yönetmede farklı sorumluluklara sahip 4 rolden oluşur."
+				]
+			],
+			"proxyAccounts": [
+				"Proxy Hesapları",
+				["Proxy hesapları, başka bir hesap adına işlem yapan hesaplardır."]
+			],
+			"readOnlyAccounts": [
+				"Salt Okunur Hesaplar",
+				[
+					"Salt Okunur hesaplar, içe aktarılabilen ancak işlem imzalayamayan hesaplardır. Bu, hesabın bakiyesini ve stake bilgilerini görüntüleyebileceğiniz, ancak onunla herhangi bir stake işlemi gerçekleştiremeyeceğiniz anlamına gelir."
+				]
+			],
+			"reserveBalance": [
+				"Rezerv Bakiye",
+				[
+					"{NETWORK_NAME} üzerinde, hesabınızın zincir üzerinde var olması için belirli bir miktarın üzerinde bakiyeye sahip olmanız gerekir. Bu miktara 'varoluşsal mevduat' denir.",
+					"Staking dashboard, bu {NETWORK_UNIT} miktarına asla dokunulmamasını sağlar."
+				]
+			],
+			"reserveBalanceForExistentialDeposit": [
+				"Varoluşsal Mevduat İçin Rezerv Bakiye",
+				[
+					"Hesabınızda zaten hesabınızın varoluşsal mevduatını karşılayan kilitli bir bakiye varsa (örneğin nominasyon için kilitlenmiş bakiye), staking dashboard ek serbest bakiye kilitlemez."
+				]
+			],
+			"rewardsByCountryAndNetwork": [
+				"Ülke ve Ağa Göre Ödüller",
+				[
+					"Farklı ülkelerden ve IP ağlarından üretilen ödüllerin tahmini yüzdesini gösterir.",
+					"Polkawatch merkeziyetsizlik analitiği, ödülleri Validatörün IP Coğrafi Konumuna göre derleyerek hesaplanır. Örnekleme dönemi son 60 gündür."
+				]
+			],
+			"selfStake": [
+				"Öz Stake",
+				[
+					"Validatörün kendisinin bağladığı {NETWORK_UNIT} miktarı.",
+					"Bu değer, validatörün toplam stake'ini oluşturmak için nominatörler tarafından bağlanan {NETWORK_UNIT} miktarına eklenir."
+				]
+			],
+			"supplyStaked": [
+				"Stake Edilen Arz",
+				[
+					"Şu anda küresel olarak stake edilen {NETWORK_UNIT}'in kümülatif arzı."
+				]
+			],
+			"totalNominators": [
+				"Toplam Nominatör",
+				[
+					"Mevcut oturumda aktif veya pasif olmalarından bağımsız olarak ağda stake yapan hesaplar."
+				]
+			],
+			"totalPayoutsAnalysed": [
+				"Analiz Edilen Toplam Ödemeler",
+				[
+					"Nominasyon yapılan validatörler tarafından son 30 günde ödenen derlenmiş {NETWORK_UNIT} ödülleri.",
+					"Bu ödemeler, nominasyonunuzun merkeziyetsizliğini hesaplamak için kullanıldı."
+				]
+			],
+			"validator": [
+				"Validatör",
+				[
+					"{NETWORK_NAME} Relay Chain için blokları doğrulayan bir varlık. Validatörler, ağı güvence altına almak ve blok üretmek için {NETWORK_NAME}'de kilit bir rol oynar.",
+					"Bir nominatör olarak, hangi validatörleri desteklemek istediğinizi seçer ve bunun karşılığında ödül alırsınız."
+				]
+			],
+			"validatorRewardHistory": [
+				"Validatör Ödül Geçmişi",
+				[
+					"Validatörün Era başına ürettiği toplam ödül. Toplam ödül, validatörün ödülü ile validatörü destekleyen her nominatörün ödülünün toplamıdır."
+				]
+			],
+			"wrongTransaction": [
+				"Yanlış İşlem",
+				[
+					"Bu hata, bir Ledger cihazı panoda şu anda aktif olandan farklı bir işlemi imzaladığında veya imzalama sürecindeyken ortaya çıkar."
+				]
+			],
+			"yourBalance": [
+				"Bakiyeniz",
+				[
+					"Bakiyeniz, bir havuza bağladığınız miktar da dahil olmak üzere toplam stake edilmiş miktarınıza ek olarak kullanabileceğiniz toplam {NETWORK_UNIT}'i temsil eder."
+				]
+			]
+		}
+	}
+}

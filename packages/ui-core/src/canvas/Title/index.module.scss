@@ -1,47 +1,47 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .title {
-  border-bottom: 1px solid var(--gray-600);
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-bottom: 1rem;
+	border-bottom: 1px solid var(--gray-600);
+	flex: 1;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	margin-bottom: 1rem;
 
-  > h1 {
-    font-family: var(--font-family-default);
-    line-height: 2.2rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 100%;
-    margin: 0.75rem 0;
-    display: flex;
-    align-items: center;
+	> h1 {
+		font-family: var(--font-family-default);
+		line-height: 2.2rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		width: 100%;
+		margin: 0.75rem 0;
+		display: flex;
+		align-items: center;
 
-    > button {
-      margin-left: 0.75rem;
-    }
-  }
+		> button {
+			margin-left: 0.75rem;
+		}
+	}
 
-  > h3 {
-    padding-bottom: 1rem;
-    display: flex;
-    align-items: center;
+	> h3 {
+		padding-bottom: 1rem;
+		display: flex;
+		align-items: center;
 
-    > button {
-      margin-left: 0.75rem;
-    }
-  }
+		> button {
+			margin-left: 0.75rem;
+		}
+	}
 
-  &.fullWidth {
-    margin: 0;
-    border-bottom: none;
+	&.fullWidth {
+		margin: 0;
+		border-bottom: none;
 
-    > h1 {
-      margin: 0;
-      font-size: 1.75rem;
-    }
-  }
+		> h1 {
+			margin: 0;
+			font-size: 1.75rem;
+		}
+	}
 }

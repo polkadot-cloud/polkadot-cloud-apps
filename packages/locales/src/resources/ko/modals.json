@@ -3,6 +3,7 @@
 		"aboveExisting": "기존 금액 초과",
 		"aboveGlobalMax": "전역 최대값 초과",
 		"aboveMax": "최대값 초과",
+		"accessCode": "액세스 코드",
 		"account": "계정",
 		"accountAlreadyImported": "이미 가져온 계정",
 		"accountAlreadyImportedOtherDevice": "계정이 다른 장치에 속해 있습니다",

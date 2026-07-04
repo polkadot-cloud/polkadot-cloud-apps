@@ -21,7 +21,7 @@
 		"dedot": "^1.3.0",
 		"global-bus": "workspace:*",
 		"rxjs": "^7.8.2",
-		"smoldot": "^3.1.3",
+		"smoldot": "^3.3.0",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {

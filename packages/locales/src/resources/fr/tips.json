@@ -1,0 +1,106 @@
+{
+	"tips": {
+		"connectExtensions": [
+			"Connecter des extensions",
+			"Connectez vos comptes pour commencer à utiliser Polkadot Cloud Staking.",
+			[
+				"Connectez vos comptes pour commencer à utiliser Polkadot Cloud Staking.",
+				"Les comptes sont accessibles via des extensions de navigateur, qui font office de portefeuilles. Votre portefeuille sert à signer les transactions que vous soumettez depuis le tableau de bord.",
+				"Connectez vos portefeuilles à l'aide du bouton Connecter en haut à droite du tableau de bord, puis sélectionnez le compte avec lequel vous souhaitez staker pour continuer.",
+				"Cloud Staking prend en charge une gamme d'extensions et de portefeuilles."
+			]
+		],
+		"howToStake": [
+			"Comment souhaitez-vous staker ?",
+			"Devenez nominateur ou membre d'un pool.",
+			[
+				"Il existe plusieurs façons de staker sur {NETWORK_NAME}.",
+				"Vous pouvez soit devenir nominateur, soit devenir membre d'un pool.",
+				"Pour nominer directement, vous devez engager des {NETWORK_UNIT} et choisir les validateurs que vous souhaitez soutenir, en nominant jusqu'à {MAX_NOMINATIONS} d'entre eux. Pour gagner des récompenses en tant que nominateur, vous devez actuellement engager au moins {MIN_ACTIVE_STAKE} {NETWORK_UNIT}.",
+				"Rejoindre un pool est bien moins coûteux et nécessite un dépôt minimum de {MIN_POOL_JOIN_BOND} {NETWORK_UNIT}. La nomination des validateurs est effectuée en votre nom, et il vous suffit de réclamer les récompenses du pool.",
+				"Il est également possible de créer un pool, ce qui nécessite un minimum de {MIN_POOL_CREATE_BOND} {NETWORK_UNIT}."
+			]
+		],
+		"joinAnotherPool": [
+			"Rejoindre un autre pool",
+			"Changez de compte pour rejoindre un autre pool.",
+			[
+				"Un seul pool peut être rejoint par compte sur {NETWORK_NAME}. Pour rejoindre d'autres pools, commencez par changer de compte."
+			]
+		],
+		"keepPoolNominating": [
+			"Gérer votre pool",
+			"Il est important de maintenir votre pool en nomination active.",
+			[
+				"Il est important de maintenir votre pool en nomination active.",
+				"Si votre pool ne gagne pas de récompenses, les membres seront tentés de le quitter pour en rejoindre un autre.",
+				"Vos rôles root et nominateur sont importants pour gérer vos nominations. Si vos nominations ne sont pas performantes, choisissez-en d'autres pour augmenter les chances de votre pool de gagner des récompenses."
+			]
+		],
+		"managingNominations": [
+			"Gérer les nominations",
+			"Veillez à vérifier régulièrement la performance de vos nominations.",
+			[
+				"Veillez à vérifier régulièrement la performance de vos nominations.",
+				"Pour maximiser la variété et un mélange décentralisé de validateurs, choisissez des validateurs issus de différentes entités."
+			]
+		],
+		"module": {
+			"cancel": "Annuler",
+			"close": "Fermer",
+			"of": "sur",
+			"oneMoment": "Un instant, s'il vous plaît",
+			"syncingWith": "Synchronisation avec {{network}}",
+			"tips": "Conseils"
+		},
+		"monitoringPool": [
+			"Gérer l'adhésion au pool",
+			"C'est une bonne idée de vérifier régulièrement si votre pool gagne activement des récompenses.",
+			[
+				"Les pools gèrent les nominations en votre nom, mais c'est tout de même une bonne idée de vérifier régulièrement si votre pool gagne activement des récompenses.",
+				"Surveillez régulièrement le statut de votre pool pour vous assurer qu'il est performant, et envisagez de rejoindre un autre pool si vous ne recevez aucune récompense."
+			]
+		],
+		"recommendedJoinPool": [
+			"Recommandé : rejoindre un pool",
+			"Votre compte est le mieux adapté pour rejoindre un pool.",
+			[
+				"Compte tenu du montant de {NETWORK_UNIT} que votre compte détient actuellement, rejoindre un pool est le meilleur moyen pour vous de commencer à staker.",
+				"Rejoindre un pool nécessite un dépôt minimum de {MIN_POOL_JOIN_BOND} {NETWORK_UNIT}."
+			]
+		],
+		"recommendedNominator": [
+			"Recommandé : devenir nominateur",
+			"Vous avez suffisamment de {NETWORK_UNIT} pour devenir nominateur.",
+			[
+				"Vous avez suffisamment de {NETWORK_UNIT} pour devenir nominateur et commencer à gagner des récompenses.",
+				"La nomination directe vous oblige toutefois à vérifier activement les validateurs que vous soutenez."
+			]
+		],
+		"reviewingPayouts": [
+			"Examiner les paiements",
+			"Examiner régulièrement vos paiements est un bon moyen d'évaluer la performance de vos nominations.",
+			[
+				"Examiner régulièrement vos paiements est un bon moyen d'évaluer la performance de vos nominations.",
+				"Rendez-vous sur la page Paiements pour obtenir un détail précis de chaque paiement que vous recevez, ainsi que du validateur (ou du pool) dont il provient."
+			]
+		],
+		"switchPool": [
+			"Changer de pool",
+			"Passez à un nouveau pool pour éviter les avertissements de pool.",
+			[
+				"Votre pool actuel présente des problèmes susceptibles d'affecter vos récompenses.",
+				"Envisagez de quitter votre pool actuel et d'en rejoindre un autre pour maximiser vos récompenses de staking."
+			]
+		],
+		"understandingValidatorPerformance": [
+			"Mesurer la performance des validateurs",
+			"Divers facteurs influencent le montant des récompenses des validateurs.",
+			[
+				"Divers facteurs influencent le montant des récompenses d'un validateur, tels que le nombre de points d'ère qu'il génère et le nombre de nominateurs qui le soutiennent.",
+				"Toutes ces métriques évoluent au fil du temps, parfois de manière imprévisible. Il est donc important que les nominateurs surveillent activement les validateurs et leur performance.",
+				"Cloud Staking propose une gamme de métriques pour vous aider à comprendre la performance d'un validateur."
+			]
+		]
+	}
+}
