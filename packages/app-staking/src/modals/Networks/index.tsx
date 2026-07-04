@@ -10,10 +10,10 @@ import { setAutoRpc, setProviderType } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useUi } from 'hooks/useUi'
-import { Title } from 'library/Modal/Title'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ChainId, NetworkId } from 'types'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { ButtonTertiary } from 'ui-buttons'
 import { Checkbox } from 'ui-core/list'
 import { Padding } from 'ui-core/modal'
@@ -43,7 +43,7 @@ export const Networks = () => {
 
 	return (
 		<>
-			<Title title={t('networks')} icon={faGlobe} />
+			<ModalTitle title={t('networks')} icon={faGlobe} />
 			<Padding>
 				<ContentWrapper>
 					<h4>{t('selectNetwork')}</h4>
