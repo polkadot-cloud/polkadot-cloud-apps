@@ -594,6 +594,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      hooks:
+        specifier: workspace:*
+        version: link:../hooks
       react:
         specifier: ^19.2.7
         version: 19.2.7

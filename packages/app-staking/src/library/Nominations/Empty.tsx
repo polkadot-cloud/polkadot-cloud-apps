@@ -3,10 +3,9 @@
 
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { ListStatusHeader } from 'library/List'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary } from 'ui-buttons'
+import { ButtonHelp, ButtonPrimary } from 'ui-buttons'
 import { CardHeader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import type { NominationsEmptyProps } from '../Nominations/types'
@@ -27,7 +26,7 @@ export const Empty = ({
 			<CardHeader action margin>
 				<h3>
 					{title || t('nominations', { ns: 'pages' })}
-					<ButtonHelpTooltip
+					<ButtonHelp
 						marginLeft
 						definition="Nominations"
 						openHelp={openHelpTooltip}

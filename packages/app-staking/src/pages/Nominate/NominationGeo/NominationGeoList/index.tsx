@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { Header, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer } from 'library/List/MotionContainer'
+import { ButtonHelp } from 'ui-buttons'
 import { CardHeader } from 'ui-core/base'
 import type { NomninationGeoListProps } from '../types'
 import { Node } from './Node'
@@ -27,7 +27,7 @@ export const NominationGeoList = ({ title, data }: NomninationGeoListProps) => {
 					<CardHeader action margin>
 						<h3>
 							{title}
-							<ButtonHelpTooltip
+							<ButtonHelp
 								marginLeft
 								definition="Geolocation of Each Nomination"
 								openHelp={openHelpTooltip}

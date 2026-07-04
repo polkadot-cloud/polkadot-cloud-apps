@@ -9,12 +9,12 @@ import {
 	useLedgerTxSubmit,
 } from '@polkadot-cloud/connect-ledger'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { EstimatedTxFee } from 'library/EstimatedTxFee'
 import { SubmitButton } from 'library/SubmitTx/Signers/SubmitButton'
 import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount, DisplayFor } from 'types'
+import { ButtonHelp } from 'ui-buttons'
 import { useOverlay } from 'ui-overlay'
 
 interface LedgerProps {
@@ -95,7 +95,7 @@ export const LedgerPrompt = ({ valid }: LedgerPromptProps) => {
 			<FontAwesomeIcon icon={faCircleExclamation} className="icon" />
 			{message}
 			{feedback?.helpKey && (
-				<ButtonHelpTooltip
+				<ButtonHelp
 					marginLeft
 					definition={feedback?.helpKey}
 					openHelp={openHelpTooltip}

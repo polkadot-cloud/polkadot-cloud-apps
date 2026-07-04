@@ -12,10 +12,9 @@ import { useProxies } from '@polkadot-cloud/connect-proxies'
 import { Polkicon } from '@w3ux/react-polkicon'
 import { ellipsisFn } from '@w3ux/utils'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { Fragment, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonMonoInvert, ButtonSecondary } from 'ui-buttons'
+import { ButtonHelp, ButtonMonoInvert, ButtonSecondary } from 'ui-buttons'
 import { Padding, Title } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
 import {
@@ -55,7 +54,7 @@ export const Proxies = () => {
 					<div>
 						<FontAwesomeIcon icon={faChevronRight} transform="shrink-4" />
 						<h3>{t('proxyAccounts')}</h3>
-						<ButtonHelpTooltip
+						<ButtonHelp
 							marginLeft
 							definition="Proxy Accounts"
 							openHelp={openHelpTooltip}
