@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { App } from 'App'
+import { initDedotService } from 'dedot-api'
 import { createRoot } from 'react-dom/client'
 
 // Network styles
@@ -21,5 +22,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) {
 	throw new Error('Failed to find the root element')
 }
+
+initDedotService()
 
 createRoot(rootElement).render(<App />)

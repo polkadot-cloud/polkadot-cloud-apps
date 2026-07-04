@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useDefaultCategories } from 'hooks/useDefaultCategories'
 import type { ComponentType } from 'react'
 import { lazy } from 'react'
 import { Overlay } from 'ui-overlay'
@@ -38,7 +39,10 @@ const lazyOverlayComponents = <
 	) as Record<keyof T, ReturnType<typeof lazyNamed>>
 
 const modals = lazyOverlayComponents({
-	Accounts: () => import('./modals/Accounts'),
+	Accounts: () =>
+		import('ui-modals/Accounts').then(({ Accounts: AccountsModal }) => ({
+			Accounts: () => <AccountsModal useCategories={useDefaultCategories} />,
+		})),
 	ExternalAccounts: () => import('./modals/ExternalAccounts'),
 	ImportAccounts: () => import('./modals/ImportAccounts'),
 	SelectCurrency: () => import('./modals/SelectCurrency'),
