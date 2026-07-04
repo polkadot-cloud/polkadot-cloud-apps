@@ -4,10 +4,10 @@
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { deriveVaultButtonState } from '@polkadot-cloud/connect-vault'
-import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
+import { SubmitButtonWrapper } from 'ui-app/Tx'
 import { ButtonSubmitWithFee } from 'ui-buttons'
 
 interface VaultProps {
