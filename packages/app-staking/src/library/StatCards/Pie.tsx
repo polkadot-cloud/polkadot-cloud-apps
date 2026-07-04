@@ -4,7 +4,7 @@
 import { Odometer } from '@w3ux/react-odometer'
 import BigNumber from 'bignumber.js'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
+import { ButtonHelp } from 'ui-buttons'
 import { Stat } from 'ui-core/base'
 import { Pie as PieGraph } from 'ui-graphs'
 import type { PieProps } from './types'
@@ -49,7 +49,7 @@ export const Pie = ({
 						<Stat.Subtitle>
 							{label}{' '}
 							{helpKey !== undefined ? (
-								<ButtonHelpTooltip
+								<ButtonHelp
 									marginLeft
 									definition={helpKey}
 									openHelp={openHelpTooltip}

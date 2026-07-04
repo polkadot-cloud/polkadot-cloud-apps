@@ -1,9 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useMenu } from 'contexts/Menu'
-import type { MenuItem } from 'contexts/Menu/types'
-import { ItemWrapper } from './Wrappers'
+import { type MenuItem, useMenu } from 'hooks/useMenu'
+import classes from './index.module.scss'
 
 export const MenuList = ({
 	items,
@@ -14,15 +13,23 @@ export const MenuList = ({
 }) => {
 	const { closeMenu } = useMenu()
 
+	const itemClassName = [
+		classes.itemWrapper,
+		secondaryBg ? classes.secondaryBg : undefined,
+	]
+		.filter(Boolean)
+		.join(' ')
+
 	return (
 		<>
 			{items.map((item) => {
 				const { icon, title, cb, disabled } = item
 
 				return (
-					<ItemWrapper
+					<button
 						key={`menu_item_${title}`}
-						$secondaryBg={secondaryBg}
+						type="button"
+						className={itemClassName}
 						disabled={disabled}
 						onClick={() => {
 							if (disabled) {
@@ -33,8 +40,8 @@ export const MenuList = ({
 						}}
 					>
 						{icon}
-						<div className="title">{title}</div>
-					</ItemWrapper>
+						<div className={classes.title}>{title}</div>
+					</button>
 				)
 			})}
 		</>

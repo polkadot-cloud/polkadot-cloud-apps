@@ -12,10 +12,9 @@ import { useApi } from 'hooks/useApi'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary, ButtonPrimaryInvert } from 'ui-buttons'
+import { ButtonHelp, ButtonPrimary, ButtonPrimaryInvert } from 'ui-buttons'
 import { ButtonRow, CardHeader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import { RolesWrapper } from '../ManagePool/Wrappers'
@@ -147,7 +146,7 @@ export const Roles = ({
 				{!inline && (
 					<h3>
 						{t('roles')}
-						<ButtonHelpTooltip
+						<ButtonHelp
 							marginLeft
 							definition="Pool Roles"
 							openHelp={openHelpTooltip}

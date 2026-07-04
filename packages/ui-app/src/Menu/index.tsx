@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useOutsideAlerter } from '@w3ux/hooks'
-import { useMenu } from 'contexts/Menu'
+import { useMenu } from 'hooks/useMenu'
 import { isValidElement, useEffect, useRef } from 'react'
-import { Wrapper } from './Wrappers'
+import classes from './index.module.scss'
+import { MenuList } from './List'
+
+export { MenuList }
 
 export const Menu = () => {
 	const {
@@ -18,24 +21,20 @@ export const Menu = () => {
 
 	const menuRef = useRef<HTMLDivElement | null>(null)
 
-	// Handler for closing the menu on window resize.
 	const resizeCallback = () => {
 		closeMenu()
 	}
 
-	// Close the menu if clicked outside of its container.
 	useOutsideAlerter(menuRef, () => {
 		closeMenu()
 	})
 
-	// Check position and show the menu if menu has been opened.
 	useEffect(() => {
 		if (open) {
 			checkMenuPosition(menuRef)
 		}
 	}, [open])
 
-	// Close the menu on window resize.
 	useEffect(() => {
 		window.addEventListener('resize', resizeCallback)
 		return () => {
@@ -43,15 +42,22 @@ export const Menu = () => {
 		}
 	}, [])
 
-	const isSecondarybg =
+	const isSecondaryBg =
 		isValidElement<{ secondaryBg?: boolean }>(inner) &&
 		inner.props?.secondaryBg === true
 
+	const wrapperClassName = [
+		classes.wrapper,
+		isSecondaryBg ? classes.secondaryBg : undefined,
+	]
+		.filter(Boolean)
+		.join(' ')
+
 	return (
 		open && (
-			<Wrapper
+			<div
 				ref={menuRef}
-				$secondaryBg={isSecondarybg}
+				className={wrapperClassName}
 				style={{
 					position: 'absolute',
 					left: `${x}px`,
@@ -61,7 +67,7 @@ export const Menu = () => {
 				}}
 			>
 				{inner}
-			</Wrapper>
+			</div>
 		)
 	)
 }

@@ -8,13 +8,15 @@ import { Polkicon } from '@w3ux/react-polkicon'
 import { formatAccountSs58, isValidAddress } from '@w3ux/util-dedot'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
-import type { FormEvent } from 'react'
+import type { ChangeEvent } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonSecondary } from 'ui-buttons'
+import { AccountInput as AccountInputCore } from 'ui-core/input'
 import { useOverlay } from 'ui-overlay'
 import type { AccountInputProps } from './types'
-import { AccountInputWrapper } from './Wrapper'
+
+export type { AccountInputProps } from './types'
 
 export const AccountInput = ({
 	successCallback,
@@ -29,43 +31,30 @@ export const AccountInput = ({
 	border = true,
 }: AccountInputProps) => {
 	const { t } = useTranslation('app')
-
 	const { network } = useNetwork()
 	const { accounts } = useImportedAccounts()
 	const { setModalResize } = useOverlay().modal
 	const { ss58 } = getStakingChainData(network)
 
-	// store current input value
 	const [value, setValue] = useState<string>(initialValue || '')
-
-	// store whether current input value is valid
 	const [valid, setValid] = useState<string | null>(null)
-
-	// store whether address was formatted (displays confirm prompt)
 	const [reformatted, setReformatted] = useState<boolean>(false)
-
-	// store whether the form is being submitted.
 	const [submitting, setSubmitting] = useState<boolean>(false)
-
-	// store whether account input is in success lock state.
 	const [successLock, setSuccessLocked] = useState<boolean>(locked)
 
-	const handleChange = (e: FormEvent<HTMLInputElement>) => {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const newValue = e.currentTarget.value.trim()
-		// set value on key change
 		setValue(newValue)
 
-		// reset reformatted if true - value has changed
 		if (reformatted) {
 			setReformatted(false)
 		}
 
-		// reset valid if empty value
 		if (newValue === '') {
 			setValid(null)
 			return
 		}
-		// check address already imported
+
 		const alreadyImported = accounts.find(
 			(a) => a.address.toUpperCase() === newValue.toUpperCase(),
 		)
@@ -73,12 +62,11 @@ export const AccountInput = ({
 			setValid('already_imported')
 			return
 		}
-		// check if valid address
+
 		setValid(isValidAddress(newValue) ? 'valid' : 'not_valid')
 	}
 
 	const handleImport = async () => {
-		// reformat address if in wrong format
 		const addressFormatted = formatAccountSs58(value, ss58)
 
 		if (!addressFormatted) {
@@ -91,51 +79,46 @@ export const AccountInput = ({
 			setValue(addressFormatted)
 			setReformatted(true)
 		} else {
-			// handle successful import.
 			setSubmitting(true)
 			const result = await successCallback(value)
 			setSubmitting(false)
 
-			// reset state on successful import.
 			if (result && resetOnSuccess) {
 				resetInput()
 			} else {
-				// flag reset & lock state.
 				setSuccessLocked(true)
 			}
 		}
 	}
 
-	// If initial value changes, update current input value.
 	useEffect(() => {
 		setValue(initialValue || '')
 	}, [initialValue])
 
 	let label
-	let labelClass
+	let labelStatus: 'neutral' | 'danger' | 'success'
 	const showSuccess = successLock && successLabel
 
 	switch (valid) {
 		case 'confirm_reformat':
 			label = t('confirmReformat')
-			labelClass = 'neutral'
-
+			labelStatus = 'neutral'
 			break
 		case 'already_imported':
 			label = t('alreadyImported')
-			labelClass = 'danger'
+			labelStatus = 'danger'
 			break
 		case 'not_valid':
 			label = t('invalid')
-			labelClass = 'danger'
+			labelStatus = 'danger'
 			break
 		case 'valid':
 			label = showSuccess ? successLabel : t('valid')
-			labelClass = showSuccess ? 'neutral' : 'success'
+			labelStatus = showSuccess ? 'neutral' : 'success'
 			break
 		default:
 			label = showSuccess ? successLabel : defaultLabel
-			labelClass = 'neutral'
+			labelStatus = 'neutral'
 			break
 	}
 
@@ -151,25 +134,13 @@ export const AccountInput = ({
 		setValid(null)
 		setModalResize()
 		setSuccessLocked(false)
-		if (resetCallback) {
-			resetCallback()
-		}
-	}
-
-	const className = []
-	if (inactive) {
-		className.push('inactive')
-	}
-	if (border) {
-		className.push('border')
+		resetCallback?.()
 	}
 
 	return (
-		<AccountInputWrapper
-			className={className.length ? className.join(' ') : undefined}
-		>
-			{inactive && <div className="inactive-block" />}
-			<h5 className={labelClass}>
+		<AccountInputCore.ImportWrapper inactive={inactive} border={border}>
+			{inactive && <AccountInputCore.ImportInactiveBlock />}
+			<AccountInputCore.ImportLabel status={labelStatus}>
 				{successLock && (
 					<>
 						<FontAwesomeIcon icon={faCheck} />
@@ -177,29 +148,29 @@ export const AccountInput = ({
 					</>
 				)}{' '}
 				{label}
-			</h5>
-			<div className={`input${successLock ? ` disabled` : ``}`}>
-				<section>
-					<div>
+			</AccountInputCore.ImportLabel>
+			<AccountInputCore.ImportContainer disabled={successLock}>
+				<AccountInputCore.ImportSection>
+					<AccountInputCore.ImportIconSlot>
 						{isValidAddress(value) ? (
 							<span style={{ padding: '0 0.5rem' }}>
 								<Polkicon address={value} transform="grow-10" />
 							</span>
 						) : (
-							<div className="ph" />
+							<AccountInputCore.ImportIdenticonPlaceholder />
 						)}
-					</div>
-					<div>
-						<input
+					</AccountInputCore.ImportIconSlot>
+					<AccountInputCore.ImportFieldSlot>
+						<AccountInputCore.ImportTextInput
 							placeholder={t('address')}
 							type="text"
-							onChange={(e: FormEvent<HTMLInputElement>) => handleChange(e)}
+							onChange={handleChange}
 							value={value}
 							disabled={successLock}
 						/>
-					</div>
-				</section>
-				<section>
+					</AccountInputCore.ImportFieldSlot>
+				</AccountInputCore.ImportSection>
+				<AccountInputCore.ImportSection>
 					{successLock ? (
 						<ButtonSecondary onClick={() => resetInput()} text={t('reset')} />
 					) : !reformatted ? (
@@ -214,8 +185,8 @@ export const AccountInput = ({
 							text={t('confirm')}
 						/>
 					)}
-				</section>
-			</div>
-		</AccountInputWrapper>
+				</AccountInputCore.ImportSection>
+			</AccountInputCore.ImportContainer>
+		</AccountInputCore.ImportWrapper>
 	)
 }

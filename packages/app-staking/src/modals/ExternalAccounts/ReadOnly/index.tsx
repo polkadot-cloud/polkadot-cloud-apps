@@ -13,11 +13,10 @@ import {
 } from '@polkadot-cloud/connect'
 import { Polkicon } from '@w3ux/react-polkicon'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ExternalAccount } from 'types'
-import { ButtonMonoInvert, ButtonSecondary } from 'ui-buttons'
+import { ButtonHelp, ButtonMonoInvert, ButtonSecondary } from 'ui-buttons'
 import { Padding, Title } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
 import {
@@ -67,7 +66,7 @@ export const ReadOnly = () => {
 					<div>
 						<FontAwesomeIcon icon={faChevronRight} transform="shrink-4" />
 						<h3>{t('readOnlyAccounts')}</h3>
-						<ButtonHelpTooltip
+						<ButtonHelp
 							marginLeft
 							definition="Read Only Accounts"
 							openHelp={openHelpTooltip}
