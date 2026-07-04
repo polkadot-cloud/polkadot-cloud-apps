@@ -1,9 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { EstimatedTxFee } from 'library/EstimatedTxFee'
 import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import type { DisplayFor } from 'types'
+import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { ButtonSubmitWithFee } from 'ui-buttons'
 
 interface ExtensionProps {
