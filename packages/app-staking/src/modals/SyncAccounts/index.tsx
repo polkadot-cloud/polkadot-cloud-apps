@@ -7,11 +7,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { Title } from 'library/Modal/Title'
 import { fetchAccountsToken } from 'plugin-gateway'
 import qrcode from 'qrcode-generator'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { ButtonPrimary } from 'ui-buttons'
 import { Spinner } from 'ui-core/base'
 import { Support } from 'ui-core/modal'
@@ -125,7 +125,7 @@ export const SyncAccounts = () => {
 
 	return (
 		<>
-			<Title title={t('syncAccounts', { ns: 'app' })} icon={faQrcode} />
+			<ModalTitle title={t('syncAccounts', { ns: 'app' })} icon={faQrcode} />
 			<Support>
 				<ModeToggle>
 					<ButtonPrimary

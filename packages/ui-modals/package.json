@@ -14,13 +14,20 @@
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^7.3.0",
+		"@fortawesome/free-brands-svg-icons": "^7.3.0",
+		"@fortawesome/free-regular-svg-icons": "^7.3.0",
 		"@fortawesome/free-solid-svg-icons": "^7.3.0",
 		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@polkadot-cloud/connect": "^1.0.9",
+		"@polkadot-cloud/connect-ledger": "^1.0.2",
 		"@polkadot-cloud/connect-proxies": "^0.2.3",
+		"@polkadot-cloud/connect-vault": "^1.0.2",
 		"@w3ux/extension-assets": "^2.3.1",
+		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/react-polkicon": "^4.0.2",
+		"@w3ux/util-dedot": "^1.0.0",
 		"@w3ux/utils": "^3.1.1",
+		"assets": "workspace:*",
 		"bignumber.js": "^11.1.4",
 		"consts": "workspace:*",
 		"hooks": "workspace:*",
@@ -28,10 +35,13 @@
 		"react-i18next": "^17.0.8",
 		"styled-components": "^6.4.3",
 		"types": "workspace:*",
+		"ui-app": "workspace:*",
+		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-overlay": "workspace:*"
 	},
 	"devDependencies": {
+		"@w3ux/types": "^2.4.2",
 		"vite-plugin-svgr": "^5.2.0"
 	}
 }

@@ -9,8 +9,8 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
 import { ButtonCopy } from 'library/ButtonCopy'
-import { Title } from 'library/Modal/Title'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding, Support } from 'ui-core/modal'
 
 export const Invite = () => {
@@ -44,7 +44,7 @@ export const Invite = () => {
 
 	return (
 		<>
-			<Title />
+			<ModalTitle />
 			<Padding verticalOnly>
 				<Support>
 					<FontAwesomeIcon

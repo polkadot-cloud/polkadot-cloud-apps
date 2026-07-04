@@ -9,7 +9,7 @@ import { ButtonHelp } from 'ui-buttons'
 import { Header, Title as Wrapper } from 'ui-core/modal'
 import { Close } from 'ui-overlay'
 
-interface TitleProps {
+interface ModalTitleProps {
 	title?: string
 	icon?: IconProp
 	Svg?: FunctionComponent<SVGProps<unknown>>
@@ -19,7 +19,7 @@ interface TitleProps {
 	paddingLeft?: string
 }
 
-export const Title = ({
+export const ModalTitle = ({
 	helpKey,
 	title,
 	icon,
@@ -27,7 +27,7 @@ export const Title = ({
 	Svg,
 	paddingTop,
 	paddingLeft,
-}: TitleProps) => {
+}: ModalTitleProps) => {
 	const { openHelpTooltip } = useHelp()
 
 	const graphic = Svg ? (
