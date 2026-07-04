@@ -5,10 +5,10 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { deriveVaultButtonState } from '@polkadot-cloud/connect-vault'
 import { EstimatedTxFee } from 'library/EstimatedTxFee'
-import { SubmitButton } from 'library/SubmitTx/Signers/SubmitButton'
 import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
+import { ButtonSubmitWithFee } from 'ui-buttons'
 
 interface VaultProps {
 	uid: number
@@ -50,8 +50,8 @@ export const VaultSubmit = ({
 
 	return (
 		<SubmitButtonWrapper>
-			<SubmitButton
-				text={buttonText}
+			<ButtonSubmitWithFee
+				submitText={buttonText}
 				iconTransform="shrink-4"
 				onSubmit={onSubmit}
 				disabled={finalDisabled}
