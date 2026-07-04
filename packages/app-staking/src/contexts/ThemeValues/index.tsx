@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { createSafeContext } from '@w3ux/hooks'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks/useTheme'
 import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import type { ThemeValuesContextInterface } from './types'

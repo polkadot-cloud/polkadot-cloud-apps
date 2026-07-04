@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useList } from 'contexts/List'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks/useTheme'
 import { SelectableWrapper } from 'library/List'
 import { useState } from 'react'
 import { ButtonMonoInvert, ButtonPrimaryInvert } from 'ui-buttons'
