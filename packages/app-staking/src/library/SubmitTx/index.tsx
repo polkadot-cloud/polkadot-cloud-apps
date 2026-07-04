@@ -12,8 +12,8 @@ import { VaultPrompt, VaultSubmit } from 'library/SubmitTx/Signers/Vault'
 import { Tx } from 'library/Tx'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { SubmitTxProps } from 'types'
 import { useOverlay, usePrompt } from 'ui-overlay'
-import type { SubmitTxProps } from './types'
 
 export const SubmitTx = (props: SubmitTxProps) => {
 	const {
