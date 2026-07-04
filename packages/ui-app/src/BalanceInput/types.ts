@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type BigNumber from 'bignumber.js'
-import type { ValueSetter } from '../types'
+
+export type BalanceInputSetter = ({ value }: { value: BigNumber }) => void
 
 export interface BalanceInputProps {
 	maxAvailable: BigNumber
 	value: string
 	defaultValue: string
 	syncing?: boolean
-	setters: ValueSetter[]
+	setters: BalanceInputSetter[]
 	disabled: boolean
 	disableTxFeeUpdate?: boolean
 }

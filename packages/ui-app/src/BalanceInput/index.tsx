@@ -9,8 +9,10 @@ import type { ChangeEvent } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonSubmitInvert } from 'ui-buttons'
-import { InputWrapper } from '../Wrappers'
+import classes from './index.module.scss'
 import type { BalanceInputProps } from './types'
+
+export type { BalanceInputProps, BalanceInputSetter } from './types'
 
 export const BalanceInput = ({
 	setters = [],
@@ -78,11 +80,14 @@ export const BalanceInput = ({
 	)
 
 	return (
-		<InputWrapper>
-			<div className="inner">
-				<section style={{ opacity: disabled ? 0.5 : 1 }}>
-					<div className="input">
-						<div>
+		<div className={classes.wrapper}>
+			<div className={classes.inner}>
+				<section
+					className={classes.section}
+					style={{ opacity: disabled ? 0.5 : 1 }}
+				>
+					<div className={classes.input}>
+						<div className={classes.field}>
 							<input
 								type="text"
 								placeholder={`0 ${unit}`}
@@ -93,7 +98,7 @@ export const BalanceInput = ({
 								disabled={disabled}
 							/>
 						</div>
-						<div>{availableFundsJsx}</div>
+						<div className={classes.available}>{availableFundsJsx}</div>
 					</div>
 					<ButtonSubmitInvert
 						text={t('max')}
@@ -106,7 +111,7 @@ export const BalanceInput = ({
 					/>
 				</section>
 			</div>
-			<div className="availableOuter">{availableFundsJsx}</div>
-		</InputWrapper>
+			<div className={classes.availableOuter}>{availableFundsJsx}</div>
+		</div>
 	)
 }

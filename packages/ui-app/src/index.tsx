@@ -3,6 +3,7 @@
 
 export * from './AccountDropdown'
 export * from './AccountInput'
+export * from './BalanceInput'
 export * from './ErrorBoundary'
 export * from './Menu'
 export * from './ModalTitle'
