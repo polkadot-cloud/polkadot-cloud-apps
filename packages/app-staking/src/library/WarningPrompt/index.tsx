@@ -6,7 +6,7 @@ import {
 	faWarning,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useThemeValues } from 'contexts/ThemeValues'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { ButtonPrimary } from 'ui-buttons'
 import { ButtonRow, Page } from 'ui-core/base'
