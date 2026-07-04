@@ -307,8 +307,14 @@ const ImportIdenticonPlaceholder = ({ style }: ComponentBase) => {
 const ImportTextInput = forwardRef<
 	HTMLInputElement,
 	InputHTMLAttributes<HTMLInputElement>
->((props, ref) => {
-	return <input className={classes.importTextInput} ref={ref} {...props} />
+>(({ className, ...props }, ref) => {
+	return (
+		<input
+			{...props}
+			ref={ref}
+			className={classNames(classes.importTextInput, className)}
+		/>
+	)
 })
 
 export const AccountInput = {
