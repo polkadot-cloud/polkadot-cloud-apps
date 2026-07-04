@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { DisplayFor } from 'types'
-import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
-import { SubmitButtonWrapper } from 'ui-app/Tx'
 import { ButtonSubmitWithFee } from 'ui-buttons'
+import { EstimatedTxFee } from '../../EstimatedTxFee'
+import { SubmitButtonWrapper } from '../../Tx'
 
 interface ExtensionProps {
 	uid: number

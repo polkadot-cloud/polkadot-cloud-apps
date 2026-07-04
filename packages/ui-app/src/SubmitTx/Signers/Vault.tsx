@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { deriveVaultButtonState } from '@polkadot-cloud/connect-vault'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
-import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
-import { SubmitButtonWrapper } from 'ui-app/Tx'
 import { ButtonSubmitWithFee } from 'ui-buttons'
+import { EstimatedTxFee } from '../../EstimatedTxFee'
+import { SubmitButtonWrapper } from '../../Tx'
 
 interface VaultProps {
 	uid: number
