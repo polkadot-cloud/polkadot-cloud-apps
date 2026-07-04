@@ -3,7 +3,7 @@
 
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks/useTheme'
 import { Confirm } from 'library/Prompt/Confirm'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
