@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { HTMLMotionProps } from 'motion/react'
+import type { ReactNode } from 'react'
 import type { ComponentBase } from 'types'
 
 export type BaseWithAnimation = ComponentBase & HTMLMotionProps<'div'>
@@ -43,4 +44,13 @@ export interface RoleChangeProps {
 	roleName: string
 	oldAddress?: string
 	newAddress?: string
+}
+
+export type ActionItemProps = ComponentBase & {
+	text: string
+	toggled?: boolean
+	disabled?: boolean
+	onToggle?: (val: boolean) => void
+	inactive?: boolean
+	inlineButton?: ReactNode
 }
