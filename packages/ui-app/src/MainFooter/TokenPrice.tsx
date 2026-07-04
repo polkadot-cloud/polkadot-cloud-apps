@@ -6,6 +6,7 @@ import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTokenPrices } from 'hooks/useTokenPrices'
 import { useMemo } from 'react'
+import classes from './index.module.scss'
 
 export const TokenPrice = () => {
 	const { network } = useNetwork()
@@ -22,12 +23,12 @@ export const TokenPrice = () => {
 	)
 	return (
 		<>
-			<div className="stat">
+			<div className={classes.stat}>
 				1 {unit} / {priceFormatter.format(price)}
 			</div>
-			<div className="stat">
+			<div className={classes.stat}>
 				<span
-					className={`change${change < 0 ? ' neg' : change > 0 ? ' pos' : ''}`}
+					className={change < 0 ? classes.neg : change > 0 ? classes.pos : ''}
 				>
 					{change < 0 ? '' : change > 0 ? '+' : ''}
 					{change}%
