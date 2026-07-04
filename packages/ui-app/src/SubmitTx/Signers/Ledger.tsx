@@ -9,12 +9,12 @@ import {
 	useLedgerTxSubmit,
 } from '@polkadot-cloud/connect-ledger'
 import { useHelp } from 'hooks/useHelp'
-import { EstimatedTxFee } from 'library/EstimatedTxFee'
-import { SubmitButtonWrapper } from 'library/Tx/Wrapper'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount, DisplayFor } from 'types'
 import { ButtonHelp, ButtonSubmitWithFee } from 'ui-buttons'
 import { useOverlay } from 'ui-overlay'
+import { EstimatedTxFee } from '../../EstimatedTxFee'
+import { SubmitButtonWrapper } from '../../Tx'
 
 interface LedgerProps {
 	uid: number

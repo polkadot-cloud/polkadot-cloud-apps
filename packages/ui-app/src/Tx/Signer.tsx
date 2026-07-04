@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useImportedAccounts } from '@polkadot-cloud/connect'
 import { useTranslation } from 'react-i18next'
 import type { SignerProps } from './types'
-import { ProxySwitcher, SignerWrapper } from './Wrapper'
+import { ProxySwitcher, SignerWrapper, txClasses } from './Wrapper'
 
 export const Signer = (props: SignerProps) => {
 	const {
@@ -55,8 +55,8 @@ export const Signer = (props: SignerProps) => {
 	const showBadgeAbove = !PromptComponent && !stacked
 
 	const badge = (
-		<span className="badge">
-			<FontAwesomeIcon icon={faPenToSquare} className="icon" />
+		<span className={txClasses.badge}>
+			<FontAwesomeIcon icon={faPenToSquare} className={txClasses.icon} />
 			{signingOpts.label}
 		</span>
 	)
@@ -75,14 +75,14 @@ export const Signer = (props: SignerProps) => {
 				</ProxySwitcher>
 			)}
 			{notEnoughFunds && (
-				<span className="not-enough">
+				<span className={txClasses.notEnough}>
 					/ &nbsp;
 					<FontAwesomeIcon
 						icon={faWarning}
-						className="danger icon"
+						className={`${txClasses.danger} ${txClasses.icon}`}
 						transform="shrink-1"
 					/>
-					<span className="danger">{dangerMessage}</span>
+					<span className={txClasses.danger}>{dangerMessage}</span>
 				</span>
 			)}
 		</>
@@ -91,7 +91,7 @@ export const Signer = (props: SignerProps) => {
 	if (showBadgeAbove) {
 		return (
 			<>
-				<SignerWrapper className="badge-row">{badge}</SignerWrapper>
+				<SignerWrapper className={txClasses.badgeRow}>{badge}</SignerWrapper>
 				<SignerWrapper>{details}</SignerWrapper>
 			</>
 		)
