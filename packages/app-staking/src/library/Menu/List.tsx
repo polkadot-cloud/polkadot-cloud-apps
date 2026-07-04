@@ -1,8 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useMenu } from 'contexts/Menu'
-import type { MenuItem } from 'contexts/Menu/types'
+import { type MenuItem, useMenu } from 'hooks/useMenu'
 import { ItemWrapper } from './Wrappers'
 
 export const MenuList = ({

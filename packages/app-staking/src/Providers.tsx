@@ -10,7 +10,6 @@ import { DappName } from 'consts'
 import { getStakingChainData } from 'consts/util'
 import { EraStakersProvider } from 'contexts/EraStakers'
 import { FiltersProvider } from 'contexts/Filters'
-import { MenuProvider } from 'contexts/Menu'
 import { MigrateProvider } from 'contexts/Migrate'
 import { NominatorSetupsProvider } from 'contexts/NominatorSetups'
 import { BondedPoolsProvider } from 'contexts/Pools/BondedPools'
@@ -40,7 +39,6 @@ export const Providers = () => {
 			BondedPoolsProvider,
 			ValidatorsProvider,
 			NominatorSetupsProvider,
-			MenuProvider,
 			MigrateProvider,
 			FiltersProvider,
 			Tooltip.Provider,

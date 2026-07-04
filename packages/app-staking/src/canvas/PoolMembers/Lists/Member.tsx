@@ -8,8 +8,8 @@ import {
 	faUnlockAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useMenu } from 'contexts/Menu'
 import { useApi } from 'hooks/useApi'
+import { useMenu } from 'hooks/useMenu'
 import { ClaimPermission } from 'library/ListItem/Labels/ClaimPermission'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { PoolMemberBonded } from 'library/ListItem/Labels/PoolMemberBonded'

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useOutsideAlerter } from '@w3ux/hooks'
-import { useMenu } from 'contexts/Menu'
+import { useMenu } from 'hooks/useMenu'
 import { isValidElement, useEffect, useRef } from 'react'
 import { Wrapper } from './Wrappers'
 
