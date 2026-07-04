@@ -7,6 +7,7 @@
 - [**English:** Welcome to Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/en/developer-overview)
 - [**Deutsch:** Willkommen bei Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/de/developer-overview)
 - [**Español:** ¡Bienvenido a Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/es/developer-overview)
+- [**Français:** Bienvenue sur Polkadot Cloud Staking !](https://docs.staking.polkadot.cloud/fr/developer-overview)
 - [**中文:** 欢迎使用Polkadot Cloud质押平台](https://docs.staking.polkadot.cloud/zh/developer-overview)
 - [**Português:** Bem-vindo ao Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/pt/developer-overview)
 - [**한국어:** Polkadot Cloud 스테이킹에 오신 것을 환영합니다!](https://docs.staking.polkadot.cloud/ko/developer-overview)
