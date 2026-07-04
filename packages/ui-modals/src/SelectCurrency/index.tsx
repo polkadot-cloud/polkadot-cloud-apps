@@ -5,10 +5,10 @@ import { SupportedCurrencies } from 'consts/currencies'
 import { useCurrency } from 'hooks/useCurrency'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { ButtonModal } from 'ui-buttons'
 import { ButtonList, Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
-import { ModalTitle } from '../ModalTitle'
 import { SearchInput } from './Wrapper'
 
 export const SelectCurrency = () => {

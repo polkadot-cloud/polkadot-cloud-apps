@@ -9,10 +9,10 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useNetwork } from 'hooks/useNetwork'
 import { Balance } from 'library/Balance'
-import { Title } from 'library/Modal/Title'
 import type { ChangeEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { CardHeader, Separator } from 'ui-core/base'
 import { TokenInput } from 'ui-core/input'
 import { Padding } from 'ui-core/modal'
@@ -66,7 +66,7 @@ export const RewardCalculator = () => {
 
 	return (
 		<div style={{ padding: '0 0.5rem' }}>
-			<Title
+			<ModalTitle
 				title={t('rewardCalculator', { ns: 'pages' })}
 				paddingLeft="0.5rem"
 			/>

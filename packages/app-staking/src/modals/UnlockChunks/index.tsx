@@ -6,10 +6,10 @@ import { useLedger } from '@polkadot-cloud/connect-ledger'
 import { setStateWithRef } from '@w3ux/utils'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
-import { Title } from 'library/Modal/Title'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UnlockChunk } from 'types'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { FixedTitle, Multi, MultiTwo, Section } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 import { Forms } from './Forms'
@@ -98,7 +98,7 @@ export const UnlockChunks = () => {
 	return (
 		<Section type="carousel">
 			<FixedTitle ref={headerRef}>
-				<Title title={t('unlocks')} fixed />
+				<ModalTitle title={t('unlocks')} fixed />
 			</FixedTitle>
 			<MultiTwo
 				style={{
