@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import type { VaultSignatureResult } from '@polkadot-cloud/connect-vault'
 import type {
 	ActiveAccount,
@@ -44,15 +43,4 @@ export interface SignerPromptProps {
 		status: 'complete' | 'cancelled',
 		signature: VaultSignatureResult,
 	) => void
-}
-
-export interface SubmitButtonProps {
-	displayFor?: DisplayFor
-	text: string
-	icon?: IconProp
-	onSubmit: () => void | Promise<void>
-	disabled: boolean
-	pulse?: boolean
-	iconTransform?: string
-	fee?: React.ReactNode
 }
