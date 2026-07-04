@@ -3,7 +3,6 @@
 
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
-import { CurrencyProvider } from 'contexts/Currency'
 import { UIProvider } from 'contexts/UI'
 import { Tooltip } from 'radix-ui'
 import { BrowserRouter } from 'react-router-dom'
@@ -22,15 +21,13 @@ export const Providers = () => (
 		adaptors={[LedgerAdaptor]}
 	>
 		<UIProvider>
-			<CurrencyProvider>
-				<BrowserRouter>
-					<OverlayProvider>
-						<Tooltip.Provider>
-							<ThemedRouter />
-						</Tooltip.Provider>
-					</OverlayProvider>
-				</BrowserRouter>
-			</CurrencyProvider>
+			<BrowserRouter>
+				<OverlayProvider>
+					<Tooltip.Provider>
+						<ThemedRouter />
+					</Tooltip.Provider>
+				</OverlayProvider>
+			</BrowserRouter>
 		</UIProvider>
 	</ConnectProvider>
 )
