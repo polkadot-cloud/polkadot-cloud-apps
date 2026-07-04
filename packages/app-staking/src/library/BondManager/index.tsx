@@ -21,9 +21,8 @@ import { useNominatorBondActions } from 'hooks/useNominatorBondActions'
 import { usePoolBondActions } from 'hooks/usePoolBondActions'
 import { useStaking } from 'hooks/useStaking'
 import { BondedChart } from 'library/BarChart/BondedChart'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary, MultiButton } from 'ui-buttons'
+import { ButtonHelp, ButtonPrimary, MultiButton } from 'ui-buttons'
 import { ButtonRow, CardHeader, Loader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import type { BondConfig, BondManagerProps } from './types'
@@ -99,7 +98,7 @@ export const BondManager = ({ bondFor, isPreloading }: BondManagerProps) => {
 			<CardHeader>
 				<h4>
 					{t('bondedFunds')}
-					<ButtonHelpTooltip
+					<ButtonHelp
 						marginLeft
 						definition={helpKey}
 						openHelp={openHelpTooltip}

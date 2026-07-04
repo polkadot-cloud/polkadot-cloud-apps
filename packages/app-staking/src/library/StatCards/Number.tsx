@@ -4,7 +4,7 @@
 import { Odometer } from '@w3ux/react-odometer'
 import BigNumber from 'bignumber.js'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
+import { ButtonHelp } from 'ui-buttons'
 import { Stat } from 'ui-core/base'
 import type { NumberProps } from './types'
 import { Wrapper } from './Wrapper'
@@ -34,7 +34,7 @@ export const Number = ({
 						<Stat.Subtitle>
 							{label}
 							{helpKey !== undefined ? (
-								<ButtonHelpTooltip
+								<ButtonHelp
 									marginLeft
 									definition={helpKey}
 									openHelp={openHelpTooltip}

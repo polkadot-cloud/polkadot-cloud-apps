@@ -1,11 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
-//
 
 import { type ReactNode, useLayoutEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-type Props = {
+export type RootPortalProps = {
 	children: ReactNode
 	targetId?: string
 	width?: number
@@ -19,10 +18,9 @@ export function RootPortal({
 	width,
 	top,
 	left,
-}: Props) {
+}: RootPortalProps) {
 	const [mounted, setMounted] = useState(false)
 
-	// Lazily create a host element for this portal instance
 	const hostEl = useMemo(
 		() =>
 			typeof document !== 'undefined' ? document.createElement('div') : null,
@@ -33,9 +31,8 @@ export function RootPortal({
 		if (!hostEl) return
 
 		const doc = document
-		const target = (targetId && doc.getElementById(targetId)) || doc.body // Fallback to body
+		const target = (targetId && doc.getElementById(targetId)) || doc.body
 
-		// Style hook: ensure it can float above modals
 		hostEl.style.position = 'absolute'
 		hostEl.style.zIndex = '99999'
 		if (width) {

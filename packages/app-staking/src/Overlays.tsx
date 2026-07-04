@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { ErrorFallbackModal } from 'library/ErrorBoundary'
 import { type ComponentType, lazy } from 'react'
+import { ErrorFallbackModal } from 'ui-app/ErrorBoundary'
 import { Overlay } from 'ui-overlay'
 
 type OverlayLoader<TModule = Record<string, unknown>> = () => Promise<TModule>

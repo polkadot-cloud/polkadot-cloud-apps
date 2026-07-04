@@ -9,12 +9,11 @@ import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { ListStatusHeader } from 'library/List'
 import { NominationList } from 'library/NominationList'
 import { useTranslation } from 'react-i18next'
 import type { MaybeAddress } from 'types'
-import { ButtonPrimary } from 'ui-buttons'
+import { ButtonHelp, ButtonPrimary } from 'ui-buttons'
 import { ButtonRow, CardHeader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import { Wrapper } from './Wrapper'
@@ -83,7 +82,7 @@ export const Nominations = ({
 			<CardHeader action margin>
 				<h3>
 					{isPool ? t('poolNominations') : t('nominations')}
-					<ButtonHelpTooltip
+					<ButtonHelp
 						marginLeft
 						definition="Nominations"
 						openHelp={openHelpTooltip}

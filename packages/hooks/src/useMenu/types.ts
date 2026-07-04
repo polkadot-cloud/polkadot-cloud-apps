@@ -3,7 +3,7 @@
 
 import type { MouseEvent as ReactMouseEvent, ReactNode, RefObject } from 'react'
 
-export interface MenuContextInterface {
+export interface MenuHookInterface {
 	open: boolean
 	show: boolean
 	inner: ReactNode | null

@@ -8,10 +8,10 @@ import { useHalving } from 'hooks/useHalving'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
 import { useUi } from 'hooks/useUi'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { Countdown } from 'library/Countdown'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ButtonHelp } from 'ui-buttons'
 import { Badge } from 'ui-core/base'
 import { GraphInner } from 'ui-core/canvas'
 import { HalvingLine } from 'ui-graphs'
@@ -46,7 +46,7 @@ export const Halving = () => {
 					<Badge.Inner>
 						<Countdown timeleft={timeleft} />
 					</Badge.Inner>
-					<ButtonHelpTooltip
+					<ButtonHelp
 						marginLeft
 						definition={'Halving'}
 						openHelp={openHelpTooltip}
