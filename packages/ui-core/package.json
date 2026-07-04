@@ -15,6 +15,7 @@
 		"./list": "./src/list/index.tsx",
 		"./modal": "./src/modal/index.tsx",
 		"./overlay": "./src/overlay/index.tsx",
+		"./portal": "./src/portal/index.tsx",
 		"./prompt": "./src/prompt/index.tsx",
 		"./popover": "./src/popover/index.tsx",
 		"./types": "./src/types.ts"

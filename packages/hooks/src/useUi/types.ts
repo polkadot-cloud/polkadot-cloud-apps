@@ -16,6 +16,4 @@ export interface UiHookInterface {
 	isBraveBrowser: boolean
 	advancedMode: boolean
 	setAdvancedMode: (value: boolean) => void
-	showHelp: boolean
-	setShowHelp: (value: boolean) => void
 }

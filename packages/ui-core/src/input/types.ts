@@ -25,3 +25,5 @@ export type AccountInputProps = ComponentBase & {
 	onBlur: FocusEventHandler<HTMLInputElement>
 	disabled?: boolean
 }
+
+export type ImportStatus = 'neutral' | 'danger' | 'success'

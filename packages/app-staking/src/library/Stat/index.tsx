@@ -8,9 +8,8 @@ import { applyWidthAsPadding, minDecimalPlaces } from '@w3ux/utils'
 import { getChainIcons } from 'assets'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
+import { ButtonHelp, ButtonPrimary, ButtonSecondary } from 'ui-buttons'
 import type {
 	StatAddress,
 	StatButtonProps,
@@ -91,7 +90,7 @@ export const Stat = ({
 			<h4>
 				{label}
 				{helpKey !== undefined ? (
-					<ButtonHelpTooltip
+					<ButtonHelp
 						definition={helpKey}
 						openHelp={openHelpTooltip}
 						marginLeft

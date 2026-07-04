@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
+import { ButtonHelp } from 'ui-buttons'
 import { Stat } from 'ui-core/base'
 import type { TextProps } from './types'
 import { Wrapper } from './Wrapper'
@@ -24,7 +24,7 @@ export const Text = ({
 						<Stat.Subtitle>
 							{label}
 							{helpKey !== undefined ? (
-								<ButtonHelpTooltip
+								<ButtonHelp
 									marginLeft
 									definition={helpKey}
 									openHelp={openHelpTooltip}
