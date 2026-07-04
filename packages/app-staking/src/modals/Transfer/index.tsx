@@ -17,9 +17,9 @@ import { SubmitTx } from 'library/SubmitTx'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Separator } from 'ui-core/base'
 import { Padding, Title } from 'ui-core/modal'
-import { AccountDropdown } from 'ui-input/AccountDropdown'
 import { Close, useOverlay } from 'ui-overlay'
 
 export const Transfer = () => {

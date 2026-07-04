@@ -5,7 +5,7 @@ import { useApi } from 'hooks/useApi'
 import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
 import { useTranslation } from 'react-i18next'
-import { AccountInput } from 'ui-input/AccountInput'
+import { AccountInput } from 'ui-app/AccountInput'
 import { perbillToPercent } from 'utils'
 import { usePoolCommission } from './provider'
 

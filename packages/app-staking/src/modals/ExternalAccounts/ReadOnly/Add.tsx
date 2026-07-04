@@ -5,9 +5,9 @@ import { useExternalAccounts } from '@polkadot-cloud/connect'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { ButtonSecondary } from 'ui-buttons'
 import { Padding } from 'ui-core/modal'
-import { AccountDropdown } from 'ui-input/AccountDropdown'
 
 export const Add = () => {
 	const { t } = useTranslation('modals')

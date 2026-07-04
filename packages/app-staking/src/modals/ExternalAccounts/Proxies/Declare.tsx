@@ -5,9 +5,9 @@ import { useProxies } from '@polkadot-cloud/connect-proxies'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { ButtonSecondary } from 'ui-buttons'
 import { Padding } from 'ui-core/modal'
-import { AccountDropdown } from 'ui-input/AccountDropdown'
 
 export const Declare = () => {
 	const { t } = useTranslation('modals')

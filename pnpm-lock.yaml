@@ -224,9 +224,9 @@ importers:
       ui-graphs:
         specifier: workspace:*
         version: link:../ui-graphs
-      ui-input:
+      ui-app:
         specifier: workspace:*
-        version: link:../ui-input
+        version: link:../ui-app
       ui-modals:
         specifier: workspace:*
         version: link:../ui-modals
@@ -721,7 +721,7 @@ importers:
         specifier: workspace:*
         version: link:../types
 
-  packages/ui-input:
+  packages/ui-app:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
         specifier: ^7.3.0

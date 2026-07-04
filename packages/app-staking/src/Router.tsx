@@ -23,7 +23,6 @@ import { usePoolFromUrl } from 'hooks/usePoolFromUrl'
 import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
-import { ErrorFallbackApp, ErrorFallbackRoutes } from 'library/ErrorBoundary'
 import { Headers } from 'library/Headers'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { MainFooter } from 'library/MainFooter'
@@ -43,8 +42,9 @@ import {
 	useLocation,
 	useNavigate,
 } from 'react-router-dom'
+import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
+import { Menu } from 'ui-app/Menu'
 import { Page } from 'ui-core/base'
-import { Menu } from 'ui-input/Menu'
 import { Prompt } from 'ui-overlay'
 import { getPagesConfig } from 'utils'
 
