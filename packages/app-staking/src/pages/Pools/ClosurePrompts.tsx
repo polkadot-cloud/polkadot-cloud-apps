@@ -3,10 +3,10 @@
 
 import { faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useSyncing } from 'hooks/useSyncing'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { useTranslation } from 'react-i18next'
 import { ButtonPrimary } from 'ui-buttons'

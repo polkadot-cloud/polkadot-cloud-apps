@@ -3,12 +3,12 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { getStakingChainData, isPoolShareEnabled } from 'consts/util'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { getUnixTime } from 'date-fns'
 import { useActivePool } from 'hooks/useActivePool'
 import { useApi } from 'hooks/useApi'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
+import { useThemeValues } from 'hooks/useThemeValues'
 import {
 	usePoolEraRewards,
 	usePoolRewards,
