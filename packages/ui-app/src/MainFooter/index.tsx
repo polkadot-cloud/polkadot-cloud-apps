@@ -19,9 +19,9 @@ import { IGNORE_NETWORKS } from 'hooks/useTokenPrices'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
+import classes from './index.module.scss'
 import { Status } from './Status'
 import { TokenPrice } from './TokenPrice'
-import { Summary, Wrapper } from './Wrappers'
 
 export const MainFooter = () => {
 	const { t } = useTranslation('app')
@@ -41,12 +41,12 @@ export const MainFooter = () => {
 
 	return (
 		<Page.Footer>
-			<Wrapper className="pagePadding containerWidth">
-				<div className="brand">
-					<CloudIconSVG className="icon" />
-					<span className="cloud-label">Cloud</span>
+			<div className={`${classes.wrapper} pagePadding containerWidth`}>
+				<div className={classes.brand}>
+					<CloudIconSVG className={classes.icon} />
+					<span className={classes.cloudLabel}>Cloud</span>
 				</div>
-				<Summary>
+				<div className={classes.summary}>
 					<section>
 						<p>
 							<a href={PlatformURL} target="_blank" rel="noreferrer">
@@ -66,11 +66,11 @@ export const MainFooter = () => {
 						</p>
 					</section>
 					<section>
-						<div className="hide-small">
+						<div className={classes.hideSmall}>
 							{plugins.includes('staking_api') &&
 								!IGNORE_NETWORKS.includes(network) && <TokenPrice />}
 							{import.meta.env.MODE === 'development' && (
-								<div className="stat last">
+								<div className={`${classes.stat} ${classes.last}`}>
 									<FontAwesomeIcon icon={faHive} />
 									<Odometer
 										wholeColor="var(--gray-900)"
@@ -81,8 +81,8 @@ export const MainFooter = () => {
 							)}
 						</div>
 					</section>
-				</Summary>
-			</Wrapper>
+				</div>
+			</div>
 		</Page.Footer>
 	)
 }
