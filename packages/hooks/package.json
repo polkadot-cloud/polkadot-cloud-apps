@@ -25,6 +25,7 @@
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
 		"react": "^19.2.7",
+		"react-i18next": "^17.0.8",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
