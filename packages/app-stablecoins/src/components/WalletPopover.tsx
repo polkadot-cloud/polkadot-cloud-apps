@@ -1,12 +1,12 @@
 import { useOutsideAlerter } from '@w3ux/hooks'
+import dotSvg from 'assets/token/dot.svg'
+import glmrSvg from 'assets/token/glmr.svg'
+import hdxSvg from 'assets/token/hdx.svg'
+import hollarSvg from 'assets/token/hollar.svg'
+import usdcSvg from 'assets/token/usdc.svg'
+import usdtSvg from 'assets/token/usdt.svg'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { useRef, useState } from 'react'
-import dotSvg from '../assets/svg/dot.svg'
-import glmrSvg from '../assets/svg/glmr.svg'
-import hdxSvg from '../assets/svg/hdx.svg'
-import hollarSvg from '../assets/svg/hollar.svg'
-import usdcSvg from '../assets/svg/usdc.svg'
-import usdtSvg from '../assets/svg/usdt.svg'
 import classes from './WalletPopover.module.scss'
 
 const stablecoinMix = [

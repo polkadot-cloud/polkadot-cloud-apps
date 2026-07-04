@@ -5,9 +5,9 @@ import {
 	faWallet,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import usdcSvg from 'assets/token/usdc.svg'
 import { useState } from 'react'
 import { Page } from 'ui-core/base'
-import usdcSvg from '../assets/svg/usdc.svg'
 import classes from './Send.module.scss'
 
 export const Send = () => {
