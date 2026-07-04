@@ -1,229 +1,229 @@
 .page {
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+	width: 100%;
 }
 
 .header {
-  margin-top: 5.5rem;
-  margin-bottom: 1.5rem;
+	margin-top: 5.5rem;
+	margin-bottom: 1.5rem;
 }
 
 .title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 2.5rem;
-  line-height: 2.8rem;
+	font-family: "DM Serif Display", serif;
+	font-size: 2.5rem;
+	line-height: 2.8rem;
 }
 
 .subtitle {
-  font-size: 1.25rem;
-  line-height: 1.8rem;
-  color: var(--gray-700);
-  margin-top: 0.75rem;
+	font-size: 1.25rem;
+	line-height: 1.8rem;
+	color: var(--gray-700);
+	margin-top: 0.75rem;
 }
 
 .card {
-  background-color: var(--gray-100);
-  border-radius: 1.5rem;
-  padding: 0.5rem;
-  box-shadow: var(--shadow-alt);
-  border: 1px solid var(--shade-200);
-  position: relative;
+	background-color: var(--gray-100);
+	border-radius: 1.5rem;
+	padding: 0.5rem;
+	box-shadow: var(--shadow-alt);
+	border: 1px solid var(--shade-200);
+	position: relative;
 }
 
 .inputSection,
 .inputSectionTop {
-  background-color: var(--gray-200);
-  border-radius: 1rem;
-  padding: 1.25rem;
-  transition: background-color var(--transition-duration) ease;
+	background-color: var(--gray-200);
+	border-radius: 1rem;
+	padding: 1.25rem;
+	transition: background-color var(--transition-duration) ease;
 
-  &:hover {
-    background-color: var(--gray-300);
-  }
+	&:hover {
+		background-color: var(--gray-300);
+	}
 }
 
 .inputSectionTop {
-  margin-bottom: 0.25rem;
+	margin-bottom: 0.25rem;
 }
 
 .sectionLabel {
-  font-size: 1.1rem;
-  line-height: 1.4rem;
-  font-weight: 700;
-  color: var(--gray-700);
-  text-transform: uppercase;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+	font-weight: 700;
+	color: var(--gray-700);
+	text-transform: uppercase;
 }
 
 .sectionLabelRow,
 .assetLabelRow,
 .detailRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .sectionLabelRow {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .addressInput {
-  display: flex;
-  align-items: center;
-  background-color: var(--gray-100);
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow-alt);
-  border: 1px solid var(--shade-200);
+	display: flex;
+	align-items: center;
+	background-color: var(--gray-100);
+	padding: 0.75rem 1rem;
+	border-radius: 0.75rem;
+	box-shadow: var(--shadow-alt);
+	border: 1px solid var(--shade-200);
 }
 
 .addressIcon {
-  color: var(--gray-600);
-  margin-right: 0.75rem;
+	color: var(--gray-600);
+	margin-right: 0.75rem;
 }
 
 .addressField,
 .amountInput {
-  background: transparent;
-  color: var(--gray-1000);
-  width: 100%;
-  font-family: var(--font-family-mono);
+	background: transparent;
+	color: var(--gray-1000);
+	width: 100%;
+	font-family: var(--font-family-mono);
 }
 
 .addressField {
-  font-size: 1.25rem;
-  line-height: 1.8rem;
-  font-weight: 500;
+	font-size: 1.25rem;
+	line-height: 1.8rem;
+	font-weight: 500;
 }
 
 .directionIndicator {
-  position: absolute;
-  left: 50%;
-  top: 100px;
-  transform: translateX(-50%);
-  z-index: 8;
+	position: absolute;
+	left: 50%;
+	top: 100px;
+	transform: translateX(-50%);
+	z-index: 8;
 }
 
 .directionButton {
-  width: 2rem;
-  height: 2rem;
-  background-color: var(--gray-100);
-  border-radius: 9999px;
-  box-shadow: var(--shadow-alt);
-  border: 1px solid var(--shade-200);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gray-600);
+	width: 2rem;
+	height: 2rem;
+	background-color: var(--gray-100);
+	border-radius: 9999px;
+	box-shadow: var(--shadow-alt);
+	border: 1px solid var(--shade-200);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--gray-600);
 }
 
 .directionIcon,
 .tokenChevron,
 .actionBtnIcon {
-  font-size: 1.25rem;
-  line-height: 1.8rem;
+	font-size: 1.25rem;
+	line-height: 1.8rem;
 }
 
 .assetLabelRow {
-  margin-bottom: 0.75rem;
+	margin-bottom: 0.75rem;
 }
 
 .balanceLabel {
-  font-size: 1.1rem;
-  line-height: 1.4rem;
-  font-weight: 500;
-  color: var(--gray-700);
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+	font-weight: 500;
+	color: var(--gray-700);
 }
 
 .balanceHighlight {
-  font-family: var(--font-family-mono);
-  color: var(--gray-1000);
-  font-weight: 700;
+	font-family: var(--font-family-mono);
+	color: var(--gray-1000);
+	font-weight: 700;
 }
 
 .inputRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
 }
 
 .amountInput {
-  font-size: 3.25rem;
-  line-height: 3.5rem;
-  font-weight: 800;
+	font-size: 3.25rem;
+	line-height: 3.5rem;
+	font-weight: 800;
 }
 
 .tokenSelector {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--gray-100);
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow-alt);
-  border: 1px solid var(--shade-200);
-  flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background-color: var(--gray-100);
+	padding: 0.5rem 1rem;
+	border-radius: 0.75rem;
+	box-shadow: var(--shadow-alt);
+	border: 1px solid var(--shade-200);
+	flex-shrink: 0;
 }
 
 .tokenIcon {
-  width: 1.5rem;
-  height: 1.5rem;
+	width: 1.5rem;
+	height: 1.5rem;
 }
 
 .tokenName {
-  font-weight: 700;
-  font-size: 1.25rem;
+	font-weight: 700;
+	font-size: 1.25rem;
 }
 
 .tokenChevron {
-  color: var(--gray-600);
+	color: var(--gray-600);
 }
 
 .details {
-  padding: 1.25rem;
+	padding: 1.25rem;
 
-  > * + * {
-    margin-top: 0.75rem;
-  }
+	> * + * {
+		margin-top: 0.75rem;
+	}
 }
 
 .detailRow {
-  font-size: 1.1rem;
-  line-height: 1.4rem;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
 }
 
 .detailLabel {
-  color: var(--gray-700);
-  font-weight: 500;
+	color: var(--gray-700);
+	font-weight: 500;
 }
 
 .detailValue {
-  font-family: var(--font-family-mono);
-  font-weight: 500;
+	font-family: var(--font-family-mono);
+	font-weight: 500;
 }
 
 .detailValueGreen {
-  font-weight: 500;
-  color: var(--status-success);
+	font-weight: 500;
+	color: var(--status-success);
 }
 
 .actionWrapper {
-  padding: 0.5rem;
+	padding: 0.5rem;
 }
 
 .actionBtn {
-  width: 100%;
-  padding: 1rem;
-  background-color: var(--gray-1000);
-  color: #fff;
-  border-radius: 1rem;
-  font-weight: 800;
-  font-size: 1.25rem;
-  line-height: 1.8rem;
-  text-transform: uppercase;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
+	width: 100%;
+	padding: 1rem;
+	background-color: var(--gray-1000);
+	color: #fff;
+	border-radius: 1rem;
+	font-weight: 800;
+	font-size: 1.25rem;
+	line-height: 1.8rem;
+	text-transform: uppercase;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
 }

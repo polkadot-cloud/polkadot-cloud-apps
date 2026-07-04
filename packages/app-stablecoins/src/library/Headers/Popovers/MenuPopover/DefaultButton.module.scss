@@ -1,21 +1,21 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .accent {
-  > div:first-child {
-    color: var(--gray-1000);
-  }
+	> div:first-child {
+		color: var(--gray-1000);
+	}
 
-  > div:first-child path {
-    fill: var(--gray-1000);
-    opacity: 1;
-  }
+	> div:first-child path {
+		fill: var(--gray-1000);
+		opacity: 1;
+	}
 
-  > div:nth-child(2) > h3 {
-    color: var(--gray-1000);
-  }
+	> div:nth-child(2) > h3 {
+		color: var(--gray-1000);
+	}
 
-  > div:last-child h4 {
-    color: var(--gray-1000);
-  }
+	> div:last-child h4 {
+		color: var(--gray-1000);
+	}
 }

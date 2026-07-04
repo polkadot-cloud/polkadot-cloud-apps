@@ -1,122 +1,122 @@
 .popover {
-  padding: 1.25rem;
+	padding: 1.25rem;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1rem;
+	margin-bottom: 1rem;
 }
 
 .title {
-  font-family: var(--font-family-title);
-  font-size: 1.75rem;
-  line-height: 2.2rem;
-  color: var(--gray-1000);
+	font-family: var(--font-family-title);
+	font-size: 1.75rem;
+	line-height: 2.2rem;
+	color: var(--gray-1000);
 }
 
 .balance {
-  font-family: var(--font-family-mono);
-  font-size: 1.6rem;
-  line-height: 2rem;
-  font-weight: 700;
-  color: var(--gray-1000);
+	font-family: var(--font-family-mono);
+	font-size: 1.6rem;
+	line-height: 2rem;
+	font-weight: 700;
+	color: var(--gray-1000);
 }
 
 .tabs {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  width: 100%;
-  background-color: var(--gray-100);
-  border: 1px solid var(--shade-200);
-  border-radius: 0.7rem;
-  padding: 0.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	width: 100%;
+	background-color: var(--gray-100);
+	border: 1px solid var(--shade-200);
+	border-radius: 0.7rem;
+	padding: 0.25rem;
 }
 
 .tabBtn,
 .tabBtnActive {
-  flex: 1;
-  border-radius: 0.5rem;
-  padding: 0.55rem 0.9rem;
-  font-family: var(--font-family-default);
-  font-size: 1.02rem;
-  line-height: 1.35rem;
-  font-weight: 700;
-  text-align: center;
+	flex: 1;
+	border-radius: 0.5rem;
+	padding: 0.55rem 0.9rem;
+	font-family: var(--font-family-default);
+	font-size: 1.02rem;
+	line-height: 1.35rem;
+	font-weight: 700;
+	text-align: center;
 }
 
 .tabBtn {
-  color: var(--gray-700);
+	color: var(--gray-700);
 
-  &:hover {
-    color: var(--gray-1000);
-    background-color: var(--gray-200);
-  }
+	&:hover {
+		color: var(--gray-1000);
+		background-color: var(--gray-200);
+	}
 }
 
 .tabBtnActive {
-  color: var(--gray-1000);
-  background-color: var(--bg-body, #fff);
-  box-shadow: 0 2px 8px rgb(16 24 40 / 14%);
+	color: var(--gray-1000);
+	background-color: var(--bg-body, #fff);
+	box-shadow: 0 2px 8px rgb(16 24 40 / 14%);
 }
 
 .section {
-  padding-top: 0.85rem;
+	padding-top: 0.85rem;
 }
 
 .subSection {
-  border-top: 1px solid var(--shade-200);
-  margin-top: 0.8rem;
-  padding-top: 0.85rem;
+	border-top: 1px solid var(--shade-200);
+	margin-top: 0.8rem;
+	padding-top: 0.85rem;
 }
 
 .sectionTitle {
-  font-family: var(--font-family-default);
-  font-size: 1.02rem;
-  line-height: 1.35rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--gray-700);
-  margin-bottom: 0.7rem;
+	font-family: var(--font-family-default);
+	font-size: 1.02rem;
+	line-height: 1.35rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--gray-700);
+	margin-bottom: 0.7rem;
 }
 
 .mixBar {
-  display: flex;
-  width: 100%;
-  height: 0.72rem;
-  border-radius: 999px;
-  overflow: hidden;
-  background-color: var(--gray-300);
+	display: flex;
+	width: 100%;
+	height: 0.72rem;
+	border-radius: 999px;
+	overflow: hidden;
+	background-color: var(--gray-300);
 }
 
 .mixSegment {
-  height: 100%;
-  background-color: var(--mix-color);
+	height: 100%;
+	background-color: var(--mix-color);
 }
 
 .mixLegend,
 .breakdownGroups,
 .tokenList,
 .chainTable {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .mixLegend {
-  gap: 0.55rem;
-  margin-top: 0.75rem;
+	gap: 0.55rem;
+	margin-top: 0.75rem;
 }
 
 .breakdownGroups {
-  gap: 0.9rem;
+	gap: 0.9rem;
 }
 
 .tokenList,
 .chainTable {
-  gap: 0.4rem;
+	gap: 0.4rem;
 }
 
 .mixLegendItem,
@@ -125,27 +125,27 @@
 .breakdownHeader,
 .tokenRow,
 .tokenLabel {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .mixLegendItem,
 .breakdownHeader,
 .tokenRow {
-  justify-content: space-between;
-  gap: 0.75rem;
+	justify-content: space-between;
+	gap: 0.75rem;
 }
 
 .mixLegendLabel,
 .tokenLabel {
-  gap: 0.5rem;
-  color: var(--gray-900);
+	gap: 0.5rem;
+	color: var(--gray-900);
 }
 
 .mixLegendIcon,
 .tokenIcon {
-  width: 1rem;
-  height: 1rem;
+	width: 1rem;
+	height: 1rem;
 }
 
 .mixLegendValue,
@@ -153,63 +153,66 @@
 .shareValue,
 .breakdownTotal,
 .tokenValue {
-  font-family: var(--font-family-mono);
-  color: var(--gray-800);
+	font-family: var(--font-family-mono);
+	color: var(--gray-800);
 }
 
 .chainTableRow {
-  display: grid;
-  grid-template-columns: minmax(7rem, 1.6fr) minmax(7rem, 1.1fr) minmax(8.5rem, 1.5fr);
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.3rem 0;
+	display: grid;
+	grid-template-columns: minmax(7rem, 1.6fr) minmax(7rem, 1.1fr) minmax(
+			8.5rem,
+			1.5fr
+		);
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.3rem 0;
 }
 
 .chainTableHead {
-  border-bottom: 1px solid var(--shade-200);
-  padding-bottom: 0.5rem;
+	border-bottom: 1px solid var(--shade-200);
+	padding-bottom: 0.5rem;
 }
 
 .chainCell {
-  color: var(--gray-900);
-  min-width: 0;
+	color: var(--gray-900);
+	min-width: 0;
 }
 
 .valueCell {
-  text-align: right;
+	text-align: right;
 }
 
 .shareCell {
-  justify-content: flex-end;
-  gap: 0.5rem;
-  min-width: 0;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	min-width: 0;
 }
 
 .chainTrack {
-  width: min(100%, 5.5rem);
-  height: 0.5rem;
-  border-radius: 999px;
-  background-color: var(--gray-300);
-  overflow: hidden;
-  flex-shrink: 0;
+	width: min(100%, 5.5rem);
+	height: 0.5rem;
+	border-radius: 999px;
+	background-color: var(--gray-300);
+	overflow: hidden;
+	flex-shrink: 0;
 }
 
 .chainFill {
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-600), var(--accent-500));
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--accent-600), var(--accent-500));
 }
 
 .breakdownGroup {
-  background-color: var(--gray-100);
-  border: 1px solid var(--shade-200);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
+	background-color: var(--gray-100);
+	border: 1px solid var(--shade-200);
+	border-radius: 0.75rem;
+	padding: 0.75rem;
 }
 
 .breakdownChainTitle {
-  color: var(--gray-900);
-  font-size: 1.16rem;
-  line-height: 1.5rem;
-  font-weight: 700;
+	color: var(--gray-900);
+	font-size: 1.16rem;
+	line-height: 1.5rem;
+	font-weight: 700;
 }
