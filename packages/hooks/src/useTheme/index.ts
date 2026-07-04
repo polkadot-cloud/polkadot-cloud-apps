@@ -64,9 +64,15 @@ const setThemeState = (theme: Theme) => {
 	themeStore.setSnapshot(theme)
 }
 
-const getColorSchemeMedia = () =>
-	hasWindow() ? window.matchMedia?.('(prefers-color-scheme: dark)') : undefined
+let colorSchemeMedia: MediaQueryList | undefined
 
+const getColorSchemeMedia = () => {
+	if (!hasWindow()) {
+		return undefined
+	}
+	colorSchemeMedia ??= window.matchMedia?.('(prefers-color-scheme: dark)')
+	return colorSchemeMedia
+}
 const handleColorSchemeChange = (event: MediaQueryListEvent) => {
 	setThemeState(event.matches ? 'dark' : 'light')
 }
