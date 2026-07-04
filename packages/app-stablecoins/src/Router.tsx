@@ -4,6 +4,7 @@
 import { Headers } from 'library/Headers'
 import { SideMenu } from 'library/SideMenu'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { MainFooter } from 'ui-app/MainFooter'
 import { Page } from 'ui-core/base'
 import { Overlays } from './Overlays'
 import { Send } from './pages/Send'
@@ -26,6 +27,7 @@ export const Router = () => (
 				/>
 				<Route path="*" element={<Navigate to="/send" replace />} />
 			</Routes>
+			<MainFooter />
 		</Page.Main>
 	</Page.Body>
 )

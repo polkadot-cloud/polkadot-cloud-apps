@@ -173,6 +173,9 @@ importers:
       styled-components:
         specifier: ^6.4.2
         version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      ui-app:
+        specifier: workspace:*
+        version: link:../ui-app
       ui-buttons:
         specifier: workspace:*
         version: link:../ui-buttons

@@ -48,6 +48,7 @@
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
 		"styled-components": "^6.4.2",
+		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-modals": "workspace:*",
