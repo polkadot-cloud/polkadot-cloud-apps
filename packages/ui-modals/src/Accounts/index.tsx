@@ -52,11 +52,11 @@ export const Accounts = ({
 						</div>
 					</AccountWrapper>
 				)}
-				{categories.map(({ key, label, items }) =>
+				{categories.map(({ key, labelKey, items }) =>
 					items.length ? (
 						<Fragment key={key}>
 							<AccountSeparator />
-							{label && <ActionItem text={label} />}
+							{labelKey && <ActionItem text={t(labelKey)} />}
 							{items.map((item) => (
 								<AccountItem
 									key={`acc_${key}_${item.address}_${item.source}`}

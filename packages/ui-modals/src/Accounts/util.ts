@@ -5,9 +5,9 @@ import type { AccountListCategory } from './types'
 
 export const getCategoryResizeKey = (categories: AccountListCategory[]) =>
 	JSON.stringify(
-		categories.map(({ key, label, items }) => ({
+		categories.map(({ key, labelKey, items }) => ({
 			key,
-			label,
+			labelKey,
 			items: items.map(({ address, source }) => ({ address, source })),
 		})),
 	)

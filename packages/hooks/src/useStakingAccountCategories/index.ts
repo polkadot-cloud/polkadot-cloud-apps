@@ -3,7 +3,6 @@
 
 import { useImportedAccounts } from '@polkadot-cloud/connect'
 import { type Proxy, useProxies } from '@polkadot-cloud/connect-proxies'
-import { useTranslation } from 'react-i18next'
 import { useBalances } from '../useBalances'
 
 export interface AccountCategoryItem {
@@ -14,7 +13,7 @@ export interface AccountCategoryItem {
 
 export interface AccountListCategory {
 	key: string
-	label?: string
+	labelKey?: string
 	items: AccountCategoryItem[]
 }
 
@@ -27,7 +26,6 @@ const hasAccount = (
 ) => items.some((item) => item.address === address && item.source === source)
 
 export const useStakingAccountCategories = (): AccountListCategory[] => {
-	const { t } = useTranslation('modals')
 	const { getDelegates } = useProxies()
 	const { accounts } = useImportedAccounts()
 	const { getStakingLedger, getPoolMembership } = useBalances()
@@ -77,11 +75,11 @@ export const useStakingAccountCategories = (): AccountListCategory[] => {
 	return [
 		{
 			key: 'nominating_and_pool',
-			label: t('nominatingAndInPool'),
+			labelKey: 'nominatingAndInPool',
 			items: nominatingAndPool,
 		},
-		{ key: 'nominating', label: t('nominating'), items: nominating },
-		{ key: 'in_pool', label: t('inPool'), items: inPool },
-		{ key: 'not_staking', label: t('notStaking'), items: notStaking },
+		{ key: 'nominating', labelKey: 'nominating', items: nominating },
+		{ key: 'in_pool', labelKey: 'inPool', items: inPool },
+		{ key: 'not_staking', labelKey: 'notStaking', items: notStaking },
 	]
 }
