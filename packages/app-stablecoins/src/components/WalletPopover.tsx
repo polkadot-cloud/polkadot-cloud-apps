@@ -1,6 +1,5 @@
 import { useOutsideAlerter } from '@w3ux/hooks'
 import dotSvg from 'assets/token/dot.svg'
-import glmrSvg from 'assets/token/glmr.svg'
 import hdxSvg from 'assets/token/hdx.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
@@ -34,9 +33,8 @@ const stablecoinMix = [
 ]
 
 const chainBalances = [
-	{ chain: 'Polkadot Hub', value: '$935,200.00', share: 65 },
-	{ chain: 'Hydration', value: '$255,540.00', share: 20 },
-	{ chain: 'Moonbeam', value: '$57,852.42', share: 15 },
+	{ chain: 'Polkadot Hub', value: '$935,200.00', share: 79 },
+	{ chain: 'Hydration', value: '$255,540.00', share: 21 },
 ]
 
 const chainTokenBreakdown = [
@@ -60,16 +58,6 @@ const chainTokenBreakdown = [
 			{ icon: dotSvg, name: 'DOT', value: '13,584.00' },
 		],
 	},
-	{
-		chain: 'Moonbeam',
-		total: '$57,852.42',
-		tokens: [
-			{ icon: usdcSvg, name: 'USDC', value: '45,000.00' },
-			{ icon: usdtSvg, name: 'USDT', value: '68,200.00' },
-			{ icon: glmrSvg, name: 'GLMR', value: '250,000.00' },
-			{ icon: dotSvg, name: 'DOT', value: '4,850.00' },
-		],
-	},
 ]
 
 export const WalletPopover = ({
@@ -88,7 +76,7 @@ export const WalletPopover = ({
 		<div ref={popoverRef} className={classes.popover}>
 			<div className={classes.header}>
 				<h2 className={classes.title}>Wallet</h2>
-				<span className={classes.balance}>$1,248,592.42</span>
+				<span className={classes.balance}>$1,190,740.00</span>
 			</div>
 
 			<div className={classes.tabs} role="tablist" aria-label="Wallet sections">
