@@ -9,6 +9,8 @@ import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
+import { getStakingChainData } from 'consts/util'
+import { useNetwork } from 'hooks'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ImportedAccount } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
@@ -37,6 +39,15 @@ const stablecoinOptions: SelectOption<Stablecoin>[] = [
 	{ value: 'HOLLAR', label: 'HOLLAR', icon: hollarSvg },
 ]
 
+const dummyAvailableBalances: Record<
+	Stablecoin,
+	{ display: string; amount: string }
+> = {
+	USDC: { display: '750,000.00 USDC', amount: '750000.00' },
+	USDT: { display: '185,200.00 USDT', amount: '185200.00' },
+	HOLLAR: { display: '150,000.00 HOLLAR', amount: '150000.00' },
+}
+
 const chainOptions: SelectOption<Chain>[] = [
 	{ value: 'assetHub', label: 'Polkadot  Hub' },
 	{ value: 'hydration', label: 'Hydration' },
@@ -44,6 +55,32 @@ const chainOptions: SelectOption<Chain>[] = [
 
 const isSameAccount = (a: ImportedAccount | null, b: ImportedAccount | null) =>
 	a?.address === b?.address && a?.source === b?.source
+
+const sanitizeAmountInput = (value: string, maxDecimals: number): string => {
+	const normalized = value.replace(/[^\d.]/g, '')
+
+	if (!normalized) {
+		return ''
+	}
+
+	const dotIndex = normalized.indexOf('.')
+
+	if (dotIndex === -1) {
+		return normalized
+	}
+
+	const integerPart = normalized.slice(0, dotIndex) || '0'
+	const decimalPart = normalized
+		.slice(dotIndex + 1)
+		.replace(/\./g, '')
+		.slice(0, maxDecimals)
+
+	if (normalized.endsWith('.') && !decimalPart.length) {
+		return `${integerPart}.`
+	}
+
+	return `${integerPart}.${decimalPart}`
+}
 
 function SendSelect<T extends string>({
 	options,
@@ -108,7 +145,12 @@ function SendSelect<T extends string>({
 			</button>
 
 			{isOpen && (
-				<div className={classes.selectMenu} role="listbox">
+				<div
+					className={`${classes.selectMenu} ${
+						variant === 'full' ? classes.selectMenuTopLayer : ''
+					}`}
+					role="listbox"
+				>
 					{options.map((option) => {
 						const selectedOption = option.value === selected.value
 
@@ -154,9 +196,26 @@ function SendSelect<T extends string>({
 export const Send = () => {
 	const { activeAccount } = useActiveAccount()
 	const { accounts, accountHasSigner, getAccount } = useImportedAccounts()
+	const { network } = useNetwork()
+	const { units } = getStakingChainData(network)
 	const [amount, setAmount] = useState('1000.00')
 	const [selectedToken, setSelectedToken] = useState(stablecoinOptions[0])
 	const [selectedChain, setSelectedChain] = useState(chainOptions[0])
+	const selectedTokenBalance = dummyAvailableBalances[selectedToken.value]
+
+	const handleAmountChange = (nextValue: string) => {
+		setAmount(sanitizeAmountInput(nextValue, units))
+	}
+
+	const handleAmountBlur = () => {
+		if (amount.endsWith('.')) {
+			setAmount(amount.slice(0, -1))
+		}
+	}
+
+	const handleUseAvailableBalance = () => {
+		setAmount(sanitizeAmountInput(selectedTokenBalance.amount, units))
+	}
 
 	const accountsWithSigners = useMemo(
 		() =>
@@ -213,7 +272,9 @@ export const Send = () => {
 				</header>
 
 				<div className={classes.card}>
-					<div className={classes.inputSectionTop}>
+					<div
+						className={`${classes.inputSectionTop} ${classes.chainSectionTop}`}
+					>
 						<div className={classes.sectionLabelRow}>
 							<span className={classes.sectionLabel}>Chain</span>
 						</div>
@@ -274,18 +335,28 @@ export const Send = () => {
 							<span className={classes.sectionLabel}>Asset to Send</span>
 							<span className={classes.balanceLabel}>
 								Available:{' '}
-								<span className={classes.balanceHighlight}>
-									750,000.00 USDC
-								</span>
+								<button
+									type="button"
+									onClick={handleUseAvailableBalance}
+									className={classes.balanceAvailableButton}
+								>
+									<span className={classes.balanceHighlight}>
+										{selectedTokenBalance.display}
+									</span>
+								</button>
 							</span>
 						</div>
 						<div className={classes.inputRow}>
 							<input
 								type="text"
 								value={amount}
-								onChange={(e) => setAmount(e.target.value)}
+								onChange={(e) => handleAmountChange(e.target.value)}
+								onBlur={handleAmountBlur}
 								className={classes.amountInput}
 								placeholder="0.00"
+								inputMode="decimal"
+								autoComplete="off"
+								aria-label="Amount to send"
 							/>
 							<SendSelect
 								options={stablecoinOptions}

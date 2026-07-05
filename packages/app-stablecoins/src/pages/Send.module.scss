@@ -45,6 +45,12 @@
 
 .inputSectionTop {
 	margin-bottom: 0.25rem;
+	position: relative;
+	z-index: 1;
+}
+
+.chainSectionTop {
+	z-index: 6;
 }
 
 .sectionLabel {
@@ -122,8 +128,6 @@
 	height: 2rem;
 	background-color: var(--gray-100);
 	border-radius: 9999px;
-	box-shadow: var(--shadow-alt);
-	border: 1px solid var(--shade-200);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -154,6 +158,17 @@
 	font-family: var(--font-family-mono);
 	color: var(--gray-1000);
 	font-weight: 700;
+}
+
+.balanceAvailableButton {
+	padding: 0;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+
+	&:hover .balanceHighlight {
+		text-decoration: underline;
+	}
 }
 
 .inputRow {
@@ -236,6 +251,10 @@
 	border-radius: 0.75rem;
 	box-shadow: var(--shadow-alt);
 	overflow: hidden;
+}
+
+.selectMenuTopLayer {
+	z-index: 80;
 }
 
 .selectOption {
