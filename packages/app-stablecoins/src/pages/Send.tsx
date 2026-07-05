@@ -1,18 +1,206 @@
 import {
 	faArrowDown,
+	faCheck,
 	faChevronDown,
 	faPaperPlane,
-	faWallet,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
+import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
-import { useState } from 'react'
+import usdtSvg from 'assets/token/usdt.svg'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { ImportedAccount } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Page } from 'ui-core/base'
 import classes from './Send.module.scss'
 
+type Stablecoin = 'USDC' | 'USDT' | 'HOLLAR'
+type Chain = 'assetHub' | 'hydration'
+
+type SelectOption<T extends string> = {
+	value: T
+	label: string
+	icon?: string
+}
+
+type SendSelectProps<T extends string> = {
+	options: SelectOption<T>[]
+	selected: SelectOption<T>
+	onSelect: (option: SelectOption<T>) => void
+	variant?: 'compact' | 'full'
+}
+
+const stablecoinOptions: SelectOption<Stablecoin>[] = [
+	{ value: 'USDC', label: 'USDC', icon: usdcSvg },
+	{ value: 'USDT', label: 'USDT', icon: usdtSvg },
+	{ value: 'HOLLAR', label: 'HOLLAR', icon: hollarSvg },
+]
+
+const chainOptions: SelectOption<Chain>[] = [
+	{ value: 'assetHub', label: 'Polkadot  Hub' },
+	{ value: 'hydration', label: 'Hydration' },
+]
+
+const isSameAccount = (a: ImportedAccount | null, b: ImportedAccount | null) =>
+	a?.address === b?.address && a?.source === b?.source
+
+function SendSelect<T extends string>({
+	options,
+	selected,
+	onSelect,
+	variant = 'compact',
+}: SendSelectProps<T>) {
+	const [isOpen, setIsOpen] = useState(false)
+	const ref = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		if (!isOpen) {
+			return
+		}
+
+		const handlePointerDown = (event: PointerEvent) => {
+			if (!ref.current?.contains(event.target as Node)) {
+				setIsOpen(false)
+			}
+		}
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				setIsOpen(false)
+			}
+		}
+
+		document.addEventListener('pointerdown', handlePointerDown)
+		document.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			document.removeEventListener('pointerdown', handlePointerDown)
+			document.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [isOpen])
+
+	return (
+		<div className={classes.selectWrapper} ref={ref}>
+			<button
+				type="button"
+				className={`${classes.selectTrigger} ${
+					variant === 'full'
+						? classes.selectTriggerFull
+						: classes.selectTriggerCompact
+				}`}
+				aria-expanded={isOpen}
+				onClick={() => setIsOpen((open) => !open)}
+			>
+				<span className={classes.selectValue}>
+					{selected.icon && (
+						<img
+							src={selected.icon}
+							alt={selected.label}
+							className={classes.tokenIcon}
+						/>
+					)}
+					<span className={classes.tokenName}>{selected.label}</span>
+				</span>
+				<FontAwesomeIcon
+					icon={faChevronDown}
+					className={classes.tokenChevron}
+				/>
+			</button>
+
+			{isOpen && (
+				<div className={classes.selectMenu} role="listbox">
+					{options.map((option) => {
+						const selectedOption = option.value === selected.value
+
+						return (
+							<button
+								type="button"
+								key={option.value}
+								className={`${classes.selectOption} ${
+									selectedOption ? classes.selectOptionActive : ''
+								}`}
+								role="option"
+								aria-selected={selectedOption}
+								onClick={() => {
+									onSelect(option)
+									setIsOpen(false)
+								}}
+							>
+								<span className={classes.selectValue}>
+									{option.icon && (
+										<img
+											src={option.icon}
+											alt={option.label}
+											className={classes.tokenIcon}
+										/>
+									)}
+									<span>{option.label}</span>
+								</span>
+								{selectedOption && (
+									<FontAwesomeIcon
+										icon={faCheck}
+										className={classes.selectCheck}
+									/>
+								)}
+							</button>
+						)
+					})}
+				</div>
+			)}
+		</div>
+	)
+}
+
 export const Send = () => {
+	const { activeAccount } = useActiveAccount()
+	const { accounts, accountHasSigner, getAccount } = useImportedAccounts()
 	const [amount, setAmount] = useState('1000.00')
-	const [address, setAddress] = useState('')
+	const [selectedToken, setSelectedToken] = useState(stablecoinOptions[0])
+	const [selectedChain, setSelectedChain] = useState(chainOptions[0])
+
+	const accountsWithSigners = useMemo(
+		() =>
+			accounts.filter((account) =>
+				accountHasSigner({
+					address: account.address,
+					source: account.source,
+				}),
+			),
+		[accounts, accountHasSigner],
+	)
+	const activeImportedAccount = getAccount(activeAccount)
+	const defaultFromAccount =
+		activeImportedAccount &&
+		accountHasSigner({
+			address: activeImportedAccount.address,
+			source: activeImportedAccount.source,
+		})
+			? activeImportedAccount
+			: accountsWithSigners[0] || null
+	const defaultToAccount = accounts[0] || null
+
+	const [fromAccount, setFromAccount] = useState<ImportedAccount | null>(
+		defaultFromAccount,
+	)
+	const [toAccount, setToAccount] = useState<ImportedAccount | null>(
+		defaultToAccount,
+	)
+
+	useEffect(() => {
+		const fromAccountExists = accountsWithSigners.some((account) =>
+			isSameAccount(account, fromAccount),
+		)
+
+		if ((!fromAccount || !fromAccountExists) && defaultFromAccount) {
+			setFromAccount(defaultFromAccount)
+		}
+	}, [accountsWithSigners, defaultFromAccount, fromAccount])
+
+	useEffect(() => {
+		if (!toAccount && defaultToAccount) {
+			setToAccount(defaultToAccount)
+		}
+	}, [defaultToAccount, toAccount])
 
 	return (
 		<Page.Row>
@@ -20,24 +208,37 @@ export const Send = () => {
 				<header className={classes.header}>
 					<h1 className={classes.title}>Send Assets</h1>
 					<p className={classes.subtitle}>
-						Transfer liquidity to another address on the same network.
+						Transfer stablecoins to another address on the same network.
 					</p>
 				</header>
 
 				<div className={classes.card}>
 					<div className={classes.inputSectionTop}>
 						<div className={classes.sectionLabelRow}>
+							<span className={classes.sectionLabel}>Chain</span>
+						</div>
+						<SendSelect
+							options={chainOptions}
+							selected={selectedChain}
+							onSelect={setSelectedChain}
+							variant="full"
+						/>
+					</div>
+
+					<div className={classes.inputSectionTop}>
+						<div className={classes.sectionLabelRow}>
 							<span className={classes.sectionLabel}>Send From</span>
 						</div>
-						<div className={classes.addressInput}>
-							<FontAwesomeIcon
-								icon={faWallet}
-								className={classes.addressIcon}
-							/>
-							<input
-								type="text"
-								placeholder="Enter sender address..."
-								className={classes.addressField}
+						<div className={classes.accountDropdown}>
+							<AccountDropdown
+								key={`from-${fromAccount?.address || 'empty'}-${
+									fromAccount?.source || 'none'
+								}`}
+								initialAccount={fromAccount}
+								accounts={accountsWithSigners}
+								onSelect={setFromAccount}
+								placeholder="Select sender account..."
+								disabled={!accountsWithSigners.length}
 							/>
 						</div>
 					</div>
@@ -55,17 +256,15 @@ export const Send = () => {
 						<div className={classes.sectionLabelRow}>
 							<span className={classes.sectionLabel}>Send To</span>
 						</div>
-						<div className={classes.addressInput}>
-							<FontAwesomeIcon
-								icon={faWallet}
-								className={classes.addressIcon}
-							/>
-							<input
-								type="text"
-								value={address}
-								onChange={(e) => setAddress(e.target.value)}
+						<div className={classes.accountDropdown}>
+							<AccountDropdown
+								key={`to-${toAccount?.address || 'empty'}-${
+									toAccount?.source || 'none'
+								}`}
+								initialAccount={toAccount}
+								accounts={accounts}
+								onSelect={setToAccount}
 								placeholder="Enter recipient address..."
-								className={classes.addressField}
 							/>
 						</div>
 					</div>
@@ -88,14 +287,11 @@ export const Send = () => {
 								className={classes.amountInput}
 								placeholder="0.00"
 							/>
-							<button type="button" className={classes.tokenSelector}>
-								<img src={usdcSvg} alt="USDC" className={classes.tokenIcon} />
-								<span className={classes.tokenName}>USDC</span>
-								<FontAwesomeIcon
-									icon={faChevronDown}
-									className={classes.tokenChevron}
-								/>
-							</button>
+							<SendSelect
+								options={stablecoinOptions}
+								selected={selectedToken}
+								onSelect={setSelectedToken}
+							/>
 						</div>
 					</div>
 
