@@ -117,17 +117,7 @@ export const useApi = (): ApiHookInterface => {
 		[chainSpecs],
 	)
 	const getConsts = useCallback(
-		(chain: ChainId): ChainConsts => {
-			const chainConsts = consts[chain] || defaultConsts
-			if (chain !== 'polkadot') {
-				return chainConsts
-			}
-
-			return {
-				...chainConsts,
-				bondDuration: chainConsts.nominatorFastUnbondDuration,
-			}
-		},
+		(chain: ChainId): ChainConsts => consts[chain] || defaultConsts,
 		[consts],
 	)
 	const getRpcEndpoint = useCallback((chain: ChainId): string => {

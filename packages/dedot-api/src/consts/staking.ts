@@ -7,7 +7,7 @@ import type { StakingChain } from '../types'
 
 export class StakingConsts<T extends StakingChain> {
 	bondDuration: number
-	nominatorFastUnbondDuration: number
+	unbondDuration: number
 	sessionsPerEra: number
 	maxExposurePageSize: number
 	historyDepth: number
@@ -15,23 +15,35 @@ export class StakingConsts<T extends StakingChain> {
 
 	constructor(public api: DedotClient<T>) {
 		this.api = api
-		this.fetch()
 	}
 
-	fetch() {
+	async fetch() {
 		this.bondDuration = this.api.consts.staking.bondingDuration
-		this.nominatorFastUnbondDuration =
-			this.api.consts.staking.nominatorFastUnbondDuration
 		this.sessionsPerEra = this.api.consts.staking.sessionsPerEra
 		this.maxExposurePageSize = this.api.consts.staking.maxExposurePageSize
 		this.historyDepth = this.api.consts.staking.historyDepth
 		this.poolsPalletId = toU8a(this.api.consts.nominationPools.palletId)
+
+		// Nominators and pools unbond in the fast unbond duration while nominator
+		// slashing is disabled on-chain; otherwise the full bond duration applies.
+		const fastUnbondDuration =
+			this.api.consts.staking.nominatorFastUnbondDuration ?? this.bondDuration
+		let nominatorsSlashable = true
+		try {
+			nominatorsSlashable =
+				await this.api.query.staking.areNominatorsSlashable()
+		} catch {
+			// Storage item unavailable on this runtime; retain slashable default.
+		}
+		this.unbondDuration = nominatorsSlashable
+			? this.bondDuration
+			: fastUnbondDuration
 	}
 
 	get() {
 		return {
 			bondDuration: this.bondDuration,
-			nominatorFastUnbondDuration: this.nominatorFastUnbondDuration,
+			unbondDuration: this.unbondDuration,
 			sessionsPerEra: this.sessionsPerEra,
 			maxExposurePageSize: this.maxExposurePageSize,
 			historyDepth: this.historyDepth,

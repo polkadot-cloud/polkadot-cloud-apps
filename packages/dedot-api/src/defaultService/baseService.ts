@@ -82,8 +82,8 @@ export class BaseService<
 		// Set default sync status
 		setSyncingMulti(defaultSyncStatus)
 
-		// Fetch chain specs
-		await this.hubChainSpec.fetch()
+		// Fetch chain specs and constants
+		await Promise.all([this.hubChainSpec.fetch(), this.stakingConsts.fetch()])
 
 		// Set chain specs and constants
 		setMultiChainSpecs({
