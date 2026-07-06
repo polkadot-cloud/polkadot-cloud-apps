@@ -8,8 +8,8 @@ import {
 } from 'consts/plugins'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { Title } from 'library/Modal/Title'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { ButtonModal } from 'ui-buttons'
 import { ButtonList, Padding } from 'ui-core/modal'
 
@@ -22,7 +22,7 @@ export const Plugins = () => {
 
 	return (
 		<>
-			<Title title={t('plugins', { ns: 'modals' })} />
+			<ModalTitle title={t('plugins', { ns: 'modals' })} />
 			<Padding horizontalOnly>
 				<ButtonList>
 					<h4 style={{ margin: '0.75rem 0.25rem' }}>

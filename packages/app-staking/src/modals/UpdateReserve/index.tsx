@@ -11,10 +11,10 @@ import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
-import { Title } from 'library/Modal/Title'
 import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
+import { ModalTitle } from 'ui-app/ModalTitle'
+import { ButtonHelp } from 'ui-buttons'
 import 'rc-slider/assets/index.css'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -64,7 +64,7 @@ export const UpdateReserve = () => {
 
 	return (
 		<Padding>
-			<Title
+			<ModalTitle
 				title={t('reserveBalance')}
 				helpKey="Reserve Balance"
 				paddingTop="0.5rem"
@@ -99,7 +99,7 @@ export const UpdateReserve = () => {
 							{minReserve.isZero() ? (
 								<>
 									{t('none')}
-									<ButtonHelpTooltip
+									<ButtonHelp
 										definition="Reserve Balance For Existential Deposit"
 										openHelp={openHelpTooltip}
 										style={{ marginLeft: '0.65rem' }}

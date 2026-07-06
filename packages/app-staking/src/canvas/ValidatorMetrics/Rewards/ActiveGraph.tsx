@@ -3,8 +3,8 @@
 
 import { planckToUnit } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useDateFormat } from 'hooks/useDateFormat'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { useValidatorRewards } from 'plugin-staking-api'
 import { useTranslation } from 'react-i18next'
 import type { NetworkId } from 'types'

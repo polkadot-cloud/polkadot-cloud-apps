@@ -5,16 +5,16 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { PolkawatchApi } from '@polkawatch/ddp-client'
 import { PolkawatchConfig } from 'consts/plugins'
 import { getPolkawatchConfig } from 'consts/util'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { StatusLabel } from 'library/StatusLabel'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ButtonHelp } from 'ui-buttons'
 import { CardHeader, Page, Stat } from 'ui-core/base'
 import { GeoDonut, GraphWrapper } from 'ui-graphs'
 import { NominationGeoList } from './NominationGeoList'
@@ -120,7 +120,7 @@ export const NominationGeo = () => {
 					<CardHeader>
 						<h4>
 							{t('payoutDistribution', { ns: 'pages' })}
-							<ButtonHelpTooltip
+							<ButtonHelp
 								marginLeft
 								definition="Nomination Payout Distribution"
 								openHelp={openHelpTooltip}

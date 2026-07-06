@@ -3,9 +3,9 @@
 
 import { MaxPayoutDays } from 'consts'
 import { getStakingChainData } from 'consts/util'
-import { useThemeValues } from 'contexts/ThemeValues'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
+import { useThemeValues } from 'hooks/useThemeValues'
 import { useTranslation } from 'react-i18next'
 import { AveragePayoutLine, PayoutBar } from 'ui-graphs'
 

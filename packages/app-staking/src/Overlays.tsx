@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { ErrorFallbackModal } from 'library/ErrorBoundary'
 import { type ComponentType, lazy } from 'react'
+import { ErrorFallbackModal } from 'ui-app/ErrorBoundary'
 import { Overlay } from 'ui-overlay'
 
 type OverlayLoader<TModule = Record<string, unknown>> = () => Promise<TModule>
@@ -38,15 +38,15 @@ const lazyOverlayComponents = <
 	) as Record<keyof T, ReturnType<typeof lazyNamed>>
 
 const modals = lazyOverlayComponents({
-	Accounts: () => import('modals/Accounts'),
+	Accounts: () => import('ui-modals/Accounts'),
 	Bio: () => import('modals/Bio'),
 	Bond: () => import('modals/Bond'),
 	ChangePoolRoles: () => import('modals/ChangePoolRoles'),
 	ClaimPayouts: () => import('modals/ClaimPayouts'),
 	ClaimReward: () => import('modals/ClaimReward'),
 	DiscordSupport: () => import('modals/DiscordSupport'),
-	ExternalAccounts: () => import('modals/ExternalAccounts'),
-	ImportAccounts: () => import('modals/ImportAccounts'),
+	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
+	ImportAccounts: () => import('ui-modals/ImportAccounts'),
 	Invite: () => import('modals/Invite'),
 	JoinPool: () => import('modals/JoinPool'),
 	LeavePool: () => import('modals/LeavePool'),
@@ -55,7 +55,7 @@ const modals = lazyOverlayComponents({
 	Networks: () => import('modals/Networks'),
 	Plugins: () => import('modals/Plugins'),
 	RewardCalculator: () => import('modals/RewardCalculator'),
-	SelectCurrency: () => import('modals/SelectCurrency'),
+	SelectCurrency: () => import('ui-modals/SelectCurrency'),
 	SelectLanguage: () => import('modals/SelectLanguage'),
 	SetController: () => import('modals/SetController'),
 	SimpleNominate: () => import('modals/SimpleNominate'),

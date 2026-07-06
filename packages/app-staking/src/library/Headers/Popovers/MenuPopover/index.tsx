@@ -31,11 +31,12 @@ import {
 	PlatformURL,
 } from 'consts'
 import { getRelayChainData } from 'consts/util/chains'
-import { useTheme } from 'contexts/Themes'
 import { useBalances } from 'hooks/useBalances'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
+import { useShowHelp } from 'hooks/useShowHelp'
 import { useStaking } from 'hooks/useStaking'
+import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
 import { type Dispatch, type SetStateAction, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -57,7 +58,8 @@ export const MenuPopover = ({
 	const { openModal } = useOverlay().modal
 	const { getPoolMembership } = useBalances()
 	const { activeAddress } = useActiveAccount()
-	const { advancedMode, setAdvancedMode, showHelp, setShowHelp } = useUi()
+	const { showHelp, setShowHelp } = useShowHelp()
+	const { advancedMode, setAdvancedMode } = useUi()
 
 	const { name } = getRelayChainData(network)
 	const { membership } = getPoolMembership(activeAddress)

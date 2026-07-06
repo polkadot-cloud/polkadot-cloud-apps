@@ -8,7 +8,7 @@ import { useHelp } from 'hooks/useHelp'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
+import { ButtonHelp } from 'ui-buttons'
 import type { StatusLabelProps } from './types'
 import { Wrapper } from './Wrapper'
 
@@ -49,7 +49,7 @@ export const StatusLabel = ({
 					{title}
 					{helpKey ? (
 						<span>
-							<ButtonHelpTooltip
+							<ButtonHelp
 								marginLeft
 								definition={helpKey}
 								openHelp={openHelpTooltip}

@@ -3,9 +3,9 @@
 
 import { setStateWithRef } from '@w3ux/utils'
 import { usePayouts } from 'hooks/usePayouts'
-import { Title } from 'library/Modal/Title'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { FixedTitle, Multi, MultiTwo, Section } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 import { Forms } from './Forms'
@@ -65,7 +65,7 @@ export const ClaimPayouts = () => {
 	return (
 		<Section type="carousel">
 			<FixedTitle ref={headerRef}>
-				<Title title={t('claimPayouts')} fixed />
+				<ModalTitle title={t('claimPayouts')} fixed />
 			</FixedTitle>
 			<MultiTwo
 				style={{

@@ -3,9 +3,8 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
-import { ButtonHelpTooltip } from 'library/ButtonHelpTooltip'
 import { Announcement as AnnouncementLoader } from 'library/Loader/Announcement'
-import { ButtonTertiary } from 'ui-buttons'
+import { ButtonHelp, ButtonTertiary } from 'ui-buttons'
 import type { AnnouncementItem } from './types'
 import { AnnouncementsContainer, Item } from './Wrappers'
 
@@ -47,7 +46,7 @@ export const AnnouncementsList = ({
 						<h4>
 							{item.label}
 							{item.helpKey && (
-								<ButtonHelpTooltip
+								<ButtonHelp
 									marginLeft
 									definition={item.helpKey}
 									openHelp={openHelpTooltip}
@@ -76,7 +75,7 @@ export const AnnouncementsList = ({
 					<h4>
 						{item.label}
 						{item.helpKey && (
-							<ButtonHelpTooltip
+							<ButtonHelp
 								marginLeft
 								definition={item.helpKey}
 								openHelp={openHelpTooltip}

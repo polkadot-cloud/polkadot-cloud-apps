@@ -5,8 +5,8 @@ import { faBolt, faCog, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useNominatorSetups } from 'contexts/NominatorSetups'
-import { Title } from 'library/Modal/Title'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 import { ItemsWrapper, ItemWrapper } from './Wrappers'
@@ -31,7 +31,7 @@ export const StakingOptions = () => {
 
 	return (
 		<>
-			<Title title={title} />
+			<ModalTitle title={title} />
 			<Padding horizontalOnly style={{ marginTop: '1rem' }}>
 				<ItemsWrapper>
 					<ItemWrapper

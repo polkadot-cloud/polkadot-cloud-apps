@@ -9,10 +9,9 @@ import { useStaking } from 'hooks/useStaking'
 import { useSubmitExtrinsic } from 'hooks/useSubmitExtrinsic'
 import { formatFromProp } from 'hooks/useSubmitExtrinsic/util'
 import { useSyncing } from 'hooks/useSyncing'
-import { ActionItem } from 'library/ActionItem'
-import { SubmitTx } from 'library/SubmitTx'
 import { useTranslation } from 'react-i18next'
-import { Padding, Title } from 'ui-core/modal'
+import { SubmitTx } from 'ui-app/SubmitTx'
+import { ActionItem, Padding, Title } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
 
 export const SetController = () => {

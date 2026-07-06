@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faCog, faPlug } from '@fortawesome/free-solid-svg-icons'
-import { useTheme } from 'contexts/Themes'
+import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'

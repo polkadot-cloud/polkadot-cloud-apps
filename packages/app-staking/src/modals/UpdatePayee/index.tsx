@@ -14,14 +14,14 @@ import { useSignerWarnings } from 'hooks/useSignerWarnings'
 import { useSubmitExtrinsic } from 'hooks/useSubmitExtrinsic'
 import { formatFromProp } from 'hooks/useSubmitExtrinsic/util'
 import { Warning } from 'library/Form/Warning'
-import { Title } from 'library/Modal/Title'
 import { PayeeInput } from 'library/PayeeInput'
 import { SelectItems } from 'library/SelectItems'
 import { SelectItem } from 'library/SelectItems/Item'
-import { SubmitTx } from 'library/SubmitTx'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MaybeAddress } from 'types'
+import { ModalTitle } from 'ui-app/ModalTitle'
+import { SubmitTx } from 'ui-app/SubmitTx'
 import { Padding, Warnings } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 
@@ -125,7 +125,7 @@ export const UpdatePayee = () => {
 
 	return (
 		<>
-			<Title
+			<ModalTitle
 				title={t('updatePayoutDestination')}
 				helpKey="Payout Destination"
 			/>

@@ -3,15 +3,15 @@
 
 import MailSVG from 'assets/icons/mail.svg?react'
 import { PlatformSupportEmail } from 'consts'
-import { Title } from 'library/Modal/Title'
 import { useTranslation } from 'react-i18next'
+import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding, Support } from 'ui-core/modal'
 
 export const MailSupport = () => {
 	const { t } = useTranslation('modals')
 	return (
 		<>
-			<Title />
+			<ModalTitle />
 			<Padding verticalOnly>
 				<Support>
 					<MailSVG />
