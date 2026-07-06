@@ -48,7 +48,7 @@ export const Chunk = ({ chunk, bondFor, onRebond }: ChunkProps) => {
 	const formatted = formatTimeleft(t, timeleft.raw)
 
 	// Calculate unbonding progress percentage. Adapts dynamically to bond
-	// duration from chain constants (works for both 28-day and 1-day unbonding).
+	// duration from chain constants.
 	const isUnlocked = left.isLessThanOrEqualTo(0)
 	const startEra = era - bondDuration
 	const erasCompleted = activeEra.index - startEra

@@ -43,12 +43,14 @@ export const UnbondMember = ({
 	const { activeAddress, activeAccount } = useActiveAccount()
 
 	const { points } = member
-	const { bondDuration } = getConsts(network)
+	const { bondDuration, nominatorFastUnbondDuration } = getConsts(network)
+	const unbondDuration =
+		network === 'polkadot' ? nominatorFastUnbondDuration : bondDuration
 	const freeToUnbond = planckToUnitBn(new BigNumber(points), units)
 	const bondDurationFormatted = timeleftAsString(
 		t,
 		getUnixTime(new Date()) + 1,
-		erasToSeconds(bondDuration),
+		erasToSeconds(unbondDuration),
 		true,
 	)
 
@@ -103,7 +105,7 @@ export const UnbondMember = ({
 						value={bondDurationFormatted}
 						tKey="onceUnbondingPoolMember"
 						valueKey="bondDurationFormatted"
-						deps={[bondDuration]}
+						deps={[unbondDuration]}
 					/>
 				</Notes>
 			</Padding>
