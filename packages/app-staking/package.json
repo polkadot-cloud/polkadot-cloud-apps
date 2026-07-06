@@ -21,7 +21,7 @@
 		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@polkadot-cloud/connect": "^1.0.9",
 		"@polkadot-cloud/connect-core": "^1.0.9",
-		"@polkadot-cloud/connect-ledger": "^1.0.2",
+		"@polkadot-cloud/connect-ledger": "^1.1.0",
 		"@polkadot-cloud/connect-proxies": "^0.2.3",
 		"@polkadot-cloud/connect-vault": "^1.0.2",
 		"@polkawatch/ddp-client": "^3.0.1",

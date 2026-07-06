@@ -90,8 +90,8 @@ importers:
         specifier: ^1.0.9
         version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^1.1.0
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.2.3
         version: 0.2.3(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)(typescript@6.0.3)
@@ -592,8 +592,8 @@ importers:
         specifier: ^1.0.9
         version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^1.1.0
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
         version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -830,8 +830,8 @@ importers:
         specifier: ^1.0.9
         version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^1.1.0
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.2.3
         version: 0.2.3(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)(typescript@6.0.3)
@@ -1569,29 +1569,29 @@ packages:
   '@ledgerhq/devices@8.15.1':
     resolution: {integrity: sha512-o4XEHiwPytnZxYUnOC5JoHX5TPDJpeMXPfXjwhsXVJ9LAbahxQWzC37Iuzk8ZY/oC2yDptzqjs/qNP2y9D9vCA==}
 
-  '@ledgerhq/devices@8.5.0':
-    resolution: {integrity: sha512-zDB6Pdk6NYYbYis8cWoLLkL9k/IvjhC3hkuuz2lhpJ2AxIs3/PDMUKoyK4DpjPtRyKk1W1lwsnpc6J1i87r4/Q==}
+  '@ledgerhq/devices@8.16.0':
+    resolution: {integrity: sha512-brXLPzkvGM3D5YNsWQ25P5G4SmWdSNBed9W8wKoOIRLGdRfvE+bg9mzFty0iZ+aRLBkLoXwX7xKIL9zUi6LBKQ==}
 
-  '@ledgerhq/errors@6.36.0':
-    resolution: {integrity: sha512-o2Q5hNvf2TzAzlH8ORAozppRbzixRPYDfmSQrP7FOcM997OEH7qDleXgp/uMpvRdxR/t3CJCG+n0i+bU/oYMKA==}
+  '@ledgerhq/errors@6.37.0':
+    resolution: {integrity: sha512-T5yiKI5UX7ugeocdTF3TUsCIN2BH41Bio4ZeN410YFjFOf3es08n/5JyMzzKwzRgP0blG3HfBf7s7vJKqCSAeg==}
 
-  '@ledgerhq/hw-transport-node-hid-noevents@6.35.4':
-    resolution: {integrity: sha512-187670Uuuek9ECcT92NQm1PnDfFHT6gBmaJinatnueMLV9lk3q4IrpFZqTotr+LhPNub+YdGQFjYJImcXvYWtw==}
+  '@ledgerhq/hw-transport-node-hid-noevents@6.36.0':
+    resolution: {integrity: sha512-hsqybDCDtpNWeWVY2b/emrsFDqVfc3Rkv4+2b6h5ubPGsKWFd+7t0u6oy0sJEl5v6C+V/uxl03shBjWEcSoxgw==}
 
-  '@ledgerhq/hw-transport-node-hid@6.33.4':
-    resolution: {integrity: sha512-/k0rH+wTpTmUifdxWuOER/dM3vPxW7RQIF0tByGC6noszVC3SGOZVcskBqJZ6xwIs1TvAHvZlEFvZWbnUJMBiw==}
+  '@ledgerhq/hw-transport-node-hid@6.33.5':
+    resolution: {integrity: sha512-uJ7VztZEDdhCAmCByMltH9Zg6qrU1CrTjVpLrO7IQD5paQbMhZNOLSrtBhWSoP8LYNo/gx5VtLTdtUIIedjsVA==}
 
-  '@ledgerhq/hw-transport-webhid@6.35.4':
-    resolution: {integrity: sha512-5tspX0/XMaLd5Nz45AYUcsevvG5QoYJ8/n8g4dUFfIketH8CZA9UPZbgPJD+OWykzhzYLQPGpahDmzxjItVZlQ==}
-
-  '@ledgerhq/hw-transport@6.31.9':
-    resolution: {integrity: sha512-HqB2Whl2qbrzyvs9gC/GmLhIy8RO4CWzjqHS4k0bPWDZRqKa8m6H32vjrbXGO//pUL1Mlu87UwvxvLyuICdjwg==}
+  '@ledgerhq/hw-transport-webhid@6.36.0':
+    resolution: {integrity: sha512-1mKWm3LyGOgmaYlAiqbmaGoupOZHbj2Kow5sXLxKZzQa4kFvQuUdinYOWhs7T8hqJyAkz9WlHYyKM7aIs8kjNg==}
 
   '@ledgerhq/hw-transport@6.35.3':
     resolution: {integrity: sha512-FLR4/2mV6srMaic3cr/kweD9RQhpv4+8Q6T6P4PPOyScuz84siH+8NXLgREIeh328W/FxEGG2norjS+tOQW0vA==}
 
   '@ledgerhq/hw-transport@6.35.4':
     resolution: {integrity: sha512-FMVxiniQp0pgSIEBX9CjXYBuIAH9BTm3OcrN+/2LqkB8QBeFZdiwmO4BeN9nc2aWspe9z6kxN3SuUyouedNokA==}
+
+  '@ledgerhq/hw-transport@6.35.5':
+    resolution: {integrity: sha512-P4+wtLewLWgxPtIb90h5kjpzXVlC6f4IBQBmvowVFkInvZt34ffXkX7wa5KfMzu4l3cqCcpNSqtPSCMp+0vuqg==}
 
   '@ledgerhq/logs@6.17.0':
     resolution: {integrity: sha512-yra33g5q/AU7+PwAws+GaVpQGUuxnDREjVBnviJjcaJLVKuLzI4pnj8Bd3nY3fypM5k1yZEYKEXfUuGFUjP2+w==}
@@ -1727,11 +1727,12 @@ packages:
       dedot: ^1
       rxjs: ^7.8.2
 
-  '@polkadot-cloud/connect-ledger@1.0.2':
-    resolution: {integrity: sha512-1W/IyQhotyvBWx4vGH2GVuOMx/KlYVtjsnYzGa76KQtRe1UGwvAvHda3qMJwpIEfdkgy93+eEUBW/LZSftMUpQ==}
+  '@polkadot-cloud/connect-ledger@1.1.0':
+    resolution: {integrity: sha512-V8/XyS4z7rIbnAWJuUsTp8dMrXRdmhxitjLWgI/4VYiURYPbylxLWpx7EluhokYAEh043i6HuJcllN8BzFROWg==}
     peerDependencies:
       '@polkadot-cloud/connect': ^1.0.9
       '@polkadot-cloud/connect-core': ^1.0.9
+      dedot: ^1
       react: ^19.1.0
       react-dom: ^19.1.0
 
@@ -2892,8 +2893,9 @@ packages:
     resolution: {integrity: sha512-FNoYzHawTMk/6KMQoEG5O4PuioX19UbwdQKF44yw0nLfOypfQdjtfZzo/UIJWAJ23sNIFbD1Ug9lbaDGMwbqQA==}
     engines: {node: '>=8'}
 
-  '@zondax/ledger-js@1.3.1':
-    resolution: {integrity: sha512-sDBwsunK2nSzkqJ5xi6QTiVVpAxSy+X1BVcMfKioBsInjktki2SezT7K8Hw6kSlYd3yfOJlw8cs+hqVtxpAGtg==}
+  '@zondax/ledger-js@1.3.3':
+    resolution: {integrity: sha512-naWfF5usVF53JDS8y7tTl4DpQep7SHm8JN1/SnS84MSI0Xh6UIUhZf7Js+p/zjiRHcjSt/WpeSwPhFouSI7J9w==}
+    engines: {node: '>=20'}
 
   '@zondax/ledger-substrate@2.3.5':
     resolution: {integrity: sha512-hUThBmTXGcrFOjJOZVWL61jqpgmImag7PAZ5zg+ByziHRU2CptoJrJ3v/bYrjTlsA7Jx1ydAUJDo8ajND7YTkQ==}
@@ -3744,8 +3746,8 @@ packages:
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
 
-  node-abi@3.92.0:
-    resolution: {integrity: sha512-KdHvFWZjEKDf0cakgFjebl371GPsISX2oZHcuyKqM7DtogIsHrqKeLTo8wBHxaXRAQlY2PsPlZmfo+9ZCxEREQ==}
+  node-abi@3.94.0:
+    resolution: {integrity: sha512-W5ZNO5KRPB5TkYmGVD9F6YqhsglXJzE6etpbmT+f6EQElhiX/UTG551cnsRGvLG3fyZEg9HwaDmNmj5nwJ4z9g==}
     engines: {node: '>=10'}
 
   node-addon-api@3.2.1:
@@ -5149,73 +5151,70 @@ snapshots:
 
   '@ledgerhq/devices@8.15.0':
     dependencies:
-      '@ledgerhq/errors': 6.36.0
+      '@ledgerhq/errors': 6.37.0
       '@ledgerhq/logs': 6.17.0
       rxjs: 7.8.2
       semver: 7.7.3
 
   '@ledgerhq/devices@8.15.1':
     dependencies:
-      '@ledgerhq/errors': 6.36.0
+      '@ledgerhq/errors': 6.37.0
       '@ledgerhq/logs': 6.17.0
       rxjs: 7.8.2
       semver: 7.7.3
 
-  '@ledgerhq/devices@8.5.0':
+  '@ledgerhq/devices@8.16.0':
     dependencies:
-      '@ledgerhq/errors': 6.36.0
-      '@ledgerhq/logs': 6.17.0
-      rxjs: 7.8.2
-      semver: 7.8.5
+      semver: 7.7.3
 
-  '@ledgerhq/errors@6.36.0': {}
+  '@ledgerhq/errors@6.37.0': {}
 
-  '@ledgerhq/hw-transport-node-hid-noevents@6.35.4':
+  '@ledgerhq/hw-transport-node-hid-noevents@6.36.0':
     dependencies:
-      '@ledgerhq/devices': 8.15.1
-      '@ledgerhq/errors': 6.36.0
-      '@ledgerhq/hw-transport': 6.35.4
+      '@ledgerhq/devices': 8.16.0
+      '@ledgerhq/errors': 6.37.0
+      '@ledgerhq/hw-transport': 6.35.5
       '@ledgerhq/logs': 6.17.0
       node-hid: 2.1.2
     optional: true
 
-  '@ledgerhq/hw-transport-node-hid@6.33.4':
+  '@ledgerhq/hw-transport-node-hid@6.33.5':
     dependencies:
-      '@ledgerhq/devices': 8.15.1
-      '@ledgerhq/errors': 6.36.0
-      '@ledgerhq/hw-transport': 6.35.4
-      '@ledgerhq/hw-transport-node-hid-noevents': 6.35.4
+      '@ledgerhq/devices': 8.16.0
+      '@ledgerhq/errors': 6.37.0
+      '@ledgerhq/hw-transport': 6.35.5
+      '@ledgerhq/hw-transport-node-hid-noevents': 6.36.0
       '@ledgerhq/logs': 6.17.0
       lodash: 4.18.1
       node-hid: 2.1.2
       usb: 2.9.0
     optional: true
 
-  '@ledgerhq/hw-transport-webhid@6.35.4':
+  '@ledgerhq/hw-transport-webhid@6.36.0':
     dependencies:
-      '@ledgerhq/devices': 8.15.1
-      '@ledgerhq/errors': 6.36.0
-      '@ledgerhq/hw-transport': 6.35.4
+      '@ledgerhq/devices': 8.16.0
+      '@ledgerhq/errors': 6.37.0
+      '@ledgerhq/hw-transport': 6.35.5
       '@ledgerhq/logs': 6.17.0
-
-  '@ledgerhq/hw-transport@6.31.9':
-    dependencies:
-      '@ledgerhq/devices': 8.5.0
-      '@ledgerhq/errors': 6.36.0
-      '@ledgerhq/logs': 6.17.0
-      events: 3.3.0
 
   '@ledgerhq/hw-transport@6.35.3':
     dependencies:
       '@ledgerhq/devices': 8.15.0
-      '@ledgerhq/errors': 6.36.0
+      '@ledgerhq/errors': 6.37.0
       '@ledgerhq/logs': 6.17.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.35.4':
     dependencies:
       '@ledgerhq/devices': 8.15.1
-      '@ledgerhq/errors': 6.36.0
+      '@ledgerhq/errors': 6.37.0
+      '@ledgerhq/logs': 6.17.0
+      events: 3.3.0
+
+  '@ledgerhq/hw-transport@6.35.5':
+    dependencies:
+      '@ledgerhq/devices': 8.16.0
+      '@ledgerhq/errors': 6.37.0
       '@ledgerhq/logs': 6.17.0
       events: 3.3.0
 
@@ -5326,15 +5325,16 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@polkadot-cloud/connect-ledger@1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@polkadot-cloud/connect-ledger@1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@ledgerhq/hw-transport-webhid': 6.35.4
+      '@ledgerhq/hw-transport-webhid': 6.36.0
       '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2)
       '@w3ux/hooks': 2.4.4(react@19.2.7)
       '@w3ux/utils': 3.1.1
       '@zondax/ledger-substrate': 2.3.5
       buffer: 6.0.3
+      dedot: 1.3.0(typescript@6.0.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -6555,18 +6555,18 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@zondax/ledger-js@1.3.1':
+  '@zondax/ledger-js@1.3.3':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.9
+      '@ledgerhq/hw-transport': 6.35.4
 
   '@zondax/ledger-substrate@2.3.5':
     dependencies:
       '@ledgerhq/hw-transport': 6.35.3
-      '@zondax/ledger-js': 1.3.1
+      '@zondax/ledger-js': 1.3.3
       axios: 1.18.1
       buffer: 6.0.3
     optionalDependencies:
-      '@ledgerhq/hw-transport-node-hid': 6.33.4
+      '@ledgerhq/hw-transport-node-hid': 6.33.5
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -7322,7 +7322,7 @@ snapshots:
       lower-case: 2.0.2
       tslib: 2.8.1
 
-  node-abi@3.92.0:
+  node-abi@3.94.0:
     dependencies:
       semver: 7.8.5
     optional: true
@@ -7471,7 +7471,7 @@ snapshots:
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
-      node-abi: 3.92.0
+      node-abi: 3.94.0
       pump: 3.0.4
       rc: 1.2.8
       simple-get: 4.0.1
@@ -7752,7 +7752,8 @@ snapshots:
 
   semver@7.7.3: {}
 
-  semver@7.8.5: {}
+  semver@7.8.5:
+    optional: true
 
   set-cookie-parser@2.7.2: {}
 
