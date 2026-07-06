@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
 	"root": true,
 	"vcs": {
 		"enabled": false,
@@ -17,7 +17,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"complexity": {
 				"noStaticOnlyClass": "off"
 			},
@@ -26,6 +26,12 @@
 					"level": "warn",
 					"fix": "safe",
 					"options": {}
+				},
+				"noUnknownPseudoClass": {
+					"level": "error",
+					"options": {
+						"ignore": ["global", "local", "export"]
+					}
 				},
 				"useExhaustiveDependencies": "off",
 				"useJsxKeyInIterable": "off"
@@ -42,6 +48,7 @@
 				"noLabelWithoutControl": "off"
 			},
 			"style": {
+				"noDescendingSpecificity": "off",
 				"noNonNullAssertion": "off"
 			}
 		}

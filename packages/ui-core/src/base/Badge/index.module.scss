@@ -1,138 +1,137 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .container {
-  border-bottom: 1px solid var(--gray-500);
-  color: var(--gray-900);
-  font-family: var(--font-family-default);
-  display: flex;
+	border-bottom: 1px solid var(--gray-500);
+	color: var(--gray-900);
+	font-family: var(--font-family-default);
+	display: flex;
 
-  &.warning {
-    border-color: var(--status-warning-transparent);
-  }
+	&.warning {
+		border-color: var(--status-warning-transparent);
+	}
 
-  &.danger {
-    border-color: var(--status-danger-transparent);
-  }
+	&.danger {
+		border-color: var(--status-danger-transparent);
+	}
 
-  &.button {
-    border-color: var(--gray-700);
-  }
+	&.button {
+		border-color: var(--gray-700);
+	}
 
-  &:last-child {
-    margin-right: 0;
-  }
+	&:last-child {
+		margin-right: 0;
+	}
 
-  .inner {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1;
-    flex-shrink: 0;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 0;
+	.inner {
+		display: flex;
+		flex-flow: row nowrap;
+		flex: 1;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 0;
 
-    &.warning {
-      background-color: var(--status-warning-bg);
-    }
+		&.warning {
+			background-color: var(--status-warning-bg);
+		}
 
-    &.danger {
-      background-color: var(--status-danger-bg);
-    }
+		&.danger {
+			background-color: var(--status-danger-bg);
+		}
 
-    &.styled {
-      border-radius: 0.7rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      margin-bottom: 0.5rem;
-    }
+		&.styled {
+			border-radius: 0.7rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
+			margin-bottom: 0.5rem;
+		}
 
-    &.activeTransform {
-      transition: transform 0.2s ease-in-out;
-      cursor: default;
+		&.activeTransform {
+			transition: transform 0.2s ease-in-out;
+			cursor: default;
 
-      &:hover {
-        transform: scale(1.02);
-      }
-    }
-  }
+			&:hover {
+				transform: scale(1.02);
+			}
+		}
+	}
 
-  &.hList {
-    margin-right: 1.25rem;
+	&.hList {
+		margin-right: 1.25rem;
 
-    .inner {
-      white-space: nowrap;
-    }
-  }
-  
-  &.vList {
-    margin-bottom: 0.5rem;
-  }
+		.inner {
+			white-space: nowrap;
+		}
+	}
+
+	&.vList {
+		margin-bottom: 0.5rem;
+	}
 }
 
-
 .badge {
-  font-family: var(--font-family-bold);
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
+	font-family: var(--font-family-bold);
+	display: flex;
+	align-items: center;
+	font-size: 1.2rem;
 
-  > button {
-    color: var(--gray-1000);
+	> svg {
+		margin-right: 0.6rem;
+	}
 
-    > svg {
-      margin-left: 0.3rem;
-    }
-  }
+	> button {
+		color: var(--gray-1000);
 
-  > svg {
-    margin-right: 0.6rem;
-  }
+		> svg {
+			margin-left: 0.3rem;
+		}
+	}
 
-  > span {
-    color: var(--gray-1000);
-    font-family: var(--font-family-semibold);
-    font-size: 0.95rem;
-    margin-left: 0.3rem;
-    margin-top: 0;
-    margin-right: 0.75rem;
+	> span {
+		color: var(--gray-1000);
+		font-family: var(--font-family-semibold);
+		font-size: 0.95rem;
+		margin-left: 0.3rem;
+		margin-top: 0;
+		margin-right: 0.75rem;
 
-    &:last-child {
-      margin-right: 0;
-    }
-  }
+		&:last-child {
+			margin-right: 0;
+		}
+	}
 
-  &.primary {
-    color: var(--gray-1000);
+	&.primary {
+		color: var(--gray-1000);
 
-    > span {
-      color: var(--gray-1000);
-    }
-  }
+		> span {
+			color: var(--gray-1000);
+		}
+	}
 
-  &.secondary {
-    color: var(--gray-900);
+	&.secondary {
+		color: var(--gray-900);
 
-    > span {
-      color: var(--gray-900);
-    }
-  }
+		> span {
+			color: var(--gray-900);
+		}
+	}
 
-  &.warning {
-    color: var(--status-warning);
-    font-family: var(--font-family-default);
+	&.warning {
+		color: var(--status-warning);
+		font-family: var(--font-family-default);
 
-    > span {
-      color: var(--status-warning);
-    }
-  }
+		> span {
+			color: var(--status-warning);
+		}
+	}
 
-  &.danger {
-    color: var(--status-danger);
-    font-family: var(--font-family-default);
+	&.danger {
+		color: var(--status-danger);
+		font-family: var(--font-family-default);
 
-    > span {
-      color: var(--status-danger);
-    }
-  }
+		> span {
+			color: var(--status-danger);
+		}
+	}
 }

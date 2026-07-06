@@ -48,14 +48,14 @@ jobs:
         run: pnpm install
 
       - name: Build
-        working-directory: 'packages/app'
+        working-directory: 'packages/app-staking'
         run: pnpm build
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v5
         with:
           name: github-pages
-          path: packages/app/build
+          path: packages/app-staking/build
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: github-pages
-          path: packages/app/build
+          path: packages/app-staking/build
       - uses: actions/configure-pages@v6
       - id: deployment
         uses: actions/deploy-pages@main
