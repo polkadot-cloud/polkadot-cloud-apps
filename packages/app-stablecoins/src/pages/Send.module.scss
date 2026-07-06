@@ -36,6 +36,7 @@
 	background-color: var(--gray-200);
 	border-radius: 1rem;
 	padding: 1.25rem;
+	margin-bottom: 0.25rem;
 	transition: background-color var(--transition-duration) ease;
 
 	&:hover {
@@ -44,7 +45,6 @@
 }
 
 .inputSectionTop {
-	margin-bottom: 0.25rem;
 	position: relative;
 	z-index: 1;
 }

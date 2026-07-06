@@ -22,6 +22,7 @@ export const Tx = (props: TxProps) => {
 		displayFor = 'default',
 		transparent,
 		stacked = false,
+		hideSigner = false,
 	} = props
 
 	const innerClasses = [
@@ -29,22 +30,33 @@ export const Tx = (props: TxProps) => {
 		['canvas', 'card'].includes(displayFor) ? txClasses[displayFor] : undefined,
 		transparent ? txClasses.transparent : undefined,
 		stacked ? txClasses.stacked : undefined,
+		hideSigner ? txClasses.hideSigner : undefined,
+	]
+		.filter(Boolean)
+		.join(' ')
+
+	// TODO: revise these new wrappers
+	const wrapperClasses = [
+		margin ? txClasses.margin : undefined,
+		transparent ? txClasses.noPadding : undefined,
 	]
 		.filter(Boolean)
 		.join(' ')
 
 	return (
-		<Wrapper className={margin ? txClasses.margin : undefined}>
+		<Wrapper className={wrapperClasses}>
 			<div className={innerClasses}>
-				<div className={txClasses.signer}>
-					<Signer
-						{...props}
-						dangerMessage={dangerMessage}
-						notEnoughFunds={notEnoughFunds}
-						PromptComponent={PromptComponent}
-					/>
-					<PromptWrapper>{PromptComponent}</PromptWrapper>
-				</div>
+				{!hideSigner && (
+					<div className={txClasses.signer}>
+						<Signer
+							{...props}
+							dangerMessage={dangerMessage}
+							notEnoughFunds={notEnoughFunds}
+							PromptComponent={PromptComponent}
+						/>
+						<PromptWrapper>{PromptComponent}</PromptWrapper>
+					</div>
+				)}
 				<div className={txClasses.submit}>{SubmitComponent}</div>
 			</div>
 		</Wrapper>

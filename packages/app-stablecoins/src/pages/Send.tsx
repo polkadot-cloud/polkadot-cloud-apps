@@ -2,23 +2,40 @@ import {
 	faArrowDown,
 	faCheck,
 	faChevronDown,
-	faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
+import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import dotSvg from 'assets/token/dot.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
-import { getStakingChainData } from 'consts/util'
-import { useNetwork } from 'hooks'
+import {
+	getStablecoinAssetConfig,
+	getStablecoinChainConfig,
+	isStablecoinFeeAssetSupported,
+	isStablecoinSendAssetSupported,
+	StablecoinConfigs,
+} from 'consts/stablecoins'
+import type { SubmittableExtrinsic } from 'dedot'
+import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ImportedAccount } from 'types'
+import {
+	type TxFeeEstimator,
+	useSubmitExtrinsic,
+} from 'tx-submit/useSubmitExtrinsic'
+import type {
+	ImportedAccount,
+	StablecoinBalance,
+	StablecoinChainId,
+	StablecoinFeeAssetSymbol,
+	StablecoinSymbol,
+} from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
+import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
+import { SubmitTx } from 'ui-app/SubmitTx'
 import { Page } from 'ui-core/base'
 import classes from './Send.module.scss'
-
-type Stablecoin = 'USDC' | 'USDT' | 'HOLLAR'
-type Chain = 'assetHub' | 'hydration'
 
 type SelectOption<T extends string> = {
 	value: T
@@ -33,24 +50,20 @@ type SendSelectProps<T extends string> = {
 	variant?: 'compact' | 'full'
 }
 
-const stablecoinOptions: SelectOption<Stablecoin>[] = [
+const stablecoinOptions: SelectOption<StablecoinSymbol>[] = [
 	{ value: 'USDC', label: 'USDC', icon: usdcSvg },
 	{ value: 'USDT', label: 'USDT', icon: usdtSvg },
 	{ value: 'HOLLAR', label: 'HOLLAR', icon: hollarSvg },
 ]
 
-const dummyAvailableBalances: Record<
-	Stablecoin,
-	{ display: string; amount: string }
-> = {
-	USDC: { display: '750,000.00 USDC', amount: '750000.00' },
-	USDT: { display: '185,200.00 USDT', amount: '185200.00' },
-	HOLLAR: { display: '150,000.00 HOLLAR', amount: '150000.00' },
-}
+const feeAssetOptions: SelectOption<StablecoinFeeAssetSymbol>[] = [
+	{ value: 'DOT', label: 'DOT', icon: dotSvg },
+	...stablecoinOptions,
+]
 
-const chainOptions: SelectOption<Chain>[] = [
-	{ value: 'assetHub', label: 'Polkadot  Hub' },
-	{ value: 'hydration', label: 'Hydration' },
+const chainOptions: SelectOption<StablecoinChainId>[] = [
+	{ value: 'statemint', label: StablecoinConfigs.statemint.label },
+	{ value: 'hydration', label: StablecoinConfigs.hydration.label },
 ]
 
 const isSameAccount = (a: ImportedAccount | null, b: ImportedAccount | null) =>
@@ -80,6 +93,41 @@ const sanitizeAmountInput = (value: string, maxDecimals: number): string => {
 	}
 
 	return `${integerPart}.${decimalPart}`
+}
+
+const toPlanck = (amount: string, decimals: number): bigint => {
+	try {
+		return BigInt(unitToPlanck(amount || '0', decimals).toString())
+	} catch {
+		return 0n
+	}
+}
+
+const formatBalance = (
+	balance: StablecoinBalance | undefined,
+	symbol: string,
+): string => {
+	if (!balance) {
+		return `0 ${symbol}`
+	}
+
+	return `${planckToUnit(balance.free, balance.decimals)} ${symbol}`
+}
+
+const maxSendableBalance = (
+	balance: StablecoinBalance | undefined,
+	feeBalance: StablecoinBalance | undefined,
+	fee: bigint,
+): bigint => {
+	if (!balance) {
+		return 0n
+	}
+
+	const feeFromSameAsset =
+		feeBalance?.chain === balance.chain && feeBalance.symbol === balance.symbol
+	const reserved = balance.existentialDeposit + (feeFromSameAsset ? fee : 0n)
+	const max = balance.free - reserved
+	return max > 0n ? max : 0n
 }
 
 function SendSelect<T extends string>({
@@ -196,15 +244,35 @@ function SendSelect<T extends string>({
 export const Send = () => {
 	const { activeAccount } = useActiveAccount()
 	const { accounts, accountHasSigner, getAccount } = useImportedAccounts()
-	const { network } = useNetwork()
-	const { units } = getStakingChainData(network)
+	const { serviceApi } = useApi()
+	const { getTxSubmission } = useTxMeta()
 	const [amount, setAmount] = useState('1000.00')
 	const [selectedToken, setSelectedToken] = useState(stablecoinOptions[0])
 	const [selectedChain, setSelectedChain] = useState(chainOptions[0])
-	const selectedTokenBalance = dummyAvailableBalances[selectedToken.value]
+	const [selectedFeeAsset, setSelectedFeeAsset] = useState(feeAssetOptions[0])
+	const [transferTx, setTransferTx] = useState<SubmittableExtrinsic>()
+	const [feeSetupTx, setFeeSetupTx] = useState<SubmittableExtrinsic>()
+	const [hydrationFeeCurrency, setHydrationFeeCurrency] = useState<
+		StablecoinFeeAssetSymbol | undefined | null
+	>(null)
+
+	const selectedAssetConfig = getStablecoinAssetConfig(
+		selectedChain.value,
+		selectedToken.value,
+	)
+	const selectedFeeAssetConfig = getStablecoinAssetConfig(
+		selectedChain.value,
+		selectedFeeAsset.value,
+	)
+	const selectedDecimals = selectedAssetConfig?.decimals ?? 0
+	const selectedFeeDecimals = selectedFeeAssetConfig?.decimals ?? 0
+	const feeDisplay = {
+		unit: selectedFeeAsset.value,
+		units: selectedFeeDecimals,
+	}
 
 	const handleAmountChange = (nextValue: string) => {
-		setAmount(sanitizeAmountInput(nextValue, units))
+		setAmount(sanitizeAmountInput(nextValue, selectedDecimals))
 	}
 
 	const handleAmountBlur = () => {
@@ -214,7 +282,12 @@ export const Send = () => {
 	}
 
 	const handleUseAvailableBalance = () => {
-		setAmount(sanitizeAmountInput(selectedTokenBalance.amount, units))
+		setAmount(
+			sanitizeAmountInput(
+				planckToUnit(maxAvailableToSend, selectedDecimals),
+				selectedDecimals,
+			),
+		)
 	}
 
 	const accountsWithSigners = useMemo(
@@ -260,6 +333,229 @@ export const Send = () => {
 			setToAccount(defaultToAccount)
 		}
 	}, [defaultToAccount, toAccount])
+
+	const tokenOptions = useMemo(() => {
+		const chainConfig = getStablecoinChainConfig(selectedChain.value)
+		return stablecoinOptions.filter((option) =>
+			chainConfig.sendAssets.includes(option.value),
+		)
+	}, [selectedChain.value])
+
+	const availableFeeAssetOptions = useMemo(() => {
+		const chainConfig = getStablecoinChainConfig(selectedChain.value)
+		return feeAssetOptions.filter((option) =>
+			chainConfig.feeAssets.includes(option.value),
+		)
+	}, [selectedChain.value])
+
+	useEffect(() => {
+		if (
+			!isStablecoinSendAssetSupported(selectedChain.value, selectedToken.value)
+		) {
+			if (tokenOptions[0]) {
+				setSelectedToken(tokenOptions[0])
+			}
+		}
+	}, [selectedChain.value, selectedToken.value, tokenOptions])
+
+	useEffect(() => {
+		if (
+			!isStablecoinFeeAssetSupported(
+				selectedChain.value,
+				selectedFeeAsset.value,
+			)
+		) {
+			setSelectedFeeAsset(feeAssetOptions[0])
+		}
+	}, [selectedChain.value, selectedFeeAsset.value])
+
+	const {
+		getBalance,
+		loading: balancesLoading,
+		refresh: refreshBalances,
+	} = useStablecoinBalances(fromAccount?.address)
+
+	const selectedTokenBalance = getBalance(
+		selectedChain.value,
+		selectedToken.value,
+	)
+	const selectedFeeAssetBalance = getBalance(
+		selectedChain.value,
+		selectedFeeAsset.value,
+	)
+
+	const amountPlanck = useMemo(
+		() => toPlanck(amount, selectedDecimals),
+		[amount, selectedDecimals],
+	)
+	const feePaymentOptions = serviceApi.stablecoins.fee.paymentOptions(
+		selectedChain.value,
+		selectedFeeAsset.value,
+	)
+	const feeEstimator = useMemo<TxFeeEstimator>(
+		() =>
+			({ tx, from, feePaymentOptions: payloadOptions }) =>
+				serviceApi.stablecoins.fee.estimate({
+					chain: selectedChain.value,
+					symbol: selectedFeeAsset.value,
+					tx,
+					from,
+					payloadOptions,
+				}),
+		[serviceApi, selectedChain.value, selectedFeeAsset.value],
+	)
+
+	const needsHydrationFeeSetup =
+		selectedChain.value === 'hydration' &&
+		!!fromAccount?.address &&
+		hydrationFeeCurrency !== null &&
+		hydrationFeeCurrency !== selectedFeeAsset.value
+
+	const feeSetupSubmit = useSubmitExtrinsic({
+		tx: feeSetupTx,
+		tag: 'stablecoin-fee-setup',
+		from: {
+			address: fromAccount?.address || null,
+			source: fromAccount?.source || null,
+		},
+		shouldSubmit: needsHydrationFeeSetup,
+		feeEstimator,
+		feeDisplay,
+		callbackInBlock: () => {
+			refreshBalances()
+			if (fromAccount?.address) {
+				serviceApi.stablecoins.query
+					.hydrationFeeCurrency(fromAccount.address)
+					.then(setHydrationFeeCurrency)
+			}
+		},
+	})
+
+	const transferSubmit = useSubmitExtrinsic({
+		tx: needsHydrationFeeSetup ? undefined : transferTx,
+		tag: 'stablecoin-send',
+		from: {
+			address: fromAccount?.address || null,
+			source: fromAccount?.source || null,
+		},
+		shouldSubmit: !needsHydrationFeeSetup,
+		feePaymentOptions,
+		feeEstimator,
+		feeDisplay,
+		callbackInBlock: refreshBalances,
+	})
+
+	const activeSubmit = needsHydrationFeeSetup ? feeSetupSubmit : transferSubmit
+	const activeFee = getTxSubmission(activeSubmit.uid)?.fee || 0n
+	const maxAvailableToSend = maxSendableBalance(
+		selectedTokenBalance,
+		selectedFeeAssetBalance,
+		needsHydrationFeeSetup ? 0n : activeFee,
+	)
+
+	const hasEnoughTransferBalance =
+		amountPlanck > 0n &&
+		!!selectedTokenBalance &&
+		amountPlanck <= maxAvailableToSend
+	const hasRecipient = !!toAccount?.address
+	const hasSender = !!fromAccount?.address && !!fromAccount?.source
+	const validTransfer =
+		hasSender &&
+		hasRecipient &&
+		!isSameAccount(fromAccount, toAccount) &&
+		hasEnoughTransferBalance &&
+		!!transferTx &&
+		!needsHydrationFeeSetup
+	const validFeeSetup = needsHydrationFeeSetup && !!feeSetupTx
+
+	useEffect(() => {
+		let stale = false
+
+		const buildTransferTx = async () => {
+			if (
+				!toAccount?.address ||
+				amountPlanck <= 0n ||
+				!isStablecoinSendAssetSupported(
+					selectedChain.value,
+					selectedToken.value,
+				)
+			) {
+				setTransferTx(undefined)
+				return
+			}
+
+			const tx = await serviceApi.stablecoins.tx.transfer({
+				chain: selectedChain.value,
+				symbol: selectedToken.value,
+				recipient: toAccount.address,
+				amount: amountPlanck,
+			})
+			if (!stale) {
+				setTransferTx(tx)
+			}
+		}
+
+		buildTransferTx()
+
+		return () => {
+			stale = true
+		}
+	}, [
+		amountPlanck,
+		selectedChain.value,
+		selectedToken.value,
+		serviceApi,
+		toAccount?.address,
+	])
+
+	useEffect(() => {
+		let stale = false
+
+		const buildFeeSetupTx = async () => {
+			if (!needsHydrationFeeSetup) {
+				setFeeSetupTx(undefined)
+				return
+			}
+
+			const tx = await serviceApi.stablecoins.tx.setHydrationFeeCurrency(
+				selectedFeeAsset.value,
+			)
+			if (!stale) {
+				setFeeSetupTx(tx)
+			}
+		}
+
+		buildFeeSetupTx()
+
+		return () => {
+			stale = true
+		}
+	}, [needsHydrationFeeSetup, selectedFeeAsset.value, serviceApi])
+
+	useEffect(() => {
+		let stale = false
+
+		const fetchHydrationFeeCurrency = async () => {
+			if (selectedChain.value !== 'hydration' || !fromAccount?.address) {
+				setHydrationFeeCurrency(null)
+				return
+			}
+
+			setHydrationFeeCurrency(null)
+			const currency = await serviceApi.stablecoins.query.hydrationFeeCurrency(
+				fromAccount.address,
+			)
+			if (!stale) {
+				setHydrationFeeCurrency(currency)
+			}
+		}
+
+		fetchHydrationFeeCurrency()
+
+		return () => {
+			stale = true
+		}
+	}, [fromAccount?.address, selectedChain.value, serviceApi])
 
 	return (
 		<Page.Row>
@@ -341,7 +637,12 @@ export const Send = () => {
 									className={classes.balanceAvailableButton}
 								>
 									<span className={classes.balanceHighlight}>
-										{selectedTokenBalance.display}
+										{balancesLoading
+											? '...'
+											: formatBalance(
+													selectedTokenBalance,
+													selectedToken.value,
+												)}
 									</span>
 								</button>
 							</span>
@@ -359,32 +660,69 @@ export const Send = () => {
 								aria-label="Amount to send"
 							/>
 							<SendSelect
-								options={stablecoinOptions}
+								options={tokenOptions}
 								selected={selectedToken}
 								onSelect={setSelectedToken}
 							/>
 						</div>
 					</div>
 
+					<div className={classes.inputSection}>
+						<div className={classes.sectionLabelRow}>
+							<span className={classes.sectionLabel}>Pay Fees In</span>
+							<span className={classes.balanceLabel}>
+								Available:{' '}
+								<span className={classes.balanceHighlight}>
+									{balancesLoading
+										? '...'
+										: formatBalance(
+												selectedFeeAssetBalance,
+												selectedFeeAsset.value,
+											)}
+								</span>
+							</span>
+						</div>
+						<SendSelect
+							options={availableFeeAssetOptions}
+							selected={selectedFeeAsset}
+							onSelect={setSelectedFeeAsset}
+							variant="full"
+						/>
+					</div>
+
 					<div className={classes.details}>
 						<div className={classes.detailRow}>
 							<span className={classes.detailLabel}>Network Fee</span>
-							<span className={classes.detailValue}>0.002 DOT</span>
+							<span className={classes.detailValue}>
+								<EstimatedTxFee
+									uid={activeSubmit.uid}
+									feeDisplay={feeDisplay}
+								/>
+							</span>
 						</div>
-						<div className={classes.detailRow}>
-							<span className={classes.detailLabel}>Estimated Time</span>
-							<span className={classes.detailValueGreen}>~6 Seconds</span>
-						</div>
+						{needsHydrationFeeSetup && (
+							<div className={classes.detailRow}>
+								<span className={classes.detailLabel}>Fee Token</span>
+								<span className={classes.detailValueGreen}>
+									Set {selectedFeeAsset.value} before sending
+								</span>
+							</div>
+						)}
 					</div>
 
 					<div className={classes.actionWrapper}>
-						<button type="button" className={classes.actionBtn}>
-							<FontAwesomeIcon
-								icon={faPaperPlane}
-								className={classes.actionBtnIcon}
-							/>
-							Send Assets
-						</button>
+						<SubmitTx
+							{...activeSubmit}
+							submitText={
+								needsHydrationFeeSetup ? 'Set Fee Token' : 'Send Assets'
+							}
+							valid={needsHydrationFeeSetup ? validFeeSetup : validTransfer}
+							noMargin
+							feeDisplay={feeDisplay}
+							feeBalance={selectedFeeAssetBalance?.free ?? 0n}
+							hideSigner
+							transparent
+						/>
 					</div>
 				</div>
 			</div>

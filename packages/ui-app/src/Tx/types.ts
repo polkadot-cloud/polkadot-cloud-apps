@@ -17,4 +17,5 @@ export interface TxProps extends SignerProps {
 	displayFor?: DisplayFor
 	transparent?: boolean
 	stacked?: boolean
+	hideSigner?: boolean
 }

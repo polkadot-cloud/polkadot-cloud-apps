@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes'
+import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
+import { StablecoinConfigs } from 'consts/stablecoins'
 import {
-	type DedotClient,
+	DedotClient,
 	ExtraSignedExtension,
 	type SmoldotProvider,
-	type WsProvider,
+	WsProvider,
 } from 'dedot'
 import type {
 	NetworkConfig,
@@ -19,6 +21,7 @@ import { BaseService } from '../defaultService/baseService'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
+import { StablecoinsService } from '../stablecoins'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 
@@ -37,6 +40,8 @@ export class PolkadotService
 {
 	// Service interface
 	interface: ServiceInterface
+	private apiHydration?: DedotClient<HydrationApi>
+	private stablecoins: StablecoinsService
 
 	constructor(
 		public networkConfig: NetworkConfig,
@@ -46,9 +51,25 @@ export class PolkadotService
 		public providerPeople: WsProvider | SmoldotProvider,
 	) {
 		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
+		this.stablecoins = new StablecoinsService(this.apiHub, this.getHydrationApi)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
+			stablecoins: {
+				query: {
+					balances: this.stablecoins.balances,
+					balance: this.stablecoins.balance,
+					hydrationFeeCurrency: this.stablecoins.hydrationFeeCurrency,
+				},
+				tx: {
+					transfer: this.stablecoins.transfer,
+					setHydrationFeeCurrency: this.stablecoins.setHydrationFeeCurrency,
+				},
+				fee: {
+					paymentOptions: this.stablecoins.paymentOptions,
+					estimate: this.stablecoins.estimateFee,
+				},
+			},
 			query: {
 				accountBalance: {
 					hub: async (address) =>
@@ -162,27 +183,55 @@ export class PolkadotService
 					signerAddress,
 					payloadOptions = undefined,
 				) =>
-					new ExtraSignedExtension(this.getLiveApi(specName), {
+					new ExtraSignedExtension(this.getSigningApi(specName), {
 						signerAddress,
 						payloadOptions,
 					}),
 				metadata: async (specName) =>
-					await this.getLiveApi(specName).call.metadata.metadataAtVersion(15),
+					await this.getSigningApi(specName).call.metadata.metadataAtVersion(
+						15,
+					),
 			},
 			spec: {
-				ss58: (specName) => this.getLiveApi(specName).consts.system.ss58Prefix,
+				ss58: (specName) =>
+					this.getSigningApi(specName).consts.system.ss58Prefix,
 			},
 			codec: {
 				$Signature: (specName) =>
-					this.getLiveApi(specName).registry.findCodec(
-						this.getLiveApi(specName).registry.metadata.extrinsic
+					this.getSigningApi(specName).registry.findCodec(
+						this.getSigningApi(specName).registry.metadata.extrinsic
 							.signatureTypeId,
 					),
 			},
 		}
 	}
 
+	getHydrationApi = async () => {
+		if (!this.apiHydration) {
+			this.apiHydration = await DedotClient.new<HydrationApi>(
+				new WsProvider(StablecoinConfigs.hydration.rpcEndpoints),
+			)
+		}
+
+		return this.apiHydration
+	}
+
+	getSigningApi = (id: string) => {
+		if (this.apiHydration?.runtimeVersion.specName === id) {
+			return this.apiHydration as unknown as DedotClient<PolkadotAssetHubApi>
+		}
+
+		return this.apiHub
+	}
+
 	async start() {
 		await super.start(this.interface)
+	}
+
+	async unsubscribe() {
+		await Promise.all([
+			super.unsubscribe(),
+			this.apiHydration ? this.apiHydration.disconnect() : Promise.resolve(),
+		])
 	}
 }

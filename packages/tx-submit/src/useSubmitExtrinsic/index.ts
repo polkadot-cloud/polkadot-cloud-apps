@@ -3,19 +3,15 @@
 
 import {
 	useExtensionAccounts,
-	useExtensions,
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
-import { useLedger } from '@polkadot-cloud/connect-ledger'
-import {
-	type VaultSignatureResult,
-	VaultSigner,
-	type VaultSignStatus,
-} from '@polkadot-cloud/connect-vault'
+import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
+import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import type { HardwareAccount } from '@w3ux/types'
-import { DappName, ManualSigners } from 'consts'
+import { ManualSigners } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
+import { SubmittableExtrinsic } from 'dedot'
 import { compactU32 } from 'dedot/shape'
 import type { InjectedSigner } from 'dedot/types'
 import { concatU8a, hexToU8a } from 'dedot/utils'
@@ -31,23 +27,32 @@ import {
 } from 'global-bus'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useApi } from 'hooks/useApi'
-import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
 import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
-import { QRSignPrompt } from 'library/QRSignPrompt'
-import { signLedgerPayload } from 'library/Signers/LedgerSigner'
-import { useEffect, useState } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
+import { QRSignPrompt } from '../QRSignPrompt'
+import { stringifyWithBigInt } from '../util'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
+
+export type {
+	TxFeeEstimator,
+	TxFeeEstimatorInput,
+	UseSubmitExtrinsic,
+	UseSubmitExtrinsicProps,
+} from './types'
 
 export const useSubmitExtrinsic = ({
 	tx,
 	tag,
 	from,
 	shouldSubmit,
+	feePaymentOptions,
+	feeEstimator,
+	feeDisplay,
 	callbackSubmit,
 	callbackInBlock,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
@@ -55,108 +60,89 @@ export const useSubmitExtrinsic = ({
 	const { serviceApi } = useApi()
 	const { network } = useNetwork()
 	const { getTxSubmission } = useTxMeta()
-	const { getAccountBalance } = useBalances()
-	const { extensionsStatus } = useExtensions()
 	const { handleResetLedgerTask } = useLedger()
 	const { isProxySupported } = useProxySupported()
 	const { openPromptWith, closePrompt } = usePrompt()
-	const { getExtensionAccount } = useExtensionAccounts()
+	const { connectExtension, getExtensionAccount } = useExtensionAccounts()
 	const { getAccount, requiresManualSign } = useImportedAccounts()
-	const { address: fromAddress, source, proxy } = from
+	const { address: fromAddress, source, proxy = null } = from
 	const {
 		balances: { balanceTxFees },
 	} = useAccountBalances(fromAddress)
 	const { unit, units } = getStakingChainData(network)
-
-	// Store the uid for this transaction
 	const [uid, setUid] = useState<number>(0)
 
-	// Get the imported account for the `from` address
 	const fromAccount =
 		fromAddress && source
 			? getAccount({
 					address: fromAddress,
-					source: source,
+					source,
 				})
 			: null
 
-	// Use fromAccount as the submit account if it exists
 	let submitAccount: ActiveAccount = fromAccount
 		? { address: fromAccount.address, source: fromAccount.source }
 		: null
+	let submitTx = tx
 
-	// If proxy account is active, wrap tx in a proxy call and set the sender to the proxy account. If
-	// already wrapped, update submitAccount to the proxy account
 	let proxySupported = false
-	if (tx && submitAccount) {
-		proxySupported = isProxySupported(tx, submitAccount.address, proxy)
-		if (tx.call.pallet === 'Proxy' && tx.call.palletCall.name === 'Proxy') {
+	if (submitTx && submitAccount) {
+		proxySupported = isProxySupported(submitTx, submitAccount.address, proxy)
+		if (
+			submitTx.call.pallet === 'Proxy' &&
+			submitTx.call.palletCall.name === 'Proxy'
+		) {
 			if (proxy) {
 				submitAccount = {
 					address: proxy.address,
 					source: proxy.source,
 				}
 			}
-		} else {
-			if (proxy && proxySupported) {
-				// Update submit address to active proxy account
-				const real = submitAccount.address
-				submitAccount = {
-					address: proxy.address,
-					source: proxy.source,
-				}
+		} else if (proxy && proxySupported) {
+			const real = submitAccount.address
+			submitAccount = {
+				address: proxy.address,
+				source: proxy.source,
+			}
 
-				// Check not a batch transaction
-				if (
-					real &&
-					!(tx.call.pallet === 'Utility' && tx.call.palletCall.name === 'Batch')
-				) {
-					// Not a batch transaction: wrap tx in proxy call. Proxy calls should already be wrapping
-					// each tx within the batch via `useBatchCall`
-					const proxiedTx = serviceApi.tx.proxy(real, tx)
-					if (proxiedTx) {
-						tx = proxiedTx
-					}
+			if (
+				real &&
+				!(
+					submitTx.call.pallet === 'Utility' &&
+					submitTx.call.palletCall.name === 'Batch'
+				)
+			) {
+				const proxiedTx = serviceApi.tx.proxy(real, submitTx)
+				if (proxiedTx) {
+					submitTx = proxiedTx
 				}
 			}
 		}
 	}
 
-	// Extrinsic submission handler
 	const onSubmit = async () => {
-		if (!tx || getUid(uid)?.submitted) {
+		if (!submitTx || getUid(uid)?.submitted || !submitAccount) {
 			return
 		}
-		if (!submitAccount) {
-			return
-		}
+
 		const account = getAccount(submitAccount)
 		if (account === null || !shouldSubmit) {
 			return
 		}
 
-		const { specName, specVersion } = tx.client.runtimeVersion
-		const ss58 = serviceApi.spec.ss58(specName)
+		const { specName } = submitTx.client.runtimeVersion
 		const { source } = account
 		const isManualSigner = ManualSigners.includes(source)
 
-		// If `activeAccount` is imported from an extension, ensure it is enabled
 		if (!isManualSigner) {
-			const isInstalled = Object.entries(extensionsStatus).find(
-				([id, status]) => id === source && status === 'connected',
-			)
-			if (!isInstalled || !window?.injectedWeb3?.[source]) {
-				throw new Error(`${t('walletNotFound')}`)
+			const connected = await connectExtension(source)
+			if (!connected) {
+				throw new Error(t('walletNotFound'))
 			}
-			// NOTE: Summons extension popup if not already connected
-			window.injectedWeb3[source].enable(DappName)
 		}
 
-		// Pre-submission state update
 		setUidSubmitted(uid, true)
 
-		// Handle signed transaction
-		let signer: InjectedSigner | undefined
 		let encodedSig
 		const handlers = {
 			onReady,
@@ -168,11 +154,8 @@ export const useSubmitExtrinsic = ({
 
 		if (requiresManualSign(submitAccount)) {
 			const networkInfo = {
-				decimals: units,
-				tokenSymbol: unit,
-				specName,
-				specVersion,
-				ss58,
+				decimals: feeDisplay?.units ?? units,
+				tokenSymbol: feeDisplay?.unit || unit,
 			}
 
 			const $Signature = serviceApi.codec.$Signature(specName)
@@ -188,10 +171,11 @@ export const useSubmitExtrinsic = ({
 						specName,
 						submitAccount.address,
 						serviceApi.signer.extraSignedExtension,
-						tx,
+						submitTx,
 						metadata || '0x',
 						networkInfo,
 						(account as HardwareAccount).index,
+						feePaymentOptions,
 					)
 					if (result) {
 						encodedSig = {
@@ -210,31 +194,27 @@ export const useSubmitExtrinsic = ({
 				const extra = serviceApi.signer.extraSignedExtension(
 					specName,
 					submitAccount.address,
+					feePaymentOptions,
 				)
 				if (!extra) {
 					onError('technical', 'missing_signer')
 					return
 				}
 				await extra.init()
-				const rawPayload = extra.toRawPayload(tx.callHex)
+				const rawPayload = extra.toRawPayload(submitTx.callHex)
 				const prefixedPayload = concatU8a(
-					compactU32.encode(tx.callLength),
+					compactU32.encode(submitTx.callLength),
 					hexToU8a(rawPayload.data),
 				)
 				const result = await new VaultSigner({
-					openPrompt: (
-						onComplete: (
-							status: VaultSignStatus,
-							result: VaultSignatureResult,
-						) => void,
-						toSign: Uint8Array,
-					) => {
+					openPrompt: (onComplete, toSign) => {
 						openPromptWith(
-							<QRSignPrompt
-								submitAddress={submitAccount.address}
-								onComplete={onComplete}
-								toSign={toSign}
-							/>,
+							createElement(QRSignPrompt, {
+								submitAddress: submitAccount.address,
+								genesisHash: submitTx.client.genesisHash,
+								onComplete,
+								toSign,
+							}),
 							'sm',
 							false,
 						)
@@ -254,33 +234,32 @@ export const useSubmitExtrinsic = ({
 				}
 			}
 
-			// Custom signer
-			//
-			// Submit the transaction with the raw signature
 			if (!encodedSig) {
 				onError('technical', 'invalid_signer')
 				return
 			}
-			addSend(network, uid, tx, encodedSig, handlers)
+			addSend(network, uid, submitTx, encodedSig, handlers)
 		} else {
-			// Extension signer
-			//
-			// Get the signer for this account and submit the transaction
-			signer = getExtensionAccount(submitAccount.address, submitAccount.source)
-				?.signer as InjectedSigner | undefined
+			const signer = getExtensionAccount(
+				submitAccount.address,
+				submitAccount.source,
+			)?.signer as InjectedSigner | undefined
 			if (!signer) {
 				onError('technical', 'missing_signer')
 				return
 			}
+			const { nonce } = await submitTx.client.query.system.account(
+				submitAccount.address,
+			)
 			addSignAndSend(
 				network,
 				uid,
 				submitAccount.address,
-				tx,
-				signer as InjectedSigner,
-				getAccountBalance(submitAccount.address).nonce +
-					pendingTxCount(submitAccount.address),
+				submitTx,
+				signer,
+				nonce + pendingTxCount(network, submitAccount.address),
 				handlers,
+				feePaymentOptions,
 			)
 		}
 	}
@@ -290,9 +269,7 @@ export const useSubmitExtrinsic = ({
 			title: t('pending'),
 			subtitle: t('transactionInitiated'),
 		})
-		if (callbackSubmit && typeof callbackSubmit === 'function') {
-			callbackSubmit()
-		}
+		callbackSubmit?.()
 	}
 
 	const onInBlock = () => {
@@ -300,9 +277,7 @@ export const useSubmitExtrinsic = ({
 			title: t('inBlock'),
 			subtitle: t('transactionInBlock'),
 		})
-		if (callbackInBlock && typeof callbackInBlock === 'function') {
-			callbackInBlock()
-		}
+		callbackInBlock?.()
 	}
 
 	const onFinalized = () => {
@@ -313,24 +288,22 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onFailed = (error?: Error) => {
-		const title = t('failed')
+		const displayUnit = feeDisplay?.unit || unit
 		let subtitle = t('errorWithTransaction')
 
-		// Handle only known, user-reported errors - focus on balance-related issues
 		if (error) {
 			const msg = error.message.toLowerCase()
 			if (
 				/balance|reserve|locked|freeze|insufficient|funds|minimum/.test(msg)
 			) {
-				if (/locked|freeze/.test(msg)) {
-					subtitle = t('errors.balanceErrorLocked')
-				} else {
-					subtitle = t('errors.balanceErrorReserveRequired')
-				}
+				subtitle = /locked|freeze/.test(msg)
+					? t('errors.balanceErrorLocked')
+					: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
 			}
 		}
+
 		emitNotification({
-			title,
+			title: t('failed'),
 			subtitle,
 		})
 	}
@@ -342,6 +315,7 @@ export const useSubmitExtrinsic = ({
 			handleResetLedgerTask()
 		}
 
+		const displayUnit = feeDisplay?.unit || unit
 		const txFee = getTxSubmission(uid)?.fee || 0n
 		const hasInsufficientFunds = balanceTxFees < txFee
 
@@ -351,22 +325,25 @@ export const useSubmitExtrinsic = ({
 		if (type === 'insufficient_funds' || hasInsufficientFunds) {
 			title = t('insufficientFunds')
 
-			switch (tx?.call.pallet) {
+			switch (submitTx?.call.pallet) {
 				case 'Staking':
-					subtitle = t('errors.addMoreDotForStaking', { unit })
+					subtitle = t('errors.addMoreDotForStaking', { unit: displayUnit })
 					break
 				case 'NominationPools':
-					subtitle = t('errors.addMoreDotForPooling', { unit })
+					subtitle = t('errors.addMoreDotForPooling', { unit: displayUnit })
 					break
 				default:
-					subtitle = t('errors.addMoreDotForFees', { unit })
+					subtitle = t('errors.addMoreDotForFees', { unit: displayUnit })
 					break
 			}
 		} else if (type === 'user_cancelled') {
 			title = t('userCancelled')
 			subtitle = t('userCancelledTransaction')
 		} else if (type === 'technical') {
-			subtitle = getTechnicalErrorMessage(details)
+			const translationKey = details ? TxErrorKeyMap[details] : undefined
+			subtitle = translationKey
+				? t(translationKey)
+				: t('transactionCancelledTechnical')
 		}
 
 		emitNotification({
@@ -375,43 +352,52 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
-	// Helper function to get specific technical error messages
-	const getTechnicalErrorMessage = (details?: string): string => {
-		if (!details) {
-			return t('transactionCancelledTechnical')
-		}
-
-		const translationKey = TxErrorKeyMap[details]
-		return translationKey
-			? t(translationKey)
-			: t('transactionCancelledTechnical')
-	}
-
-	// Re-fetch tx fee if tx changes
 	const fetchTxFee = async () => {
-		if (tx && submitAccount?.address) {
-			const { partialFee } = await tx.paymentInfo(submitAccount.address)
-			updateFee(uid, partialFee)
+		if (submitTx && submitAccount?.address) {
+			updateFee(uid, 0n)
+			const feeTx = SubmittableExtrinsic.fromTx(
+				submitTx.client as Parameters<typeof SubmittableExtrinsic.fromTx>[0],
+				submitTx.call,
+			)
+			try {
+				const partialFee = feeEstimator
+					? await feeEstimator({
+							tx: feeTx,
+							from: submitAccount.address,
+							feePaymentOptions,
+						})
+					: (await feeTx.paymentInfo(submitAccount.address, feePaymentOptions))
+							.partialFee
+				updateFee(uid, partialFee)
+			} catch {
+				updateFee(uid, 0n)
+			}
 		}
 	}
 
-	// Initialise tx submission
+	const submitAccountKey = stringifyWithBigInt(submitAccount)
+	const feePaymentOptionsKey = stringifyWithBigInt(feePaymentOptions)
+	const txHex = submitTx?.toHex()
+
 	useEffect(() => {
-		// Add a new uid for this transaction
 		if (uid === 0) {
-			const newUid = addUid({ from: submitAccount?.address || null, tag })
+			const newUid = addUid({
+				network,
+				from: submitAccount?.address || null,
+				tag,
+			})
 			setUid(newUid)
 		}
-	}, [])
+	}, [submitAccount?.address, tag, network, uid])
 
 	useEffect(() => {
 		if (uid > 0) {
 			fetchTxFee()
 		}
-	}, [JSON.stringify(submitAccount), uid, JSON.stringify(tx?.toHex())])
+	}, [submitAccountKey, uid, feePaymentOptionsKey, txHex, feeEstimator])
 
 	return {
-		txInitiated: !!tx,
+		txInitiated: !!submitTx,
 		uid,
 		onSubmit,
 		submitAccount,

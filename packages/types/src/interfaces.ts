@@ -19,11 +19,47 @@ import type { IdentityOf, SuperOf } from './identity'
 import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
 import type {
+	StablecoinAssetSymbol,
+	StablecoinBalance,
+	StablecoinChainId,
+	StablecoinFeeAssetSymbol,
+	StablecoinFeeEstimateInput,
+	StablecoinTransferInput,
+} from './stablecoins'
+import type {
 	ErasStakersOverviewEntries,
 	ErasStakersPagedEntries,
 } from './staking'
 
 export interface ServiceInterface {
+	stablecoins: {
+		query: {
+			balances: (address: string) => Promise<StablecoinBalance[]>
+			balance: (
+				address: string,
+				chain: StablecoinChainId,
+				symbol: StablecoinAssetSymbol,
+			) => Promise<StablecoinBalance | undefined>
+			hydrationFeeCurrency: (
+				address: string,
+			) => Promise<StablecoinFeeAssetSymbol | undefined>
+		}
+		tx: {
+			transfer: (
+				input: StablecoinTransferInput,
+			) => Promise<SubmittableExtrinsic | undefined>
+			setHydrationFeeCurrency: (
+				symbol: StablecoinFeeAssetSymbol,
+			) => Promise<SubmittableExtrinsic | undefined>
+		}
+		fee: {
+			paymentOptions: (
+				chain: StablecoinChainId,
+				symbol: StablecoinFeeAssetSymbol,
+			) => PayloadOptions | undefined
+			estimate: (input: StablecoinFeeEstimateInput) => Promise<bigint>
+		}
+	}
 	query: {
 		accountBalance: {
 			hub: (address: string) => Promise<PalletBalancesAccountData | undefined>
