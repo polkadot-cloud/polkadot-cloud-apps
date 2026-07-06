@@ -5,20 +5,19 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { getUnixTime } from 'date-fns'
 import type { SubmittableExtrinsic } from 'dedot'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
-import { useErasToTimeLeft } from 'hooks/useErasToTimeLeft'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSignerWarnings } from 'hooks/useSignerWarnings'
 import { useStakingMetrics } from 'hooks/useStakingMetrics'
 import { useSubmitExtrinsic } from 'hooks/useSubmitExtrinsic'
 import { formatFromProp } from 'hooks/useSubmitExtrinsic/util'
 import { useTxMeta } from 'hooks/useTxMeta'
+import { useUnbondDuration } from 'hooks/useUnbondDuration'
 import { UnbondFeedback } from 'library/Form/Unbond/UnbondFeedback'
 import { Warning, WarningLink } from 'library/Form/Warning'
 import { StaticNote } from 'modals/Utils/StaticNote'
@@ -27,14 +26,12 @@ import { Trans, useTranslation } from 'react-i18next'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { Notes, Padding, Title, Warnings } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
-import { timeleftAsString } from 'utils'
 
 export const Unbond = () => {
 	const { t } = useTranslation('modals')
 	const { network } = useNetwork()
 	const { getTxSubmission } = useTxMeta()
 	const { activeProxy } = useActiveProxy()
-	const { erasToSeconds } = useErasToTimeLeft()
 	const { getPendingPoolRewards } = useBalances()
 	const { getSignerWarnings } = useSignerWarnings()
 	const { activeAddress, activeAccount } = useActiveAccount()
@@ -49,21 +46,15 @@ export const Unbond = () => {
 		config: { options },
 	} = useOverlay().modal
 	const {
-		getConsts,
 		poolsConfig: { minJoinBond: minJoinBondBn, minCreateBond: minCreateBondBn },
 	} = useApi()
 
 	const { bondFor } = options
-	const { bondDuration } = getConsts(network)
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
 	const { unit, units } = getStakingChainData(network)
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 
-	const bondDurationFormatted = timeleftAsString(
-		t,
-		getUnixTime(new Date()) + 1,
-		erasToSeconds(bondDuration),
-		true,
-	)
+	const unbondDurationFormatted = formatUnbondDuration(t)
 
 	const pendingRewardsUnit = planckToUnit(pendingRewards, units)
 
@@ -231,10 +222,10 @@ export const Unbond = () => {
 						)
 					) : null}
 					<StaticNote
-						value={bondDurationFormatted}
+						value={unbondDurationFormatted}
 						tKey="onceUnbonding"
 						valueKey="bondDurationFormatted"
-						deps={[bondDuration]}
+						deps={[unbondDuration]}
 					/>
 				</Notes>
 			</Padding>

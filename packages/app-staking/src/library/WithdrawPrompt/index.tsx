@@ -3,47 +3,35 @@
 
 import { faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { getUnixTime } from 'date-fns'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
-import { useApi } from 'hooks/useApi'
-import { useErasToTimeLeft } from 'hooks/useErasToTimeLeft'
-import { useNetwork } from 'hooks/useNetwork'
 import { useThemeValues } from 'hooks/useThemeValues'
+import { useUnbondDuration } from 'hooks/useUnbondDuration'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { useTranslation } from 'react-i18next'
 import type { BondFor } from 'types'
 import { ButtonPrimary } from 'ui-buttons'
 import { ButtonRow, Page } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
-import { timeleftAsString } from 'utils'
 
 export const WithdrawPrompt = ({ bondFor }: { bondFor: BondFor }) => {
 	const { t } = useTranslation('modals')
-	const { getConsts } = useApi()
-	const { network } = useNetwork()
 	const { activePool } = useActivePool()
 	const { openModal } = useOverlay().modal
 	const { getThemeValue } = useThemeValues()
 
 	const { activeAddress } = useActiveAccount()
-	const { erasToSeconds } = useErasToTimeLeft()
+	const { formatUnbondDuration } = useUnbondDuration()
 	const { state } = activePool?.bondedPool || {}
 
 	const { balances } = useAccountBalances(activeAddress)
-	const { bondDuration } = getConsts(network)
 
 	const totalUnlockChunks =
 		bondFor === 'nominator'
 			? balances.nominator.totalUnlockChunks
 			: balances.pool.totalUnlockChunks
 
-	const bondDurationFormatted = timeleftAsString(
-		t,
-		getUnixTime(new Date()) + 1,
-		erasToSeconds(bondDuration),
-		true,
-	)
+	const unbondDurationFormatted = formatUnbondDuration(t)
 
 	// Check whether there are active unlock chunks.
 	const displayPrompt = totalUnlockChunks > 0
@@ -59,7 +47,11 @@ export const WithdrawPrompt = ({ bondFor }: { bondFor: BondFor }) => {
 				>
 					<div className="content">
 						<h3>{t('unlocksInProgress')}</h3>
-						<h4>{t('youHaveActiveUnlocks', { bondDurationFormatted })}</h4>
+						<h4>
+							{t('youHaveActiveUnlocks', {
+								bondDurationFormatted: unbondDurationFormatted,
+							})}
+						</h4>
 						<ButtonRow yMargin>
 							<ButtonPrimary
 								iconLeft={faLockOpen}

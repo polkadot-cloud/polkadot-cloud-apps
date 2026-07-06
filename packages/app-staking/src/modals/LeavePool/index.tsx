@@ -4,17 +4,16 @@
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { planckToUnit } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
-import { getUnixTime } from 'date-fns'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
-import { useErasToTimeLeft } from 'hooks/useErasToTimeLeft'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSignerWarnings } from 'hooks/useSignerWarnings'
 import { useSubmitExtrinsic } from 'hooks/useSubmitExtrinsic'
 import { formatFromProp } from 'hooks/useSubmitExtrinsic/util'
+import { useUnbondDuration } from 'hooks/useUnbondDuration'
 import { Warning } from 'library/Form/Warning'
 import { ModalBack } from 'library/ModalBack'
 import { StaticNote } from 'modals/Utils/StaticNote'
@@ -23,7 +22,6 @@ import { useTranslation } from 'react-i18next'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { ActionItem, Padding, Title, Warnings } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
-import { timeleftAsString } from 'utils'
 
 export const LeavePool = ({
 	onResize,
@@ -35,8 +33,7 @@ export const LeavePool = ({
 	const { t } = useTranslation('modals')
 	const { network } = useNetwork()
 	const { activePool } = useActivePool()
-	const { getConsts, serviceApi } = useApi()
-	const { erasToSeconds } = useErasToTimeLeft()
+	const { serviceApi } = useApi()
 	const { closeModal } = useOverlay().modal
 	const { activeProxy } = useActiveProxy()
 	const { getSignerWarnings } = useSignerWarnings()
@@ -46,15 +43,10 @@ export const LeavePool = ({
 
 	const { unit, units } = getStakingChainData(network)
 	const { active: activeBn } = balances.pool
-	const { bondDuration } = getConsts(network)
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 	const { membership } = getPoolMembership(activeAddress)
-	const bondDurationFormatted = timeleftAsString(
-		t,
-		getUnixTime(new Date()) + 1,
-		erasToSeconds(bondDuration),
-		true,
-	)
+	const unbondDurationFormatted = formatUnbondDuration(t)
 	const freeToUnbond = planckToUnit(activeBn, units)
 	const pendingRewardsUnit = planckToUnit(pendingRewards, units)
 
@@ -107,10 +99,10 @@ export const LeavePool = ({
 					text={`${t('unbond')} ${freeToUnbond.toString()} ${unit}`}
 				/>
 				<StaticNote
-					value={bondDurationFormatted}
+					value={unbondDurationFormatted}
 					tKey="onceUnbonding"
 					valueKey="bondDurationFormatted"
-					deps={[bondDuration]}
+					deps={[unbondDuration]}
 				/>
 			</Padding>
 			{!!onClick && <ModalBack onClick={onClick} />}

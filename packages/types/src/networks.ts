@@ -58,7 +58,7 @@ export interface ChainSpecVersion {
 
 export interface ChainConsts {
 	bondDuration: number
-	nominatorFastUnbondDuration: number
+	unbondDuration: number
 	sessionsPerEra: number
 	maxExposurePageSize: number
 	historyDepth: number
