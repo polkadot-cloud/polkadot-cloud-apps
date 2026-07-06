@@ -7,6 +7,7 @@ import type { StakingChain } from '../types'
 
 export class StakingConsts<T extends StakingChain> {
 	bondDuration: number
+	nominatorFastUnbondDuration: number
 	sessionsPerEra: number
 	maxExposurePageSize: number
 	historyDepth: number
@@ -19,6 +20,8 @@ export class StakingConsts<T extends StakingChain> {
 
 	fetch() {
 		this.bondDuration = this.api.consts.staking.bondingDuration
+		this.nominatorFastUnbondDuration =
+			this.api.consts.staking.nominatorFastUnbondDuration
 		this.sessionsPerEra = this.api.consts.staking.sessionsPerEra
 		this.maxExposurePageSize = this.api.consts.staking.maxExposurePageSize
 		this.historyDepth = this.api.consts.staking.historyDepth
@@ -28,6 +31,7 @@ export class StakingConsts<T extends StakingChain> {
 	get() {
 		return {
 			bondDuration: this.bondDuration,
+			nominatorFastUnbondDuration: this.nominatorFastUnbondDuration,
 			sessionsPerEra: this.sessionsPerEra,
 			maxExposurePageSize: this.maxExposurePageSize,
 			historyDepth: this.historyDepth,
