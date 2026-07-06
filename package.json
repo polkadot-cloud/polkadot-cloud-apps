@@ -12,7 +12,7 @@
 		"license:headers": "npx @kt3k/license-checker -q"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.1",
+		"@biomejs/biome": "2.5.2",
 		"@kt3k/license-checker": "3.2.2",
 		"@types/chroma-js": "^3.1.2",
 		"@types/react": "^19.2.17",
