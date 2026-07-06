@@ -12,11 +12,11 @@
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^7.2.0",
+		"@fortawesome/fontawesome-svg-core": "^7.3.0",
 		"dedot": "^1.3.0"
 	},
 	"devDependencies": {
 		"@dedot/chaintypes": "^0.280.0",
-		"bignumber.js": "^11.1.3"
+		"bignumber.js": "^11.1.5"
 	}
 }

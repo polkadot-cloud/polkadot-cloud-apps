@@ -10,7 +10,7 @@ jobs:
   check-license:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
         with:
           version: 11.1.0
@@ -23,7 +23,7 @@ jobs:
       matrix:
         node-version: [24.x]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
         with:
           version: 11.1.0
@@ -34,7 +34,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Cache Vite Build
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.pnpm-store
@@ -45,7 +45,7 @@ jobs:
       - run: pnpm check
       - run: pnpm license:headers
       - run: pnpm build:verify
-        working-directory: packages/app
+        working-directory: packages/app-staking
       - run: pnpm test
       - run: pnpm run validate
         working-directory: packages/locales

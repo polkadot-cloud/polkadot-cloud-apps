@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { planckToUnit } from '@w3ux/utils'
@@ -10,6 +10,7 @@ import { calculateAllBalances } from 'utils'
 import { useApi } from '../useApi'
 import { useBalances } from '../useBalances'
 import { useNetwork } from '../useNetwork'
+import { useStakingMetrics } from '../useStakingMetrics'
 
 export const useAccountBalances = (address: MaybeAddress) => {
 	const {
@@ -20,7 +21,8 @@ export const useAccountBalances = (address: MaybeAddress) => {
 	} = useBalances()
 	const { network } = useNetwork()
 	const { feeReserve } = useBalances()
-	const { activeEra, stakingMetrics } = useApi()
+	const { activeEra } = useApi()
+	const stakingMetrics = useStakingMetrics()
 	const { units } = getStakingChainData(network)
 
 	// Calculates various balances for an account pertaining to free balance, nominating and pools.

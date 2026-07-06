@@ -1,8 +1,7 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { planckToUnit } from '@w3ux/utils'
-import BigNumber from 'bignumber.js'
 import type { ActiveAccountOwnStake, Staker } from 'types'
 import type { ProcessExposuresArgs } from './types'
 
@@ -37,8 +36,8 @@ const processExposures = (data: ProcessExposuresArgs) => {
 		if (others.length) {
 			// Sort `others` by value bonded, largest first.
 			others = others.sort((a, b) => {
-				const r = new BigNumber(b.value).minus(a.value)
-				return r.isZero() ? 0 : r.isLessThan(0) ? -1 : 1
+				const r = BigInt(b.value) - BigInt(a.value)
+				return r === 0n ? 0 : r < 0n ? -1 : 1
 			})
 			stakers.push({
 				address,

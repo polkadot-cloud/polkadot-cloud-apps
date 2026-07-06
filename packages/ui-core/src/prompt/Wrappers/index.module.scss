@@ -1,103 +1,103 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .promptWrapper {
-  animation: prompt-fade-in 0.075s ease-in-out forwards;
-  background: var(--overlay-backdrop);
-  height: 100%;
-  position: fixed;
-  width: 100%;
-  z-index: 11;
+	animation: prompt-fade-in 0.075s ease-in-out forwards;
+	background: var(--overlay-backdrop);
+	height: 100%;
+	position: fixed;
+	width: 100%;
+	z-index: 11;
 }
 
 .inner {
-  align-items: center;
-  animation: prompt-fade-scale 0.3s cubic-bezier(0, 1, 0, 1) forwards;
-  display: flex;
-  flex-flow: row wrap;
-  height: 100%;
-  justify-content: center;
-  padding: 2rem;
+	align-items: center;
+	animation: prompt-fade-scale 0.3s cubic-bezier(0, 1, 0, 1) forwards;
+	display: flex;
+	flex-flow: row wrap;
+	height: 100%;
+	justify-content: center;
+	padding: 2rem;
 
-  :global(h4.subheading) {
-    margin-bottom: 1rem;
-  }
+	:global(h4.subheading) {
+		margin-bottom: 1rem;
+	}
 
-  :global(.padded) {
-    padding: 1rem 1.5rem;
-  }
+	:global(.padded) {
+		padding: 1rem 1.5rem;
+	}
 }
 
 .backdropButton {
-  cursor: default;
-  height: 100%;
-  position: fixed;
-  width: 100%;
-  z-index: 8;
+	cursor: default;
+	height: 100%;
+	position: fixed;
+	width: 100%;
+	z-index: 8;
 }
 
 .heightWrapper {
-  border-radius: 1rem;
-  max-height: 100%;
-  overflow: auto;
-  position: relative;
-  transition: height 0.5s cubic-bezier(0.1, 1, 0.2, 1);
-  width: 100%;
-  z-index: 9;
+	border-radius: 1rem;
+	max-height: 100%;
+	overflow: auto;
+	position: relative;
+	transition: height 0.5s cubic-bezier(0.1, 1, 0.2, 1);
+	width: 100%;
+	z-index: 9;
 }
 
 .heightWrapperSmall {
-  max-width: 500px;
+	max-width: 500px;
 }
 
 .heightWrapperLarge {
-  max-width: 700px;
+	max-width: 700px;
 }
 
 .contentWrapper {
-  background: var(--gray-200);
-  height: auto;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
+	background: var(--gray-200);
+	height: auto;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
 
-  a {
-    color: var(--gray-1000);
-  }
+	a {
+		color: var(--gray-1000);
+	}
 
-  :global(.header) {
-    align-items: center;
-    display: flex;
-    flex-flow: row wrap;
-    padding: 1rem 2rem 0;
-    width: 100%;
-  }
+	:global(.header) {
+		align-items: center;
+		display: flex;
+		flex-flow: row wrap;
+		padding: 1rem 2rem 0;
+		width: 100%;
+	}
 
-  :global(.body) {
-    padding: 1rem 2rem 1.5rem;
+	:global(.body) {
+		padding: 1rem 2rem 1.5rem;
 
-    h4 {
-      margin: 1rem 0;
-    }
-  }
+		h4 {
+			margin: 1rem 0;
+		}
+	}
 }
 
 @keyframes prompt-fade-in {
-  from {
-    opacity: 0;
-  }
+	from {
+		opacity: 0;
+	}
 
-  to {
-    opacity: 1;
-  }
+	to {
+		opacity: 1;
+	}
 }
 
 @keyframes prompt-fade-scale {
-  from {
-    transform: scale(0.8);
-  }
+	from {
+		transform: scale(0.8);
+	}
 
-  to {
-    transform: scale(1);
-  }
+	to {
+		transform: scale(1);
+	}
 }

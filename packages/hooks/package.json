@@ -14,10 +14,10 @@
 	},
 	"dependencies": {
 		"@polkadot-cloud/connect": "^1.0.9",
-		"@polkadot-cloud/connect-proxies": "^0.2.3",
+		"@polkadot-cloud/connect-proxies": "^0.3.0",
 		"@w3ux/utils": "^3.1.1",
 		"@w3ux/validator-assets": "^1.3.3",
-		"bignumber.js": "^11.1.3",
+		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
 		"dedot": "^1.3.0",

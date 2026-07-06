@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
@@ -11,14 +11,12 @@ import {
 	defaultConsts,
 	defaultPoolsConfig,
 	defaultServiceInterface,
-	defaultStakingMetrics,
 	getAutoRpc,
 	getProviderType,
 	getRpcEndpoints,
 	networkConfig$,
 	poolsConfig$,
 	serviceInterface$,
-	stakingMetrics$,
 } from 'global-bus'
 import { useCallback, useSyncExternalStore } from 'react'
 import type {
@@ -30,7 +28,6 @@ import type {
 	PoolsConfig,
 	ProviderType,
 	ServiceInterface,
-	StakingMetrics,
 } from 'types'
 import { createObservableStore } from 'utils'
 import { useNetwork } from '../useNetwork'
@@ -62,10 +59,6 @@ const activeEraStore = createObservableStore<IActiveEra>(
 const poolsConfigStore = createObservableStore<PoolsConfig>(
 	poolsConfig$,
 	defaultPoolsConfig,
-)
-const stakingMetricsStore = createObservableStore<StakingMetrics>(
-	stakingMetrics$,
-	defaultStakingMetrics,
 )
 const serviceInterfaceStore = createObservableStore<ServiceInterface>(
 	serviceInterface$,
@@ -109,11 +102,6 @@ export const useApi = (): ApiHookInterface => {
 		poolsConfigStore.getSnapshot,
 		poolsConfigStore.getSnapshot,
 	)
-	const stakingMetrics = useSyncExternalStore(
-		stakingMetricsStore.subscribe,
-		stakingMetricsStore.getSnapshot,
-		stakingMetricsStore.getSnapshot,
-	)
 	const serviceApi = useSyncExternalStore(
 		serviceInterfaceStore.subscribe,
 		serviceInterfaceStore.getSnapshot,
@@ -147,7 +135,6 @@ export const useApi = (): ApiHookInterface => {
 		getConsts,
 		activeEra,
 		poolsConfig,
-		stakingMetrics,
 		serviceApi,
 	}
 }

@@ -1,30 +1,29 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .content {
-  color: var(--gray-100);
-  background: var(--gray-1000);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  font-size: 1.1rem;
-  line-height: 1.4rem;
-  user-select: none;
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-  max-width: 220px;
+	color: var(--gray-100);
+	background: var(--gray-1000);
+	border-radius: 0.5rem;
+	padding: 0.75rem 1rem;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+	user-select: none;
+	animation-duration: 400ms;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+	will-change: transform, opacity;
+	max-width: 220px;
 
-  &[data-state='delayed-open'][data-side='top'] {
-    animation-name: slide-down-and-fade;
-  }
+	&[data-state="delayed-open"][data-side="top"] {
+		animation-name: slide-down-and-fade;
+	}
 
-  z-index: 99;
+	z-index: 99;
 }
 
-
 .inverted {
-  background: var(--bg-primary);
-  color: var(--gray-900);
+	background: var(--bg-primary);
+	color: var(--gray-900);
 }
 
 .fadeIn {
@@ -33,23 +32,23 @@
 }
 
 .arrow {
-  fill: var(--gray-1000);
+	fill: var(--gray-1000);
 }
 
 .arrowInverted {
-  fill: var(--bg-primary);
+	fill: var(--bg-primary);
 }
 
 @keyframes slide-down-and-fade {
-  from {
-    opacity: 0;
-    transform: translateY(-2px);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(-2px);
+	}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 @keyframes scale-in {

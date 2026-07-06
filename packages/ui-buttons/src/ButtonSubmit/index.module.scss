@@ -1,42 +1,42 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnSubmit {
-  border: 1px solid var(--gray-1000);
-  border-radius: var(--btn-sm-radius);
-  background: var(--gray-1000);
-  color: var(--gray-100);
+	border: 1px solid var(--gray-1000);
+	border-radius: var(--btn-sm-radius);
+	background: var(--gray-1000);
+	color: var(--gray-100);
 }
 
 .btnSubmitSm {
-  padding: var(--btn-lg-padding);
-  font-size: var(--btn-sm-font-size);
+	padding: var(--btn-lg-padding);
+	font-size: var(--btn-sm-font-size);
 }
 
 .btnSubmitLg {
-  padding: var(--btn-lg-padding);
-  font-size: var(--btn-lg-font-size);
+	padding: var(--btn-lg-padding);
+	font-size: var(--btn-lg-font-size);
 }
 
 .btnSubmitPulse {
-  box-shadow: 0 0 30px 0 var(--gray-700);
-  transform: scale(1);
-  animation: pulse 2s infinite;
+	box-shadow: 0 0 30px 0 var(--gray-700);
+	transform: scale(1);
+	animation: pulse 2s infinite;
 
-  @keyframes pulse {
-    0% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 var(--gray-700);
-    }
+	@keyframes pulse {
+		0% {
+			transform: scale(0.95);
+			box-shadow: 0 0 0 0 var(--gray-700);
+		}
 
-    70% {
-      transform: scale(1);
-      box-shadow: 0 0 0 10px rgb(0 0 0 / 0%);
-    }
+		70% {
+			transform: scale(1);
+			box-shadow: 0 0 0 10px rgb(0 0 0 / 0%);
+		}
 
-    100% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
-    }
-  }
+		100% {
+			transform: scale(0.95);
+			box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
+		}
+	}
 }

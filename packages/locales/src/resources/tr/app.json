@@ -173,6 +173,7 @@
 		"inBlock": "Blokta",
 		"inactive": "Pasif",
 		"include": "Dahil Et",
+		"includeIncomingProjection": "Gelen projeksiyonu dahil et",
 		"initializing": "Başlatılıyor",
 		"insertPayoutAddress": "Bir ödeme adresi girin",
 		"insufficientFunds": "Yetersiz Bakiye",
@@ -185,6 +186,7 @@
 		"issuance": "Arz",
 		"join": "Katıl",
 		"language": "Dil",
+		"last30dIncoming": "Son 30 Gün",
 		"ledgerAccount": "Ledger Hesabı",
 		"ledgerAccountFetched": "Ledger Hesabı Alındı",
 		"ledgerAccountImported": "Ledger Hesabı İçe Aktarıldı",
@@ -423,6 +425,7 @@
 		"webExtensions": "Web Uzantıları",
 		"whenActivelyNominating": "aktif olarak nominasyon yaparken.",
 		"wrongTransaction": "Yanlış işlem, lütfen tekrar imzalayın.",
-		"year": "yıl"
+		"year": "yıl",
+		"yourPayouts": "Ödemeleriniz"
 	}
 }
