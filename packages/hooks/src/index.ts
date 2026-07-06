@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './useAccountBalances'
@@ -17,6 +17,7 @@ export * from './useFavoritePools'
 export * from './useFavoriteValidators'
 export * from './useHelp'
 export * from './useInvites'
+export * from './useMenu'
 export * from './useNetwork'
 export * from './useOperators'
 export * from './usePayouts'
@@ -24,10 +25,14 @@ export * from './usePlugins'
 export * from './usePoolMembers'
 export * from './usePoolSetups'
 export * from './useProxySupported'
+export * from './useShowHelp'
 export * from './useStaking'
+export * from './useStakingAccountCategories'
 export * from './useStakingMetrics'
 export * from './useSupplyStaked'
 export * from './useSyncing'
+export * from './useTheme'
+export * from './useThemeValues'
 export * from './useTokenPrices'
 export * from './useTooltip'
 export * from './useTxMeta'

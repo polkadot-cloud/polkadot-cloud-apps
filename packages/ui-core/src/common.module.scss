@@ -1,37 +1,37 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
 }
 
 .scroll {
-  scrollbar-width: thin;
-  scrollbar-color: inherit transparent;
+	scrollbar-width: thin;
+	scrollbar-color: inherit transparent;
 
-  ::-webkit-scrollbar {
-    width: 0.1rem;
-  }
+	::-webkit-scrollbar {
+		width: 0.1rem;
+	}
 
-  ::-webkit-scrollbar-track {
-    background-color: transparent;
-    border: 0;
-  }
+	::-webkit-scrollbar-track {
+		background-color: transparent;
+		border: 0;
+	}
 
-  ::-webkit-scrollbar-thumb {
-    background-color: transparent; /* color of the scroll thumb */
-    border-radius: 2rem; /* roundness of the scroll thumb */
-    border: 0.1rem solid transparent; /* creates padding around scroll thumb */
-  }
+	::-webkit-scrollbar-thumb {
+		background-color: transparent; /* color of the scroll thumb */
+		border-radius: 2rem; /* roundness of the scroll thumb */
+		border: 0.1rem solid transparent; /* creates padding around scroll thumb */
+	}
 }
 
 .modalMulti {
-  display: flex;
-  height: auto;
-  position: relative;
-  overflow: hidden auto;
+	display: flex;
+	height: auto;
+	position: relative;
+	overflow: hidden auto;
 }

@@ -13,8 +13,8 @@
 		"./types": "./src/types.ts"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^7.2.0",
-		"@fortawesome/free-solid-svg-icons": "^7.2.0",
+		"@fortawesome/fontawesome-svg-core": "^7.3.0",
+		"@fortawesome/free-solid-svg-icons": "^7.3.0",
 		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/utils": "^3.1.1",

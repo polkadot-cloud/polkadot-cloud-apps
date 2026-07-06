@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { DedotClient, SmoldotProvider, WsProvider } from 'dedot'
@@ -82,8 +82,8 @@ export class BaseService<
 		// Set default sync status
 		setSyncingMulti(defaultSyncStatus)
 
-		// Fetch chain specs
-		await this.hubChainSpec.fetch()
+		// Fetch chain specs and constants
+		await Promise.all([this.hubChainSpec.fetch(), this.stakingConsts.fetch()])
 
 		// Set chain specs and constants
 		setMultiChainSpecs({
