@@ -5,15 +5,14 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { getUnixTime } from 'date-fns'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
 import { useBatchCall } from 'hooks/useBatchCall'
-import { useErasToTimeLeft } from 'hooks/useErasToTimeLeft'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSignerWarnings } from 'hooks/useSignerWarnings'
+import { useUnbondDuration } from 'hooks/useUnbondDuration'
 import { Warning } from 'library/Form/Warning'
 import { StaticNote } from 'modals/Utils/StaticNote'
 import { useEffect, useState } from 'react'
@@ -23,7 +22,6 @@ import { formatFromProp } from 'tx-submit/util'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { ActionItem, Padding, Title, Warnings } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
-import { timeleftAsString } from 'utils'
 
 export const Unstake = () => {
 	const { t } = useTranslation('modals')
@@ -31,24 +29,18 @@ export const Unstake = () => {
 	const { newBatchCall } = useBatchCall()
 	const { getNominations } = useBalances()
 	const { activeProxy } = useActiveProxy()
-	const { getConsts, serviceApi } = useApi()
-	const { erasToSeconds } = useErasToTimeLeft()
+	const { serviceApi } = useApi()
 	const { getSignerWarnings } = useSignerWarnings()
 	const { closeModal, setModalResize } = useOverlay().modal
 	const { activeAddress, activeAccount } = useActiveAccount()
 
 	const { balances } = useAccountBalances(activeAddress)
-	const { bondDuration } = getConsts(network)
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
 	const { unit, units } = getStakingChainData(network)
 	const nominations = getNominations(activeAddress)
 	const { active } = balances.nominator
 
-	const bondDurationFormatted = timeleftAsString(
-		t,
-		getUnixTime(new Date()) + 1,
-		erasToSeconds(bondDuration),
-		true,
-	)
+	const unbondDurationFormatted = formatUnbondDuration(t)
 
 	// convert BigNumber values to number
 	const freeToUnbond = new BigNumber(planckToUnit(active, units))
@@ -130,10 +122,10 @@ export const Unstake = () => {
 					/>
 				)}
 				<StaticNote
-					value={bondDurationFormatted}
+					value={unbondDurationFormatted}
 					tKey="onceUnbonding"
 					valueKey="bondDurationFormatted"
-					deps={[bondDuration]}
+					deps={[unbondDuration]}
 				/>
 			</Padding>
 			<SubmitTx

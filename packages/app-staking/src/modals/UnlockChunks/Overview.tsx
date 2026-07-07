@@ -6,10 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { getUnixTime } from 'date-fns'
 import { useApi } from 'hooks/useApi'
-import { useErasToTimeLeft } from 'hooks/useErasToTimeLeft'
 import { useNetwork } from 'hooks/useNetwork'
+import { useUnbondDuration } from 'hooks/useUnbondDuration'
 import { StatsWrapper, StatWrapper } from 'library/Modal/Wrappers'
 import { StaticNote } from 'modals/Utils/StaticNote'
 import type { Dispatch, ForwardedRef, SetStateAction } from 'react'
@@ -18,7 +17,6 @@ import { useTranslation } from 'react-i18next'
 import type { BondFor, UnlockChunk } from 'types'
 import { ButtonSubmit } from 'ui-buttons'
 import { Notes, Padding } from 'ui-core/modal'
-import { timeleftAsString } from 'utils'
 import { Chunk } from './Chunk'
 import { ContentWrapper } from './Wrappers'
 
@@ -37,17 +35,11 @@ export const Overview = forwardRef(
 	) => {
 		const { t } = useTranslation('modals')
 		const { network } = useNetwork()
-		const { getConsts, activeEra } = useApi()
-		const { bondDuration } = getConsts(network)
-		const { erasToSeconds } = useErasToTimeLeft()
+		const { activeEra } = useApi()
+		const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
 
 		const { unit, units } = getStakingChainData(network)
-		const bondDurationFormatted = timeleftAsString(
-			t,
-			getUnixTime(new Date()) + 1,
-			erasToSeconds(bondDuration),
-			true,
-		)
+		const unbondDurationFormatted = formatUnbondDuration(t)
 
 		const isStaking = bondFor === 'nominator'
 
@@ -156,10 +148,10 @@ export const Overview = forwardRef(
 					))}
 					<Notes withPadding>
 						<StaticNote
-							value={bondDurationFormatted}
+							value={unbondDurationFormatted}
 							tKey="unlockTake"
 							valueKey="bondDurationFormatted"
-							deps={[bondDuration]}
+							deps={[unbondDuration]}
 						/>
 						<p> {isStaking ? ` ${t('rebondUnlock')}` : null}</p>
 						{!isStaking ? <p>{t('unlockChunk')}</p> : null}
