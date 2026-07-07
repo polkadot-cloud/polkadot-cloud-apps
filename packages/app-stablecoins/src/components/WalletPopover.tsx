@@ -1,3 +1,6 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
 import { useOutsideAlerter } from '@w3ux/hooks'
 import dotSvg from 'assets/token/dot.svg'
 import hdxSvg from 'assets/token/hdx.svg'
