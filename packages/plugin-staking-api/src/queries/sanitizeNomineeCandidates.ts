@@ -2,12 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { gql } from '@apollo/client'
-import type { SanitizeNomineeCandidatesData } from '../types'
+import type {
+	SanitizeNomineeCandidate,
+	SanitizeNomineeCandidatesData,
+} from '../types'
 import { fetchQuery } from './generic'
 
 const QUERY = gql`
-  query SanitizeNomineeCandidates($network: String!, $addresses: [String!]!) {
-    sanitizeNomineeCandidates(network: $network, addresses: $addresses)
+  query SanitizeNomineeCandidates(
+    $network: String!
+    $addresses: [ValidatorInput!]!
+  ) {
+    sanitizeNomineeCandidates(network: $network, addresses: $addresses) {
+      address
+      prefs {
+        commission
+        blocked
+      }
+    }
   }
 `
 
@@ -17,10 +29,10 @@ const DEFAULT: SanitizeNomineeCandidatesData = {
 
 export const fetchSanitizeNomineeCandidates = (
 	network: string,
-	addresses: string[],
+	validators: SanitizeNomineeCandidate[],
 ) =>
 	fetchQuery<SanitizeNomineeCandidatesData>(
 		QUERY,
-		{ network, addresses },
+		{ network, addresses: validators },
 		DEFAULT,
 	)
