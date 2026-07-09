@@ -47,18 +47,6 @@ export const useValidatorFilters = () => {
 	)
 
 	/*
-	 * filterAllCommission: Filters the supplied list and removes items with 100% commission. Returns
-	 * the updated filtered list.
-	 */
-	const filterAllCommission = useCallback(
-		(list: AnyFilter) =>
-			list.filter(
-				(validator: AnyFilter) => validator?.prefs?.commission !== 100,
-			),
-		[],
-	)
-
-	/*
 	 * filterBlockedNominations: Filters the supplied list and removes items that have blocked
 	 * nominations. Returns the updated filtered list.
 	 */
@@ -112,7 +100,6 @@ export const useValidatorFilters = () => {
 
 	const excludesToLabels = useMemo<Record<string, string>>(
 		() => ({
-			all_commission: t('100Commission'),
 			blocked_nominations: t('blockedNominations'),
 			missing_identity: t('missingIdentity'),
 		}),
@@ -123,14 +110,12 @@ export const useValidatorFilters = () => {
 		() => ({
 			active: filterActive,
 			missing_identity: filterMissingIdentity,
-			all_commission: filterAllCommission,
 			blocked_nominations: filterBlockedNominations,
 			in_session: filterInSession,
 		}),
 		[
 			filterActive,
 			filterMissingIdentity,
-			filterAllCommission,
 			filterBlockedNominations,
 			filterInSession,
 		],
@@ -170,26 +155,6 @@ export const useValidatorFilters = () => {
 	)
 
 	/*
-	 * orderLowestCommission: Orders a list by commission, lowest first. Returns the updated ordered
-	 * list.
-	 */
-	const orderLowestCommission = useCallback(
-		(list: AnyFilter) =>
-			[...list].sort((a, b) => a.prefs.commission - b.prefs.commission),
-		[],
-	)
-
-	/*
-	 * orderHighestCommission: Orders a list by commission, highest first. Returns the updated ordered
-	 * list.
-	 */
-	const orderHighestCommission = useCallback(
-		(list: AnyFilter) =>
-			[...list].sort((a, b) => b.prefs.commission - a.prefs.commission),
-		[],
-	)
-
-	/*
 	 * orderByRank: Orders a list by validator rank.
 	 */
 	const orderByRank = useCallback(
@@ -205,8 +170,6 @@ export const useValidatorFilters = () => {
 	const ordersToLabels = useMemo<Record<string, string>>(
 		() => ({
 			rank: `${t('performance')}`,
-			low_commission: t('lowCommission'),
-			high_commission: t('highCommission'),
 			default: t('unordered'),
 		}),
 		[t],
@@ -215,10 +178,8 @@ export const useValidatorFilters = () => {
 	const orderToFunction = useMemo<Record<string, AnyFunction>>(
 		() => ({
 			rank: orderByRank,
-			low_commission: orderLowestCommission,
-			high_commission: orderHighestCommission,
 		}),
-		[orderByRank, orderLowestCommission, orderHighestCommission],
+		[orderByRank],
 	)
 
 	const applyOrder = useCallback(

@@ -79,9 +79,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		Record<string, SuperIdentity>
 	>({})
 
-	// Stores the average network commission rate
-	const [avgCommission, setAvgCommission] = useState<number>(0)
-
 	// Stores the average reward rate
 	const [avgRewardRate, setAvgRewardRate] = useState<number>(0)
 
@@ -96,21 +93,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		reward: bigint
 	}>(defaultAverageEraValidatorReward)
 
-	const getAverageCommission = (entries: Validator[]): number => {
-		let count = 0
-		let acc = 0
-		for (const {
-			prefs: { commission },
-		} of entries) {
-			if (commission !== 100) {
-				count++
-				acc += commission
-			}
-		}
-		return Number((count ? acc / count : 0).toFixed(2))
-	}
-
-	// Fetch validator entries, format the returning data, and calculate the average commission
+	// Fetch validator entries and format the returning data
 	const getValidatorEntries = async () => {
 		if (!isReady) {
 			return defaultValidatorsData
@@ -128,8 +111,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 				},
 			})
 		})
-		const localAvgCommission = getAverageCommission(entries)
-		return { entries, localAvgCommission }
+		return { entries }
 	}
 
 	// Fetches and formats the active validator set, and derives metrics from the result
@@ -147,32 +129,16 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		)
 
 		// The validator entries for the current active era
-		let localAvgCommission = 0
 		let validatorEntries: Validator[] = []
 		if (localEraValidators) {
 			validatorEntries = localEraValidators.entries
-			localAvgCommission =
-				localEraValidators.avgCommission ||
-				getAverageCommission(validatorEntries)
 		} else {
 			const result = await getValidatorEntries()
-			localAvgCommission = result.localAvgCommission
 			validatorEntries = result.entries
 		}
 
 		// Set entries data for the era to local storage
-		setLocalEraValidators(
-			network,
-			activeEra.index.toString(),
-			validatorEntries,
-			localAvgCommission,
-		)
-		setAvgCommission((current) => {
-			if (pluginEnabled('staking_api') && current > 0) {
-				return current
-			}
-			return localAvgCommission
-		})
+		setLocalEraValidators(network, activeEra.index.toString(), validatorEntries)
 
 		// NOTE: validators are shuffled before committed to state
 		setValidators({ status: 'synced', validators: shuffle(validatorEntries) })
@@ -320,12 +286,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	const getValidatorStats = async (): Promise<void> => {
 		const { validatorStats } = await fetchValidatorStats(network)
 		setActiveValidatorRanks(validatorStats.activeValidatorRanks)
-		const nextAvgCommission = Number(
-			validatorStats.averageValidatorCommission.toFixed(2),
-		)
-		setAvgCommission((current) =>
-			nextAvgCommission > 0 || current === 0 ? nextAvgCommission : current,
-		)
 		setAvgRewardRate(validatorStats.averageRewardRate.rate)
 	}
 
@@ -373,7 +333,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 			status: 'unsynced',
 			validators: [],
 		})
-		setAvgCommission(0)
 		setValidatorIdentities({})
 		setValidatorSupers({})
 	}, [network])
@@ -417,7 +376,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 				getValidators,
 				validatorIdentities,
 				validatorSupers,
-				avgCommission,
 				validatorsFetched: validators.status,
 				avgRewardRate,
 				averageEraValidatorReward,

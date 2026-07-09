@@ -3,7 +3,6 @@
 
 export const defaultValidatorsData = {
 	entries: [],
-	localAvgCommission: 0,
 }
 
 export const defaultAverageEraValidatorReward = {
