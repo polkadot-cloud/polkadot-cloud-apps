@@ -51,7 +51,6 @@
 		"createPool": "풀 생성",
 		"daily": "일일",
 		"decentralizationPerNomination": "지명당 지리적 위치",
-		"deductAvgCommissionOf": "평균 수수료 {{commission}}% 제외",
 		"deductedFromBond": "본딩에서 공제됨",
 		"depositor": "예치자",
 		"depositorOfPool": "풀의 예치자",

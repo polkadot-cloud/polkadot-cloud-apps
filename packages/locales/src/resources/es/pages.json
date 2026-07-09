@@ -49,7 +49,6 @@
 		"createPool": "Crear Pool",
 		"daily": "Diario",
 		"decentralizationPerNomination": "Geolocalización Por Nominación",
-		"deductAvgCommissionOf": "Deducir la comisión promedio de {{commission}}%",
 		"deductedFromBond": "Deducido de la Vinculación",
 		"depositor": "Depositante",
 		"depositorOfPool": "Depositante del Pool",

@@ -49,7 +49,6 @@
 		"createPool": "创建提名池",
 		"daily": "每日",
 		"decentralizationPerNomination": "每个提名的地理位置",
-		"deductAvgCommissionOf": "扣除平均佣金{{commission}}",
 		"deductedFromBond": "从质押里扣除",
 		"depositor": "存款人",
 		"depositorOfPool": "提名池存款人",

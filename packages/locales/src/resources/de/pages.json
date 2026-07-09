@@ -49,7 +49,6 @@
 		"createPool": "Pool erstellen",
 		"daily": "Täglich",
 		"decentralizationPerNomination": "Dezentralisierung Pro Nominierung",
-		"deductAvgCommissionOf": "Durchschnittliche Provision von {{commission}}% abziehen",
 		"deductedFromBond": "Von der Kaution abgezogen",
 		"depositor": "Einzahler",
 		"depositorOfPool": "Einzahler des Pools",
