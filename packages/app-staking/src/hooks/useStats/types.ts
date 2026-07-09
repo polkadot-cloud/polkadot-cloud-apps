@@ -6,7 +6,7 @@ export type StatKey =
 	| 'supplyStaked'
 	| 'nextReward'
 	| 'activeValidators'
-	| 'averageCommission'
+	| 'minValidatorBond'
 	| 'totalValidators'
 	| 'minimumToJoinPool'
 	| 'activePools'

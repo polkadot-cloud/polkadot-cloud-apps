@@ -10,7 +10,6 @@ export interface ValidatorsContextInterface {
 	getValidators: () => Validator[]
 	validatorIdentities: Record<string, IdentityOf>
 	validatorSupers: Record<string, AnyJson>
-	avgCommission: number
 	validatorsFetched: Sync
 	avgRewardRate: number
 	averageEraValidatorReward: AverageEraValidatorReward
@@ -34,7 +33,6 @@ export type ValidatorAddresses = {
 }[]
 
 export interface LocalValidatorEntriesData {
-	avgCommission: number
 	era: string
 	entries: Validator[]
 }
