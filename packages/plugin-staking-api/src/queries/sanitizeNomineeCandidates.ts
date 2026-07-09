@@ -11,9 +11,9 @@ import { fetchQuery } from './generic'
 const QUERY = gql`
   query SanitizeNomineeCandidates(
     $network: String!
-    $addresses: [ValidatorInput!]!
+    $candidates: [ValidatorInput!]!
   ) {
-    sanitizeNomineeCandidates(network: $network, addresses: $addresses) {
+    sanitizeNomineeCandidates(network: $network, candidates: $candidates) {
       address
       prefs {
         commission
@@ -29,10 +29,10 @@ const DEFAULT: SanitizeNomineeCandidatesData = {
 
 export const fetchSanitizeNomineeCandidates = (
 	network: string,
-	validators: SanitizeNomineeCandidate[],
+	candidates: SanitizeNomineeCandidate[],
 ) =>
 	fetchQuery<SanitizeNomineeCandidatesData>(
 		QUERY,
-		{ network, addresses: validators },
+		{ network, candidates },
 		DEFAULT,
 	)
