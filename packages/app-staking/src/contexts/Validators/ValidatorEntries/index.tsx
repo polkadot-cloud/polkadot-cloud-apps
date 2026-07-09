@@ -132,18 +132,13 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		let validatorEntries: Validator[] = []
 		if (localEraValidators) {
 			validatorEntries = localEraValidators.entries
-
 		} else {
 			const result = await getValidatorEntries()
 			validatorEntries = result.entries
 		}
 
 		// Set entries data for the era to local storage
-		setLocalEraValidators(
-			network,
-			activeEra.index.toString(),
-			validatorEntries,
-		)
+		setLocalEraValidators(network, activeEra.index.toString(), validatorEntries)
 
 		// NOTE: validators are shuffled before committed to state
 		setValidators({ status: 'synced', validators: shuffle(validatorEntries) })
