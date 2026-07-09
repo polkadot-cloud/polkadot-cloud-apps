@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% 수수료",
 		"accountConnected": "계정 연결됨",
 		"accounts": "계정",
 		"active": "활성",
-		"activeLowCommission": "활성 저수수료",
-		"activeLowCommissionSubtitle": "수수료가 낮은 고성능 검증인을 선택합니다.",
 		"activePools": "활성 풀",
 		"activeValidator": "활성 검증인",
 		"activeValidators": "활성 검증인",
@@ -166,7 +163,6 @@
 		"graphInactive": "비활성",
 		"help": "도움말",
 		"helpPrompts": "도움말 팝업",
-		"highCommission": "높은 수수료",
 		"highPerformanceValidator": "고성능 검증자",
 		"iHaveScanned": "스캔 완료",
 		"import": "가져오기",
@@ -211,7 +207,6 @@
 		"listItemActive": "활성",
 		"locked": "잠금",
 		"lockedPools": "잠금 풀",
-		"lowCommission": "낮은 수수료",
 		"manual": "수동",
 		"manualSelectionSubtitle": "처음부터 검증자를 추가합니다.",
 		"manual_selection": "수동 선택",

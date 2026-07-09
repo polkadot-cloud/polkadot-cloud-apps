@@ -92,6 +92,7 @@ export interface StakingMetrics {
 	lastReward: bigint | undefined
 	lastTotalStake: bigint
 	minNominatorBond: bigint
+	minValidatorBond: bigint
 	totalStaked: bigint
 	counterForNominators: number
 }
