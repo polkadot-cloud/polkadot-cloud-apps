@@ -412,6 +412,8 @@
 		"warnings": {
 			"destroyingDescription": "Votre pool est en cours de destruction et vous ne pouvez pas gagner de récompenses du pool.",
 			"destroyingTitle": "Le pool est en destruction",
+			"highCommissionDescription": "La commission de votre pool est élevée. Envisagez de rejoindre un autre pool pour augmenter vos récompenses.",
+			"highCommissionTitle": "Commission élevée",
 			"noChangeRateDescription": "Votre pool n'a aucun taux de changement de commission défini. Il peut augmenter sa commission à n'importe quelle valeur à tout moment.",
 			"noChangeRateTitle": "Aucun taux de changement de commission"
 		},

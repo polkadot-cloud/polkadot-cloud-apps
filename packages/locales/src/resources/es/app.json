@@ -412,6 +412,8 @@
 		"warnings": {
 			"destroyingDescription": "Tu pool está siendo destruido y no puedes ganar recompensas del pool.",
 			"destroyingTitle": "Pool está siendo destruido",
+			"highCommissionDescription": "La comisión de tu pool es alta. Considera unirte a un pool diferente para aumentar las recompensas.",
+			"highCommissionTitle": "Comisión Alta",
 			"noChangeRateDescription": "Su fondo no tiene una tasa de cambio de comisión establecida. Puede aumentar su comisión a cualquier valor en cualquier momento.",
 			"noChangeRateTitle": "Tasa de cambio sin comisión"
 		},

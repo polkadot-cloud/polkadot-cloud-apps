@@ -412,6 +412,8 @@
 		"warnings": {
 			"destroyingDescription": "Havuzunuz yok ediliyor ve havuz ödülleri kazanamazsınız.",
 			"destroyingTitle": "Havuz Yok Ediliyor",
+			"highCommissionDescription": "Havuzunuzun komisyonu yüksek. Ödüllerinizi artırmak için farklı bir havuza katılmayı düşünün.",
+			"highCommissionTitle": "Yüksek Komisyon",
 			"noChangeRateDescription": "Havuzunuzun ayarlanmış bir komisyon değişim oranı yok. Komisyonunu istediği zaman herhangi bir değere çıkarabilir.",
 			"noChangeRateTitle": "Komisyon Değişim Oranı Yok"
 		},

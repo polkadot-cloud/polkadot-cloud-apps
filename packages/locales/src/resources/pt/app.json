@@ -413,6 +413,8 @@
 		"warnings": {
 			"destroyingDescription": "Seu pool está sendo destruído e você não pode ganhar recompensas de pool.",
 			"destroyingTitle": "Pool Está Sendo Destruído",
+			"highCommissionDescription": "A comissão do seu pool é alta. Considere aderir a um pool diferente para aumentar as recompensas.",
+			"highCommissionTitle": "Comissão Alta",
 			"noChangeRateDescription": "Seu pool não tem taxa de mudança de comissão definida. Pode aumentar sua comissão para qualquer valor a qualquer momento.",
 			"noChangeRateTitle": "Sem Taxa de Mudança de Comissão"
 		},

@@ -412,6 +412,8 @@
 		"warnings": {
 			"destroyingDescription": "Your pool is being destroyed and you cannot earn pool rewards.",
 			"destroyingTitle": "Pool is Destroying",
+			"highCommissionDescription": "Your pool's commission is high. Consider joining a different pool to increase rewards.",
+			"highCommissionTitle": "High Commission",
 			"noChangeRateDescription": "Your pool has no commission change rate set. It can increase its commission to any value at any time.",
 			"noChangeRateTitle": "No Commission Change Rate"
 		},

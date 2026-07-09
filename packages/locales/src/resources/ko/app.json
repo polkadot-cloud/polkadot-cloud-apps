@@ -413,6 +413,8 @@
 		"warnings": {
 			"destroyingDescription": "풀이 해제 중이며 풀 보상을 얻을 수 없습니다.",
 			"destroyingTitle": "풀 해제 중",
+			"highCommissionDescription": "풀의 수수료가 높습니다. 보상을 높이기 위해 다른 풀에 참여하는 것을 고려하세요.",
+			"highCommissionTitle": "높은 수수료",
 			"noChangeRateDescription": "풀에 수수료 변경 속도가 설정되지 않았습니다. 언제든지 수수료를 임의로 인상할 수 있습니다.",
 			"noChangeRateTitle": "수수료 변경 속도 없음"
 		},

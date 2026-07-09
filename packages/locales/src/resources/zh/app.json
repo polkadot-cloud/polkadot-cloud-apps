@@ -402,6 +402,8 @@
 		"warnings": {
 			"destroyingDescription": "您的奖池将被销毁，您将无法获得奖池奖励。",
 			"destroyingTitle": "奖池正在销毁",
+			"highCommissionDescription": "您的奖池佣金较高。考虑加入其他奖池以增加奖励。",
+			"highCommissionTitle": "高佣金",
 			"noChangeRateDescription": "您的奖池未设置佣金变动率。它可以随时将佣金提高到任何值。",
 			"noChangeRateTitle": "无佣金变更率"
 		},

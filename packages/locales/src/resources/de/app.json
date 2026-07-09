@@ -412,6 +412,8 @@
 		"warnings": {
 			"destroyingDescription": "Dein Pool wird zerstört und du kannst keine Pool-Belohnungen verdienen.",
 			"destroyingTitle": "Pool wird zerstört",
+			"highCommissionDescription": "Die Provision deines Pools ist hoch. Erwäge, einem anderen Pool beizutreten, um deine Belohnungen zu erhöhen.",
+			"highCommissionTitle": "Hohe Provision",
 			"noChangeRateDescription": "Dein Pool hat keinen Provisionsänderungssatz festgelegt. Die Provision kann jederzeit auf jeden beliebigen Wert erhöht werden.",
 			"noChangeRateTitle": "Kein Provisionsänderungssatz"
 		},
