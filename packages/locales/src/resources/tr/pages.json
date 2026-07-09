@@ -66,8 +66,6 @@
 		"fetchingValidators": "Validatörler alınıyor",
 		"free": "Serbest",
 		"fromPool": "Havuzdan",
-		"fullCommissionValidatorSubtitle": "%100 komisyon alan validatörlerden stake ödülü almazsınız. Nominasyonlarınızı güncellemeyi düşünün.",
-		"fullCommissionValidatorTitle": "%100 Komisyonlu Bir Nominasyonunuz Var",
 		"generateNominations": "Nominasyon Oluştur",
 		"goBack": "Geri Dön",
 		"howDecentralizedIsYourNomination": "Nominasyonunuz ne kadar merkeziyetsiz?",

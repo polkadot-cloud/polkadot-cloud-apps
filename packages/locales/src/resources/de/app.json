@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% Provision",
 		"accountConnected": "Konto verbunden",
 		"accounts": "Konten",
 		"active": "Aktiv",
-		"activeLowCommission": "Aktiv Niedrige Provision",
-		"activeLowCommissionSubtitle": "Wählt leistungsstarke Validatoren mit niedriger Provision aus.",
 		"activePools": "Aktive Pools",
 		"activeValidator": "Aktiver Validator",
 		"activeValidators": "Aktive Validatoren",
@@ -165,7 +162,6 @@
 		"graphInactive": "Inaktiv",
 		"help": "Hilfe",
 		"helpPrompts": "Hilfetipps",
-		"highCommission": "Hohe Gebühr",
 		"highPerformanceValidator": "Hochleistungs-Validator",
 		"iHaveScanned": "Ich habe gescannt",
 		"import": "Importieren",
@@ -210,7 +206,6 @@
 		"listItemActive": "Aktiv",
 		"locked": "Gesperrt",
 		"lockedPools": "Gesperrte Pools",
-		"lowCommission": "Niedrige Gebühren",
 		"manual": "Manuell",
 		"manualSelectionSubtitle": "Validatoren von Grund auf hinzufügen.",
 		"manual_selection": "Manuelle Auswahl",
@@ -417,8 +412,6 @@
 		"warnings": {
 			"destroyingDescription": "Dein Pool wird zerstört und du kannst keine Pool-Belohnungen verdienen.",
 			"destroyingTitle": "Pool wird zerstört",
-			"highCommissionDescription": "Die Provision deines Pools ist hoch. Erwäge, einem anderen Pool beizutreten, um deine Belohnungen zu erhöhen.",
-			"highCommissionTitle": "Hohe Provision",
 			"noChangeRateDescription": "Dein Pool hat keinen Provisionsänderungssatz festgelegt. Die Provision kann jederzeit auf jeden beliebigen Wert erhöht werden.",
 			"noChangeRateTitle": "Kein Provisionsänderungssatz"
 		},

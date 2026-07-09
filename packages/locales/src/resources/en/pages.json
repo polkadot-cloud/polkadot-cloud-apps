@@ -66,8 +66,6 @@
 		"fetchingValidators": "Fetching validators",
 		"free": "Free",
 		"fromPool": "From Pool",
-		"fullCommissionValidatorSubtitle": "You will not receive staking rewards from validators who charge 100% commission. Consider updating your nominations.",
-		"fullCommissionValidatorTitle": "You Have a Nomination with 100% Commission",
 		"generateNominations": "Generate Nominations",
 		"goBack": "Go Back",
 		"howDecentralizedIsYourNomination": "How decentralized is your Nomination?",

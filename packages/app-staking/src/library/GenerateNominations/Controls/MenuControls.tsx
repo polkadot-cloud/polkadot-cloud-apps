@@ -31,7 +31,7 @@ export const MenuControls = ({ setters, allowRevert }: MenuControlsProps) => {
 							text={t('startAgain', { ns: 'app' })}
 							onClick={() => resetNominations(setters)}
 						/>
-						{['Active Low Commission', 'Optimal Selection'].includes(
+						{['Optimal Selection'].includes(
 							method,
 						) && (
 							<ButtonMenu

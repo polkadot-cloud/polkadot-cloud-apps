@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% de commission",
 		"accountConnected": "Compte connecté",
 		"accounts": "Comptes",
 		"active": "Actif",
-		"activeLowCommission": "Actif faible commission",
-		"activeLowCommissionSubtitle": "Sélectionne des validateurs performants avec une faible commission.",
 		"activePools": "Pools actifs",
 		"activeValidator": "Validateur actif",
 		"activeValidators": "Validateurs actifs",
@@ -165,7 +162,6 @@
 		"graphInactive": "Inactif",
 		"help": "Aide",
 		"helpPrompts": "Invites d'aide",
-		"highCommission": "Commission élevée",
 		"highPerformanceValidator": "Validateur haute performance",
 		"iHaveScanned": "J'ai scanné",
 		"import": "Importer",
@@ -210,7 +206,6 @@
 		"listItemActive": "Actif",
 		"locked": "Verrouillé",
 		"lockedPools": "Pools verrouillés",
-		"lowCommission": "Faible commission",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Ajoutez des validateurs à partir de zéro.",
 		"manual_selection": "Sélection manuelle",
@@ -417,8 +412,6 @@
 		"warnings": {
 			"destroyingDescription": "Votre pool est en cours de destruction et vous ne pouvez pas gagner de récompenses du pool.",
 			"destroyingTitle": "Le pool est en destruction",
-			"highCommissionDescription": "La commission de votre pool est élevée. Envisagez de rejoindre un autre pool pour augmenter vos récompenses.",
-			"highCommissionTitle": "Commission élevée",
 			"noChangeRateDescription": "Votre pool n'a aucun taux de changement de commission défini. Il peut augmenter sa commission à n'importe quelle valeur à tout moment.",
 			"noChangeRateTitle": "Aucun taux de changement de commission"
 		},

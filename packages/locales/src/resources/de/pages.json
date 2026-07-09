@@ -66,8 +66,6 @@
 		"fetchingValidators": "Validatoren werden geladen",
 		"free": "Kostenlos",
 		"fromPool": "Aus dem Pool",
-		"fullCommissionValidatorSubtitle": "du erhältst keine Staking-Belohnungen von Validatoren, die 100% Provision berechnen. Erwäge, deine Nominierungen zu aktualisieren.",
-		"fullCommissionValidatorTitle": "du hast eine Nominierung mit 100% Provision",
 		"generateNominations": "Nominierungen erstellen",
 		"goBack": "Zurück",
 		"howDecentralizedIsYourNomination": "Wie dezentralisiert ist deine Nominierung?",

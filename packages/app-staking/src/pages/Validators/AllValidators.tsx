@@ -44,7 +44,6 @@ export const AllValidators = () => {
 									defaultFilters={{
 										includes: ['active'],
 										excludes: [
-											'all_commission',
 											'blocked_nominations',
 											'missing_identity',
 										],

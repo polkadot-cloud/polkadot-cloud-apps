@@ -66,8 +66,6 @@
 		"fetchingValidators": "Obteniendo validadores",
 		"free": "Disponible",
 		"fromPool": "Del Pool",
-		"fullCommissionValidatorSubtitle": "No recibirás recompensas de staking de validadores que cobran 100% de comisión. Considera actualizar tus nominaciones.",
-		"fullCommissionValidatorTitle": "Tienes una nominación con 100% de comisión",
 		"generateNominations": "Generar nominaciones",
 		"goBack": "Volver",
 		"howDecentralizedIsYourNomination": "¿Qué tan descentralizada está tu nominación?",

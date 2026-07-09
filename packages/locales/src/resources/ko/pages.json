@@ -68,8 +68,6 @@
 		"fetchingValidators": "검증자를 가져오는 중",
 		"free": "자유",
 		"fromPool": "풀에서",
-		"fullCommissionValidatorSubtitle": "100% 수수료를 부과하는 검증자로부터는 스테이킹 보상을 받지 않습니다. 지명을 업데이트하는 것을 고려하세요.",
-		"fullCommissionValidatorTitle": "100% 수수료의 지명이 있습니다",
 		"generateNominations": "지명 생성",
 		"goBack": "돌아가기",
 		"howDecentralizedIsYourNomination": "귀하의 지명이 얼마나 분산되어 있습니까?",

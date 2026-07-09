@@ -3,7 +3,6 @@
 
 import {
 	faCalendarXmark,
-	faCircleUp,
 	faTrashCan,
 } from '@fortawesome/free-regular-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
@@ -35,14 +34,7 @@ export const useWarnings = () => {
 						format: 'danger',
 						faIcon: faTrashCan,
 					})
-				} else if (warning.type === 'HIGH_COMMISSION') {
-					messages.push({
-						value: t('warnings.highCommissionTitle'),
-						faIcon: faCircleUp,
-						description: t('warnings.highCommissionDescription'),
-						format: 'warning',
-					})
-				} else if (warning.type === 'NO_CHANGE_RATE') {
+				}else if (warning.type === 'NO_CHANGE_RATE') {
 					messages.push({
 						value: t('warnings.noChangeRateTitle'),
 						faIcon: faCalendarXmark,

@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "Comissão de 100%",
 		"accountConnected": "Conta Conectada",
 		"accounts": "Contas",
 		"active": "Ativo",
-		"activeLowCommission": "Ativo Comissão Baixa",
-		"activeLowCommissionSubtitle": "Seleciona validadores de alto desempenho com baixa comissão.",
 		"activePools": "Pools Ativos",
 		"activeValidator": "Validador Ativo",
 		"activeValidators": "Validadores Ativos",
@@ -166,7 +163,6 @@
 		"graphInactive": "Inativo",
 		"help": "Ajuda",
 		"helpPrompts": "Dicas de Ajuda",
-		"highCommission": "Comissão Alta",
 		"highPerformanceValidator": "Validador de Alto Desempenho",
 		"iHaveScanned": "Eu Digitalizei",
 		"import": "Importar",
@@ -211,7 +207,6 @@
 		"listItemActive": "Ativo",
 		"locked": "Bloqueado",
 		"lockedPools": "Pools Bloqueados",
-		"lowCommission": "Comissão Baixa",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Adicione validadores do zero.",
 		"manual_selection": "Seleção Manual",
@@ -418,8 +413,6 @@
 		"warnings": {
 			"destroyingDescription": "Seu pool está sendo destruído e você não pode ganhar recompensas de pool.",
 			"destroyingTitle": "Pool Está Sendo Destruído",
-			"highCommissionDescription": "A comissão do seu pool é alta. Considere aderir a um pool diferente para aumentar as recompensas.",
-			"highCommissionTitle": "Comissão Alta",
 			"noChangeRateDescription": "Seu pool não tem taxa de mudança de comissão definida. Pode aumentar sua comissão para qualquer valor a qualquer momento.",
 			"noChangeRateTitle": "Sem Taxa de Mudança de Comissão"
 		},

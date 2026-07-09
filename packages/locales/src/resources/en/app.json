@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% commission",
 		"accountConnected": "Account Connected",
 		"accounts": "Accounts",
 		"active": "Active",
-		"activeLowCommission": "Active Low Commission",
-		"activeLowCommissionSubtitle": "Selects high performing validators with low commission.",
 		"activePools": "Active Pools",
 		"activeValidator": "Active Validator",
 		"activeValidators": "Active Validators",
@@ -165,7 +162,6 @@
 		"graphInactive": "Inactive",
 		"help": "Help",
 		"helpPrompts": "Help Prompts",
-		"highCommission": "High Commission",
 		"highPerformanceValidator": "High Performance Validator",
 		"iHaveScanned": "I Have Scanned",
 		"import": "Import",
@@ -210,7 +206,6 @@
 		"listItemActive": "Active",
 		"locked": "Locked",
 		"lockedPools": "Locked Pools",
-		"lowCommission": "Low Commission",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Add validators from scratch.",
 		"manual_selection": "Manual Selection",
@@ -417,8 +412,6 @@
 		"warnings": {
 			"destroyingDescription": "Your pool is being destroyed and you cannot earn pool rewards.",
 			"destroyingTitle": "Pool is Destroying",
-			"highCommissionDescription": "Your pool's commission is high. Consider joining a different pool to increase rewards.",
-			"highCommissionTitle": "High Commission",
 			"noChangeRateDescription": "Your pool has no commission change rate set. It can increase its commission to any value at any time.",
 			"noChangeRateTitle": "No Commission Change Rate"
 		},
