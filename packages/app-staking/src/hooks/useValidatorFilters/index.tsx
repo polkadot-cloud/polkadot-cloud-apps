@@ -212,7 +212,7 @@ export const useValidatorFilters = () => {
 		() => ({
 			rank: orderByRank,
 		}),
-		[orderByRank, orderLowestCommission, orderHighestCommission],
+		[orderByRank],
 	)
 
 	const applyOrder = useCallback(
