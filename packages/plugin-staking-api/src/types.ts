@@ -276,6 +276,10 @@ export interface SearchValidatorsData {
 	searchValidators: SearchValidators
 }
 
+export interface SanitizeNomineeCandidatesData {
+	sanitizeNomineeCandidates: string[]
+}
+
 export interface SearchValidators {
 	total: number
 	validators: {
