@@ -14,7 +14,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useOutsideAlerter } from '@w3ux/hooks'
 import {
-	DappOrganisation,
+	PlatformName,
 	DiscordSupportURL,
 	PlatformGitHubURL,
 	PlatformSupportEmail,
@@ -140,7 +140,7 @@ export const MenuPopover = ({
 					<FontAwesomeIcon icon={faCloud} transform="shrink-2" />
 				</div>
 				<div>
-					<h3>{DappOrganisation}</h3>
+					<h3>{PlatformName}</h3>
 				</div>
 				<div>
 					<div>

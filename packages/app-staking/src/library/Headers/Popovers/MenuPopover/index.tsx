@@ -25,7 +25,7 @@ import { capitalizeFirstLetter } from '@w3ux/utils'
 import DiscordSVG from 'assets/brands/discord.svg?react'
 import EnvelopeSVG from 'assets/icons/envelope.svg?react'
 import {
-	DappOrganisation,
+	PlatformName,
 	PlatformDocsURL,
 	PlatformGitHubURL,
 	PlatformURL,
@@ -262,7 +262,7 @@ export const MenuPopover = ({
 				}}
 			/>
 			<DefaultButton
-				text={DappOrganisation}
+				text={PlatformName}
 				iconLeft={faCloud}
 				iconRight={faExternalLinkAlt}
 				accent

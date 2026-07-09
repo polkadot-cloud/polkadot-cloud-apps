@@ -42,6 +42,8 @@
 		"radix-ui": "^1.4.2",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
+		"react-error-boundary": "^6.1.2",
+		"react-helmet-async": "^3.0.0",
 		"react-i18next": "^17.0.8",
 		"react-router-dom": "^7.15.1",
 		"rxjs": "^7.8.2",

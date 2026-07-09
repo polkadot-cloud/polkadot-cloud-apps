@@ -34,6 +34,7 @@
 		"hooks": "workspace:*",
 		"motion": "12.23.24",
 		"react": "^19.2.7",
+		"react-helmet-async": "^3.0.0",
 		"react-i18next": "^17.0.8",
 		"simplebar-react": "3.3.2",
 		"types": "workspace:*",

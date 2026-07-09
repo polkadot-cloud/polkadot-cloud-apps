@@ -8,15 +8,15 @@ import { Tooltip } from 'radix-ui'
 import { BrowserRouter } from 'react-router-dom'
 import { OverlayProvider } from 'ui-overlay'
 import { ThemedRouter } from './Themes'
+import { StablecoinsDappName } from 'consts'
 
-const DappName = 'Polkadot Cloud Stablecoins'
 const Network = 'polkadot'
 const PolkadotSs58 = 0
 
 export const Providers = () => (
 	<ConnectProvider
 		network={Network}
-		dappName={DappName}
+		dappName={StablecoinsDappName}
 		ss58={PolkadotSs58}
 		adaptors={[LedgerAdaptor]}
 	>
