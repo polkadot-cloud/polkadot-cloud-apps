@@ -23,10 +23,6 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: SanitizeNomineeCandidatesData = {
-	sanitizeNomineeCandidates: [],
-}
-
 export const fetchSanitizeNomineeCandidates = (
 	network: string,
 	candidates: SanitizeNomineeCandidate[],
@@ -34,5 +30,5 @@ export const fetchSanitizeNomineeCandidates = (
 	fetchQuery<SanitizeNomineeCandidatesData>(
 		QUERY,
 		{ network, candidates },
-		DEFAULT,
+		{ sanitizeNomineeCandidates: candidates },
 	)
