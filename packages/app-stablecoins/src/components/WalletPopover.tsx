@@ -73,7 +73,7 @@ export const WalletPopover = ({
 
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
-	}, ['header-notifications'])
+	}, ['header-wallet'])
 
 	return (
 		<div ref={popoverRef} className={classes.popover}>
