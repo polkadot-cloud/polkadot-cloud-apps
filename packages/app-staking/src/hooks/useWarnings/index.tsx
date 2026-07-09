@@ -34,7 +34,7 @@ export const useWarnings = () => {
 						format: 'danger',
 						faIcon: faTrashCan,
 					})
-				}else if (warning.type === 'NO_CHANGE_RATE') {
+				} else if (warning.type === 'NO_CHANGE_RATE') {
 					messages.push({
 						value: t('warnings.noChangeRateTitle'),
 						faIcon: faCalendarXmark,

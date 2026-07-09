@@ -43,10 +43,7 @@ export const AllValidators = () => {
 									selectable={false}
 									defaultFilters={{
 										includes: ['active'],
-										excludes: [
-											'blocked_nominations',
-											'missing_identity',
-										],
+										excludes: ['blocked_nominations', 'missing_identity'],
 									}}
 									defaultOrder="rank"
 									allowListFormat={false}

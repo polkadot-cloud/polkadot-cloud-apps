@@ -69,11 +69,7 @@ export const useFetchMethods = () => {
 		// filter validators to find waiting candidates
 		waiting = applyFilter(
 			null,
-			[
-				'blocked_nominations',
-				'missing_identity',
-				'in_session',
-			],
+			['blocked_nominations', 'missing_identity', 'in_session'],
 			waiting,
 		)
 
