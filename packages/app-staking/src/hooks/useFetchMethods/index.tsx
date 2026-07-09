@@ -65,6 +65,7 @@ export const useFetchMethods = () => {
 		return favs
 	}
 
+	// TODO: Remove low commission (all commission now 0%).
 	const fetchLowCommission = () => {
 		let filtered = [...getValidators()]
 
