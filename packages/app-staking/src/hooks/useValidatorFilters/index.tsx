@@ -47,18 +47,6 @@ export const useValidatorFilters = () => {
 	)
 
 	/*
-	 * filterAllCommission: Filters the supplied list and removes items with 100% commission. Returns
-	 * the updated filtered list.
-	 */
-	const filterAllCommission = useCallback(
-		(list: AnyFilter) =>
-			list.filter(
-				(validator: AnyFilter) => validator?.prefs?.commission !== 100,
-			),
-		[],
-	)
-
-	/*
 	 * filterBlockedNominations: Filters the supplied list and removes items that have blocked
 	 * nominations. Returns the updated filtered list.
 	 */
@@ -128,7 +116,6 @@ export const useValidatorFilters = () => {
 		[
 			filterActive,
 			filterMissingIdentity,
-			filterAllCommission,
 			filterBlockedNominations,
 			filterInSession,
 		],
@@ -165,26 +152,6 @@ export const useValidatorFilters = () => {
 			return list
 		},
 		[getFiltersToApply],
-	)
-
-	/*
-	 * orderLowestCommission: Orders a list by commission, lowest first. Returns the updated ordered
-	 * list.
-	 */
-	const orderLowestCommission = useCallback(
-		(list: AnyFilter) =>
-			[...list].sort((a, b) => a.prefs.commission - b.prefs.commission),
-		[],
-	)
-
-	/*
-	 * orderHighestCommission: Orders a list by commission, highest first. Returns the updated ordered
-	 * list.
-	 */
-	const orderHighestCommission = useCallback(
-		(list: AnyFilter) =>
-			[...list].sort((a, b) => b.prefs.commission - a.prefs.commission),
-		[],
 	)
 
 	/*
