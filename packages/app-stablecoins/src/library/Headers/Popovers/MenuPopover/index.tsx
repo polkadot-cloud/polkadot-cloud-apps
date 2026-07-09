@@ -14,9 +14,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useOutsideAlerter } from '@w3ux/hooks'
 import {
-	PlatformName,
 	DiscordSupportURL,
 	PlatformGitHubURL,
+	PlatformName,
 	PlatformSupportEmail,
 	PlatformURL,
 } from 'consts'

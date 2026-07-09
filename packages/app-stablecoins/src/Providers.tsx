@@ -3,12 +3,12 @@
 
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
+import { StablecoinsDappName } from 'consts'
 import { UIProvider } from 'contexts/UI'
 import { Tooltip } from 'radix-ui'
 import { BrowserRouter } from 'react-router-dom'
 import { OverlayProvider } from 'ui-overlay'
 import { ThemedRouter } from './Themes'
-import { StablecoinsDappName } from 'consts'
 
 const Network = 'polkadot'
 const PolkadotSs58 = 0

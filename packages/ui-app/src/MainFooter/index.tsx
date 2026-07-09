@@ -7,8 +7,8 @@ import { Odometer } from '@w3ux/react-odometer'
 import CloudIconSVG from 'assets/icons/cloud.svg?react'
 import BigNumber from 'bignumber.js'
 import {
-	PlatformName,
 	PlatformDisclaimerURL,
+	PlatformName,
 	PlatformPrivacyURL,
 	PlatformURL,
 } from 'consts'
