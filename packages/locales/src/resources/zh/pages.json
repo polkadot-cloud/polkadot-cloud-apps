@@ -95,6 +95,7 @@
 		"minimumToEarnRewards": "最低收益抵押额",
 		"minimumToJoinPool": "最低入提名池质押金",
 		"minimumToNominate": "最低提名质押额",
+		"minimumValidatorBond": "最低验证人质押金",
 		"monthly": "每月",
 		"moreResources": "更多资讯",
 		"networkCurrentlyStaked": "{{total}} {{unit}} 目前正在{{network}}进行抵押",

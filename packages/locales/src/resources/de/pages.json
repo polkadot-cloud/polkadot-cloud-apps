@@ -95,6 +95,7 @@
 		"minimumToEarnRewards": "Minimum zum Verdienen von Belohnungen",
 		"minimumToJoinPool": "Minimum zum Beitritt zu einem Pool",
 		"minimumToNominate": "Minimum zum Nominieren",
+		"minimumValidatorBond": "Mindest-Validator-Bond",
 		"monthly": "Monatlich",
 		"moreResources": "Weitere Ressourcen",
 		"networkCurrentlyStaked": "{{total}} {{unit}} werden derzeit auf {{network}} gestakt.",

@@ -7,7 +7,6 @@ import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
@@ -88,13 +87,18 @@ export const useSupplyStakedStat = (): StatPick<'supplyStaked'> => {
 }
 
 export const useValidatorStats = (): StatPick<
-	'activeValidators' | 'totalValidators' | 'averageCommission'
+	'activeValidators' | 'totalValidators' | 'minValidatorBond'
 > => {
 	const { t } = useTranslation('pages')
+	const { network } = useNetwork()
+	const { unit, units } = getStakingChainData(network)
 	const { activeValidators } = useEraStakers()
-	const { avgCommission } = useValidators()
-	const { validatorCount, counterForValidators, maxValidatorsCount } =
-		useStakingMetrics()
+	const {
+		validatorCount,
+		counterForValidators,
+		maxValidatorsCount,
+		minValidatorBond,
+	} = useStakingMetrics()
 
 	return {
 		activeValidators: {
@@ -134,12 +138,14 @@ export const useValidatorStats = (): StatPick<
 			}%`,
 			helpKey: 'Validator',
 		},
-		averageCommission: {
-			id: 'averageCommission',
-			type: StatType.TEXT,
-			label: t('averageCommission'),
-			value: `${String(avgCommission)}%`,
-			helpKey: 'Average Commission',
+		minValidatorBond: {
+			id: 'minValidatorBond',
+			type: StatType.NUMBER,
+			label: t('minimumValidatorBond'),
+			value: parseFloat(planckToUnit(minValidatorBond, units)),
+			decimals: 3,
+			unit: `${unit}`,
+			helpKey: 'Bonding',
 		},
 	}
 }

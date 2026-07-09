@@ -97,6 +97,7 @@
 		"minimumToEarnRewards": "보상 획득 최소값",
 		"minimumToJoinPool": "풀 가입 최소값",
 		"minimumToNominate": "지명 최소값",
+		"minimumValidatorBond": "검증자 최소 본드",
 		"monthly": "월간",
 		"moreResources": "더 많은 리소스",
 		"networkCurrentlyStaked": "{{network}}에서 현재 {{total}} {{unit}}이 스테이킹되고 있습니다.",

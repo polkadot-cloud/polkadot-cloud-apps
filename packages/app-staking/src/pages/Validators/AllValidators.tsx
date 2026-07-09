@@ -15,12 +15,12 @@ export const AllValidators = () => {
 	const { isReady } = useApi()
 	const { getValidators } = useValidators()
 	const validators = getValidators()
-	const { activeValidators, totalValidators, averageCommission } =
+	const { activeValidators, totalValidators, minValidatorBond } =
 		useValidatorStats()
 	return (
 		<>
 			<Stat.Row>
-				<Stats items={[activeValidators, totalValidators, averageCommission]} />
+				<Stats items={[activeValidators, totalValidators, minValidatorBond]} />
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>

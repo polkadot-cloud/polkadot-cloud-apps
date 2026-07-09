@@ -95,6 +95,7 @@
 		"minimumToEarnRewards": "Ödül Kazanmak İçin Minimum",
 		"minimumToJoinPool": "Havuza Katılmak İçin Minimum",
 		"minimumToNominate": "Nominasyon Yapmak İçin Minimum",
+		"minimumValidatorBond": "Minimum Validatör Bondu",
 		"monthly": "Aylık",
 		"moreResources": "Daha Fazla Kaynak",
 		"networkCurrentlyStaked": "{{network}} üzerinde şu anda {{total}} {{unit}} stake ediliyor.",

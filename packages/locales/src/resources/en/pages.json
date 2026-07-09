@@ -95,6 +95,7 @@
 		"minimumToEarnRewards": "Minimum To Earn Rewards",
 		"minimumToJoinPool": "Minimum To Join Pool",
 		"minimumToNominate": "Minimum To Nominate",
+		"minimumValidatorBond": "Minimum Validator Bond",
 		"monthly": "Monthly",
 		"moreResources": "More Resources",
 		"networkCurrentlyStaked": "{{total}} {{unit}} is currently being staked on {{network}}.",

@@ -97,6 +97,7 @@
 		"minimumToEarnRewards": "Mínimo Para Ganhar Recompensas",
 		"minimumToJoinPool": "Mínimo Para Entrar no Pool",
 		"minimumToNominate": "Mínimo Para Nomear",
+		"minimumValidatorBond": "Bond Mínimo do Validador",
 		"monthly": "Mensal",
 		"moreResources": "Mais Recursos",
 		"networkCurrentlyStaked": "{{total}} {{unit}} está atualmente em staking em {{network}}.",

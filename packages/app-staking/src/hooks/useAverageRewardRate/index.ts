@@ -16,8 +16,7 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
 	const { pluginEnabled } = usePlugins()
-	const { avgCommission, averageEraValidatorReward, avgRewardRate } =
-		useValidators()
+	const { averageEraValidatorReward, avgRewardRate } = useValidators()
 
 	const { units } = getStakingChainData(network)
 
@@ -31,7 +30,6 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 		if (
 			totalIssuance === 0n ||
 			erasPerDay === 0 ||
-			avgCommission === 0 ||
 			averageEraValidatorReward.reward === 0n
 		) {
 			return 0
