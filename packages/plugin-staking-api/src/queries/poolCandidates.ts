@@ -6,7 +6,7 @@ import type { PoolCandidatesData } from '../types'
 import { fetchQuery } from './generic'
 
 const QUERY = gql`
-  query PoolCandidates($network: String!, $knownOnly: Boolean = false) {
+  query PoolCandidates($network: String!, $knownOnly: Boolean!) {
     poolCandidates(network: $network, knownOnly: $knownOnly)
   }
 `
@@ -15,5 +15,5 @@ const DEFAULT: PoolCandidatesData = {
 	poolCandidates: [],
 }
 
-export const fetchPoolCandidates = (network: string, knownOnly = false) =>
+export const fetchPoolCandidates = (network: string, knownOnly: boolean) =>
 	fetchQuery<PoolCandidatesData>(QUERY, { network, knownOnly }, DEFAULT)
