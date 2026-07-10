@@ -73,6 +73,7 @@
 		"inactiveNominations": "Inactive Nominations",
 		"inactivePoolNotNominating": "Inactive: Pool Not Nominating",
 		"joinAnotherPool": "Join Another Pool",
+		"joinPolkadotCloudPoolToSeeRewardTrends": "Join a Polkadot Cloud Pool to see Reward Trends",
 		"joinPool": "Join Pool",
 		"joinPoolHeading": "Join {{totalMembers}} pool members staking a total of {{totalPoolPoints}} {{unit}} on {{network}}.",
 		"last30DayReward": "Last 30 Days Reward",

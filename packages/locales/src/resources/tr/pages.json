@@ -73,6 +73,7 @@
 		"inactiveNominations": "Pasif Nominasyonlar",
 		"inactivePoolNotNominating": "Pasif: Havuz Nominasyon Yapmıyor",
 		"joinAnotherPool": "Başka Bir Havuza Katıl",
+		"joinPolkadotCloudPoolToSeeRewardTrends": "Ödül trendlerini görmek için bir Polkadot Cloud havuzuna katılın",
 		"joinPool": "Havuza Katıl",
 		"joinPoolHeading": "{{network}} üzerinde toplam {{totalPoolPoints}} {{unit}} stake eden {{totalMembers}} havuz üyesine katılın.",
 		"last30DayReward": "Son 30 Günlük Ödül",
