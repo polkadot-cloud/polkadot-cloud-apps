@@ -75,6 +75,7 @@
 		"inactiveNominations": "비활성 지명",
 		"inactivePoolNotNominating": "비활성: 풀이 지명하지 않음",
 		"joinAnotherPool": "다른 풀에 가입",
+		"joinPolkadotCloudPoolToSeeRewardTrends": "보상 추이를 확인하려면 Polkadot Cloud 풀에 가입하세요",
 		"joinPool": "풀에 가입",
 		"joinPoolHeading": "{{network}}에서 총 {{totalPoolPoints}} {{unit}}을 스테이킹하는 {{totalMembers}}명의 풀 회원에게 가입하세요.",
 		"last30DayReward": "지난 30일 보상",
