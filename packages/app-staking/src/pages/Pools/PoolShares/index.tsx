@@ -182,9 +182,14 @@ export const PoolShares = () => {
 					{poolShareUnavailable ? (
 						<>
 							<StatusLabel
+								hideIcon={!activePool}
 								backgroundOpacity={0.95}
 								status="pool_share_unavailable"
-								title={t('availableForPolkadotCloudPoolsOnly')}
+								title={t(
+									activePool
+										? 'availableForPolkadotCloudPoolsOnly'
+										: 'joinPolkadotCloudPoolToSeeRewardTrends',
+								)}
 								topOffset="38%"
 							/>
 							<PoolSharesDemoGraph

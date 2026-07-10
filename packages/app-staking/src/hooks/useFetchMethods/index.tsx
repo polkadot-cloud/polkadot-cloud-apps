@@ -3,32 +3,32 @@
 
 import { shuffle } from '@w3ux/utils'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { pluginEnabled } from 'global-bus'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
+import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorFilters } from 'hooks/useValidatorFilters'
 import type { AddNominationsType } from 'library/GenerateNominations/types'
+import { fetchSanitizeNomineeCandidates } from 'plugin-staking-api'
 import type { Validator } from 'types'
 
 // Helper function to get a random item from an array
 const getRandomItem = <T,>(items: T[]): T | null => shuffle(items)[0] || null
 
 export const useFetchMethods = () => {
+	const { network } = useNetwork()
 	const { applyFilter } = useValidatorFilters()
 	const { favoritesList } = useFavoriteValidators()
 	const { getValidators, getValidatorRankSegment } = useValidators()
 
-	const fetch = (method: string) => {
-		let nominations
+	const fetch = async (method: string): Promise<Validator[]> => {
 		switch (method) {
 			case 'Optimal Selection':
-				nominations = fetchOptimal()
-				break
+				return await fetchOptimal()
 			case 'From Favorites':
-				nominations = fetchFavorites()
-				break
+				return fetchFavorites()
 			default:
 				return []
 		}
-		return nominations
 	}
 
 	const add = (nominations: Validator[], type: AddNominationsType) => {
@@ -62,7 +62,7 @@ export const useFetchMethods = () => {
 		return favs
 	}
 
-	const fetchOptimal = () => {
+	const fetchOptimal = async () => {
 		let active = [...getValidators()]
 		let waiting = [...getValidators()]
 
@@ -95,7 +95,18 @@ export const useFetchMethods = () => {
 			active = shuffle(active).slice(0, 14)
 		}
 
-		return shuffle(waiting.concat(active))
+		const nominations = shuffle(waiting.concat(active))
+
+		if (!pluginEnabled('staking_api')) {
+			return nominations
+		}
+
+		const { sanitizeNomineeCandidates } = await fetchSanitizeNomineeCandidates(
+			network,
+			nominations,
+		)
+
+		return sanitizeNomineeCandidates
 	}
 
 	const available = (nominations: Validator[]) => {
