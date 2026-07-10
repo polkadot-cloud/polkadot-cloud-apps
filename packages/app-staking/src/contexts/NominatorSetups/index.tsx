@@ -147,13 +147,13 @@ export const NominatorSetupsProvider = ({
 		}
 	}, [activeAddress, network, stringifiedAccountsKey])
 
-	const generateOptimalSetup = (): NominatorProgress => {
+	const generateOptimalSetup = async (): Promise<NominatorProgress> => {
 		const setup = {
 			payee: {
 				destination: 'Staked' as PayeeOption,
 				account: null,
 			},
-			nominations: fetch('Optimal Selection'),
+			nominations: await fetch('Optimal Selection'),
 			bond: planckToUnit(totalPossibleBond, units),
 		}
 		return setup
