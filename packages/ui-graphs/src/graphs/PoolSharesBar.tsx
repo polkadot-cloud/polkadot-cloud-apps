@@ -274,7 +274,7 @@ export const PoolSharesBar = ({
 	])
 
 	const color = getThemeValue('--gray-1000') || '#000000'
-	const lineAreaColor = colorWithAlpha(color, 0.14)
+	const lineAreaColor = colorWithAlpha(color, 0.06)
 
 	const data = {
 		labels: series.map(({ timestamp }) =>
@@ -288,22 +288,7 @@ export const PoolSharesBar = ({
 				label: labels.poolShares,
 				data: syncing ? [] : series.map(({ shareReward }) => shareReward),
 				borderColor: color,
-				backgroundColor: (context: { chart: ChartType }) => {
-					const { chart } = context
-					const { chartArea, ctx } = chart
-					if (!chartArea) {
-						return lineAreaColor
-					}
-					const gradient = ctx.createLinearGradient(
-						0,
-						chartArea.top,
-						0,
-						chartArea.bottom,
-					)
-					gradient.addColorStop(0, colorWithAlpha(color, 0.16))
-					gradient.addColorStop(1, colorWithAlpha(color, 0))
-					return gradient
-				},
+				backgroundColor: lineAreaColor,
 				pointBackgroundColor: color,
 				pointBorderColor: getThemeValue('--bg-primary'),
 				pointBorderWidth: 2,
