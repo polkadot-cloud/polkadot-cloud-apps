@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
   --item-border-width: 1.25px;
 
   &.member {
-    --height-bottom-row: 2.75rem;
+    --height-bottom-row: 3.75rem;
   }
   &.pool {
     --height-bottom-row: 3.25rem;

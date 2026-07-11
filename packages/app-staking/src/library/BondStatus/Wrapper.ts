@@ -4,6 +4,7 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div<{
+	$align: 'left' | 'right'
 	$status: string
 	$noMargin?: boolean
 }>`
@@ -14,8 +15,14 @@ export const Wrapper = styled.div<{
 				? 'color-mix(in srgb, var(--status-success) 10%, transparent)'
 				: 'var(--gray-400)'};
   border-radius: 0.75rem;
-  border-top-right-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
+  border-top-left-radius: ${(props) =>
+		props.$align === 'left' ? '0.25rem' : '0.75rem'};
+  border-top-right-radius: ${(props) =>
+		props.$align === 'right' ? '0.25rem' : '0.75rem'};
+  border-bottom-right-radius: ${(props) =>
+		props.$align === 'left' ? '0.25rem' : '0.75rem'};
+  border-bottom-left-radius: ${(props) =>
+		props.$align === 'right' ? '0.25rem' : '0.75rem'};
   background: ${(props) =>
 		props.$status === 'active'
 			? 'color-mix(in srgb, var(--status-success) 2%, transparent)'
