@@ -71,6 +71,8 @@ export const Wrapper = styled.div`
 
       &.bottom {
         height: var(--height-bottom-row);
+        padding: 0 0.25rem;
+        padding-top: 0.25rem;
 
         &.pools {
           align-items: flex-start;
