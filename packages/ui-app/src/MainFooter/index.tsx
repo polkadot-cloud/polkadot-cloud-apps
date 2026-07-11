@@ -7,8 +7,8 @@ import { Odometer } from '@w3ux/react-odometer'
 import CloudIconSVG from 'assets/icons/cloud.svg?react'
 import BigNumber from 'bignumber.js'
 import {
-	DappOrganisation,
 	PlatformDisclaimerURL,
+	PlatformName,
 	PlatformPrivacyURL,
 	PlatformURL,
 } from 'consts'
@@ -50,7 +50,7 @@ export const MainFooter = () => {
 					<section>
 						<p>
 							<a href={PlatformURL} target="_blank" rel="noreferrer">
-								{DappOrganisation}
+								{PlatformName}
 							</a>
 						</p>
 						<Status />

@@ -13,7 +13,7 @@ import {
 	type VaultSignStatus,
 } from '@polkadot-cloud/connect-vault'
 import type { HardwareAccount } from '@w3ux/types'
-import { DappName, ManualSigners } from 'consts'
+import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
 import { compactU32 } from 'dedot/shape'
@@ -149,7 +149,7 @@ export const useSubmitExtrinsic = ({
 				throw new Error(`${t('walletNotFound')}`)
 			}
 			// NOTE: Summons extension popup if not already connected
-			window.injectedWeb3[source].enable(DappName)
+			window.injectedWeb3[source].enable(StakingDappName)
 		}
 
 		// Pre-submission state update

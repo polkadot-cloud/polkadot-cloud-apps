@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { NetworkId, Networks, SystemChain } from 'types'
+import { RpcEndpointsByChain } from './rpc'
 
 // The default network to use when no network is specified
 export const DefaultNetwork: NetworkId = 'polkadot'
@@ -15,15 +16,7 @@ export const NetworkList: Networks = {
 		name: 'polkadot',
 		endpoints: {
 			getLightClient: async () => await import('@dedot/chain-specs/polkadot'),
-			rpc: {
-				'Automata 1RPC': 'wss://1rpc.io/dot',
-				// Dwellir: 'wss://polkadot-rpc.dwellir.com',
-				// IBP1: 'wss://rpc.ibp.network/polkadot',
-				// IBP2: 'wss://rpc.dotters.network/polkadot',
-				LuckyFriday: 'wss://rpc-polkadot.luckyfriday.io',
-				OnFinality: 'wss://polkadot.api.onfinality.io/public-ws',
-				Stakeworld: 'wss://dot-rpc.stakeworld.io',
-			},
+			rpc: RpcEndpointsByChain.polkadot,
 		},
 		unit: 'DOT',
 		units: 10,
@@ -45,15 +38,7 @@ export const NetworkList: Networks = {
 		name: 'kusama',
 		endpoints: {
 			getLightClient: async () => await import('@dedot/chain-specs/ksmcc3'),
-			rpc: {
-				'Automata 1RPC': 'wss://1rpc.io/ksm',
-				// Dwellir: 'wss://kusama-rpc.dwellir.com',
-				// IBP1: 'wss://rpc.ibp.network/kusama',
-				// IBP2: 'wss://rpc.dotters.network/kusama',
-				LuckyFriday: 'wss://rpc-kusama.luckyfriday.io',
-				OnFinality: 'wss://kusama.api.onfinality.io/public-ws',
-				Stakeworld: 'wss://ksm-rpc.stakeworld.io',
-			},
+			rpc: RpcEndpointsByChain.kusama,
 		},
 		unit: 'KSM',
 		units: 12,
@@ -75,14 +60,7 @@ export const NetworkList: Networks = {
 		name: 'westend',
 		endpoints: {
 			getLightClient: async () => await import('@dedot/chain-specs/westend2'),
-			rpc: {
-				// Dwellir: 'wss://westend-rpc.dwellir.com',
-				// IBP1: 'wss://rpc.ibp.network/westend',
-				// IBP2: 'wss://rpc.dotters.network/westend',
-				LuckyFriday: 'wss://rpc-westend.luckyfriday.io',
-				OnFinality: 'wss://westend.api.onfinality.io/public-ws',
-				Stakeworld: 'wss://wnd-rpc.stakeworld.io',
-			},
+			rpc: RpcEndpointsByChain.westend,
 		},
 		unit: 'WND',
 		units: 12,
@@ -104,13 +82,7 @@ export const NetworkList: Networks = {
 		name: 'paseo',
 		endpoints: {
 			getLightClient: async () => await import('@dedot/chain-specs/paseo'),
-			rpc: {
-				IBP1: 'wss://rpc.ibp.network/paseo',
-				IBP2: 'wss://paseo.dotters.network',
-				Amforc: 'wss://paseo.rpc.amforc.com',
-				Dwellir: 'wss://paseo-rpc.dwellir.com',
-				StakeWorld: 'wss://pas-rpc.stakeworld.io',
-			},
+			rpc: RpcEndpointsByChain.paseo,
 		},
 		unit: 'PAS',
 		units: 10,
@@ -141,14 +113,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/polkadot_people'),
-			rpc: {
-				PolkadotPeople: 'wss://polkadot-people-rpc.polkadot.io',
-				LuckyFriday: 'wss://rpc-people-polkadot.luckyfriday.io',
-				RadiumBlock: 'wss://people-polkadot.public.curie.radiumblock.co/ws',
-				// IBP1: 'wss://sys.ibp.network/people-polkadot',
-				// IBP2: 'wss://people-polkadot.dotters.network',
-				'Sys Dotters': 'wss://sys.dotters.network/people-polkadot',
-			},
+			rpc: RpcEndpointsByChain['people-polkadot'],
 		},
 		relayChain: 'polkadot',
 	},
@@ -161,13 +126,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/ksmcc3_people'),
-			rpc: {
-				Parity: 'wss://kusama-people-rpc.polkadot.io',
-				Stakeworld: 'wss://ksm-rpc.stakeworld.io/people',
-				// IBP1: 'wss://sys.ibp.network/people-kusama',
-				// IBP2: 'wss://people-kusama.dotters.network',
-				LuckyFriday: 'wss://rpc-people-kusama.luckyfriday.io',
-			},
+			rpc: RpcEndpointsByChain['people-kusama'],
 		},
 		relayChain: 'kusama',
 	},
@@ -180,10 +139,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/westend2_people'),
-			rpc: {
-				// IBP1: 'wss://sys.ibp.network/people-westend',
-				// IBP2: 'wss://people-westend.dotters.network',
-			},
+			rpc: RpcEndpointsByChain['people-westend'],
 		},
 		relayChain: 'westend',
 	},
@@ -196,15 +152,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/polkadot_asset_hub'),
-			rpc: {
-				DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
-				// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
-				// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
-				StakeWorld: 'wss://dot-rpc.stakeworld.io/assethub',
-				// Dwellir: 'wss://asset-hub-polkadot-rpc.dwellir.com',
-				// IBP1: 'wss://sys.ibp.network/asset-hub-polkadot',
-				// IBP2: 'wss://asset-hub-polkadot.dotters.network',
-			},
+			rpc: RpcEndpointsByChain.statemint,
 		},
 		relayChain: 'polkadot',
 	},
@@ -217,12 +165,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/ksmcc3_asset_hub'),
-			rpc: {
-				LuckyFriday: 'wss://rpc-asset-hub-kusama.luckyfriday.io',
-				Parity: 'wss://kusama-asset-hub-rpc.polkadot.io',
-				// IBP1: 'wss://sys.ibp.network/asset-hub-kusama',
-				// IBP2: 'wss://asset-hub-kusama.dotters.network',
-			},
+			rpc: RpcEndpointsByChain.statemine,
 		},
 		relayChain: 'kusama',
 	},
@@ -235,13 +178,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/westend2_asset_hub'),
-			rpc: {
-				Parity: 'wss://westend-asset-hub-rpc.polkadot.io',
-				// Dwellir: 'wss://asset-hub-westend-rpc.dwellir.com',
-				// IBP1: 'wss://sys.ibp.network/asset-hub-westend',
-				// IBP2: 'wss://asset-hub-westend.dotters.network',
-				'Permanence DAO EU': 'wss://asset-hub-westend.rpc.permanence.io',
-			},
+			rpc: RpcEndpointsByChain.westmint,
 		},
 		relayChain: 'westend',
 	},
@@ -254,10 +191,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/paseo_people'),
-			rpc: {
-				IBP2: 'wss://people-paseo.dotters.network',
-				Amforc: 'wss://people-paseo.rpc.amforc.com',
-			},
+			rpc: RpcEndpointsByChain['people-paseo'],
 		},
 		relayChain: 'paseo',
 	},
@@ -270,13 +204,7 @@ export const SystemChainList: Record<string, SystemChain> = {
 		endpoints: {
 			getLightClient: async () =>
 				await import('@dedot/chain-specs/paseo_asset_hub'),
-			rpc: {
-				IBP1: 'wss://sys.ibp.network/asset-hub-paseo',
-				IBP2: 'wss://asset-hub-paseo.dotters.network',
-				Dwellir: 'wss://asset-hub-paseo-rpc.dwellir.com',
-				StakeWorld: 'wss://pas-rpc.stakeworld.io/assethub',
-				TurboFlakes: 'wss://sys.turboflakes.io/asset-hub-paseo',
-			},
+			rpc: RpcEndpointsByChain.paseomint,
 		},
 		relayChain: 'paseo',
 	},
