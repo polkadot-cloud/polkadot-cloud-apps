@@ -2,12 +2,12 @@
 	"$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
 	"root": true,
 	"vcs": {
-		"enabled": false,
+		"enabled": true,
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false,
+		"ignoreUnknown": true,
 		"includes": ["**", "!dist", "!build", "!node_modules", "!**/*.svg"]
 	},
 	"formatter": {
