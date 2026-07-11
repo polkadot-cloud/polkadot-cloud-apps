@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Offline } from 'Offline'
 import { Overlays } from 'Overlays'
 import { StakingApi } from 'StakingApi'
 import { useActiveAccount } from '@polkadot-cloud/connect'
@@ -26,7 +25,6 @@ import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { Headers } from 'library/Headers'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { NotificationPrompts } from 'library/NotificationPrompts'
-import { PageWithTitle } from 'library/PageWithTitle'
 import { SideMenu } from 'library/SideMenu'
 import { Tooltip } from 'library/Tooltip'
 import { ApolloProvider, client } from 'plugin-staking-api'
@@ -44,6 +42,8 @@ import {
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
 import { MainFooter } from 'ui-app/MainFooter'
 import { Menu } from 'ui-app/Menu'
+import { Offline } from 'ui-app/Offline'
+import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
 import { Prompt } from 'ui-overlay'
 import { getPagesConfig } from 'utils'
