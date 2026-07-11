@@ -270,6 +270,9 @@ importers:
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.23.0))
+      vite-shared:
+        specifier: workspace:*
+        version: link:../vite-shared
 
   packages/assets:
     dependencies:
@@ -1024,6 +1027,12 @@ importers:
     devDependencies:
       vite:
         specifier: 8.1.3
+        version: 8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.23.0)
+
+  packages/vite-shared:
+    dependencies:
+      vite:
+        specifier: ^8.0.0
         version: 8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(sass@1.101.0)(tsx@4.23.0)
 
   packages/workers:
