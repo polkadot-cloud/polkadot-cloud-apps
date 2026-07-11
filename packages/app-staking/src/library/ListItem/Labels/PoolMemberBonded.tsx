@@ -37,7 +37,6 @@ export const PoolMemberBonded = ({ member }: { member: FetchedPoolMember }) => {
 				<BondStatus
 					status={status}
 					label={t('bonded')}
-					separator=": "
 					value={`${bonded.decimalPlaces(3).toFormat()} ${unit}`}
 				/>
 			)}
@@ -45,7 +44,6 @@ export const PoolMemberBonded = ({ member }: { member: FetchedPoolMember }) => {
 				<BondStatus
 					status="inactive"
 					label={t('unbonding')}
-					separator=" "
 					value={`${totalUnbonding.decimalPlaces(3).toFormat()} ${unit}`}
 				/>
 			)}

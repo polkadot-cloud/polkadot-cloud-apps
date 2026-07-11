@@ -7,23 +7,21 @@ import { Wrapper } from './Wrapper'
 export const BondStatus = ({
 	label,
 	noMargin = false,
-	separator = ' / ',
 	status,
 	value,
 }: {
 	label: ReactNode
 	noMargin?: boolean
-	separator?: string
 	status: string
 	value?: ReactNode
 }) => (
 	<Wrapper $status={status} $noMargin={noMargin}>
 		<h5>
-			{label}
+			<span>{label}</span>
 			{value !== undefined && value !== null ? (
 				<>
-					{separator}
-					{value}
+					<span className="separator" aria-hidden="true" />
+					<span>{value}</span>
 				</>
 			) : null}
 		</h5>
