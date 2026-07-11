@@ -8,7 +8,7 @@ import {
 import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
 import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import type { HardwareAccount } from '@w3ux/types'
-import { ManualSigners } from 'consts'
+import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
 import { SubmittableExtrinsic } from 'dedot'
@@ -139,6 +139,8 @@ export const useSubmitExtrinsic = ({
 			if (!connected) {
 				throw new Error(t('walletNotFound'))
 			}
+			// NOTE: Summons extension popup if not already connected
+			window.injectedWeb3?.[source]?.enable(StakingDappName)
 		}
 
 		setUidSubmitted(uid, true)
