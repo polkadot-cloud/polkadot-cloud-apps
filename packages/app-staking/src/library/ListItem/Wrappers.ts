@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   --height-top-row: 3.25rem;
-  --height-bottom-row: 5rem;
+  --height-bottom-row: 5.5rem;
   --item-border-width: 1.25px;
 
   &.member {
@@ -95,24 +95,6 @@ export const Wrapper = styled.div`
         }
       }
     }
-  }
-`
-
-export const ValidatorStatusWrapper = styled.div<{
-	$status: string
-	$noMargin?: boolean
-}>`
-  margin-right: ${(props) => (props.$noMargin ? '0' : '0.35rem')};
-  padding: 0 0.5rem;
-
-  h5 {
-    color: ${(props) =>
-			props.$status === 'active' ? 'var(--status-success)' : 'var(--gray-900)'};
-    opacity: ${(props) => (props.$status === 'active' ? 0.8 : 0.5)};
-    display: flex;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 `
 
