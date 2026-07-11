@@ -5,15 +5,27 @@ import type { ReactNode } from 'react'
 import { Wrapper } from './Wrapper'
 
 export const BondStatus = ({
-	children,
+	label,
 	noMargin = false,
+	separator = ' / ',
 	status,
+	value,
 }: {
-	children: ReactNode
+	label: ReactNode
 	noMargin?: boolean
+	separator?: string
 	status: string
+	value?: ReactNode
 }) => (
 	<Wrapper $status={status} $noMargin={noMargin}>
-		<h5>{children}</h5>
+		<h5>
+			{label}
+			{value !== undefined && value !== null ? (
+				<>
+					{separator}
+					{value}
+				</>
+			) : null}
+		</h5>
 	</Wrapper>
 )

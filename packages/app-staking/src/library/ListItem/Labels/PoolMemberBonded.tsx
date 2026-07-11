@@ -34,14 +34,20 @@ export const PoolMemberBonded = ({ member }: { member: FetchedPoolMember }) => {
 	return (
 		<>
 			{bonded.isGreaterThan(0) && (
-				<BondStatus status={status}>
-					{t('bonded')}: {bonded.decimalPlaces(3).toFormat()} {unit}
-				</BondStatus>
+				<BondStatus
+					status={status}
+					label={t('bonded')}
+					separator=": "
+					value={`${bonded.decimalPlaces(3).toFormat()} ${unit}`}
+				/>
 			)}
 			{totalUnbonding.isGreaterThan(0) && (
-				<BondStatus status="inactive">
-					{t('unbonding')} {totalUnbonding.decimalPlaces(3).toFormat()} {unit}
-				</BondStatus>
+				<BondStatus
+					status="inactive"
+					label={t('unbonding')}
+					separator=" "
+					value={`${totalUnbonding.decimalPlaces(3).toFormat()} ${unit}`}
+				/>
 			)}
 		</>
 	)

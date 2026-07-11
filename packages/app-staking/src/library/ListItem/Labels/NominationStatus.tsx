@@ -60,11 +60,17 @@ export const NominationStatus = ({
 	}
 
 	return (
-		<BondStatus status={status || 'waiting'} noMargin={noMargin}>
-			{t(statusTKey)}
-			{stakedAmount.isGreaterThan(0)
-				? ` / ${syncing ? '...' : `${stakedAmount.toFormat()} ${unit}`}`
-				: null}
-		</BondStatus>
+		<BondStatus
+			status={status || 'waiting'}
+			noMargin={noMargin}
+			label={t(statusTKey)}
+			value={
+				stakedAmount.isGreaterThan(0)
+					? syncing
+						? '...'
+						: `${stakedAmount.toFormat()} ${unit}`
+					: undefined
+			}
+		/>
 	)
 }

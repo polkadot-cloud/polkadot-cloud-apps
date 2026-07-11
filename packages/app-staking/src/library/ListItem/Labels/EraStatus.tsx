@@ -23,17 +23,26 @@ export const EraStatus = ({ address, noMargin, status }: EraStatusProps) => {
 	const validatorStatus = syncing ? 'waiting' : status
 
 	return (
-		<BondStatus status={validatorStatus} noMargin={noMargin}>
-			{syncing
-				? t('syncing')
-				: validatorStatus !== 'waiting'
-					? `${t('listItemActive')} / ${planckToUnitBn(
+		<BondStatus
+			status={validatorStatus}
+			noMargin={noMargin}
+			label={
+				syncing
+					? t('syncing')
+					: validatorStatus === 'waiting'
+						? capitalizeFirstLetter(t(`${validatorStatus}`) ?? '')
+						: t('listItemActive')
+			}
+			value={
+				!syncing && validatorStatus !== 'waiting'
+					? `${planckToUnitBn(
 							new BigNumber(getValidatorTotalStake(address)),
 							units,
 						)
 							.integerValue()
 							.toFormat()} ${unit}`
-					: capitalizeFirstLetter(t(`${validatorStatus}`) ?? '')}
-		</BondStatus>
+					: undefined
+			}
+		/>
 	)
 }
