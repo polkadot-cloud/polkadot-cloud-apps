@@ -37,7 +37,7 @@ export const Wrapper = styled.div<{
 
     .separator {
       align-self: stretch;
-      background: color-mix(in srgb, var(--status-success) 20%, transparent);
+      background: ${(props) => (props.$status === 'active' ? 'color-mix(in srgb, var(--status-success) 20%, transparent)' : 'color-mix(in srgb, var(--gray-900) 20%, transparent)')};
       flex: 0 0 1px;
       transform: skew(-15deg);
     }
