@@ -1,15 +1,17 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-// Global Constants
-export const DappName = 'Polkadot Cloud Staking'
-export const DappOrganisation = 'Polkadot Cloud'
-export const PlatformURL = 'https://polkadot.cloud'
-export const ProductionURL = 'https://staking.polkadot.cloud'
+// Staking
+export const StakingDappName = 'Polkadot Cloud Staking'
+export const StakingProductionURL = 'https://staking.polkadot.cloud'
 export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
+
+// Platform
+export const PlatformName = 'Polkadot Cloud'
+export const PlatformURL = 'https://polkadot.cloud'
 export const PlatformPrivacyURL = 'https://polkadot.cloud/privacy'
 export const PlatformDisclaimerURL = 'https://polkadot.cloud/disclaimer'
-export const PlatformSupportEmail = 'staking@polkadot.cloud'
+export const PlatformSupportEmail = 'support@polkadot.cloud'
 export const PlatformGitHubURL =
 	'https://github.com/polkadot-cloud/polkadot-cloud-apps'
 export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
