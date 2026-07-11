@@ -3,21 +3,20 @@
 
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import type { PageItem } from 'types'
 import { Page } from 'ui-core/base'
+import type { PageWithTitleProps } from './types'
 
-export const PageWithTitle = ({ page }: { page: PageItem }) => {
+export const PageWithTitle = (props: PageWithTitleProps) => {
 	const { t } = useTranslation()
-	const { Entry, key } = page
+	const { Entry, key } = props.page
+	const appTitle = props.appTitle ?? t('title', { ns: 'app' })
 
 	return (
 		<Page.Container>
 			<Helmet>
-				<title>{`${t(key, { ns: 'app' })} | ${t('title', {
-					ns: 'app',
-				})}`}</title>
+				<title>{`${t(key, { ns: 'app' })} | ${appTitle}`}</title>
 			</Helmet>
-			<Entry page={page} />
+			<Entry page={props.page} />
 		</Page.Container>
 	)
 }
