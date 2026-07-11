@@ -19,7 +19,13 @@ const serveSharedFavicons = (): Plugin => ({
 	apply: 'serve',
 	configureServer(server) {
 		server.middlewares.use(async (request, response, next) => {
-			const pathname = new URL(request.url ?? '/', 'http://localhost').pathname
+			let pathname: string
+			try {
+				pathname = new URL(request.url ?? '/', 'http://localhost').pathname
+			} catch {
+				next()
+				return
+			}
 			const match = pathname.match(/^\/favicons\/([^/]+)$/)
 
 			if (!match) {
