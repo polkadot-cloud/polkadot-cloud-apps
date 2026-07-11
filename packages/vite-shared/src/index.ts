@@ -19,7 +19,13 @@ const serveSharedFavicons = (): Plugin => ({
 	apply: 'serve',
 	configureServer(server) {
 		server.middlewares.use(async (request, response, next) => {
-			const pathname = new URL(request.url ?? '/', 'http://localhost').pathname
+			let pathname: string
+			try {
+				pathname = new URL(request.url ?? '/', 'http://localhost').pathname
+			} catch {
+				next()
+				return
+			}
 			const match = pathname.match(/^\/favicons\/([^/]+)$/)
 
 			if (!match) {
@@ -52,7 +58,11 @@ const buildSharedFavicons = (): Plugin => ({
 	name: 'build-shared-favicons',
 	apply: 'build',
 	async buildStart() {
-		for (const filename of await readdir(faviconDir)) {
+		for (const entry of await readdir(faviconDir, { withFileTypes: true })) {
+			if (!entry.isFile()) continue
+			const filename = entry.name
+			if (!(path.extname(filename) in contentTypes)) continue
+
 			this.emitFile({
 				type: 'asset',
 				fileName: `favicons/${filename}`,
