@@ -7,7 +7,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": true,
+		"ignoreUnknown": false,
 		"includes": ["**", "!dist", "!build", "!node_modules", "!**/*.svg"]
 	},
 	"formatter": {
