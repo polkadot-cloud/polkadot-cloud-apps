@@ -20,13 +20,16 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 
 	const { units } = getStakingChainData(network)
 
-	// Get average reward rate based on the current staking metrics. Directly returns rate from
-	// staking API if available
-	const getAverageRewardRate = (compounded: boolean = false): number => {
-		if (pluginEnabled('staking_api')) {
-			return avgRewardRate
+	const normalizeStakingApiRate = (rate: number): number => {
+		if (!Number.isFinite(rate) || rate <= 0) {
+			return 0
 		}
+		return rate
+	}
 
+	const getCalculatedAverageRewardRate = (
+		compounded: boolean = false,
+	): number => {
 		if (
 			totalIssuance === 0n ||
 			erasPerDay === 0 ||
@@ -79,6 +82,19 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 			supplyStaked === 0 ? 0 : Number(inflationToStakers) / supplyStaked
 
 		return rate
+	}
+
+	// Get average reward rate based on the current staking metrics. Prefer staking API when available,
+	// but gracefully fall back to chain-derived metrics if API returns zero/stale data.
+	const getAverageRewardRate = (compounded: boolean = false): number => {
+		if (pluginEnabled('staking_api')) {
+			const normalizedRate = normalizeStakingApiRate(avgRewardRate)
+			if (normalizedRate > 0) {
+				console.log('using normalized staking API rate:', normalizedRate)
+				return normalizedRate
+			}
+		}
+		return getCalculatedAverageRewardRate(compounded)
 	}
 
 	const formatRateAsPercent = (rate: number) => {
