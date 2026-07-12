@@ -90,7 +90,6 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 		if (pluginEnabled('staking_api')) {
 			const normalizedRate = normalizeStakingApiRate(avgRewardRate)
 			if (normalizedRate > 0) {
-				console.log('using normalized staking API rate:', normalizedRate)
 				return normalizedRate
 			}
 		}
