@@ -337,12 +337,13 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		setValidatorSupers({})
 	}, [network])
 
-	// Refetch active validator ranks when network changes
+	// Refetch staking API validator stats when network or era changes so APY does not remain stale at
+	// the initial default value.
 	useEffect(() => {
-		if (pluginEnabled('staking_api')) {
+		if (pluginEnabled('staking_api') && activeEra.index > 0) {
 			getValidatorStats()
 		}
-	}, [network, pluginEnabled('staking_api')])
+	}, [network, activeEra.index, pluginEnabled('staking_api')])
 
 	// Fetch validators and era reward points when fetched status changes
 	useEffect(() => {
@@ -362,11 +363,11 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 			if (validators.status === 'synced') {
 				setValidatorsFetched('unsynced')
 			}
-			if (!pluginEnabled('staking_api')) {
+			if (!pluginEnabled('staking_api') || avgRewardRate === 0) {
 				getAverageEraValidatorReward()
 			}
 		}
-	}, [isReady, activeEra])
+	}, [isReady, activeEra, avgRewardRate])
 
 	return (
 		<ValidatorsContext.Provider
