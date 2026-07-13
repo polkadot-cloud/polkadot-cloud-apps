@@ -2,16 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useUi } from 'hooks/useUi'
-import { type ComponentType, useState } from 'react'
+import { useState } from 'react'
 import { Header } from 'ui-core/base'
 import { Account } from './Account'
 import { Notifications } from './Notifications'
 import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
-
-interface HeadersProps {
-	Sync: ComponentType
-}
+import type { HeadersProps } from './types'
 
 export const Headers = ({ Sync }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
