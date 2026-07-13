@@ -3,13 +3,14 @@
 
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { StablecoinsDappName } from 'consts'
-import { Headers } from 'library/Headers'
 import { SideMenu } from 'library/SideMenu'
+import { Wallet } from 'library/Wallet'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import type { PageItem } from 'types'
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
+import { Headers } from 'ui-app/Headers'
 import { MainFooter } from 'ui-app/MainFooter'
 import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
@@ -34,7 +35,7 @@ export const Router = () => (
 			<SideMenu />
 			<Page.Main>
 				<HelmetProvider>
-					<Headers />
+					<Headers Wallet={Wallet} />
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 						<Routes>
 							<Route index element={<Navigate to="/send" replace />} />
