@@ -440,9 +440,6 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
-      react-router-dom:
-        specifier: ^7.18.1
-        version: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       types:
         specifier: workspace:*
         version: link:../types
