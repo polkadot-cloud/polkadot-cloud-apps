@@ -22,10 +22,10 @@ import { usePoolFromUrl } from 'hooks/usePoolFromUrl'
 import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
-import { Headers } from 'library/Headers'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { NotificationPrompts } from 'library/NotificationPrompts'
 import { SideMenu } from 'library/SideMenu'
+import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
 import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
@@ -40,6 +40,7 @@ import {
 	useNavigate,
 } from 'react-router-dom'
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
+import { Headers } from 'ui-app/Headers'
 import { MainFooter } from 'ui-app/MainFooter'
 import { Menu } from 'ui-app/Menu'
 import { Offline } from 'ui-app/Offline'
@@ -128,7 +129,7 @@ const RouterInner = () => {
 					<SideMenu />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers />
+							<Headers Sync={Sync} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {

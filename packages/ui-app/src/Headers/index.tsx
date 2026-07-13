@@ -8,9 +8,9 @@ import { Account } from './Account'
 import { Notifications } from './Notifications'
 import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
-import { Sync } from './Sync'
+import type { HeadersProps } from './types'
 
-export const Headers = () => {
+export const Headers = ({ Sync }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
 
 	// Whether the connect popover is open
