@@ -26,6 +26,7 @@ import { Headers } from 'library/Headers'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { NotificationPrompts } from 'library/NotificationPrompts'
 import { SideMenu } from 'library/SideMenu'
+import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
 import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
@@ -128,7 +129,7 @@ const RouterInner = () => {
 					<SideMenu />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers />
+							<Headers Sync={Sync} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {
