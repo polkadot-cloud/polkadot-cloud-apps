@@ -639,6 +639,9 @@ importers:
       '@fortawesome/free-brands-svg-icons':
         specifier: ^7.3.0
         version: 7.3.0
+      '@fortawesome/free-regular-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.0
       '@fortawesome/free-solid-svg-icons':
         specifier: ^7.3.0
         version: 7.3.0
@@ -651,6 +654,9 @@ importers:
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
         version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@polkadot-cloud/connect-proxies':
+        specifier: ^0.3.0
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
         version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.7)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -666,6 +672,9 @@ importers:
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
         version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@w3ux/types':
+        specifier: ^2.4.2
+        version: 2.4.2
       '@w3ux/util-dedot':
         specifier: ^1.0.0
         version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
@@ -681,6 +690,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      event-tracking:
+        specifier: workspace:*
+        version: link:../event-tracking
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -702,6 +714,9 @@ importers:
       simplebar-react:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.7)
+      styled-components:
+        specifier: ^6.4.3
+        version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       types:
         specifier: workspace:*
         version: link:../types

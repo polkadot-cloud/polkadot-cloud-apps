@@ -15,9 +15,9 @@ import type { ToggleConnectProps } from './Popovers/types'
 export const Account = ({ setOpenConnect }: ToggleConnectProps) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
+	const { activeProxy } = useActiveProxy()
 	const { openModal } = useOverlay().modal
 	const { activeAccount, activeAddress } = useActiveAccount()
-	const { activeProxy } = useActiveProxy()
 	const { accountHasSigner, getAccount, accounts } = useImportedAccounts()
 
 	const [open, setOpen] = useState<boolean>(false)
