@@ -17,7 +17,7 @@
 		"commander": "^15.0.0",
 		"consts": "workspace:*",
 		"dotenv": "^17.4.2",
-		"openai": "^6.45.0"
+		"openai": "^6.46.0"
 	},
 	"devDependencies": {
 		"@types/node": "^26.1.0",
