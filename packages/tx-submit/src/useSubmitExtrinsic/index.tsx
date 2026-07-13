@@ -3,6 +3,7 @@
 
 import {
 	useExtensionAccounts,
+	useExtensions,
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
 import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
@@ -60,10 +61,11 @@ export const useSubmitExtrinsic = ({
 	const { serviceApi } = useApi()
 	const { network } = useNetwork()
 	const { getTxSubmission } = useTxMeta()
+	const { extensionsStatus } = useExtensions()
 	const { handleResetLedgerTask } = useLedger()
 	const { isProxySupported } = useProxySupported()
 	const { openPromptWith, closePrompt } = usePrompt()
-	const { connectExtension, getExtensionAccount } = useExtensionAccounts()
+	const { getExtensionAccount } = useExtensionAccounts()
 	const { getAccount, requiresManualSign } = useImportedAccounts()
 	const { address: fromAddress, source, proxy = null } = from
 	const {
@@ -135,12 +137,13 @@ export const useSubmitExtrinsic = ({
 		const isManualSigner = ManualSigners.includes(source)
 
 		if (!isManualSigner) {
-			const connected = await connectExtension(source)
-			if (!connected) {
+			const isConnected = extensionsStatus[source] === 'connected'
+			const injectedExtension = window.injectedWeb3?.[source]
+			if (!isConnected || !injectedExtension) {
 				throw new Error(t('walletNotFound'))
 			}
 			// NOTE: Summons extension popup if not already connected
-			window.injectedWeb3?.[source]?.enable(StakingDappName)
+			injectedExtension.enable(StakingDappName)
 		}
 
 		setUidSubmitted(uid, true)
