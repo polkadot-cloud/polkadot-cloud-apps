@@ -720,6 +720,15 @@ importers:
 
   packages/tx-submit:
     dependencies:
+      '@fortawesome/fontawesome-svg-core':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.0
+      '@fortawesome/react-fontawesome':
+        specifier: ^3.3.1
+        version: 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
         version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
@@ -750,9 +759,15 @@ importers:
       react-i18next:
         specifier: ^17.0.8
         version: 17.0.8(i18next@26.3.4(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      styled-components:
+        specifier: ^6.4.3
+        version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       types:
         specifier: workspace:*
         version: link:../types
+      ui-buttons:
+        specifier: workspace:*
+        version: link:../ui-buttons
       ui-overlay:
         specifier: workspace:*
         version: link:../ui-overlay

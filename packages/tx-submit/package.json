@@ -11,9 +11,12 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./util": "./src/util.ts",
-		"./*": "./src/*/index.ts"
+		"./*": "./src/*/index.tsx"
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^7.3.0",
+		"@fortawesome/free-solid-svg-icons": "^7.3.0",
+		"@fortawesome/react-fontawesome": "^3.3.1",
 		"@polkadot-cloud/connect": "^1.0.9",
 		"@polkadot-cloud/connect-ledger": "^1.1.0",
 		"@polkadot-cloud/connect-vault": "^1.0.2",
@@ -24,7 +27,9 @@
 		"hooks": "workspace:*",
 		"react": "^19.2.7",
 		"react-i18next": "^17.0.8",
+		"styled-components": "^6.4.3",
 		"types": "workspace:*",
+		"ui-buttons": "workspace:*",
 		"ui-overlay": "workspace:*"
 	}
 }

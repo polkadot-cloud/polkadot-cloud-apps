@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
+	faChevronLeft,
+	faChevronRight,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
 	QrDisplayPayload,
 	QrScanSignature,
 	type VaultSignatureResult,
@@ -10,8 +15,9 @@ import {
 import { hexToU8a } from 'dedot/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
 import { usePrompt } from 'ui-overlay'
-import classes from './index.module.scss'
+import { Wrapper } from './Wrapper'
 
 export interface QRSignPromptProps {
 	submitAddress: string
@@ -28,24 +34,28 @@ export const QRSignPrompt = ({
 }: QRSignPromptProps) => {
 	const { t } = useTranslation('app')
 	const { setOnClosePrompt } = usePrompt()
+
+	// Whether user is on sign or submit stage
 	const [stage, setStage] = useState<number>(1)
 
 	return (
-		<div className={classes.wrapper}>
-			<h3 className={classes.title}>
-				{stage === 1 ? t('scanPolkadotVault') : t('signPolkadotVault')}
-			</h3>
+		<Wrapper>
+			{stage === 1 && <h3 className="title">{t('scanPolkadotVault')}</h3>}
+			{stage === 2 && <h3 className="title">{t('signPolkadotVault')}</h3>}
 
-			<div className={classes.progress}>
-				<span className={stage === 1 ? classes.active : undefined}>Scan</span>
-				<span aria-hidden>&gt;</span>
-				<span className={stage === 2 ? classes.active : undefined}>Sign</span>
+			<div className="progress">
+				<span className={stage === 1 ? 'active' : undefined}>Scan</span>
+				<FontAwesomeIcon
+					icon={faChevronRight}
+					transform="shrink-4"
+					className="arrow"
+				/>
+				<span className={stage === 2 ? 'active' : undefined}>Sign</span>
 			</div>
-
 			{stage === 1 && (
-				<div className={`${classes.viewer} ${classes.withBorder}`}>
+				<div className="viewer withBorder">
 					<QrDisplayPayload
-						address={submitAddress}
+						address={submitAddress || ''}
 						cmd={2}
 						genesisHash={hexToU8a(genesisHash)}
 						payload={toSign}
@@ -54,7 +64,7 @@ export const QRSignPrompt = ({
 				</div>
 			)}
 			{stage === 2 && (
-				<div className={classes.viewer}>
+				<div className="viewer">
 					<QrScanSignature
 						size={279}
 						onScan={({ signature }) => {
@@ -64,38 +74,38 @@ export const QRSignPrompt = ({
 					/>
 				</div>
 			)}
-
-			<div className={classes.foot}>
-				<div className={classes.actions}>
+			<div className="foot">
+				<div>
 					{stage === 2 && (
-						<button
-							type="button"
-							className={`${classes.button} ${classes.secondary}`}
+						<ButtonSecondary
+							text={t('backToScan')}
+							size="lg"
 							onClick={() => setStage(1)}
-						>
-							{t('backToScan')}
-						</button>
+							iconLeft={faChevronLeft}
+							iconTransform="shrink-3"
+						/>
 					)}
 					{stage === 1 && (
-						<button
-							type="button"
-							className={`${classes.button} ${classes.primary}`}
-							onClick={() => setStage(2)}
-						>
-							{t('iHaveScanned')}
-						</button>
+						<ButtonPrimary
+							text={t('iHaveScanned')}
+							size="lg"
+							onClick={() => {
+								setStage(2)
+							}}
+							iconRight={faChevronRight}
+							iconTransform="shrink-3"
+						/>
 					)}
-					<button
-						type="button"
-						className={`${classes.button} ${classes.secondary}`}
+					<ButtonSecondary
+						text={t('cancel')}
+						size="lg"
+						marginLeft
 						onClick={() => {
 							onComplete('cancelled', null)
 						}}
-					>
-						{t('cancel')}
-					</button>
+					/>
 				</div>
 			</div>
-		</div>
+		</Wrapper>
 	)
 }
