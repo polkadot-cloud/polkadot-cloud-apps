@@ -10,7 +10,7 @@ import {
 } from '@polkadot-cloud/connect-ledger'
 import { useHelp } from 'hooks/useHelp'
 import { useTranslation } from 'react-i18next'
-import type { ActiveAccount, DisplayFor } from 'types'
+import type { ActiveAccount, DisplayFor, TxFeeDisplay } from 'types'
 import { ButtonHelp, ButtonSubmitWithFee } from 'ui-buttons'
 import { useOverlay } from 'ui-overlay'
 import { EstimatedTxFee } from '../../EstimatedTxFee'
@@ -25,6 +25,7 @@ interface LedgerProps {
 	submitAccount: ActiveAccount
 	onSubmit: () => void
 	notEnoughFunds: boolean
+	feeDisplay: TxFeeDisplay
 }
 
 interface LedgerPromptProps {
@@ -39,6 +40,7 @@ export const LedgerSubmit = ({
 	submitAccount,
 	onSubmit,
 	notEnoughFunds,
+	feeDisplay,
 }: LedgerProps) => {
 	const { t } = useTranslation('app')
 	const { setModalResize } = useOverlay().modal
@@ -69,7 +71,7 @@ export const LedgerSubmit = ({
 				onSubmit={buttonOnClick}
 				disabled={buttonDisabled}
 				pulse={buttonPulse}
-				fee={<EstimatedTxFee uid={uid} />}
+				fee={<EstimatedTxFee uid={uid} feeDisplay={feeDisplay} />}
 			/>
 		</SubmitButtonWrapper>
 	)

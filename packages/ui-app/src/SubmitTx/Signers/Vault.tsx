@@ -5,7 +5,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { deriveVaultButtonState } from '@polkadot-cloud/connect-vault'
 import { useTranslation } from 'react-i18next'
-import type { DisplayFor } from 'types'
+import type { DisplayFor, TxFeeDisplay } from 'types'
 import { ButtonSubmitWithFee } from 'ui-buttons'
 import { EstimatedTxFee } from '../../EstimatedTxFee'
 import { SubmitButtonWrapper } from '../../Tx'
@@ -19,6 +19,7 @@ interface VaultProps {
 	onSubmit: () => void
 	notEnoughFunds: boolean
 	promptStatus: number
+	feeDisplay: TxFeeDisplay
 }
 
 export const VaultSubmit = ({
@@ -30,6 +31,7 @@ export const VaultSubmit = ({
 	onSubmit,
 	notEnoughFunds,
 	promptStatus,
+	feeDisplay,
 }: VaultProps) => {
 	const { t } = useTranslation('app')
 
@@ -56,7 +58,7 @@ export const VaultSubmit = ({
 				onSubmit={onSubmit}
 				disabled={finalDisabled}
 				pulse={finalPulse}
-				fee={<EstimatedTxFee uid={uid} />}
+				fee={<EstimatedTxFee uid={uid} feeDisplay={feeDisplay} />}
 			/>
 		</SubmitButtonWrapper>
 	)
