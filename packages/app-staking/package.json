@@ -62,6 +62,7 @@
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
 		"styled-components": "^6.4.3",
+		"ui-app": "workspace:*",
 		"tx-submit": "workspace:*",
 		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
