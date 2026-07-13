@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@w3ux/react-polkicon'
-import { ButtonCopy } from 'library/ButtonCopy'
+import { ButtonCopy } from 'ui-app/ButtonCopy'
 import { Padding, Stat } from 'ui-core/popover'
 
 export const Account = ({
