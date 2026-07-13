@@ -61,12 +61,13 @@
     <script>
       window.sa_event =
         window.sa_event ||
-        function () {
-          var a = [].slice.call(arguments)
-          window.sa_event.q
-            ? window.sa_event.q.push(a)
-            : (window.sa_event.q = [a])
-        }
+        ((...args) => {
+          if (window.sa_event.q) {
+            window.sa_event.q.push(args)
+          } else {
+            window.sa_event.q = [args]
+          }
+        })
     </script>
   </head>
   <body>
