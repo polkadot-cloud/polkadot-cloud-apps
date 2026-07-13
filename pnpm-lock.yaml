@@ -201,6 +201,9 @@ importers:
         specifier: workspace:*
         version: link:../ui-styles
     devDependencies:
+      '@w3ux/types':
+        specifier: ^2.4.2
+        version: 2.4.2
       types:
         specifier: workspace:*
         version: link:../types
