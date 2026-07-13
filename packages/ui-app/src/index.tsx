@@ -4,6 +4,7 @@
 export * from './AccountDropdown'
 export * from './AccountInput'
 export * from './BalanceInput'
+export * from './ButtonCopy'
 export * from './ErrorBoundary'
 export * from './EstimatedTxFee'
 export * from './MainFooter'
