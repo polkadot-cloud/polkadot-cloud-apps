@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { PageCategories, PagesConfig } from 'config'
 import { setActivePage } from 'hooks/useActivePages'
 import { usePageFromHash } from 'hooks/usePageFromHash'
 import { useEffect, useState } from 'react'
@@ -12,10 +11,7 @@ import { FloatingtMenu } from './FloatingMenu'
 
 export const SideMenu = () => {
 	const { pathname } = useLocation()
-	const { categoryKey } = usePageFromHash({
-		pageCategories: PageCategories,
-		pagesConfig: PagesConfig,
-	})
+	const { categoryKey } = usePageFromHash()
 
 	// Define local category state to manage active category between both menu versions. Speeds up
 	// re-renders compared to url changes
