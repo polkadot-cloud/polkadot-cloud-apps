@@ -64,7 +64,6 @@
 		"styled-components": "^6.4.3",
 		"ui-app": "workspace:*",
 		"tx-submit": "workspace:*",
-		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-graphs": "workspace:*",
