@@ -19,6 +19,6 @@
 		"jsx": "react-jsx",
 		"noEmit": true
 	},
-	"include": ["src", "tests", "../ui-app/src/ButtonCopy"],
+	"include": ["src", "tests"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
