@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { ButtonCopy } from 'library/ButtonCopy'
+import { ButtonCopy } from 'ui-app'
 import type { CopyAddressProps } from '../types'
 
 export const CopyAddress = ({ address }: CopyAddressProps) => (
