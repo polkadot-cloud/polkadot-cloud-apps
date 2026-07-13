@@ -6,7 +6,7 @@ import {
 	useExtensions,
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
-import { useLedger } from '@polkadot-cloud/connect-ledger'
+import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
 import {
 	type VaultSignatureResult,
 	VaultSigner,
@@ -40,7 +40,6 @@ import { useTranslation } from 'react-i18next'
 import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
-import { signLedgerPayload } from '../Signers/LedgerSigner'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
 export const useSubmitExtrinsic = ({
