@@ -28,10 +28,6 @@
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"react-router-dom": "^7.18.1",
 		"types": "workspace:*"
-	},
-	"peerDependencies": {
-		"react-router-dom": "^7.18.1"
 	}
 }
