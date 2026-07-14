@@ -21,7 +21,7 @@
 		"@vitejs/plugin-react": "^6.0.3",
 		"@w3ux/types": "^2.4.2",
 		"globals": "^17.7.0",
-		"postcss": "^8.5.19",
+		"postcss": "^8.5.16",
 		"postcss-scss": "^4.0.9",
 		"prettier": "^3.9.5",
 		"prettier-plugin-organize-imports": "^4.1.0",
