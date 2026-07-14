@@ -2,32 +2,49 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { gql } from '@apollo/client'
-import type { ValidatorStatsData } from '../types'
+import type { ValidatorStats, ValidatorStatsData } from '../types'
 import { fetchQuery } from './generic'
 
 const QUERY = gql`
   query ValidatorStats($network: String!) {
-    validatorStats(network: $network) {
-      averageRewardRate {
-        rate
-      }
-      averageValidatorCommission
-      activeValidatorRanks {
-        rank
-        validator
-      }
+    averageRewardRate(chain: $network) {
+      rate
+    }
+    activeValidatorRanks(network: $network) {
+      rank
+      validator
     }
   }
 `
-const DEFAULT: ValidatorStatsData = {
-	validatorStats: {
-		averageRewardRate: {
-			rate: 0,
-		},
-		averageValidatorCommission: 0,
-		activeValidatorRanks: [],
+
+type ValidatorStatsQueryData = Omit<
+	ValidatorStats,
+	'averageValidatorCommission'
+>
+
+const DEFAULT: ValidatorStatsQueryData = {
+	averageRewardRate: {
+		rate: 0,
 	},
+	activeValidatorRanks: [],
 }
 
-export const fetchValidatorStats = (network: string) =>
-	fetchQuery<ValidatorStatsData>(QUERY, { network }, DEFAULT)
+export const fetchValidatorStats = async (
+	network: string,
+): Promise<ValidatorStatsData> => {
+	// The composite validatorStats resolver falls back wholesale when its commission service is
+	// unavailable. Query its independent resolvers so rank and reward-rate data remain available.
+	const result = await fetchQuery<ValidatorStatsQueryData>(
+		QUERY,
+		{ network },
+		DEFAULT,
+		{ fetchPolicy: 'network-only' },
+	)
+
+	return {
+		validatorStats: {
+			...result,
+			averageValidatorCommission: 0,
+		},
+	}
+}
