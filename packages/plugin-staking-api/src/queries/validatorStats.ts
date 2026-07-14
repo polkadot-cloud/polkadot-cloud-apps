@@ -27,8 +27,6 @@ const DEFAULT: ValidatorStats = {
 export const fetchValidatorStats = async (
 	network: string,
 ): Promise<ValidatorStatsData> => {
-	// The composite validatorStats resolver falls back wholesale when its commission service is
-	// unavailable. Query its independent resolvers so rank and reward-rate data remain available.
 	const result = await fetchQuery<ValidatorStats>(QUERY, { network }, DEFAULT, {
 		fetchPolicy: 'network-only',
 	})
