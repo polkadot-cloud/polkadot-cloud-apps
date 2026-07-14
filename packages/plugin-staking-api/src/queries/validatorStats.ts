@@ -17,12 +17,7 @@ const QUERY = gql`
   }
 `
 
-type ValidatorStatsQueryData = Omit<
-	ValidatorStats,
-	'averageValidatorCommission'
->
-
-const DEFAULT: ValidatorStatsQueryData = {
+const DEFAULT: ValidatorStats = {
 	averageRewardRate: {
 		rate: 0,
 	},
@@ -34,17 +29,13 @@ export const fetchValidatorStats = async (
 ): Promise<ValidatorStatsData> => {
 	// The composite validatorStats resolver falls back wholesale when its commission service is
 	// unavailable. Query its independent resolvers so rank and reward-rate data remain available.
-	const result = await fetchQuery<ValidatorStatsQueryData>(
-		QUERY,
-		{ network },
-		DEFAULT,
-		{ fetchPolicy: 'network-only' },
-	)
+	const result = await fetchQuery<ValidatorStats>(QUERY, { network }, DEFAULT, {
+		fetchPolicy: 'network-only',
+	})
 
 	return {
 		validatorStats: {
 			...result,
-			averageValidatorCommission: 0,
 		},
 	}
 }
