@@ -248,7 +248,6 @@ export interface ValidatorStatsData {
 export interface ValidatorStats {
 	averageRewardRate: AverageRewardRateResult
 	activeValidatorRanks: ValidatorRanksResult
-	averageValidatorCommission: number
 }
 
 export interface RpcEndpointHealthData {
