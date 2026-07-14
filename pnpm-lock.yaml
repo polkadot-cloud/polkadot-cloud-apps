@@ -39,7 +39,7 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0
       postcss:
-        specifier: ^8.5.16
+        specifier: ^8.5.19
         version: 8.5.19
       postcss-scss:
         specifier: ^4.0.9
