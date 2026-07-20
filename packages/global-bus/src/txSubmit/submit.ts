@@ -3,10 +3,14 @@
 
 import type { SubmittableExtrinsic } from 'dedot'
 import type { ExtrinsicSignatureV4 } from 'dedot/codecs'
-import type { InjectedSigner, TxStatus } from 'dedot/types'
+import type { InjectedSigner, ISubmittableResult } from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
 import type { TxStatusHandlers } from 'types'
-import { getErrorKeyFromMessage } from './error'
+import {
+	type DispatchErrorRegistry,
+	getDispatchErrorMessage,
+	getErrorKeyFromMessage,
+} from './error'
 import { deleteTx, setUidPending, setUidSubmitted, subs } from './index'
 
 export const addSignAndSend = async (
@@ -26,8 +30,8 @@ export const addSignAndSend = async (
 		subs[uid] = await tx.signAndSend(
 			from,
 			{ signer, nonce },
-			async ({ status }) => {
-				handleResult(uid, status, onRest)
+			async (result) => {
+				handleResult(uid, result, onRest, tx.client.registry)
 			},
 		)
 	} catch (e) {
@@ -50,8 +54,8 @@ export const addSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.send(async ({ status }) => {
-			handleResult(uid, status, onRest)
+		subs[uid] = await tx.send(async (result) => {
+			handleResult(uid, result, onRest, tx.client.registry)
 		})
 	} catch (e) {
 		handleError(String(e), onError)
@@ -62,7 +66,7 @@ export const addSend = async (
 
 export const handleResult = (
 	uid: number,
-	status: TxStatus,
+	result: ISubmittableResult,
 	{
 		onReady,
 		onInBlock,
@@ -74,7 +78,23 @@ export const handleResult = (
 		onFinalized: () => void
 		onFailed: (err: Error) => void
 	},
+	registry?: DispatchErrorRegistry,
 ) => {
+	const { status, dispatchError } = result
+
+	// A transaction can be included in a block and finalized while its extrinsic
+	// reverted on-chain (e.g. staking.InsufficientBond, nominationPools.PoolNotFound).
+	// `status` only reflects inclusion, so a dispatch error must be surfaced as a
+	// failure instead of being routed to the success handlers.
+	if (
+		dispatchError &&
+		(status.type === 'BestChainBlockIncluded' || status.type === 'Finalized')
+	) {
+		onFailed(new Error(getDispatchErrorMessage(dispatchError, registry)))
+		deleteTx(uid)
+		return
+	}
+
 	if (status.type === 'Broadcasting') {
 		setUidPending(uid, true)
 		onReady()

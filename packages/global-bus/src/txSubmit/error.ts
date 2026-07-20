@@ -1,6 +1,39 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { DispatchError } from 'dedot/codecs'
+
+// Minimal registry surface needed to decode module dispatch errors, satisfied
+// by a dedot client's `registry`.
+export interface DispatchErrorRegistry {
+	findErrorMeta(
+		error: DispatchError,
+	): { pallet: string; name: string; docs: string[] } | undefined
+}
+
+// Convert an on-chain DispatchError into a human-readable message. `Module`
+// errors are decoded via the registry into `Pallet.Error` plus their metadata
+// docs; other variants (BadOrigin, Token, Arithmetic, …) fall back to the
+// variant name (with a nested value where one is present).
+export const getDispatchErrorMessage = (
+	dispatchError: DispatchError,
+	registry?: DispatchErrorRegistry,
+): string => {
+	if (dispatchError.type === 'Module') {
+		const meta = registry?.findErrorMeta(dispatchError)
+		if (meta) {
+			const docs = meta.docs.join(' ').trim()
+			return docs
+				? `${meta.pallet}.${meta.name}: ${docs}`
+				: `${meta.pallet}.${meta.name}`
+		}
+	}
+	const value = (dispatchError as { value?: unknown }).value
+	return typeof value === 'string'
+		? `${dispatchError.type}.${value}`
+		: dispatchError.type
+}
+
 // Enhanced technical error classification
 export const getErrorKeyFromMessage = (errorMessage: string): string => {
 	const msgLower = errorMessage.toLowerCase()
