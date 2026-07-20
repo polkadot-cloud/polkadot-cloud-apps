@@ -16,7 +16,6 @@ import 'ui-styles/theme/theme.scss'
 // Package styles
 import '@w3ux/react-odometer/index.css'
 import 'simplebar/dist/simplebar.min.css'
-import './style.scss'
 
 const rootElement = document.getElementById('root')
 if (!rootElement) {
