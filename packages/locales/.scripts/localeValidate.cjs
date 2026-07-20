@@ -14,10 +14,10 @@ const {
 const DEFAULT_LOCALE = 'en'
 
 // When true, orphaned keys (present in a translation but not in `en`) fail
-// validation; otherwise they are reported as warnings. Kept `false` for now so
-// CI stays green while pre-existing orphaned keys are cleaned up — flip to
-// `true` to enforce parity in both directions going forward.
-const ORPHANED_KEYS_FATAL = false
+// validation; otherwise they are only reported as warnings. Enabled now that
+// every locale is in full parity with `en`, so drift is caught in both
+// directions (missing and orphaned keys) going forward.
+const ORPHANED_KEYS_FATAL = true
 
 // Read and parse a locale file.
 const readLocale = (locale, file) =>
@@ -80,7 +80,9 @@ const validateKeyOrder = () => {
 	for (const locale of locales) {
 		const localePath = join(localeDir, locale)
 		for (const file of fs.readdirSync(localePath)) {
-			const json = JSON.parse(fs.readFileSync(join(localePath, file)).toString())
+			const json = JSON.parse(
+				fs.readFileSync(join(localePath, file)).toString(),
+			)
 			if (JSON.stringify(json) !== JSON.stringify(orderJsonByKeys(json))) {
 				errors.push(
 					`Keys are in the incorrect order in locale "${locale}", file "${file}".`,
@@ -90,7 +92,9 @@ const validateKeyOrder = () => {
 	}
 
 	if (errors.length > 0) {
-		throw new Error(`Locale key order validation failed:\n\n${errors.join('\n')}`)
+		throw new Error(
+			`Locale key order validation failed:\n\n${errors.join('\n')}`,
+		)
 	}
 }
 
