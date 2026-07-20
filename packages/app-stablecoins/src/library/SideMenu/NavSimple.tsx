@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
-import { useUi } from 'contexts/UI'
+import { useUi } from 'hooks/useUI'
 import { Main } from './Main'
 import { LogoWrapper, ToggleWrapper, Wrapper } from './Wrapper'
 

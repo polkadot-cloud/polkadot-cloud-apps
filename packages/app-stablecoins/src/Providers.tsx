@@ -4,7 +4,6 @@
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
 import { StablecoinsDappName } from 'consts'
-import { UIProvider } from 'contexts/UI'
 import { Tooltip } from 'radix-ui'
 import { BrowserRouter } from 'react-router-dom'
 import { OverlayProvider } from 'ui-overlay'
@@ -20,14 +19,12 @@ export const Providers = () => (
 		ss58={PolkadotSs58}
 		adaptors={[LedgerAdaptor]}
 	>
-		<UIProvider>
-			<BrowserRouter>
-				<OverlayProvider>
-					<Tooltip.Provider>
-						<ThemedRouter />
-					</Tooltip.Provider>
-				</OverlayProvider>
-			</BrowserRouter>
-		</UIProvider>
+		<BrowserRouter>
+			<OverlayProvider>
+				<Tooltip.Provider>
+					<ThemedRouter />
+				</Tooltip.Provider>
+			</OverlayProvider>
+		</BrowserRouter>
 	</ConnectProvider>
 )

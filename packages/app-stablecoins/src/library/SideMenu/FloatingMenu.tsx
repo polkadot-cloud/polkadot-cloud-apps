@@ -4,7 +4,7 @@
 import { useOnResize, useOutsideAlerter } from '@w3ux/hooks'
 import CloudSVG from 'assets/icons/cloud.svg?react'
 import { PageWidthMediumThreshold } from 'consts'
-import { useUi } from 'contexts/UI'
+import { useUi } from 'hooks/useUI'
 import { useRef } from 'react'
 import { Page } from 'ui-core/base'
 import { Main } from './Main'
