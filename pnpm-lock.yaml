@@ -665,7 +665,7 @@ importers:
   packages/plugin-staking-api:
     dependencies:
       '@apollo/client':
-        specifier: ^4.2.5
+        specifier: ^4.2.6
         version: 4.2.6(graphql@17.0.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rxjs@7.8.2)
       graphql:
         specifier: ^17.0.2
