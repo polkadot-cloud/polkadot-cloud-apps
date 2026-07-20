@@ -59,14 +59,16 @@ export const getTransferableBalance = (
 	feeReserve: bigint,
 ): bigint => maxBigInt(freeBalance - feeReserve, 0n)
 
-// Calculate balance available for transaction fees
+// Balance available for transaction fees. Currently identical to the free
+// balance (free minus the existential deposit reserve), but kept as its own
+// export because "spendable for fees" is a distinct domain concept, consumed
+// independently by tx submission (see SubmitTx and useSubmitExtrinsic).
+// Delegating to getFreeBalance keeps a single source of truth for the shared
+// computation while preserving the intent-revealing name.
 export const balanceForTxFees = (
 	accountBalance: AccountBalance,
 	edReserved: bigint,
-): bigint => {
-	const { free } = accountBalance.balance
-	return maxBigInt(free - edReserved, 0n)
-}
+): bigint => getFreeBalance(accountBalance, edReserved)
 
 // Calculate nominator balances from staking ledger and transferable balance
 export const nominatorBalances = (
