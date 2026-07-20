@@ -104,6 +104,8 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		const overviews = await serviceApi.query.erasStakersOverviewEntries(
 			activeEra.index,
 		)
+		// Overview entries define the active validator set and are available before paged exposures.
+		setActiveValidators(overviews.length)
 
 		// Calculate active nominator count from overviews if staking API is disabled
 		let totalNominators: number | undefined
@@ -120,7 +122,8 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			era,
 			activeEra.index.toString(),
 		)
-		if (localExposures) {
+		// Ignore empty or partial caches so a failed exposure fetch can recover on the next load.
+		if (localExposures?.length === overviews.length) {
 			exposures = localExposures
 		} else {
 			exposures = await getPagedErasStakers(era, overviews)
@@ -147,7 +150,6 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			setActiveNominatorsCount(totalNominators)
 		}
 
-		setActiveValidators(exposures.length)
 		worker.postMessage({
 			era: activeEra.index.toString(),
 			networkName: network,

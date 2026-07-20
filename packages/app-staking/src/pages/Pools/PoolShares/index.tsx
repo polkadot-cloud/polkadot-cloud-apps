@@ -39,7 +39,10 @@ export const PoolShares = () => {
 	const { activePool } = useActivePool()
 	const { getThemeValue } = useThemeValues()
 	const { activeAddress } = useActiveAccount()
-	const { syncing: syncingInitialization } = useSyncing(['initialization'])
+	const { syncing: syncingInitialization } = useSyncing([
+		'initialization',
+		'active-pools',
+	])
 	const { unit, units } = getStakingChainData(network)
 	const [loading, setLoading] = useState<boolean>(false)
 	const [poolShareRewards, setPoolShareRewards] = useState<
@@ -182,9 +185,14 @@ export const PoolShares = () => {
 					{poolShareUnavailable ? (
 						<>
 							<StatusLabel
+								hideIcon={!activePool}
 								backgroundOpacity={0.95}
 								status="pool_share_unavailable"
-								title={t('availableForPolkadotCloudPoolsOnly')}
+								title={t(
+									activePool
+										? 'availableForPolkadotCloudPoolsOnly'
+										: 'joinPolkadotCloudPoolToSeeRewardTrends',
+								)}
 								topOffset="38%"
 							/>
 							<PoolSharesDemoGraph

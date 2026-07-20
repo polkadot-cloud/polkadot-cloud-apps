@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "Comissão de 100%",
 		"accountConnected": "Conta Conectada",
 		"accounts": "Contas",
 		"active": "Ativo",
-		"activeLowCommission": "Ativo Comissão Baixa",
-		"activeLowCommissionSubtitle": "Seleciona validadores de alto desempenho com baixa comissão.",
 		"activePools": "Pools Ativos",
 		"activeValidator": "Validador Ativo",
 		"activeValidators": "Validadores Ativos",
@@ -166,7 +163,6 @@
 		"graphInactive": "Inativo",
 		"help": "Ajuda",
 		"helpPrompts": "Dicas de Ajuda",
-		"highCommission": "Comissão Alta",
 		"highPerformanceValidator": "Validador de Alto Desempenho",
 		"iHaveScanned": "Eu Digitalizei",
 		"import": "Importar",
@@ -211,7 +207,6 @@
 		"listItemActive": "Ativo",
 		"locked": "Bloqueado",
 		"lockedPools": "Pools Bloqueados",
-		"lowCommission": "Comissão Baixa",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Adicione validadores do zero.",
 		"manual_selection": "Seleção Manual",

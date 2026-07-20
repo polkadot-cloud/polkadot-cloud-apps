@@ -155,14 +155,6 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 
 						{/* Commission Filter */}
 						<div style={{ margin: '1rem 0' }}>
-							<h5
-								style={{
-									marginBottom: '0.5rem',
-									color: 'var(--gray-900)',
-								}}
-							>
-								{t('maxCommission', { ns: 'modals' })}: {maxCommission}%
-							</h5>
 							<StyledSlider
 								value={maxCommission}
 								min={0}

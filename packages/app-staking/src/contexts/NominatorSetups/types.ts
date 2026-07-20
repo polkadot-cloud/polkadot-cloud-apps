@@ -10,7 +10,7 @@ export interface NominatorSetupsContextInterface {
 	removeNominatorSetup: (address: MaybeAddress) => void
 	getNominatorSetupPercent: (address: MaybeAddress) => number
 	setNominatorSetupSection: (section: number) => void
-	generateOptimalSetup: () => NominatorProgress
+	generateOptimalSetup: () => Promise<NominatorProgress>
 }
 
 export type PayeeOption = 'Staked' | 'Stash' | 'Controller' | 'Account' | 'None'
