@@ -6,19 +6,14 @@ import { useOnResize, useOutsideAlerter } from '@w3ux/hooks'
 import CloudSVG from 'assets/icons/cloud.svg?react'
 import { PageWidthMediumThreshold } from 'consts'
 import { useUi } from 'hooks/useUi'
-import { type Dispatch, type SetStateAction, useRef } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { NavSection } from 'types'
 import { Page, Separator } from 'ui-core/base'
-import { Main } from './Main'
 import { Primary } from './Primary'
+import type { FloatingMenuProps } from './types'
 import { LogoWrapper, Wrapper } from './Wrapper'
 
-export const FloatingtMenu = ({
-	setLocalCategory,
-}: {
-	setLocalCategory: Dispatch<SetStateAction<NavSection>>
-}) => {
+export const FloatingMenu = ({ renderMain, title }: FloatingMenuProps) => {
 	const { t } = useTranslation('app')
 	const { setSideMenu, sideMenuOpen, advancedMode, setAdvancedMode } = useUi()
 
@@ -41,13 +36,13 @@ export const FloatingtMenu = ({
 				<section>
 					<LogoWrapper $minimised={false} $advancedMode={advancedMode}>
 						<CloudSVG />
-						<h3>Stake</h3>
+						<h3>{title}</h3>
 					</LogoWrapper>
-					<Main
-						activeCategory={null}
-						showHeaders={true}
-						setLocalCategory={advancedMode ? setLocalCategory : undefined}
-					/>
+					{renderMain({
+						activeCategory: null,
+						advancedMode,
+						showHeaders: true,
+					})}
 					<div className="inner">
 						<Page.Side.Heading title={t('support')} minimised={false} />
 						{advancedMode && (
