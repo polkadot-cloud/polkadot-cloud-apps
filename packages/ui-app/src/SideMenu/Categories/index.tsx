@@ -7,15 +7,8 @@ import { usePageFromHash } from 'hooks/usePageFromHash'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import type { PageCategory, PageCategoryItems, PagesConfigItems } from 'types'
+import type { CategoriesPopoverProps } from '../types'
 import classes from './index.module.scss'
-
-export interface CategoriesPopoverProps {
-	getActivePageForCategory: (category: PageCategory['key']) => string
-	pageCategories: PageCategoryItems
-	pagesConfig: PagesConfigItems
-	setOpen: (open: boolean) => void
-}
 
 export const CategoriesPopover = ({
 	getActivePageForCategory,

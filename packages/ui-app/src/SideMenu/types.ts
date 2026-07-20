@@ -54,6 +54,13 @@ export interface HeadingProps {
 	minimised: boolean
 }
 
+export interface CategoriesPopoverProps {
+	getActivePageForCategory: (category: PageCategory['key']) => string
+	pageCategories: PageCategoryItems
+	pagesConfig: PagesConfigItems
+	setOpen: (open: boolean) => void
+}
+
 export interface PrimaryProps {
 	pageKey?: string
 	name: string
