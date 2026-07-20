@@ -15,11 +15,7 @@ import { useWarnings } from 'hooks/useWarnings'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import type {
-	PageCategory,
-	PageItem,
-	PagesConfigItems,
-} from 'types'
+import type { PageCategory, PageItem, PagesConfigItems } from 'types'
 import { Primary } from 'ui-app/SideMenu'
 import { Page } from 'ui-core/base'
 import { getPagesConfig, pageKeyExistsInCategory } from 'utils'
