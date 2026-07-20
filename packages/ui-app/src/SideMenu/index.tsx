@@ -5,13 +5,22 @@ export {
 	CategoriesPopover,
 	type CategoriesPopoverProps,
 } from './Categories'
+export {
+	DefaultMenu,
+	type DefaultMenuBarItem,
+	type DefaultMenuProps,
+} from './DefaultMenu'
+export { FloatingMenu, type FloatingMenuProps } from './FloatingMenu'
+export { NavSimple, type NavSimpleProps } from './NavSimple'
 export { Primary } from './Primary'
 export type {
 	HeadingProps,
 	IconProps,
 	MinimisedProps,
 	PrimaryProps,
+	RenderSideMenuMain,
 	SecondaryProps,
+	SideMenuMainRenderProps,
 } from './types'
 export {
 	BarButton,

@@ -2,8 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
-import type { FunctionComponent, SVGProps } from 'react'
+import type { FunctionComponent, ReactNode, SVGProps } from 'react'
 import type { BulletType } from 'types'
+
+export interface SideMenuMainRenderProps {
+	activeCategory: number | null
+	advancedMode?: boolean
+	hidden?: boolean
+	showHeaders?: boolean
+}
+
+export type RenderSideMenuMain = (props: SideMenuMainRenderProps) => ReactNode
 
 export interface MinimisedProps {
 	$advancedMode?: boolean
