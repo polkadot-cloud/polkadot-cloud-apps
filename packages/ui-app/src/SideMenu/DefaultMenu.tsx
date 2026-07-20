@@ -3,29 +3,24 @@
 
 import {
 	faChevronDown,
-	faCoins,
-	faPeopleLine,
 	faRightFromBracket,
-	faServer,
 	faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
-import { PageCategories } from 'config'
-import { useActivePageForCategory } from 'hooks/useActivePages'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import type { NavSection } from 'types'
+import type { PageCategory } from 'types'
 import { Page, Separator, Tooltip } from 'ui-core/base'
 import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { getCategoryId } from 'utils'
 import { CategoriesPopover } from './Categories'
-import { Main } from './Main'
 import { NavSimple } from './NavSimple'
+import type { DefaultMenuProps } from './types'
 import {
 	BarButton,
 	BarFooterWrapper,
@@ -36,24 +31,27 @@ import {
 } from './Wrapper'
 
 export const DefaultMenu = ({
+	barItems,
+	getActivePageForCategory,
 	localCategory,
-}: {
-	localCategory: NavSection
-}) => {
+	pageCategories,
+	pagesConfig,
+	renderMain,
+	title,
+}: DefaultMenuProps) => {
 	const { t } = useTranslation('app')
 	const { advancedMode, setAdvancedMode, sideMenuMinimised } = useUi()
 	const navigate = useNavigate()
 	const { themeElementRef } = useTheme()
 	const { status: modalStatus } = useOverlay().modal
 	const { status: canvasStatus } = useOverlay().canvas
-	const { getActivePageForCategory } = useActivePageForCategory()
 
 	const [openCategories, setOpenCategories] = useState<boolean>(false)
 
 	const transparent = modalStatus === 'open' || canvasStatus === 'open'
 
 	// Navigate to the last active page for a category
-	const navigateToCategory = (category: NavSection) => {
+	const navigateToCategory = (category: PageCategory['key']) => {
 		navigate(getActivePageForCategory(category))
 	}
 
@@ -69,63 +67,30 @@ export const DefaultMenu = ({
 							<CloudSVG />
 						</BarLogoWrapper>
 						<BarIconsWrapper>
-							<section>
-								<Tooltip
-									text={t('stake')}
-									side="right"
-									container={themeElementRef.current || undefined}
-									delayDuration={100}
-									fadeIn
-								>
-									<BarButton
-										type="button"
-										onClick={() => {
-											navigateToCategory('stake')
-										}}
-										className={localCategory === 'stake' ? 'active' : ''}
+							{barItems.map(({ faIcon, iconTransform, key }, index) => (
+								<section key={key}>
+									<Tooltip
+										text={t(key)}
+										side="right"
+										container={themeElementRef.current || undefined}
+										delayDuration={index === 0 ? 100 : 0}
+										fadeIn
 									>
-										<FontAwesomeIcon icon={faCoins} />
-									</BarButton>
-								</Tooltip>
-							</section>
-							<section>
-								<Tooltip
-									text={t('validators')}
-									side="right"
-									container={themeElementRef.current || undefined}
-									delayDuration={0}
-									fadeIn
-								>
-									<BarButton
-										type="button"
-										onClick={() => {
-											navigateToCategory('validators')
-										}}
-										className={localCategory === 'validators' ? 'active' : ''}
-									>
-										<FontAwesomeIcon icon={faServer} />
-									</BarButton>
-								</Tooltip>
-							</section>
-							<section>
-								<Tooltip
-									text={t('pools')}
-									side="right"
-									container={themeElementRef.current || undefined}
-									delayDuration={0}
-									fadeIn
-								>
-									<BarButton
-										type="button"
-										onClick={() => {
-											navigateToCategory('pools')
-										}}
-										className={localCategory === 'pools' ? 'active' : ''}
-									>
-										<FontAwesomeIcon icon={faPeopleLine} transform="grow-3" />
-									</BarButton>
-								</Tooltip>
-							</section>
+										<BarButton
+											type="button"
+											onClick={() => {
+												navigateToCategory(key)
+											}}
+											className={localCategory === key ? 'active' : ''}
+										>
+											<FontAwesomeIcon
+												icon={faIcon}
+												transform={iconTransform}
+											/>
+										</BarButton>
+									</Tooltip>
+								</section>
+							))}
 						</BarIconsWrapper>
 						<BarFooterWrapper>
 							<Separator style={{ opacity: 0.25 }} />
@@ -151,14 +116,21 @@ export const DefaultMenu = ({
 			}
 			nav={
 				!advancedMode ? (
-					<NavSimple />
+					<NavSimple renderMain={renderMain} title={title} />
 				) : (
 					<Wrapper $minimised={sideMenuMinimised} $advancedMode={advancedMode}>
 						<section>
 							<Popover
 								open={openCategories}
 								portalContainer={themeElementRef.current || undefined}
-								content={<CategoriesPopover setOpen={setOpenCategories} />}
+								content={
+									<CategoriesPopover
+										getActivePageForCategory={getActivePageForCategory}
+										pageCategories={pageCategories}
+										pagesConfig={pagesConfig}
+										setOpen={setOpenCategories}
+									/>
+								}
 								onTriggerClick={() => {
 									setOpenCategories(!openCategories)
 								}}
@@ -178,10 +150,10 @@ export const DefaultMenu = ({
 									</span>
 								</CategoryHeader>
 							</Popover>
-							<Main
-								activeCategory={getCategoryId(PageCategories, localCategory)}
-								hidden={openCategories}
-							/>
+							{renderMain({
+								activeCategory: getCategoryId(pageCategories, localCategory),
+								hidden: openCategories,
+							})}
 						</section>
 						<section></section>
 					</Wrapper>
