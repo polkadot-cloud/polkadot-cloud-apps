@@ -9,9 +9,8 @@ import {
 import { PageCategories, PagesConfig } from 'config'
 import { setActivePage, useActivePageForCategory } from 'hooks/useActivePages'
 import { usePageFromHash } from 'hooks/usePageFromHash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import type { NavSection } from 'types'
 import {
 	DefaultMenu,
 	type DefaultMenuBarItem,
@@ -34,17 +33,6 @@ export const SideMenu = () => {
 		pagesConfig: PagesConfig,
 	})
 
-	// Define local category state to manage active category between both menu versions. Speeds up
-	// re-renders compared to url changes
-	const [localCategory, setLocalCategory] = useState<NavSection>(categoryKey)
-
-	// Update category key if changed externally
-	useEffect(() => {
-		if (categoryKey !== localCategory) {
-			setLocalCategory(categoryKey)
-		}
-	}, [categoryKey])
-
 	// Track page visits and update local storage with active page per category
 	useEffect(() => {
 		const pageHash = `/${pathname.replace(/^\/+/, '').split('?')[0]}`
@@ -55,7 +43,6 @@ export const SideMenu = () => {
 
 	const renderMain = ({
 		activeCategory,
-		advancedMode,
 		hidden,
 		showHeaders,
 	}: SideMenuMainRenderProps) => (
@@ -63,7 +50,6 @@ export const SideMenu = () => {
 			activeCategory={activeCategory}
 			hidden={hidden}
 			showHeaders={showHeaders}
-			setLocalCategory={advancedMode ? setLocalCategory : undefined}
 		/>
 	)
 
@@ -72,7 +58,7 @@ export const SideMenu = () => {
 			<DefaultMenu
 				barItems={DefaultMenuBarItems}
 				getActivePageForCategory={getActivePageForCategory}
-				localCategory={localCategory}
+				localCategory={categoryKey}
 				pageCategories={PageCategories}
 				pagesConfig={PagesConfig}
 				renderMain={renderMain}
