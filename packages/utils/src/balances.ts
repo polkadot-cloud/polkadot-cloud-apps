@@ -35,7 +35,11 @@ export const getUnlocking = (chunks: UnlockChunk[], currentEra: number) => {
 	let totalUnlocked = 0n
 
 	for (const { value, era } of chunks) {
-		if (currentEra > era) {
+		// A chunk becomes withdrawable once the active era reaches its era
+		// (active_era >= chunk.era), matching the chain's `withdraw_unbonded` rule
+		// and the withdraw UI. `>=` (not `>`) ensures a chunk maturing in the
+		// current era counts as unlocked rather than still unlocking.
+		if (currentEra >= era) {
 			totalUnlocked = totalUnlocked + value
 		} else {
 			totalUnlocking = totalUnlocking + value
