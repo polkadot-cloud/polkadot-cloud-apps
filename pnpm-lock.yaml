@@ -693,6 +693,9 @@ importers:
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       consts:
         specifier: workspace:*
         version: link:../consts

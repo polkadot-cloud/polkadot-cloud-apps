@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
-import { PageCategories } from 'config'
+import { PageCategories, PagesConfig } from 'config'
 import { useActivePageForCategory } from 'hooks/useActivePages'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
@@ -24,6 +24,7 @@ import {
 	BarFooterWrapper,
 	BarIconsWrapper,
 	BarLogoWrapper,
+	CategoriesPopover,
 	CategoryHeader,
 	Wrapper,
 } from 'ui-app/SideMenu'
@@ -31,7 +32,6 @@ import { Page, Separator, Tooltip } from 'ui-core/base'
 import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { getCategoryId } from 'utils'
-import { CategoriesPopover } from './Categories'
 import { Main } from './Main'
 import { NavSimple } from './NavSimple'
 
@@ -158,7 +158,14 @@ export const DefaultMenu = ({
 							<Popover
 								open={openCategories}
 								portalContainer={themeElementRef.current || undefined}
-								content={<CategoriesPopover setOpen={setOpenCategories} />}
+								content={
+									<CategoriesPopover
+										getActivePageForCategory={getActivePageForCategory}
+										pageCategories={PageCategories}
+										pagesConfig={PagesConfig}
+										setOpen={setOpenCategories}
+									/>
+								}
 								onTriggerClick={() => {
 									setOpenCategories(!openCategories)
 								}}

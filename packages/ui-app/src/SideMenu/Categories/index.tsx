@@ -3,26 +3,32 @@
 
 import { useOutsideAlerter } from '@w3ux/hooks'
 import classNames from 'classnames'
-import { PageCategories, PagesConfig } from 'config'
-import { useActivePageForCategory } from 'hooks/useActivePages'
 import { usePageFromHash } from 'hooks/usePageFromHash'
-import { type Dispatch, type SetStateAction, useRef } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import type { PageCategory, PageCategoryItems, PagesConfigItems } from 'types'
 import classes from './index.module.scss'
 
+export interface CategoriesPopoverProps {
+	getActivePageForCategory: (category: PageCategory['key']) => string
+	pageCategories: PageCategoryItems
+	pagesConfig: PagesConfigItems
+	setOpen: (open: boolean) => void
+}
+
 export const CategoriesPopover = ({
+	getActivePageForCategory,
+	pageCategories,
+	pagesConfig,
 	setOpen,
-}: {
-	setOpen: Dispatch<SetStateAction<boolean>>
-}) => {
+}: CategoriesPopoverProps) => {
 	const { t } = useTranslation('app')
 	const navigate = useNavigate()
 	const { categoryKey } = usePageFromHash({
-		pageCategories: PageCategories,
-		pagesConfig: PagesConfig,
+		pageCategories,
+		pagesConfig,
 	})
-	const { getActivePageForCategory } = useActivePageForCategory()
 
 	const popoverRef = useRef<HTMLDivElement>(null)
 
@@ -34,7 +40,7 @@ export const CategoriesPopover = ({
 	return (
 		<div ref={popoverRef}>
 			<div className={classes.inner}>
-				{PageCategories.map((category) => {
+				{pageCategories.map((category) => {
 					const allClasses = classNames(classes.button, {
 						[classes.active]: category.key === categoryKey,
 					})
