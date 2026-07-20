@@ -7,22 +7,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
-import type { UiHookInterface } from 'hooks/useUi'
 import { useUi } from 'hooks/useUi'
-import type { RenderSideMenuMain } from './types'
+import type { NavSimpleProps } from './types'
 import { LogoWrapper, ToggleWrapper, Wrapper } from './Wrapper'
 
-export interface NavSimpleProps {
-	renderMain: RenderSideMenuMain
-	title: string
-}
-
 export const NavSimple = ({ renderMain, title }: NavSimpleProps) => {
-	const {
-		sideMenuMinimised,
-		userSideMenuMinimised,
-		setUserSideMenuMinimised,
-	}: UiHookInterface = useUi()
+	const { sideMenuMinimised, userSideMenuMinimised, setUserSideMenuMinimised } =
+		useUi()
 
 	return (
 		<>

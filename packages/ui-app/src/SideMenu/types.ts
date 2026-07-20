@@ -3,7 +3,12 @@
 
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode, SVGProps } from 'react'
-import type { BulletType } from 'types'
+import type {
+	BulletType,
+	PageCategory,
+	PageCategoryItems,
+	PagesConfigItems,
+} from 'types'
 
 export interface SideMenuMainRenderProps {
 	activeCategory: number | null
@@ -12,6 +17,31 @@ export interface SideMenuMainRenderProps {
 	showHeaders?: boolean
 }
 
+export interface DefaultMenuBarItem {
+	faIcon: IconProp
+	iconTransform?: string
+	key: PageCategory['key']
+}
+
+export interface DefaultMenuProps {
+	barItems: DefaultMenuBarItem[]
+	getActivePageForCategory: (category: PageCategory['key']) => string
+	localCategory: PageCategory['key']
+	pageCategories: PageCategoryItems
+	pagesConfig: PagesConfigItems
+	renderMain: RenderSideMenuMain
+	title: string
+}
+
+export interface FloatingMenuProps {
+	renderMain: RenderSideMenuMain
+	title: string
+}
+
+export interface NavSimpleProps {
+	renderMain: RenderSideMenuMain
+	title: string
+}
 export type RenderSideMenuMain = (props: SideMenuMainRenderProps) => ReactNode
 
 export interface MinimisedProps {

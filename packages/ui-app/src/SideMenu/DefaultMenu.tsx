@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import {
 	faChevronDown,
 	faRightFromBracket,
@@ -14,14 +13,14 @@ import { useUi } from 'hooks/useUi'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import type { PageCategory, PageCategoryItems, PagesConfigItems } from 'types'
+import type { PageCategory } from 'types'
 import { Page, Separator, Tooltip } from 'ui-core/base'
 import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { getCategoryId } from 'utils'
 import { CategoriesPopover } from './Categories'
 import { NavSimple } from './NavSimple'
-import type { RenderSideMenuMain } from './types'
+import type { DefaultMenuProps } from './types'
 import {
 	BarButton,
 	BarFooterWrapper,
@@ -30,22 +29,6 @@ import {
 	CategoryHeader,
 	Wrapper,
 } from './Wrapper'
-
-export interface DefaultMenuBarItem {
-	faIcon: IconProp
-	iconTransform?: string
-	key: PageCategory['key']
-}
-
-export interface DefaultMenuProps {
-	barItems: DefaultMenuBarItem[]
-	getActivePageForCategory: (category: PageCategory['key']) => string
-	localCategory: PageCategory['key']
-	pageCategories: PageCategoryItems
-	pagesConfig: PagesConfigItems
-	renderMain: RenderSideMenuMain
-	title: string
-}
 
 export const DefaultMenu = ({
 	barItems,

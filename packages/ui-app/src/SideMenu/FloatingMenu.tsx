@@ -10,13 +10,8 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page, Separator } from 'ui-core/base'
 import { Primary } from './Primary'
-import type { RenderSideMenuMain } from './types'
+import type { FloatingMenuProps } from './types'
 import { LogoWrapper, Wrapper } from './Wrapper'
-
-export interface FloatingMenuProps {
-	renderMain: RenderSideMenuMain
-	title: string
-}
 
 export const FloatingMenu = ({ renderMain, title }: FloatingMenuProps) => {
 	const { t } = useTranslation('app')
