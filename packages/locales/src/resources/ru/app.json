@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% комиссии",
 		"accountConnected": "Аккаунт подключён",
 		"accounts": "Аккаунты",
 		"active": "Активно",
-		"activeLowCommission": "Активные с низкой комиссией",
-		"activeLowCommissionSubtitle": "Выбирает высокопроизводительные валидаторы с низкой комиссией.",
 		"activePools": "Активные пулы",
 		"activeValidator": "Активный валидатор",
 		"activeValidators": "Активные валидаторы",
@@ -166,7 +163,6 @@
 		"graphInactive": "Неактивно",
 		"help": "Помощь",
 		"helpPrompts": "Подсказки помощи",
-		"highCommission": "Высокая комиссия",
 		"highPerformanceValidator": "Высокопроизводительный валидатор",
 		"iHaveScanned": "Я отсканировал",
 		"import": "Импортировать",
@@ -174,6 +170,7 @@
 		"inBlock": "В блоке",
 		"inactive": "Неактивно",
 		"include": "Включить",
+		"includeIncomingProjection": "Включить прогноз поступлений",
 		"initializing": "Инициализация",
 		"insertPayoutAddress": "Введите адрес для выплат",
 		"insufficientFunds": "Недостаточно средств",
@@ -186,6 +183,7 @@
 		"issuance": "Эмиссия",
 		"join": "Присоединиться",
 		"language": "Язык",
+		"last30dIncoming": "Последние 30 дней",
 		"ledgerAccount": "Аккаунт Ledger",
 		"ledgerAccountFetched": "Аккаунт Ledger получен",
 		"ledgerAccountImported": "Аккаунт Ledger импортирован",
@@ -210,7 +208,6 @@
 		"listItemActive": "Активно",
 		"locked": "Заблокировано",
 		"lockedPools": "Заблокированные пулы",
-		"lowCommission": "Низкая комиссия",
 		"manual": "Вручную",
 		"manualSelectionSubtitle": "Добавьте валидаторы с нуля.",
 		"manual_selection": "Выбор вручную",
@@ -435,6 +432,7 @@
 		"webExtensions": "Расширения браузера",
 		"whenActivelyNominating": "при активной номинации.",
 		"wrongTransaction": "Неверная транзакция, пожалуйста, подпишите снова.",
-		"year": "год"
+		"year": "год",
+		"yourPayouts": "Ваши выплаты"
 	}
 }
