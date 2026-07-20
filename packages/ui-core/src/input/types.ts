@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChangeEvent, ChangeEventHandler, FocusEventHandler } from 'react'
@@ -25,3 +25,5 @@ export type AccountInputProps = ComponentBase & {
 	onBlur: FocusEventHandler<HTMLInputElement>
 	disabled?: boolean
 }
+
+export type ImportStatus = 'neutral' | 'danger' | 'success'

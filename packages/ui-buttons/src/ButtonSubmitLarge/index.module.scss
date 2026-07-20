@@ -1,89 +1,89 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .wrapper {
-  --button-border-radius: 2rem;
-  --button-vertical-space: 1.1rem;
+	--button-border-radius: 2rem;
+	--button-vertical-space: 1.1rem;
 
-  height: inherit;
-  width: 100%;
-  flex: 1;
-  display: flex;
-  flex-flow: row wrap;
-  margin-top: 0.38rem;
+	height: inherit;
+	width: 100%;
+	flex: 1;
+	display: flex;
+	flex-flow: row wrap;
+	margin-top: 0.38rem;
 
-  @media (width <= 650px) {
-    flex-wrap: wrap;
-  }
+	@media (width <= 650px) {
+		flex-wrap: wrap;
+	}
 }
 
 .button {
-  height: 3.75rem;
-  width: 100%;
-  border-radius: var(--button-border-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: filter 0.15s;
-  flex-shrink: 1;
-  background-color: var(--gray-1000);
-  color: var(--gray-100);
-  flex-grow: 1;
-  padding: 0 2rem;
-  font-size: 1.3rem;
-  line-height: 1.3rem;
-  border: none;
+	height: 3.75rem;
+	width: 100%;
+	border-radius: var(--button-border-radius);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	white-space: nowrap;
+	transition: filter 0.15s;
+	flex-shrink: 1;
+	background-color: var(--gray-1000);
+	color: var(--gray-100);
+	flex-grow: 1;
+	padding: 0 2rem;
+	font-size: 1.3rem;
+	line-height: 1.3rem;
+	border: none;
 
-  &:hover {
-    filter: brightness(90%);
-  }
+	&:hover {
+		filter: brightness(90%);
+	}
 
-  @media (width <= 650px) {
-    border-radius: var(--button-border-radius);
-    margin-top: var(--button-vertical-space);
-    flex-grow: 1;
-    flex-basis: 100%;
-  }
+	@media (width <= 650px) {
+		border-radius: var(--button-border-radius);
+		margin-top: var(--button-vertical-space);
+		flex-grow: 1;
+		flex-basis: 100%;
+	}
 
-  svg {
-    margin: 0 0.75rem;
-  }
+	svg {
+		margin: 0 0.75rem;
+	}
 
-  &:disabled {
-    opacity: var(--opacity-disabled);
-    cursor: default;
-  }
+	&:disabled {
+		opacity: var(--opacity-disabled);
+		cursor: default;
+	}
 }
 
 .buttonDisabled {
-  background-color: var(--gray-700);
+	background-color: var(--gray-700);
 
-  &:hover {
-    filter: none;
-  }
+	&:hover {
+		filter: none;
+	}
 }
 
 .buttonPulse {
-  box-shadow: 0 0 30px 0 var(--gray-700);
-  transform: scale(1);
-  animation: pulse 4s infinite;
+	box-shadow: 0 0 30px 0 var(--gray-700);
+	transform: scale(1);
+	animation: pulse 4s infinite;
 
-  @keyframes pulse {
-    0% {
-      transform: scale(0.98);
-      box-shadow: 0 0 0 0 var(--gray-700);
-    }
+	@keyframes pulse {
+		0% {
+			transform: scale(0.98);
+			box-shadow: 0 0 0 0 var(--gray-700);
+		}
 
-    70% {
-      transform: scale(1);
-      box-shadow: 0 0 0 10px rgb(0 0 0 / 0%);
-    }
+		70% {
+			transform: scale(1);
+			box-shadow: 0 0 0 10px rgb(0 0 0 / 0%);
+		}
 
-    100% {
-      transform: scale(0.98);
-      box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
-    }
-  }
+		100% {
+			transform: scale(0.98);
+			box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
+		}
+	}
 }

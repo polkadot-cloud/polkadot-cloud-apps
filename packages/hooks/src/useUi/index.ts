@@ -1,8 +1,8 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { extractUrlValue, localStorageOrDefault } from '@w3ux/utils'
-import { AdvancedModeKey, PageWidthMediumThreshold, ShowHelpKey } from 'consts'
+import { AdvancedModeKey, PageWidthMediumThreshold } from 'consts'
 import {
 	createSingletonStore,
 	type SingletonStore,
@@ -14,7 +14,6 @@ export type { UiHookInterface } from './types'
 
 const SideMenuMinimisedKey = 'side_menu_minimised'
 const defaultAdvancedMode = false
-const defaultShowHelp = true
 
 type UiState = Omit<
 	UiHookInterface,
@@ -22,7 +21,6 @@ type UiState = Omit<
 	| 'setUserSideMenuMinimised'
 	| 'setContainerRefs'
 	| 'setAdvancedMode'
-	| 'setShowHelp'
 >
 
 const hasWindow = () => typeof window !== 'undefined'
@@ -56,22 +54,6 @@ const getInitialAdvancedMode = (): boolean => {
 	}
 }
 
-const getInitialShowHelp = (): boolean => {
-	if (!hasLocalStorage()) {
-		return defaultShowHelp
-	}
-	try {
-		return localStorageOrDefault(ShowHelpKey, defaultShowHelp, true) as boolean
-	} catch {
-		try {
-			localStorage.setItem(ShowHelpKey, String(defaultShowHelp))
-		} catch {
-			// ignore storage write errors (e.g. private mode / blocked storage)
-		}
-		return defaultShowHelp
-	}
-}
-
 const getInitialUserSideMenuMinimised = (): boolean => {
 	if (!hasLocalStorage()) {
 		return false
@@ -101,7 +83,6 @@ const getInitialUiState = (): UiState => {
 		containerRefs: {},
 		isBraveBrowser: false,
 		advancedMode: getInitialAdvancedMode(),
-		showHelp: getInitialShowHelp(),
 	}
 }
 
@@ -182,13 +163,6 @@ const setAdvancedMode = (value: boolean) => {
 	uiStore.patchSnapshot({ advancedMode: value })
 }
 
-const setShowHelp = (value: boolean) => {
-	if (hasLocalStorage()) {
-		localStorage.setItem(ShowHelpKey, String(value))
-	}
-	uiStore.patchSnapshot({ showHelp: value })
-}
-
 export const useUi = (): UiHookInterface => {
 	const state = useSingletonStore(uiStore)
 
@@ -199,6 +173,5 @@ export const useUi = (): UiHookInterface => {
 		setUserSideMenuMinimised,
 		setContainerRefs,
 		setAdvancedMode,
-		setShowHelp,
 	}
 }

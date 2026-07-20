@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "Comissão de 100%",
 		"accountConnected": "Conta Conectada",
 		"accounts": "Contas",
 		"active": "Ativo",
-		"activeLowCommission": "Ativo Comissão Baixa",
-		"activeLowCommissionSubtitle": "Seleciona validadores de alto desempenho com baixa comissão.",
 		"activePools": "Pools Ativos",
 		"activeValidator": "Validador Ativo",
 		"activeValidators": "Validadores Ativos",
@@ -166,7 +163,6 @@
 		"graphInactive": "Inativo",
 		"help": "Ajuda",
 		"helpPrompts": "Dicas de Ajuda",
-		"highCommission": "Comissão Alta",
 		"highPerformanceValidator": "Validador de Alto Desempenho",
 		"iHaveScanned": "Eu Digitalizei",
 		"import": "Importar",
@@ -174,6 +170,7 @@
 		"inBlock": "Em Bloco",
 		"inactive": "Inativo",
 		"include": "Incluir",
+		"includeIncomingProjection": "Incluir projeção de entrada",
 		"initializing": "Inicializando",
 		"insertPayoutAddress": "Insira um endereço de pagamento",
 		"insufficientFunds": "Fundos Insuficientes",
@@ -186,6 +183,7 @@
 		"issuance": "Emissão",
 		"join": "Participar",
 		"language": "Idioma",
+		"last30dIncoming": "Últimos 30 dias",
 		"ledgerAccount": "Conta Ledger",
 		"ledgerAccountFetched": "Conta Ledger Obtida",
 		"ledgerAccountImported": "Conta Ledger Importada",
@@ -209,7 +207,6 @@
 		"listItemActive": "Ativo",
 		"locked": "Bloqueado",
 		"lockedPools": "Pools Bloqueados",
-		"lowCommission": "Comissão Baixa",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Adicione validadores do zero.",
 		"manual_selection": "Seleção Manual",
@@ -424,6 +421,7 @@
 		"webExtensions": "Extensões Web",
 		"whenActivelyNominating": "ao nomear ativamente.",
 		"wrongTransaction": "Transação incorreta, assine novamente.",
-		"year": "ano"
+		"year": "ano",
+		"yourPayouts": "Seus Pagamentos"
 	}
 }

@@ -1,91 +1,91 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .headerButton {
-  color: var(--gray-900);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: inherit;
-  margin: 0 0.4em;
+	color: var(--gray-900);
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: inherit;
+	margin: 0 0.4em;
 
-  &:last-child {
-    margin-right: 0;
-  }
+	&:last-child {
+		margin-right: 0;
+	}
 
-  > span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
+	> span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+	}
 
-  > button,
-  > span {
-    background: var(--gray-400);
-    padding: 0 0.1rem;
-    font-size: 1rem;
-    border-radius: 50%;
-    width: 1.9rem;
-    height: 1.9rem;
+	> button,
+	> span {
+		background: var(--gray-400);
+		padding: 0 0.1rem;
+		font-size: 1rem;
+		border-radius: 50%;
+		width: 1.9rem;
+		height: 1.9rem;
 
-    @media (min-width: $page-width-small-threshold) {
-      padding: 0 0.2rem;
-    }
+		@media (min-width: $page-width-small-threshold) {
+			padding: 0 0.2rem;
+		}
 
-    &:hover {
-      opacity: 0.75;
-    }
+		&:hover {
+			opacity: 0.75;
+		}
 
-    &.active {
-      color: var(--gray-1000);
-    }
+		&.active {
+			color: var(--gray-1000);
+		}
 
-    &:disabled {
-      opacity: var(--opacity-disabled);
-    }
+		&:disabled {
+			opacity: var(--opacity-disabled);
+		}
 
-    > svg {
-      color: var(--accent-900);
-    }
-  }
+		> svg {
+			color: var(--accent-900);
+		}
+	}
 
-  &.outline > button,
-  &.outline > span {
-    background: none;
-  }
+	&.outline > button,
+	&.outline > span {
+		background: none;
+	}
 
-  &.text > button,
-  &.outline > span {
-    font-family: var(--font-family-semibold);
-    font-size: 0.95rem;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    width: auto;
-    height: auto;
-    border-radius: 0.75rem;
-    padding: 0.4rem 0.75rem;
+	&.text > button,
+	&.outline > span {
+		font-family: var(--font-family-semibold);
+		font-size: 0.95rem;
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		width: auto;
+		height: auto;
+		border-radius: 0.75rem;
+		padding: 0.4rem 0.75rem;
 
-    &:disabled {
-      &:hover {
-        opacity: var(--opacity-disabled);
-      }
-    }
+		&:disabled {
+			&:hover {
+				opacity: var(--opacity-disabled);
+			}
+		}
 
-     svg {
-      margin: 0;
-    }
-  }
+		svg {
+			margin: 0;
+		}
+	}
 
-  &.noMargin {
-    margin: 0;
+	&.noMargin {
+		margin: 0;
 
-     svg {
-      margin: 0;
-    }
-  }
+		svg {
+			margin: 0;
+		}
+	}
 }

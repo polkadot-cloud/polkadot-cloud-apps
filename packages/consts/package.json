@@ -15,13 +15,13 @@
 	},
 	"dependencies": {
 		"@dedot/chain-specs": "^0.10.0",
-		"@polkadot-cloud/connect-proxies": "^0.2.3",
+		"@polkadot-cloud/connect-proxies": "^0.3.0",
 		"@polkawatch/ddp-client": "^3.0.1",
 		"@substrate/connect-known-chains": "^1.10.2",
 		"assets": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*",
-		"vite": "8.0.16"
+		"vite": "8.1.3"
 	}
 }

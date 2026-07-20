@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "%100 komisyon",
 		"accountConnected": "Hesap Bağlandı",
 		"accounts": "Hesaplar",
 		"active": "Aktif",
-		"activeLowCommission": "Aktif Düşük Komisyon",
-		"activeLowCommissionSubtitle": "Düşük komisyonlu, yüksek performanslı validatörleri seçer.",
 		"activePools": "Aktif Havuzlar",
 		"activeValidator": "Aktif Validatör",
 		"activeValidators": "Aktif Validatörler",
@@ -165,7 +162,6 @@
 		"graphInactive": "Pasif",
 		"help": "Yardım",
 		"helpPrompts": "Yardım İpuçları",
-		"highCommission": "Yüksek Komisyon",
 		"highPerformanceValidator": "Yüksek Performanslı Validatör",
 		"iHaveScanned": "Taramayı Tamamladım",
 		"import": "İçe Aktar",
@@ -173,6 +169,7 @@
 		"inBlock": "Blokta",
 		"inactive": "Pasif",
 		"include": "Dahil Et",
+		"includeIncomingProjection": "Gelen projeksiyonu dahil et",
 		"initializing": "Başlatılıyor",
 		"insertPayoutAddress": "Bir ödeme adresi girin",
 		"insufficientFunds": "Yetersiz Bakiye",
@@ -185,6 +182,7 @@
 		"issuance": "Arz",
 		"join": "Katıl",
 		"language": "Dil",
+		"last30dIncoming": "Son 30 Gün",
 		"ledgerAccount": "Ledger Hesabı",
 		"ledgerAccountFetched": "Ledger Hesabı Alındı",
 		"ledgerAccountImported": "Ledger Hesabı İçe Aktarıldı",
@@ -208,7 +206,6 @@
 		"listItemActive": "Aktif",
 		"locked": "Kilitli",
 		"lockedPools": "Kilitli Havuzlar",
-		"lowCommission": "Düşük Komisyon",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Validatörleri sıfırdan ekleyin.",
 		"manual_selection": "Manuel Seçim",
@@ -423,6 +420,7 @@
 		"webExtensions": "Web Uzantıları",
 		"whenActivelyNominating": "aktif olarak nominasyon yaparken.",
 		"wrongTransaction": "Yanlış işlem, lütfen tekrar imzalayın.",
-		"year": "yıl"
+		"year": "yıl",
+		"yourPayouts": "Ödemeleriniz"
 	}
 }

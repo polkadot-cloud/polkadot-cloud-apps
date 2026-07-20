@@ -1,105 +1,106 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 $button-padding: 1.3rem 1rem 1.2rem 1rem;
 
 .menuItem {
-  border-bottom: 1px solid var(--gray-500);
-  display: flex;
-  align-items: center;
-  width: 100%;
+	border-bottom: 1px solid var(--gray-500);
+	display: flex;
+	align-items: center;
+	width: 100%;
 
-  &:first-child {
-    border-top-left-radius: $popover-border-radius;
-    border-top-right-radius: $popover-border-radius;
-  }
+	&:first-child {
+		border-top-left-radius: $popover-border-radius;
+		border-top-right-radius: $popover-border-radius;
+	}
 
-  &:last-child {
-    border-bottom-left-radius: $popover-border-radius;
-    border-bottom-right-radius: $popover-border-radius;
-    border: none;
-  }
+	&:last-child {
+		border-bottom-left-radius: $popover-border-radius;
+		border-bottom-right-radius: $popover-border-radius;
+		border: none;
+	}
 
-  &.button {
-    padding: $button-padding;
+	> div,
+	> button > div {
+		display: flex;
+		align-items: center;
 
-    &:hover {
-      background: var(--btn-popover-tab-bg);
-    }
+		&:first-child {
+			color: var(--text-tertiary);
+			margin-right: 0.85rem;
+			flex-direction: row;
+			justify-content: center;
 
-    &.disabled {
-      cursor: default;
+			path[fill="currentColor"] {
+				fill: var(--text-tertiary);
+				opacity: 0.75;
+			}
+		}
 
-      > div {
-        opacity: 0.4;
-      }
-    }
-  }
+		&:last-child {
+			flex-grow: 1;
+			justify-content: flex-start;
 
-  > button {
-    padding: $button-padding;
-    display: flex;
-    flex: 0 0 50%;
-    align-items: center;
+			> div {
+				flex-grow: 1;
+				display: flex;
+				justify-content: flex-end;
 
-    &:nth-child(2) {
-      border-left: 1px solid var(--gray-500);
-    }
+				> h4 {
+					color: var(--text-tertiary);
 
-    &:hover {
-      background: var(--btn-popover-tab-bg);
-    }
+					path[fill="currentColor"] {
+						fill: var(--text-tertiary);
+					}
+				}
+			}
+		}
 
-    &:disabled {
-      background: none;
-      cursor: default;
-    }
-  }
+		> h3 {
+			color: var(--gray-900);
+			font-size: 1.2rem;
 
-  > div, > button > div {
-    display: flex;
-    align-items: center;
+			> svg {
+				margin-left: 0.5rem;
+			}
+		}
+	}
 
-    &:first-child {
-      color: var(--text-tertiary);
-      margin-right: 0.85rem;
-      flex-direction: row;
-      justify-content: center;
-      
-      path[fill='currentColor'] {
-        fill: var(--text-tertiary);
-        opacity: 0.75;
-      }
-    }
+	> button {
+		padding: $button-padding;
+		display: flex;
+		flex: 0 0 50%;
+		align-items: center;
 
-    &:last-child {
-      flex-grow: 1;
-      justify-content: flex-start;
+		&:nth-child(2) {
+			border-left: 1px solid var(--gray-500);
+		}
 
-      > div {
-        flex-grow: 1;
-        display: flex;
-        justify-content: flex-end;
+		&:hover {
+			background: var(--btn-popover-tab-bg);
+		}
 
-        > h4 {
-          color: var(--text-tertiary);
+		&:disabled {
+			background: none;
+			cursor: default;
+		}
+	}
 
-           path[fill='currentColor'] {
-            fill: var(--text-tertiary);
-          }
-        }
-      }
-    }
+	&.button {
+		padding: $button-padding;
 
-    > h3 {
-      color: var(--gray-900);
-      font-size: 1.2rem;
+		&:hover {
+			background: var(--btn-popover-tab-bg);
+		}
 
-      > svg {
-        margin-left: 0.5rem;
-      }
-    }
-  }
+		&.disabled {
+			cursor: default;
+
+			> div {
+				opacity: 0.4;
+			}
+		}
+	}
 }

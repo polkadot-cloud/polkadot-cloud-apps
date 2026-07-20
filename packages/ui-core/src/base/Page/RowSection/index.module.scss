@@ -1,76 +1,77 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .primary {
-  order: 0;
-  flex: 1;
-  max-width: 100%;
+	order: 0;
+	flex: 1;
+	max-width: 100%;
 
-  @media (min-width: $page-width-medium-threshold) {
-    order: 0;
-    flex: 1;
-    flex-basis: 100%;
-    width: 100%;
-  }
+	@media (min-width: $page-width-medium-threshold) {
+		order: 0;
+		flex: 1;
+		flex-basis: 100%;
+		width: 100%;
+	}
 
-  @media (min-width: $row-section-thirds-threshold) {
-    flex-basis: 60%;
-    width: 60%;
-  }
+	@media (min-width: $row-section-thirds-threshold) {
+		flex-basis: 60%;
+		width: 60%;
+	}
 
-  &.first {
-    @media (min-width: $row-section-thirds-threshold) {
-      order: 1;
-      padding-left: 0.75rem;
-    }
-  }
+	&.first {
+		@media (min-width: $row-section-thirds-threshold) {
+			order: 1;
+			padding-left: 0.75rem;
+		}
+	}
 
-  &.last {
-    @media (min-width: $row-section-thirds-threshold) {
-      padding-right: 0.75rem;
-    }
-  }
+	&.last {
+		@media (min-width: $row-section-thirds-threshold) {
+			padding-right: 0.75rem;
+		}
+	}
 }
 
 .secondary {
-  order: 0;
-  flex-basis: 100%;
-  width: 100%;
-  border-radius: 1rem;
+	order: 0;
+	flex-basis: 100%;
+	width: 100%;
+	border-radius: 1rem;
 
-  @media (min-width: $page-width-medium-threshold) {
-    order: 0;
-    flex: 1;
-    max-width: none;
-  }
+	@media (min-width: $page-width-medium-threshold) {
+		order: 0;
+		flex: 1;
+		max-width: none;
+	}
 
-  @media (min-width: $row-section-thirds-threshold) {
-    padding-left: 0;
-    flex-basis: 40%;
-    max-width: 40%;
-  }
+	@media (min-width: $row-section-thirds-threshold) {
+		padding-left: 0;
+		flex-basis: 40%;
+		max-width: 40%;
+	}
 
-  &.first {
-    @media (min-width: $row-section-thirds-threshold) {
-      padding-left: 0.75rem;
-      order: 1;
-    }
-  }
+	&.first {
+		@media (min-width: $row-section-thirds-threshold) {
+			padding-left: 0.75rem;
+			order: 1;
+		}
+	}
 
-  &.last {
-    @media (min-width: $row-section-thirds-threshold) {
-      padding-right: 0.75rem;
-    }
-  }
+	&.last {
+		@media (min-width: $row-section-thirds-threshold) {
+			padding-right: 0.75rem;
+		}
+	}
 }
 
-.standalone {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+.primary.standalone,
+.secondary.standalone {
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .vLast {
-  order: 1;
+	order: 1;
 }
