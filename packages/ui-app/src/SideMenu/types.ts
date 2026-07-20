@@ -23,25 +23,26 @@ export interface DefaultMenuBarItem {
 	key: PageCategory['key']
 }
 
-export interface DefaultMenuProps {
+export interface BaseMenuProps {
+	renderMain: RenderSideMenuMain
+	title: string
+}
+
+export interface AdvancedDefaultMenuProps extends BaseMenuProps {
 	barItems: DefaultMenuBarItem[]
 	getActivePageForCategory: (category: PageCategory['key']) => string
 	localCategory: PageCategory['key']
 	pageCategories: PageCategoryItems
 	pagesConfig: PagesConfigItems
-	renderMain: RenderSideMenuMain
-	title: string
 }
 
-export interface FloatingMenuProps {
-	renderMain: RenderSideMenuMain
-	title: string
+export type DefaultMenuProps = BaseMenuProps | AdvancedDefaultMenuProps
+
+export interface FloatingMenuProps extends BaseMenuProps {
+	supportsAdvancedMode?: boolean
 }
 
-export interface NavSimpleProps {
-	renderMain: RenderSideMenuMain
-	title: string
-}
+export type NavSimpleProps = BaseMenuProps
 export type RenderSideMenuMain = (props: SideMenuMainRenderProps) => ReactNode
 
 export interface MinimisedProps {

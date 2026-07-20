@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { useUi } from 'hooks/useUI'
+import { useUi } from 'hooks/useUi'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { Primary } from './Primary'
+import { Primary } from 'ui-app/SideMenu'
 
 export const Main = () => {
 	const { t } = useTranslation('app')

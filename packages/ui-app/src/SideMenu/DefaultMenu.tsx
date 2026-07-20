@@ -20,7 +20,7 @@ import { useOverlay } from 'ui-overlay'
 import { getCategoryId } from 'utils'
 import { CategoriesPopover } from './Categories'
 import { NavSimple } from './NavSimple'
-import type { DefaultMenuProps } from './types'
+import type { AdvancedDefaultMenuProps, DefaultMenuProps } from './types'
 import {
 	BarButton,
 	BarFooterWrapper,
@@ -30,15 +30,12 @@ import {
 	Wrapper,
 } from './Wrapper'
 
-export const DefaultMenu = ({
-	barItems,
-	getActivePageForCategory,
-	localCategory,
-	pageCategories,
-	pagesConfig,
-	renderMain,
-	title,
-}: DefaultMenuProps) => {
+const isAdvancedMenu = (
+	props: DefaultMenuProps,
+): props is AdvancedDefaultMenuProps => 'barItems' in props
+
+export const DefaultMenu = (props: DefaultMenuProps) => {
+	const { renderMain, title } = props
 	const { t } = useTranslation('app')
 	const { advancedMode, setAdvancedMode, sideMenuMinimised } = useUi()
 	const navigate = useNavigate()
@@ -49,10 +46,14 @@ export const DefaultMenu = ({
 	const [openCategories, setOpenCategories] = useState<boolean>(false)
 
 	const transparent = modalStatus === 'open' || canvasStatus === 'open'
+	const advancedMenu = isAdvancedMenu(props) ? props : undefined
+	const showAdvancedMenu = advancedMode && advancedMenu !== undefined
 
 	// Navigate to the last active page for a category
 	const navigateToCategory = (category: PageCategory['key']) => {
-		navigate(getActivePageForCategory(category))
+		if (advancedMenu) {
+			navigate(advancedMenu.getActivePageForCategory(category))
+		}
 	}
 
 	return (
@@ -61,36 +62,40 @@ export const DefaultMenu = ({
 			minimised={sideMenuMinimised}
 			transparent={transparent}
 			bar={
-				!advancedMode ? undefined : (
+				!showAdvancedMenu ? undefined : (
 					<>
 						<BarLogoWrapper>
 							<CloudSVG />
 						</BarLogoWrapper>
 						<BarIconsWrapper>
-							{barItems.map(({ faIcon, iconTransform, key }, index) => (
-								<section key={key}>
-									<Tooltip
-										text={t(key)}
-										side="right"
-										container={themeElementRef.current || undefined}
-										delayDuration={index === 0 ? 100 : 0}
-										fadeIn
-									>
-										<BarButton
-											type="button"
-											onClick={() => {
-												navigateToCategory(key)
-											}}
-											className={localCategory === key ? 'active' : ''}
+							{advancedMenu.barItems.map(
+								({ faIcon, iconTransform, key }, index) => (
+									<section key={key}>
+										<Tooltip
+											text={t(key)}
+											side="right"
+											container={themeElementRef.current || undefined}
+											delayDuration={index === 0 ? 100 : 0}
+											fadeIn
 										>
-											<FontAwesomeIcon
-												icon={faIcon}
-												transform={iconTransform}
-											/>
-										</BarButton>
-									</Tooltip>
-								</section>
-							))}
+											<BarButton
+												type="button"
+												onClick={() => {
+													navigateToCategory(key)
+												}}
+												className={
+													advancedMenu.localCategory === key ? 'active' : ''
+												}
+											>
+												<FontAwesomeIcon
+													icon={faIcon}
+													transform={iconTransform}
+												/>
+											</BarButton>
+										</Tooltip>
+									</section>
+								),
+							)}
 						</BarIconsWrapper>
 						<BarFooterWrapper>
 							<Separator style={{ opacity: 0.25 }} />
@@ -115,19 +120,24 @@ export const DefaultMenu = ({
 				)
 			}
 			nav={
-				!advancedMode ? (
+				!showAdvancedMenu ? (
 					<NavSimple renderMain={renderMain} title={title} />
 				) : (
-					<Wrapper $minimised={sideMenuMinimised} $advancedMode={advancedMode}>
+					<Wrapper
+						$minimised={sideMenuMinimised}
+						$advancedMode={showAdvancedMenu}
+					>
 						<section>
 							<Popover
 								open={openCategories}
 								portalContainer={themeElementRef.current || undefined}
 								content={
 									<CategoriesPopover
-										getActivePageForCategory={getActivePageForCategory}
-										pageCategories={pageCategories}
-										pagesConfig={pagesConfig}
+										getActivePageForCategory={
+											advancedMenu.getActivePageForCategory
+										}
+										pageCategories={advancedMenu.pageCategories}
+										pagesConfig={advancedMenu.pagesConfig}
 										setOpen={setOpenCategories}
 									/>
 								}
@@ -141,7 +151,7 @@ export const DefaultMenu = ({
 								transparent
 							>
 								<CategoryHeader className="menu-categories">
-									<span>{t(localCategory, { ns: 'app' })}</span>
+									<span>{t(advancedMenu.localCategory, { ns: 'app' })}</span>
 									<span>
 										<FontAwesomeIcon
 											icon={openCategories ? faTimes : faChevronDown}
@@ -151,7 +161,10 @@ export const DefaultMenu = ({
 								</CategoryHeader>
 							</Popover>
 							{renderMain({
-								activeCategory: getCategoryId(pageCategories, localCategory),
+								activeCategory: getCategoryId(
+									advancedMenu.pageCategories,
+									advancedMenu.localCategory,
+								),
 								hidden: openCategories,
 							})}
 						</section>
