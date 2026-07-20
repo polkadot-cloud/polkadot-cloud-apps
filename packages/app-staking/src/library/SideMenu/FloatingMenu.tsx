@@ -9,10 +9,9 @@ import { useUi } from 'hooks/useUi'
 import { type Dispatch, type SetStateAction, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { NavSection } from 'types'
+import { LogoWrapper, Primary, Wrapper } from 'ui-app/SideMenu'
 import { Page, Separator } from 'ui-core/base'
 import { Main } from './Main'
-import { Primary } from './Primary'
-import { LogoWrapper, Wrapper } from './Wrapper'
 
 export const FloatingtMenu = ({
 	setLocalCategory,

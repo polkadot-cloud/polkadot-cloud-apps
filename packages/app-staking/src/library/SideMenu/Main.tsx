@@ -21,9 +21,9 @@ import type {
 	PageItem,
 	PagesConfigItems,
 } from 'types'
+import { Primary } from 'ui-app/SideMenu'
 import { Page } from 'ui-core/base'
 import { getPagesConfig, pageKeyExistsInCategory } from 'utils'
-import { Primary } from './Primary'
 
 export const Main = ({
 	activeCategory,

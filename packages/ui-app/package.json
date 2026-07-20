@@ -39,6 +39,7 @@
 		"react": "^19.2.7",
 		"react-helmet-async": "^3.0.0",
 		"react-i18next": "^17.0.9",
+		"react-router-dom": "^7.18.1",
 		"simplebar-react": "3.3.2",
 		"styled-components": "^6.4.3",
 		"types": "workspace:*",

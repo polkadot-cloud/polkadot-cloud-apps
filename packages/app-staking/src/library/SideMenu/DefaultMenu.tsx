@@ -19,13 +19,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { NavSection } from 'types'
-import { Page, Separator, Tooltip } from 'ui-core/base'
-import { Popover } from 'ui-core/popover'
-import { useOverlay } from 'ui-overlay'
-import { getCategoryId } from 'utils'
-import { CategoriesPopover } from './Categories'
-import { Main } from './Main'
-import { NavSimple } from './NavSimple'
 import {
 	BarButton,
 	BarFooterWrapper,
@@ -33,7 +26,14 @@ import {
 	BarLogoWrapper,
 	CategoryHeader,
 	Wrapper,
-} from './Wrapper'
+} from 'ui-app/SideMenu'
+import { Page, Separator, Tooltip } from 'ui-core/base'
+import { Popover } from 'ui-core/popover'
+import { useOverlay } from 'ui-overlay'
+import { getCategoryId } from 'utils'
+import { CategoriesPopover } from './Categories'
+import { Main } from './Main'
+import { NavSimple } from './NavSimple'
 
 export const DefaultMenu = ({
 	localCategory,

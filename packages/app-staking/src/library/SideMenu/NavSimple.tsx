@@ -9,8 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
 import type { UiHookInterface } from 'hooks/useUi'
 import { useUi } from 'hooks/useUi'
+import { LogoWrapper, ToggleWrapper, Wrapper } from 'ui-app/SideMenu'
 import { Main } from './Main'
-import { LogoWrapper, ToggleWrapper, Wrapper } from './Wrapper'
 
 export const NavSimple = () => {
 	const {
