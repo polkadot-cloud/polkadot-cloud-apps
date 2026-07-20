@@ -1,5 +1,7 @@
 packages:
   - packages/*
+overrides:
+  rolldown: 1.1.4
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

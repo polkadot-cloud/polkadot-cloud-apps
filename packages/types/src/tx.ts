@@ -14,6 +14,11 @@ export type TxSubmissionItem = {
 	pending: boolean
 }
 
+export type TxFeeDisplay = {
+	unit: string
+	units: number
+}
+
 export interface TxStatusHandlers {
 	onReady: () => void
 	onInBlock: () => void
@@ -38,6 +43,7 @@ export type SubmitTxProps = SubmitProps &
 		txInitiated: boolean
 		proxyAccount: ActiveProxy | null
 		stacked?: boolean
+		feeDisplay?: TxFeeDisplay
 	}
 
 export interface SubmitProps {

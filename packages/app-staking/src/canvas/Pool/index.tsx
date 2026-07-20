@@ -53,7 +53,10 @@ export const Pool = () => {
 	// pools
 	const getPoolCandidates = async () => {
 		if (pluginEnabled('staking_api')) {
-			const { poolCandidates } = await fetchPoolCandidates(network)
+			const { poolCandidates } = await fetchPoolCandidates(
+				network,
+				import.meta.env.PROD,
+			)
 			return poolCandidates
 		} else {
 			return bondedPools

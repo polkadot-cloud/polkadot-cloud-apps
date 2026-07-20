@@ -47,7 +47,7 @@ export const Announcements = ({ items }: { items: AnnouncementItem[] }) => {
 	// Total rewards claimed
 	const rewardsClaimedValue = rewardsClaimed.decimalPlaces(3).toFormat()
 	announcements.push(
-		rewardsClaimedValue === '0'
+		totalRewardsClaimed === undefined
 			? null
 			: {
 					label: t('totalClaimed'),
@@ -57,8 +57,9 @@ export const Announcements = ({ items }: { items: AnnouncementItem[] }) => {
 
 	// Available to claim
 	const rewardBalanceValue = rewardBalance.decimalPlaces(3).toFormat()
+
 	announcements.push(
-		rewardBalanceValue === '0'
+		rewardAccountBalance === undefined
 			? null
 			: {
 					label: t('availableToClaim', { unit }),

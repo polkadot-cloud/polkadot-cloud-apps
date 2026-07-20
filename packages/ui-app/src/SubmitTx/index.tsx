@@ -8,7 +8,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { SubmitTxProps } from 'types'
+import type { SubmitTxProps, TxFeeDisplay } from 'types'
 import { useOverlay, usePrompt } from 'ui-overlay'
 import { Tx } from '../Tx'
 import { Extension } from './Signers/Extension'
@@ -28,6 +28,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 		onResize,
 		transparent,
 		stacked,
+		feeDisplay,
 	} = props
 
 	const { t } = useTranslation()
@@ -37,7 +38,8 @@ export const SubmitTx = (props: SubmitTxProps) => {
 	const { setModalResize } = useOverlay().modal
 	const { requiresManualSign, getAccount } = useImportedAccounts()
 
-	const { unit } = getStakingChainData(network)
+	const { unit, units } = getStakingChainData(network)
+	const activeFeeDisplay: TxFeeDisplay = feeDisplay ?? { unit, units }
 	const txSubmission = getTxSubmission(uid)
 	const from = txSubmission?.from || null
 	const fee = txSubmission?.fee || 0n
@@ -83,6 +85,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 					onSubmit={onSubmit}
 					notEnoughFunds={notEnoughFunds}
 					promptStatus={promptStatus}
+					feeDisplay={activeFeeDisplay}
 				/>
 			)
 			PromptComponent = <VaultPrompt valid={valid} />
@@ -98,6 +101,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 					submitAccount={submitAccount}
 					onSubmit={onSubmit}
 					notEnoughFunds={notEnoughFunds}
+					feeDisplay={activeFeeDisplay}
 				/>
 			)
 			PromptComponent = <LedgerPrompt valid={valid} />
@@ -113,6 +117,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 				valid={valid}
 				submitted={submitted}
 				notEnoughFunds={notEnoughFunds}
+				feeDisplay={activeFeeDisplay}
 			/>
 		)
 		PromptComponent = undefined
@@ -122,7 +127,9 @@ export const SubmitTx = (props: SubmitTxProps) => {
 		<Tx
 			{...props}
 			notEnoughFunds={notEnoughFunds}
-			dangerMessage={`${t('notEnough', { ns: 'app' })} ${unit}`}
+			dangerMessage={`${t('notEnough', { ns: 'app' })} ${
+				activeFeeDisplay.unit
+			}`}
 			margin={!noMargin}
 			SubmitComponent={SubmitComponent}
 			PromptComponent={PromptComponent}

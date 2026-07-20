@@ -14,7 +14,6 @@ import { CopyAddress } from '../ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Metrics } from '../ListItem/Buttons/Metrics'
 import { Blocked } from '../ListItem/Labels/Blocked'
-import { Commission } from '../ListItem/Labels/Commission'
 import { Identity } from '../ListItem/Labels/Identity'
 import { NominationStatus } from '../ListItem/Labels/NominationStatus'
 import type { ItemProps } from './types'
@@ -90,7 +89,6 @@ export const Item = ({
 							<APY rate={rateAfterCommission} />
 							<Quartile address={address} />
 							<Blocked prefs={prefs} />
-							<Commission commission={commission} />
 						</LabelRow>
 						<NominationStatus
 							address={address}

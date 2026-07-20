@@ -20,7 +20,6 @@ import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Blocked } from '../ListItem/Labels/Blocked'
-import { Commission } from '../ListItem/Labels/Commission'
 import { EraStatus } from '../ListItem/Labels/EraStatus'
 import { Identity } from '../ListItem/Labels/Identity'
 import type { ItemProps } from './types'
@@ -107,7 +106,6 @@ export const Item = ({
 							<APY rate={rateAfterCommission} />
 							<Quartile address={address} />
 							<Blocked prefs={prefs} />
-							<Commission commission={commission} />
 						</LabelRow>
 						<EraStatus address={address} status={validatorStatus} noMargin />
 					</div>

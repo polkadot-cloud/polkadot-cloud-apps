@@ -36,6 +36,13 @@ ChartJS.register(
 	annotationPlugin,
 )
 
+const colorWithAlpha = (value: string, alpha: number, fallback = '#000000') => {
+	const parsedColor = chartColor(value)
+	return (parsedColor.valid ? parsedColor : chartColor(fallback))
+		.alpha(alpha)
+		.rgbString()
+}
+
 export const PoolSharesBar = ({
 	days,
 	entries,
@@ -108,9 +115,7 @@ export const PoolSharesBar = ({
 					xMax: index,
 					yMin: 0,
 					yMax: new BigNumber(shareReward).toNumber(),
-					borderColor: chartColor(getThemeValue('--gray-1000'))
-						.alpha(0.28)
-						.rgbString(),
+					borderColor: colorWithAlpha(getThemeValue('--gray-1000'), 0.28),
 					borderDash: [2, 4],
 					borderWidth: 1.4,
 				}
@@ -159,8 +164,8 @@ export const PoolSharesBar = ({
 
 			const applyAlpha = (tip: AnnotationOptions<'label'>, a: number) => {
 				tip.display = a > 0
-				tip.backgroundColor = chartColor(tipBgColor).alpha(a).rgbString()
-				tip.color = chartColor(tipTextColor).alpha(a).rgbString()
+				tip.backgroundColor = colorWithAlpha(tipBgColor, a)
+				tip.color = colorWithAlpha(tipTextColor, a, '#ffffff')
 			}
 
 			const toggleTip = (chart: ChartType, show: boolean) => {
@@ -268,8 +273,8 @@ export const PoolSharesBar = ({
 		unit,
 	])
 
-	const color = getThemeValue('--gray-1000')
-	const lineAreaColor = chartColor(color).alpha(0.14).rgbString()
+	const color = getThemeValue('--gray-1000') || '#000000'
+	const lineAreaColor = colorWithAlpha(color, 0.06)
 
 	const data = {
 		labels: series.map(({ timestamp }) =>
@@ -283,22 +288,7 @@ export const PoolSharesBar = ({
 				label: labels.poolShares,
 				data: syncing ? [] : series.map(({ shareReward }) => shareReward),
 				borderColor: color,
-				backgroundColor: (context: { chart: ChartType }) => {
-					const { chart } = context
-					const { chartArea, ctx } = chart
-					if (!chartArea) {
-						return lineAreaColor
-					}
-					const gradient = ctx.createLinearGradient(
-						0,
-						chartArea.top,
-						0,
-						chartArea.bottom,
-					)
-					gradient.addColorStop(0, chartColor(color).alpha(0.16).rgbString())
-					gradient.addColorStop(1, chartColor(color).alpha(0).rgbString())
-					return gradient
-				},
+				backgroundColor: lineAreaColor,
 				pointBackgroundColor: color,
 				pointBorderColor: getThemeValue('--bg-primary'),
 				pointBorderWidth: 2,
