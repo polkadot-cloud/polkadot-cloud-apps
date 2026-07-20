@@ -15,26 +15,19 @@ import { useWarnings } from 'hooks/useWarnings'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import type {
-	NavSection,
-	PageCategory,
-	PageItem,
-	PagesConfigItems,
-} from 'types'
+import type { PageCategory, PageItem, PagesConfigItems } from 'types'
+import { Primary } from 'ui-app/SideMenu'
 import { Page } from 'ui-core/base'
 import { getPagesConfig, pageKeyExistsInCategory } from 'utils'
-import { Primary } from './Primary'
 
 export const Main = ({
 	activeCategory,
 	showHeaders = false,
 	hidden = false,
-	setLocalCategory,
 }: {
 	activeCategory: number | null
 	showHeaders?: boolean
 	hidden?: boolean
-	setLocalCategory?: (category: NavSection) => void
 }) => {
 	const { t } = useTranslation('app')
 	const navigate = useNavigate()
@@ -157,9 +150,6 @@ export const Main = ({
 												pageKey={key}
 												name={t(key)}
 												to={() => {
-													if (!activeCategory && setLocalCategory) {
-														setLocalCategory(categoryKey)
-													}
 													navigate(hash)
 												}}
 												active={
