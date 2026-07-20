@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "100% 佣金",
 		"accountConnected": "帐户已连接",
 		"accounts": "账户",
 		"active": "激活",
-		"activeLowCommission": "活跃低佣金",
-		"activeLowCommissionSubtitle": "选择低佣金且高效表现的验证人",
 		"activePools": "活跃提名池",
 		"activeValidator": "活跃验证人",
 		"activeValidators": "活跃验证人",
@@ -164,7 +161,6 @@
 		"graphInactive": "不活跃",
 		"help": "帮助",
 		"helpPrompts": "帮助提示",
-		"highCommission": "高佣金",
 		"highPerformanceValidator": "高效表现的验证人",
 		"iHaveScanned": "己扫描",
 		"import": "导入",
@@ -172,6 +168,7 @@
 		"inBlock": "己在区块中",
 		"inactive": "未激活",
 		"include": "包含",
+		"includeIncomingProjection": "包含预计入账",
 		"initializing": "初始化中",
 		"insertPayoutAddress": "输入收益到账地址",
 		"insufficientFunds": "余额不足",
@@ -184,6 +181,7 @@
 		"issuance": "发行量",
 		"join": "加入提名池",
 		"language": "语言",
+		"last30dIncoming": "过去30天",
 		"ledgerAccount": "Ledger帐户",
 		"ledgerAccountFetched": "己获得Ledger账户",
 		"ledgerAccountImported": "已导入Ledger账户",
@@ -206,7 +204,6 @@
 		"listItemActive": "活跃",
 		"locked": "己锁",
 		"lockedPools": "已锁定提名池",
-		"lowCommission": "低佣金",
 		"manual": "手动",
 		"manualSelectionSubtitle": "从头开始添加验证人",
 		"manual_selection": "手动选择",
@@ -413,6 +410,7 @@
 		"webExtensions": "浏览器扩展",
 		"whenActivelyNominating": "当活跃提名时",
 		"wrongTransaction": "错误交易，请重新签名",
-		"year": "年"
+		"year": "年",
+		"yourPayouts": "您的收益"
 	}
 }

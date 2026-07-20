@@ -1,7 +1,8 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
+import { useShowHelp } from 'hooks/useShowHelp'
 import type { JSX } from 'react'
 import React from 'react'
 import commonClasses from '../common.module.scss'
@@ -18,7 +19,7 @@ import classes from './index.module.scss'
  *
  * @returns {JSX.Element} The rendered ButtonHelp component.
  */
-export const ButtonHelp = (props: ButtonHelpProps): JSX.Element => {
+export const ButtonHelp = (props: ButtonHelpProps): JSX.Element | null => {
 	const {
 		disabled,
 		marginLeft,
@@ -35,8 +36,13 @@ export const ButtonHelp = (props: ButtonHelpProps): JSX.Element => {
 		openHelp,
 		definition,
 	} = props
+	const { showHelp } = useShowHelp()
 
 	const btnRef = React.useRef<HTMLButtonElement>(null)
+
+	if (!showHelp) {
+		return null
+	}
 
 	const buttonClasses = classNames(
 		commonClasses.btnCore,
