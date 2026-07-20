@@ -24,7 +24,7 @@
 		"@polkadot-cloud/connect-ledger": "^1.1.0",
 		"@polkadot-cloud/connect-proxies": "^0.3.0",
 		"@polkawatch/ddp-client": "^3.0.1",
-		"@tanstack/react-query": "^5.101.2",
+		"@tanstack/react-query": "^5.101.3",
 		"@w3ux/extension-assets": "^2.3.1",
 		"@w3ux/factories": "^2.2.2",
 		"@w3ux/hooks": "^2.4.4",
