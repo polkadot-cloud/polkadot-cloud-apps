@@ -36,6 +36,19 @@ if (
 	localStorage.removeItem('lng_resources')
 }
 
+// Reload the app when a lazy-loaded chunk or stylesheet fails to fetch, so fresh assets are
+// retrieved. Rate-limited to avoid a reload loop if an asset is persistently unavailable
+const preloadErrorReloadKey = 'preload_error_reload'
+window.addEventListener('vite:preloadError', (event) => {
+	const lastReload = Number(sessionStorage.getItem(preloadErrorReloadKey) || 0)
+	if (Date.now() - lastReload < 10_000) {
+		return
+	}
+	sessionStorage.setItem(preloadErrorReloadKey, String(Date.now()))
+	event.preventDefault()
+	window.location.reload()
+})
+
 // Initialise global api service
 initDedotService()
 
