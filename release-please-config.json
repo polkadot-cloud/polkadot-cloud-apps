@@ -2,7 +2,7 @@
 	"last-release-sha": "142ea86d91de5f89016a0c62f9733c32f6af9fba",
 	"include-component-in-tag": true,
 	"packages": {
-		"packages/app": {},
+		"packages/app-staking": {},
 		"packages/assets": {},
 		"packages/consts": {},
 		"packages/locales": {},

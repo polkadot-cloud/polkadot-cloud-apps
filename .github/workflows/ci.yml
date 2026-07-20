@@ -45,7 +45,7 @@ jobs:
       - run: pnpm check
       - run: pnpm license:headers
       - run: pnpm build:verify
-        working-directory: packages/app
+        working-directory: packages/app-staking
       - run: pnpm test
       - run: pnpm run validate
         working-directory: packages/locales
