@@ -1,11 +1,8 @@
 {
 	"app": {
-		"100Commission": "コミッション100%",
 		"accountConnected": "アカウントが接続されました",
 		"accounts": "アカウント",
 		"active": "アクティブ",
-		"activeLowCommission": "アクティブな低コミッション",
-		"activeLowCommissionSubtitle": "コミッションが低くパフォーマンスの高いバリデータを選択します。",
 		"activePools": "アクティブなプール",
 		"activeValidator": "アクティブなバリデータ",
 		"activeValidators": "アクティブなバリデータ",
@@ -165,7 +162,6 @@
 		"graphInactive": "非アクティブ",
 		"help": "ヘルプ",
 		"helpPrompts": "ヘルププロンプト",
-		"highCommission": "高コミッション",
 		"highPerformanceValidator": "高パフォーマンスバリデータ",
 		"iHaveScanned": "スキャンしました",
 		"import": "インポート",
@@ -173,6 +169,7 @@
 		"inBlock": "ブロックに記録",
 		"inactive": "非アクティブ",
 		"include": "含める",
+		"includeIncomingProjection": "受取予測を含める",
 		"initializing": "初期化中",
 		"insertPayoutAddress": "支払いアドレスを挿入してください",
 		"insufficientFunds": "資金が不足しています",
@@ -185,6 +182,7 @@
 		"issuance": "発行量",
 		"join": "参加",
 		"language": "言語",
+		"last30dIncoming": "過去30日間",
 		"ledgerAccount": "Ledgerアカウント",
 		"ledgerAccountFetched": "Ledgerアカウントを取得しました",
 		"ledgerAccountImported": "Ledgerアカウントをインポートしました",
@@ -208,7 +206,6 @@
 		"listItemActive": "アクティブ",
 		"locked": "ロック済み",
 		"lockedPools": "ロック済みのプール",
-		"lowCommission": "低コミッション",
 		"manual": "手動",
 		"manualSelectionSubtitle": "バリデータを一から追加します。",
 		"manual_selection": "手動選択",
@@ -423,6 +420,7 @@
 		"webExtensions": "ブラウザ拡張機能",
 		"whenActivelyNominating": "アクティブにノミネート中の場合。",
 		"wrongTransaction": "誤ったトランザクションです。もう一度署名してください。",
-		"year": "年"
+		"year": "年",
+		"yourPayouts": "あなたの支払い"
 	}
 }
