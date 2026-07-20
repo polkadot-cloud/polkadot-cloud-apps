@@ -1,57 +1,56 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 @keyframes tab-preloader-pulse {
-  0% {
-    opacity: 0.45;
-  }
+	0% {
+		opacity: 0.45;
+	}
 
-  50% {
-    opacity: 0.85;
-  }
+	50% {
+		opacity: 0.85;
+	}
 
-  100% {
-    opacity: 0.45;
-  }
+	100% {
+		opacity: 0.45;
+	}
 }
 
 .btnTabPreloader {
-  align-items: center;
-  background: var(--btn-tab);
-  border-top-left-radius: 0.4rem;
-  border-top-right-radius: 0.4rem;
-  display: flex;
-  height: 3.2rem;
-  justify-content: flex-start;
-  margin-bottom: 0;
-  margin-right: 0.75rem;
-  min-width: 5.75rem;
-  overflow: hidden;
-  padding: 0 1rem;
+	align-items: center;
+	background: var(--btn-tab);
+	border-top-left-radius: 0.4rem;
+	border-top-right-radius: 0.4rem;
+	display: flex;
+	height: 3.2rem;
+	justify-content: flex-start;
+	margin-bottom: 0;
+	margin-right: 0.75rem;
+	min-width: 5.75rem;
+	overflow: hidden;
+	padding: 0 1rem;
 
-  &:last-child {
-    margin-right: 0;
-  }
+	&:last-child {
+		margin-right: 0;
+	}
 
-  &.secondary {
-    background: var(--btn-canvas-tab);
-  }
+	&.secondary {
+		background: var(--btn-canvas-tab);
+	}
 }
 
 .shadowLabel,
 .shadowBadge {
-  animation: tab-preloader-pulse 1.6s ease-in-out infinite;
-  background: var(--gray-600);
-  border-radius: 0.3rem;
-  display: block;
+	animation: tab-preloader-pulse 1.6s ease-in-out infinite;
+	background: var(--gray-600);
+	border-radius: 0.3rem;
+	display: block;
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
+	@media (prefers-reduced-motion: reduce) {
+		animation: none;
+	}
 }
 
 .shadowLabel {
-  height: 0.75rem;
-  width: 3.6rem;
+	height: 0.75rem;
+	width: 3.6rem;
 }
-

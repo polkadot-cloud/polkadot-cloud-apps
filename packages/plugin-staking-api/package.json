@@ -13,8 +13,8 @@
 		"./types": "./src/types.ts"
 	},
 	"dependencies": {
-		"@apollo/client": "^4.2.3",
-		"graphql": "^17.0.1",
+		"@apollo/client": "^4.2.6",
+		"graphql": "^17.0.2",
 		"rxjs": "^7.8.2"
 	}
 }

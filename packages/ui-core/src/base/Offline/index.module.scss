@@ -1,24 +1,24 @@
-/* Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
 .offlineLabel {
-  background: var(--gray-1000);
-  border: 0.5px solid var(--gray-500);
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 999;
-  padding: 0.75rem 1.15rem;
-  border-radius: 0.6rem;
-  display: flex;
-  align-items: center;
+	background: var(--gray-1000);
+	border: 0.5px solid var(--gray-500);
+	position: fixed;
+	bottom: 1rem;
+	right: 1rem;
+	z-index: 999;
+	padding: 0.75rem 1.15rem;
+	border-radius: 0.6rem;
+	display: flex;
+	align-items: center;
 
-  > h3 {
-    color: var(--gray-100);
-  }
+	> h3 {
+		color: var(--gray-100);
+	}
 
-  > svg {
-    color: var(--gray-100);
-    margin-right: 0.75rem;
-  }
+	> svg {
+		color: var(--gray-100);
+		margin-right: 0.75rem;
+	}
 }

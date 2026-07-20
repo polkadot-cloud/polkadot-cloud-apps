@@ -1,40 +1,40 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .header {
-  transition: all var(--transition-duration);
-  position: fixed;
-  top: 0;
-  right: 0;
-  display: flex;
-  flex-flow: row wrap;
-  height: $header-height;
-  z-index: 6;
-  width: 100%;
+	transition: all var(--transition-duration);
+	position: fixed;
+	top: 0;
+	right: 0;
+	display: flex;
+	flex-flow: row wrap;
+	height: $header-height;
+	z-index: 6;
+	width: 100%;
 
-  > section {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
+	> section {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
 
-    &:first-child {
-      justify-content: flex-start;
-      flex-grow: 1;
-      padding-left: 1rem;
-    }
-  
-    &:last-child {
-      justify-content: flex-end;
-    }
-  }
+		&:first-child {
+			justify-content: flex-start;
+			flex-grow: 1;
+			padding-left: 1rem;
+		}
 
-  @media (width >= calc($page-width-medium-threshold + 1px)) {
-    padding-left: $side-nav-maximised-width;
+		&:last-child {
+			justify-content: flex-end;
+		}
+	}
 
-    &.minimized {
-      padding-left: $side-nav-minimised-width;
-    }
-  }
+	@media (width >= calc($page-width-medium-threshold + 1px)) {
+		padding-left: $side-nav-maximised-width;
+
+		&.minimized {
+			padding-left: $side-nav-minimised-width;
+		}
+	}
 }

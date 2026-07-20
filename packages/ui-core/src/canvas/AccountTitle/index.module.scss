@@ -1,60 +1,61 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .accountTitle {
-  --account-title-height: 2.75rem;
+	--account-title-height: 2.75rem;
 
-  border-bottom: 1px solid var(--gray-600);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin: 2rem 0 1rem;
-  padding-bottom: 0.1rem;
+	border-bottom: 1px solid var(--gray-600);
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	margin: 2rem 0 1rem;
+	padding-bottom: 0.1rem;
 
-  > div {
-    display: flex;
-    flex: 1;
+	> div {
+		display: flex;
+		flex: 1;
+		align-items: center;
 
-    > div {
-      display: flex;
-      flex: 1;
+		> div {
+			display: flex;
+			flex: 1;
 
-      &:nth-child(1) {
-        max-width: 4rem;
-      }
+			&:nth-child(1) {
+				max-width: 4rem;
+			}
 
-      &:nth-child(2) {
-        padding-left: 1rem;
-        flex-direction: column;
-        position: relative;
+			&:nth-child(2) {
+				padding-left: 1rem;
+				flex-direction: column;
+				position: relative;
 
-        > div:first-child {
-          height: var(--account-title-height);
-          position: absolute;
-          padding-top: 2rem;
-          flex: 1;
-          top: 0;
-          left: 0.75rem;
-          width: 100%;
+				> div:first-child {
+					height: var(--account-title-height);
+					position: absolute;
+					padding-top: 2rem;
+					flex: 1;
+					top: 0;
+					left: 0.75rem;
+					width: 100%;
 
-          > h1 {
-            font-family: var(--font-family-bold);
-            position: absolute;
-            top: 0;
-            left: 0;
-            margin: 0;
-            line-height: 2rem;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 100%;
-          }
-        }
+					> h1 {
+						font-family: var(--font-family-bold);
+						position: absolute;
+						top: 0;
+						left: 0;
+						margin: 0;
+						line-height: 2rem;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						white-space: nowrap;
+						width: 100%;
+					}
+				}
 
-        > div:last-child {
-          margin-top: var(--account-title-height);
-        }
-      }
-    }
-  }
+				> div:last-child {
+					margin-top: var(--account-title-height);
+				}
+			}
+		}
+	}
 }

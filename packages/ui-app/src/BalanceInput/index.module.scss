@@ -1,0 +1,88 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.wrapper {
+	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+
+	h3 {
+		color: var(--gray-900);
+		margin: 0;
+		padding: 0 0.25rem;
+	}
+}
+
+.inner {
+	width: 100%;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	margin-top: 0.75rem;
+	padding: 0;
+}
+
+.section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.input {
+	border: 1px solid var(--gray-500);
+	border-radius: 0.75rem;
+	padding: 1rem;
+	display: flex;
+	flex: 1;
+	flex-flow: row wrap;
+	align-items: center;
+}
+
+.field {
+	flex-grow: 1;
+
+	> input {
+		border: none;
+		padding: 0;
+		width: 100%;
+		max-width: 100%;
+		flex-grow: 1;
+		font-family: var(--font-family-bold);
+	}
+}
+
+.available {
+	color: var(--gray-900);
+	padding-left: 0.5rem;
+	justify-content: flex-end;
+	opacity: 0.5;
+	position: relative;
+	max-width: 50%;
+
+	@media (width <= 600px) {
+		display: none;
+	}
+
+	p {
+		margin: 0;
+		width: 100%;
+		overflow: hidden;
+		position: relative;
+		font-family: var(--font-family-semibold);
+		font-size: 1rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.availableOuter {
+	color: var(--gray-900);
+	opacity: 0.5;
+	padding: 0 0.5rem;
+	margin-top: 0;
+
+	@media (width >= 601px) {
+		display: none;
+	}
+}
