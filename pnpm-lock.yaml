@@ -238,7 +238,7 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0
       '@fortawesome/react-fontawesome':
-        specifier: ^3.3.1
+        specifier: ^3.4.0
         version: 3.4.0(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
@@ -334,7 +334,7 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       radix-ui:
-        specifier: ^1.6.1
+        specifier: ^1.6.2
         version: 1.6.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       rc-slider:
         specifier: ^11.1.6
@@ -352,7 +352,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(react@19.2.7)
       react-i18next:
-        specifier: ^17.0.8
+        specifier: ^17.0.9
         version: 17.0.9(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       react-router-dom:
         specifier: ^7.18.1
