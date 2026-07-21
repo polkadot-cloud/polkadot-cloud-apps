@@ -9,6 +9,7 @@ import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { useRef, useState } from 'react'
+import { PopoverTab } from 'ui-buttons'
 import classes from './WalletPopover.module.scss'
 
 const stablecoinMix = [
@@ -76,36 +77,14 @@ export const WalletPopover = ({
 	}, ['header-wallet'])
 
 	return (
-		<div ref={popoverRef} className={classes.popover}>
-			<div className={classes.header}>
-				<h2 className={classes.title}>Wallet</h2>
-				<span className={classes.balance}>$1,190,740.00</span>
-			</div>
-
-			<div className={classes.tabs} role="tablist" aria-label="Wallet sections">
-				<button
-					type="button"
-					role="tab"
-					aria-selected={activeTab === 'balances'}
-					className={
-						activeTab === 'balances' ? classes.tabBtnActive : classes.tabBtn
-					}
+		<div ref={popoverRef}>
+			<PopoverTab.Container position="top">
+				<PopoverTab.Button
+					text="Balances"
 					onClick={() => setActiveTab('balances')}
-				>
-					Balances
-				</button>
-				<button
-					type="button"
-					role="tab"
-					aria-selected={activeTab === 'mix'}
-					className={
-						activeTab === 'mix' ? classes.tabBtnActive : classes.tabBtn
-					}
-					onClick={() => setActiveTab('mix')}
-				>
-					Mix
-				</button>
-			</div>
+				/>
+				<PopoverTab.Button text="Mix" onClick={() => setActiveTab('mix')} />
+			</PopoverTab.Container>
 
 			{activeTab === 'mix' && (
 				<div className={classes.section}>
@@ -172,6 +151,11 @@ export const WalletPopover = ({
 
 			{activeTab === 'balances' && (
 				<div className={classes.section}>
+					<div className={classes.header}>
+						<h2 className={classes.title}>Wallet</h2>
+						<span className={classes.balance}>$1,190,740.00</span>
+					</div>
+
 					<h3 className={classes.sectionTitle}>Token Balances by Chain</h3>
 					<div className={classes.breakdownGroups}>
 						{chainTokenBreakdown.map((group) => (
