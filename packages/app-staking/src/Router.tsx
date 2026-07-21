@@ -126,7 +126,7 @@ const RouterInner = () => {
 					<Menu />
 					<Tooltip />
 					<Prompt />
-					<SideMenu />
+					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
 							<Headers Nodes={{ sync: Sync }} />

@@ -8,16 +8,29 @@ import {
 } from 'ui-app/SideMenu'
 import { Main } from './Main'
 
-export const SideMenu = () => {
+export const SideMenu = ({
+	enableAdvancedMenu,
+}: {
+	enableAdvancedMenu: false
+}) => {
 	const renderMain = (_props: SideMenuMainRenderProps) => <Main />
 
 	return (
 		<>
-			<DefaultMenu renderMain={renderMain} title="Cloud" />
+			<DefaultMenu
+				barItems={[]}
+				getActivePageForCategory={() => '/send'}
+				localCategory="stake"
+				pageCategories={[]}
+				pagesConfig={[]}
+				renderMain={renderMain}
+				title="Cloud"
+				enableAdvancedMenu={enableAdvancedMenu}
+			/>
 			<FloatingMenu
 				renderMain={renderMain}
 				title="Cloud"
-				supportsAdvancedMode={false}
+				enableAdvancedMenu={enableAdvancedMenu}
 			/>
 		</>
 	)

@@ -32,7 +32,7 @@ export const Router = () => (
 	<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
 		<Page.Body id="portal-root">
 			<Overlays />
-			<SideMenu />
+			<SideMenu enableAdvancedMenu={false} />
 			<Page.Main>
 				<HelmetProvider>
 					<Headers Nodes={{ wallet: Wallet }} />
