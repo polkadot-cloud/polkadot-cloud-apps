@@ -11,6 +11,7 @@ import type {
 } from 'types'
 import { SystemChainList } from './networks'
 
+// Shared display metadata for every supported fee token.
 const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	DOT: { color: '#E6007A', decimals: SystemChainList.statemint.units },
 	USDC: { color: '#3E73C4', decimals: 6 },
@@ -18,12 +19,15 @@ const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
 }
 
+// All supported transaction fee asset symbols.
 export const FeeAssetSymbols = Object.keys(FeeTokenMetadata) as FeeAssetSymbol[]
 
+// All supported stablecoin symbols, excluding the native DOT fee token.
 export const StablecoinSymbols = FeeAssetSymbols.filter(
 	(symbol): symbol is StablecoinSymbol => symbol !== 'DOT',
 )
 
+// Merges shared fee-token metadata into chain-specific asset configuration.
 const withFeeTokenMetadata = (
 	assets: ChainAssetConfigs,
 ): StablecoinChainConfig['assets'] =>
@@ -37,6 +41,7 @@ const withFeeTokenMetadata = (
 		]),
 	)
 
+// Stablecoin and fee-token configuration for each supported chain.
 const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 	statemint: {
 		label: 'Polkadot Hub',
@@ -78,6 +83,7 @@ const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 	},
 }
 
+// All chains configured for stablecoin operations.
 export const StablecoinChains = Object.keys(
 	StablecoinConfigs,
 ) as StablecoinChainId[]
