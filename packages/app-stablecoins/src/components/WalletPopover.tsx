@@ -8,9 +8,9 @@ import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
-import { ConnectItem } from 'ui-core/popover'
+import { ConnectItem, MenuItem } from 'ui-core/popover'
 import classes from './WalletPopover.module.scss'
 
 const stablecoinMix = [
@@ -159,36 +159,34 @@ export const WalletPopover = ({
 
 					<ConnectItem.Container>
 						{chainTokenBreakdown.map((group) => (
-							<>
+							<Fragment key={group.chain}>
 								<h4>{group.chain}</h4>
-								<div key={group.chain} className={classes.breakdownGroup}>
-									<div className={classes.breakdownHeader}>
-										<span className={classes.breakdownTotal}>
-											{group.total}
-										</span>
+								<MenuItem padded>
+									<div>
+										<h3>Total</h3>
+										<div>
+											<h4>{group.total}</h4>
+										</div>
 									</div>
-									<div className={classes.tokenList}>
-										{group.tokens.map((token) => (
-											<div
-												key={`${group.chain}-${token.name}`}
-												className={classes.tokenRow}
-											>
-												<div className={classes.tokenLabel}>
-													<img
-														src={token.icon}
-														alt={token.name}
-														className={classes.tokenIcon}
-													/>
-													<span>{token.name}</span>
-												</div>
-												<span className={classes.tokenValue}>
-													{token.value}
-												</span>
+								</MenuItem>
+								{group.tokens.map((token) => (
+									<MenuItem key={`${group.chain}-${token.name}`} padded>
+										<div>
+											<img
+												src={token.icon}
+												alt={token.name}
+												className={classes.tokenIcon}
+											/>
+										</div>
+										<div>
+											<h3>{token.name}</h3>
+											<div>
+												<h4>{token.value}</h4>
 											</div>
-										))}
-									</div>
-								</div>
-							</>
+										</div>
+									</MenuItem>
+								))}
+							</Fragment>
 						))}
 					</ConnectItem.Container>
 				</div>

@@ -50,7 +50,6 @@
 }
 
 .mixLegend,
-.tokenList,
 .chainTable {
 	display: flex;
 	flex-direction: column;
@@ -61,43 +60,36 @@
 	margin-top: 0.75rem;
 }
 
-.tokenList,
 .chainTable {
 	gap: 0.4rem;
 }
 
 .mixLegendItem,
 .mixLegendLabel,
-.shareCell,
-.tokenRow,
-.tokenLabel {
+.shareCell {
 	display: flex;
 	align-items: center;
 }
 
-.mixLegendItem,
-.tokenRow {
+.mixLegendItem {
 	justify-content: space-between;
 	gap: 0.75rem;
 }
 
-.mixLegendLabel,
-.tokenLabel {
+.mixLegendLabel {
 	gap: 0.5rem;
 	color: var(--gray-900);
 }
 
 .mixLegendIcon,
 .tokenIcon {
-	width: 1rem;
-	height: 1rem;
+	width: 1.75rem;
+	height: 1.75rem;
 }
 
 .mixLegendValue,
 .valueCell,
-.shareValue,
-.breakdownTotal,
-.tokenValue {
+.shareValue {
 	font-family: var(--font-family-mono);
 	color: var(--gray-800);
 }
@@ -146,11 +138,4 @@
 	height: 100%;
 	border-radius: inherit;
 	background: linear-gradient(90deg, var(--accent-600), var(--accent-500));
-}
-
-.breakdownGroup {
-	background-color: var(--gray-100);
-	border: 1px solid var(--shade-200);
-	border-radius: 0.75rem;
-	padding: 0.75rem;
 }

@@ -4,6 +4,7 @@
 @use "ui-styles/theme/variables" as *;
 
 $button-padding: 1.3rem 1rem 1.2rem 1rem;
+$button-padding-sm: 1rem;
 
 .menuItem {
 	border-bottom: 1px solid var(--gray-500);
@@ -20,6 +21,10 @@ $button-padding: 1.3rem 1rem 1.2rem 1rem;
 		border-bottom-left-radius: $popover-border-radius;
 		border-bottom-right-radius: $popover-border-radius;
 		border: none;
+	}
+
+	&.padded {
+		padding: $button-padding-sm;
 	}
 
 	> div,
