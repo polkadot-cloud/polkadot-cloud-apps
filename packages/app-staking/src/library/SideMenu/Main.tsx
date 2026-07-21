@@ -44,7 +44,7 @@ export const Main = ({
 	const { controllerUnmigrated } = getStakingLedger(activeAddress)
 	const { balances, nominatorBalance } = useAccountBalances(activeAddress)
 	const { totalUnlockChunks } = balances.nominator
-	
+
 	const menuMinimised = sideMenuMinimised && !advancedMode
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const fullCommissionNominees = nominated.filter(
