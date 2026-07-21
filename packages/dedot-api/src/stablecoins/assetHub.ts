@@ -3,8 +3,8 @@
 
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import {
+	AssetHubNativeAssetLocation,
 	getAssetHubAssetLocation,
-	getAssetHubNativeAssetLocation,
 	getStablecoinAssetConfig,
 	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
@@ -112,7 +112,7 @@ export const createAssetHubStablecoinAdapter = (
 		const assetFee =
 			await api.call.assetConversionApi.quotePriceTokensForExactTokens(
 				getAssetHubAssetLocation(config.assetId),
-				getAssetHubNativeAssetLocation(),
+				AssetHubNativeAssetLocation,
 				nativeFee,
 				true,
 			)

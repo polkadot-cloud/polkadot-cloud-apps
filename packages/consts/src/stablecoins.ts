@@ -91,26 +91,31 @@ export const StablecoinChains = Object.keys(
 	StablecoinConfigs,
 ) as StablecoinChainId[]
 
+// Gets an asset's chain-specific stablecoin configuration.
 export const getStablecoinAssetConfig = (
 	chain: StablecoinChainId,
 	symbol: StablecoinAssetSymbol,
 ) => StablecoinConfigs[chain].assets[symbol]
 
+// Gets all configured fee assets for a chain.
 export const getStablecoinFeeAssets = (
 	chain: StablecoinChainId,
 ): StablecoinFeeAssetSymbol[] =>
 	Object.keys(StablecoinConfigs[chain].assets) as StablecoinFeeAssetSymbol[]
 
+// Checks whether a stablecoin can be sent on a chain.
 export const isStablecoinSendAssetSupported = (
 	chain: StablecoinChainId,
 	symbol: StablecoinSymbol,
 ) => !!getStablecoinAssetConfig(chain, symbol)
 
+// Checks whether an asset can pay transaction fees on a chain.
 export const isStablecoinFeeAssetSupported = (
 	chain: StablecoinChainId,
 	symbol: StablecoinFeeAssetSymbol,
 ) => !!getStablecoinAssetConfig(chain, symbol)
 
+// Builds the Asset Hub XCM location for a local asset ID.
 export const getAssetHubAssetLocation = (assetId: number) => ({
 	parents: 0,
 	interior: {
@@ -122,9 +127,10 @@ export const getAssetHubAssetLocation = (assetId: number) => ({
 	},
 })
 
-export const getAssetHubNativeAssetLocation = () => ({
+// The Asset Hub XCM location for its native relay-chain asset.
+export const AssetHubNativeAssetLocation = {
 	parents: 1,
 	interior: {
-		type: 'Here' as const,
+		type: 'Here',
 	},
-})
+} as const
