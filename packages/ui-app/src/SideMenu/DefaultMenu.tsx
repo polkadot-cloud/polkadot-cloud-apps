@@ -1,34 +1,21 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faChevronDown,
-	faRightFromBracket,
-	faTimes,
-} from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import CloudSVG from 'assets/icons/cloud.svg?react'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import type { PageCategory } from 'types'
-import { Page, Separator, Tooltip } from 'ui-core/base'
+import { Page } from 'ui-core/base'
 import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { getCategoryId } from 'utils'
+import { AdvancedMenu } from './AdvancedMenu'
 import { CategoriesPopover } from './Categories'
 import { NavSimple } from './NavSimple'
 import type { DefaultMenuProps } from './types'
-import {
-	BarButton,
-	BarFooterWrapper,
-	BarIconsWrapper,
-	BarLogoWrapper,
-	CategoryHeader,
-	Wrapper,
-} from './Wrapper'
+import { CategoryHeader, Wrapper } from './Wrapper'
 
 export const DefaultMenu = ({
 	barItems,
@@ -38,11 +25,11 @@ export const DefaultMenu = ({
 	pagesConfig,
 	renderMain,
 	title,
+	enableAdvancedMenu,
 }: DefaultMenuProps) => {
 	const { t } = useTranslation('app')
-	const { advancedMode, setAdvancedMode, sideMenuMinimised } = useUi()
-	const navigate = useNavigate()
 	const { themeElementRef } = useTheme()
+	const { advancedMode, sideMenuMinimised } = useUi()
 	const { status: modalStatus } = useOverlay().modal
 	const { status: canvasStatus } = useOverlay().canvas
 
@@ -50,75 +37,28 @@ export const DefaultMenu = ({
 
 	const transparent = modalStatus === 'open' || canvasStatus === 'open'
 
-	// Navigate to the last active page for a category
-	const navigateToCategory = (category: PageCategory['key']) => {
-		navigate(getActivePageForCategory(category))
-	}
+	const showAdvancedMenu = enableAdvancedMenu && advancedMode
+	const menuMinimised = sideMenuMinimised && !showAdvancedMenu
 
 	return (
 		<Page.Side.Default
 			open={false}
-			minimised={sideMenuMinimised}
+			minimised={menuMinimised}
 			transparent={transparent}
 			bar={
-				!advancedMode ? undefined : (
-					<>
-						<BarLogoWrapper>
-							<CloudSVG />
-						</BarLogoWrapper>
-						<BarIconsWrapper>
-							{barItems.map(({ faIcon, iconTransform, key }, index) => (
-								<section key={key}>
-									<Tooltip
-										text={t(key)}
-										side="right"
-										container={themeElementRef.current || undefined}
-										delayDuration={index === 0 ? 100 : 0}
-										fadeIn
-									>
-										<BarButton
-											type="button"
-											onClick={() => {
-												navigateToCategory(key)
-											}}
-											className={localCategory === key ? 'active' : ''}
-										>
-											<FontAwesomeIcon
-												icon={faIcon}
-												transform={iconTransform}
-											/>
-										</BarButton>
-									</Tooltip>
-								</section>
-							))}
-						</BarIconsWrapper>
-						<BarFooterWrapper>
-							<Separator style={{ opacity: 0.25 }} />
-							<Tooltip
-								text={t('exitAdvancedMode')}
-								side="right"
-								container={themeElementRef.current || undefined}
-								delayDuration={0}
-								fadeIn
-							>
-								<BarButton
-									type="button"
-									onClick={() => {
-										setAdvancedMode(false)
-									}}
-								>
-									<FontAwesomeIcon icon={faRightFromBracket} />
-								</BarButton>
-							</Tooltip>
-						</BarFooterWrapper>
-					</>
+				!showAdvancedMenu ? undefined : (
+					<AdvancedMenu
+						barItems={barItems}
+						getActivePageForCategory={getActivePageForCategory}
+						localCategory={localCategory}
+					/>
 				)
 			}
 			nav={
-				!advancedMode ? (
+				!showAdvancedMenu ? (
 					<NavSimple renderMain={renderMain} title={title} />
 				) : (
-					<Wrapper $minimised={sideMenuMinimised} $advancedMode={advancedMode}>
+					<Wrapper $minimised={menuMinimised} $advancedMode={showAdvancedMenu}>
 						<section>
 							<Popover
 								open={openCategories}

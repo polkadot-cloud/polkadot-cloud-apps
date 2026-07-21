@@ -3,6 +3,7 @@
 
 export * from './Close'
 export * from './CloseCanvas'
+export * from './lazyNamed'
 export * from './Overlay'
 export * from './Prompt'
 export * from './Provider'
