@@ -16,11 +16,11 @@ import { LogoWrapper, Wrapper } from './Wrapper'
 export const FloatingMenu = ({
 	renderMain,
 	title,
-	supportsAdvancedMode = true,
+	enableAdvancedMenu = true,
 }: FloatingMenuProps) => {
 	const { t } = useTranslation('app')
 	const { setSideMenu, sideMenuOpen, advancedMode, setAdvancedMode } = useUi()
-	const showAdvancedMode = supportsAdvancedMode && advancedMode
+	const showAdvancedMode = enableAdvancedMenu && advancedMode
 
 	// Listen to window resize to automatically hide the side menu on window resize.
 	useOnResize(() => {

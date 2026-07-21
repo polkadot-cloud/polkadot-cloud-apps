@@ -18,6 +18,11 @@ export const SideMenu = ({
 	return (
 		<>
 			<DefaultMenu
+				barItems={[]}
+				getActivePageForCategory={() => '/send'}
+				localCategory="stake"
+				pageCategories={[]}
+				pagesConfig={[]}
 				renderMain={renderMain}
 				title="Cloud"
 				enableAdvancedMenu={enableAdvancedMenu}
@@ -25,7 +30,7 @@ export const SideMenu = ({
 			<FloatingMenu
 				renderMain={renderMain}
 				title="Cloud"
-				supportsAdvancedMode={enableAdvancedMenu}
+				enableAdvancedMenu={enableAdvancedMenu}
 			/>
 		</>
 	)

@@ -18,7 +18,7 @@ export const Router = () => (
 			<SideMenu enableAdvancedMenu={false} />
 			<Page.Main>
 				<HelmetProvider>
-					<Headers />
+					<Headers enableAdvancedMenu={false} />
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 						<Page.Container></Page.Container>
 						{/* Coming Soon */}

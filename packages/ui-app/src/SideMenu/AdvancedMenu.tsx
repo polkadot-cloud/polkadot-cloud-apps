@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { PageCategory } from 'types'
 import { Separator, Tooltip } from 'ui-core/base'
-import type { AdvancedMenuProps } from './types'
+import type { BaseMenuProps } from './types'
 import {
 	BarButton,
 	BarFooterWrapper,
@@ -22,7 +22,7 @@ export const AdvancedMenu = ({
 	barItems,
 	getActivePageForCategory,
 	localCategory,
-}: AdvancedMenuProps) => {
+}: BaseMenuProps) => {
 	const { t } = useTranslation('app')
 	const { setAdvancedMode } = useUi()
 	const navigate = useNavigate()
