@@ -216,11 +216,10 @@ export class PolkadotService
 		return this.apiHydration
 	}
 
-	getSigningApi = (id: string) => {
-		if (this.apiHydration?.runtimeVersion.specName === id) {
-			return this.apiHydration as unknown as DedotClient<PolkadotAssetHubApi>
+	getSigningApi = (specName: string) => {
+		if (this.apiHydration?.runtimeVersion.specName === specName) {
+			return this.apiHydration as unknown as DedotClient<HydrationApi>
 		}
-
 		return this.apiHub
 	}
 
