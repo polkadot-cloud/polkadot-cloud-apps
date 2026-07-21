@@ -15,10 +15,10 @@ import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import {
 	getStablecoinAssetConfig,
+	getStablecoinChainLabel,
 	isStablecoinFeeAssetSupported,
 	isStablecoinSendAssetSupported,
 	StablecoinChains,
-	StablecoinConfigs,
 	StablecoinFeeAssetSymbols,
 	StablecoinSymbols,
 } from 'consts/stablecoins'
@@ -79,7 +79,7 @@ const feeAssetOptions: SelectOption<StablecoinFeeAssetSymbol>[] =
 const chainOptions: SelectOption<StablecoinChainId>[] = StablecoinChains.map(
 	(chain) => ({
 		value: chain,
-		label: StablecoinConfigs[chain].label,
+		label: getStablecoinChainLabel(chain),
 	}),
 )
 

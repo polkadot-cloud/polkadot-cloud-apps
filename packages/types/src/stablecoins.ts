@@ -10,9 +10,12 @@ export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR'
 
 export type StablecoinFeeAssetSymbol = 'DOT' | StablecoinSymbol
 
+export type AssetMetadata = Pick<StablecoinAssetConfig, 'color' | 'decimals'>
+
 export type StablecoinAssetSymbol = StablecoinFeeAssetSymbol
 
 export type StablecoinAssetConfig = {
+	color: string
 	decimals: number
 	existentialDeposit: bigint
 	assetId?: number

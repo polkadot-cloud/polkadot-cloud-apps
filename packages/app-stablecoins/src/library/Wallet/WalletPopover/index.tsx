@@ -7,7 +7,7 @@ import hdxSvg from 'assets/token/hdx.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
-import { StablecoinConfigs } from 'consts/stablecoins'
+import { getStablecoinChainLabel, getStablecoinColor } from 'consts/stablecoins'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
@@ -17,35 +17,32 @@ import classes from './index.module.scss'
 const stablecoinMix = [
 	{
 		icon: usdcSvg,
-		label: 'USDC',
+		symbol: 'USDC',
 		value: '$750,000',
 		share: 60,
-		color: '#3E73C4',
 	},
 	{
 		icon: usdtSvg,
-		label: 'USDT',
+		symbol: 'USDT',
 		value: '$312,450',
 		share: 27,
-		color: '#26A17B',
 	},
 	{
 		icon: hollarSvg,
-		label: 'HOLLAR',
+		symbol: 'HOLLAR',
 		value: '$150,000',
 		share: 13,
-		color: '#B3CF92',
 	},
-]
+] as const
 
 const chainBalances = [
 	{
-		chain: StablecoinConfigs.statemint.label,
+		chain: getStablecoinChainLabel('statemint'),
 		value: '$935,200.00',
 		share: 79,
 	},
 	{
-		chain: StablecoinConfigs.hydration.label,
+		chain: getStablecoinChainLabel('hydration'),
 		value: '$255,540.00',
 		share: 21,
 	},
@@ -53,7 +50,7 @@ const chainBalances = [
 
 const chainTokenBreakdown = [
 	{
-		chain: StablecoinConfigs.statemint.label,
+		chain: getStablecoinChainLabel('statemint'),
 		total: '$935,200.00',
 		tokens: [
 			{ icon: usdcSvg, name: 'USDC', value: '750,000.00' },
@@ -62,7 +59,7 @@ const chainTokenBreakdown = [
 		],
 	},
 	{
-		chain: StablecoinConfigs.hydration.label,
+		chain: getStablecoinChainLabel('hydration'),
 		total: '$255,540.00',
 		tokens: [
 			{ icon: usdcSvg, name: 'USDC', value: '92,500.00' },
@@ -104,12 +101,12 @@ export const WalletPopover = ({
 							<span className={classes.mixBar}>
 								{stablecoinMix.map((coin) => (
 									<span
-										key={coin.label}
+										key={coin.symbol}
 										className={classes.mixSegment}
 										style={
 											{
 												width: `${coin.share}%`,
-												'--mix-color': coin.color,
+												'--mix-color': getStablecoinColor(coin.symbol),
 											} as CSSProperties
 										}
 									/>
@@ -117,16 +114,16 @@ export const WalletPopover = ({
 							</span>
 						</MenuItem>
 						{stablecoinMix.map((coin) => (
-							<MenuItem key={coin.label} padded>
+							<MenuItem key={coin.symbol} padded>
 								<div>
 									<img
 										src={coin.icon}
-										alt={coin.label}
+										alt={coin.symbol}
 										className={classes.tokenIcon}
 									/>
 								</div>
 								<div>
-									<h3>{coin.label}</h3>
+									<h3>{coin.symbol}</h3>
 									<div>
 										<h4>{coin.value}</h4>
 									</div>

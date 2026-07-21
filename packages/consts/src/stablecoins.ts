@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type {
+	AssetMetadata,
 	StablecoinAssetConfig,
 	StablecoinAssetSymbol,
 	StablecoinChainConfig,
@@ -11,15 +12,15 @@ import type {
 } from 'types'
 import { SystemChainList } from './networks'
 
-const StablecoinAssetDecimals: Record<StablecoinAssetSymbol, number> = {
-	DOT: SystemChainList.statemint.units,
-	USDC: 6,
-	USDT: 6,
-	HOLLAR: 18,
+const StablecoinAssetMetadata: Record<StablecoinAssetSymbol, AssetMetadata> = {
+	DOT: { color: '#E6007A', decimals: SystemChainList.statemint.units },
+	USDC: { color: '#3E73C4', decimals: 6 },
+	USDT: { color: '#26A17B', decimals: 6 },
+	HOLLAR: { color: '#B3CF92', decimals: 18 },
 }
 
 export const StablecoinFeeAssetSymbols = Object.keys(
-	StablecoinAssetDecimals,
+	StablecoinAssetMetadata,
 ) as StablecoinFeeAssetSymbol[]
 
 export const StablecoinSymbols = StablecoinFeeAssetSymbols.filter(
@@ -27,10 +28,13 @@ export const StablecoinSymbols = StablecoinFeeAssetSymbols.filter(
 )
 
 type ChainAssetConfigs = Partial<
-	Record<StablecoinAssetSymbol, Omit<StablecoinAssetConfig, 'decimals'>>
+	Record<
+		StablecoinAssetSymbol,
+		Omit<StablecoinAssetConfig, keyof AssetMetadata>
+	>
 >
 
-const withAssetDecimals = (
+const withAssetMetadata = (
 	assets: ChainAssetConfigs,
 ): StablecoinChainConfig['assets'] =>
 	Object.fromEntries(
@@ -38,18 +42,15 @@ const withAssetDecimals = (
 			symbol,
 			{
 				...config,
-				decimals: StablecoinAssetDecimals[symbol as StablecoinAssetSymbol],
+				...StablecoinAssetMetadata[symbol as StablecoinAssetSymbol],
 			},
 		]),
 	)
 
-export const StablecoinConfigs: Record<
-	StablecoinChainId,
-	StablecoinChainConfig
-> = {
+const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 	statemint: {
 		label: 'Polkadot Hub',
-		assets: withAssetDecimals({
+		assets: withAssetMetadata({
 			DOT: {
 				existentialDeposit: 10_000_000_000n,
 			},
@@ -65,7 +66,7 @@ export const StablecoinConfigs: Record<
 	},
 	hydration: {
 		label: 'Hydration',
-		assets: withAssetDecimals({
+		assets: withAssetMetadata({
 			DOT: {
 				existentialDeposit: 17_540_000n,
 				assetId: 5,
@@ -91,11 +92,19 @@ export const StablecoinChains = Object.keys(
 	StablecoinConfigs,
 ) as StablecoinChainId[]
 
+// Gets a stablecoin chain's display label.
+export const getStablecoinChainLabel = (chain: StablecoinChainId) =>
+	StablecoinConfigs[chain].label
+
 // Gets an asset's chain-specific stablecoin configuration.
 export const getStablecoinAssetConfig = (
 	chain: StablecoinChainId,
 	symbol: StablecoinAssetSymbol,
 ) => StablecoinConfigs[chain].assets[symbol]
+
+// Gets an asset's globally configured display color.
+export const getStablecoinColor = (symbol: StablecoinAssetSymbol) =>
+	StablecoinAssetMetadata[symbol].color
 
 // Gets all configured fee assets for a chain.
 export const getStablecoinFeeAssets = (
