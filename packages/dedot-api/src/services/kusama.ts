@@ -19,6 +19,7 @@ import { BaseService } from '../defaultService/baseService'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
+import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 
@@ -49,21 +50,7 @@ export class KusamaService
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
-			stablecoins: {
-				query: {
-					balances: async () => [],
-					balance: async () => undefined,
-					hydrationFeeCurrency: async () => undefined,
-				},
-				tx: {
-					transfer: async () => undefined,
-					setHydrationFeeCurrency: async () => undefined,
-				},
-				fee: {
-					paymentOptions: () => undefined,
-					estimate: async () => 0n,
-				},
-			},
+			stablecoins: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
 					hub: async (address) =>

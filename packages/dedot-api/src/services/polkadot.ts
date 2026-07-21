@@ -21,7 +21,7 @@ import { BaseService } from '../defaultService/baseService'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
-import { StablecoinsService } from '../stablecoins'
+import { createStablecoinsInterface } from '../stablecoins'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 
@@ -41,7 +41,6 @@ export class PolkadotService
 	// Service interface
 	interface: ServiceInterface
 	private apiHydration?: DedotClient<HydrationApi>
-	private stablecoins: StablecoinsService
 
 	constructor(
 		public networkConfig: NetworkConfig,
@@ -51,25 +50,13 @@ export class PolkadotService
 		public providerPeople: WsProvider | SmoldotProvider,
 	) {
 		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
-		this.stablecoins = new StablecoinsService(this.apiHub, this.getHydrationApi)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
-			stablecoins: {
-				query: {
-					balances: this.stablecoins.balances,
-					balance: this.stablecoins.balance,
-					hydrationFeeCurrency: this.stablecoins.hydrationFeeCurrency,
-				},
-				tx: {
-					transfer: this.stablecoins.transfer,
-					setHydrationFeeCurrency: this.stablecoins.setHydrationFeeCurrency,
-				},
-				fee: {
-					paymentOptions: this.stablecoins.paymentOptions,
-					estimate: this.stablecoins.estimateFee,
-				},
-			},
+			stablecoins: createStablecoinsInterface(
+				this.apiHub,
+				this.getHydrationApi,
+			),
 			query: {
 				accountBalance: {
 					hub: async (address) =>
