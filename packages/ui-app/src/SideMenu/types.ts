@@ -23,14 +23,17 @@ export interface DefaultMenuBarItem {
 	key: PageCategory['key']
 }
 
-export interface DefaultMenuProps {
+export interface BaseMenuProps {
 	barItems: DefaultMenuBarItem[]
 	getActivePageForCategory: (category: PageCategory['key']) => string
 	localCategory: PageCategory['key']
+}
+export interface DefaultMenuProps extends BaseMenuProps {
 	pageCategories: PageCategoryItems
 	pagesConfig: PagesConfigItems
 	renderMain: RenderSideMenuMain
 	title: string
+	enableAdvancedMenu: boolean
 }
 
 export interface FloatingMenuProps {
