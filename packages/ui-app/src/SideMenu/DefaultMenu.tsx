@@ -25,6 +25,7 @@ export const DefaultMenu = ({
 	pagesConfig,
 	renderMain,
 	title,
+	enableAdvancedMenu,
 }: DefaultMenuProps) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
@@ -36,13 +37,15 @@ export const DefaultMenu = ({
 
 	const transparent = modalStatus === 'open' || canvasStatus === 'open'
 
+	const showAdvancedMenu = enableAdvancedMenu && advancedMode
+
 	return (
 		<Page.Side.Default
 			open={false}
 			minimised={sideMenuMinimised}
 			transparent={transparent}
 			bar={
-				!advancedMode ? undefined : (
+				!showAdvancedMenu ? undefined : (
 					<AdvancedMenu
 						barItems={barItems}
 						getActivePageForCategory={getActivePageForCategory}
@@ -51,10 +54,13 @@ export const DefaultMenu = ({
 				)
 			}
 			nav={
-				!advancedMode ? (
+				!showAdvancedMenu ? (
 					<NavSimple renderMain={renderMain} title={title} />
 				) : (
-					<Wrapper $minimised={sideMenuMinimised} $advancedMode={advancedMode}>
+					<Wrapper
+						$minimised={sideMenuMinimised}
+						$advancedMode={showAdvancedMenu}
+					>
 						<section>
 							<Popover
 								open={openCategories}
