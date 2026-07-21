@@ -89,39 +89,43 @@ export const WalletPopover = ({
 
 			{activeTab === 'mix' && (
 				<div className={classes.section}>
-					<h3 className={classes.sectionTitle}>Stablecoin Mix</h3>
-					<div className={classes.mixBar}>
+					<ConnectItem.Container>
+						<h4>Stablecoin Mix</h4>
+						<MenuItem padded>
+							<span className={classes.mixBar}>
+								{stablecoinMix.map((coin) => (
+									<span
+										key={coin.label}
+										className={classes.mixSegment}
+										style={
+											{
+												width: `${coin.share}%`,
+												'--mix-color': coin.color,
+											} as CSSProperties
+										}
+									/>
+								))}
+							</span>
+						</MenuItem>
 						{stablecoinMix.map((coin) => (
-							<div
-								key={coin.label}
-								className={classes.mixSegment}
-								style={
-									{
-										width: `${coin.share}%`,
-										'--mix-color': coin.color,
-									} as CSSProperties
-								}
-							/>
-						))}
-					</div>
-					<div className={classes.mixLegend}>
-						{stablecoinMix.map((coin) => (
-							<div key={coin.label} className={classes.mixLegendItem}>
-								<div className={classes.mixLegendLabel}>
+							<MenuItem key={coin.label} padded>
+								<div>
 									<img
 										src={coin.icon}
 										alt={coin.label}
-										className={classes.mixLegendIcon}
+										className={classes.tokenIcon}
 									/>
-									<span>{coin.label}</span>
 								</div>
-								<span className={classes.mixLegendValue}>{coin.value}</span>
-							</div>
+								<div>
+									<h3>{coin.label}</h3>
+									<div>
+										<h4>{coin.value}</h4>
+									</div>
+								</div>
+							</MenuItem>
 						))}
-					</div>
 
-					<div className={classes.subSection}>
-						<h3 className={classes.sectionTitle}>Balances by Chain</h3>
+						<h4>Balances by Chain</h4>
 						<div className={classes.chainTable}>
 							<div
 								className={`${classes.chainTableRow} ${classes.chainTableHead}`}
@@ -146,7 +150,7 @@ export const WalletPopover = ({
 								</div>
 							))}
 						</div>
-					</div>
+					</ConnectItem.Container>
 				</div>
 			)}
 
