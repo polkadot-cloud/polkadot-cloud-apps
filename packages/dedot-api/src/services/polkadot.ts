@@ -4,7 +4,7 @@
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes'
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
-import { StablecoinConfigs } from 'consts/stablecoins'
+import { getRpcEndpointList } from 'consts/rpc'
 import {
 	DedotClient,
 	ExtraSignedExtension,
@@ -209,7 +209,7 @@ export class PolkadotService
 	getHydrationApi = async () => {
 		if (!this.apiHydration) {
 			this.apiHydration = await DedotClient.new<HydrationApi>(
-				new WsProvider(StablecoinConfigs.hydration.rpcEndpoints),
+				new WsProvider(getRpcEndpointList('hydration')),
 			)
 		}
 

@@ -2,124 +2,114 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type {
+	StablecoinAssetConfig,
 	StablecoinAssetSymbol,
 	StablecoinChainConfig,
 	StablecoinChainId,
 	StablecoinFeeAssetSymbol,
 	StablecoinSymbol,
 } from 'types'
-import { getRpcEndpointList } from './rpc'
+import { SystemChainList } from './networks'
 
-export const StablecoinChains: StablecoinChainId[] = ['statemint', 'hydration']
-
-export const StablecoinSymbols: StablecoinSymbol[] = ['USDC', 'USDT', 'HOLLAR']
-
-export const StablecoinFeeAssetSymbols: StablecoinFeeAssetSymbol[] = [
-	'DOT',
-	'USDC',
-	'USDT',
-	'HOLLAR',
-]
-
-export const StablecoinAssetDecimals: Record<StablecoinAssetSymbol, number> = {
-	DOT: 10,
+const StablecoinAssetDecimals: Record<StablecoinAssetSymbol, number> = {
+	DOT: SystemChainList.statemint.units,
 	USDC: 6,
 	USDT: 6,
 	HOLLAR: 18,
 }
+
+export const StablecoinFeeAssetSymbols = Object.keys(
+	StablecoinAssetDecimals,
+) as StablecoinFeeAssetSymbol[]
+
+export const StablecoinSymbols = StablecoinFeeAssetSymbols.filter(
+	(symbol): symbol is StablecoinSymbol => symbol !== 'DOT',
+)
+
+type ChainAssetConfigs = Partial<
+	Record<StablecoinAssetSymbol, Omit<StablecoinAssetConfig, 'decimals'>>
+>
+
+const withAssetDecimals = (
+	assets: ChainAssetConfigs,
+): StablecoinChainConfig['assets'] =>
+	Object.fromEntries(
+		Object.entries(assets).map(([symbol, config]) => [
+			symbol,
+			{
+				...config,
+				decimals: StablecoinAssetDecimals[symbol as StablecoinAssetSymbol],
+			},
+		]),
+	)
 
 export const StablecoinConfigs: Record<
 	StablecoinChainId,
 	StablecoinChainConfig
 > = {
 	statemint: {
-		id: 'statemint',
 		label: 'Polkadot Hub',
-		shortLabel: 'Polkadot Hub',
-		rpcEndpoints: getRpcEndpointList('statemint'),
-		sendAssets: ['USDC', 'USDT'],
-		feeAssets: ['DOT', 'USDC', 'USDT'],
-		assets: {
+		assets: withAssetDecimals({
 			DOT: {
-				symbol: 'DOT',
-				label: 'DOT',
-				decimals: StablecoinAssetDecimals.DOT,
 				existentialDeposit: 10_000_000_000n,
 			},
 			USDC: {
-				symbol: 'USDC',
-				label: 'USDC',
-				decimals: StablecoinAssetDecimals.USDC,
 				existentialDeposit: 700_000n,
 				assetId: 1337,
 			},
 			USDT: {
-				symbol: 'USDT',
-				label: 'USDT',
-				decimals: StablecoinAssetDecimals.USDT,
 				existentialDeposit: 700_000n,
 				assetId: 1984,
 			},
-		},
+		}),
 	},
 	hydration: {
-		id: 'hydration',
 		label: 'Hydration',
-		shortLabel: 'Hydration',
-		rpcEndpoints: getRpcEndpointList('hydration'),
-		sendAssets: ['USDC', 'USDT', 'HOLLAR'],
-		feeAssets: ['DOT', 'USDC', 'USDT', 'HOLLAR'],
-		assets: {
+		assets: withAssetDecimals({
 			DOT: {
-				symbol: 'DOT',
-				label: 'DOT',
-				decimals: StablecoinAssetDecimals.DOT,
 				existentialDeposit: 17_540_000n,
 				assetId: 5,
 			},
 			USDC: {
-				symbol: 'USDC',
-				label: 'USDC',
-				decimals: StablecoinAssetDecimals.USDC,
 				existentialDeposit: 10_000n,
 				assetId: 22,
 			},
 			USDT: {
-				symbol: 'USDT',
-				label: 'USDT',
-				decimals: StablecoinAssetDecimals.USDT,
 				existentialDeposit: 10_000n,
 				assetId: 10,
 			},
 			HOLLAR: {
-				symbol: 'HOLLAR',
-				label: 'HOLLAR',
-				decimals: StablecoinAssetDecimals.HOLLAR,
 				existentialDeposit: 100_000_000_000_000n,
 				assetId: 222,
 				erc20Contract: '0x531a654d1696ed52e7275a8cede955e82620f99a',
 			},
-		},
+		}),
 	},
 }
 
-export const getStablecoinChainConfig = (chain: StablecoinChainId) =>
-	StablecoinConfigs[chain]
+export const StablecoinChains = Object.keys(
+	StablecoinConfigs,
+) as StablecoinChainId[]
 
 export const getStablecoinAssetConfig = (
 	chain: StablecoinChainId,
 	symbol: StablecoinAssetSymbol,
 ) => StablecoinConfigs[chain].assets[symbol]
 
+export const getStablecoinFeeAssets = (
+	chain: StablecoinChainId,
+): StablecoinFeeAssetSymbol[] =>
+	Object.keys(StablecoinConfigs[chain].assets) as StablecoinFeeAssetSymbol[]
+
 export const isStablecoinSendAssetSupported = (
 	chain: StablecoinChainId,
 	symbol: StablecoinSymbol,
-) => StablecoinConfigs[chain].sendAssets.includes(symbol)
+) => !!getStablecoinAssetConfig(chain, symbol)
 
 export const isStablecoinFeeAssetSupported = (
 	chain: StablecoinChainId,
 	symbol: StablecoinFeeAssetSymbol,
-) => StablecoinConfigs[chain].feeAssets.includes(symbol)
+) => !!getStablecoinAssetConfig(chain, symbol)
 
 export const getAssetHubAssetLocation = (assetId: number) => ({
 	parents: 0,

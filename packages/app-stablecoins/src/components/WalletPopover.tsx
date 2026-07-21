@@ -7,6 +7,7 @@ import hdxSvg from 'assets/token/hdx.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
+import { StablecoinConfigs } from 'consts/stablecoins'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
@@ -38,13 +39,21 @@ const stablecoinMix = [
 ]
 
 const chainBalances = [
-	{ chain: 'Polkadot Hub', value: '$935,200.00', share: 79 },
-	{ chain: 'Hydration', value: '$255,540.00', share: 21 },
+	{
+		chain: StablecoinConfigs.statemint.label,
+		value: '$935,200.00',
+		share: 79,
+	},
+	{
+		chain: StablecoinConfigs.hydration.label,
+		value: '$255,540.00',
+		share: 21,
+	},
 ]
 
 const chainTokenBreakdown = [
 	{
-		chain: 'Polkadot Hub',
+		chain: StablecoinConfigs.statemint.label,
 		total: '$935,200.00',
 		tokens: [
 			{ icon: usdcSvg, name: 'USDC', value: '750,000.00' },
@@ -53,7 +62,7 @@ const chainTokenBreakdown = [
 		],
 	},
 	{
-		chain: 'Hydration',
+		chain: StablecoinConfigs.hydration.label,
 		total: '$255,540.00',
 		tokens: [
 			{ icon: usdcSvg, name: 'USDC', value: '92,500.00' },

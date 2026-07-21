@@ -6,7 +6,7 @@ import {
 	getAssetHubAssetLocation,
 	getAssetHubNativeAssetLocation,
 	getStablecoinAssetConfig,
-	StablecoinConfigs,
+	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
 import { asTx } from '../util'
@@ -46,7 +46,7 @@ const fetchAssetHubAssetBalance = async (
 export const createAssetHubStablecoinAdapter = (
 	api: DedotClient<PolkadotAssetHubApi>,
 ): StablecoinAdapter => ({
-	feeAssets: StablecoinConfigs.statemint.feeAssets,
+	feeAssets: getStablecoinFeeAssets('statemint'),
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('statemint', symbol)
 		if (!config) {

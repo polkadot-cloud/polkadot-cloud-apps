@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
-import { getStablecoinAssetConfig, StablecoinConfigs } from 'consts/stablecoins'
+import {
+	getStablecoinAssetConfig,
+	getStablecoinFeeAssets,
+} from 'consts/stablecoins'
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import { decodeAddress, u8aToHex } from 'dedot/utils'
 import type { StablecoinFeeAssetSymbol } from 'types'
@@ -120,7 +123,7 @@ const estimateHydrationFee = async (
 export const createHydrationStablecoinAdapter = (
 	getApi: () => Promise<DedotClient<HydrationApi>>,
 ): HydrationStablecoinAdapter => ({
-	feeAssets: StablecoinConfigs.hydration.feeAssets,
+	feeAssets: getStablecoinFeeAssets('hydration'),
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('hydration', symbol)
 		if (!config) {
@@ -170,7 +173,7 @@ export const createHydrationStablecoinAdapter = (
 			.accountCurrencyMap(address)
 			.catch(() => undefined)
 
-		return StablecoinConfigs.hydration.feeAssets.find((symbol) => {
+		return getStablecoinFeeAssets('hydration').find((symbol) => {
 			const config = getStablecoinAssetConfig('hydration', symbol)
 			return config?.assetId === assetId
 		})

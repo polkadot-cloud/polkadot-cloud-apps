@@ -15,10 +15,12 @@ import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import {
 	getStablecoinAssetConfig,
-	getStablecoinChainConfig,
 	isStablecoinFeeAssetSupported,
 	isStablecoinSendAssetSupported,
+	StablecoinChains,
 	StablecoinConfigs,
+	StablecoinFeeAssetSymbols,
+	StablecoinSymbols,
 } from 'consts/stablecoins'
 import type { SubmittableExtrinsic } from 'dedot'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
@@ -53,21 +55,33 @@ type SendSelectProps<T extends string> = {
 	variant?: 'compact' | 'full'
 }
 
-const stablecoinOptions: SelectOption<StablecoinSymbol>[] = [
-	{ value: 'USDC', label: 'USDC', icon: usdcSvg },
-	{ value: 'USDT', label: 'USDT', icon: usdtSvg },
-	{ value: 'HOLLAR', label: 'HOLLAR', icon: hollarSvg },
-]
+const tokenIcons: Record<StablecoinFeeAssetSymbol, string> = {
+	DOT: dotSvg,
+	USDC: usdcSvg,
+	USDT: usdtSvg,
+	HOLLAR: hollarSvg,
+}
 
-const feeAssetOptions: SelectOption<StablecoinFeeAssetSymbol>[] = [
-	{ value: 'DOT', label: 'DOT', icon: dotSvg },
-	...stablecoinOptions,
-]
+const stablecoinOptions: SelectOption<StablecoinSymbol>[] =
+	StablecoinSymbols.map((symbol) => ({
+		value: symbol,
+		label: symbol,
+		icon: tokenIcons[symbol],
+	}))
 
-const chainOptions: SelectOption<StablecoinChainId>[] = [
-	{ value: 'statemint', label: StablecoinConfigs.statemint.label },
-	{ value: 'hydration', label: StablecoinConfigs.hydration.label },
-]
+const feeAssetOptions: SelectOption<StablecoinFeeAssetSymbol>[] =
+	StablecoinFeeAssetSymbols.map((symbol) => ({
+		value: symbol,
+		label: symbol,
+		icon: tokenIcons[symbol],
+	}))
+
+const chainOptions: SelectOption<StablecoinChainId>[] = StablecoinChains.map(
+	(chain) => ({
+		value: chain,
+		label: StablecoinConfigs[chain].label,
+	}),
+)
 
 const isSameAccount = (a: ImportedAccount | null, b: ImportedAccount | null) =>
 	a?.address === b?.address && a?.source === b?.source
@@ -338,16 +352,14 @@ export const Send = () => {
 	}, [defaultToAccount, toAccount])
 
 	const tokenOptions = useMemo(() => {
-		const chainConfig = getStablecoinChainConfig(selectedChain.value)
 		return stablecoinOptions.filter((option) =>
-			chainConfig.sendAssets.includes(option.value),
+			isStablecoinSendAssetSupported(selectedChain.value, option.value),
 		)
 	}, [selectedChain.value])
 
 	const availableFeeAssetOptions = useMemo(() => {
-		const chainConfig = getStablecoinChainConfig(selectedChain.value)
 		return feeAssetOptions.filter((option) =>
-			chainConfig.feeAssets.includes(option.value),
+			isStablecoinFeeAssetSupported(selectedChain.value, option.value),
 		)
 	}, [selectedChain.value])
 

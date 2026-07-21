@@ -13,8 +13,6 @@ export type StablecoinFeeAssetSymbol = 'DOT' | StablecoinSymbol
 export type StablecoinAssetSymbol = StablecoinFeeAssetSymbol
 
 export type StablecoinAssetConfig = {
-	symbol: StablecoinAssetSymbol
-	label: string
 	decimals: number
 	existentialDeposit: bigint
 	assetId?: number
@@ -22,12 +20,7 @@ export type StablecoinAssetConfig = {
 }
 
 export type StablecoinChainConfig = {
-	id: StablecoinChainId
 	label: string
-	shortLabel: string
-	rpcEndpoints: string[]
-	sendAssets: StablecoinSymbol[]
-	feeAssets: StablecoinFeeAssetSymbol[]
 	assets: Partial<Record<StablecoinAssetSymbol, StablecoinAssetConfig>>
 }
 
