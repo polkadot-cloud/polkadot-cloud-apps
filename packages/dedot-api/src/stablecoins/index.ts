@@ -6,10 +6,9 @@ import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 import type {
-	StablecoinAssetSymbol,
+	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinChainId,
-	StablecoinFeeAssetSymbol,
 	StablecoinFeeEstimateInput,
 	StablecoinTransferInput,
 } from 'types'
@@ -53,7 +52,7 @@ export class StablecoinsService {
 	balance = async (
 		address: string,
 		chain: StablecoinChainId,
-		symbol: StablecoinAssetSymbol,
+		symbol: FeeAssetSymbol,
 	): Promise<StablecoinBalance | undefined> => {
 		return this.adapters[chain].balance(address, symbol)
 	}
@@ -61,7 +60,7 @@ export class StablecoinsService {
 	// Reads the user's currently selected Hydration transaction fee currency.
 	hydrationFeeCurrency = async (
 		address: string,
-	): Promise<StablecoinFeeAssetSymbol | undefined> => {
+	): Promise<FeeAssetSymbol | undefined> => {
 		return this.adapters.hydration.hydrationFeeCurrency(address)
 	}
 
@@ -77,7 +76,7 @@ export class StablecoinsService {
 
 	// Builds a Hydration extrinsic that changes the account's fee currency.
 	setHydrationFeeCurrency = async (
-		symbol: StablecoinFeeAssetSymbol,
+		symbol: FeeAssetSymbol,
 	): Promise<SubmittableExtrinsic | undefined> => {
 		return this.adapters.hydration.setHydrationFeeCurrency(symbol)
 	}
@@ -85,7 +84,7 @@ export class StablecoinsService {
 	// Supplies Asset Hub payload options when fees should be paid in an asset.
 	paymentOptions = (
 		chain: StablecoinChainId,
-		symbol: StablecoinFeeAssetSymbol,
+		symbol: FeeAssetSymbol,
 	): PayloadOptions | undefined => {
 		return this.adapters[chain].paymentOptions(symbol)
 	}

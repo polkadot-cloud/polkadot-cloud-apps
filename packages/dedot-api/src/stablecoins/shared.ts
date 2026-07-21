@@ -5,9 +5,8 @@ import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import type { SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 import type {
-	StablecoinAssetSymbol,
+	FeeAssetSymbol,
 	StablecoinBalance,
-	StablecoinFeeAssetSymbol,
 	StablecoinFeeEstimateInput,
 	StablecoinTransferInput,
 } from 'types'
@@ -20,24 +19,22 @@ export type BalancePair = {
 
 // Common interface implemented by each chain-specific stablecoin adapter.
 export type StablecoinAdapter = {
-	feeAssets: StablecoinFeeAssetSymbol[]
+	feeAssets: FeeAssetSymbol[]
 	balance: (
 		address: string,
-		symbol: StablecoinAssetSymbol,
+		symbol: FeeAssetSymbol,
 	) => Promise<StablecoinBalance | undefined>
 	transfer: (
 		input: StablecoinTransferInput,
 	) => Promise<SubmittableExtrinsic | undefined>
-	paymentOptions: (
-		symbol: StablecoinFeeAssetSymbol,
-	) => PayloadOptions | undefined
+	paymentOptions: (symbol: FeeAssetSymbol) => PayloadOptions | undefined
 	estimateFee: (input: StablecoinFeeEstimateInput) => Promise<bigint>
 }
 
 // Builds an empty balance for a configured stablecoin when a lookup fails.
 export const zeroBalance = (
 	chain: StablecoinBalance['chain'],
-	symbol: StablecoinAssetSymbol,
+	symbol: FeeAssetSymbol,
 ): StablecoinBalance | undefined => {
 	const config = getStablecoinAssetConfig(chain, symbol)
 	if (!config) {
@@ -57,7 +54,7 @@ export const zeroBalance = (
 // Adds stablecoin metadata to a raw free/frozen balance pair.
 export const toStablecoinBalance = (
 	chain: StablecoinBalance['chain'],
-	symbol: StablecoinAssetSymbol,
+	symbol: FeeAssetSymbol,
 	balance: BalancePair,
 ): StablecoinBalance | undefined => {
 	const config = getStablecoinAssetConfig(chain, symbol)

@@ -8,18 +8,16 @@ import {
 } from 'consts/stablecoins'
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import { decodeAddress, u8aToHex } from 'dedot/utils'
-import type { StablecoinFeeAssetSymbol } from 'types'
+import type { FeeAssetSymbol } from 'types'
 import { asTx } from '../util'
 import type { BalancePair, StablecoinAdapter } from './shared'
 import { toStablecoinBalance, zeroBalance } from './shared'
 
 // Adapter shape for Hydration-only fee currency calls.
 export type HydrationStablecoinAdapter = StablecoinAdapter & {
-	hydrationFeeCurrency: (
-		address: string,
-	) => Promise<StablecoinFeeAssetSymbol | undefined>
+	hydrationFeeCurrency: (address: string) => Promise<FeeAssetSymbol | undefined>
 	setHydrationFeeCurrency: (
-		symbol: StablecoinFeeAssetSymbol,
+		symbol: FeeAssetSymbol,
 	) => Promise<SubmittableExtrinsic | undefined>
 }
 
@@ -96,7 +94,7 @@ const fetchHydrationFeeAssetPrice = async (
 // Converts a native Hydration fee into the selected fee asset amount.
 const estimateHydrationFee = async (
 	api: DedotClient<HydrationApi>,
-	symbol: StablecoinFeeAssetSymbol,
+	symbol: FeeAssetSymbol,
 	nativeFee: bigint,
 ): Promise<bigint> => {
 	const config = getStablecoinAssetConfig('hydration', symbol)

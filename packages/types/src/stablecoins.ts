@@ -8,11 +8,13 @@ export type StablecoinChainId = 'statemint' | 'hydration'
 
 export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR'
 
-export type StablecoinFeeAssetSymbol = 'DOT' | StablecoinSymbol
+export type FeeAssetSymbol = 'DOT' | StablecoinSymbol
 
 export type AssetMetadata = Pick<StablecoinAssetConfig, 'color' | 'decimals'>
 
-export type StablecoinAssetSymbol = StablecoinFeeAssetSymbol
+export type ChainAssetConfigs = Partial<
+	Record<FeeAssetSymbol, Omit<StablecoinAssetConfig, keyof AssetMetadata>>
+>
 
 export type StablecoinAssetConfig = {
 	color: string
@@ -24,12 +26,12 @@ export type StablecoinAssetConfig = {
 
 export type StablecoinChainConfig = {
 	label: string
-	assets: Partial<Record<StablecoinAssetSymbol, StablecoinAssetConfig>>
+	assets: Partial<Record<FeeAssetSymbol, StablecoinAssetConfig>>
 }
 
 export type StablecoinBalance = {
 	chain: StablecoinChainId
-	symbol: StablecoinAssetSymbol
+	symbol: FeeAssetSymbol
 	free: bigint
 	frozen: bigint
 	existentialDeposit: bigint
@@ -45,13 +47,13 @@ export type StablecoinTransferInput = {
 
 export type StablecoinFeePayment = {
 	chain: StablecoinChainId
-	symbol: StablecoinFeeAssetSymbol
+	symbol: FeeAssetSymbol
 	payloadOptions?: PayloadOptions
 }
 
 export type StablecoinFeeEstimateInput = {
 	chain: StablecoinChainId
-	symbol: StablecoinFeeAssetSymbol
+	symbol: FeeAssetSymbol
 	tx: SubmittableExtrinsic
 	from: string
 	payloadOptions?: PayloadOptions

@@ -19,10 +19,9 @@ import type { IdentityOf, SuperOf } from './identity'
 import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
 import type {
-	StablecoinAssetSymbol,
+	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinChainId,
-	StablecoinFeeAssetSymbol,
 	StablecoinFeeEstimateInput,
 	StablecoinTransferInput,
 } from './stablecoins'
@@ -38,24 +37,24 @@ export interface ServiceInterface {
 			balance: (
 				address: string,
 				chain: StablecoinChainId,
-				symbol: StablecoinAssetSymbol,
+				symbol: FeeAssetSymbol,
 			) => Promise<StablecoinBalance | undefined>
 			hydrationFeeCurrency: (
 				address: string,
-			) => Promise<StablecoinFeeAssetSymbol | undefined>
+			) => Promise<FeeAssetSymbol | undefined>
 		}
 		tx: {
 			transfer: (
 				input: StablecoinTransferInput,
 			) => Promise<SubmittableExtrinsic | undefined>
 			setHydrationFeeCurrency: (
-				symbol: StablecoinFeeAssetSymbol,
+				symbol: FeeAssetSymbol,
 			) => Promise<SubmittableExtrinsic | undefined>
 		}
 		fee: {
 			paymentOptions: (
 				chain: StablecoinChainId,
-				symbol: StablecoinFeeAssetSymbol,
+				symbol: FeeAssetSymbol,
 			) => PayloadOptions | undefined
 			estimate: (input: StablecoinFeeEstimateInput) => Promise<bigint>
 		}

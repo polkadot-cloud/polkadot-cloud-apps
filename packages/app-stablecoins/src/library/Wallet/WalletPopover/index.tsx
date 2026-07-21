@@ -7,7 +7,7 @@ import hdxSvg from 'assets/token/hdx.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
-import { getStablecoinChainLabel, getStablecoinColor } from 'consts/stablecoins'
+import { getFeeTokenColor, getStablecoinChainLabel } from 'consts/stablecoins'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
@@ -106,7 +106,7 @@ export const WalletPopover = ({
 										style={
 											{
 												width: `${coin.share}%`,
-												'--mix-color': getStablecoinColor(coin.symbol),
+												'--mix-color': getFeeTokenColor(coin.symbol),
 											} as CSSProperties
 										}
 									/>

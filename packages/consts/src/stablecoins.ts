@@ -3,38 +3,28 @@
 
 import type {
 	AssetMetadata,
-	StablecoinAssetConfig,
-	StablecoinAssetSymbol,
+	ChainAssetConfigs,
+	FeeAssetSymbol,
 	StablecoinChainConfig,
 	StablecoinChainId,
-	StablecoinFeeAssetSymbol,
 	StablecoinSymbol,
 } from 'types'
 import { SystemChainList } from './networks'
 
-const StablecoinAssetMetadata: Record<StablecoinAssetSymbol, AssetMetadata> = {
+const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	DOT: { color: '#E6007A', decimals: SystemChainList.statemint.units },
 	USDC: { color: '#3E73C4', decimals: 6 },
 	USDT: { color: '#26A17B', decimals: 6 },
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
 }
 
-export const StablecoinFeeAssetSymbols = Object.keys(
-	StablecoinAssetMetadata,
-) as StablecoinFeeAssetSymbol[]
+export const FeeAssetSymbols = Object.keys(FeeTokenMetadata) as FeeAssetSymbol[]
 
-export const StablecoinSymbols = StablecoinFeeAssetSymbols.filter(
+export const StablecoinSymbols = FeeAssetSymbols.filter(
 	(symbol): symbol is StablecoinSymbol => symbol !== 'DOT',
 )
 
-type ChainAssetConfigs = Partial<
-	Record<
-		StablecoinAssetSymbol,
-		Omit<StablecoinAssetConfig, keyof AssetMetadata>
-	>
->
-
-const withAssetMetadata = (
+const withFeeTokenMetadata = (
 	assets: ChainAssetConfigs,
 ): StablecoinChainConfig['assets'] =>
 	Object.fromEntries(
@@ -42,7 +32,7 @@ const withAssetMetadata = (
 			symbol,
 			{
 				...config,
-				...StablecoinAssetMetadata[symbol as StablecoinAssetSymbol],
+				...FeeTokenMetadata[symbol as FeeAssetSymbol],
 			},
 		]),
 	)
@@ -50,7 +40,7 @@ const withAssetMetadata = (
 const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 	statemint: {
 		label: 'Polkadot Hub',
-		assets: withAssetMetadata({
+		assets: withFeeTokenMetadata({
 			DOT: {
 				existentialDeposit: 10_000_000_000n,
 			},
@@ -66,7 +56,7 @@ const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 	},
 	hydration: {
 		label: 'Hydration',
-		assets: withAssetMetadata({
+		assets: withFeeTokenMetadata({
 			DOT: {
 				existentialDeposit: 17_540_000n,
 				assetId: 5,
@@ -99,18 +89,18 @@ export const getStablecoinChainLabel = (chain: StablecoinChainId) =>
 // Gets an asset's chain-specific stablecoin configuration.
 export const getStablecoinAssetConfig = (
 	chain: StablecoinChainId,
-	symbol: StablecoinAssetSymbol,
+	symbol: FeeAssetSymbol,
 ) => StablecoinConfigs[chain].assets[symbol]
 
-// Gets an asset's globally configured display color.
-export const getStablecoinColor = (symbol: StablecoinAssetSymbol) =>
-	StablecoinAssetMetadata[symbol].color
+// Gets a fee token's globally configured display color.
+export const getFeeTokenColor = (symbol: FeeAssetSymbol) =>
+	FeeTokenMetadata[symbol].color
 
 // Gets all configured fee assets for a chain.
 export const getStablecoinFeeAssets = (
 	chain: StablecoinChainId,
-): StablecoinFeeAssetSymbol[] =>
-	Object.keys(StablecoinConfigs[chain].assets) as StablecoinFeeAssetSymbol[]
+): FeeAssetSymbol[] =>
+	Object.keys(StablecoinConfigs[chain].assets) as FeeAssetSymbol[]
 
 // Checks whether a stablecoin can be sent on a chain.
 export const isStablecoinSendAssetSupported = (
@@ -121,7 +111,7 @@ export const isStablecoinSendAssetSupported = (
 // Checks whether an asset can pay transaction fees on a chain.
 export const isStablecoinFeeAssetSupported = (
 	chain: StablecoinChainId,
-	symbol: StablecoinFeeAssetSymbol,
+	symbol: FeeAssetSymbol,
 ) => !!getStablecoinAssetConfig(chain, symbol)
 
 // Builds the Asset Hub XCM location for a local asset ID.

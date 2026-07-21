@@ -14,12 +14,12 @@ import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import {
+	FeeAssetSymbols,
 	getStablecoinAssetConfig,
 	getStablecoinChainLabel,
 	isStablecoinFeeAssetSupported,
 	isStablecoinSendAssetSupported,
 	StablecoinChains,
-	StablecoinFeeAssetSymbols,
 	StablecoinSymbols,
 } from 'consts/stablecoins'
 import type { SubmittableExtrinsic } from 'dedot'
@@ -30,10 +30,10 @@ import {
 	useSubmitExtrinsic,
 } from 'tx-submit/useSubmitExtrinsic'
 import type {
+	FeeAssetSymbol,
 	ImportedAccount,
 	StablecoinBalance,
 	StablecoinChainId,
-	StablecoinFeeAssetSymbol,
 	StablecoinSymbol,
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
@@ -55,7 +55,7 @@ type SendSelectProps<T extends string> = {
 	variant?: 'compact' | 'full'
 }
 
-const tokenIcons: Record<StablecoinFeeAssetSymbol, string> = {
+const tokenIcons: Record<FeeAssetSymbol, string> = {
 	DOT: dotSvg,
 	USDC: usdcSvg,
 	USDT: usdtSvg,
@@ -69,12 +69,13 @@ const stablecoinOptions: SelectOption<StablecoinSymbol>[] =
 		icon: tokenIcons[symbol],
 	}))
 
-const feeAssetOptions: SelectOption<StablecoinFeeAssetSymbol>[] =
-	StablecoinFeeAssetSymbols.map((symbol) => ({
+const feeAssetOptions: SelectOption<FeeAssetSymbol>[] = FeeAssetSymbols.map(
+	(symbol) => ({
 		value: symbol,
 		label: symbol,
 		icon: tokenIcons[symbol],
-	}))
+	}),
+)
 
 const chainOptions: SelectOption<StablecoinChainId>[] = StablecoinChains.map(
 	(chain) => ({
@@ -270,7 +271,7 @@ export const Send = () => {
 	const [transferTx, setTransferTx] = useState<SubmittableExtrinsic>()
 	const [feeSetupTx, setFeeSetupTx] = useState<SubmittableExtrinsic>()
 	const [hydrationFeeCurrency, setHydrationFeeCurrency] = useState<
-		StablecoinFeeAssetSymbol | undefined | null
+		FeeAssetSymbol | undefined | null
 	>(null)
 
 	const selectedAssetConfig = getStablecoinAssetConfig(

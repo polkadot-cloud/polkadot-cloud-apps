@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type {
-	StablecoinAssetSymbol,
+	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinChainId,
 } from 'types'
@@ -62,7 +62,7 @@ export const useStablecoinBalances = (address?: string | null) => {
 
 	// Read a cached balance for a specific chain and stablecoin symbol.
 	const getBalance = useCallback(
-		(chain: StablecoinChainId, symbol: StablecoinAssetSymbol) =>
+		(chain: StablecoinChainId, symbol: FeeAssetSymbol) =>
 			balances.find(
 				(balance) => balance.chain === chain && balance.symbol === symbol,
 			),
