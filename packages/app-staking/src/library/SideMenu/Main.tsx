@@ -45,6 +45,7 @@ export const Main = ({
 	const { balances, nominatorBalance } = useAccountBalances(activeAddress)
 	const { totalUnlockChunks } = balances.nominator
 
+	const menuMinimised = sideMenuMinimised && !advancedMode
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const fullCommissionNominees = nominated.filter(
 		(nominee) => nominee.prefs.commission === 100,
@@ -138,7 +139,7 @@ export const Main = ({
 						{showHeaders && (
 							<Page.Side.Heading
 								title={t(categoryKey)}
-								minimised={sideMenuMinimised}
+								minimised={menuMinimised}
 							/>
 						)}
 						{pagesToDisplay.map(
@@ -157,7 +158,7 @@ export const Main = ({
 												}
 												faIcon={faIcon}
 												bullet={bullet}
-												minimised={sideMenuMinimised}
+												minimised={menuMinimised}
 												advanced={advancedMode}
 											/>
 										)}

@@ -25,7 +25,11 @@ const DefaultMenuBarItems: DefaultMenuBarItem[] = [
 	{ key: 'pools', faIcon: faPeopleLine, iconTransform: 'grow-3' },
 ]
 
-export const SideMenu = () => {
+export const SideMenu = ({
+	enableAdvancedMenu,
+}: {
+	enableAdvancedMenu: boolean
+}) => {
 	const { pathname } = useLocation()
 	const { getActivePageForCategory } = useActivePageForCategory()
 	const { categoryKey } = usePageFromHash({
@@ -63,6 +67,7 @@ export const SideMenu = () => {
 				pagesConfig={PagesConfig}
 				renderMain={renderMain}
 				title="Cloud"
+				enableAdvancedMenu={enableAdvancedMenu}
 			/>
 			<FloatingMenu renderMain={renderMain} title="Stake" />
 		</>
