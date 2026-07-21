@@ -10,6 +10,7 @@ import usdtSvg from 'assets/token/usdt.svg'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
+import { ConnectItem } from 'ui-core/popover'
 import classes from './WalletPopover.module.scss'
 
 const stablecoinMix = [
@@ -156,35 +157,40 @@ export const WalletPopover = ({
 						<span className={classes.balance}>$1,190,740.00</span>
 					</div>
 
-					<h3 className={classes.sectionTitle}>Token Balances by Chain</h3>
-					<div className={classes.breakdownGroups}>
+					<ConnectItem.Container>
 						{chainTokenBreakdown.map((group) => (
-							<div key={group.chain} className={classes.breakdownGroup}>
-								<div className={classes.breakdownHeader}>
-									<h4 className={classes.breakdownChainTitle}>{group.chain}</h4>
-									<span className={classes.breakdownTotal}>{group.total}</span>
-								</div>
-								<div className={classes.tokenList}>
-									{group.tokens.map((token) => (
-										<div
-											key={`${group.chain}-${token.name}`}
-											className={classes.tokenRow}
-										>
-											<div className={classes.tokenLabel}>
-												<img
-													src={token.icon}
-													alt={token.name}
-													className={classes.tokenIcon}
-												/>
-												<span>{token.name}</span>
+							<>
+								<h4>{group.chain}</h4>
+								<div key={group.chain} className={classes.breakdownGroup}>
+									<div className={classes.breakdownHeader}>
+										<span className={classes.breakdownTotal}>
+											{group.total}
+										</span>
+									</div>
+									<div className={classes.tokenList}>
+										{group.tokens.map((token) => (
+											<div
+												key={`${group.chain}-${token.name}`}
+												className={classes.tokenRow}
+											>
+												<div className={classes.tokenLabel}>
+													<img
+														src={token.icon}
+														alt={token.name}
+														className={classes.tokenIcon}
+													/>
+													<span>{token.name}</span>
+												</div>
+												<span className={classes.tokenValue}>
+													{token.value}
+												</span>
 											</div>
-											<span className={classes.tokenValue}>{token.value}</span>
-										</div>
-									))}
+										))}
+									</div>
 								</div>
-							</div>
+							</>
 						))}
-					</div>
+					</ConnectItem.Container>
 				</div>
 			)}
 		</div>
