@@ -2,32 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useDefaultCategories } from 'hooks/useDefaultCategories'
-import type { ComponentType } from 'react'
-import { lazy } from 'react'
-import { Overlay } from 'ui-overlay'
-
-type OverlayLoader<TModule = Record<string, unknown>> = () => Promise<TModule>
-
-const lazyNamed = <TModule extends Record<string, unknown>>(
-	load: OverlayLoader<TModule>,
-	exportName: string,
-) =>
-	lazy(async () => {
-		const module = await load()
-		const component = module[exportName]
-
-		if (!component) {
-			throw new Error(`Missing overlay export: ${exportName}`)
-		}
-
-		if (typeof component !== 'function') {
-			throw new Error(
-				`Export ${exportName} is not a component (expected function, got ${typeof component})`,
-			)
-		}
-
-		return { default: component as ComponentType }
-	})
+import type { OverlayLoader } from 'ui-overlay'
+import { lazyNamed, Overlay } from 'ui-overlay'
 
 const lazyOverlayComponents = <
 	T extends Record<string, OverlayLoader<Record<string, unknown>>>,
