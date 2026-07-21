@@ -4,6 +4,5 @@
 import type { ComponentType } from 'react'
 
 export interface HeadersProps {
-	Sync?: ComponentType
-	Wallet?: ComponentType
+	Nodes?: Record<string, ComponentType>
 }
