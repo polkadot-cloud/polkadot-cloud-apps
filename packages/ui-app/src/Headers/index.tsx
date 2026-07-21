@@ -23,7 +23,7 @@ export const Headers = ({ Nodes }: HeadersProps) => {
 			</section>
 			<section>
 				{Object.entries(Nodes || {}).map(([key, Component]) => (
-					<Component key={`${key}`} />
+					<Component key={key} />
 				))}
 				<Account openConnect={openConnect} setOpenConnect={setOpenConnect} />
 				<Notifications />
