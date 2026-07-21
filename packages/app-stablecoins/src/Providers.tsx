@@ -5,26 +5,26 @@ import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
 import { StablecoinsDappName } from 'consts'
 import { Tooltip } from 'radix-ui'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { OverlayProvider } from 'ui-overlay'
 import { ThemedRouter } from './Themes'
 
-const Network = 'polkadot'
-const PolkadotSs58 = 0
+const network = 'polkadot'
+const ss58 = 0
 
 export const Providers = () => (
 	<ConnectProvider
-		network={Network}
+		network={network}
 		dappName={StablecoinsDappName}
-		ss58={PolkadotSs58}
+		ss58={ss58}
 		adaptors={[LedgerAdaptor]}
 	>
-		<BrowserRouter>
+		<HashRouter basename="/">
 			<OverlayProvider>
 				<Tooltip.Provider>
 					<ThemedRouter />
 				</Tooltip.Provider>
 			</OverlayProvider>
-		</BrowserRouter>
+		</HashRouter>
 	</ConnectProvider>
 )
