@@ -129,7 +129,7 @@ const RouterInner = () => {
 					<SideMenu />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers Nodes={{ sync: () => <Sync /> }} />
+							<Headers Nodes={{ sync: Sync }} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {
