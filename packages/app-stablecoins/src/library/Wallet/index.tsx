@@ -18,7 +18,6 @@ export const Wallet = () => {
 			portalContainer={themeElementRef.current || undefined}
 			content={<WalletPopover setOpen={setOpen} />}
 			onTriggerClick={() => setOpen(!open)}
-			width="460px"
 		>
 			<ButtonHeader className="header-wallet" icon={faWallet} />
 		</Popover>
