@@ -13,9 +13,14 @@ import { Primary } from './Primary'
 import type { FloatingMenuProps } from './types'
 import { LogoWrapper, Wrapper } from './Wrapper'
 
-export const FloatingMenu = ({ renderMain, title }: FloatingMenuProps) => {
+export const FloatingMenu = ({
+	renderMain,
+	title,
+	supportsAdvancedMode = true,
+}: FloatingMenuProps) => {
 	const { t } = useTranslation('app')
 	const { setSideMenu, sideMenuOpen, advancedMode, setAdvancedMode } = useUi()
+	const showAdvancedMode = supportsAdvancedMode && advancedMode
 
 	// Listen to window resize to automatically hide the side menu on window resize.
 	useOnResize(() => {
@@ -34,18 +39,18 @@ export const FloatingMenu = ({ renderMain, title }: FloatingMenuProps) => {
 		<Page.Side.Floating open={sideMenuOpen} minimised={false}>
 			<Wrapper ref={ref} $minimised={false}>
 				<section>
-					<LogoWrapper $minimised={false} $advancedMode={advancedMode}>
+					<LogoWrapper $minimised={false} $advancedMode={showAdvancedMode}>
 						<CloudSVG />
 						<h3>{title}</h3>
 					</LogoWrapper>
 					{renderMain({
 						activeCategory: null,
-						advancedMode,
+						advancedMode: showAdvancedMode,
 						showHeaders: true,
 					})}
 					<div className="inner">
 						<Page.Side.Heading title={t('support')} minimised={false} />
-						{advancedMode && (
+						{showAdvancedMode && (
 							<>
 								<Separator />
 								<Primary
