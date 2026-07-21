@@ -20,7 +20,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	build: {
-		outDir: 'dist',
+		outDir: 'build',
 	},
 	server: {
 		fs: {
