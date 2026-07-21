@@ -38,11 +38,12 @@ export const DefaultMenu = ({
 	const transparent = modalStatus === 'open' || canvasStatus === 'open'
 
 	const showAdvancedMenu = enableAdvancedMenu && advancedMode
+	const menuMinimised = sideMenuMinimised && !showAdvancedMenu
 
 	return (
 		<Page.Side.Default
 			open={false}
-			minimised={sideMenuMinimised}
+			minimised={menuMinimised}
 			transparent={transparent}
 			bar={
 				!showAdvancedMenu ? undefined : (
@@ -57,10 +58,7 @@ export const DefaultMenu = ({
 				!showAdvancedMenu ? (
 					<NavSimple renderMain={renderMain} title={title} />
 				) : (
-					<Wrapper
-						$minimised={sideMenuMinimised}
-						$advancedMode={showAdvancedMenu}
-					>
+					<Wrapper $minimised={menuMinimised} $advancedMode={showAdvancedMenu}>
 						<section>
 							<Popover
 								open={openCategories}

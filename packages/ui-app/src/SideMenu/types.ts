@@ -39,6 +39,7 @@ export interface DefaultMenuProps extends BaseMenuProps {
 export interface FloatingMenuProps {
 	renderMain: RenderSideMenuMain
 	title: string
+	enableAdvancedMenu?: boolean
 }
 
 export interface NavSimpleProps {
