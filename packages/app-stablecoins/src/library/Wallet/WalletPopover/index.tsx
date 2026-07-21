@@ -12,7 +12,7 @@ import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
 import { ConnectItem, MenuItem } from 'ui-core/popover'
-import classes from './WalletPopover.module.scss'
+import classes from './index.module.scss'
 
 const stablecoinMix = [
 	{

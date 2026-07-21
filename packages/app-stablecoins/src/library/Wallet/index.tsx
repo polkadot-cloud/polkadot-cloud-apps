@@ -6,7 +6,7 @@ import { useTheme } from 'hooks'
 import { useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
-import { WalletPopover } from '../../components/WalletPopover'
+import { WalletPopover } from './WalletPopover'
 
 export const Wallet = () => {
 	const { themeElementRef } = useTheme()
