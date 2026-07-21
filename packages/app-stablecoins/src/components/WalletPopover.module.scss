@@ -42,17 +42,14 @@
 .shareCell {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	min-width: 0;
 }
 
 .tokenIcon {
 	width: 1.75rem;
 	height: 1.75rem;
-}
-
-.shareCell {
-	justify-content: flex-end;
-	gap: 0.5rem;
-	min-width: 0;
 }
 
 .chainTrack {
