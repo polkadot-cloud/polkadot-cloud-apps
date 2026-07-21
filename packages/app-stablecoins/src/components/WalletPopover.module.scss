@@ -39,11 +39,6 @@
 	background-color: var(--mix-color);
 }
 
-.chainTable {
-	display: flex;
-	flex-direction: column;
-}
-
 .shareCell {
 	display: flex;
 	align-items: center;
@@ -52,37 +47,6 @@
 .tokenIcon {
 	width: 1.75rem;
 	height: 1.75rem;
-}
-
-.valueCell,
-.shareValue {
-	font-family: var(--font-family-mono);
-	color: var(--gray-800);
-}
-
-.chainTableRow {
-	display: grid;
-	grid-template-columns: minmax(7rem, 1.6fr) minmax(7rem, 1.1fr) minmax(
-			8.5rem,
-			1.5fr
-	);
-	align-items: center;
-	gap: 0.75rem;
-	padding: 1rem;
-}
-
-.chainTableHead {
-	border-bottom: 1px solid var(--shade-200);
-	padding-bottom: 0.5rem;
-}
-
-.chainCell {
-	color: var(--gray-900);
-	min-width: 0;
-}
-
-.valueCell {
-	text-align: right;
 }
 
 .shareCell {

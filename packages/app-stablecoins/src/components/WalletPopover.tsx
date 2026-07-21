@@ -125,31 +125,27 @@ export const WalletPopover = ({
 							</MenuItem>
 						))}
 
-						<h4>Balances by Chain</h4>
-						<div className={classes.chainTable}>
-							<div
-								className={`${classes.chainTableRow} ${classes.chainTableHead}`}
-							>
-								<span className={classes.chainCell}>Chain</span>
-								<span className={classes.valueCell}>Balance</span>
-								<span className={classes.shareCell}>Share</span>
-							</div>
-							{chainBalances.map((row) => (
-								<div key={row.chain} className={classes.chainTableRow}>
-									<span className={classes.chainCell}>{row.chain}</span>
-									<span className={classes.valueCell}>{row.value}</span>
-									<div className={classes.shareCell}>
-										<span className={classes.shareValue}>{row.share}%</span>
-										<div className={classes.chainTrack}>
-											<div
-												className={classes.chainFill}
-												style={{ width: `${row.share}%` }}
-											/>
+						{chainBalances.map((row) => (
+							<Fragment key={row.chain}>
+								<h4>{row.chain}</h4>
+								<MenuItem padded>
+									<div>
+										<h3>{row.value}</h3>
+									</div>
+									<div>
+										<div className={classes.shareCell}>
+											<h4>{row.share}%</h4>
+											<div className={classes.chainTrack}>
+												<div
+													className={classes.chainFill}
+													style={{ width: `${row.share}%` }}
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
-						</div>
+								</MenuItem>
+							</Fragment>
+						))}
 					</ConnectItem.Container>
 				</div>
 			)}
