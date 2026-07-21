@@ -35,13 +35,13 @@ const isAdvancedMenu = (
 ): props is AdvancedDefaultMenuProps => 'barItems' in props
 
 export const DefaultMenu = (props: DefaultMenuProps) => {
-	const { renderMain, title } = props
 	const { t } = useTranslation('app')
-	const { advancedMode, setAdvancedMode, sideMenuMinimised } = useUi()
+	const { renderMain, title } = props
 	const navigate = useNavigate()
 	const { themeElementRef } = useTheme()
 	const { status: modalStatus } = useOverlay().modal
 	const { status: canvasStatus } = useOverlay().canvas
+	const { advancedMode, setAdvancedMode, sideMenuMinimised } = useUi()
 
 	const [openCategories, setOpenCategories] = useState<boolean>(false)
 
