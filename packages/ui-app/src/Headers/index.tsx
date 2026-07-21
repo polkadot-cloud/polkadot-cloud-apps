@@ -22,7 +22,7 @@ export const Headers = ({ Sync }: HeadersProps) => {
 				<SideMenuToggle />
 			</section>
 			<section>
-				<Sync />
+				{Sync && <Sync />}
 				<Account openConnect={openConnect} setOpenConnect={setOpenConnect} />
 				<Notifications />
 				<Settings openConnect={openConnect} setOpenConnect={setOpenConnect} />

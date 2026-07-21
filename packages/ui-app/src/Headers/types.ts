@@ -4,5 +4,5 @@
 import type { ComponentType } from 'react'
 
 export interface HeadersProps {
-	Sync: ComponentType
+	Sync?: ComponentType
 }
