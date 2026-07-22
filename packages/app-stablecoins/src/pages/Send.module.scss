@@ -60,12 +60,6 @@
 	}
 }
 
-.tokenChevron,
-.actionBtnIcon {
-	font-size: 1.25rem;
-	line-height: 1.8rem;
-}
-
 .balanceLabel {
 	font-size: 1.1rem;
 	line-height: 1.4rem;
@@ -102,101 +96,6 @@
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
-}
-
-.selectWrapper {
-	position: relative;
-	flex-shrink: 0;
-}
-
-.selectTrigger,
-.selectOption {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.5rem;
-	width: 100%;
-}
-
-.selectTrigger {
-	background-color: var(--gray-100);
-	border-radius: 0.75rem;
-	box-shadow: var(--shadow-alt);
-	border: 1px solid var(--shade-200);
-
-	&:hover {
-		border-color: var(--gray-500);
-	}
-}
-
-.selectTriggerCompact {
-	padding: 0.5rem 1rem;
-}
-
-.selectTriggerFull {
-	padding: 0.85rem 1rem;
-}
-
-.selectValue {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	min-width: 0;
-}
-
-.tokenIcon {
-	width: 1.5rem;
-	height: 1.5rem;
-	flex-shrink: 0;
-}
-
-.tokenName {
-	font-weight: 700;
-	font-size: 1.25rem;
-}
-
-.tokenChevron {
-	color: var(--gray-600);
-}
-
-.selectMenu {
-	position: absolute;
-	top: calc(100% + 0.35rem);
-	right: 0;
-	z-index: 20;
-	min-width: 100%;
-	background-color: var(--gray-100);
-	border: 1px solid var(--shade-200);
-	border-radius: 0.75rem;
-	box-shadow: var(--shadow-alt);
-	overflow: hidden;
-}
-
-.selectMenuTopLayer {
-	z-index: 80;
-}
-
-.selectOption {
-	color: var(--gray-900);
-	padding: 0.75rem 1rem;
-	text-align: left;
-	white-space: nowrap;
-
-	&:hover {
-		background-color: var(--gray-200);
-		color: var(--gray-1000);
-	}
-}
-
-.selectOptionActive {
-	background-color: var(--gray-200);
-	color: var(--gray-1000);
-	font-weight: 700;
-}
-
-.selectCheck {
-	color: var(--status-success);
-	font-size: 0.95rem;
 }
 
 .details {

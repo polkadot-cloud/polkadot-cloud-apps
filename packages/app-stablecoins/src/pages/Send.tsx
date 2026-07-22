@@ -1,8 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
 import dotSvg from 'assets/token/dot.svg'
@@ -20,7 +18,7 @@ import {
 } from 'consts/stablecoins'
 import type { SubmittableExtrinsic } from 'dedot'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
 	type TxFeeEstimator,
 	useSubmitExtrinsic,
@@ -33,24 +31,12 @@ import type {
 	StablecoinSymbol,
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
+import { Dropdown, type DropdownOption } from 'ui-app/Dropdown'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import classes from './Send.module.scss'
-
-type SelectOption<T extends string> = {
-	value: T
-	label: string
-	icon?: string
-}
-
-type SendSelectProps<T extends string> = {
-	options: SelectOption<T>[]
-	selected: SelectOption<T>
-	onSelect: (option: SelectOption<T>) => void
-	variant?: 'compact' | 'full'
-}
 
 const tokenIcons: Record<FeeAssetSymbol, string> = {
 	DOT: dotSvg,
@@ -59,14 +45,14 @@ const tokenIcons: Record<FeeAssetSymbol, string> = {
 	HOLLAR: hollarSvg,
 }
 
-const stablecoinOptions: SelectOption<StablecoinSymbol>[] =
+const stablecoinOptions: DropdownOption<StablecoinSymbol>[] =
 	StablecoinSymbols.map((symbol) => ({
 		value: symbol,
 		label: symbol,
 		icon: tokenIcons[symbol],
 	}))
 
-const feeAssetOptions: SelectOption<FeeAssetSymbol>[] = FeeAssetSymbols.map(
+const feeAssetOptions: DropdownOption<FeeAssetSymbol>[] = FeeAssetSymbols.map(
 	(symbol) => ({
 		value: symbol,
 		label: symbol,
@@ -74,7 +60,7 @@ const feeAssetOptions: SelectOption<FeeAssetSymbol>[] = FeeAssetSymbols.map(
 	}),
 )
 
-const chainOptions: SelectOption<StablecoinChainId>[] = StablecoinChains.map(
+const chainOptions: DropdownOption<StablecoinChainId>[] = StablecoinChains.map(
 	(chain) => ({
 		value: chain,
 		label: getStablecoinChainLabel(chain),
@@ -143,117 +129,6 @@ const maxSendableBalance = (
 	const reserved = balance.existentialDeposit + (feeFromSameAsset ? fee : 0n)
 	const max = balance.free - reserved
 	return max > 0n ? max : 0n
-}
-
-function SendSelect<T extends string>({
-	options,
-	selected,
-	onSelect,
-	variant = 'compact',
-}: SendSelectProps<T>) {
-	const [isOpen, setIsOpen] = useState(false)
-	const ref = useRef<HTMLDivElement>(null)
-
-	useEffect(() => {
-		if (!isOpen) {
-			return
-		}
-
-		const handlePointerDown = (event: PointerEvent) => {
-			if (!ref.current?.contains(event.target as Node)) {
-				setIsOpen(false)
-			}
-		}
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') {
-				setIsOpen(false)
-			}
-		}
-
-		document.addEventListener('pointerdown', handlePointerDown)
-		document.addEventListener('keydown', handleKeyDown)
-
-		return () => {
-			document.removeEventListener('pointerdown', handlePointerDown)
-			document.removeEventListener('keydown', handleKeyDown)
-		}
-	}, [isOpen])
-
-	return (
-		<div className={classes.selectWrapper} ref={ref}>
-			<button
-				type="button"
-				className={`${classes.selectTrigger} ${
-					variant === 'full'
-						? classes.selectTriggerFull
-						: classes.selectTriggerCompact
-				}`}
-				aria-expanded={isOpen}
-				onClick={() => setIsOpen((open) => !open)}
-			>
-				<span className={classes.selectValue}>
-					{selected.icon && (
-						<img
-							src={selected.icon}
-							alt={selected.label}
-							className={classes.tokenIcon}
-						/>
-					)}
-					<span className={classes.tokenName}>{selected.label}</span>
-				</span>
-				<FontAwesomeIcon
-					icon={faChevronDown}
-					className={classes.tokenChevron}
-				/>
-			</button>
-
-			{isOpen && (
-				<div
-					className={`${classes.selectMenu} ${
-						variant === 'full' ? classes.selectMenuTopLayer : ''
-					}`}
-					role="listbox"
-				>
-					{options.map((option) => {
-						const selectedOption = option.value === selected.value
-
-						return (
-							<button
-								type="button"
-								key={option.value}
-								className={`${classes.selectOption} ${
-									selectedOption ? classes.selectOptionActive : ''
-								}`}
-								role="option"
-								aria-selected={selectedOption}
-								onClick={() => {
-									onSelect(option)
-									setIsOpen(false)
-								}}
-							>
-								<span className={classes.selectValue}>
-									{option.icon && (
-										<img
-											src={option.icon}
-											alt={option.label}
-											className={classes.tokenIcon}
-										/>
-									)}
-									<span>{option.label}</span>
-								</span>
-								{selectedOption && (
-									<FontAwesomeIcon
-										icon={faCheck}
-										className={classes.selectCheck}
-									/>
-								)}
-							</button>
-						)
-					})}
-				</div>
-			)}
-		</div>
-	)
 }
 
 export const Send = () => {
@@ -580,7 +455,7 @@ export const Send = () => {
 
 				<div className={classes.card}>
 					<SendForm.Segment title="Chain" layer="top">
-						<SendSelect
+						<Dropdown
 							options={chainOptions}
 							selected={selectedChain}
 							onSelect={setSelectedChain}
@@ -654,7 +529,7 @@ export const Send = () => {
 								autoComplete="off"
 								aria-label="Amount to send"
 							/>
-							<SendSelect
+							<Dropdown
 								options={tokenOptions}
 								selected={selectedToken}
 								onSelect={setSelectedToken}
@@ -678,7 +553,7 @@ export const Send = () => {
 							</span>
 						}
 					>
-						<SendSelect
+						<Dropdown
 							options={availableFeeAssetOptions}
 							selected={selectedFeeAsset}
 							onSelect={setSelectedFeeAsset}
