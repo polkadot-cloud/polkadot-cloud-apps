@@ -4,5 +4,7 @@
 import type { ComponentType } from 'react'
 
 export interface HeadersProps {
-	Nodes?: Record<string, ComponentType>
+	NodesLeft?: Record<string, ComponentType>
+	NodesRight?: Record<string, ComponentType>
+	enableAdvancedMenu?: boolean
 }
