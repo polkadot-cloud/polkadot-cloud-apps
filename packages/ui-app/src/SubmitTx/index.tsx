@@ -30,6 +30,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 		stacked,
 		feeDisplay,
 		feeBalance,
+		hideSigner,
 	} = props
 
 	const { t } = useTranslation()
@@ -138,6 +139,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 			displayFor={displayFor}
 			transparent={transparent}
 			stacked={stacked}
+			hideSigner={hideSigner}
 		/>
 	)
 }
