@@ -1,11 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faArrowDown,
-	faCheck,
-	faChevronDown,
-} from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
@@ -40,6 +36,7 @@ import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { Page } from 'ui-core/base'
+import { SendForm } from 'ui-core/input'
 import classes from './Send.module.scss'
 
 type SelectOption<T extends string> = {
@@ -616,14 +613,7 @@ export const Send = () => {
 						</div>
 					</div>
 
-					<div className={classes.directionIndicator}>
-						<div className={classes.directionButton}>
-							<FontAwesomeIcon
-								icon={faArrowDown}
-								className={classes.directionIcon}
-							/>
-						</div>
-					</div>
+					<SendForm.DirectionIndicator />
 
 					<div className={classes.inputSectionTop}>
 						<div className={classes.sectionLabelRow}>

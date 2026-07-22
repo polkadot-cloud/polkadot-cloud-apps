@@ -1,7 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export * from './AccountInput'
-export * from './SendForm'
-export * from './Switch'
-export * from './TokenInput'
+import { DirectionIndicator } from './DirectionIndicator'
+
+export const SendForm = {
+	DirectionIndicator,
+}
