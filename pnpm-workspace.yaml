@@ -1,9 +1,5 @@
 packages:
   - packages/*
-overrides:
-  react: 19.2.7
-  react-dom: 19.2.7
-  rolldown: 1.1.4
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

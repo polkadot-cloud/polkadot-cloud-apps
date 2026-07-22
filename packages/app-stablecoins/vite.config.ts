@@ -21,6 +21,12 @@ export default defineConfig({
 	},
 	build: {
 		outDir: 'build',
+		rolldownOptions: {
+			output: {
+				// Keep CSS-in-JS module evaluation deterministic across split chunks.
+				strictExecutionOrder: true,
+			},
+		},
 	},
 	server: {
 		fs: {
