@@ -12,7 +12,15 @@ export let subs: Record<number, Unsub> = {}
 export const getUid = (id: number) =>
 	_uids.getValue().find((item) => item.uid === id)
 
-export const addUid = ({ from, tag }: { from: MaybeAddress; tag?: string }) => {
+export const addUid = ({
+	network,
+	from,
+	tag,
+}: {
+	network: string
+	from: MaybeAddress
+	tag?: string
+}) => {
 	let newUids = [..._uids.getValue()]
 	// Ensure uid is unique
 	const newUid = newUids.length + 1
@@ -22,6 +30,7 @@ export const addUid = ({ from, tag }: { from: MaybeAddress; tag?: string }) => {
 	}
 	newUids.push({
 		uid: newUid,
+		network,
 		submitted: false,
 		pending: false,
 		from,
