@@ -573,12 +573,10 @@ export const Send = () => {
 	return (
 		<Page.Row>
 			<div className={classes.page}>
-				<header className={classes.header}>
-					<h1 className={classes.title}>Send Assets</h1>
-					<p className={classes.subtitle}>
-						Transfer stablecoins to another address on the same network.
-					</p>
-				</header>
+				<SendForm.Header
+					title="Send Assets"
+					subtitle="Transfer stablecoins to another address on the same network."
+				/>
 
 				<div className={classes.card}>
 					<SendForm.Segment title="Chain" layer="top">
