@@ -1,13 +1,7 @@
 {
 	"help": {
 		"definitions": {
-			"activeNominators": [
-				"活跃提名人",
-				[
-					"当前Session中活跃的提名人.",
-					"因为您的验证人也可能己超额认选,所以活跃的提名人并不能保证能获得奖励."
-				]
-			],
+			"activeNominators": ["活跃提名人", ["当前Session中活跃的提名人."]],
 			"activePools": [
 				"活跃提名池",
 				["{NETWORK_NAME}网络上当前活跃的提名池数量."]
@@ -48,10 +42,8 @@
 			"decentralizationAnalyticsPeriod": [
 				"去中心化分析周期",
 				[
-					"通过分析过去30天支付的奖励来计算您的提名的去中心化程度.",
-					"根据网络的不同, 这将转化为若干个Era.",
-					"30天提供了足够的信息, 使聚合有意义.",
-					"30天的周期也足够短, 可以在几天后开始影响此分析中提名的变化."
+					"通过分析过去30天支付的奖励来计算您的提名的去中心化程度. 根据网络的不同, 这将转化为若干个Era.",
+					"30天提供了足够的信息, 使聚合有意义. 30天的周期也足够短, 可以在几天后开始影响此分析中提名的变化."
 				]
 			],
 			"epoch": [
@@ -260,16 +252,6 @@
 				[
 					"验证人自身质押的{NETWORK_UNIT}数量.",
 					"这个值也会被添加到提名人质押{NETWORK_UNIT}数量中, 作为验证人的总抵押数的一部分."
-				]
-			],
-			"stashAndControllerAccounts": [
-				"Stash和Controller帐户",
-				[
-					"Stash和Controller只是用于管理抵押操作的{NETWORK_NAME}账户.",
-					"Stash账户是用于存放抵押资金的账户,而Controlle账户则用于代表Stash账户执行抵押操作.",
-					"切换帐户实际上是在自动切换Stash帐户到Controller帐户.",
-					"请提前导入Stash和Controller帐户。否则将无法使用该应用的所有功能.",
-					"可在抵押页面上导入不同的Controller帐户."
 				]
 			],
 			"supplyStaked": ["抵押比例", ["目前全球{NETWORK_UNIT}的累计发行量."]],

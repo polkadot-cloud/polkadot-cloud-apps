@@ -89,7 +89,6 @@
 		"displayingValidators_one": "{{count}}명의 검증인 표시",
 		"displayingValidators_other": "{{count}}명의 검증인 표시",
 		"docs": "문서",
-		"documentation": "문서",
 		"done": "완료",
 		"email": "이메일",
 		"enablePermissionlessClaiming": "무허가 청구 활성화",
