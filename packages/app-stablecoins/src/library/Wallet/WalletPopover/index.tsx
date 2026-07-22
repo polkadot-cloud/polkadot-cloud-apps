@@ -11,7 +11,7 @@ import { getFeeTokenColor, getStablecoinChainLabel } from 'consts/stablecoins'
 import type { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
-import { ConnectItem, MenuItem } from 'ui-core/popover'
+import { ConnectItem, Headline, MenuItem } from 'ui-core/popover'
 import classes from './index.module.scss'
 
 const stablecoinMix = [
@@ -94,7 +94,7 @@ export const WalletPopover = ({
 			</PopoverTab.Container>
 
 			{activeTab === 'mix' && (
-				<div className={classes.section}>
+				<div>
 					<ConnectItem.Container>
 						<h4>Stablecoin Mix</h4>
 						<MenuItem padded>
@@ -157,11 +157,8 @@ export const WalletPopover = ({
 			)}
 
 			{activeTab === 'balances' && (
-				<div className={classes.section}>
-					<div className={classes.header}>
-						<h2 className={classes.title}>Wallet</h2>
-						<span className={classes.balance}>$1,190,740.00</span>
-					</div>
+				<div>
+					<Headline title="Balance" value="$1,190,740.00" />
 
 					<ConnectItem.Container>
 						{chainTokenBreakdown.map((group) => (
