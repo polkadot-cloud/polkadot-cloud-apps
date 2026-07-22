@@ -7,6 +7,7 @@ import type { DisplayFor } from './overlay'
 
 export type TxSubmissionItem = {
 	uid: number
+	network: string
 	tag?: string
 	fee: bigint
 	from: MaybeAddress

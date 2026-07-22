@@ -398,7 +398,11 @@ export const useSubmitExtrinsic = ({
 	useEffect(() => {
 		// Add a new uid for this transaction
 		if (uid === 0) {
-			const newUid = addUid({ from: submitAccount?.address || null, tag })
+			const newUid = addUid({
+				network,
+				from: submitAccount?.address || null,
+				tag,
+			})
 			setUid(newUid)
 		}
 	}, [])
