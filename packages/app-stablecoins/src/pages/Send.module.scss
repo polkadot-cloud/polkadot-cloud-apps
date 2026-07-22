@@ -13,12 +13,6 @@
 	position: relative;
 }
 
-.detailRow {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
 .addressInput {
 	display: flex;
 	align-items: center;
@@ -85,34 +79,6 @@
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
-}
-
-.details {
-	padding: 1.25rem;
-
-	> * + * {
-		margin-top: 0.75rem;
-	}
-}
-
-.detailRow {
-	font-size: 1.1rem;
-	line-height: 1.4rem;
-}
-
-.detailLabel {
-	color: var(--gray-700);
-	font-weight: 500;
-}
-
-.detailValue {
-	font-family: var(--font-family-mono);
-	font-weight: 500;
-}
-
-.detailValueGreen {
-	font-weight: 500;
-	color: var(--status-success);
 }
 
 .actionWrapper {

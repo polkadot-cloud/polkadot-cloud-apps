@@ -4,11 +4,14 @@
 import { DirectionIndicator } from './DirectionIndicator'
 import { Header } from './Header'
 import { Label } from './Label'
+import { Note, Notes } from './Notes'
 import { Segment } from './Segment'
 
 export const SendForm = {
 	DirectionIndicator,
 	Header,
 	Label,
+	Note,
+	Notes,
 	Segment,
 }

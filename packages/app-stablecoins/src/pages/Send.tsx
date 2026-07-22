@@ -552,25 +552,16 @@ export const Send = () => {
 						/>
 					</SendForm.Segment>
 
-					<div className={classes.details}>
-						<div className={classes.detailRow}>
-							<span className={classes.detailLabel}>Network Fee</span>
-							<span className={classes.detailValue}>
-								<EstimatedTxFee
-									uid={activeSubmit.uid}
-									feeDisplay={feeDisplay}
-								/>
-							</span>
-						</div>
+					<SendForm.Notes>
+						<SendForm.Note label="Network Fee">
+							<EstimatedTxFee uid={activeSubmit.uid} feeDisplay={feeDisplay} />
+						</SendForm.Note>
 						{needsHydrationFeeSetup && (
-							<div className={classes.detailRow}>
-								<span className={classes.detailLabel}>Fee Token</span>
-								<span className={classes.detailValueGreen}>
-									Set {selectedFeeAsset.value} before sending
-								</span>
-							</div>
+							<SendForm.Note label="Fee Token" variant="success">
+								Set {selectedFeeAsset.value} before sending
+							</SendForm.Note>
 						)}
-					</div>
+					</SendForm.Notes>
 
 					<div className={classes.actionWrapper}>
 						<SubmitTx
