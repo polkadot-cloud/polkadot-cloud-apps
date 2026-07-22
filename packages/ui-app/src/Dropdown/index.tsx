@@ -9,7 +9,7 @@ import type { DropdownProps } from './types'
 
 export type { DropdownOption, DropdownProps } from './types'
 
-export const Dropdown = <T extends string,>({
+export const Dropdown = <T extends string>({
 	options,
 	selected,
 	onSelect,
@@ -71,7 +71,6 @@ export const Dropdown = <T extends string,>({
 					className={`${classes.menu} ${
 						variant === 'full' ? classes.menuTopLayer : ''
 					}`}
-					role="listbox"
 				>
 					{options.map((option) => {
 						const selectedOption = option.value === selected.value
@@ -83,8 +82,6 @@ export const Dropdown = <T extends string,>({
 								className={`${classes.option} ${
 									selectedOption ? classes.optionActive : ''
 								}`}
-								role="option"
-								aria-selected={selectedOption}
 								onClick={() => {
 									onSelect(option)
 									setIsOpen(false)
