@@ -31,46 +31,10 @@
 	position: relative;
 }
 
-.inputSection,
-.inputSectionTop {
-	background-color: var(--gray-200);
-	border-radius: 1rem;
-	padding: 1.25rem;
-	margin-bottom: 0.25rem;
-	transition: background-color var(--transition-duration) ease;
-
-	&:hover {
-		background-color: var(--gray-300);
-	}
-}
-
-.inputSectionTop {
-	position: relative;
-	z-index: 1;
-}
-
-.chainSectionTop {
-	z-index: 6;
-}
-
-.sectionLabel {
-	font-size: 1.1rem;
-	line-height: 1.4rem;
-	font-weight: 700;
-	color: var(--gray-700);
-	text-transform: uppercase;
-}
-
-.sectionLabelRow,
-.assetLabelRow,
 .detailRow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-}
-
-.sectionLabelRow {
-	margin-bottom: 1rem;
 }
 
 .addressInput {
@@ -118,10 +82,6 @@
 .actionBtnIcon {
 	font-size: 1.25rem;
 	line-height: 1.8rem;
-}
-
-.assetLabelRow {
-	margin-bottom: 0.75rem;
 }
 
 .balanceLabel {
@@ -306,12 +266,6 @@
 }
 
 @media (width <= 560px) {
-	.assetLabelRow {
-		align-items: flex-start;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-
 	.inputRow {
 		align-items: stretch;
 		flex-direction: column;

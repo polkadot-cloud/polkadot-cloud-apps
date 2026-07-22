@@ -581,24 +581,16 @@ export const Send = () => {
 				</header>
 
 				<div className={classes.card}>
-					<div
-						className={`${classes.inputSectionTop} ${classes.chainSectionTop}`}
-					>
-						<div className={classes.sectionLabelRow}>
-							<span className={classes.sectionLabel}>Chain</span>
-						</div>
+					<SendForm.Segment title="Chain" layer="top">
 						<SendSelect
 							options={chainOptions}
 							selected={selectedChain}
 							onSelect={setSelectedChain}
 							variant="full"
 						/>
-					</div>
+					</SendForm.Segment>
 
-					<div className={classes.inputSectionTop}>
-						<div className={classes.sectionLabelRow}>
-							<span className={classes.sectionLabel}>Send From</span>
-						</div>
+					<SendForm.Segment title="Send From" layer="raised">
 						<div className={classes.accountDropdown}>
 							<AccountDropdown
 								key={`from-${fromAccount?.address || 'empty'}-${
@@ -611,14 +603,11 @@ export const Send = () => {
 								disabled={!accountsWithSigners.length}
 							/>
 						</div>
-					</div>
+					</SendForm.Segment>
 
 					<SendForm.DirectionIndicator />
 
-					<div className={classes.inputSectionTop}>
-						<div className={classes.sectionLabelRow}>
-							<span className={classes.sectionLabel}>Send To</span>
-						</div>
+					<SendForm.Segment title="Send To" layer="raised">
 						<div className={classes.accountDropdown}>
 							<AccountDropdown
 								key={`to-${toAccount?.address || 'empty'}-${
@@ -630,11 +619,12 @@ export const Send = () => {
 								placeholder="Enter recipient address..."
 							/>
 						</div>
-					</div>
+					</SendForm.Segment>
 
-					<div className={classes.inputSection}>
-						<div className={classes.assetLabelRow}>
-							<span className={classes.sectionLabel}>Asset to Send</span>
+					<SendForm.Segment
+						title="Asset to Send"
+						responsiveHeader
+						headerContent={
 							<span className={classes.balanceLabel}>
 								Available:{' '}
 								<button
@@ -652,7 +642,8 @@ export const Send = () => {
 									</span>
 								</button>
 							</span>
-						</div>
+						}
+					>
 						<div className={classes.inputRow}>
 							<input
 								type="text"
@@ -671,11 +662,11 @@ export const Send = () => {
 								onSelect={setSelectedToken}
 							/>
 						</div>
-					</div>
+					</SendForm.Segment>
 
-					<div className={classes.inputSection}>
-						<div className={classes.sectionLabelRow}>
-							<span className={classes.sectionLabel}>Pay Fees In</span>
+					<SendForm.Segment
+						title="Pay Fees In"
+						headerContent={
 							<span className={classes.balanceLabel}>
 								Available:{' '}
 								<span className={classes.balanceHighlight}>
@@ -687,14 +678,15 @@ export const Send = () => {
 											)}
 								</span>
 							</span>
-						</div>
+						}
+					>
 						<SendSelect
 							options={availableFeeAssetOptions}
 							selected={selectedFeeAsset}
 							onSelect={setSelectedFeeAsset}
 							variant="full"
 						/>
-					</div>
+					</SendForm.Segment>
 
 					<div className={classes.details}>
 						<div className={classes.detailRow}>
