@@ -1,32 +1,3 @@
-.addressInput {
-	display: flex;
-	align-items: center;
-	background-color: var(--gray-100);
-	padding: 0.75rem 1rem;
-	border-radius: 0.75rem;
-	box-shadow: var(--shadow-alt);
-	border: 1px solid var(--shade-200);
-}
-
-.addressIcon {
-	color: var(--gray-600);
-	margin-right: 0.75rem;
-}
-
-.addressField,
-.amountInput {
-	background: transparent;
-	color: var(--gray-1000);
-	width: 100%;
-	font-family: var(--font-family-mono);
-}
-
-.addressField {
-	font-size: 1.25rem;
-	line-height: 1.8rem;
-	font-weight: 500;
-}
-
 .accountDropdown {
 	:global([class*="selected-account-"]) {
 		background-color: var(--gray-100);
@@ -60,26 +31,14 @@
 }
 
 .amountInput {
+	background: transparent;
+	color: var(--gray-1000);
+	width: 100%;
+	font-family: var(--font-family-mono);
 	font-size: 3.25rem;
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
-}
-
-.actionBtn {
-	width: 100%;
-	padding: 1rem;
-	background-color: var(--gray-1000);
-	color: #fff;
-	border-radius: 1rem;
-	font-weight: 800;
-	font-size: 1.25rem;
-	line-height: 1.8rem;
-	text-transform: uppercase;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 0.5rem;
 }
 
 @media (width <= 560px) {
