@@ -35,6 +35,9 @@
 	},
 	"pnpm": {
 		"overrides": {
+			"react": "19.2.7",
+			"react-dom": "19.2.7",
+			"rolldown": "1.1.4",
 			"vite": "8.1.5",
 			"react-helmet-async>react": "19.1.0",
 			"use-sync-external-store>react": "19.1.0"
