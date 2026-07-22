@@ -38,6 +38,11 @@ $button-padding-sm: 1rem;
 			flex-direction: row;
 			justify-content: center;
 
+			> img {
+				width: 1.75rem;
+				height: 1.75rem;
+			}
+
 			path[fill="currentColor"] {
 				fill: var(--text-tertiary);
 				opacity: 0.75;
