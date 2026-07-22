@@ -23,13 +23,17 @@ SPDX-License-Identifier: GPL-3.0-only */
  * Korean (ko): Uses regular for semibold and bold weights
  */
 $language-font-overrides: (
-	"zh": (
-		"semibold": "DM Sans",
-		"bold": "DM Sans Semi Bold",
-	),
-	"ko": (
-		"bold": "DM Sans Bold",
-	),
+  'zh': (
+    'semibold': 'DM Sans',
+    'bold': 'DM Sans Semi Bold',
+  ),
+    'ja': (
+    'semibold': 'DM Sans Semi Bold',
+    'bold': 'DM Sans Semi Bold',
+  ),
+   'ko': (
+    'bold': 'DM Sans Bold',
+  ),
 );
 
 @each $lang, $overrides in $language-font-overrides {

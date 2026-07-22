@@ -10,5 +10,6 @@ export const localeDefinitions = {
 	tr: { label: 'Türkçe' },
 	zh: { label: '中文' },
 	es: { label: 'Español' },
+	ja: { label: '日本語' },
 	fr: { label: 'Français' },
 } as const
