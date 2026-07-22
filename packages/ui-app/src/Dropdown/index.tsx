@@ -71,7 +71,6 @@ export const Dropdown = <T extends string>({
 					className={`${classes.menu} ${
 						variant === 'full' ? classes.menuTopLayer : ''
 					}`}
-					role="listbox"
 				>
 					{options.map((option) => {
 						const selectedOption = option.value === selected.value
