@@ -4,6 +4,7 @@
 @use "ui-styles/theme/variables" as *;
 
 $button-padding: 1.3rem 1rem 1.2rem 1rem;
+$button-padding-sm: 1rem;
 
 .menuItem {
 	border-bottom: 1px solid var(--gray-500);
@@ -22,6 +23,10 @@ $button-padding: 1.3rem 1rem 1.2rem 1rem;
 		border: none;
 	}
 
+	&.padded {
+		padding: $button-padding-sm;
+	}
+
 	> div,
 	> button > div {
 		display: flex;
@@ -32,6 +37,11 @@ $button-padding: 1.3rem 1rem 1.2rem 1rem;
 			margin-right: 0.85rem;
 			flex-direction: row;
 			justify-content: center;
+
+			> img {
+				width: 1.75rem;
+				height: 1.75rem;
+			}
 
 			path[fill="currentColor"] {
 				fill: var(--text-tertiary);
