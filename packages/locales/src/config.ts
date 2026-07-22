@@ -28,6 +28,7 @@ const dateFormatLoaders = {
 	tr: () => import('date-fns/locale/tr').then(({ tr }) => tr),
 	zh: () => import('date-fns/locale/zh-CN').then(({ zhCN }) => zhCN),
 	es: () => import('date-fns/locale/es').then(({ es }) => es),
+	ru: () => import('date-fns/locale/ru').then(({ ru }) => ru),
 	fr: () => import('date-fns/locale/fr').then(({ fr }) => fr),
 } satisfies Record<LocaleKey, () => Promise<Locale>>
 

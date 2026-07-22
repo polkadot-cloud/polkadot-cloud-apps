@@ -157,7 +157,7 @@ export const ToggleWrapper = styled.button`
 export const BulletWrapper = styled.div`
   color: var(--status-success);
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   font-size: 0.88rem;
   flex-flow: row wrap;
   justify-content: flex-end;

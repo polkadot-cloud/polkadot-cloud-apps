@@ -7,7 +7,7 @@ export const Wrapper = styled.span`
   border: none;
   height: 3.2rem;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   align-items: center;
   margin: 0.25rem 0.2rem 0.25rem 0;
   padding: 0rem 0.5rem 0rem 0.95rem;
@@ -16,6 +16,7 @@ export const Wrapper = styled.span`
   cursor: pointer;
   
   .iconContainer {
+    flex: 0 0 auto;
     width: 2.5rem;
   }
   
@@ -66,6 +67,11 @@ export const Wrapper = styled.span`
   }
   
   .name {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--font-family-semibold);
     margin: 0;
     padding: 0;
