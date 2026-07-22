@@ -10,7 +10,11 @@ import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
 import type { HeadersProps } from './types'
 
-export const Headers = ({ Nodes, enableAdvancedMenu = true }: HeadersProps) => {
+export const Headers = ({
+	NodesLeft,
+	NodesRight,
+	enableAdvancedMenu = true,
+}: HeadersProps) => {
 	const { advancedMode, sideMenuMinimised } = useUi()
 	const menuMinimised =
 		sideMenuMinimised && !(enableAdvancedMenu && advancedMode)
@@ -24,10 +28,13 @@ export const Headers = ({ Nodes, enableAdvancedMenu = true }: HeadersProps) => {
 				<SideMenuToggle />
 			</section>
 			<section>
-				{Object.entries(Nodes || {}).map(([key, Component]) => (
+				{Object.entries(NodesLeft || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
 				<Account openConnect={openConnect} setOpenConnect={setOpenConnect} />
+				{Object.entries(NodesRight || {}).map(([key, Component]) => (
+					<Component key={key} />
+				))}
 				<Notifications />
 				<Settings openConnect={openConnect} setOpenConnect={setOpenConnect} />
 			</section>
