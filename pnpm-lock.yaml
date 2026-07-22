@@ -46,22 +46,22 @@ importers:
         version: 3.9.6
       prettier-plugin-organize-imports:
         specifier: ^4.1.0
-        version: 4.3.0(prettier@3.9.6)(typescript@6.0.3)
+        version: 4.3.0(prettier@3.9.6)(typescript@7.0.2)
       sass:
         specifier: ^1.101.0
         version: 1.101.3
       stylelint:
         specifier: ^17.14.1
-        version: 17.14.1(typescript@6.0.3)
+        version: 17.14.1(typescript@7.0.2)
       stylelint-config-standard-scss:
         specifier: ^17.0.0
-        version: 17.0.0(postcss@8.5.21)(stylelint@17.14.1(typescript@6.0.3))
+        version: 17.0.0(postcss@8.5.21)(stylelint@17.14.1(typescript@7.0.2))
       stylelint-order:
         specifier: ^8.1.1
-        version: 8.1.1(stylelint@17.14.1(typescript@6.0.3))
+        version: 8.1.1(stylelint@17.14.1(typescript@7.0.2))
       typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vite:
         specifier: 8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
@@ -85,16 +85,16 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/extension-assets':
         specifier: ^2.3.1
         version: 2.3.1(react@19.2.8)
@@ -106,10 +106,10 @@ importers:
         version: 2.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/util-dedot':
         specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+        version: 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -127,7 +127,7 @@ importers:
         version: link:../consts
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       dedot-api:
         specifier: workspace:*
         version: link:../dedot-api
@@ -163,7 +163,7 @@ importers:
         version: 3.0.0(react@19.2.8)
       react-i18next:
         specifier: ^17.0.8
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.15.1
         version: 7.18.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -208,17 +208,17 @@ importers:
         specifier: workspace:*
         version: link:../types
       typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vite:
         specifier: 8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
       vite-plugin-checker:
         specifier: ^0.13.0
-        version: 0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@7.0.2))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -242,16 +242,16 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkawatch/ddp-client':
         specifier: ^3.0.1
         version: 3.0.5
@@ -272,10 +272,10 @@ importers:
         version: 2.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/util-dedot':
         specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+        version: 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -302,7 +302,7 @@ importers:
         version: 4.4.0
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       dedot-api:
         specifier: workspace:*
         version: link:../dedot-api
@@ -353,7 +353,7 @@ importers:
         version: 3.0.0(react@19.2.8)
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.1
         version: 7.18.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -413,8 +413,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vite:
         specifier: 8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
@@ -423,10 +423,10 @@ importers:
         version: 1.2.1(rolldown@1.1.5)
       vite-plugin-checker:
         specifier: ^0.14.4
-        version: 0.14.4(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 0.14.4(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@7.0.2))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -445,7 +445,7 @@ importers:
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
 
   packages/consts:
     dependencies:
@@ -454,7 +454,7 @@ importers:
         version: 0.10.0
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkawatch/ddp-client':
         specifier: ^3.0.1
         version: 3.0.5
@@ -476,16 +476,16 @@ importers:
     dependencies:
       '@dedot/chaintypes':
         specifier: ^0.280.0
-        version: 0.280.0(dedot@1.3.0(typescript@6.0.3))
+        version: 0.280.0(dedot@1.3.0(typescript@7.0.2))
       '@polkadot-cloud/connect-core':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/util-dedot':
         specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+        version: 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -494,7 +494,7 @@ importers:
         version: link:../consts
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -525,7 +525,7 @@ importers:
     dependencies:
       '@polkadot-cloud/connect-core':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -534,7 +534,7 @@ importers:
         version: link:../consts
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       event-tracking:
         specifier: workspace:*
         version: link:../event-tracking
@@ -559,10 +559,10 @@ importers:
     dependencies:
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -580,7 +580,7 @@ importers:
         version: 4.4.0
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -626,8 +626,8 @@ importers:
         specifier: ^4.23.1
         version: 4.23.1
       typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vite:
         specifier: 8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
@@ -648,10 +648,10 @@ importers:
         version: link:../event-tracking
       i18next:
         specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        version: 26.3.6(typescript@7.0.2)
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -681,7 +681,7 @@ importers:
         version: 0.10.0
       '@dedot/chaintypes':
         specifier: ^0.280.0
-        version: 0.280.0(dedot@1.3.0(typescript@6.0.3))
+        version: 0.280.0(dedot@1.3.0(typescript@7.0.2))
       '@polkadot/keyring':
         specifier: ^14.0.3
         version: 14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3)
@@ -690,7 +690,7 @@ importers:
         version: 14.0.3(@polkadot/util@14.0.3)
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       smoldot:
         specifier: ^3.3.1
         version: 3.3.1
@@ -715,8 +715,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.1)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
@@ -734,13 +734,13 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/types':
         specifier: ^2.4.2
         version: 2.4.2
@@ -749,7 +749,7 @@ importers:
         version: link:../consts
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -761,7 +761,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       styled-components:
         specifier: ^6.4.4
         version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -782,11 +782,11 @@ importers:
         version: 7.3.1
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
     devDependencies:
       '@dedot/chaintypes':
         specifier: ^0.280.0
-        version: 0.280.0(dedot@1.3.0(typescript@6.0.3))
+        version: 0.280.0(dedot@1.3.0(typescript@7.0.2))
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
@@ -810,16 +810,16 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/extension-assets':
         specifier: ^2.3.1
         version: 2.3.1(react@19.2.8)
@@ -831,13 +831,13 @@ importers:
         version: 2.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/types':
         specifier: ^2.4.2
         version: 2.4.2
       '@w3ux/util-dedot':
         specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+        version: 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -873,7 +873,7 @@ importers:
         version: 3.0.0(react@19.2.8)
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.1
         version: 7.18.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -901,7 +901,7 @@ importers:
     devDependencies:
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
 
   packages/ui-buttons:
     dependencies:
@@ -919,7 +919,7 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/utils':
         specifier: 3.1.1
         version: 3.1.1
@@ -944,7 +944,7 @@ importers:
         version: 2.4.2
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       types:
         specifier: workspace:*
         version: link:../types
@@ -965,7 +965,7 @@ importers:
         version: 2.4.4(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/utils':
         specifier: 3.1.1
         version: 3.1.1
@@ -974,7 +974,7 @@ importers:
         version: 2.5.1
       dedot:
         specifier: ^1
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       motion:
         specifier: 12.23.24
         version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1069,16 +1069,16 @@ importers:
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@polkadot-cloud/connect':
         specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.3.0
-        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        version: 0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       '@polkadot-cloud/connect-vault':
         specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/extension-assets':
         specifier: ^2.3.1
         version: 2.3.1(react@19.2.8)
@@ -1087,10 +1087,10 @@ importers:
         version: 2.4.4(react@19.2.8)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@w3ux/util-dedot':
         specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+        version: 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1111,7 +1111,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       styled-components:
         specifier: ^6.4.4
         version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1136,7 +1136,7 @@ importers:
         version: 2.4.2
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+        version: 5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
 
   packages/ui-overlay:
     dependencies:
@@ -1202,7 +1202,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.10
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       ui-buttons:
         specifier: workspace:*
         version: link:../ui-buttons
@@ -1242,10 +1242,10 @@ importers:
         version: 4.4.0
       dedot:
         specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
+        version: 1.3.0(typescript@7.0.2)
       i18next:
         specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        version: 26.3.6(typescript@7.0.2)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -3030,6 +3030,126 @@ packages:
   '@types/w3c-web-usb@1.0.14':
     resolution: {integrity: sha512-Qu3Nn6JFuF4+sHKYl+IcX9vYiI40ogleXzFFSxoE1W94rG98o/kXs8uJ0QSfFzuwBCZWlGfUGpPkgwuuX4PchA==}
 
+  '@typescript/typescript-aix-ppc64@7.0.2':
+    resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [aix]
+
+  '@typescript/typescript-darwin-arm64@7.0.2':
+    resolution: {integrity: sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/typescript-darwin-x64@7.0.2':
+    resolution: {integrity: sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/typescript-freebsd-arm64@7.0.2':
+    resolution: {integrity: sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [freebsd]
+
+  '@typescript/typescript-freebsd-x64@7.0.2':
+    resolution: {integrity: sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@typescript/typescript-linux-arm64@7.0.2':
+    resolution: {integrity: sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/typescript-linux-arm@7.0.2':
+    resolution: {integrity: sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm]
+    os: [linux]
+
+  '@typescript/typescript-linux-loong64@7.0.2':
+    resolution: {integrity: sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [loong64]
+    os: [linux]
+
+  '@typescript/typescript-linux-mips64el@7.0.2':
+    resolution: {integrity: sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [mips64el]
+    os: [linux]
+
+  '@typescript/typescript-linux-ppc64@7.0.2':
+    resolution: {integrity: sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [linux]
+
+  '@typescript/typescript-linux-riscv64@7.0.2':
+    resolution: {integrity: sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [riscv64]
+    os: [linux]
+
+  '@typescript/typescript-linux-s390x@7.0.2':
+    resolution: {integrity: sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [s390x]
+    os: [linux]
+
+  '@typescript/typescript-linux-x64@7.0.2':
+    resolution: {integrity: sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/typescript-netbsd-arm64@7.0.2':
+    resolution: {integrity: sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [netbsd]
+
+  '@typescript/typescript-netbsd-x64@7.0.2':
+    resolution: {integrity: sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [netbsd]
+
+  '@typescript/typescript-openbsd-arm64@7.0.2':
+    resolution: {integrity: sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [openbsd]
+
+  '@typescript/typescript-openbsd-x64@7.0.2':
+    resolution: {integrity: sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [openbsd]
+
+  '@typescript/typescript-sunos-x64@7.0.2':
+    resolution: {integrity: sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [sunos]
+
+  '@typescript/typescript-win32-arm64@7.0.2':
+    resolution: {integrity: sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/typescript-win32-x64@7.0.2':
+    resolution: {integrity: sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [win32]
+
   '@vitejs/plugin-react@6.0.3':
     resolution: {integrity: sha512-vmFvco5/QuC2f9Oj+wTk0+9XeDFkHxSamwZKYc7MxYwKICfvUvlMhqKI0VuICPltGqh1neqBKDvO4kes1ya8vg==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4619,9 +4739,9 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  typescript@6.0.3:
-    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
-    engines: {node: '>=14.17'}
+  typescript@7.0.2:
+    resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
+    engines: {node: '>=16.20.0'}
     hasBin: true
 
   uglify-js@3.19.3:
@@ -5150,19 +5270,19 @@ snapshots:
 
   '@dedot/chain-specs@0.10.0': {}
 
-  '@dedot/chaintypes@0.263.0(dedot@1.3.0(typescript@6.0.3))':
+  '@dedot/chaintypes@0.263.0(dedot@1.3.0(typescript@7.0.2))':
     dependencies:
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
 
-  '@dedot/chaintypes@0.280.0(dedot@1.3.0(typescript@6.0.3))':
+  '@dedot/chaintypes@0.280.0(dedot@1.3.0(typescript@7.0.2))':
     dependencies:
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
 
-  '@dedot/cli@1.3.0(typescript@6.0.3)':
+  '@dedot/cli@1.3.0(typescript@7.0.2)':
     dependencies:
       '@dedot/api': 1.3.0
       '@dedot/codecs': 1.3.0
-      '@dedot/codegen': 1.3.0(typescript@6.0.3)
+      '@dedot/codegen': 1.3.0(typescript@7.0.2)
       '@dedot/wasm': 0.1.0
       '@polkadot/types-support': 16.5.6
       ora: 9.4.1
@@ -5178,11 +5298,11 @@ snapshots:
       '@dedot/shape': 1.3.0
       '@dedot/utils': 1.3.0
 
-  '@dedot/codegen@1.3.0(typescript@6.0.3)':
+  '@dedot/codegen@1.3.0(typescript@7.0.2)':
     dependencies:
       '@dedot/api': 1.3.0
       '@dedot/codecs': 1.3.0
-      '@dedot/contracts': 1.3.0(typescript@6.0.3)
+      '@dedot/contracts': 1.3.0(typescript@7.0.2)
       '@dedot/providers': 1.3.0
       '@dedot/runtime-specs': 1.3.0
       '@dedot/shape': 1.3.0
@@ -5196,13 +5316,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@dedot/contracts@1.3.0(typescript@6.0.3)':
+  '@dedot/contracts@1.3.0(typescript@7.0.2)':
     dependencies:
       '@dedot/api': 1.3.0
       '@dedot/codecs': 1.3.0
       '@dedot/types': 1.3.0
       '@dedot/utils': 1.3.0
-      viem: 2.55.4(typescript@6.0.3)
+      viem: 2.55.4(typescript@7.0.2)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -5600,64 +5720,64 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.6.0
     optional: true
 
-  '@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)':
+  '@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)':
     dependencies:
       '@w3ux/extension-assets': 2.3.1(react@19.2.8)
       '@w3ux/types': 2.4.2
-      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@6.0.3))
+      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils': 3.1.1
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@polkadot-cloud/connect-ledger@1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@polkadot-cloud/connect-ledger@1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@ledgerhq/hw-transport-webhid': 6.36.0
-      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/hooks': 2.4.4(react@19.2.8)
       '@w3ux/utils': 3.1.1
       '@zondax/ledger-substrate': 2.3.5
       buffer: 6.0.3
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
     transitivePeerDependencies:
       - debug
       - supports-color
 
-  '@polkadot-cloud/connect-proxies@0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
+  '@polkadot-cloud/connect-proxies@0.3.0(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
     dependencies:
-      '@dedot/chaintypes': 0.263.0(dedot@1.3.0(typescript@6.0.3))
-      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+      '@dedot/chaintypes': 0.263.0(dedot@1.3.0(typescript@7.0.2))
+      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/hooks': 2.4.4(react@19.2.8)
       '@w3ux/utils': 3.1.1
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       rxjs: 7.8.2
 
-  '@polkadot-cloud/connect-vault@1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@polkadot-cloud/connect-vault@1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
-      dedot: 1.3.0(typescript@6.0.3)
+      '@polkadot-cloud/connect': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
+      dedot: 1.3.0(typescript@7.0.2)
       html5-qrcode: 2.3.8
       qrcode-generator: 1.5.0
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       xxhash-wasm: 1.1.0
 
-  '@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
+  '@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
     dependencies:
-      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.0.9(dedot@1.3.0(typescript@7.0.2))(react@19.2.8)(rxjs@7.8.2)
       '@w3ux/hooks': 2.4.4(react@19.2.8)
       '@w3ux/types': 2.4.2
-      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@6.0.3))
+      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@7.0.2))
       '@w3ux/utils': 3.1.1
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       rxjs: 7.8.2
@@ -6662,12 +6782,12 @@ snapshots:
       '@svgr/babel-plugin-transform-react-native-svg': 8.1.0(@babel/core@7.29.7)
       '@svgr/babel-plugin-transform-svg-component': 8.0.0(@babel/core@7.29.7)
 
-  '@svgr/core@8.1.0(typescript@6.0.3)':
+  '@svgr/core@8.1.0(typescript@7.0.2)':
     dependencies:
       '@babel/core': 7.29.7
       '@svgr/babel-preset': 8.1.0(@babel/core@7.29.7)
       camelcase: 6.3.0
-      cosmiconfig: 8.3.6(typescript@6.0.3)
+      cosmiconfig: 8.3.6(typescript@7.0.2)
       snake-case: 3.0.4
     transitivePeerDependencies:
       - supports-color
@@ -6678,11 +6798,11 @@ snapshots:
       '@babel/types': 7.29.7
       entities: 4.5.0
 
-  '@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0(typescript@6.0.3))':
+  '@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0(typescript@7.0.2))':
     dependencies:
       '@babel/core': 7.29.7
       '@svgr/babel-preset': 8.1.0(@babel/core@7.29.7)
-      '@svgr/core': 8.1.0(typescript@6.0.3)
+      '@svgr/core': 8.1.0(typescript@7.0.2)
       '@svgr/hast-util-to-babel-ast': 8.0.0
       svg-parser: 2.0.4
     transitivePeerDependencies:
@@ -6732,6 +6852,66 @@ snapshots:
       csstype: 3.2.3
 
   '@types/w3c-web-usb@1.0.14':
+    optional: true
+
+  '@typescript/typescript-aix-ppc64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-darwin-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-darwin-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-freebsd-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-freebsd-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-arm@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-loong64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-mips64el@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-ppc64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-riscv64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-s390x@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-netbsd-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-netbsd-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-openbsd-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-openbsd-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-sunos-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-win32-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
   '@vitejs/plugin-react@6.0.3(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))':
@@ -6803,19 +6983,19 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  '@w3ux/react-polkicon@4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@w3ux/react-polkicon@4.0.2(dedot@1.3.0(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@w3ux/crypto': 1.2.1
-      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@6.0.3))
-      dedot: 1.3.0(typescript@6.0.3)
+      '@w3ux/util-dedot': 1.0.0(dedot@1.3.0(typescript@7.0.2))
+      dedot: 1.3.0(typescript@7.0.2)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
   '@w3ux/types@2.4.2': {}
 
-  '@w3ux/util-dedot@1.0.0(dedot@1.3.0(typescript@6.0.3))':
+  '@w3ux/util-dedot@1.0.0(dedot@1.3.0(typescript@7.0.2))':
     dependencies:
-      dedot: 1.3.0(typescript@6.0.3)
+      dedot: 1.3.0(typescript@7.0.2)
 
   '@w3ux/utils@3.1.1': {}
 
@@ -6855,9 +7035,9 @@ snapshots:
       - debug
       - supports-color
 
-  abitype@1.2.3(typescript@6.0.3):
+  abitype@1.2.3(typescript@7.0.2):
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   agent-base@6.0.2:
     dependencies:
@@ -7031,23 +7211,23 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cosmiconfig@8.3.6(typescript@6.0.3):
+  cosmiconfig@8.3.6(typescript@7.0.2):
     dependencies:
       import-fresh: 3.3.1
       js-yaml: 4.3.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
 
-  cosmiconfig@9.0.2(typescript@6.0.3):
+  cosmiconfig@9.0.2(typescript@7.0.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.3.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   css-functions-list@3.3.3: {}
 
@@ -7071,12 +7251,12 @@ snapshots:
       mimic-response: 3.1.0
     optional: true
 
-  dedot@1.3.0(typescript@6.0.3):
+  dedot@1.3.0(typescript@7.0.2):
     dependencies:
       '@dedot/api': 1.3.0
-      '@dedot/cli': 1.3.0(typescript@6.0.3)
+      '@dedot/cli': 1.3.0(typescript@7.0.2)
       '@dedot/codecs': 1.3.0
-      '@dedot/contracts': 1.3.0(typescript@6.0.3)
+      '@dedot/contracts': 1.3.0(typescript@7.0.2)
       '@dedot/merkleized-metadata': 1.3.0
       '@dedot/providers': 1.3.0
       '@dedot/runtime-specs': 1.3.0
@@ -7383,9 +7563,9 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  i18next@26.3.6(typescript@6.0.3):
+  i18next@26.3.6(typescript@7.0.2):
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   ieee754@1.2.1: {}
 
@@ -7682,7 +7862,7 @@ snapshots:
       stdin-discarder: 0.3.2
       string-width: 8.2.2
 
-  ox@0.14.30(typescript@6.0.3):
+  ox@0.14.30(typescript@7.0.2):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
@@ -7690,10 +7870,10 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@6.0.3)
+      abitype: 1.2.3(typescript@7.0.2)
       eventemitter3: 5.0.1
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
     transitivePeerDependencies:
       - zod
 
@@ -7771,10 +7951,10 @@ snapshots:
       tunnel-agent: 0.6.0
     optional: true
 
-  prettier-plugin-organize-imports@4.3.0(prettier@3.9.6)(typescript@6.0.3):
+  prettier-plugin-organize-imports@4.3.0(prettier@3.9.6)(typescript@7.0.2):
     dependencies:
       prettier: 3.9.6
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   prettier@3.9.6: {}
 
@@ -7909,16 +8089,16 @@ snapshots:
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
 
-  react-i18next@17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3):
+  react-i18next@17.0.10(i18next@26.3.6(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2):
     dependencies:
       '@babel/runtime': 7.29.7
       html-parse-stringify: 3.0.1
-      i18next: 26.3.6(typescript@6.0.3)
+      i18next: 26.3.6(typescript@7.0.2)
       react: 19.2.8
       use-sync-external-store: 1.6.0(react@19.2.8)
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   react-is@18.3.1: {}
 
@@ -8158,39 +8338,39 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
 
-  stylelint-config-recommended-scss@17.0.1(postcss@8.5.21)(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-config-recommended-scss@17.0.1(postcss@8.5.21)(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.21)
-      stylelint: 17.14.1(typescript@6.0.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.14.1(typescript@6.0.3))
-      stylelint-scss: 7.2.0(stylelint@17.14.1(typescript@6.0.3))
+      stylelint: 17.14.1(typescript@7.0.2)
+      stylelint-config-recommended: 18.0.0(stylelint@17.14.1(typescript@7.0.2))
+      stylelint-scss: 7.2.0(stylelint@17.14.1(typescript@7.0.2))
     optionalDependencies:
       postcss: 8.5.21
 
-  stylelint-config-recommended@18.0.0(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
-      stylelint: 17.14.1(typescript@6.0.3)
+      stylelint: 17.14.1(typescript@7.0.2)
 
-  stylelint-config-standard-scss@17.0.0(postcss@8.5.21)(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-config-standard-scss@17.0.0(postcss@8.5.21)(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
-      stylelint: 17.14.1(typescript@6.0.3)
-      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.21)(stylelint@17.14.1(typescript@6.0.3))
-      stylelint-config-standard: 40.0.0(stylelint@17.14.1(typescript@6.0.3))
+      stylelint: 17.14.1(typescript@7.0.2)
+      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.21)(stylelint@17.14.1(typescript@7.0.2))
+      stylelint-config-standard: 40.0.0(stylelint@17.14.1(typescript@7.0.2))
     optionalDependencies:
       postcss: 8.5.21
 
-  stylelint-config-standard@40.0.0(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-config-standard@40.0.0(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
-      stylelint: 17.14.1(typescript@6.0.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.14.1(typescript@6.0.3))
+      stylelint: 17.14.1(typescript@7.0.2)
+      stylelint-config-recommended: 18.0.0(stylelint@17.14.1(typescript@7.0.2))
 
-  stylelint-order@8.1.1(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-order@8.1.1(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
       postcss: 8.5.20
       postcss-sorting: 10.0.0(postcss@8.5.20)
-      stylelint: 17.14.1(typescript@6.0.3)
+      stylelint: 17.14.1(typescript@7.0.2)
 
-  stylelint-scss@7.2.0(stylelint@17.14.1(typescript@6.0.3)):
+  stylelint-scss@7.2.0(stylelint@17.14.1(typescript@7.0.2)):
     dependencies:
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -8203,9 +8383,9 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.4
       postcss-value-parser: 4.2.0
-      stylelint: 17.14.1(typescript@6.0.3)
+      stylelint: 17.14.1(typescript@7.0.2)
 
-  stylelint@17.14.1(typescript@6.0.3):
+  stylelint@17.14.1(typescript@7.0.2):
     dependencies:
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -8215,7 +8395,7 @@ snapshots:
       '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.4)
       '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.4)
       colord: 2.9.3
-      cosmiconfig: 9.0.2(typescript@6.0.3)
+      cosmiconfig: 9.0.2(typescript@7.0.2)
       css-functions-list: 3.3.3
       css-tree: 3.2.1
       debug: 4.4.3
@@ -8316,7 +8496,28 @@ snapshots:
       safe-buffer: 5.2.1
     optional: true
 
-  typescript@6.0.3: {}
+  typescript@7.0.2:
+    optionalDependencies:
+      '@typescript/typescript-aix-ppc64': 7.0.2
+      '@typescript/typescript-darwin-arm64': 7.0.2
+      '@typescript/typescript-darwin-x64': 7.0.2
+      '@typescript/typescript-freebsd-arm64': 7.0.2
+      '@typescript/typescript-freebsd-x64': 7.0.2
+      '@typescript/typescript-linux-arm': 7.0.2
+      '@typescript/typescript-linux-arm64': 7.0.2
+      '@typescript/typescript-linux-loong64': 7.0.2
+      '@typescript/typescript-linux-mips64el': 7.0.2
+      '@typescript/typescript-linux-ppc64': 7.0.2
+      '@typescript/typescript-linux-riscv64': 7.0.2
+      '@typescript/typescript-linux-s390x': 7.0.2
+      '@typescript/typescript-linux-x64': 7.0.2
+      '@typescript/typescript-netbsd-arm64': 7.0.2
+      '@typescript/typescript-netbsd-x64': 7.0.2
+      '@typescript/typescript-openbsd-arm64': 7.0.2
+      '@typescript/typescript-openbsd-x64': 7.0.2
+      '@typescript/typescript-sunos-x64': 7.0.2
+      '@typescript/typescript-win32-arm64': 7.0.2
+      '@typescript/typescript-win32-x64': 7.0.2
 
   uglify-js@3.19.3:
     optional: true
@@ -8368,18 +8569,18 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  viem@2.55.4(typescript@6.0.3):
+  viem@2.55.4(typescript@7.0.2):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@6.0.3)
+      abitype: 1.2.3(typescript@7.0.2)
       isows: 1.0.7(ws@8.21.0)
-      ox: 0.14.30(typescript@6.0.3)
+      ox: 0.14.30(typescript@7.0.2)
       ws: 8.21.0
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8396,7 +8597,7 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-checker@0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
+  vite-plugin-checker@0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@7.0.2))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
     dependencies:
       '@babel/code-frame': 7.29.7
       chokidar: 4.0.3
@@ -8411,10 +8612,10 @@ snapshots:
     optionalDependencies:
       '@biomejs/biome': 2.5.4
       meow: 14.1.0
-      stylelint: 17.14.1(typescript@6.0.3)
-      typescript: 6.0.3
+      stylelint: 17.14.1(typescript@7.0.2)
+      typescript: 7.0.2
 
-  vite-plugin-checker@0.14.4(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
+  vite-plugin-checker@0.14.4(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@7.0.2))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
     dependencies:
       '@babel/code-frame': 7.29.7
       chokidar: 5.0.0
@@ -8427,14 +8628,14 @@ snapshots:
     optionalDependencies:
       '@biomejs/biome': 2.5.4
       meow: 14.1.0
-      stylelint: 17.14.1(typescript@6.0.3)
-      typescript: 6.0.3
+      stylelint: 17.14.1(typescript@7.0.2)
+      typescript: 7.0.2
 
-  vite-plugin-svgr@5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
+  vite-plugin-svgr@5.2.0(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)):
     dependencies:
       '@rollup/pluginutils': 5.4.0
-      '@svgr/core': 8.1.0(typescript@6.0.3)
-      '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@6.0.3))
+      '@svgr/core': 8.1.0(typescript@7.0.2)
+      '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@7.0.2))
       vite: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
     transitivePeerDependencies:
       - rollup
