@@ -45,6 +45,7 @@ export type SubmitTxProps = SubmitProps &
 		proxyAccount: ActiveProxy | null
 		stacked?: boolean
 		feeDisplay?: TxFeeDisplay
+		feeBalance?: bigint
 		hideSigner?: boolean
 	}
 
