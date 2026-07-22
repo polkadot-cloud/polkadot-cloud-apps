@@ -9,10 +9,15 @@ import type {
 } from 'types'
 
 // Count nominators once even when their stake is spread across multiple validators.
-export const countUniqueNominators = (exposures: Exposure[]) =>
-	new Set(
-		exposures.flatMap(({ val: { others } }) => others.map(({ who }) => who)),
-	).size
+export const countUniqueNominators = (exposures: Exposure[]) => {
+	const nominators = new Set<string>()
+	for (const { val: { others } } of exposures) {
+		for (const { who } of others) {
+			nominators.add(who)
+		}
+	}
+	return nominators.size
+}
 
 // Get local `erasStakers` entries for an era
 export const getLocalEraExposures = (
