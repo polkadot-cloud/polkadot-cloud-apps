@@ -447,13 +447,13 @@ export const Send = () => {
 
 	return (
 		<Page.Row>
-			<div className={classes.page}>
+			<SendForm.Container>
 				<SendForm.Header
 					title="Send Assets"
 					subtitle="Transfer stablecoins to another address on the same network."
 				/>
 
-				<div className={classes.card}>
+				<SendForm.Card>
 					<SendForm.Segment title="Chain" layer="top">
 						<Dropdown
 							options={chainOptions}
@@ -563,7 +563,7 @@ export const Send = () => {
 						)}
 					</SendForm.Notes>
 
-					<div className={classes.actionWrapper}>
+					<SendForm.Action>
 						<SubmitTx
 							{...activeSubmit}
 							submitText={
@@ -576,9 +576,9 @@ export const Send = () => {
 							hideSigner
 							transparent
 						/>
-					</div>
-				</div>
-			</div>
+					</SendForm.Action>
+				</SendForm.Card>
+			</SendForm.Container>
 		</Page.Row>
 	)
 }

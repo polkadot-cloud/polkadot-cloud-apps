@@ -1,18 +1,3 @@
-.page {
-	max-width: 600px;
-	margin: 0 auto;
-	width: 100%;
-}
-
-.card {
-	background-color: var(--gray-100);
-	border-radius: 1.5rem;
-	padding: 0.5rem;
-	box-shadow: var(--shadow-alt);
-	border: 1px solid var(--shade-200);
-	position: relative;
-}
-
 .addressInput {
 	display: flex;
 	align-items: center;
@@ -79,10 +64,6 @@
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
-}
-
-.actionWrapper {
-	padding: 0.5rem;
 }
 
 .actionBtn {
