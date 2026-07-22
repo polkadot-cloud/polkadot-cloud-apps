@@ -4,5 +4,6 @@
 import type { ComponentType } from 'react'
 
 export interface HeadersProps {
-	Sync: ComponentType
+	NodesLeft?: Record<string, ComponentType>
+	NodesRight?: Record<string, ComponentType>
 }

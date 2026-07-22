@@ -1,0 +1,29 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.directionIndicator {
+	display: flex;
+	justify-content: center;
+	height: 0;
+	position: relative;
+	z-index: 8;
+	pointer-events: none;
+}
+
+.directionButton {
+	width: 2rem;
+	height: 2rem;
+	background-color: var(--gray-100);
+	border-radius: 9999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--gray-600);
+	transform: translateY(-50%);
+	pointer-events: auto;
+}
+
+.directionIcon {
+	font-size: 1.25rem;
+	line-height: 1.8rem;
+}

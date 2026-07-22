@@ -10,7 +10,7 @@ import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
 import type { HeadersProps } from './types'
 
-export const Headers = ({ Sync }: HeadersProps) => {
+export const Headers = ({ NodesLeft, NodesRight }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
 
 	// Whether the connect popover is open
@@ -22,8 +22,13 @@ export const Headers = ({ Sync }: HeadersProps) => {
 				<SideMenuToggle />
 			</section>
 			<section>
-				<Sync />
+				{Object.entries(NodesLeft || {}).map(([key, Component]) => (
+					<Component key={key} />
+				))}
 				<Account openConnect={openConnect} setOpenConnect={setOpenConnect} />
+				{Object.entries(NodesRight || {}).map(([key, Component]) => (
+					<Component key={key} />
+				))}
 				<Notifications />
 				<Settings openConnect={openConnect} setOpenConnect={setOpenConnect} />
 			</section>

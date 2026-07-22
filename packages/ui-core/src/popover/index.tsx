@@ -3,8 +3,11 @@
 
 export * from './ConnectItem'
 export * from './Heading'
+export * from './Headline'
 export * from './List'
 export * from './MenuItem'
 export * from './Padding'
 export * from './Popover'
+export * from './ProportionBar'
+export * from './SegmentedBar'
 export * from './Stat'

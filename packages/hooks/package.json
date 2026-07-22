@@ -24,7 +24,7 @@
 		"global-bus": "workspace:*",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.7",
+		"react": "^19.2.8",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
