@@ -60,26 +60,15 @@
 	}
 }
 
-.balanceLabel {
-	font-size: 1.1rem;
-	line-height: 1.4rem;
-	font-weight: 500;
-	color: var(--gray-700);
-}
-
-.balanceHighlight {
-	font-family: var(--font-family-mono);
-	color: var(--gray-1000);
-	font-weight: 700;
-}
-
-.balanceAvailableButton {
+.availableBalanceButton {
 	padding: 0;
 	background: transparent;
 	border: 0;
 	cursor: pointer;
+	color: inherit;
+	font: inherit;
 
-	&:hover .balanceHighlight {
+	&:hover {
 		text-decoration: underline;
 	}
 }

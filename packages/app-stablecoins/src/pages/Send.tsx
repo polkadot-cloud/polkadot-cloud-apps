@@ -498,23 +498,17 @@ export const Send = () => {
 						title="Asset to Send"
 						responsiveHeader
 						headerContent={
-							<span className={classes.balanceLabel}>
-								Available:{' '}
+							<SendForm.Label label="Available">
 								<button
 									type="button"
 									onClick={handleUseAvailableBalance}
-									className={classes.balanceAvailableButton}
+									className={classes.availableBalanceButton}
 								>
-									<span className={classes.balanceHighlight}>
-										{balancesLoading
-											? '...'
-											: formatBalance(
-													selectedTokenBalance,
-													selectedToken.value,
-												)}
-									</span>
+									{balancesLoading
+										? '...'
+										: formatBalance(selectedTokenBalance, selectedToken.value)}
 								</button>
-							</span>
+							</SendForm.Label>
 						}
 					>
 						<div className={classes.inputRow}>
@@ -540,17 +534,14 @@ export const Send = () => {
 					<SendForm.Segment
 						title="Pay Fees In"
 						headerContent={
-							<span className={classes.balanceLabel}>
-								Available:{' '}
-								<span className={classes.balanceHighlight}>
-									{balancesLoading
-										? '...'
-										: formatBalance(
-												selectedFeeAssetBalance,
-												selectedFeeAsset.value,
-											)}
-								</span>
-							</span>
+							<SendForm.Label label="Available">
+								{balancesLoading
+									? '...'
+									: formatBalance(
+											selectedFeeAssetBalance,
+											selectedFeeAsset.value,
+										)}
+							</SendForm.Label>
 						}
 					>
 						<Dropdown

@@ -3,10 +3,12 @@
 
 import { DirectionIndicator } from './DirectionIndicator'
 import { Header } from './Header'
+import { Label } from './Label'
 import { Segment } from './Segment'
 
 export const SendForm = {
 	DirectionIndicator,
 	Header,
+	Label,
 	Segment,
 }
