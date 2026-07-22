@@ -7,6 +7,7 @@ import type { DisplayFor } from './overlay'
 
 export type TxSubmissionItem = {
 	uid: number
+	network: string
 	tag?: string
 	fee: bigint
 	from: MaybeAddress
@@ -44,6 +45,8 @@ export type SubmitTxProps = SubmitProps &
 		proxyAccount: ActiveProxy | null
 		stacked?: boolean
 		feeDisplay?: TxFeeDisplay
+		feeBalance?: bigint
+		hideSigner?: boolean
 	}
 
 export interface SubmitProps {

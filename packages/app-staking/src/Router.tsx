@@ -126,10 +126,10 @@ const RouterInner = () => {
 					<Menu />
 					<Tooltip />
 					<Prompt />
-					<SideMenu />
+					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers Sync={Sync} />
+							<Headers NodesLeft={{ sync: Sync }} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {

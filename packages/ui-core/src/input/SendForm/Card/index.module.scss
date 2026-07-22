@@ -1,0 +1,11 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.card {
+	background-color: var(--gray-100);
+	border-radius: 1.5rem;
+	padding: 0.5rem;
+	box-shadow: var(--shadow-alt);
+	border: 1px solid var(--shade-200);
+	position: relative;
+}

@@ -1,0 +1,27 @@
+{
+	"extends": "../../tsconfig.react.json",
+	"compilerOptions": {
+		"paths": {
+			"App": ["./src/App"],
+			"contexts/*": ["./src/contexts/*"],
+			"library/*": ["./src/library/*"],
+			"modals/*": ["./src/modals/*"]
+		},
+		"outDir": "build",
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "Bundler",
+		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
+		"allowJs": false,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
+		"noEmit": true
+	},
+	"include": ["src"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

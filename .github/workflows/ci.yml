@@ -28,7 +28,7 @@ jobs:
         with:
           version: 11.1.0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -46,6 +46,8 @@ jobs:
       - run: pnpm license:headers
       - run: pnpm build:verify
         working-directory: packages/app-staking
+      - run: pnpm build:verify
+        working-directory: packages/app-stablecoins
       - run: pnpm test
       - run: pnpm run validate
         working-directory: packages/locales
