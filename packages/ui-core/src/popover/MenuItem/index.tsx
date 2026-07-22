@@ -6,8 +6,16 @@ import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import type { ComponentBaseWithClassName } from 'types'
 import classes from './index.module.scss'
 
-export const MenuItem = ({ children }: { children: ReactNode }) => {
-	const allClasses = classNames(classes.menuItem)
+export const MenuItem = ({
+	children,
+	padded,
+}: {
+	children: ReactNode
+	padded?: boolean
+}) => {
+	const allClasses = classNames(classes.menuItem, {
+		[classes.padded]: padded,
+	})
 
 	return <div className={allClasses}>{children}</div>
 }
