@@ -11,7 +11,9 @@ import type {
 // Count nominators once even when their stake is spread across multiple validators.
 export const countUniqueNominators = (exposures: Exposure[]) => {
 	const nominators = new Set<string>()
-	for (const { val: { others } } of exposures) {
+	for (const {
+		val: { others },
+	} of exposures) {
 		for (const { who } of others) {
 			nominators.add(who)
 		}
