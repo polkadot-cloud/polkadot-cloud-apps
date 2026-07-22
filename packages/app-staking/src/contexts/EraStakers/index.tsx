@@ -9,7 +9,6 @@ import { removeSyncing, setSyncing } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { fetchEraTotalNominators } from 'plugin-staking-api'
 import type { ReactNode } from 'react'
 import { useRef, useState } from 'react'
 import type {
@@ -22,7 +21,11 @@ import Worker from 'workers/stakers?worker'
 import type { ProcessExposuresResponse } from 'workers/types'
 import { defaultEraStakers } from './defaults'
 import type { EraStakers, EraStakersContextInterface } from './types'
-import { getLocalEraExposures, setLocalEraExposures } from './util'
+import {
+	countUniqueNominators,
+	getLocalEraExposures,
+	setLocalEraExposures,
+} from './util'
 
 const worker = new Worker()
 
@@ -97,7 +100,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		if (!isReady || activeEra.index === 0) {
 			return {
 				exposures: [],
-				totalNominators: undefined,
+				totalNominators: 0,
 			}
 		}
 		// Fetch current era overviews
@@ -106,15 +109,6 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		)
 		// Overview entries define the active validator set and are available before paged exposures.
 		setActiveValidators(overviews.length)
-
-		// Calculate active nominator count from overviews if staking API is disabled
-		let totalNominators: number | undefined
-		if (!pluginEnabled('staking_api')) {
-			totalNominators = overviews.reduce(
-				(prev, [, { nominatorCount }]) => prev + nominatorCount,
-				0,
-			)
-		}
 
 		let exposures: Exposure[] = []
 		const localExposures = getLocalEraExposures(
@@ -133,6 +127,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		if (era === activeEra.index.toString()) {
 			setLocalEraExposures(network, era, exposures)
 		}
+		const totalNominators = countUniqueNominators(exposures)
 		return { exposures, totalNominators }
 	}
 
@@ -146,9 +141,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		const { exposures, totalNominators } = await fetchEraStakers(
 			activeEra.index.toString(),
 		)
-		if (totalNominators !== undefined) {
-			setActiveNominatorsCount(totalNominators)
-		}
+		setActiveNominatorsCount(totalNominators)
 
 		worker.postMessage({
 			era: activeEra.index.toString(),
@@ -220,15 +213,6 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			i++
 		}
 		return result
-	}
-
-	// Fetches and sets the total active nominators for the current era
-	const handleEraTotalNominators = async () => {
-		const { eraTotalNominators } = await fetchEraTotalNominators(
-			network,
-			activeEra.index,
-		)
-		setActiveNominatorsCount(eraTotalNominators.totalNominators)
 	}
 
 	// Fetches and sets the previous era's reward points
@@ -328,12 +312,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	useEffectIgnoreInitial(() => {
 		if (isReady) {
 			fetchActiveEraStakers()
-			if (pluginEnabled('staking_api')) {
-				// If era has been fetched, fetch total nominators
-				if (activeEra.index > 0) {
-					handleEraTotalNominators()
-				}
-			} else {
+			if (!pluginEnabled('staking_api')) {
 				if (activeEra.index > 0) {
 					// Fetch previous era reward points
 					if (

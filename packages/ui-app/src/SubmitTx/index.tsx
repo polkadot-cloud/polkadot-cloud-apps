@@ -29,6 +29,8 @@ export const SubmitTx = (props: SubmitTxProps) => {
 		transparent,
 		stacked,
 		feeDisplay,
+		feeBalance,
+		hideSigner,
 	} = props
 
 	const { t } = useTranslation()
@@ -47,7 +49,8 @@ export const SubmitTx = (props: SubmitTxProps) => {
 	const {
 		balances: { balanceTxFees },
 	} = useAccountBalances(from)
-	const notEnoughFunds = balanceTxFees - fee < 0n && fee > 0n
+	const feeBalanceAvailable = feeBalance ?? balanceTxFees
+	const notEnoughFunds = feeBalanceAvailable - fee < 0n && fee > 0n
 
 	// Determine submit button text
 	const activeSubmitText =
@@ -136,6 +139,7 @@ export const SubmitTx = (props: SubmitTxProps) => {
 			displayFor={displayFor}
 			transparent={transparent}
 			stacked={stacked}
+			hideSigner={hideSigner}
 		/>
 	)
 }
