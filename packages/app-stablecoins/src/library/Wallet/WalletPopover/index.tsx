@@ -8,11 +8,16 @@ import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
 import { getFeeTokenColor, getStablecoinChainLabel } from 'consts/stablecoins'
-import type { CSSProperties, Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
-import { ConnectItem, Headline, MenuItem } from 'ui-core/popover'
-import classes from './index.module.scss'
+import {
+	ConnectItem,
+	Headline,
+	MenuItem,
+	ProportionBar,
+	SegmentedBar,
+} from 'ui-core/popover'
 
 const stablecoinMix = [
 	{
@@ -98,20 +103,16 @@ export const WalletPopover = ({
 					<ConnectItem.Container>
 						<h4>Stablecoin Mix</h4>
 						<MenuItem padded>
-							<span className={classes.mixBar}>
-								{stablecoinMix.map((coin) => (
-									<span
-										key={coin.symbol}
-										className={classes.mixSegment}
-										style={
-											{
-												width: `${coin.share}%`,
-												'--mix-color': getFeeTokenColor(coin.symbol),
-											} as CSSProperties
-										}
-									/>
-								))}
-							</span>
+							<SegmentedBar
+								ariaLabel={stablecoinMix
+									.map(({ share, symbol }) => `${symbol}: ${share}%`)
+									.join(', ')}
+								segments={stablecoinMix.map(({ share, symbol }) => ({
+									color: getFeeTokenColor(symbol),
+									id: symbol,
+									value: share,
+								}))}
+							/>
 						</MenuItem>
 						{stablecoinMix.map((coin) => (
 							<MenuItem key={coin.symbol} padded>
@@ -135,15 +136,7 @@ export const WalletPopover = ({
 										<h3>{row.value}</h3>
 									</div>
 									<div>
-										<div className={classes.shareCell}>
-											<h4>{row.share}%</h4>
-											<div className={classes.chainTrack}>
-												<div
-													className={classes.chainFill}
-													style={{ width: `${row.share}%` }}
-												/>
-											</div>
-										</div>
+										<ProportionBar percentage={row.share} />
 									</div>
 								</MenuItem>
 							</Fragment>

@@ -1,18 +1,4 @@
-.mixBar {
-	display: flex;
-	width: 100%;
-	height: 0.72rem;
-	border-radius: 999px;
-	overflow: hidden;
-	background-color: var(--gray-300);
-}
-
-.mixSegment {
-	height: 100%;
-	background-color: var(--mix-color);
-}
-
-.shareCell {
+.proportionBar {
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
@@ -20,7 +6,7 @@
 	min-width: 0;
 }
 
-.chainTrack {
+.track {
 	width: min(100%, 5.5rem);
 	height: 0.5rem;
 	border-radius: 999px;
@@ -29,7 +15,7 @@
 	flex-shrink: 0;
 }
 
-.chainFill {
+.fill {
 	height: 100%;
 	border-radius: inherit;
 	background: linear-gradient(90deg, var(--accent-600), var(--accent-500));
