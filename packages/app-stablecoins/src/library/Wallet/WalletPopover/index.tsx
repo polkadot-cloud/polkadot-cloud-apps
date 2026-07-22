@@ -116,11 +116,7 @@ export const WalletPopover = ({
 						{stablecoinMix.map((coin) => (
 							<MenuItem key={coin.symbol} padded>
 								<div>
-									<img
-										src={coin.icon}
-										alt={coin.symbol}
-										className={classes.tokenIcon}
-									/>
+									<img src={coin.icon} alt={coin.symbol} />
 								</div>
 								<div>
 									<h3>{coin.symbol}</h3>
@@ -175,11 +171,7 @@ export const WalletPopover = ({
 								{group.tokens.map((token) => (
 									<MenuItem key={`${group.chain}-${token.name}`} padded>
 										<div>
-											<img
-												src={token.icon}
-												alt={token.name}
-												className={classes.tokenIcon}
-											/>
+											<img src={token.icon} alt={token.name} />
 										</div>
 										<div>
 											<h3>{token.name}</h3>
