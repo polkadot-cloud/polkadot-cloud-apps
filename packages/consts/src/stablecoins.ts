@@ -23,6 +23,7 @@ const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
 }
 
+// Display icons for every supported fee token.
 const FeeTokenIcons: Record<FeeAssetSymbol, string> = {
 	DOT: dotSvg,
 	USDC: usdcSvg,
