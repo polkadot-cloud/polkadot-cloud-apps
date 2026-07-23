@@ -115,7 +115,7 @@ const BalanceInputControl = ({
 					placeholder="0.00"
 					inputMode="decimal"
 					autoComplete="off"
-					aria-label={ariaLabel ?? `${unit} amount`}
+					aria-label={ariaLabel ?? `${unit} ${t('amount')}`}
 					disabled={disabled}
 					style={
 						inputFontSize !== undefined
