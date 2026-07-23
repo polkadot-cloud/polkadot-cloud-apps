@@ -205,7 +205,6 @@
 		"none": "None",
 		"notAuthenticated": "Not Authenticated",
 		"notInstalled": "Not Installed",
-		"notMeetMinimum": "You do not meet the minimum nominator bond of {{minNominatorBondUnit}} {{unit}}. Please bond some funds before nominating.",
 		"notStaking": "Not Staking",
 		"notToClaim": "Validators usually claim payouts on behalf of their nominators. If you decide not to claim here, it is likely you will receive your payouts within 1-2 days of them becoming available.",
 		"notePoolDepositorMinBond_depositor": "As the pool depositor you must maintain a bond of at least {{bond}} {{unit}}.",

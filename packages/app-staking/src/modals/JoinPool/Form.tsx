@@ -3,12 +3,11 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { Polkicon } from '@w3ux/react-polkicon'
-import { capitalizeFirstLetter, planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { capitalizeFirstLetter, unitToPlanck } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { PerbillMultiplier } from 'consts'
 import { getStakingChainData } from 'consts/util'
 import { defaultClaimPermission } from 'global-bus'
-import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBatchCall } from 'hooks/useBatchCall'
@@ -48,36 +47,19 @@ export const Form = ({
 	const { activeProxy } = useActiveProxy()
 	const { getSignerWarnings } = useSignerWarnings()
 	const { activeAddress, activeAccount } = useActiveAccount()
-	const {
-		balances: {
-			pool: { totalPossibleBond },
-		},
-	} = useAccountBalances(activeAddress)
-
 	const { unit, units } = getStakingChainData(network)
 	const largestTxFee = useBondGreatestFee({ bondFor: 'pool' })
 
 	// Bond amount to join pool with
-	const [bond, setBond] = useState<{ bond: string }>({
-		bond: planckToUnit(totalPossibleBond, units),
-	})
+	const [bond, setBond] = useState('')
 
 	// Whether the bond amount is valid
-	const [bondValid, setBondValid] = useState<boolean>(false)
-
-	// feedback errors to trigger modal resize
-	const [feedbackErrors, setFeedbackErrors] = useState<string[]>([])
+	const [bondValid, setBondValid] = useState(false)
+	const bondPlanck = unitToPlanck(bond || '0', units)
+	const formValid = bondValid && bondPlanck > 0n
 
 	// Store the pool balance
 	const [poolBalance, setPoolBalance] = useState<BigNumber | null>(null)
-
-	// Handler to set bond on input change
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
-	}
-
-	// Whether the form is ready to submit
-	const formValid = bondValid && feedbackErrors.length === 0
 
 	const getTx = () => {
 		if (!formValid) {
@@ -85,10 +67,10 @@ export const Form = ({
 		}
 		const txs = serviceApi.tx.joinPool(
 			bondedPool.id,
-			unitToPlanck(!bondValid ? 0 : bond.bond, units),
+			bondPlanck,
 			defaultClaimPermission,
 		)
-		if (!txs || (txs && !txs.length)) {
+		if (!txs?.length) {
 			return
 		}
 		return txs.length === 1
@@ -99,7 +81,7 @@ export const Form = ({
 	const submitExtrinsic = useSubmitExtrinsic({
 		tx: getTx(),
 		from: formatFromProp(activeAccount, activeProxy),
-		shouldSubmit: bondValid,
+		shouldSubmit: formValid,
 		callbackSubmit: () => {
 			closeModal()
 			// Optional callback function on join success.
@@ -108,7 +90,7 @@ export const Form = ({
 				onJoinCallback()
 			}
 		},
-		callbackInBlock: async () => {
+		callbackInBlock: () => {
 			// Reset local storage setup progress
 			setPoolSetup(defaultPoolProgress)
 		},
@@ -120,7 +102,7 @@ export const Form = ({
 		submitExtrinsic.proxySupported,
 	)
 
-	const poolCommission = bondedPool?.commission?.current?.[0]
+	const poolCommission = bondedPool.commission?.current?.[0]
 
 	// Fetches the balance of the bonded pool
 	const getPoolBalance = async () => {
@@ -128,28 +110,24 @@ export const Form = ({
 			bondedPool.id,
 			BigInt(bondedPool.points),
 		)
-		const balance = new BigNumber(apiResult || 0)
-		if (balance) {
-			setPoolBalance(new BigNumber(balance))
-		}
+		setPoolBalance(new BigNumber(apiResult ?? 0))
 	}
 
 	// modal resize on form update
 	useEffect(
 		() => setModalResize(),
-		[
-			bond,
-			bondValid,
-			feedbackErrors.length,
-			warnings.length,
-			poolBalance?.toString(),
-		],
+		[bond, bondValid, warnings.length, poolBalance],
 	)
+
+	useEffect(() => {
+		setBond('')
+		setBondValid(false)
+	}, [activeAddress])
 
 	// Fetch the balance when pool or points change
 	useEffect(() => {
 		if (isReady) {
-			getPoolBalance()
+			void getPoolBalance()
 		}
 	}, [bondedPool.id, bondedPool.points, isReady])
 
@@ -159,7 +137,7 @@ export const Form = ({
 				<JoinFormWrapper>
 					<HeaderWrapper>
 						<Polkicon
-							address={bondedPool?.addresses.stash || ''}
+							address={bondedPool.addresses.stash ?? ''}
 							background="transparent"
 							fontSize="4rem"
 						/>
@@ -179,32 +157,24 @@ export const Form = ({
 							</span>
 							<span>
 								{!poolBalance
-									? `...`
+									? '...'
 									: `${planckToUnitBn(poolBalance, units)
 											.decimalPlaces(0)
 											.toFormat()} ${unit} ${capitalizeFirstLetter(t('bonded'))}`}
 							</span>
 						</div>
 					</HeaderWrapper>
-					<h4>
-						{t('bond', { ns: 'app' })} {unit}
-					</h4>
+
 					<div className="input">
 						<div>
 							<BondFeedback
-								joiningPool
-								displayFirstWarningOnly
+								value={bond}
+								onChange={setBond}
 								syncing={largestTxFee.isZero()}
-								bondFor={'pool'}
-								listenIsValid={(valid, errors) => {
-									setBondValid(valid)
-									setFeedbackErrors(errors)
-								}}
-								defaultBond={null}
-								setters={[handleSetBond]}
+								bondFor="pool"
+								listenIsValid={setBondValid}
 								parentErrors={warnings}
-								txFees={BigInt(largestTxFee.toString())}
-								bonding={false}
+								txFees={BigInt(largestTxFee.toFixed(0))}
 							/>
 						</div>
 					</div>

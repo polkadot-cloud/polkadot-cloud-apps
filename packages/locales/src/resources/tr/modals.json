@@ -205,7 +205,6 @@
 		"none": "Yok",
 		"notAuthenticated": "Kimlik Doğrulanmadı",
 		"notInstalled": "Yüklü Değil",
-		"notMeetMinimum": "{{minNominatorBondUnit}} {{unit}} minimum nominatör bağlama miktarını karşılamıyorsunuz. Lütfen nominasyon yapmadan önce bir miktar fon bağlayın.",
 		"notStaking": "Stake Edilmiyor",
 		"notToClaim": "Validatörler genellikle ödemeleri nominatörleri adına talep eder. Burada talep etmemeye karar verirseniz, ödemelerinizi kullanılabilir olduktan sonra 1-2 gün içinde alacaksınız.",
 		"notePoolDepositorMinBond_depositor": "Havuz Depositor'ı olarak en az {{bond}} {{unit}} bağlama miktarını korumalısınız.",

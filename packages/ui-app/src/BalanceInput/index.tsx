@@ -1,117 +1,150 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useActiveAccount } from '@polkadot-cloud/connect'
+import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
+import classNames from 'classnames'
 import { getStakingChainData } from 'consts/util'
+import { useInputAutoFontSize } from 'hooks/useInputAutoFontSize'
 import { useNetwork } from 'hooks/useNetwork'
-import type { ChangeEvent } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonSubmitInvert } from 'ui-buttons'
+import { sanitizeBalanceInput } from 'utils'
+import { Dropdown } from '../Dropdown'
 import classes from './index.module.scss'
-import type { BalanceInputProps } from './types'
+import type {
+	BalanceInputControlProps,
+	BalanceInputMultiProps,
+	BalanceInputProps,
+} from './types'
 
-export type { BalanceInputProps, BalanceInputSetter } from './types'
+export type {
+	BalanceInputMultiProps,
+	BalanceInputProps,
+	BalanceInputValue,
+} from './types'
 
-export const BalanceInput = ({
-	setters = [],
-	disabled,
-	defaultValue,
+const BalanceInputControl = ({
+	value,
+	unit,
 	maxAvailable,
-	disableTxFeeUpdate = false,
-	value = '0',
+	maxDecimals,
+	disabled = false,
 	syncing = false,
-}: BalanceInputProps) => {
+	label,
+	ariaLabel,
+	displayFor = 'default',
+	leading,
+	trailing,
+	onChange,
+	onBlur,
+}: BalanceInputControlProps) => {
 	const { t } = useTranslation('app')
-	const { network } = useNetwork()
-	const { activeAddress } = useActiveAccount()
-	const { unit } = getStakingChainData(network)
-
-	// the current local token value
-	const [localValue, setLocalValue] = useState<string>(value)
-
-	// reset value to default when changing account
-	useEffect(() => {
-		setLocalValue(defaultValue ?? '0')
-	}, [activeAddress])
-
-	useEffect(() => {
-		if (!disableTxFeeUpdate) {
-			setLocalValue(value.toString())
-		}
-	}, [value])
-
-	// handle value change
-	const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
-		const val = e.target.value
-		if (val !== '') {
-			try {
-				if (new BigNumber(val).isNaN()) {
-					return
-				}
-			} catch {
-				return
-			}
-		}
-		setLocalValue(val)
-		updateParentState(val)
-	}
-
-	// apply value to parent setters
-	const updateParentState = (val: string) => {
-		val = val || '0'
-		if (new BigNumber(val).isNaN()) {
-			val = '0'
-		}
-
-		for (const setter of setters) {
-			setter({
-				value: new BigNumber(val),
-			})
+	const { inputRef, fontSize: inputFontSize } = useInputAutoFontSize({ value })
+	const formattedAvailable = `${maxAvailable.toFormat()} ${unit}`
+	const maxDisabled = disabled || syncing || maxAvailable.isLessThanOrEqualTo(0)
+	const updateValue = (nextValue: string) => {
+		const sanitized = sanitizeBalanceInput(nextValue, maxDecimals)
+		if (sanitized !== null && sanitized !== value) {
+			onChange(sanitized)
 		}
 	}
 
-	// available funds as jsx
-	const availableFundsJsx = (
-		<p>
-			{syncing ? '...' : `${maxAvailable.toFormat()} ${unit} ${t('available')}`}
-		</p>
-	)
+	useEffect(() => {
+		const sanitized = sanitizeBalanceInput(value, maxDecimals)
+		if (sanitized !== null && sanitized !== value) {
+			onChange(sanitized)
+		}
+	}, [maxDecimals, onChange, value])
 
 	return (
-		<div className={classes.wrapper}>
-			<div className={classes.inner}>
-				<section
-					className={classes.section}
-					style={{ opacity: disabled ? 0.5 : 1 }}
-				>
-					<div className={classes.input}>
-						<div className={classes.field}>
-							<input
-								type="text"
-								placeholder={`0 ${unit}`}
-								value={localValue}
-								onChange={(e) => {
-									handleChangeValue(e)
-								}}
-								disabled={disabled}
-							/>
-						</div>
-						<div className={classes.available}>{availableFundsJsx}</div>
-					</div>
-					<ButtonSubmitInvert
-						text={t('max')}
-						disabled={disabled || syncing || maxAvailable.isZero()}
-						onClick={() => {
-							setLocalValue(maxAvailable.toString())
-							updateParentState(maxAvailable.toString())
-						}}
-						marginLeft
-					/>
-				</section>
+		<div
+			className={classNames(classes.wrapper, {
+				[classes.canvas]: displayFor === 'canvas',
+			})}
+		>
+			<div className={classes.header}>
+				<span className={classes.label}>{label ?? t('amount')}</span>
+				<span className={classes.available}>
+					{t('available')}:{' '}
+					<button
+						type="button"
+						className={classes.availableButton}
+						disabled={maxDisabled}
+						onClick={() => updateValue(maxAvailable.toFixed())}
+					>
+						{syncing ? '...' : formattedAvailable}
+					</button>
+				</span>
 			</div>
-			<div className={classes.availableOuter}>{availableFundsJsx}</div>
+			<div
+				className={classNames(classes.inputRow, {
+					[classes.inputRowMulti]: trailing,
+				})}
+				style={{ opacity: disabled ? 0.5 : 1 }}
+			>
+				{leading}
+				<input
+					ref={inputRef}
+					type="text"
+					value={value}
+					onChange={(event) => updateValue(event.target.value)}
+					onBlur={() => {
+						if (value.endsWith('.')) {
+							onChange(value.slice(0, -1))
+						}
+						onBlur?.()
+					}}
+					className={classes.amountInput}
+					placeholder="0.00"
+					inputMode="decimal"
+					autoComplete="off"
+					aria-label={ariaLabel ?? `${unit} ${t('amount')}`}
+					disabled={disabled}
+					style={
+						inputFontSize !== undefined
+							? { fontSize: `${inputFontSize}px` }
+							: undefined
+					}
+				/>
+				{trailing}
+			</div>
 		</div>
 	)
 }
+
+export const BalanceInput = ({
+	maxAvailable,
+	...inputProps
+}: BalanceInputProps) => {
+	const { network } = useNetwork()
+	const { unit, units } = getStakingChainData(network)
+	const TokenIcon = getChainIcons(network).token
+
+	return (
+		<BalanceInputControl
+			{...inputProps}
+			unit={unit}
+			maxAvailable={new BigNumber(maxAvailable)}
+			maxDecimals={units}
+			leading={<TokenIcon className={classes.tokenIcon} aria-hidden />}
+		/>
+	)
+}
+
+export const BalanceInputMulti = <T extends string>({
+	options,
+	selected,
+	onSelect,
+	maxAvailable,
+	...inputProps
+}: BalanceInputMultiProps<T>) => (
+	<BalanceInputControl
+		{...inputProps}
+		unit={selected.label}
+		maxAvailable={new BigNumber(maxAvailable)}
+		trailing={
+			<Dropdown options={options} selected={selected} onSelect={onSelect} />
+		}
+	/>
+)

@@ -205,7 +205,6 @@
 		"none": "Nenhum",
 		"notAuthenticated": "Não Autenticado",
 		"notInstalled": "Não Instalado",
-		"notMeetMinimum": "Você não atende ao vínculo mínimo do nomeador de {{minNominatorBondUnit}} {{unit}}. Vincule alguns fundos antes de nomear.",
 		"notStaking": "Não Fazendo Staking",
 		"notToClaim": "Validadores geralmente reivindicam pagamentos em nome de seus nomeadores. Se você optar por não reivindicar aqui, é provável que receba seus pagamentos dentro de 1-2 dias após ficarem disponíveis.",
 		"notePoolDepositorMinBond_depositor": "Como depositante do pool, você deve manter um vínculo de pelo menos {{bond}} {{unit}}.",
