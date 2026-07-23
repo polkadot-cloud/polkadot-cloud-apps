@@ -3,42 +3,27 @@
 
 import type BigNumber from 'bignumber.js'
 import type { ReactNode } from 'react'
-import type { BondFor, ClaimPermission } from 'types'
-
-export type ValueSetter = ({
-	value,
-	inputValue,
-}: {
-	value: BigNumber
-	inputValue?: string
-}) => void
+import type { BondFor, ClaimPermission, DisplayFor } from 'types'
 
 export interface BondFeedbackProps {
+	value: string
+	onChange: (value: string) => void
 	syncing?: boolean
-	setters: ValueSetter[]
 	bondFor: BondFor
-	defaultBond: string | null
 	bonding?: boolean
-	joiningPool?: boolean
-	listenIsValid?: ((valid: boolean, errors: string[]) => void) | (() => void)
-	parentErrors?: string[]
-	disableTxFeeUpdate?: boolean
-	setLocalResize?: () => void
+	listenIsValid?: (valid: boolean) => void
+	parentErrors?: readonly string[]
 	txFees: bigint
 	maxWidth?: boolean
-	displayFirstWarningOnly?: boolean
+	displayFor?: DisplayFor
 }
 
 export interface UnbondFeedbackProps {
-	setters: ValueSetter[]
+	value: string
+	onChange: (value: string) => void
 	bondFor: BondFor
-	defaultBond?: number
-	inSetup?: boolean
-	listenIsValid?: ((valid: boolean, errors: string[]) => void) | (() => void)
-	parentErrors?: string[]
-	setLocalResize?: () => void
-	txFees: bigint
-	displayFirstWarningOnly?: boolean
+	listenIsValid?: (valid: boolean) => void
+	parentErrors?: readonly string[]
 }
 
 export interface NominateStatusBarProps {
