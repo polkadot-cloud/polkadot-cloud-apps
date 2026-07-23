@@ -55,12 +55,9 @@ export const UnbondFeedback = ({
 	})
 
 	// handler to set bond as a string
-	const handleSetBond = ({
+	const handleSetBond: UnbondFeedbackProps['setters'][number] = ({
 		value,
 		inputValue,
-	}: {
-		value: BigNumber
-		inputValue?: string
 	}) => {
 		setBond({ bond: inputValue ?? value.toString() })
 	}
