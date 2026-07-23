@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "Allow anyone to withdraw your rewards to your account.",
 		"allowCompound": "Allow Compound",
 		"allowWithdraw": "Allow Withdraw",
+		"amount": "Amount",
 		"alreadyImported": "Address Already Imported",
 		"alreadyStaking": "Already Staking",
 		"analyzingPoolPerformance": "Analyzing pool performance",

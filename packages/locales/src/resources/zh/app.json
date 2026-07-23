@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "允许任何人代表您取出收益",
 		"allowCompound": "允许复利",
 		"allowWithdraw": "允许取出收益",
+		"amount": "数量",
 		"alreadyImported": "地址已导入",
 		"alreadyStaking": "您已在质押中",
 		"analyzingPoolPerformance": "分析提名池性能",

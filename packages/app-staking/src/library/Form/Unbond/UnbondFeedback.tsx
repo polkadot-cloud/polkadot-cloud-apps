@@ -12,10 +12,10 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useStakingMetrics } from 'hooks/useStakingMetrics'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BalanceInput } from 'ui-app/BalanceInput'
 import type { UnbondFeedbackProps } from '../types'
 import { Warning } from '../Warning'
 import { Spacer } from '../Wrappers'
-import { UnbondInput } from './UnbondInput'
 
 export const UnbondFeedback = ({
 	bondFor,
@@ -55,8 +55,14 @@ export const UnbondFeedback = ({
 	})
 
 	// handler to set bond as a string
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setBond({ bond: inputValue ?? value.toString() })
 	}
 
 	// current bond value BigNumber
@@ -156,13 +162,12 @@ export const UnbondFeedback = ({
 				<Warning key={`unbond_error_${err}`} text={err} />
 			))}
 			<Spacer />
-			<UnbondInput
-				active={new BigNumber(active)}
+			<BalanceInput
 				defaultValue={defaultValue}
 				disabled={
 					active === 0n || nominatorActiveBelowMin || poolActiveBelowMin
 				}
-				unbondToMin={new BigNumber(unbondToMin)}
+				maxAvailable={new BigNumber(planckToUnit(unbondToMin, units))}
 				setters={setters}
 				value={bond.bond}
 			/>

@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "Permitir que cualquiera retire tus recompensas a tu cuenta",
 		"allowCompound": "Permitir Reinversión",
 		"allowWithdraw": "Permitir Retiro",
+		"amount": "Cantidad",
 		"alreadyImported": "Dirección Ya Importada",
 		"alreadyStaking": "Ya estás stakeando",
 		"analyzingPoolPerformance": "Analizando el rendimiento del pool",

@@ -5,7 +5,13 @@ import type BigNumber from 'bignumber.js'
 import type { ReactNode } from 'react'
 import type { BondFor, ClaimPermission } from 'types'
 
-export type ValueSetter = ({ value }: { value: BigNumber }) => void
+export type ValueSetter = ({
+	value,
+	inputValue,
+}: {
+	value: BigNumber
+	inputValue?: string
+}) => void
 
 export interface BondFeedbackProps {
 	syncing?: boolean
@@ -33,15 +39,6 @@ export interface UnbondFeedbackProps {
 	setLocalResize?: () => void
 	txFees: bigint
 	displayFirstWarningOnly?: boolean
-}
-
-export interface UnbondInputProps {
-	active: BigNumber
-	unbondToMin: BigNumber
-	defaultValue: string
-	disabled: boolean
-	setters: ValueSetter[]
-	value: string
 }
 
 export interface NominateStatusBarProps {

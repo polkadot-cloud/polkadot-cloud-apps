@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "누구나 보상을 계정으로 인출하도록 허용합니다.",
 		"allowCompound": "복합(재투자) 허용",
 		"allowWithdraw": "인출 허용",
+		"amount": "금액",
 		"alreadyImported": "주소가 이미 가져와졌습니다",
 		"alreadyStaking": "이미 스테이킹 중",
 		"analyzingPoolPerformance": "풀 성능 분석 중",
