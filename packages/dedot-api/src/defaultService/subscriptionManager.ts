@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import {
 	getActiveAddress,
 	importedAccounts$,
@@ -17,12 +18,21 @@ import {
 	bonded$,
 	fetchAndSetPoolWarnings,
 	getSyncing,
+	removeStablecoinBalances,
 	removeSyncing,
+	setStablecoinBalance,
+	setStablecoinBalancesSubscriptionError,
 } from 'global-bus'
 import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
-import type { NetworkId, ServiceInterface, SystemChainId } from 'types'
+import type {
+	NetworkId,
+	ServiceInterface,
+	StablecoinBalance,
+	SystemChainId,
+} from 'types'
 import { AccountBalanceQuery } from '../subscribe/accountBalance'
 import { ActivePoolQuery } from '../subscribe/activePool'
+import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { BondedQuery } from '../subscribe/bonded'
 import { EraRewardPointsQuery } from '../subscribe/eraRewardPoints'
 import { PoolMembershipQuery } from '../subscribe/poolMembership'
@@ -32,6 +42,7 @@ import type {
 	ActivePools,
 	AssetHubChain,
 	BondedAccounts,
+	DedotServiceConfig,
 	PeopleChain,
 	PoolMemberships,
 	StakingChain,
@@ -46,6 +57,12 @@ import {
 } from '../util'
 import type { AccountBalances } from './types'
 
+export type StablecoinBalanceSubscriber = (
+	address: string,
+	onBalance: (balance: StablecoinBalance) => void,
+	onError: (error: unknown) => void,
+) => () => void
+
 // Manages all subscriptions for a default service
 export class SubscriptionManager<
 	PeopleApi extends PeopleChain,
@@ -59,6 +76,7 @@ export class SubscriptionManager<
 		people: {},
 		hub: {},
 	}
+	subStablecoinBalances: Record<string, () => void> = {}
 	subBonded: BondedAccounts<StakingApi> = {}
 	subStakingLedgers: StakingLedgers<StakingApi> = {}
 	subActivePoolIds: Subscription
@@ -77,6 +95,10 @@ export class SubscriptionManager<
 		private ids: [NetworkId, SystemChainId, SystemChainId],
 		private stakingConsts: { poolsPalletId: Uint8Array },
 		private serviceInterface: ServiceInterface,
+		private subscribeStablecoinBalances:
+			| StablecoinBalanceSubscriber
+			| undefined,
+		private features: Required<DedotServiceConfig>,
 	) {}
 
 	// Initialize default service subscriptions
@@ -86,9 +108,10 @@ export class SubscriptionManager<
 			.pipe(startWith([], [], []), pairwise())
 			.subscribe(([prev, cur]) => {
 				const ss58 = this.apiHub.consts.system.ss58Prefix
+				const formattedPrev = formatAccountAddresses(prev.flat(), ss58)
 				const formattedCur = formatAccountAddresses(cur.flat(), ss58)
 				const { added, removed, remaining } = diffImportedAccounts(
-					prev.flat(),
+					formattedPrev,
 					formattedCur,
 				)
 
@@ -111,8 +134,13 @@ export class SubscriptionManager<
 						})
 						this.subBonded[address]?.unsubscribe()
 						delete this.subBonded[address]
-						this.subPoolMemberships?.[address]?.unsubscribe()
+						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
+						if (this.features.stablecoins) {
+							this.subStablecoinBalances[address]?.()
+							delete this.subStablecoinBalances[address]
+							removeStablecoinBalances(address)
+						}
 					}
 				})
 
@@ -125,10 +153,61 @@ export class SubscriptionManager<
 					const addressAlreadyPresent = remaining.some(
 						(a) => a?.address === address,
 					)
+					const balanceKey = getAccountKey(this.ids[2], address)
+					const addressAlreadySubscribed =
+						!!this.subAccountBalances.hub[balanceKey]
 					// Only subscribe to address subscriptions if no other occurrence of the address exists
-					if (!addressAlreadyAdded && !addressAlreadyPresent) {
-						this.subAccountBalances.hub[getAccountKey(this.ids[2], address)] =
-							new AccountBalanceQuery(this.apiHub, this.ids[2], address)
+					if (
+						!addressAlreadyAdded &&
+						!addressAlreadyPresent &&
+						!addressAlreadySubscribed
+					) {
+						this.subAccountBalances.hub[balanceKey] = new AccountBalanceQuery(
+							this.apiHub,
+							this.ids[2],
+							address,
+						)
+						if (this.features.stablecoins) {
+							let disposed = false
+							let assetHubSubscription:
+								| AssetHubStablecoinBalancesQuery
+								| undefined
+							let unsubscribeChainSubscription: (() => void) | undefined
+							this.subStablecoinBalances[address] = () => {
+								disposed = true
+								assetHubSubscription?.unsubscribe()
+								unsubscribeChainSubscription?.()
+							}
+							void this.serviceInterface.stablecoins.query
+								.balances(address)
+								.catch(() => undefined)
+								.then(() => {
+									if (disposed) {
+										return
+									}
+
+									const onBalance = (balance: StablecoinBalance) =>
+										setStablecoinBalance(address, balance)
+									const onError = () =>
+										setStablecoinBalancesSubscriptionError(address)
+
+									if (this.ids[2] === 'statemint') {
+										assetHubSubscription = new AssetHubStablecoinBalancesQuery(
+											this
+												.apiHub as unknown as DedotClient<PolkadotAssetHubApi>,
+											address,
+											onBalance,
+											onError,
+										)
+									}
+									unsubscribeChainSubscription =
+										this.subscribeStablecoinBalances?.(
+											address,
+											onBalance,
+											onError,
+										)
+								})
+						}
 
 						this.subBonded[address] = new BondedQuery(this.stakingApi, address)
 						this.subPoolMemberships[address] = new PoolMembershipQuery(
@@ -247,6 +326,13 @@ export class SubscriptionManager<
 		}
 		for (const sub of Object.values(this.subStakingLedgers)) {
 			sub?.unsubscribe()
+		}
+		for (const [address, unsubscribe] of Object.entries(
+			this.subStablecoinBalances,
+		)) {
+			delete this.subStablecoinBalances[address]
+			unsubscribe()
+			removeStablecoinBalances(address)
 		}
 		for (const sub of Object.values(this.subBonded)) {
 			sub?.unsubscribe()

@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes'
+import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
+import { getRpcEndpointList } from 'consts/rpc'
 import {
-	type DedotClient,
+	DedotClient,
 	ExtraSignedExtension,
 	type SmoldotProvider,
-	type WsProvider,
+	WsProvider,
 } from 'dedot'
 import type {
 	NetworkConfig,
@@ -16,11 +18,16 @@ import type {
 	SystemChainId,
 } from 'types'
 import { BaseService } from '../defaultService/baseService'
+import type { StablecoinBalanceSubscriber } from '../defaultService/subscriptionManager'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
+import { createStablecoinsInterface } from '../stablecoins'
+import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
+import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
+import type { DedotServiceConfig } from '../types'
 
 export class PolkadotService
 	extends BaseService<
@@ -37,6 +44,8 @@ export class PolkadotService
 {
 	// Service interface
 	interface: ServiceInterface
+	private apiHydration?: DedotClient<HydrationApi>
+	private apiHydrationPromise?: Promise<DedotClient<HydrationApi>>
 
 	constructor(
 		public networkConfig: NetworkConfig,
@@ -44,11 +53,23 @@ export class PolkadotService
 		public apiHub: DedotClient<PolkadotAssetHubApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
-		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
+		super(
+			networkConfig,
+			ids,
+			apiHub,
+			apiHub,
+			providerRelay,
+			providerPeople,
+			features,
+		)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
+			stablecoins: this.features.stablecoins
+				? createStablecoinsInterface(this.apiHub, this.getHydrationApi)
+				: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
 					hub: async (address) =>
@@ -162,27 +183,86 @@ export class PolkadotService
 					signerAddress,
 					payloadOptions = undefined,
 				) =>
-					new ExtraSignedExtension(this.getLiveApi(specName), {
+					new ExtraSignedExtension(this.getSigningApi(specName), {
 						signerAddress,
 						payloadOptions,
 					}),
 				metadata: async (specName) =>
-					await this.getLiveApi(specName).call.metadata.metadataAtVersion(15),
+					await this.getSigningApi(specName).call.metadata.metadataAtVersion(
+						15,
+					),
 			},
 			spec: {
-				ss58: (specName) => this.getLiveApi(specName).consts.system.ss58Prefix,
+				ss58: (specName) =>
+					this.getSigningApi(specName).consts.system.ss58Prefix,
 			},
 			codec: {
 				$Signature: (specName) =>
-					this.getLiveApi(specName).registry.findCodec(
-						this.getLiveApi(specName).registry.metadata.extrinsic
+					this.getSigningApi(specName).registry.findCodec(
+						this.getSigningApi(specName).registry.metadata.extrinsic
 							.signatureTypeId,
 					),
 			},
 		}
 	}
 
+	getHydrationApi = () => {
+		if (!this.apiHydrationPromise) {
+			this.apiHydrationPromise = DedotClient.new<HydrationApi>(
+				new WsProvider(getRpcEndpointList('hydration')),
+			)
+				.then((api) => {
+					this.apiHydration = api
+					return api
+				})
+				.catch((error) => {
+					this.apiHydrationPromise = undefined
+					throw error
+				})
+		}
+
+		return this.apiHydrationPromise
+	}
+
+	private subscribeStablecoinBalances: StablecoinBalanceSubscriber = (
+		address,
+		onBalance,
+		onError,
+	) => {
+		const subscription = new HydrationStablecoinBalancesQuery(
+			this.getHydrationApi,
+			address,
+			onBalance,
+			onError,
+		)
+
+		return () => {
+			subscription.unsubscribe()
+		}
+	}
+
+	getSigningApi = (specName: string) => {
+		if (this.apiHydration?.runtimeVersion.specName === specName) {
+			return this.apiHydration as unknown as DedotClient<HydrationApi>
+		}
+		return this.apiHub
+	}
+
 	async start() {
-		await super.start(this.interface)
+		await super.start(
+			this.interface,
+			this.features.stablecoins ? this.subscribeStablecoinBalances : undefined,
+		)
+	}
+
+	async unsubscribe() {
+		await Promise.all([
+			super.unsubscribe(),
+			this.apiHydrationPromise
+				?.then((api) => api.disconnect())
+				.catch(() => undefined),
+		])
+		this.apiHydration = undefined
+		this.apiHydrationPromise = undefined
 	}
 }

@@ -21,9 +21,17 @@ import { ChainSpecs } from '../spec/chainSpecs'
 import { ActiveEraQuery } from '../subscribe/activeEra'
 import { BlockNumberQuery } from '../subscribe/blockNumber'
 import { PoolsConfigQuery } from '../subscribe/poolsConfig'
-import type { AssetHubChain, PeopleChain, StakingChain } from '../types'
+import type {
+	AssetHubChain,
+	DedotServiceConfig,
+	PeopleChain,
+	StakingChain,
+} from '../types'
 import { IdentityManager } from './identityManager'
-import { SubscriptionManager } from './subscriptionManager'
+import {
+	type StablecoinBalanceSubscriber,
+	SubscriptionManager,
+} from './subscriptionManager'
 
 // Base service utility that handles common initialization and management
 export class BaseService<
@@ -53,6 +61,8 @@ export class BaseService<
 	// Identity manager
 	identityManager: IdentityManager<PeopleApi>
 
+	features: Required<DedotServiceConfig>
+
 	constructor(
 		public networkConfig: NetworkConfig,
 		public ids: [NetworkId, SystemChainId, SystemChainId],
@@ -60,7 +70,11 @@ export class BaseService<
 		private stakingApi: DedotClient<StakingApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
+		this.features = {
+			stablecoins: features.stablecoins ?? true,
+		}
 		this.apiStatus = {
 			hub: new ApiStatus(this.apiHub, ids[2], networkConfig),
 		}
@@ -72,7 +86,10 @@ export class BaseService<
 	}
 
 	// Initialize the service with common setup logic
-	async start(serviceInterface: ServiceInterface) {
+	async start(
+		serviceInterface: ServiceInterface,
+		subscribeStablecoinBalances?: StablecoinBalanceSubscriber,
+	) {
 		// Initialize chain specs
 		this.hubChainSpec = new ChainSpecs(this.apiHub)
 
@@ -105,6 +122,8 @@ export class BaseService<
 			this.ids,
 			{ poolsPalletId: this.stakingConsts.poolsPalletId },
 			serviceInterface,
+			subscribeStablecoinBalances,
+			this.features,
 		)
 
 		// Initialize identity manager

@@ -37,7 +37,7 @@ if (
 }
 
 // Initialise global api service
-initDedotService()
+initDedotService({ stablecoins: false })
 
 const root = createRoot(rootElement)
 
