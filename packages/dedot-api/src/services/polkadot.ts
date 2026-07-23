@@ -23,10 +23,11 @@ import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
-import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
+import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
+import type { DedotServiceConfig } from '../types'
 
 export class PolkadotService
 	extends BaseService<
@@ -52,15 +53,23 @@ export class PolkadotService
 		public apiHub: DedotClient<PolkadotAssetHubApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
-		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
+		super(
+			networkConfig,
+			ids,
+			apiHub,
+			apiHub,
+			providerRelay,
+			providerPeople,
+			features,
+		)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
-			stablecoins: createStablecoinsInterface(
-				this.apiHub,
-				this.getHydrationApi,
-			),
+			stablecoins: this.features.stablecoins
+				? createStablecoinsInterface(this.apiHub, this.getHydrationApi)
+				: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
 					hub: async (address) =>
@@ -220,25 +229,15 @@ export class PolkadotService
 		onBalance,
 		onError,
 	) => {
-		const subscriptions = [
-			new AssetHubStablecoinBalancesQuery(
-				this.apiHub,
-				address,
-				onBalance,
-				onError,
-			),
-			new HydrationStablecoinBalancesQuery(
-				this.getHydrationApi,
-				address,
-				onBalance,
-				onError,
-			),
-		]
+		const subscription = new HydrationStablecoinBalancesQuery(
+			this.getHydrationApi,
+			address,
+			onBalance,
+			onError,
+		)
 
 		return () => {
-			for (const subscription of subscriptions) {
-				subscription.unsubscribe()
-			}
+			subscription.unsubscribe()
 		}
 	}
 
@@ -250,7 +249,10 @@ export class PolkadotService
 	}
 
 	async start() {
-		await super.start(this.interface, this.subscribeStablecoinBalances)
+		await super.start(
+			this.interface,
+			this.features.stablecoins ? this.subscribeStablecoinBalances : undefined,
+		)
 	}
 
 	async unsubscribe() {

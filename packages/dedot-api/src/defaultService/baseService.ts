@@ -21,7 +21,12 @@ import { ChainSpecs } from '../spec/chainSpecs'
 import { ActiveEraQuery } from '../subscribe/activeEra'
 import { BlockNumberQuery } from '../subscribe/blockNumber'
 import { PoolsConfigQuery } from '../subscribe/poolsConfig'
-import type { AssetHubChain, PeopleChain, StakingChain } from '../types'
+import type {
+	AssetHubChain,
+	DedotServiceConfig,
+	PeopleChain,
+	StakingChain,
+} from '../types'
 import { IdentityManager } from './identityManager'
 import {
 	type StablecoinBalanceSubscriber,
@@ -56,6 +61,8 @@ export class BaseService<
 	// Identity manager
 	identityManager: IdentityManager<PeopleApi>
 
+	features: Required<DedotServiceConfig>
+
 	constructor(
 		public networkConfig: NetworkConfig,
 		public ids: [NetworkId, SystemChainId, SystemChainId],
@@ -63,7 +70,11 @@ export class BaseService<
 		private stakingApi: DedotClient<StakingApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
+		this.features = {
+			stablecoins: features.stablecoins ?? true,
+		}
 		this.apiStatus = {
 			hub: new ApiStatus(this.apiHub, ids[2], networkConfig),
 		}
@@ -112,6 +123,7 @@ export class BaseService<
 			{ poolsPalletId: this.stakingConsts.poolsPalletId },
 			serviceInterface,
 			subscribeStablecoinBalances,
+			this.features,
 		)
 
 		// Initialize identity manager

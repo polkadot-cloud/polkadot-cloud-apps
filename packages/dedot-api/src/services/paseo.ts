@@ -22,6 +22,7 @@ import { runtimeApi } from '../runtimeApi'
 import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
+import type { DedotServiceConfig } from '../types'
 
 export class PaseoService
 	extends BaseService<
@@ -45,8 +46,17 @@ export class PaseoService
 		public apiHub: DedotClient<PaseoAssetHubApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
-		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
+		super(
+			networkConfig,
+			ids,
+			apiHub,
+			apiHub,
+			providerRelay,
+			providerPeople,
+			features,
+		)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
