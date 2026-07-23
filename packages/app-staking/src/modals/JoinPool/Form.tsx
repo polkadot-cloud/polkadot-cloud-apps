@@ -186,9 +186,7 @@ export const Form = ({
 							</span>
 						</div>
 					</HeaderWrapper>
-					<h4>
-						{t('bond', { ns: 'app' })} {unit}
-					</h4>
+
 					<div className="input">
 						<div>
 							<BondFeedback

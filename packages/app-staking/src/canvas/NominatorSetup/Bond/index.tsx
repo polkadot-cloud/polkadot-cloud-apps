@@ -102,7 +102,7 @@ export const Bond = ({
 					setters={[handleSetBond]}
 					txFees={fee}
 					maxWidth
-					joiningPool
+					displayFor="canvas"
 				/>
 				<NominateStatusBar value={new BigNumber(bond.bond)} />
 				{!inline && <Footer complete={bondValid} bondFor="nominator" />}

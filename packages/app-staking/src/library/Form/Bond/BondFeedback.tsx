@@ -20,6 +20,7 @@ export const BondFeedback = ({
 	bondFor,
 	bonding = false,
 	joiningPool = false,
+	displayFor = 'default',
 	parentErrors = [],
 	setters = [],
 	listenIsValid,
@@ -192,7 +193,7 @@ export const BondFeedback = ({
 				}}
 			>
 				<BalanceInput
-					displayFor={joiningPool ? 'canvas' : 'default'}
+					displayFor={displayFor === 'canvas' ? 'canvas' : 'default'}
 					value={String(bond.bond)}
 					defaultValue={defaultBondStr}
 					syncing={syncing}

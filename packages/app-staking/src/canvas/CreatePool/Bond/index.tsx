@@ -89,6 +89,7 @@ export const Bond = ({ section }: SetupStepProps) => {
 					txFees={fee}
 					maxWidth
 					joiningPool
+					displayFor="canvas"
 				/>
 				<CreatePoolStatusBar value={bondValue} />
 				<Footer complete={bondValid} bondFor="pool" />

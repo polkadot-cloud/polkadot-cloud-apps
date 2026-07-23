@@ -157,7 +157,7 @@ export const JoinForm = ({
 			<div className="input">
 				<div>
 					<BondFeedback
-						joiningPool
+						displayFor="canvas"
 						displayFirstWarningOnly
 						syncing={largestTxFee.isZero()}
 						bondFor={'pool'}

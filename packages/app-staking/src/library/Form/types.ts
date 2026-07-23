@@ -3,7 +3,7 @@
 
 import type BigNumber from 'bignumber.js'
 import type { ReactNode } from 'react'
-import type { BondFor, ClaimPermission } from 'types'
+import type { BondFor, ClaimPermission, DisplayFor } from 'types'
 
 export type ValueSetter = ({
 	value,
@@ -27,6 +27,7 @@ export interface BondFeedbackProps {
 	txFees: bigint
 	maxWidth?: boolean
 	displayFirstWarningOnly?: boolean
+	displayFor?: DisplayFor
 }
 
 export interface UnbondFeedbackProps {
