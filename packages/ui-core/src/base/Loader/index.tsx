@@ -4,6 +4,9 @@
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
-export const Loader = ({ style }: ComponentBase) => (
-	<div className={classes.loader} style={style} />
+export const Loader = ({
+	as: Element = 'div',
+	style,
+}: ComponentBase & { as?: 'div' | 'span' }) => (
+	<Element className={classes.loader} style={style} />
 )

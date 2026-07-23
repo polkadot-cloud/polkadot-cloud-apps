@@ -68,6 +68,10 @@ $button-padding-sm: 1rem;
 			}
 		}
 
+		&:only-child {
+			margin-right: 0;
+		}
+
 		> h3 {
 			color: var(--gray-900);
 			font-size: 1.2rem;
