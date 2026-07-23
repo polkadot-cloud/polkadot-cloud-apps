@@ -10,7 +10,7 @@ import { useActivePool } from 'hooks/useActivePool'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useStakingMetrics } from 'hooks/useStakingMetrics'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BalanceInput } from 'ui-app/BalanceInput'
 import type { BondFeedbackProps } from '../types'
@@ -92,16 +92,27 @@ export const BondFeedback = ({
 	}
 
 	const bondValid = errors.length === 0 && value !== ''
+	const previousFeeState = useRef({ activeAddress, bondFor, txFees })
 	useEffect(() => {
 		listenIsValid?.(bondValid)
 	}, [bondValid, listenIsValid])
 
-	// update max bond after txFee sync
+	// Update the value only when transaction fees change, not while typing.
 	useEffect(() => {
+		const previous = previousFeeState.current
+		const feesUpdated =
+			previous.activeAddress === activeAddress &&
+			previous.bondFor === bondFor &&
+			previous.txFees !== txFees
+		previousFeeState.current = { activeAddress, bondFor, txFees }
+
+		if (!feesUpdated) {
+			return
+		}
 		if (bondBigInt > freeToBond) {
 			onChange(planckToUnit(freeToBond, units))
 		}
-	}, [bondBigInt, freeToBond, onChange, units])
+	}, [activeAddress, bondBigInt, bondFor, freeToBond, onChange, txFees, units])
 
 	return (
 		<>
