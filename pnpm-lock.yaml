@@ -862,6 +862,9 @@ importers:
       hooks:
         specifier: workspace:*
         version: link:../hooks
+      locales:
+        specifier: workspace:*
+        version: link:../locales
       motion:
         specifier: 12.23.24
         version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1103,6 +1106,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      global-bus:
+        specifier: workspace:*
+        version: link:../global-bus
       hooks:
         specifier: workspace:*
         version: link:../hooks

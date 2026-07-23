@@ -30,6 +30,7 @@
 		"assets": "workspace:*",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
+		"global-bus": "workspace:*",
 		"hooks": "workspace:*",
 		"react": "^19.2.8",
 		"react-i18next": "^17.0.10",

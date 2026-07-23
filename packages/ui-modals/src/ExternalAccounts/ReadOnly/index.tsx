@@ -12,6 +12,7 @@ import {
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
 import { Polkicon } from '@w3ux/react-polkicon'
+import { emitNotification } from 'global-bus'
 import { useHelp } from 'hooks/useHelp'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -49,6 +50,10 @@ export const ReadOnly = () => {
 	const handleForgetUserAccount = (account: ExternalAccount) => {
 		if (account.addedBy === 'user') {
 			forgetExternalAccounts([account])
+			emitNotification({
+				title: t('readOnlyForgotten'),
+				subtitle: account.address,
+			})
 		}
 		setModalResize()
 	}

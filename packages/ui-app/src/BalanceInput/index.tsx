@@ -47,7 +47,8 @@ export const BalanceInput = ({
 		const val = e.target.value
 		if (val !== '') {
 			try {
-				if (new BigNumber(val).isNaN()) {
+				const bn = new BigNumber(val)
+				if (bn.isNaN() || bn.isNegative()) {
 					return
 				}
 			} catch {
