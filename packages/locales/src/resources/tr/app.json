@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "Herkesin ödüllerinizi hesabınıza çekmesine izin verin.",
 		"allowCompound": "Bileşiğe İzin Ver",
 		"allowWithdraw": "Çekmeye İzin Ver",
+		"amount": "Miktar",
 		"alreadyImported": "Adres Zaten İçe Aktarıldı",
 		"alreadyStaking": "Zaten Stake Ediliyor",
 		"analyzingPoolPerformance": "Havuz performansı analiz ediliyor",

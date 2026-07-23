@@ -31,6 +31,7 @@ import type {
 	StablecoinSymbol,
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
+import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown, type DropdownOption } from 'ui-app/Dropdown'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
@@ -69,32 +70,6 @@ const chainOptions: DropdownOption<StablecoinChainId>[] = StablecoinChains.map(
 
 const isSameAccount = (a: ImportedAccount | null, b: ImportedAccount | null) =>
 	a?.address === b?.address && a?.source === b?.source
-
-const sanitizeAmountInput = (value: string, maxDecimals: number): string => {
-	const normalized = value.replace(/[^\d.]/g, '')
-
-	if (!normalized) {
-		return ''
-	}
-
-	const dotIndex = normalized.indexOf('.')
-
-	if (dotIndex === -1) {
-		return normalized
-	}
-
-	const integerPart = normalized.slice(0, dotIndex) || '0'
-	const decimalPart = normalized
-		.slice(dotIndex + 1)
-		.replace(/\./g, '')
-		.slice(0, maxDecimals)
-
-	if (normalized.endsWith('.') && !decimalPart.length) {
-		return `${integerPart}.`
-	}
-
-	return `${integerPart}.${decimalPart}`
-}
 
 const toPlanck = (amount: string, decimals: number): bigint => {
 	try {
@@ -136,7 +111,7 @@ export const Send = () => {
 	const { accounts, accountHasSigner, getAccount } = useImportedAccounts()
 	const { serviceApi } = useApi()
 	const { getTxSubmission } = useTxMeta()
-	const [amount, setAmount] = useState('1000.00')
+	const [amount, setAmount] = useState('')
 	const [selectedToken, setSelectedToken] = useState(stablecoinOptions[0])
 	const [selectedChain, setSelectedChain] = useState(chainOptions[0])
 	const [selectedFeeAsset, setSelectedFeeAsset] = useState(feeAssetOptions[0])
@@ -159,25 +134,6 @@ export const Send = () => {
 	const feeDisplay = {
 		unit: selectedFeeAsset.value,
 		units: selectedFeeDecimals,
-	}
-
-	const handleAmountChange = (nextValue: string) => {
-		setAmount(sanitizeAmountInput(nextValue, selectedDecimals))
-	}
-
-	const handleAmountBlur = () => {
-		if (amount.endsWith('.')) {
-			setAmount(amount.slice(0, -1))
-		}
-	}
-
-	const handleUseAvailableBalance = () => {
-		setAmount(
-			sanitizeAmountInput(
-				planckToUnit(maxAvailableToSend, selectedDecimals),
-				selectedDecimals,
-			),
-		)
 	}
 
 	const accountsWithSigners = useMemo(
@@ -494,42 +450,18 @@ export const Send = () => {
 						</div>
 					</SendForm.Segment>
 
-					<SendForm.Segment
-						title="Asset to Send"
-						responsiveHeader
-						headerContent={
-							<SendForm.Label label="Available">
-								<button
-									type="button"
-									onClick={handleUseAvailableBalance}
-									className={classes.availableBalanceButton}
-								>
-									{balancesLoading
-										? '...'
-										: formatBalance(selectedTokenBalance, selectedToken.value)}
-								</button>
-							</SendForm.Label>
-						}
-					>
-						<div className={classes.inputRow}>
-							<input
-								type="text"
-								value={amount}
-								onChange={(e) => handleAmountChange(e.target.value)}
-								onBlur={handleAmountBlur}
-								className={classes.amountInput}
-								placeholder="0.00"
-								inputMode="decimal"
-								autoComplete="off"
-								aria-label="Amount to send"
-							/>
-							<Dropdown
-								options={tokenOptions}
-								selected={selectedToken}
-								onSelect={setSelectedToken}
-							/>
-						</div>
-					</SendForm.Segment>
+					<BalanceInputMulti
+						label="Asset to Send"
+						value={amount}
+						onChange={setAmount}
+						maxAvailable={planckToUnit(maxAvailableToSend, selectedDecimals)}
+						maxDecimals={selectedDecimals}
+						syncing={balancesLoading}
+						options={tokenOptions}
+						selected={selectedToken}
+						onSelect={setSelectedToken}
+						ariaLabel="Amount to send"
+					/>
 
 					<SendForm.Segment
 						title="Pay Fees In"

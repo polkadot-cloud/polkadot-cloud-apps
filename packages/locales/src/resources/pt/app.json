@@ -21,6 +21,7 @@
 		"allowAnyoneWithdraw": "Permitir que qualquer pessoa saque suas recompensas para sua conta.",
 		"allowCompound": "Permitir Capitalização",
 		"allowWithdraw": "Permitir Saque",
+		"amount": "Valor",
 		"alreadyImported": "Endereço Já Importado",
 		"alreadyStaking": "Já em Staking",
 		"analyzingPoolPerformance": "Analisando o desempenho do pool",

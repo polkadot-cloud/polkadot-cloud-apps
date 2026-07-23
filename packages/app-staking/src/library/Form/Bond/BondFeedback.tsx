@@ -66,8 +66,14 @@ export const BondFeedback = ({
 	})
 
 	// handler to set bond as a string
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setBond({ bond: inputValue ?? value.toString() })
 	}
 
 	// current bond planck value
@@ -186,6 +192,7 @@ export const BondFeedback = ({
 				}}
 			>
 				<BalanceInput
+					displayFor={joiningPool ? 'canvas' : 'default'}
 					value={String(bond.bond)}
 					defaultValue={defaultBondStr}
 					syncing={syncing}
