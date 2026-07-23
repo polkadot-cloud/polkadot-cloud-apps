@@ -7,8 +7,10 @@ import {
 	getStablecoinBalances,
 	removeStablecoinBalances,
 	resetStablecoinBalances,
+	setStablecoinBalance,
 	setStablecoinBalances,
 	setStablecoinBalancesError,
+	setStablecoinBalancesSubscriptionError,
 	setStablecoinBalancesSyncing,
 } from '../../global-bus/src/stablecoinBalances'
 
@@ -98,5 +100,50 @@ describe('stablecoin balance state', () => {
 
 		expect(getStablecoinBalances('alice').balances[0]?.free).toBe(1n)
 		expect(getStablecoinBalances('bob').balances[0]?.free).toBe(2n)
+	})
+
+	test('patches one live balance without disturbing a refresh or other assets', () => {
+		const initialRequest = setStablecoinBalancesSyncing('alice')
+		setStablecoinBalances(
+			'alice',
+			[createBalance(1n), createBalance(2n, 'DOT')],
+			initialRequest,
+		)
+		const refreshRequest = setStablecoinBalancesSyncing('alice')
+
+		setStablecoinBalance('alice', createBalance(3n))
+
+		expect(getStablecoinBalances('alice')).toEqual({
+			balances: [createBalance(3n), createBalance(2n, 'DOT')],
+			requestId: refreshRequest,
+			status: 'syncing',
+		})
+	})
+
+	test('retains cached balances when a live subscription fails', () => {
+		const requestId = setStablecoinBalancesSyncing('alice')
+		const balances = [createBalance(1n)]
+		setStablecoinBalances('alice', balances, requestId)
+
+		setStablecoinBalancesSubscriptionError('alice')
+
+		expect(getStablecoinBalances('alice')).toEqual({
+			balances,
+			status: 'error',
+		})
+	})
+
+	test('does not recreate a removed address from a late live update', () => {
+		const requestId = setStablecoinBalancesSyncing('alice')
+		setStablecoinBalances('alice', [createBalance(1n)], requestId)
+		removeStablecoinBalances('alice')
+
+		setStablecoinBalance('alice', createBalance(2n))
+		setStablecoinBalancesSubscriptionError('alice')
+
+		expect(getStablecoinBalances('alice')).toEqual({
+			balances: [],
+			status: 'idle',
+		})
 	})
 })

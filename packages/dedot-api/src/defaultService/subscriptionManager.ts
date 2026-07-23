@@ -19,9 +19,16 @@ import {
 	getSyncing,
 	removeStablecoinBalances,
 	removeSyncing,
+	setStablecoinBalance,
+	setStablecoinBalancesSubscriptionError,
 } from 'global-bus'
 import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
-import type { NetworkId, ServiceInterface, SystemChainId } from 'types'
+import type {
+	NetworkId,
+	ServiceInterface,
+	StablecoinBalance,
+	SystemChainId,
+} from 'types'
 import { AccountBalanceQuery } from '../subscribe/accountBalance'
 import { ActivePoolQuery } from '../subscribe/activePool'
 import { BondedQuery } from '../subscribe/bonded'
@@ -47,6 +54,12 @@ import {
 } from '../util'
 import type { AccountBalances } from './types'
 
+export type StablecoinBalanceSubscriber = (
+	address: string,
+	onBalance: (balance: StablecoinBalance) => void,
+	onError: (error: unknown) => void,
+) => () => void
+
 // Manages all subscriptions for a default service
 export class SubscriptionManager<
 	PeopleApi extends PeopleChain,
@@ -60,6 +73,7 @@ export class SubscriptionManager<
 		people: {},
 		hub: {},
 	}
+	subStablecoinBalances: Record<string, () => void> = {}
 	subBonded: BondedAccounts<StakingApi> = {}
 	subStakingLedgers: StakingLedgers<StakingApi> = {}
 	subActivePoolIds: Subscription
@@ -78,6 +92,7 @@ export class SubscriptionManager<
 		private ids: [NetworkId, SystemChainId, SystemChainId],
 		private stakingConsts: { poolsPalletId: Uint8Array },
 		private serviceInterface: ServiceInterface,
+		private subscribeStablecoinBalances?: StablecoinBalanceSubscriber,
 	) {}
 
 	// Initialize default service subscriptions
@@ -87,9 +102,10 @@ export class SubscriptionManager<
 			.pipe(startWith([], [], []), pairwise())
 			.subscribe(([prev, cur]) => {
 				const ss58 = this.apiHub.consts.system.ss58Prefix
+				const formattedPrev = formatAccountAddresses(prev.flat(), ss58)
 				const formattedCur = formatAccountAddresses(cur.flat(), ss58)
 				const { added, removed, remaining } = diffImportedAccounts(
-					prev.flat(),
+					formattedPrev,
 					formattedCur,
 				)
 
@@ -114,6 +130,8 @@ export class SubscriptionManager<
 						delete this.subBonded[address]
 						this.subPoolMemberships?.[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
+						this.subStablecoinBalances[address]?.()
+						delete this.subStablecoinBalances[address]
 						removeStablecoinBalances(address)
 					}
 				})
@@ -127,13 +145,35 @@ export class SubscriptionManager<
 					const addressAlreadyPresent = remaining.some(
 						(a) => a?.address === address,
 					)
+					const addressAlreadySubscribed = !!this.subStablecoinBalances[address]
 					// Only subscribe to address subscriptions if no other occurrence of the address exists
-					if (!addressAlreadyAdded && !addressAlreadyPresent) {
+					if (
+						!addressAlreadyAdded &&
+						!addressAlreadyPresent &&
+						!addressAlreadySubscribed
+					) {
 						this.subAccountBalances.hub[getAccountKey(this.ids[2], address)] =
 							new AccountBalanceQuery(this.apiHub, this.ids[2], address)
+						let disposed = false
+						let unsubscribeSubscription: (() => void) | undefined
+						this.subStablecoinBalances[address] = () => {
+							disposed = true
+							unsubscribeSubscription?.()
+						}
 						void this.serviceInterface.stablecoins.query
 							.balances(address)
 							.catch(() => undefined)
+							.then(() => {
+								if (disposed) {
+									return
+								}
+
+								unsubscribeSubscription = this.subscribeStablecoinBalances?.(
+									address,
+									(balance) => setStablecoinBalance(address, balance),
+									() => setStablecoinBalancesSubscriptionError(address),
+								)
+							})
 
 						this.subBonded[address] = new BondedQuery(this.stakingApi, address)
 						this.subPoolMemberships[address] = new PoolMembershipQuery(
@@ -252,6 +292,13 @@ export class SubscriptionManager<
 		}
 		for (const sub of Object.values(this.subStakingLedgers)) {
 			sub?.unsubscribe()
+		}
+		for (const [address, unsubscribe] of Object.entries(
+			this.subStablecoinBalances,
+		)) {
+			delete this.subStablecoinBalances[address]
+			unsubscribe()
+			removeStablecoinBalances(address)
 		}
 		for (const sub of Object.values(this.subBonded)) {
 			sub?.unsubscribe()

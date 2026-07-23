@@ -86,6 +86,53 @@ export const setStablecoinBalancesError = (
 	})
 }
 
+// Updates one live balance while retaining the rest of the account snapshot and sync state.
+export const setStablecoinBalance = (
+	address: string,
+	balance: StablecoinBalance,
+) => {
+	const state = _stablecoinBalances.getValue()
+	const current = state[address]
+	if (!current) {
+		return
+	}
+
+	const index = current.balances.findIndex(
+		({ chain, symbol }) => chain === balance.chain && symbol === balance.symbol,
+	)
+	const balances =
+		index === -1
+			? [...current.balances, balance]
+			: current.balances.map((currentBalance, currentIndex) =>
+					currentIndex === index ? balance : currentBalance,
+				)
+
+	_stablecoinBalances.next({
+		...state,
+		[address]: {
+			...current,
+			balances,
+		},
+	})
+}
+
+// Marks a live subscription as unhealthy while retaining the last known balances.
+export const setStablecoinBalancesSubscriptionError = (address: string) => {
+	const state = _stablecoinBalances.getValue()
+	const current = state[address]
+	if (!current) {
+		return
+	}
+
+	_stablecoinBalances.next({
+		...state,
+		[address]: {
+			...current,
+			status: 'error',
+		},
+	})
+}
+
 export const removeStablecoinBalances = (address: string) => {
 	const state = { ..._stablecoinBalances.getValue() }
 	if (!state[address]) {

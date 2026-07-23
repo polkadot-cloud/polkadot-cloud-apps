@@ -23,7 +23,10 @@ import { BlockNumberQuery } from '../subscribe/blockNumber'
 import { PoolsConfigQuery } from '../subscribe/poolsConfig'
 import type { AssetHubChain, PeopleChain, StakingChain } from '../types'
 import { IdentityManager } from './identityManager'
-import { SubscriptionManager } from './subscriptionManager'
+import {
+	type StablecoinBalanceSubscriber,
+	SubscriptionManager,
+} from './subscriptionManager'
 
 // Base service utility that handles common initialization and management
 export class BaseService<
@@ -72,7 +75,10 @@ export class BaseService<
 	}
 
 	// Initialize the service with common setup logic
-	async start(serviceInterface: ServiceInterface) {
+	async start(
+		serviceInterface: ServiceInterface,
+		subscribeStablecoinBalances?: StablecoinBalanceSubscriber,
+	) {
 		// Initialize chain specs
 		this.hubChainSpec = new ChainSpecs(this.apiHub)
 
@@ -105,6 +111,7 @@ export class BaseService<
 			this.ids,
 			{ poolsPalletId: this.stakingConsts.poolsPalletId },
 			serviceInterface,
+			subscribeStablecoinBalances,
 		)
 
 		// Initialize identity manager

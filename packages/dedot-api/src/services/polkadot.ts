@@ -18,10 +18,13 @@ import type {
 	SystemChainId,
 } from 'types'
 import { BaseService } from '../defaultService/baseService'
+import type { StablecoinBalanceSubscriber } from '../defaultService/subscriptionManager'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
+import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
+import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 
@@ -212,6 +215,33 @@ export class PolkadotService
 		return this.apiHydrationPromise
 	}
 
+	private subscribeStablecoinBalances: StablecoinBalanceSubscriber = (
+		address,
+		onBalance,
+		onError,
+	) => {
+		const subscriptions = [
+			new AssetHubStablecoinBalancesQuery(
+				this.apiHub,
+				address,
+				onBalance,
+				onError,
+			),
+			new HydrationStablecoinBalancesQuery(
+				this.getHydrationApi,
+				address,
+				onBalance,
+				onError,
+			),
+		]
+
+		return () => {
+			for (const subscription of subscriptions) {
+				subscription.unsubscribe()
+			}
+		}
+	}
+
 	getSigningApi = (specName: string) => {
 		if (this.apiHydration?.runtimeVersion.specName === specName) {
 			return this.apiHydration as unknown as DedotClient<HydrationApi>
@@ -220,7 +250,7 @@ export class PolkadotService
 	}
 
 	async start() {
-		await super.start(this.interface)
+		await super.start(this.interface, this.subscribeStablecoinBalances)
 	}
 
 	async unsubscribe() {
