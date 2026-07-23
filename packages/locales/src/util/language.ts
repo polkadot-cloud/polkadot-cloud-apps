@@ -56,10 +56,14 @@ export const getResources = (lng: string, i18n?: i18n) => {
 		let localValid = false
 		const localResources = localStorage.getItem('lng_resources')
 		if (localResources !== null) {
-			const { l, r } = JSON.parse(localResources)
-			if (l === lng) {
-				localValid = true
-				resources = { [lng]: { ...r } }
+			try {
+				const { l, r } = JSON.parse(localResources)
+				if (l === lng) {
+					localValid = true
+					resources = { [lng]: { ...r } }
+				}
+			} catch {
+				// Corrupt cached resources; fall back to dynamic load
 			}
 		}
 		if (!localValid) {

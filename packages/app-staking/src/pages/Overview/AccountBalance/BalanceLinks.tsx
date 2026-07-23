@@ -26,6 +26,7 @@ export const BalanceLinks = () => {
 						window.open(
 							`https://${getSubscanBalanceChainId(network)}.subscan.io/account/${activeAddress}`,
 							'_blank',
+							'noopener,noreferrer',
 						)
 					}
 					iconRight={faExternalLinkAlt}

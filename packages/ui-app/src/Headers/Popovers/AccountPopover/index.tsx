@@ -89,6 +89,7 @@ export const AccountPopover = ({
 					window.open(
 						`https://${getSubscanBalanceChainId(network)}.subscan.io/account/${activeAddress}`,
 						'_blank',
+						'noopener,noreferrer',
 					)
 				}}
 			>

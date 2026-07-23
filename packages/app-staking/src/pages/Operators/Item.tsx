@@ -116,7 +116,11 @@ export const Item = ({ item, actionable, network }: ItemProps) => {
 								type="button"
 								className="active"
 								onClick={() => {
-									window.open(`mailto:${email}`, '_blank')
+									window.open(
+										`mailto:${email}`,
+										'_blank',
+										'noopener,noreferrer',
+									)
 								}}
 							>
 								<FontAwesomeIcon
@@ -137,7 +141,11 @@ export const Item = ({ item, actionable, network }: ItemProps) => {
 								type="button"
 								className="active"
 								onClick={() => {
-									window.open(`https://twitter.com/${x}`, '_blank')
+									window.open(
+										`https://twitter.com/${x}`,
+										'_blank',
+										'noopener,noreferrer',
+									)
 								}}
 							>
 								<FontAwesomeIcon icon={faTwitter} className="icon-left" />
@@ -154,7 +162,17 @@ export const Item = ({ item, actionable, network }: ItemProps) => {
 								type="button"
 								className="active"
 								onClick={() => {
-									window.open(website, '_blank')
+									// `website` comes from third-party validator-assets data;
+									// only follow well-formed http(s) URLs to avoid
+									// javascript:/data: scheme injection.
+									try {
+										const { protocol, href } = new URL(website)
+										if (protocol === 'https:' || protocol === 'http:') {
+											window.open(href, '_blank', 'noopener,noreferrer')
+										}
+									} catch {
+										// Malformed URL; do nothing
+									}
 								}}
 							>
 								<h4>{t('website')}</h4>

@@ -106,6 +106,7 @@ export const HelpTooltip = () => {
 								window.open(
 									`${PlatformDocsURL}/${i18n.language}/glossary?a=${docsKey}`,
 									'_blank',
+									'noopener,noreferrer',
 								)
 								closeHelpTooltip()
 							}}

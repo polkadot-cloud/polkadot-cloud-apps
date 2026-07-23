@@ -87,7 +87,11 @@ export const useQuickActions = () => {
 		},
 		email: {
 			onClick: () => {
-				window.open(`mailto:${PlatformSupportEmail}`, '_blank')
+				window.open(
+					`mailto:${PlatformSupportEmail}`,
+					'_blank',
+					'noopener,noreferrer',
+				)
 			},
 			disabled: false,
 			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faEnvelope} />,
@@ -95,7 +99,7 @@ export const useQuickActions = () => {
 		},
 		discord: {
 			onClick: () => {
-				window.open(DiscordSupportURL, '_blank')
+				window.open(DiscordSupportURL, '_blank', 'noopener,noreferrer')
 			},
 			disabled: false,
 			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faDiscord} />,

@@ -17,7 +17,7 @@ export const WebUrl = ({
 			type="button"
 			onClick={(ev) => {
 				ev.stopPropagation()
-				window.open(url, '_blank')
+				window.open(url, '_blank', 'noopener,noreferrer')
 			}}
 		>
 			{text}

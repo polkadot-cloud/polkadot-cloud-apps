@@ -28,7 +28,13 @@ export const getLocalEraExposures = (
 	activeEra: string,
 ) => {
 	const data = localStorage.getItem(`${network}_exposures`)
-	const current = data ? (JSON.parse(data) as LocalExposuresData) : null
+	let current: LocalExposuresData | null = null
+	try {
+		current = data ? (JSON.parse(data) as LocalExposuresData) : null
+	} catch {
+		// Corrupt local data; clear it and treat as missing
+		localStorage.removeItem(`${network}_exposures`)
+	}
 	const currentEra = current?.era
 
 	if (currentEra && currentEra !== activeEra) {
