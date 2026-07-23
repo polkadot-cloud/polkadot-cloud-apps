@@ -159,16 +159,20 @@ export const Send = () => {
 			isSameAccount(account, fromAccount),
 		)
 
-		if ((!fromAccount || !fromAccountExists) && defaultFromAccount) {
+		if (!fromAccountExists) {
 			setFromAccount(defaultFromAccount)
 		}
 	}, [accountsWithSigners, defaultFromAccount, fromAccount])
 
 	useEffect(() => {
-		if (!toAccount && defaultToAccount) {
+		const toAccountExists = accounts.some((account) =>
+			isSameAccount(account, toAccount),
+		)
+
+		if (!toAccountExists) {
 			setToAccount(defaultToAccount)
 		}
-	}, [defaultToAccount, toAccount])
+	}, [accounts, defaultToAccount, toAccount])
 
 	const tokenOptions = useMemo(() => {
 		return stablecoinOptions.filter((option) =>

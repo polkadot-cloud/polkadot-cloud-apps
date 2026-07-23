@@ -86,6 +86,16 @@ export const setStablecoinBalancesError = (
 	})
 }
 
+export const removeStablecoinBalances = (address: string) => {
+	const state = { ..._stablecoinBalances.getValue() }
+	if (!state[address]) {
+		return
+	}
+
+	delete state[address]
+	_stablecoinBalances.next(state)
+}
+
 export const resetStablecoinBalances = () => {
 	_stablecoinBalances.next({})
 }

@@ -5,6 +5,7 @@ import type { FeeAssetSymbol, StablecoinBalance } from 'types'
 import { beforeEach, describe, expect, test } from 'vitest'
 import {
 	getStablecoinBalances,
+	removeStablecoinBalances,
 	resetStablecoinBalances,
 	setStablecoinBalances,
 	setStablecoinBalancesError,
@@ -76,6 +77,17 @@ describe('stablecoin balance state', () => {
 		setStablecoinBalances('alice', [createBalance(2n)], staleRequest)
 		setStablecoinBalances('alice', [createBalance(3n)], currentRequest)
 		expect(getStablecoinBalances('alice').balances[0]?.free).toBe(3n)
+	})
+
+	test('removing an address invalidates its in-flight request', () => {
+		const staleRequest = setStablecoinBalancesSyncing('alice')
+		removeStablecoinBalances('alice')
+		setStablecoinBalances('alice', [createBalance(1n)], staleRequest)
+
+		expect(getStablecoinBalances('alice')).toEqual({
+			balances: [],
+			status: 'idle',
+		})
 	})
 
 	test('keeps cached addresses isolated', () => {

@@ -17,6 +17,7 @@ import {
 	bonded$,
 	fetchAndSetPoolWarnings,
 	getSyncing,
+	removeStablecoinBalances,
 	removeSyncing,
 } from 'global-bus'
 import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
@@ -113,6 +114,7 @@ export class SubscriptionManager<
 						delete this.subBonded[address]
 						this.subPoolMemberships?.[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
+						removeStablecoinBalances(address)
 					}
 				})
 
@@ -129,6 +131,9 @@ export class SubscriptionManager<
 					if (!addressAlreadyAdded && !addressAlreadyPresent) {
 						this.subAccountBalances.hub[getAccountKey(this.ids[2], address)] =
 							new AccountBalanceQuery(this.apiHub, this.ids[2], address)
+						void this.serviceInterface.stablecoins.query
+							.balances(address)
+							.catch(() => undefined)
 
 						this.subBonded[address] = new BondedQuery(this.stakingApi, address)
 						this.subPoolMemberships[address] = new PoolMembershipQuery(

@@ -41,6 +41,7 @@ export class PolkadotService
 	// Service interface
 	interface: ServiceInterface
 	private apiHydration?: DedotClient<HydrationApi>
+	private apiHydrationPromise?: Promise<DedotClient<HydrationApi>>
 
 	constructor(
 		public networkConfig: NetworkConfig,
@@ -193,14 +194,22 @@ export class PolkadotService
 		}
 	}
 
-	getHydrationApi = async () => {
-		if (!this.apiHydration) {
-			this.apiHydration = await DedotClient.new<HydrationApi>(
+	getHydrationApi = () => {
+		if (!this.apiHydrationPromise) {
+			this.apiHydrationPromise = DedotClient.new<HydrationApi>(
 				new WsProvider(getRpcEndpointList('hydration')),
 			)
+				.then((api) => {
+					this.apiHydration = api
+					return api
+				})
+				.catch((error) => {
+					this.apiHydrationPromise = undefined
+					throw error
+				})
 		}
 
-		return this.apiHydration
+		return this.apiHydrationPromise
 	}
 
 	getSigningApi = (specName: string) => {
@@ -217,7 +226,11 @@ export class PolkadotService
 	async unsubscribe() {
 		await Promise.all([
 			super.unsubscribe(),
-			this.apiHydration ? this.apiHydration.disconnect() : Promise.resolve(),
+			this.apiHydrationPromise
+				?.then((api) => api.disconnect())
+				.catch(() => undefined),
 		])
+		this.apiHydration = undefined
+		this.apiHydrationPromise = undefined
 	}
 }

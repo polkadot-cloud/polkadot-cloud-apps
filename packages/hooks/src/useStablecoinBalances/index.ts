@@ -5,12 +5,11 @@ import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import {
 	defaultStablecoinBalances,
-	getStablecoinBalances,
 	getStablecoinBalancesState,
 	type StablecoinBalancesState,
 	stablecoinBalances$,
 } from 'global-bus'
-import { useCallback, useEffect, useSyncExternalStore } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import type { FeeAssetSymbol, StablecoinChainId, StablecoinSymbol } from 'types'
 import { createObservableStore } from 'utils'
 import { useApi } from '../useApi'
@@ -41,17 +40,6 @@ export const useStablecoinBalances = (address?: string | null) => {
 			await serviceApi.stablecoins.query
 				.balances(address)
 				.catch(() => undefined)
-		}
-	}, [address, serviceApi])
-
-	useEffect(() => {
-		if (!address) {
-			return
-		}
-
-		const currentStatus = getStablecoinBalances(address).status
-		if (currentStatus === 'idle' || currentStatus === 'error') {
-			void serviceApi.stablecoins.query.balances(address).catch(() => undefined)
 		}
 	}, [address, serviceApi])
 
