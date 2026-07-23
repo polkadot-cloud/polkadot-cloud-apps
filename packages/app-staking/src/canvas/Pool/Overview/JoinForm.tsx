@@ -76,8 +76,14 @@ export const JoinForm = ({
 	const [feedbackErrors, setFeedbackErrors] = useState<string[]>([])
 
 	// Handler to set bond on input change.
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setBond({ bond: inputValue ?? value.toFixed() })
 	}
 
 	// Whether the form is ready to submit.

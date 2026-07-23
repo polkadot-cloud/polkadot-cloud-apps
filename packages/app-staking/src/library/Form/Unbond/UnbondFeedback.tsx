@@ -59,7 +59,7 @@ export const UnbondFeedback = ({
 		value,
 		inputValue,
 	}) => {
-		setBond({ bond: inputValue ?? value.toString() })
+		setBond({ bond: inputValue ?? value.toFixed() })
 	}
 
 	// current bond value BigNumber

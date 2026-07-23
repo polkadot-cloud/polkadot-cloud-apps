@@ -38,15 +38,22 @@ export const Bond = ({ section }: SetupStepProps) => {
 	const [bondValid, setBondValid] = useState<boolean>(false)
 
 	// handler for updating bond
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		const fixedValue = inputValue ?? value.toFixed()
 		// set this form's bond value
 		setBond({
-			bond: value.toString(),
+			bond: fixedValue,
 		})
 		// set pool progress bond value
 		setPoolSetup({
 			...progress,
-			bond: value.toString(),
+			bond: fixedValue,
 		})
 	}
 

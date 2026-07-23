@@ -170,7 +170,7 @@ export const BalanceInput = ({
 		setLocalValue(nextValue)
 
 		const normalizedValue = nextValue || '0'
-		lastEmittedValue.current = new BigNumber(normalizedValue).toString()
+		lastEmittedValue.current = new BigNumber(normalizedValue).toFixed()
 		for (const setter of setters) {
 			setter({
 				value: new BigNumber(normalizedValue),

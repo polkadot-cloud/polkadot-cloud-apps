@@ -52,15 +52,22 @@ export const Bond = ({
 	}
 
 	// handler for updating bond
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		const fixedValue = inputValue ?? value.toFixed()
 		// set this form's bond value
 		setBond({
-			bond: value.toString(),
+			bond: fixedValue,
 		})
 		// set nominator progress bond value
 		setNominatorSetup({
 			...progress,
-			bond: value.toString(),
+			bond: fixedValue,
 		})
 	}
 
@@ -104,7 +111,7 @@ export const Bond = ({
 					maxWidth
 					displayFor="canvas"
 				/>
-				<NominateStatusBar value={new BigNumber(bond.bond)} />
+				<NominateStatusBar value={new BigNumber(bond.bond || '0')} />
 				{!inline && <Footer complete={bondValid} bondFor="nominator" />}
 			</MotionContainer>
 		</>

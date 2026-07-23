@@ -71,22 +71,29 @@ export const Unbond = () => {
 	)
 
 	const [bond, setBond] = useState<{ bond: string }>({
-		bond: freeToUnbond.toString(),
+		bond: freeToUnbond.toFixed(),
 	})
 	const [points, setPoints] = useState<bigint>(0n)
 
 	const [bondValid, setBondValid] = useState<boolean>(false)
 
 	// handler to set bond as a string
-	const handleSetBond = async ({ value }: { value: BigNumber }) => {
+	const handleSetBond = async ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		const fixedValue = inputValue ?? value.toFixed()
 		if (isPooling && activePool) {
 			const balancePoints = await serviceApi.runtimeApi.balanceToPoints(
 				activePool.id,
-				unitToPlanck(value.toString(), units),
+				unitToPlanck(fixedValue, units),
 			)
 			setPoints(balancePoints)
 		}
-		setBond({ bond: value.toString() })
+		setBond({ bond: fixedValue })
 	}
 
 	// feedback errors to trigger modal resize

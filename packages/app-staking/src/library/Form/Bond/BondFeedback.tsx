@@ -74,7 +74,7 @@ export const BondFeedback = ({
 		value: BigNumber
 		inputValue?: string
 	}) => {
-		setBond({ bond: inputValue ?? value.toString() })
+		setBond({ bond: inputValue ?? value.toFixed() })
 	}
 
 	// current bond planck value

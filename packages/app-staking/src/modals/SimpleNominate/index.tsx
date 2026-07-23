@@ -61,8 +61,14 @@ export const SimpleNominate = () => {
 	)
 
 	// Handler to set bond on input change
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond(value.toString())
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setBond(inputValue ?? value.toFixed())
 	}
 
 	const getTxs = () => {

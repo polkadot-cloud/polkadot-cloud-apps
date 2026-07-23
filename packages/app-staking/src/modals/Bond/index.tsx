@@ -66,7 +66,7 @@ export const Bond = () => {
 
 	// local bond value.
 	const [bond, setBond] = useState<{ bond: string }>({
-		bond: freeToBond.toString(),
+		bond: freeToBond.toFixed(),
 	})
 
 	// bond valid.
@@ -76,23 +76,30 @@ export const Bond = () => {
 	const [feedbackErrors, setFeedbackErrors] = useState<string[]>([])
 
 	// handler to set bond as a string
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
+	const handleSetBond = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setBond({ bond: inputValue ?? value.toFixed() })
 	}
+	const bondValue = bond.bond || '0'
 
 	// bond minus tx fees.
 	const enoughToCoverTxFees: boolean = freeToBond
-		.minus(bond.bond)
+		.minus(bondValue)
 		.isGreaterThan(planckToUnitBn(largestTxFee, units))
 
 	// bond value after max tx fees have been deducated.
 	let bondAfterTxFees: BigNumber
 
 	if (enoughToCoverTxFees) {
-		bondAfterTxFees = new BigNumber(unitToPlanck(bond.bond, units))
+		bondAfterTxFees = new BigNumber(unitToPlanck(bondValue, units))
 	} else {
 		bondAfterTxFees = BigNumber.max(
-			new BigNumber(unitToPlanck(String(bond.bond), units)).minus(largestTxFee),
+			new BigNumber(unitToPlanck(bondValue, units)).minus(largestTxFee),
 			0,
 		)
 	}

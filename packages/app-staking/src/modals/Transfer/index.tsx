@@ -47,7 +47,8 @@ export const Transfer = () => {
 	)
 
 	// Amount to transfer
-	const [amount, setAmountState] = useState<BigNumber>(new BigNumber(0))
+	const [amount, setAmountState] = useState<string>('0')
+	const amountBn = new BigNumber(amount || '0')
 
 	const {
 		balances: { transferableBalance },
@@ -56,16 +57,16 @@ export const Transfer = () => {
 	const { units } = getStakingChainData(network)
 
 	const valid =
-		amount.gt(0) &&
+		amountBn.gt(0) &&
 		toAccount !== null &&
 		fromAccount !== null &&
 		fromAccount.address !== toAccount.address
 
 	const getTx = () => {
-		if (!fromAccount || !toAccount || amount.lte(0)) {
+		if (!fromAccount || !toAccount || amountBn.lte(0)) {
 			return
 		}
-		const amountPlanck = unitToPlanck(amount.toString(), units)
+		const amountPlanck = unitToPlanck(amount, units)
 		const tx = serviceApi.tx.transferKeepAlive(toAccount.address, amountPlanck)
 		return tx
 	}
@@ -91,16 +92,22 @@ export const Transfer = () => {
 		},
 	})
 
-	const setAmount = ({ value }: { value: BigNumber }) => {
-		setAmountState(value)
+	const setAmount = ({
+		value,
+		inputValue,
+	}: {
+		value: BigNumber
+		inputValue?: string
+	}) => {
+		setAmountState(inputValue ?? value.toFixed())
 	}
 
 	// Reset amount on from address change
 	useEffect(() => {
 		// If from address max balance is less than current amount, set amount to max
 		const maxBalance = new BigNumber(planckToUnit(transferableBalance, units))
-		if (amount.gt(maxBalance)) {
-			setAmountState(maxBalance)
+		if (amountBn.gt(maxBalance)) {
+			setAmountState(maxBalance.toFixed())
 			return
 		}
 	}, [amount, fromAccount, transferableBalance])
@@ -126,7 +133,7 @@ export const Transfer = () => {
 				/>
 				<Separator transparent />
 				<BalanceInput
-					value={String(amount)}
+					value={amount}
 					defaultValue={'0'}
 					syncing={false}
 					disabled={false}
