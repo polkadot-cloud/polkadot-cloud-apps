@@ -8,13 +8,11 @@ export type UseInputAutoFontSizeOptions = {
 	overflowPadding?: number
 }
 
-export const useInputAutoFontSize = <
-	T extends HTMLInputElement = HTMLInputElement,
->({
+export const useInputAutoFontSize = ({
 	value,
 	overflowPadding = 2,
 }: UseInputAutoFontSizeOptions = {}) => {
-	const inputRef = useRef<T>(null)
+	const inputRef = useRef<HTMLInputElement>(null)
 	const measureRef = useRef<HTMLSpanElement>(null)
 	const baseInlineFontSize = useRef<string | undefined>(undefined)
 	const [fontSize, setFontSize] = useState<number>()
@@ -91,9 +89,7 @@ export const useInputAutoFontSize = <
 					100
 				: undefined
 
-		setFontSize((currentFontSize) =>
-			currentFontSize === nextFontSize ? currentFontSize : nextFontSize,
-		)
+		setFontSize(nextFontSize)
 	}, [overflowPadding])
 
 	useLayoutEffect(() => {

@@ -2,10 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
-import BigNumber from 'bignumber.js'
+import { maxBigInt, planckToUnit, unitToPlanck } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
-import type { SubmittableExtrinsic } from 'dedot'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
@@ -23,7 +21,6 @@ import { formatFromProp } from 'tx-submit/util'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { Padding, Title, Warnings } from 'ui-core/modal'
 import { Close, useOverlay } from 'ui-overlay'
-import { planckToUnitBn } from 'utils'
 
 export const Bond = () => {
 	const { t } = useTranslation('modals')
@@ -51,88 +48,42 @@ export const Bond = () => {
 
 	// `totalAdditionalBond` and `transferableBalance` already have `feeReserve`
 	// deducted.
-	const freeToBond = new BigNumber(
-		planckToUnit(
-			bondFor === 'nominator'
-				? nominator.totalAdditionalBond
-				: transferableBalance,
-			units,
-		),
-	)
+	const availableBalance =
+		bondFor === 'nominator'
+			? nominator.totalAdditionalBond
+			: transferableBalance
 
 	const largestTxFee = useBondGreatestFee({ bondFor })
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 	const pendingRewardsUnit = planckToUnit(pendingRewards, units)
 
 	// local bond value.
-	const [bond, setBond] = useState<{ bond: string }>({
-		bond: freeToBond.toFixed(),
-	})
+	const [bond, setBond] = useState('')
 
 	// bond valid.
-	const [bondValid, setBondValid] = useState<boolean>(false)
+	const [bondValid, setBondValid] = useState(false)
 
-	// feedback errors to trigger modal resize
-	const [feedbackErrors, setFeedbackErrors] = useState<string[]>([])
+	const bondPlanck = unitToPlanck(bond || '0', units)
+	const largestTxFeePlanck = BigInt(largestTxFee.toFixed(0))
+	const maxBond = maxBigInt(availableBalance - largestTxFeePlanck, 0n)
+	const formValid = bondValid && bondPlanck > 0n && bondPlanck <= maxBond
 
-	// handler to set bond as a string
-	const handleSetBond = ({
-		value,
-		inputValue,
-	}: {
-		value: BigNumber
-		inputValue?: string
-	}) => {
-		setBond({ bond: inputValue ?? value.toFixed() })
-	}
-	const bondValue = bond.bond || '0'
-
-	// bond minus tx fees.
-	const enoughToCoverTxFees: boolean = freeToBond
-		.minus(bondValue)
-		.isGreaterThan(planckToUnitBn(largestTxFee, units))
-
-	// bond value after max tx fees have been deducated.
-	let bondAfterTxFees: BigNumber
-
-	if (enoughToCoverTxFees) {
-		bondAfterTxFees = new BigNumber(unitToPlanck(bondValue, units))
-	} else {
-		bondAfterTxFees = BigNumber.max(
-			new BigNumber(unitToPlanck(bondValue, units)).minus(largestTxFee),
-			0,
-		)
-	}
-
-	// determine whether this is a pool or staking transaction.
-	const determineTx = (bondToSubmit: BigNumber) => {
-		let tx: SubmittableExtrinsic | undefined
-		const bondBigInt = !bondValid
-			? 0n
-			: bondToSubmit.isNaN()
-				? 0n
-				: BigInt(bondToSubmit.toString())
-
-		if (isPooling) {
-			tx = serviceApi.tx.poolBondExtra('FreeBalance', bondBigInt)
-		} else if (isStaking) {
-			tx = serviceApi.tx.stakingBondExtra(bondBigInt)
-		}
-		return tx
-	}
-
-	// the actual bond tx to submit
-	const getTx = (bondToSubmit: BigNumber) => {
-		if (!activeAddress) {
+	const getTx = () => {
+		if (!activeAddress || !formValid) {
 			return
 		}
-		return determineTx(bondToSubmit)
+		if (isPooling) {
+			return serviceApi.tx.poolBondExtra('FreeBalance', bondPlanck)
+		}
+		if (isStaking) {
+			return serviceApi.tx.stakingBondExtra(bondPlanck)
+		}
 	}
 
 	const submitExtrinsic = useSubmitExtrinsic({
-		tx: getTx(bondAfterTxFees),
+		tx: getTx(),
 		from: formatFromProp(activeAccount, activeProxy),
-		shouldSubmit: bondValid,
+		shouldSubmit: formValid,
 		callbackSubmit: () => {
 			closeModal()
 		},
@@ -144,16 +95,13 @@ export const Bond = () => {
 		submitExtrinsic.proxySupported,
 	)
 
-	// update bond value on task change.
 	useEffect(() => {
-		handleSetBond({ value: freeToBond })
-	}, [freeToBond.toString()])
+		setBond('')
+		setBondValid(false)
+	}, [activeAddress, bondFor])
 
 	// modal resize on form update
-	useEffect(
-		() => setModalResize(),
-		[bond, bondValid, feedbackErrors.length, warnings.length],
-	)
+	useEffect(() => setModalResize(), [bond, bondValid, warnings.length])
 
 	return (
 		<>
@@ -168,16 +116,13 @@ export const Bond = () => {
 					</Warnings>
 				) : null}
 				<BondFeedback
+					value={bond}
+					onChange={setBond}
 					syncing={largestTxFee.isZero()}
 					bondFor={bondFor}
-					listenIsValid={(valid, errors) => {
-						setBondValid(valid)
-						setFeedbackErrors(errors)
-					}}
-					defaultBond={null}
-					setters={[handleSetBond]}
+					listenIsValid={setBondValid}
 					parentErrors={warnings}
-					txFees={BigInt(largestTxFee.toString())}
+					txFees={largestTxFeePlanck}
 					bonding={
 						(bondFor === 'nominator' && isBonding) ||
 						(bondFor === 'pool' && !!membership)
@@ -187,7 +132,7 @@ export const Bond = () => {
 			</Padding>
 			<SubmitTx
 				submitText={t('bond', { ns: 'modals' })}
-				valid={bondValid}
+				valid={formValid}
 				{...submitExtrinsic}
 			/>
 		</>

@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
-import type BigNumber from 'bignumber.js'
+import { unitToPlanck } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNominatorSetups } from 'contexts/NominatorSetups'
 import type { PalletStakingRewardDestination } from 'dedot/chaintypes'
-import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBatchCall } from 'hooks/useBatchCall'
@@ -15,7 +13,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { BondFeedback } from 'library/Form/Bond/BondFeedback'
 import { Warning } from 'library/Form/Warning'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
@@ -35,11 +33,6 @@ export const SimpleNominate = () => {
 	const { accountHasSigner } = useImportedAccounts()
 	const { activeAddress, activeAccount } = useActiveAccount()
 	const { getNominatorSetup, removeNominatorSetup } = useNominatorSetups()
-	const {
-		balances: {
-			nominator: { totalPossibleBond },
-		},
-	} = useAccountBalances(activeAddress)
 	const { units } = getStakingChainData(network)
 
 	// Whether the active account (or its active proxy) can actually sign. Used to
@@ -53,26 +46,20 @@ export const SimpleNominate = () => {
 	const { nominations } = progress
 
 	// Track whether bond is valid
-	const [bondValid, setBondValid] = useState<boolean>(true)
+	const [bondValid, setBondValid] = useState(false)
 
 	// Bond amount for nominating
-	const [bond, setBond] = useState<string>(
-		planckToUnit(totalPossibleBond, units),
-	)
+	const [bond, setBond] = useState('')
+	const bondPlanck = unitToPlanck(bond || '0', units)
+	const formValid = bondValid && hasSigner && bondPlanck > 0n
 
-	// Handler to set bond on input change
-	const handleSetBond = ({
-		value,
-		inputValue,
-	}: {
-		value: BigNumber
-		inputValue?: string
-	}) => {
-		setBond(inputValue ?? value.toFixed())
-	}
+	useEffect(() => {
+		setBond('')
+		setBondValid(false)
+	}, [activeAddress])
 
 	const getTxs = () => {
-		if (!activeAddress) {
+		if (!activeAddress || !formValid) {
 			return
 		}
 		// Default destination to 'Stash' to receive rewards as free balance to the stash account
@@ -83,11 +70,7 @@ export const SimpleNominate = () => {
 		const nominationsParam = nominations.map(
 			({ address }: { address: string }) => address,
 		)
-		const tx = serviceApi.tx.newNominator(
-			unitToPlanck(bond || '0', units),
-			payee,
-			nominationsParam,
-		)
+		const tx = serviceApi.tx.newNominator(bondPlanck, payee, nominationsParam)
 
 		if (!tx) {
 			return
@@ -99,7 +82,7 @@ export const SimpleNominate = () => {
 		tag: 'nominatorSetup',
 		tx: getTxs(),
 		from: formatFromProp(activeAccount, activeProxy),
-		shouldSubmit: true,
+		shouldSubmit: formValid,
 		callbackInBlock: () => {
 			// Close the modal after the extrinsic is included in a block
 			closeModal()
@@ -108,7 +91,7 @@ export const SimpleNominate = () => {
 		},
 	})
 
-	const fee = getTxSubmission(submitExtrinsic.uid)?.fee || 0n
+	const fee = getTxSubmission(submitExtrinsic.uid)?.fee ?? 0n
 
 	return (
 		<>
@@ -119,12 +102,10 @@ export const SimpleNominate = () => {
 
 				<Separator transparent />
 				<BondFeedback
-					syncing={false}
+					value={bond}
+					onChange={setBond}
 					bondFor="nominator"
-					bonding={false}
-					listenIsValid={(valid) => setBondValid(valid)}
-					defaultBond={null}
-					setters={[handleSetBond]}
+					listenIsValid={setBondValid}
 					txFees={fee}
 					maxWidth
 				/>
@@ -133,7 +114,7 @@ export const SimpleNominate = () => {
 				<SubmitTx
 					displayFor="card"
 					submitText={t('startNominating')}
-					valid={bondValid && hasSigner}
+					valid={formValid}
 					{...submitExtrinsic}
 					stacked
 				/>

@@ -3,7 +3,6 @@
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
-import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
@@ -28,7 +27,7 @@ export const Transfer = () => {
 	const { network } = useNetwork()
 	const { activeProxy } = useActiveProxy()
 	const { closeModal } = useOverlay().modal
-	const { activeAccount } = useActiveAccount()
+	const { activeAddress, activeAccount } = useActiveAccount()
 	const { accounts, accountHasSigner, getAccount } = useImportedAccounts()
 
 	// Filter accounts to only show those with signers
@@ -43,37 +42,40 @@ export const Transfer = () => {
 
 	// To account
 	const [toAccount, setToAccount] = useState<ImportedAccount | null>(
-		accounts?.[0] || null,
+		accounts?.[0] ?? null,
 	)
 
 	// Amount to transfer
-	const [amount, setAmountState] = useState<string>('0')
-	const amountBn = new BigNumber(amount || '0')
+	const [amount, setAmount] = useState('0')
+	const handleFromAccountChange = (account: ImportedAccount | null) => {
+		setFromAccount(account)
+		setAmount('0')
+	}
 
 	const {
 		balances: { transferableBalance },
-	} = useAccountBalances(fromAccount?.address || null)
+	} = useAccountBalances(fromAccount?.address ?? null)
 
 	const { units } = getStakingChainData(network)
+	const amountPlanck = unitToPlanck(amount || '0', units)
 
 	const valid =
-		amountBn.gt(0) &&
+		amountPlanck > 0n &&
+		amountPlanck <= transferableBalance &&
 		toAccount !== null &&
 		fromAccount !== null &&
 		fromAccount.address !== toAccount.address
 
 	const getTx = () => {
-		if (!fromAccount || !toAccount || amountBn.lte(0)) {
+		if (!valid || !fromAccount || !toAccount) {
 			return
 		}
-		const amountPlanck = unitToPlanck(amount, units)
-		const tx = serviceApi.tx.transferKeepAlive(toAccount.address, amountPlanck)
-		return tx
+		return serviceApi.tx.transferKeepAlive(toAccount.address, amountPlanck)
 	}
 
 	// Initialize proxy switcher hook, allowing switching between proxies if available
 	const proxySwitcher = useProxySwitcher(
-		fromAccount?.address || null,
+		fromAccount?.address ?? null,
 		activeProxy,
 		fromAccount
 			? { address: fromAccount.address, source: fromAccount.source }
@@ -86,31 +88,20 @@ export const Transfer = () => {
 			fromAccount,
 			filterNonProxy(proxySwitcher.currentSigner),
 		),
-		shouldSubmit: true,
+		shouldSubmit: valid,
 		callbackSubmit: () => {
 			closeModal()
 		},
 	})
 
-	const setAmount = ({
-		value,
-		inputValue,
-	}: {
-		value: BigNumber
-		inputValue?: string
-	}) => {
-		setAmountState(inputValue ?? value.toFixed())
-	}
+	useEffect(() => setAmount('0'), [activeAddress])
 
-	// Reset amount on from address change
+	// Clamp the amount when the selected account's available balance decreases.
 	useEffect(() => {
-		// If from address max balance is less than current amount, set amount to max
-		const maxBalance = new BigNumber(planckToUnit(transferableBalance, units))
-		if (amountBn.gt(maxBalance)) {
-			setAmountState(maxBalance.toFixed())
-			return
+		if (amountPlanck > transferableBalance) {
+			setAmount(planckToUnit(transferableBalance, units))
 		}
-	}, [amount, fromAccount, transferableBalance])
+	}, [amountPlanck, transferableBalance, units])
 
 	return (
 		<>
@@ -121,12 +112,12 @@ export const Transfer = () => {
 				<AccountDropdown
 					initialAccount={getAccount(activeAccount)}
 					accounts={accountsWithSigners}
-					onSelect={setFromAccount}
+					onSelect={handleFromAccountChange}
 					label={t('from', { ns: 'app' })}
 				/>
 				<Separator transparent />
 				<AccountDropdown
-					initialAccount={accounts?.[0] || null}
+					initialAccount={accounts?.[0] ?? null}
 					accounts={accountsWithSigners}
 					onSelect={setToAccount}
 					label={t('to', { ns: 'app' })}
@@ -134,12 +125,8 @@ export const Transfer = () => {
 				<Separator transparent />
 				<BalanceInput
 					value={amount}
-					defaultValue={'0'}
-					syncing={false}
-					disabled={false}
-					setters={[setAmount]}
-					maxAvailable={new BigNumber(planckToUnit(transferableBalance, units))}
-					disableTxFeeUpdate={false}
+					onChange={setAmount}
+					maxAvailable={planckToUnit(transferableBalance, units)}
 				/>
 			</Padding>
 			<SubmitTx valid={valid} {...submitExtrinsic} {...proxySwitcher} />
