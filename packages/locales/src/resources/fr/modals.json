@@ -205,7 +205,6 @@
 		"none": "Aucun",
 		"notAuthenticated": "Non authentifié",
 		"notInstalled": "Non installé",
-		"notMeetMinimum": "Vous n'atteignez pas l'engagement minimum du nominateur de {{minNominatorBondUnit}} {{unit}}. Veuillez engager des fonds avant de nominer.",
 		"notStaking": "Pas de staking",
 		"notToClaim": "Les validateurs réclament généralement les paiements au nom de leurs nominateurs. Si vous décidez de ne pas réclamer ici, il est probable que vous receviez vos paiements dans les 1 à 2 jours suivant leur disponibilité.",
 		"notePoolDepositorMinBond_depositor": "En tant que déposant du pool, vous devez maintenir un engagement d'au moins {{bond}} {{unit}}.",

@@ -205,7 +205,6 @@
 		"none": "Ninguno",
 		"notAuthenticated": "No Autenticado",
 		"notInstalled": "No Instalado",
-		"notMeetMinimum": "No cumples con la vinculación mínima de nominador de {{minNominatorBondUnit}} {{unit}}. Por favor, vincula algunos fondos antes de nominar.",
 		"notStaking": "Sin hacer Staking",
 		"notToClaim": "VLos validadores suelen reclamar los pagos en nombre de sus nominadores. Si decides no reclamar aquí, es probable que recibas tus pagos dentro de 1-2 días después de que estén disponibles.",
 		"notePoolDepositorMinBond_depositor": "Como depositante del Pool debes mantener una vinculación de al menos {{bond}} {{unit}}.",
