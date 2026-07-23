@@ -1,6 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import dotSvg from 'assets/token/dot.svg'
+import hollarSvg from 'assets/token/hollar.svg'
+import usdcSvg from 'assets/token/usdc.svg'
+import usdtSvg from 'assets/token/usdt.svg'
 import type {
 	AssetMetadata,
 	ChainAssetConfigs,
@@ -17,6 +21,13 @@ const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	USDC: { color: '#3E73C4', decimals: 6 },
 	USDT: { color: '#26A17B', decimals: 6 },
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
+}
+
+const FeeTokenIcons: Record<FeeAssetSymbol, string> = {
+	DOT: dotSvg,
+	USDC: usdcSvg,
+	USDT: usdtSvg,
+	HOLLAR: hollarSvg,
 }
 
 // All supported transaction fee asset symbols.
@@ -101,6 +112,9 @@ export const getStablecoinAssetConfig = (
 // Gets a fee token's globally configured display color.
 export const getFeeTokenColor = (symbol: FeeAssetSymbol) =>
 	FeeTokenMetadata[symbol].color
+
+// Gets a fee token's display icon.
+export const getFeeTokenIcon = (symbol: FeeAssetSymbol) => FeeTokenIcons[symbol]
 
 // Gets all configured fee assets for a chain.
 export const getStablecoinFeeAssets = (

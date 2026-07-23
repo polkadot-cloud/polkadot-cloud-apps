@@ -3,12 +3,9 @@
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { planckToUnit, unitToPlanck } from '@w3ux/utils'
-import dotSvg from 'assets/token/dot.svg'
-import hollarSvg from 'assets/token/hollar.svg'
-import usdcSvg from 'assets/token/usdc.svg'
-import usdtSvg from 'assets/token/usdt.svg'
 import {
 	FeeAssetSymbols,
+	getFeeTokenIcon,
 	getStablecoinAssetConfig,
 	getStablecoinChainLabel,
 	isStablecoinFeeAssetSupported,
@@ -39,25 +36,18 @@ import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import classes from './Send.module.scss'
 
-const tokenIcons: Record<FeeAssetSymbol, string> = {
-	DOT: dotSvg,
-	USDC: usdcSvg,
-	USDT: usdtSvg,
-	HOLLAR: hollarSvg,
-}
-
 const stablecoinOptions: DropdownOption<StablecoinSymbol>[] =
 	StablecoinSymbols.map((symbol) => ({
 		value: symbol,
 		label: symbol,
-		icon: tokenIcons[symbol],
+		icon: getFeeTokenIcon(symbol),
 	}))
 
 const feeAssetOptions: DropdownOption<FeeAssetSymbol>[] = FeeAssetSymbols.map(
 	(symbol) => ({
 		value: symbol,
 		label: symbol,
-		icon: tokenIcons[symbol],
+		icon: getFeeTokenIcon(symbol),
 	}),
 )
 

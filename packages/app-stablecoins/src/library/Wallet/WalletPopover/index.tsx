@@ -1,16 +1,21 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useOutsideAlerter } from '@w3ux/hooks'
-import dotSvg from 'assets/token/dot.svg'
-import hdxSvg from 'assets/token/hdx.svg'
-import hollarSvg from 'assets/token/hollar.svg'
-import usdcSvg from 'assets/token/usdc.svg'
-import usdtSvg from 'assets/token/usdt.svg'
-import { getFeeTokenColor, getStablecoinChainLabel } from 'consts/stablecoins'
+import {
+	getFeeTokenColor,
+	getFeeTokenIcon,
+	getStablecoinChainLabel,
+	getStablecoinFeeAssets,
+	StablecoinChains,
+	StablecoinSymbols,
+} from 'consts/stablecoins'
+import { useStablecoinBalances } from 'hooks'
 import type { Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { PopoverTab } from 'ui-buttons'
+import { Loader } from 'ui-core/base'
 import {
 	ConnectItem,
 	Headline,
@@ -19,77 +24,43 @@ import {
 	SegmentedBar,
 } from 'ui-core/popover'
 
-const stablecoinMix = [
-	{
-		icon: usdcSvg,
-		symbol: 'USDC',
-		value: '$750,000',
-		share: 60,
-	},
-	{
-		icon: usdtSvg,
-		symbol: 'USDT',
-		value: '$312,450',
-		share: 27,
-	},
-	{
-		icon: hollarSvg,
-		symbol: 'HOLLAR',
-		value: '$150,000',
-		share: 13,
-	},
-] as const
-
-const chainBalances = [
-	{
-		chain: getStablecoinChainLabel('statemint'),
-		value: '$935,200.00',
-		share: 79,
-	},
-	{
-		chain: getStablecoinChainLabel('hydration'),
-		value: '$255,540.00',
-		share: 21,
-	},
-]
-
-const chainTokenBreakdown = [
-	{
-		chain: getStablecoinChainLabel('statemint'),
-		total: '$935,200.00',
-		tokens: [
-			{ icon: usdcSvg, name: 'USDC', value: '750,000.00' },
-			{ icon: usdtSvg, name: 'USDT', value: '185,200.00' },
-			{ icon: dotSvg, name: 'DOT', value: '31,696.00' },
-		],
-	},
-	{
-		chain: getStablecoinChainLabel('hydration'),
-		total: '$255,540.00',
-		tokens: [
-			{ icon: usdcSvg, name: 'USDC', value: '92,500.00' },
-			{ icon: usdtSvg, name: 'USDT', value: '312,450.00' },
-			{ icon: hollarSvg, name: 'HOLLAR', value: '150,000.00' },
-			{ icon: hdxSvg, name: 'HDX', value: '820,000.00' },
-			{ icon: dotSvg, name: 'DOT', value: '13,584.00' },
-		],
-	},
-]
+const BalancePreloader = ({
+	height = '1rem',
+	width = '5rem',
+}: {
+	height?: string
+	width?: string
+}) => <Loader as="span" style={{ height, width }} />
 
 export const WalletPopover = ({
 	setOpen,
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
+	const { activeAddress } = useActiveAccount()
+	const {
+		getBalanceUnit,
+		getStablecoinShare,
+		getStablecoinTotal,
+		loading: syncing,
+	} = useStablecoinBalances(activeAddress)
 	const popoverRef = useRef<HTMLDivElement>(null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
+	const stablecoinMix = StablecoinSymbols.map((symbol) => ({
+		share: getStablecoinShare({ symbol }),
+		symbol,
+		value: `$${getStablecoinTotal({ symbol }).toFormat(2)}`,
+	}))
 
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
 	}, ['header-wallet'])
 
 	return (
-		<div ref={popoverRef}>
+		<div ref={popoverRef} aria-busy={syncing}>
+			{syncing && (
+				<span aria-label="Syncing balances" aria-live="polite" role="status" />
+			)}
 			<PopoverTab.Container position="top">
 				<PopoverTab.Button
 					text="Balances"
@@ -103,40 +74,52 @@ export const WalletPopover = ({
 					<ConnectItem.Container>
 						<h4>Stablecoin Mix</h4>
 						<MenuItem padded>
-							<SegmentedBar
-								ariaLabel={stablecoinMix
-									.map(({ share, symbol }) => `${symbol}: ${share}%`)
-									.join(', ')}
-								segments={stablecoinMix.map(({ share, symbol }) => ({
-									color: getFeeTokenColor(symbol),
-									id: symbol,
-									value: share,
-								}))}
-							/>
+							{syncing ? (
+								<BalancePreloader height="0.72rem" width="100%" />
+							) : (
+								<SegmentedBar
+									ariaLabel={stablecoinMix
+										.map(({ share, symbol }) => `${symbol}: ${share}%`)
+										.join(', ')}
+									segments={stablecoinMix.map(({ share, symbol }) => ({
+										color: getFeeTokenColor(symbol),
+										id: symbol,
+										value: share,
+									}))}
+								/>
+							)}
 						</MenuItem>
-						{stablecoinMix.map((coin) => (
-							<MenuItem key={coin.symbol} padded>
+						{stablecoinMix.map(({ symbol, value }) => (
+							<MenuItem key={symbol} padded>
 								<div>
-									<img src={coin.icon} alt={coin.symbol} />
+									<img src={getFeeTokenIcon(symbol)} alt="" />
 								</div>
 								<div>
-									<h3>{coin.symbol}</h3>
-									<div>
-										<h4>{coin.value}</h4>
-									</div>
+									<h3>{symbol}</h3>
+									<div>{syncing ? <BalancePreloader /> : <h4>{value}</h4>}</div>
 								</div>
 							</MenuItem>
 						))}
 
-						{chainBalances.map((row) => (
-							<Fragment key={row.chain}>
-								<h4>{row.chain}</h4>
+						{StablecoinChains.map((chain) => (
+							<Fragment key={chain}>
+								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>
 									<div>
-										<h3>{row.value}</h3>
+										{syncing ? (
+											<BalancePreloader height="1.2rem" width="7rem" />
+										) : (
+											<h3>${getStablecoinTotal({ chain }).toFormat(2)}</h3>
+										)}
 									</div>
 									<div>
-										<ProportionBar percentage={row.share} />
+										{syncing ? (
+											<BalancePreloader height="0.75rem" width="7rem" />
+										) : (
+											<ProportionBar
+												percentage={getStablecoinShare({ chain })}
+											/>
+										)}
 									</div>
 								</MenuItem>
 							</Fragment>
@@ -147,29 +130,46 @@ export const WalletPopover = ({
 
 			{activeTab === 'balances' && (
 				<div>
-					<Headline title="Balance" value="$1,190,740.00" />
+					<Headline
+						title="Balance"
+						value={
+							syncing ? (
+								<BalancePreloader height="1.5rem" width="7.5rem" />
+							) : (
+								`$${getStablecoinTotal().toFormat(2)}`
+							)
+						}
+					/>
 
 					<ConnectItem.Container>
-						{chainTokenBreakdown.map((group) => (
-							<Fragment key={group.chain}>
-								<h4>{group.chain}</h4>
+						{StablecoinChains.map((chain) => (
+							<Fragment key={chain}>
+								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>
 									<div>
 										<h3>Total</h3>
 										<div>
-											<h4>{group.total}</h4>
+											{syncing ? (
+												<BalancePreloader width="7rem" />
+											) : (
+												<h4>${getStablecoinTotal({ chain }).toFormat(2)}</h4>
+											)}
 										</div>
 									</div>
 								</MenuItem>
-								{group.tokens.map((token) => (
-									<MenuItem key={`${group.chain}-${token.name}`} padded>
+								{getStablecoinFeeAssets(chain).map((symbol) => (
+									<MenuItem key={`${chain}-${symbol}`} padded>
 										<div>
-											<img src={token.icon} alt={token.name} />
+											<img src={getFeeTokenIcon(symbol)} alt="" />
 										</div>
 										<div>
-											<h3>{token.name}</h3>
+											<h3>{symbol}</h3>
 											<div>
-												<h4>{token.value}</h4>
+												{syncing ? (
+													<BalancePreloader />
+												) : (
+													<h4>{getBalanceUnit(chain, symbol).toFormat(2)}</h4>
+												)}
 											</div>
 										</div>
 									</MenuItem>

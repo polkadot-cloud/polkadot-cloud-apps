@@ -4,6 +4,12 @@
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { DedotClient } from 'dedot'
+import {
+	getStablecoinBalances,
+	setStablecoinBalances,
+	setStablecoinBalancesError,
+	setStablecoinBalancesSyncing,
+} from 'global-bus'
 import type { ServiceInterface, StablecoinBalance } from 'types'
 import { createAssetHubStablecoinAdapter } from './assetHub'
 import {
@@ -17,6 +23,11 @@ type StablecoinAdapters = {
 	hydration: HydrationStablecoinAdapter
 }
 
+type BalanceRequest = {
+	promise: Promise<StablecoinBalance[]>
+	requestId: number
+}
+
 // Creates the stablecoin service interface for balances, transfers, fee assets, and fee estimates
 // across Asset Hub and Hydration.
 export const createStablecoinsInterface = (
@@ -27,19 +38,49 @@ export const createStablecoinsInterface = (
 		statemint: createAssetHubStablecoinAdapter(apiHub),
 		hydration: createHydrationStablecoinAdapter(getHydrationApi),
 	}
+	const balanceRequests = new Map<string, BalanceRequest>()
+
+	const queryBalances = (address: string): Promise<StablecoinBalance[]> => {
+		const pending = balanceRequests.get(address)
+		const state = getStablecoinBalances(address)
+		if (
+			pending &&
+			state.status === 'syncing' &&
+			state.requestId === pending.requestId
+		) {
+			return pending.promise
+		}
+
+		const requestId = setStablecoinBalancesSyncing(address)
+		const promise = Promise.all(
+			Object.values(adapters).flatMap((adapter) =>
+				adapter.feeAssets.map((symbol) => adapter.balance(address, symbol)),
+			),
+		)
+			.then((results) => {
+				const balances = results.filter(
+					(balance): balance is StablecoinBalance => !!balance,
+				)
+				setStablecoinBalances(address, balances, requestId)
+				return balances
+			})
+			.catch((error) => {
+				setStablecoinBalancesError(address, requestId)
+				throw error
+			})
+			.finally(() => {
+				if (balanceRequests.get(address)?.requestId === requestId) {
+					balanceRequests.delete(address)
+				}
+			})
+
+		balanceRequests.set(address, { promise, requestId })
+		return promise
+	}
 
 	return {
 		query: {
-			balances: async (address) => {
-				const jobs = Object.values(adapters).flatMap((adapter) =>
-					adapter.feeAssets.map((symbol) => adapter.balance(address, symbol)),
-				)
-
-				const balances = await Promise.all(jobs)
-				return balances.filter(
-					(balance): balance is StablecoinBalance => !!balance,
-				)
-			},
+			balances: queryBalances,
 			balance: (address, chain, symbol) =>
 				adapters[chain].balance(address, symbol),
 			hydrationFeeCurrency: (address) =>
