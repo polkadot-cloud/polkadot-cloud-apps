@@ -84,7 +84,14 @@ export const deleteTx = (uid: number) => {
 	removeSub(uid)
 }
 
-export const pendingTxCount = (from: string) =>
-	_uids.getValue().filter((item) => item.from === from && item.pending).length
+export const pendingTxCount = (networkOrFrom: string, from?: string) =>
+	_uids
+		.getValue()
+		.filter(
+			(item) =>
+				item.from === (from ?? networkOrFrom) &&
+				(from === undefined || item.network === networkOrFrom) &&
+				item.pending,
+		).length
 
 export * from './submit'
