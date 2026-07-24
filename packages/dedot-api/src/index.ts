@@ -11,7 +11,7 @@ import { getInitialNetworkConfig } from 'global-bus/util'
 import { pairwise, startWith } from 'rxjs'
 import { onNetworkReset } from './reset'
 import { getDefaultService } from './start'
-import type { ServiceClass } from './types'
+import type { DedotServiceConfig, ServiceClass } from './types'
 import { hasApiHub } from './util'
 
 // The active service
@@ -21,7 +21,7 @@ let service: ServiceClass
 const proxiesLifecycle = createProxiesLifecycle()
 
 // Start service for the current network
-export const initDedotService = async () => {
+export const initDedotService = async (features: DedotServiceConfig = {}) => {
 	// Populate network config with sanitized RPC endpoints
 	const config = await getInitialNetworkConfig()
 	setNetworkConfig(
@@ -51,22 +51,50 @@ export const initDedotService = async () => {
 			if (network === 'westend') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)
-				service = new Service(cur, ids, ...apis, providerRelay, providerPeople)
+				service = new Service(
+					cur,
+					ids,
+					...apis,
+					providerRelay,
+					providerPeople,
+					features,
+				)
 			}
 			if (network === 'kusama') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)
-				service = new Service(cur, ids, ...apis, providerRelay, providerPeople)
+				service = new Service(
+					cur,
+					ids,
+					...apis,
+					providerRelay,
+					providerPeople,
+					features,
+				)
 			}
 			if (network === 'polkadot') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)
-				service = new Service(cur, ids, ...apis, providerRelay, providerPeople)
+				service = new Service(
+					cur,
+					ids,
+					...apis,
+					providerRelay,
+					providerPeople,
+					features,
+				)
 			}
 			if (network === 'paseo') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)
-				service = new Service(cur, ids, ...apis, providerRelay, providerPeople)
+				service = new Service(
+					cur,
+					ids,
+					...apis,
+					providerRelay,
+					providerPeople,
+					features,
+				)
 			}
 
 			// Expose service interface
@@ -80,3 +108,5 @@ export const initDedotService = async () => {
 			await service.start()
 		})
 }
+
+export type { DedotServiceConfig } from './types'
