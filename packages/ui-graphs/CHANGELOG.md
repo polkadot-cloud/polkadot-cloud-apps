@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.4.0...ui-graphs-v1.5.0) (2026-07-24)
+
+
+### Features
+
+* **fix:** Biome deprecation, lint CSS ([#3609](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3609)) ([2554736](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2554736f2fa465aa82e62b1e8c1c9321c40dbc96))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+
+
+### Bug Fixes
+
+* missing theme value ([a8c9c3f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a8c9c3f09d710abf2962325849879e206cece22f))
+
 ## [1.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.3.0...ui-graphs-v1.4.0) (2026-05-26)
 
 

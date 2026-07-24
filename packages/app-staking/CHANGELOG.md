@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-staking-v2.3.0...app-staking-v2.4.0) (2026-07-24)
+
+
+### Features
+
+* add `app-stablecoins` skeleton [2] ([#3687](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3687)) ([5b7868b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5b7868b64a4fa7c2d03166d259848349cc82976c))
+* Add stablecoin service layer ([#3697](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3697)) ([e931ab6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e931ab691680692b2331cd90a083235cbf5d86a6))
+* **fix:** Count unique nominators ([#3693](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3693)) ([734a3a5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/734a3a59838da1ca61a76ff85b1b09c97ff74678))
+* **fix:** derive effective unbond duration from chain state for unbonding displays ([#3624](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3624)) ([089a9c5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/089a9c56d4c32656af788b488e5a26026b83234a))
+* **fix:** Fix pool preloader on zero values, fix biome formatting ([#3644](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3644)) ([2b479e9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2b479e9bcbf528ece94d0792c95e5a79cfc1448d))
+* **fix:** pool shares: also wait for active-pools sync ([6d30546](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6d305460f8b358cc60c3ea0161c7064ff14ccab8))
+* **refactor:** `Headers` takes nodes with keys ([#3685](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3685)) ([6c4f6b6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c4f6b6f27063c58c018135b8b1ccbf7bce43d6e))
+* **refactor:** Abstract advanced menu, add `enableAdvancedMenu` prop ([#3686](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3686)) ([f8d429a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f8d429ae57762e4a81eff2735fbebb0ee5f6c142))
+* **refactor:** Abstract key library and context components ([#3617](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3617)) ([6fee099](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6fee099114c1bdcd5a7887d7e14b5f8125bf7d3c))
+* **refactor:** Abstract side menu UI ([#3668](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3668)) ([35aae55](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/35aae5540b0df5ca5195a8edab4dcf8442f60ced))
+* **refactor:** Amend consts config, abstract rpc endpoints ([#3648](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3648)) ([bc812fb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/bc812fbfa655b72e026d7913a83cda6bf9af17cb))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Init `tx-submit` package ([#3652](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3652)) ([52f42dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/52f42dd598ef7241c981e2ec4289c6db38f4cc05))
+* **refactor:** Init `ui-modals`, mv `Accounts` modal ([#3616](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3616)) ([ed170be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ed170be36e996fcabe57f0cdc410db5abf79e186))
+* **refactor:** Move `ActionItem` to `ui-core` ([#3615](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3615)) ([8907f84](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8907f846d9bc7be9cb4957852106d53222892e7c))
+* **refactor:** Move `app-staking/library` components to `ui-app` package ([#3654](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3654)) ([d2afe49](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d2afe49d6867fc5bbf9e000469c56526a9c69fc6))
+* **refactor:** Move `usePageFromHash` hook ([#3655](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3655)) ([1e6a6e6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1e6a6e6d8a688516c09a5cb5ae49fd7984636d92))
+* **refactor:** Move `useTheme` to `hooks` ([#3619](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3619)) ([8a4f72a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8a4f72aef00df6af7b4535617c6a61bfd4652e77))
+* **refactor:** Move key modals to `ui-modals` ([#3618](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3618)) ([341b053](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/341b053a87659d7683adc201d5ee9fc28c24aa91))
+* **refactor:** Move shared app components to `ui-app` ([#3649](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3649)) ([8f75624](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8f756246bc8dbabbe6cc7670ee054dd6798488fc))
+* **refactor:** Move ThemeValues to `hooks` ([#3620](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3620)) ([e070e76](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e070e76b141d80e1b4524b87d5eca7a98a1214cb))
+* **refactor:** Move Tx library components to `ui-app` ([#3622](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3622)) ([c63a3b3](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c63a3b334712902979e778b85f9c870edeeffe2d))
+* **refactor:** Remove outer `SubmitButton` ([#3621](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3621)) ([a494046](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a4940467d70546f187317d252031bd2067a8ce82))
+* **refactor:** Share `lazyNamed` through `ui-overlay` ([#3684](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3684)) ([6a331cb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6a331cb067c2035e54d5ff047dbca0164f65b915))
+* **refactor:** Shared favicons via `vite-shared` package ([#3646](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3646)) ([b9d470b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b9d470bad181aabca9e36a32bcbe2a6615eaf722))
+* **refactor:** Support production pool candidates ([#3639](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3639)) ([c5f5e17](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c5f5e177619a346e1cba86f959a57c76c61c1225))
+* Remove deprecated validator commission UI ([#3640](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3640)) ([2586616](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2586616543521052215bdab495ea601319cad135))
+* Use sanitize nominee candidates query ([#3641](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3641)) ([db7d720](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db7d72028edd85b0caab73f7fae241b54361b04d))
+* **ux:** Improve bond status badge UI ([#3645](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3645)) ([11aaff9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/11aaff9efa26735ee3a69eafb9ad9d0cc99fecf1))
+* **ux:** Revise balance inputs, add `BalanceInputMulti` ([#3695](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3695)) ([cb62237](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cb62237a18b0c93246c5843bc728dfa98aa940de))
+* **ux:** Show reward trend demo when no active pool ([#3643](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3643)) ([0d235bc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0d235bc7c5c33fbcdc6994d5ea7cce8a19234bc6))
+
 ## [2.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-v2.2.0...app-v2.3.0) (2026-05-26)
 
 

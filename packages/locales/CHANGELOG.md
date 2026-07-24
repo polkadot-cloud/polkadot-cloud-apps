@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.6.0...locales-v1.7.0) (2026-07-24)
+
+
+### Features
+
+* add sync access code ([e0c1bcf](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e0c1bcf3c3d4d25570ddcb2e680189a2313c4408))
+* Lazy load date formats ([#3585](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3585)) ([205b077](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/205b077e1e6798036741656434ee5d9755b7e394))
+* **locale:** Add Turkish (Türkçe) language support ([#3514](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3514)) ([b433484](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b4334844513bc595601736b8a9d0f27fef77f016))
+* **locales:** add French (fr) language support ([#3593](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3593)) ([21de8e4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/21de8e494bbf6aa954455b9db1971ab22da29cec))
+* **refactor:** `ActiveStaker`, `UI`, `PoolMembers` contexts to standalone hooks  ([#3557](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3557)) ([7f35f18](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7f35f182dd1a96372598907afb2f5c129b30c129))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* Remove deprecated validator commission UI ([#3640](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3640)) ([2586616](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2586616543521052215bdab495ea601319cad135))
+* **ux:** Incoming payments UI for `RewardDestination::Account`. ([#3547](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3547)) ([2209a28](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2209a28acb57dc130cf739d54068bb86faac30ca))
+* **ux:** Revise balance inputs, add `BalanceInputMulti` ([#3695](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3695)) ([cb62237](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cb62237a18b0c93246c5843bc728dfa98aa940de))
+* **ux:** Show reward trend demo when no active pool ([#3643](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3643)) ([0d235bc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0d235bc7c5c33fbcdc6994d5ea7cce8a19234bc6))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.5.0...locales-v1.6.0) (2026-05-26)
 
 

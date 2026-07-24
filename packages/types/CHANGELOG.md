@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.5.0...types-v1.6.0) (2026-07-24)
+
+
+### Features
+
+* Add stablecoin service layer ([#3697](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3697)) ([e931ab6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e931ab691680692b2331cd90a083235cbf5d86a6))
+* **fix:** derive effective unbond duration from chain state for unbonding displays ([#3624](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3624)) ([089a9c5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/089a9c56d4c32656af788b488e5a26026b83234a))
+* Prepare shared stablecoin support ([#3696](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3696)) ([5f8605f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5f8605f2e90cdaed82a5d03a1dae03fabba66c9d))
+* **refactor:** Add `network` to transaction UIDs ([#3690](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3690)) ([4b1f8e5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4b1f8e54b5f2a54d3bee10ecea2b14b5b6dba2f8))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Move Tx library components to `ui-app` ([#3622](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3622)) ([c63a3b3](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c63a3b334712902979e778b85f9c870edeeffe2d))
+* **refactor:** Move worker to standalone package ([#3563](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3563)) ([ff533dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ff533dd9feb198bec105e2c0719d69d76bd46364))
+* **refactor:** revise Tx  ([#3688](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3688)) ([35ff02a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/35ff02a288b1853deb0cb167a3654328be942db6))
+* **refactor:** Support custom transaction fee display ([#3651](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3651)) ([5b78d47](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5b78d473f871c7ddb79868eb7ab85b34ef9bd784))
+* **refactor:** Update `ui-app` transaction submission ([#3692](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3692)) ([effbb51](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/effbb51721b4c92583814f476618225dd2d72261))
+* Remove deprecated validator commission UI ([#3640](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3640)) ([2586616](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2586616543521052215bdab495ea601319cad135))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.4.0...types-v1.5.0) (2026-05-26)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/assets-v1.5.0...assets-v1.6.0) (2026-07-24)
+
+
+### Features
+
+* add stablecoin token assets ([#3647](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3647)) ([53a6098](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/53a60982fe7541c22e5d3f0d22e9e1088eb9eef0))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/assets-v1.4.0...assets-v1.5.0) (2026-05-26)
 
 

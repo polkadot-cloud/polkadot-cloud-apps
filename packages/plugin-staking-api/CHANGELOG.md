@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.6.0...plugin-staking-api-v1.7.0) (2026-07-24)
+
+
+### Features
+
+* **fix:** Fix validator stats query ([#3667](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3667)) ([0f81b7d](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0f81b7da63f107ccad0073ef2c3fc3755a1608dc))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Support production pool candidates ([#3639](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3639)) ([c5f5e17](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c5f5e177619a346e1cba86f959a57c76c61c1225))
+* Remove deprecated validator commission UI ([#3640](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3640)) ([2586616](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2586616543521052215bdab495ea601319cad135))
+* Use sanitize nominee candidates query ([#3641](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3641)) ([db7d720](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db7d72028edd85b0caab73f7fae241b54361b04d))
+* **ux:** Incoming payments UI for `RewardDestination::Account`. ([#3547](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3547)) ([2209a28](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2209a28acb57dc130cf739d54068bb86faac30ca))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.5.0...plugin-staking-api-v1.6.0) (2026-05-26)
 
 
