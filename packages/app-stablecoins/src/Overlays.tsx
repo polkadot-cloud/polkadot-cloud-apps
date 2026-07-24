@@ -19,9 +19,12 @@ const modals = lazyOverlayComponents({
 		import('ui-modals/Accounts').then(({ Accounts: AccountsModal }) => ({
 			Accounts: () => <AccountsModal useCategories={useDefaultCategories} />,
 		})),
+	DiscordSupport: () => import('ui-modals/DiscordSupport'),
 	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
 	ImportAccounts: () => import('ui-modals/ImportAccounts'),
+	MailSupport: () => import('ui-modals/MailSupport'),
 	SelectCurrency: () => import('ui-modals/SelectCurrency'),
+	SelectLanguage: () => import('ui-modals/SelectLanguage'),
 })
 
 const ErrorFallbackModal = () => null

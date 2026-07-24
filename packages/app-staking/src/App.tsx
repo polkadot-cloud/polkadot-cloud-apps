@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Providers } from 'Providers'
-import { i18next } from 'locales'
+import { i18next } from 'locales/staking'
 import { I18nextProvider } from 'react-i18next'
 
 export const App = () => (

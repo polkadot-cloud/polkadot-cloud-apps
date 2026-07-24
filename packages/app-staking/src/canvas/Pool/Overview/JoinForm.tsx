@@ -3,11 +3,9 @@
 
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
-import type BigNumber from 'bignumber.js'
+import { unitToPlanck } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { defaultClaimPermission } from 'global-bus'
-import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useBatchCall } from 'hooks/useBatchCall'
@@ -17,7 +15,7 @@ import { defaultPoolProgress, usePoolSetups } from 'hooks/usePoolSetups'
 import { useSignerWarnings } from 'hooks/useSignerWarnings'
 import { BondFeedback } from 'library/Form/Bond/BondFeedback'
 import { ClaimPermissionInput } from 'library/Form/ClaimPermissionInput'
-import { type Dispatch, type SetStateAction, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
@@ -50,12 +48,6 @@ export const JoinForm = ({
 	const { activeProxy } = useActiveProxy()
 	const { getSignerWarnings } = useSignerWarnings()
 	const { activeAddress, activeAccount } = useActiveAccount()
-	const {
-		balances: {
-			pool: { totalPossibleBond },
-		},
-	} = useAccountBalances(activeAddress)
-
 	const { unit, units } = getStakingChainData(network)
 	const largestTxFee = useBondGreatestFee({ bondFor: 'pool' })
 
@@ -65,23 +57,12 @@ export const JoinForm = ({
 	)
 
 	// Bond amount to join pool with.
-	const [bond, setBond] = useState<{ bond: string }>({
-		bond: planckToUnit(totalPossibleBond, units),
-	})
+	const [bond, setBond] = useState('')
 
 	// Whether the bond amount is valid.
-	const [bondValid, setBondValid] = useState<boolean>(false)
-
-	// feedback errors to trigger modal resize
-	const [feedbackErrors, setFeedbackErrors] = useState<string[]>([])
-
-	// Handler to set bond on input change.
-	const handleSetBond = ({ value }: { value: BigNumber }) => {
-		setBond({ bond: value.toString() })
-	}
-
-	// Whether the form is ready to submit.
-	const formValid = bondValid && feedbackErrors.length === 0
+	const [bondValid, setBondValid] = useState(false)
+	const bondPlanck = unitToPlanck(bond || '0', units)
+	const formValid = bondValid && bondPlanck > 0n
 
 	const getTx = () => {
 		if (!claimPermission || !formValid) {
@@ -89,16 +70,21 @@ export const JoinForm = ({
 		}
 		const txs = serviceApi.tx.joinPool(
 			bondedPool.id,
-			unitToPlanck(!bondValid ? 0 : bond.bond, units),
+			bondPlanck,
 			claimPermission,
 		)
-		if (!txs || (txs && !txs.length)) {
+		if (!txs?.length) {
 			return
 		}
 		return txs.length === 1
 			? txs[0]
 			: newBatchCall(txs, activeAddress, activeProxy)
 	}
+
+	useEffect(() => {
+		setBond('')
+		setBondValid(false)
+	}, [activeAddress])
 
 	// Randomly select a new pool to display
 	const handleChooseNewPool = () => {
@@ -114,7 +100,7 @@ export const JoinForm = ({
 	const submitExtrinsic = useSubmitExtrinsic({
 		tx: getTx(),
 		from: formatFromProp(activeAccount, activeProxy),
-		shouldSubmit: bondValid,
+		shouldSubmit: formValid,
 		callbackSubmit: () => {
 			closeCanvas()
 			// Optional callback function on join success.
@@ -123,7 +109,7 @@ export const JoinForm = ({
 				onJoinCallback()
 			}
 		},
-		callbackInBlock: async () => {
+		callbackInBlock: () => {
 			// Reset local storage setup progress
 			setPoolSetup(defaultPoolProgress)
 		},
@@ -147,7 +133,7 @@ export const JoinForm = ({
 					<ButtonPrimaryInvert
 						text={t('chooseAnotherPool', { ns: 'app' })}
 						iconLeft={faArrowsRotate}
-						onClick={() => handleChooseNewPool()}
+						onClick={handleChooseNewPool}
 					/>
 				)}
 			</div>
@@ -157,28 +143,21 @@ export const JoinForm = ({
 			<div className="input">
 				<div>
 					<BondFeedback
-						joiningPool
-						displayFirstWarningOnly
+						value={bond}
+						onChange={setBond}
+						displayFor="canvas"
 						syncing={largestTxFee.isZero()}
-						bondFor={'pool'}
-						listenIsValid={(valid, errors) => {
-							setBondValid(valid)
-							setFeedbackErrors(errors)
-						}}
-						defaultBond={null}
-						setters={[handleSetBond]}
+						bondFor="pool"
+						listenIsValid={setBondValid}
 						parentErrors={warnings}
-						txFees={BigInt(largestTxFee.toString())}
-						bonding={false}
+						txFees={BigInt(largestTxFee.toFixed(0))}
 					/>
 				</div>
 			</div>
 			<h4 className="underline">{t('claimSetting', { ns: 'app' })}</h4>
 			<ClaimPermissionInput
 				current={claimPermission}
-				onChange={(val: ClaimPermission) => {
-					setClaimPermission(val)
-				}}
+				onChange={setClaimPermission}
 			/>
 			<div className="submit">
 				<SubmitTx

@@ -205,7 +205,6 @@
 		"none": "없음",
 		"notAuthenticated": "인증되지 않음",
 		"notInstalled": "설치되지 않음",
-		"notMeetMinimum": "최소 지정인 본딩액 {{minNominatorBondUnit}} {{unit}}을 충족하지 못합니다. 지정하기 전에 자금을 본딩하세요.",
 		"notStaking": "스테이킹 중이 아님",
 		"notToClaim": "검증인들은 일반적으로 지정인을 대신하여 지급금을 청구합니다. 여기서 청구하지 않기로 결정하면, 지급금이 이용 가능해진 후 1-2일 이내에 받을 가능성이 높습니다.",
 		"notePoolDepositorMinBond_depositor": "풀 예치인으로서 최소 {{bond}} {{unit}}의 본드를 유지해야 합니다.",
