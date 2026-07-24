@@ -1,59 +1,58 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnTab {
-  color: var(--gray-900);
-  transition:
-    opacity var(--transition-duration),
-    font-size var(--transition-duration);
-  border-top-left-radius: 0.4rem;
-  border-top-right-radius: 0.4rem;
-  font-size: 1.15rem;
-  margin-bottom: 0;
-  margin-right: 0.75rem;
-  padding: 0 1rem;
-  height: 3.2rem;
+	color: var(--gray-900);
+	transition:
+		opacity var(--transition-duration),
+		font-size var(--transition-duration);
+	border-top-left-radius: 0.4rem;
+	border-top-right-radius: 0.4rem;
+	font-size: 1.15rem;
+	margin-bottom: 0;
+	margin-right: 0.75rem;
+	padding: 0 1rem;
+	height: 3.2rem;
 
-  &:last-child {
-    margin-right: 0;
-  }
+	&:last-child {
+		margin-right: 0;
+	}
 
-  &:hover {
-    opacity: 0.9;
-  }
+	&:hover {
+		opacity: 0.9;
+	}
 
-  &:disabled {
-    cursor: default;
-  }
+	&:disabled {
+		cursor: default;
+	}
 }
 
 .btnTabInner {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .btnTabActive {
-  background: var(--btn-tab);
-  color: var(--gray-1000);
+	background: var(--btn-tab);
+	color: var(--gray-1000);
 }
 
 .btnTabSecondaryColorActive {
-  background: var(--btn-canvas-tab);
-  color: var(--gray-1000);
+	background: var(--btn-canvas-tab);
+	color: var(--gray-1000);
 }
 
-
 .btnTabBadge {
-  border: 1px solid var(--gray-500);
-  color: var(--text-tertiary);
-  font-size: var(--btn-sm-font-size);
-  margin-left: var(--btn-lg-spacing);
-  display: flex;
-  padding: 0.3rem 0.6rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.4rem;
-  overflow: hidden;
-  width: fit-content;
-  max-width: 3rem;
+	border: 1px solid var(--gray-500);
+	color: var(--text-tertiary);
+	font-size: var(--btn-sm-font-size);
+	margin-left: var(--btn-lg-spacing);
+	display: flex;
+	padding: 0.3rem 0.6rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.4rem;
+	overflow: hidden;
+	width: fit-content;
+	max-width: 3rem;
 }

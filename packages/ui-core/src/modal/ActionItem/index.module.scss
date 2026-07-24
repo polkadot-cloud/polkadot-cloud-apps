@@ -1,0 +1,33 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.actionItem {
+	display: flex;
+	align-items: center;
+	margin: 1.25rem 0 0;
+	border-bottom: 1px solid var(--gray-500);
+	padding-bottom: 0.75rem;
+	width: 100%;
+	color: var(--gray-1000);
+	font-family: var(--font-family-semibold);
+
+	> svg {
+		margin-right: 0.65rem;
+	}
+
+	span {
+		margin-left: 0.5rem;
+	}
+}
+
+.toggle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 0.65rem;
+	border: 1px solid var(--gray-500);
+	border-radius: 0.4rem;
+	background: var(--bg-input);
+	width: 1.75rem;
+	height: 1.75rem;
+}

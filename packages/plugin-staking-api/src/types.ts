@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type {
@@ -96,6 +96,29 @@ export interface NominatorRewardTrendData {
 
 export interface PoolRewardTrendData {
 	poolRewardTrend: RewardTrend
+}
+
+export interface PayeeNominatorRewardsData {
+	payeeNominatorRewards: PayeeNominatorRewardsResult
+}
+
+export interface PayeeNominatorRewardsResult {
+	total: string
+	rewards: PayeeEraReward[]
+	active: PayeeNominatorReward[]
+}
+
+export interface PayeeEraReward {
+	era: number
+	reward: string
+}
+
+export interface PayeeNominatorReward {
+	address: string
+	label: string | null
+	stakedBalance: string
+	validatorApy: number
+	incomingPayouts: string
 }
 
 export interface RewardTrend {
@@ -225,7 +248,6 @@ export interface ValidatorStatsData {
 export interface ValidatorStats {
 	averageRewardRate: AverageRewardRateResult
 	activeValidatorRanks: ValidatorRanksResult
-	averageValidatorCommission: number
 }
 
 export interface RpcEndpointHealthData {
@@ -251,6 +273,20 @@ export interface RpcHealthLabels {
 
 export interface SearchValidatorsData {
 	searchValidators: SearchValidators
+}
+
+export interface SanitizeNomineeCandidatesData {
+	sanitizeNomineeCandidates: SanitizeNomineeCandidate[]
+}
+
+export interface SanitizeNomineeCandidate {
+	address: string
+	prefs: SanitizeNomineeCandidatePrefs
+}
+
+export interface SanitizeNomineeCandidatePrefs {
+	commission: number
+	blocked: boolean
 }
 
 export interface SearchValidators {
@@ -285,8 +321,8 @@ export interface ActiveStatusWithNominees {
 
 export type PoolWarningType =
 	| 'DESTROYING'
-	| 'HIGH_COMMISSION'
 	| 'NO_CHANGE_RATE'
+	| 'HIGH_COMMISSION'
 
 export interface PoolWarningsData {
 	poolWarnings: {

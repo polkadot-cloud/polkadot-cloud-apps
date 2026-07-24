@@ -1,48 +1,37 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import i18next from 'i18next'
+import { createInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { DefaultLocale } from './config'
+import type { LocaleProfile } from './types'
+import { getInitialLanguage, getResources, loadLanguage } from './util/language'
 
 export {
 	DefaultLocale,
-	fallbackResources,
 	getLoadedDateFormat,
-	lngNamespaces,
 	loadDateFormat,
 	locales,
 } from './config'
 
-import {
-	doDynamicImport,
-	getInitialLanguage,
-	getResources,
-} from './util/language'
+export const createI18next = (profile: LocaleProfile) => {
+	const lng = getInitialLanguage()
+	const { resources, dynamicLoad } = getResources(
+		lng,
+		profile.fallbackResources,
+	)
+	const i18next = Object.assign(createInstance(), { localeProfile: profile })
 
-// Get initial language.
-const lng: string = getInitialLanguage()
-
-// Get default resources and whether a dynamic load is required for the active language
-const { resources, dynamicLoad } = getResources(lng)
-
-// Default language to show before any dynamic load
-const defaultLng = dynamicLoad ? DefaultLocale : lng
-
-// Configure i18n object
-i18next
-	// .use(LanguageDetector)
-	.use(initReactI18next)
-	.init({
+	i18next.use(initReactI18next).init({
 		debug: import.meta.env.VITE_DEBUG_I18N === '1',
 		fallbackLng: DefaultLocale,
-		lng: defaultLng,
+		lng: dynamicLoad ? DefaultLocale : lng,
 		resources,
 	})
 
-// Dynamically load default language resources if needed
-if (dynamicLoad) {
-	doDynamicImport(lng, i18next)
-}
+	if (dynamicLoad) {
+		void loadLanguage(lng, i18next, profile).catch(() => undefined)
+	}
 
-export { i18next }
+	return i18next
+}

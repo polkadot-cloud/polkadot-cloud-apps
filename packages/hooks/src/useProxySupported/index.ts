@@ -1,18 +1,30 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
 	isSupportedProxyCall,
-	useProxies,
+	type ProxyRecord,
+	proxies$,
 } from '@polkadot-cloud/connect-proxies'
 import { UnsupportedIfUniqueController } from 'consts/proxies'
 import type { SubmittableExtrinsic } from 'dedot'
+import { useSyncExternalStore } from 'react'
 import type { ActiveProxy, MaybeAddress } from 'types'
+import { createObservableStore } from 'utils'
 import { useBalances } from '../useBalances'
 
+const proxiesStore = createObservableStore<Record<string, ProxyRecord>>(
+	proxies$,
+	{},
+)
+
 export const useProxySupported = () => {
-	const { getProxyDelegate } = useProxies()
 	const { getStakingLedger } = useBalances()
+	const proxies = useSyncExternalStore(
+		proxiesStore.subscribe,
+		proxiesStore.getSnapshot,
+		proxiesStore.getSnapshot,
+	)
 
 	// Check if the controller account of sender is unmigrated
 	const unmigratedController = (c: string, f: MaybeAddress) => {
@@ -26,7 +38,12 @@ export const useProxySupported = () => {
 		delegator: MaybeAddress,
 		proxy: ActiveProxy | null,
 	) => {
-		const proxyDelegate = getProxyDelegate(delegator, proxy?.address || null)
+		const proxyDelegate =
+			delegator && proxy
+				? proxies[delegator]?.proxies.find(
+						({ delegate }) => delegate === proxy.address,
+					)
+				: null
 		if (!tx || !proxyDelegate) {
 			return false
 		}

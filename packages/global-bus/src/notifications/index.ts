@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { ToastDelayDuration } from 'consts'
@@ -8,6 +8,14 @@ import { _notifications } from './private'
 let notificationCounter = 0
 
 export const notifications$ = _notifications.asObservable()
+
+export const dismissNotification = (index: number) => {
+	_notifications.next(
+		_notifications
+			.getValue()
+			.filter((notification) => notification.index !== index),
+	)
+}
 
 export const emitNotification = ({ title, subtitle }: NotificationText) => {
 	// Create a new notification with an index based on the current length of the notifications array
@@ -25,10 +33,6 @@ export const emitNotification = ({ title, subtitle }: NotificationText) => {
 
 	// After a period of time, dismiss the notification
 	setTimeout(() => {
-		_notifications.next(
-			_notifications
-				.getValue()
-				.filter((notification) => notification.index !== index),
-		)
+		dismissNotification(index)
 	}, ToastDelayDuration)
 }

@@ -1,0 +1,19 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import type { ComponentType } from 'react'
+
+export interface MenuPopoverFeatureFlags {
+	advancedMode?: boolean
+	helpPrompts?: boolean
+	share?: boolean
+	plugins?: boolean
+	docs?: boolean
+	syncAccounts?: boolean
+}
+
+export interface HeadersProps {
+	NodesLeft?: Record<string, ComponentType>
+	NodesRight?: Record<string, ComponentType>
+	menuPopoverFeatures?: MenuPopoverFeatureFlags
+}

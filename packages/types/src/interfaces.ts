@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ExtraSignedExtension, SubmittableExtrinsic } from 'dedot'
@@ -19,11 +19,46 @@ import type { IdentityOf, SuperOf } from './identity'
 import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
 import type {
+	FeeAssetSymbol,
+	StablecoinBalance,
+	StablecoinChainId,
+	StablecoinFeeEstimateInput,
+	StablecoinTransferInput,
+} from './stablecoins'
+import type {
 	ErasStakersOverviewEntries,
 	ErasStakersPagedEntries,
 } from './staking'
 
 export interface ServiceInterface {
+	stablecoins: {
+		query: {
+			balances: (address: string) => Promise<StablecoinBalance[]>
+			balance: (
+				address: string,
+				chain: StablecoinChainId,
+				symbol: FeeAssetSymbol,
+			) => Promise<StablecoinBalance | undefined>
+			hydrationFeeCurrency: (
+				address: string,
+			) => Promise<FeeAssetSymbol | undefined>
+		}
+		tx: {
+			transfer: (
+				input: StablecoinTransferInput,
+			) => Promise<SubmittableExtrinsic | undefined>
+			setHydrationFeeCurrency: (
+				symbol: FeeAssetSymbol,
+			) => Promise<SubmittableExtrinsic | undefined>
+		}
+		fee: {
+			paymentOptions: (
+				chain: StablecoinChainId,
+				symbol: FeeAssetSymbol,
+			) => PayloadOptions | undefined
+			estimate: (input: StablecoinFeeEstimateInput) => Promise<bigint>
+		}
+	}
 	query: {
 		accountBalance: {
 			hub: (address: string) => Promise<PalletBalancesAccountData | undefined>

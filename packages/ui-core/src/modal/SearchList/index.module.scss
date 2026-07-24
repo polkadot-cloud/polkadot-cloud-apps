@@ -1,131 +1,131 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-height: 50vh;
-  max-height: none;
-  overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	min-height: 50vh;
+	max-height: none;
+	overflow: hidden;
 
-  @media (min-width: $page-width-small-threshold) {
-    flex-direction: row;
-    max-height: 450px;
-  }
+	@media (min-width: $page-width-small-threshold) {
+		flex-direction: row;
+		max-height: 450px;
+	}
 }
 
 .leftColumn {
-  flex: 1;
-  overflow: hidden auto;
-  max-height: 50vh;
-  min-height: 50vh;
+	flex: 1;
+	overflow: hidden auto;
+	max-height: 50vh;
+	min-height: 50vh;
 
-  @media (min-width: $page-width-small-threshold) {
-    max-height: none;
-    flex: 2;
-  }
+	@media (min-width: $page-width-small-threshold) {
+		max-height: none;
+		flex: 2;
+	}
 }
 
 .rightColumn {
-  flex: 1;
-  border-left: none;
-  border-top: 1px solid var(--gray-500);
-  padding-left: 0;
-  padding-top: 1rem;
+	flex: 1;
+	border-left: none;
+	border-top: 1px solid var(--gray-500);
+	padding-left: 0;
+	padding-top: 1rem;
 
-  @media (min-width: $page-width-small-threshold) {
-    border-left: 1px solid var(--gray-500);
-    padding-left: 1rem;
-    flex: 1;
-  }
+	@media (min-width: $page-width-small-threshold) {
+		border-left: 1px solid var(--gray-500);
+		padding-left: 1rem;
+		flex: 1;
+	}
 }
 
 .header {
-  color: var(--gray-900);
-  margin: 0 0 0.5rem;
+	color: var(--gray-900);
+	margin: 0 0 0.5rem;
 }
 
 .searchHeader {
-  color: var(--gray-900);
-  margin: 1rem 0 0.5rem;
+	color: var(--gray-900);
+	margin: 1rem 0 0.5rem;
 }
 
 .loadingWrapper {
-  color: var(--gray-900);
-  padding: 1rem;
-  text-align: center;
+	color: var(--gray-900);
+	padding: 1rem;
+	text-align: center;
 }
 
 .noResultsWrapper {
-  padding: 1rem;
-  text-align: center;
+	padding: 1rem;
+	text-align: center;
 }
 
 .selectedList {
-  border: 1px solid var(--gray-600);
-  max-height: 250px;
-  overflow-y: auto;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
+	border: 1px solid var(--gray-600);
+	max-height: 250px;
+	overflow-y: auto;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
 
-  @media (min-width: $page-width-small-threshold) {
-    max-height: 350px;
-  }
+	@media (min-width: $page-width-small-threshold) {
+		max-height: 350px;
+	}
 }
 
 .emptyState {
-  border: 1px dashed var(--gray-600);
-  color: var(--gray-900);
-  padding: 2rem 1rem;
-  text-align: center;
-  border-radius: 0.5rem;
+	border: 1px dashed var(--gray-600);
+	color: var(--gray-900);
+	padding: 2rem 1rem;
+	text-align: center;
+	border-radius: 0.5rem;
 
-  small {
-    display: block;
-    margin-top: 0.25rem;
-  }
+	small {
+		display: block;
+		margin-top: 0.25rem;
+	}
 }
 
 .clearButton {
-  border: 1px solid var(--status-error-color);
-  color: var(--gray-1000);
-  margin-top: 0.5rem;
-  width: 100%;
-  padding: 0.5rem;
-  background: transparent;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  font-size: 0.875rem;
+	border: 1px solid var(--status-error-color);
+	color: var(--gray-1000);
+	margin-top: 0.5rem;
+	width: 100%;
+	padding: 0.5rem;
+	background: transparent;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	font-size: 0.875rem;
 
-  &:hover {
-    background: var(--status-error-color);
-    color: var(--gray-900);
-  }
+	&:hover {
+		background: var(--status-error-color);
+		color: var(--gray-900);
+	}
 }
 
 .nominationsCounter {
-  padding: 0.75rem 0;
-  margin: 1rem 0 0.5rem;
-  border-radius: 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	padding: 0.75rem 0;
+	margin: 1rem 0 0.5rem;
+	border-radius: 0.75rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .nominationsText {
-  color: var(--gray-900);
-  font-family: var(--font-family-semibold);
+	color: var(--gray-900);
+	font-family: var(--font-family-semibold);
 }
 
 .remainingText {
-  &.hasRemaining {
-    color: var(--gray-1000);
-  }
+	&.hasRemaining {
+		color: var(--gray-1000);
+	}
 
-  &.noRemaining {
-    color: var(--gray-900);
-  }
+	&.noRemaining {
+		color: var(--gray-900);
+	}
 }

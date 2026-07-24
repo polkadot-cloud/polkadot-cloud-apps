@@ -1,7 +1,7 @@
-/* Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use 'sass:list';
+@use "sass:list";
 
 /* Gray scale lightness values (percentage) */
 
@@ -15,186 +15,191 @@ $gray-lightness-dark: (6, 9, 12, 15, 21, 27, 42, 53, 63, 89);
 $shade-lightness-light: 92;
 $shade-lightness-dark: 8;
 
-
 /* general styles */
 :root {
-  --btn-sm-radius: 0.75rem;
-  --btn-sm-padding: 0.45rem 1rem;
-  --btn-sm-spacing: 0.125rem;
-  --btn-sm-font-size: 1rem;
-  --btn-md-padding: 0.5rem 1.25rem;
-  --btn-md-font-size: 1.1rem;
-  --btn-lg-radius: 1.5rem;
-  --btn-lg-padding: 0.53rem 1rem;
-  --btn-lg-spacing: 0.625rem;
-  --btn-lg-font-size: 1.15rem;
-  --transition-duration: 0.15s;
-  --opacity-disabled: 0.3;
+	--btn-sm-radius: 0.75rem;
+	--btn-sm-padding: 0.45rem 1rem;
+	--btn-sm-spacing: 0.125rem;
+	--btn-sm-font-size: 1rem;
+	--btn-md-padding: 0.5rem 1.25rem;
+	--btn-md-font-size: 1.1rem;
+	--btn-lg-radius: 1.5rem;
+	--btn-lg-padding: 0.53rem 1rem;
+	--btn-lg-spacing: 0.625rem;
+	--btn-lg-font-size: 1.15rem;
+	--transition-duration: 0.15s;
+	--opacity-disabled: 0.3;
 }
 
 /* light theme colors */
 .light {
-  /* Generate gray scale: 100 = lightest, 1000 = darkest */
-  @for $i from 1 through 10 {
-    --gray-#{$i * 100}: hsl(0deg 0% #{list.nth($gray-lightness-light, $i)}%);
-  }
+	/* Generate gray scale: 100 = lightest, 1000 = darkest */
+	@for $i from 1 through 10 {
+		--gray-#{$i * 100}: hsl(
+			0deg 0% #{list.nth($gray-lightness-light, $i) * 1%}
+		);
+	}
 
-  /* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
-  @for $i from 1 through 10 {
-    --shade-#{$i * 100}: hsl(0deg 0% #{$shade-lightness-light}% / #{$i * 10}%);
-  }
+	/* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
+	@for $i from 1 through 10 {
+		--shade-#{$i * 100}: hsl(
+			0deg 0% #{$shade-lightness-light * 1%} / #{$i * 10%}
+		);
+	}
 
-  /* Backgrounds */
-  --bg-body: var(--gray-300);
-  --bg-primary: var(--gray-200);
-  --bg-modal: var(--gray-200);
-  --bg-modal-footer: var(--gray-400);
-  --bg-list: var(--gray-300);
-  --bg-input: var(--gray-100);
-  --overlay-backdrop: rgb(228 228 228 / 70%);
-  --bg-card-floating: var(--shade-900);
-  --bg-min-side-menu: var(--gray-200);
+	/* Backgrounds */
+	--bg-body: var(--gray-300);
+	--bg-primary: var(--gray-200);
+	--bg-modal: var(--gray-200);
+	--bg-modal-footer: var(--gray-400);
+	--bg-list: var(--gray-300);
+	--bg-input: var(--gray-100);
+	--overlay-backdrop: rgb(228 228 228 / 70%);
+	--bg-card-floating: var(--shade-900);
+	--bg-min-side-menu: var(--gray-200);
 
-  /* Buttons */
-  --btn-bg-secondary: var(--gray-300);
-  --btn-tab: var(--gray-500);
-  --btn-canvas-tab: var(--gray-500);
-  --btn-popover-tab-bg: var(--gray-300);
-  --btn-help-bg: var(--gray-400);
-  --btn-quick-action-bg: var(--gray-300);
+	/* Buttons */
+	--btn-bg-secondary: var(--gray-300);
+	--btn-tab: var(--gray-500);
+	--btn-canvas-tab: var(--gray-500);
+	--btn-popover-tab-bg: var(--gray-300);
+	--btn-help-bg: var(--gray-400);
+	--btn-quick-action-bg: var(--gray-300);
 
-  /* Shadows */
-  --shadow-primary: var(--shade-200);
-  --shadow-secondary: var(--gray-500);
+	/* Shadows */
+	--shadow-primary: var(--shade-200);
+	--shadow-secondary: var(--gray-500);
 
-  /* Shimmer */
-  --shimmer-fg: var(--gray-500);
-  --shimmer-bg: var(--gray-600);
+	/* Shimmer */
+	--shimmer-fg: var(--gray-500);
+	--shimmer-bg: var(--gray-600);
 
-  /* Grid */
-  --grid-primary: var(--gray-500);
-  --grid-secondary: var(--gray-400);
+	/* Grid */
+	--grid-primary: var(--gray-500);
+	--grid-secondary: var(--gray-400);
 
-  /* Text */
-  --text-tertiary: var(--gray-800);
+	/* Text */
+	--text-tertiary: var(--gray-800);
 
-  /* Status colors */
-  --status-success: green;
-  --status-success-transparent: rgb(0 128 0 / 25%);
-  --status-warning: #b0850d;
-  --status-warning-transparent: rgb(236 211 125 / 50%);
-  --status-warning-bg: rgb(236 211 125 / 10%);
-  --status-danger: #ae2324;
-  --status-danger-transparent: rgb(255 0 0 / 25%);
-  --status-danger-bg: rgb(255 0 0 / 5%);
+	/* Status colors */
+	--status-success: green;
+	--status-success-transparent: rgb(0 128 0 / 25%);
+	--status-warning: #b0850d;
+	--status-warning-transparent: rgb(236 211 125 / 50%);
+	--status-warning-bg: rgb(236 211 125 / 10%);
+	--status-danger: #ae2324;
+	--status-danger-transparent: rgb(255 0 0 / 25%);
+	--status-danger-bg: rgb(255 0 0 / 5%);
 
-  /* Gradients */
-  --gradient-menu: linear-gradient(
-    180deg,
-    rgb(242 242 242 / 93%) 0%,
-    rgb(234 234 234 / 93%) 100%
-  );
-  --highlight: rgb(0 0 0 / 4%) 0%;
-  --highlight-alt: linear-gradient(
-    90deg,
-    rgb(0 0 0 / 6%) 0%,
-    rgb(0 0 0 / 1%) 95%,
-    rgb(0 0 0 / 0%) 100%
-  );
+	/* Gradients */
+	--gradient-menu: linear-gradient(
+		180deg,
+		rgb(242 242 242 / 93%) 0%,
+		rgb(234 234 234 / 93%) 100%
+	);
+	--highlight: rgb(0 0 0 / 4%) 0%;
+	--highlight-alt: linear-gradient(
+		90deg,
+		rgb(0 0 0 / 6%) 0%,
+		rgb(0 0 0 / 1%) 95%,
+		rgb(0 0 0 / 0%) 100%
+	);
 
-  /* Shadow composites */
-  --shadow:
-    -1px -2px 12px 1px var(--gray-400),
-    0px 0.5px 1px 0px var(--shade-600),
-    0 3.5px 6px -1px var(--gray-500),
-    0.5px -0.5px 0px 0px var(--gray-700),
-    -0.5px 0px 0px 0px var(--gray-700);
-  --shadow-alt:
-    0px 1px 1px 0px var(--shadow-secondary),
-    0 0.5px 1px -1px var(--shadow-secondary),
-    0.4px -0.4px 0px 0px var(--shadow-secondary),
-    -0.4px 0px 0px 0px var(--shadow-secondary);
+	/* Shadow composites */
+	--shadow:
+		-1px -2px 12px 1px var(--gray-400),
+		0px 0.5px 1px 0px var(--shade-600),
+		0 3.5px 6px -1px var(--gray-500),
+		0.5px -0.5px 0px 0px var(--gray-700),
+		-0.5px 0px 0px 0px var(--gray-700);
+	--shadow-alt:
+		0px 1px 1px 0px var(--shadow-secondary),
+		0 0.5px 1px -1px var(--shadow-secondary),
+		0.4px -0.4px 0px 0px var(--shadow-secondary),
+		-0.4px 0px 0px 0px var(--shadow-secondary);
 }
 
 /* dark theme colors */
 .dark {
-  /* Generate gray scale: 100 = darkest, 1000 = lightest */
-  @for $i from 1 through 10 {
-    --gray-#{$i * 100}: hsl(0deg 0% #{list.nth($gray-lightness-dark, $i)}%);
-  }
+	/* Generate gray scale: 100 = darkest, 1000 = lightest */
+	@for $i from 1 through 10 {
+		--gray-#{$i * 100}: hsl(0deg 0% #{list.nth($gray-lightness-dark, $i) * 1%});
+	}
 
-  /* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
-  @for $i from 1 through 10 {
-    --shade-#{$i * 100}: hsl(0deg 0% #{$shade-lightness-dark}% / #{$i * 10}%);
-  }
+	/* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
+	@for $i from 1 through 10 {
+		--shade-#{$i * 100}: hsl(
+			0deg 0% #{$shade-lightness-dark * 1%} / #{$i * 10%}
+		);
+	}
 
-  /* Backgrounds */
-  --bg-body: var(--gray-200);
-  --bg-primary: var(--gray-300);
-  --bg-modal: var(--gray-300);
-  --bg-modal-footer: var(--gray-200);
-  --bg-list: var(--gray-400);
-  --bg-input: var(--gray-400);
-  --overlay-backdrop: rgb(40 40 40 / 80%);
-  --bg-card-floating: var(--shade-900);
-  --bg-min-side-menu: var(--gray-300);
+	/* Backgrounds */
+	--bg-body: var(--gray-200);
+	--bg-primary: var(--gray-300);
+	--bg-modal: var(--gray-300);
+	--bg-modal-footer: var(--gray-200);
+	--bg-list: var(--gray-400);
+	--bg-input: var(--gray-400);
+	--overlay-backdrop: rgb(40 40 40 / 80%);
+	--bg-card-floating: var(--shade-900);
+	--bg-min-side-menu: var(--gray-300);
 
-  /* Buttons */
-  --btn-bg-secondary: var(--gray-400);
-  --btn-tab: var(--gray-500);
-  --btn-canvas-tab: var(--gray-400);
-  --btn-popover-tab-bg: var(--gray-400);
-  --btn-help-bg: var(--gray-400);
-  --btn-quick-action-bg: var(--gray-400);
+	/* Buttons */
+	--btn-bg-secondary: var(--gray-400);
+	--btn-tab: var(--gray-500);
+	--btn-canvas-tab: var(--gray-400);
+	--btn-popover-tab-bg: var(--gray-400);
+	--btn-help-bg: var(--gray-400);
+	--btn-quick-action-bg: var(--gray-400);
 
-  /* Shadows */
-  --shadow-primary: var(--shade-200);
-  --shadow-secondary: var(--shade-400);
+	/* Shadows */
+	--shadow-primary: var(--shade-200);
+	--shadow-secondary: var(--shade-400);
 
-  /* Shimmer */
-  --shimmer-bg: var(--gray-400);
-  --shimmer-fg: var(--gray-200);
+	/* Shimmer */
+	--shimmer-bg: var(--gray-400);
+	--shimmer-fg: var(--gray-200);
 
-  /* Grid */
-  --grid-primary: var(--gray-400);
-  --grid-secondary: var(--gray-500);
+	/* Grid */
+	--grid-primary: var(--gray-400);
+	--grid-secondary: var(--gray-500);
 
-  /* Text */
-  --text-tertiary: var(--gray-700);
+	/* Text */
+	--text-tertiary: var(--gray-700);
 
-  /* Status colors */
-  --status-success: #74da77;
-  --status-success-transparent: rgb(0 128 0 / 25%);
-  --status-warning: rgb(219 161 0 / 100%);
-  --status-warning-transparent: rgb(255 165 0 / 50%);
-  --status-warning-bg: rgb(236 211 125 / 10%);
-  --status-danger: #d14445;
-  --status-danger-transparent: rgb(255 0 0 / 25%);
-  --status-danger-bg: rgb(255 0 0 / 5%);
+	/* Status colors */
+	--status-success: #74da77;
+	--status-success-transparent: rgb(0 128 0 / 25%);
+	--status-warning: rgb(219 161 0 / 100%);
+	--status-warning-transparent: rgb(255 165 0 / 50%);
+	--status-warning-bg: rgb(236 211 125 / 10%);
+	--status-danger: #d14445;
+	--status-danger-transparent: rgb(255 0 0 / 25%);
+	--status-danger-bg: rgb(255 0 0 / 5%);
 
-  /* Gradients */
-  --gradient-menu: linear-gradient(
-    180deg,
-    rgb(38 38 38 / 93%) 0%,
-    rgb(23 23 23 / 93%) 100%
-  );
-  --highlight: rgb(255 255 255 / 3%);
-  --highlight-alt: linear-gradient(
-    90deg,
-    rgb(255 255 255 / 3%) 0%,
-    rgb(255 255 255 / 1%) 100%
-  );
+	/* Gradients */
+	--gradient-menu: linear-gradient(
+		180deg,
+		rgb(38 38 38 / 93%) 0%,
+		rgb(23 23 23 / 93%) 100%
+	);
+	--highlight: rgb(255 255 255 / 3%);
+	--highlight-alt: linear-gradient(
+		90deg,
+		rgb(255 255 255 / 3%) 0%,
+		rgb(255 255 255 / 1%) 100%
+	);
 
-  /* Shadow composites */
-  --shadow:
-    -1px -2px 10px 0px var(--shadow-secondary),
-    0px 0.5px 1px 0px var(--shade-500),
-    0 3.5px 6px -1px var(--shadow-primary),
-    0.4px -0.4px 0px 0px var(--shadow-primary),
-    -0.4px 0px 0px 0px var(--shadow-primary);
-  --shadow-alt:
-    0px 1px 1px 0px var(--shadow-secondary),
-    0 0.5px 1px -1px var(--shadow-secondary),
-    0.4px -0.4px 0px 0px var(--shadow-secondary),
-    -0.4px 0px 0px 0px var(--shadow-secondary);
+	/* Shadow composites */
+	--shadow:
+		-1px -2px 10px 0px var(--shadow-secondary),
+		0px 0.5px 1px 0px var(--shade-500),
+		0 3.5px 6px -1px var(--shadow-primary),
+		0.4px -0.4px 0px 0px var(--shadow-primary),
+		-0.4px 0px 0px 0px var(--shadow-primary);
+	--shadow-alt:
+		0px 1px 1px 0px var(--shadow-secondary),
+		0 0.5px 1px -1px var(--shadow-secondary),
+		0.4px -0.4px 0px 0px var(--shadow-secondary),
+		-0.4px 0px 0px 0px var(--shadow-secondary);
 }

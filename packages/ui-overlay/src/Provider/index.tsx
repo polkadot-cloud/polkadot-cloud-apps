@@ -1,10 +1,10 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
 import { setStateWithRef } from '@w3ux/utils'
 import type { ReactNode, RefObject } from 'react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
 	ActiveOverlayInstance,
 	CanvasStatus,
@@ -231,6 +231,21 @@ export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 	const setOnClosePrompt = useCallback((onClosePrompt: (() => void) | null) => {
 		setPromptState((prev) => ({ ...prev, onClosePrompt }))
 	}, [])
+
+	useEffect(() => {
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key !== 'Escape' || promptState.status !== 0) {
+				return
+			}
+			if (activeOverlayInstance === 'canvas') {
+				closeCanvas()
+			} else if (activeOverlayInstance === 'modal') {
+				closeModal()
+			}
+		}
+		window.addEventListener('keydown', closeOnEscape)
+		return () => window.removeEventListener('keydown', closeOnEscape)
+	}, [activeOverlayInstance, promptState.status])
 
 	// Update modal height and open modal once refs are initialised
 	useEffectIgnoreInitial(() => {

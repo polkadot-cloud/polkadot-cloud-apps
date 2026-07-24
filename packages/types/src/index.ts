@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './accounts'
@@ -14,6 +14,7 @@ export * from './notifications'
 export * from './overlay'
 export * from './plugins'
 export * from './pools'
+export * from './stablecoins'
 export * from './staking'
 export * from './stakingLedger'
 export * from './syncing'

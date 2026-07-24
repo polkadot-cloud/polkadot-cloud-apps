@@ -1,233 +1,234 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .tipsWrapper {
-  padding: $summary-footer-padding;
-  position: relative;
+	padding: $summary-footer-padding;
+	position: relative;
 
-  .inner {
-    border: 1px solid var(--gray-500);
-    display: flex;
-    flex-flow: row wrap;
-    border-radius: 1rem;
-    overflow: hidden;
-    padding: 0;
-    height: $summary-footer-height;
+	.inner {
+		border: 1px solid var(--gray-500);
+		display: flex;
+		flex-flow: row wrap;
+		border-radius: 1rem;
+		overflow: hidden;
+		padding: 0;
+		height: $summary-footer-height;
 
-    .items {
-      display: flex;
-      flex-grow: 1;
-    }
-  }
-
-  &.warning {
-    .inner {
-      border-color: var(--status-warning);
-    }
-
-    .items {
-      .desc h4 {
-        color: var(--status-warning);
-      }
-
-      section svg {
-        color: var(--status-warning);
-      }
-    }
-
-    .pageToggle h4 {
-      color: var(--status-warning);
-    }
-
-    .pageToggle > span > button > svg {
-      color: var(--status-warning-transparent);
-    }
-
-    .pageToggle > span > button {
-      color: var(--status-warning);
-      background-color: transparent;
-
-      > svg {
-        color: var(--status-warning);
-      }
-    }
-  }
-
-  &.danger {
-    .inner {
-      border-color: var(--status-danger);
-    }
-
-    .items {
-      .desc h4 {
-        color: var(--status-danger);
-      }
-
-      section svg {
-        color: var(--status-danger);
-      }
-    }
-
-    .pageToggle h4 {
-      color: var(--status-danger);
-    }
-
-    .pageToggle > span > button > svg {
-      color: var(--status-danger-transparent);
-    }
-
-    .pageToggle > span > button {
-      color: var(--status-danger);
-      background-color: transparent;
-
-      > svg {
-        color: var(--status-danger);
-      }
-    }
-  }
+		.items {
+			display: flex;
+			flex-grow: 1;
+		}
+	}
 }
 
 .itemsWrapper {
-  width: 100%;
-  display: flex;
-  justify-items: center;
-  justify-content: center;
+	width: 100%;
+	display: flex;
+	justify-items: center;
+	justify-content: center;
 }
 
 .itemWrapper {
-  padding: 0 0.25rem;
-  flex-basis: 100%;
+	padding: 0 0.25rem;
+	flex-basis: 100%;
 
-  &:last-child {
-    margin-right: 0.25rem;
-  }
+	&:last-child {
+		margin-right: 0.25rem;
+	}
 }
 
 .itemInner {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  height: 100%;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	height: 100%;
 
-  > section {
-    padding: 0 0.25rem;
+	> section {
+		padding: 0 0.25rem;
 
-    &:nth-child(2) {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      flex: 1;
+		&:nth-child(2) {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			flex: 1;
 
-      .desc {
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        width: 100%;
-        height: 1.5rem;
-        position: relative;
+			.desc {
+				display: flex;
+				align-items: center;
+				overflow: hidden;
+				width: 100%;
+				height: 1.5rem;
+				position: relative;
 
-        &.active > button > h4:hover {
-          color: var(--accent-700);
+				h4 {
+					color: var(--gray-900);
+					transition: color var(--transition-duration);
+					font-family: var(--font-family-default);
+					text-align: left;
+					font-size: 1.05rem;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					padding-right: 1.75rem;
 
-          > svg {
-            color: var(--gray-1000);
-            opacity: 1;
-          }
-        }
+					> svg {
+						color: var(--gray-900);
+						transition: all var(--transition-duration);
+						position: absolute;
+						right: 0.2rem;
+						top: 0.43rem;
+						font-size: 1rem;
+						opacity: 0.5;
+						margin-left: 0.4rem;
+					}
+				}
 
-        h4 {
-          color: var(--gray-900);
-          transition: color var(--transition-duration);
-          font-family: var(--font-family-default);
-          text-align: left;
-          font-size: 1.05rem;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          padding-right: 1.75rem;
+				> button,
+				> h4 {
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 1.5rem;
+					max-width: 100%;
+					width: auto;
+				}
 
-          > svg {
-            color: var(--gray-900);
-            transition: all var(--transition-duration);
-            position: absolute;
-            right: 0.2rem;
-            top: 0.43rem;
-            font-size: 1rem;
-            opacity: 0.5;
-            margin-left: 0.4rem;
-          }
-        }
+				&.active > button > h4:hover {
+					color: var(--accent-700);
 
-        > button, > h4 {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 1.5rem;
-          max-width: 100%;
-          width: auto;
-        }
-      }
-    }
-  }
+					> svg {
+						color: var(--gray-1000);
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
 }
 
 .pageToggle {
-  color: var(--gray-900);
-  display: flex;
-  align-items: center;
-  margin-left: 0.5rem;
-  height: 100%;
+	color: var(--gray-900);
+	display: flex;
+	align-items: center;
+	margin-left: 0.5rem;
+	height: 100%;
 
-  > span {
-    border-left: 1px solid var(--gray-500);
-    height: inherit;
+	> span {
+		border-left: 1px solid var(--gray-500);
+		height: inherit;
 
-    > button {
-      transition: color var(--transition-duration);
-      opacity: 0.75;
-      font-size: 1.1rem;
-      height: 100%;
-      padding: 0 0.75rem;
+		> button {
+			transition: color var(--transition-duration);
+			opacity: 0.75;
+			font-size: 1.1rem;
+			height: 100%;
+			padding: 0 0.75rem;
 
-      > svg {
-        color: var(--gray-900);
-      }
+			> svg {
+				color: var(--gray-900);
+			}
 
-      &:hover {
-        opacity: 1;
-        color: var(--gray-1000);
-        background-color: var(--bg-body);
-      }
+			&:hover {
+				opacity: 1;
+				color: var(--gray-1000);
+				background-color: var(--bg-body);
+			}
 
-      &:disabled {
-        color: var(--gray-900);
-        opacity: var(--opacity-disabled);
+			&:disabled {
+				color: var(--gray-900);
+				opacity: var(--opacity-disabled);
 
-        &:hover {
-          cursor: default;
-          background-color: var(--bg-primary);
-        }
-      }
-    }
-  }
+				&:hover {
+					cursor: default;
+					background-color: var(--bg-primary);
+				}
+			}
+		}
+	}
 
-  h4 {
-    color: var(--text-tertiary);
-    margin: 0 0.5rem 0 0;
+	h4 {
+		color: var(--text-tertiary);
+		margin: 0 0.5rem 0 0;
 
-    @media (max-width: $small-font-size-max-width) {
-      display: none;
-    }
+		@media (max-width: $small-font-size-max-width) {
+			display: none;
+		}
 
-    > span {
-      margin: 0 0.4rem;
-    }
+		> span {
+			margin: 0 0.4rem;
+		}
 
-    &.disabled {
-      opacity: var(--opacity-disabled);
-    }
-  }
+		&.disabled {
+			opacity: var(--opacity-disabled);
+		}
+	}
+}
+
+.tipsWrapper.warning {
+	.inner {
+		border-color: var(--status-warning);
+	}
+
+	.pageToggle h4 {
+		color: var(--status-warning);
+	}
+
+	.pageToggle > span > button > svg {
+		color: var(--status-warning-transparent);
+	}
+
+	.pageToggle > span > button {
+		color: var(--status-warning);
+		background-color: transparent;
+
+		> svg {
+			color: var(--status-warning);
+		}
+	}
+
+	.items {
+		.desc h4 {
+			color: var(--status-warning);
+		}
+
+		section svg {
+			color: var(--status-warning);
+		}
+	}
+}
+
+.tipsWrapper.danger {
+	.inner {
+		border-color: var(--status-danger);
+	}
+
+	.pageToggle h4 {
+		color: var(--status-danger);
+	}
+
+	.pageToggle > span > button > svg {
+		color: var(--status-danger-transparent);
+	}
+
+	.pageToggle > span > button {
+		color: var(--status-danger);
+		background-color: transparent;
+
+		> svg {
+			color: var(--status-danger);
+		}
+	}
+
+	.items {
+		.desc h4 {
+			color: var(--status-danger);
+		}
+
+		section svg {
+			color: var(--status-danger);
+		}
+	}
 }

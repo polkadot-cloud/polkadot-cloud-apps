@@ -1,6 +1,7 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+export * from '../modal/ActionItem'
 export * from '../modal/AddressHeader'
 export * from '../modal/ButtonList'
 export * from '../modal/Card'

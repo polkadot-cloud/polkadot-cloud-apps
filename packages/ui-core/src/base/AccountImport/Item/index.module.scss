@@ -1,177 +1,177 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .item {
-  display: flex;
-  align-items: center;
-  padding: 1.5rem 1.6rem 1.5rem 1.35rem;
-  position: relative;
-  border-bottom: 1px solid var(--gray-500);
+	display: flex;
+	align-items: center;
+	padding: 1.5rem 1.6rem 1.5rem 1.35rem;
+	position: relative;
+	border-bottom: 1px solid var(--gray-500);
 
-  &.last {
-    padding-bottom: 2rem;
-  }
+	&.last {
+		padding-bottom: 2rem;
+	}
 
-  > .border {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 1rem;
-    width: calc(100% - 4rem);
+	> .border {
+		position: absolute;
+		right: 0.5rem;
+		bottom: 1rem;
+		width: calc(100% - 4rem);
 
-    &.last {
-      border-bottom: none;
-    }
-  }
+		&.last {
+			border-bottom: none;
+		}
+	}
 
-  > .action {
-    flex: 0;
-    display: flex;
-    flex-direction: column;
-    padding-left: 1.75rem;
-    padding-right: 0;
+	> .action {
+		flex: 0;
+		display: flex;
+		flex-direction: column;
+		padding-left: 1.75rem;
+		padding-right: 0;
 
-    > button {
-      color: var(--text-tertiary);
-      width: 100%;
-      margin-top: 1.7rem;
-      margin-right: 0.75rem;
+		> button {
+			color: var(--text-tertiary);
+			width: 100%;
+			margin-top: 1.7rem;
+			margin-right: 0.75rem;
 
-      &:hover {
-        color: var(--gray-1000);
-      }
-    }
-  }
+			&:hover {
+				color: var(--gray-1000);
+			}
+		}
+	}
 
-  > .content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+	> .content {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
 
-    &.noAction {
-      padding-right: 0.9rem;
-    }
+		&.noAction {
+			padding-right: 0.9rem;
+		}
 
-    > .inner {
-      display: flex;
-      align-items: center;
+		> .inner {
+			display: flex;
+			align-items: center;
 
-      > .identicon {
-        position: relative;
-      }
+			> .identicon {
+				position: relative;
+			}
 
-      > div:last-child {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        flex-grow: 1;
+			> div:last-child {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				flex-grow: 1;
 
-        button {
-          color: var(--gray-1000);
-          margin-left: 0.2rem;
-        }
+				button {
+					color: var(--gray-1000);
+					margin-left: 0.2rem;
+				}
 
-        section {
-          display: flex;
-          padding-left: 0.9rem;
-          width: 100%;
+				section {
+					display: flex;
+					padding-left: 0.9rem;
+					width: 100%;
 
-          &.row {
-            align-items: center;
-            position: relative;
+					&.row {
+						align-items: center;
+						position: relative;
 
-            .edit {
-              margin-left: 0.4rem;
-            }
+						.edit {
+							margin-left: 0.4rem;
+						}
 
-            .editHint {
-              position: absolute;
-              right: 0.85rem;
-              top: 50%;
-              transform: translateY(-50%);
-              font-size: 0.75rem;
-              color: var(--text-tertiary);
-              opacity: 0.4;
-              pointer-events: none;
-              transition: opacity var(--transition-duration);
-            }
+						.editHint {
+							position: absolute;
+							right: 0.85rem;
+							top: 50%;
+							transform: translateY(-50%);
+							font-size: 0.75rem;
+							color: var(--text-tertiary);
+							opacity: 0.4;
+							pointer-events: none;
+							transition: opacity var(--transition-duration);
+						}
 
-            &:hover .editHint {
-              opacity: 0.8;
-            }
-          }
-        }
+						&:hover .editHint {
+							opacity: 0.8;
+						}
+					}
+				}
 
-        h5,
-        button {
-          &.label {
-            display: flex;
-            align-items: flex-end;
-            margin-right: 0.5rem;
-            margin-bottom: 0.85rem;
-          }
-        }
+				h5,
+				button {
+					&.label {
+						display: flex;
+						align-items: flex-end;
+						margin-right: 0.5rem;
+						margin-bottom: 0.85rem;
+					}
+				}
 
-        input {
-          background: var(--btn-popover-tab-bg);
-          border: 1px solid var(--gray-500);
-          color: var(--gray-1000);
-          font-family: var(--font-family-default);
-          padding: 1rem 0.85rem;
-          border-radius: 0.65rem;
-          letter-spacing: 0.02rem;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          width: 100%;
-          transition: all var(--transition-duration);
+				input {
+					background: var(--btn-popover-tab-bg);
+					border: 1px solid var(--gray-500);
+					color: var(--gray-1000);
+					font-family: var(--font-family-default);
+					padding: 1rem 0.85rem;
+					border-radius: 0.65rem;
+					letter-spacing: 0.02rem;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					width: 100%;
+					transition: all var(--transition-duration);
 
-          &:focus {
-            border-color: var(--gray-1000);
-          }
+					&:focus {
+						border-color: var(--gray-1000);
+					}
 
-          &:disabled {
-            background: none;
-          }
-        }
+					&:disabled {
+						background: none;
+					}
+				}
 
-        .full {
-          font-family: var(--font-family-default);
-          position: relative;
-          width: 100%;
-          line-height: 2rem;
-          height: 2.25rem;
-          margin-bottom: 0.15rem;
+				.full {
+					font-family: var(--font-family-default);
+					position: relative;
+					width: 100%;
+					line-height: 2rem;
+					height: 2.25rem;
+					margin-bottom: 0.15rem;
 
-          > span {
-            color: var(--text-tertiary);
-            position: absolute;
-            top: 0;
-            left: 0;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            padding-left: 1.2rem;
-            padding-right: 0;
-            width: 100%;
-            max-width: 100%;
+					> span {
+						color: var(--text-tertiary);
+						position: absolute;
+						top: 0;
+						left: 0;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
+						padding-left: 1.2rem;
+						padding-right: 0;
+						width: 100%;
+						max-width: 100%;
 
-            > button {
-              color: var(--text-tertiary);
-              margin-left: 0.25rem;
-            }
-          }
-        }
-      }
-    }
-  }
+						> button {
+							color: var(--text-tertiary);
+							margin-left: 0.25rem;
+						}
+					}
+				}
+			}
+		}
+	}
 
-  .more {
-    margin-top: 1rem;
-    padding: 0 1.5rem;
+	.more {
+		margin-top: 1rem;
+		padding: 0 1.5rem;
 
-    h4 {
-      opacity: var(--opacity-disabled);
-      padding: 0;
-    }
-  }
+		h4 {
+			opacity: var(--opacity-disabled);
+			padding: 0;
+		}
+	}
 }

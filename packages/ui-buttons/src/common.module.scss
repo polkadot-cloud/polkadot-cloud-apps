@@ -1,83 +1,83 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnCore {
-  font-family: var(--font-family-semibold);
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+	font-family: var(--font-family-semibold);
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 
-  &:focus {
-    outline: none;
-  }
+	&:focus {
+		outline: none;
+	}
 
-  * {
-    box-sizing: border-box;
-  }
+	* {
+		box-sizing: border-box;
+	}
 }
 
 .btnGrow {
-  flex: 1 1 0%;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	flex: 1 1 0%;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .btnSpacingLeft {
-  margin-left: var(--btn-lg-spacing);
+	margin-left: var(--btn-lg-spacing);
 }
 
 .btnSpacingRight {
-  margin-right: var(--btn-lg-spacing);
+	margin-right: var(--btn-lg-spacing);
 }
 
 .btnMarginX {
-  margin: 0 var(--btn-lg-spacing);
+	margin: 0 var(--btn-lg-spacing);
 }
 
 .btnSmall {
-  padding: var(--btn-sm-padding);
-  font-size: var(--btn-sm-font-size);
+	padding: var(--btn-sm-padding);
+	font-size: var(--btn-sm-font-size);
 }
 
 .btnMedium {
-  padding: var(--btn-md-padding);
-  font-size: var(--btn-md-font-size);
+	padding: var(--btn-md-padding);
+	font-size: var(--btn-md-font-size);
 }
 
 .btnLarge {
-  padding: var(--btn-lg-padding);
-  font-size: var(--btn-lg-font-size);
+	padding: var(--btn-lg-padding);
+	font-size: var(--btn-lg-font-size);
 }
 
 .btnIconLeftSpacing {
-  margin-left: var(--btn-sm-spacing);
-  margin-right: var(--btn-lg-spacing);
+	margin-left: var(--btn-sm-spacing);
+	margin-right: var(--btn-lg-spacing);
 }
 
 .btnIconRightSpacing {
-  margin-left: var(--btn-lg-spacing);
-  margin-right: var(--btn-sm-spacing);
+	margin-left: var(--btn-lg-spacing);
+	margin-right: var(--btn-sm-spacing);
 }
 
 .btnDisabled {
-  transition:
-    opacity var(--transition-duration),
-    color var(--transition-duration);
-  opacity: var(--opacity-disabled);
-  cursor: default;
+	transition:
+		opacity var(--transition-duration),
+		color var(--transition-duration);
+	opacity: var(--opacity-disabled);
+	cursor: default;
 }
 
 .btnActiveTransforms {
-  transition: transform var(--transition-duration);
+	transition: transform var(--transition-duration);
 
-  &:hover {
-    transform: scale(1.02);
-  }
+	&:hover {
+		transform: scale(1.02);
+	}
 
-  &:active {
-    transform: scale(0.98);
-  }
+	&:active {
+		transform: scale(0.98);
+	}
 }

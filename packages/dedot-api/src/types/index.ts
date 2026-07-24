@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type {
@@ -24,6 +24,24 @@ import type { ActivePoolQuery } from '../subscribe/activePool'
 import type { BondedQuery } from '../subscribe/bonded'
 import type { PoolMembershipQuery } from '../subscribe/poolMembership'
 import type { StakingLedgerQuery } from '../subscribe/stakingLedger'
+
+export type DedotServiceConfig = {
+	nominationPools?: boolean
+	staking?: boolean
+	stablecoins?: {
+		assetHub?: boolean
+		hydration?: boolean
+	}
+}
+
+export type DedotServiceFeatures = {
+	nominationPools: boolean
+	staking: boolean
+	stablecoins: {
+		assetHub: boolean
+		hydration: boolean
+	}
+}
 
 // All available chains
 export type Chain =

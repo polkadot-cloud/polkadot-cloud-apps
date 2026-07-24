@@ -1,53 +1,53 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnModal {
-  color: var(--gray-1000);
-  background: var(--gray-400);
-  transition: background-color var(--transition-duration);
-  box-sizing: border-box;
-  padding: 0.9rem 1rem;
-  cursor: pointer;
-  border-radius: 0.75rem;
-  text-align: left;
-  border: 1px solid transparent;
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.6rem;
+	color: var(--gray-1000);
+	background: var(--gray-400);
+	transition: background-color var(--transition-duration);
+	box-sizing: border-box;
+	padding: 0.9rem 1rem;
+	cursor: pointer;
+	border-radius: 0.75rem;
+	text-align: left;
+	border: 1px solid transparent;
+	position: relative;
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.6rem;
 
-  &.selected {
-    border-color: var(--gray-1000);
-  }
+	&.selected {
+		border-color: var(--gray-1000);
+	}
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
 
-  &:hover {
-    background: var(--gray-500);
-  }
+	&:hover {
+		background: var(--gray-500);
+	}
 
-  > h3 {
-    font-family: var(--font-family-default);
-    flex-grow: 1;
-    min-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+	> h3 {
+		font-family: var(--font-family-default);
+		flex-grow: 1;
+		min-width: 0;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 
-  h5 {
-    &.toggle {
-      > .on {
-        color: var(--gray-1000);
-      }
+	h5 {
+		&.toggle {
+			> .on {
+				color: var(--gray-1000);
+			}
 
-      > .off {
-        color: var(--text-tertiary);
-        opacity: 0.75;
-      }
-    }
-  }
+			> .off {
+				color: var(--text-tertiary);
+				opacity: 0.75;
+			}
+		}
+	}
 }
