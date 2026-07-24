@@ -72,8 +72,11 @@ export const useSubmitExtrinsic = ({
 		balances: { balanceTxFees },
 	} = useAccountBalances(fromAddress)
 	const { unit, units } = getStakingChainData(network)
+
+	// Store the uid for this transaction
 	const [uid, setUid] = useState<number>(0)
 
+	// Get the imported account for the `from` address
 	const fromAccount =
 		fromAddress && source
 			? getAccount({
@@ -82,11 +85,14 @@ export const useSubmitExtrinsic = ({
 				})
 			: null
 
+	// Use fromAccount as the submit account if it exists
 	let submitAccount: ActiveAccount = fromAccount
 		? { address: fromAccount.address, source: fromAccount.source }
 		: null
 	let submitTx = tx
 
+	// If proxy account is active, wrap tx in a proxy call and set the sender to the proxy account. If
+	// already wrapped, update submitAccount to the proxy account
 	let proxySupported = false
 	if (submitTx && submitAccount) {
 		proxySupported = isProxySupported(submitTx, submitAccount.address, proxy)
@@ -101,12 +107,14 @@ export const useSubmitExtrinsic = ({
 				}
 			}
 		} else if (proxy && proxySupported) {
+			// Update submit address to active proxy account
 			const real = submitAccount.address
 			submitAccount = {
 				address: proxy.address,
 				source: proxy.source,
 			}
 
+			// Check not a batch transaction
 			if (
 				real &&
 				!(
@@ -114,6 +122,8 @@ export const useSubmitExtrinsic = ({
 					submitTx.call.palletCall.name === 'Batch'
 				)
 			) {
+				// Not a batch transaction: wrap tx in proxy call. Proxy calls should already be wrapping
+				// each tx within the batch via `useBatchCall`
 				const proxiedTx = serviceApi.tx.proxy(real, submitTx)
 				if (proxiedTx) {
 					submitTx = proxiedTx
@@ -122,6 +132,7 @@ export const useSubmitExtrinsic = ({
 		}
 	}
 
+	// Extrinsic submission handler
 	const onSubmit = async () => {
 		if (!submitTx || getUid(uid)?.submitted || !submitAccount) {
 			return
@@ -136,6 +147,7 @@ export const useSubmitExtrinsic = ({
 		const { source } = account
 		const isManualSigner = ManualSigners.includes(source)
 
+		// If `activeAccount` is imported from an extension, ensure it is enabled
 		if (!isManualSigner) {
 			const isConnected = extensionsStatus[source] === 'connected'
 			const injectedExtension = window.injectedWeb3?.[source]
@@ -146,8 +158,10 @@ export const useSubmitExtrinsic = ({
 			injectedExtension.enable(StakingDappName)
 		}
 
+		// Pre-submission state update
 		setUidSubmitted(uid, true)
 
+		// Handle signed transaction
 		let encodedSig
 		const handlers = {
 			onReady,
@@ -239,12 +253,18 @@ export const useSubmitExtrinsic = ({
 				}
 			}
 
+			// Custom signer
+			//
+			// Submit the transaction with the raw signature
 			if (!encodedSig) {
 				onError('technical', 'invalid_signer')
 				return
 			}
 			addSend(network, uid, submitTx, encodedSig, handlers)
 		} else {
+			// Extension signer
+			//
+			// Get the signer for this account and submit the transaction
 			const signer = getExtensionAccount(
 				submitAccount.address,
 				submitAccount.source,
@@ -296,6 +316,7 @@ export const useSubmitExtrinsic = ({
 		const displayUnit = feeDisplay?.unit || unit
 		let subtitle = t('errorWithTransaction')
 
+		// Handle only known, user-reported errors - focus on balance-related issues
 		if (error) {
 			const msg = error.message.toLowerCase()
 			if (
@@ -345,6 +366,7 @@ export const useSubmitExtrinsic = ({
 			title = t('userCancelled')
 			subtitle = t('userCancelledTransaction')
 		} else if (type === 'technical') {
+			// Get the specific technical error message
 			const translationKey = details ? TxErrorKeyMap[details] : undefined
 			subtitle = translationKey
 				? t(translationKey)
@@ -357,6 +379,7 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
+	// Re-fetch tx fee if tx changes
 	const fetchTxFee = async () => {
 		if (submitTx && submitAccount?.address) {
 			updateFee(uid, 0n)
@@ -380,11 +403,13 @@ export const useSubmitExtrinsic = ({
 		}
 	}
 
+	// Initialise tx submission
 	const submitAccountKey = stringifyWithBigInt(submitAccount)
 	const feePaymentOptionsKey = stringifyWithBigInt(feePaymentOptions)
 	const txHex = submitTx?.toHex()
 
 	useEffect(() => {
+		// Add a new uid for this transaction
 		if (uid === 0) {
 			const newUid = addUid({
 				network,
