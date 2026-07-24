@@ -66,9 +66,15 @@ export class PolkadotService
 		)
 
 		// Initialize service interface with network-specific routing
+		const stablecoinsEnabled =
+			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
 		this.interface = {
-			stablecoins: this.features.stablecoins
-				? createStablecoinsInterface(this.apiHub, this.getHydrationApi)
+			stablecoins: stablecoinsEnabled
+				? createStablecoinsInterface(
+						this.apiHub,
+						this.getHydrationApi,
+						this.features.stablecoins,
+					)
 				: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
@@ -224,7 +230,7 @@ export class PolkadotService
 		return this.apiHydrationPromise
 	}
 
-	private subscribeStablecoinBalances: StablecoinBalanceSubscriber = (
+	private subscribeHydrationStablecoinBalances: StablecoinBalanceSubscriber = (
 		address,
 		onBalance,
 		onError,
@@ -251,7 +257,9 @@ export class PolkadotService
 	async start() {
 		await super.start(
 			this.interface,
-			this.features.stablecoins ? this.subscribeStablecoinBalances : undefined,
+			this.features.stablecoins.hydration
+				? this.subscribeHydrationStablecoinBalances
+				: undefined,
 		)
 	}
 
