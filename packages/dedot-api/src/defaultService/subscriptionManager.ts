@@ -220,11 +220,18 @@ export class SubscriptionManager<
 								})
 						}
 
-						this.subBonded[address] = new BondedQuery(this.stakingApi, address)
-						this.subPoolMemberships[address] = new PoolMembershipQuery(
-							this.stakingApi,
-							address,
-						)
+						if (this.features.staking) {
+							this.subBonded[address] = new BondedQuery(
+								this.stakingApi,
+								address,
+							)
+						}
+						if (this.features.nominationPools) {
+							this.subPoolMemberships[address] = new PoolMembershipQuery(
+								this.stakingApi,
+								address,
+							)
+						}
 					}
 					addedAddresses.push(address)
 				}
@@ -236,21 +243,23 @@ export class SubscriptionManager<
 			})
 
 		// Active bonded subscription - manages staking ledgers
-		this.subActiveBonded = bonded$
-			.pipe(startWith([]), pairwise())
-			.subscribe(([prev, cur]) => {
-				const { added, removed } = diffBonded(prev, cur)
-				removed.forEach(({ stash }) => {
-					this.subStakingLedgers?.[stash]?.unsubscribe()
+		if (this.features.staking) {
+			this.subActiveBonded = bonded$
+				.pipe(startWith([]), pairwise())
+				.subscribe(([prev, cur]) => {
+					const { added, removed } = diffBonded(prev, cur)
+					removed.forEach(({ stash }) => {
+						this.subStakingLedgers?.[stash]?.unsubscribe()
+					})
+					added.forEach(({ stash, bonded }) => {
+						this.subStakingLedgers[stash] = new StakingLedgerQuery(
+							this.stakingApi,
+							stash,
+							bonded,
+						)
+					})
 				})
-				added.forEach(({ stash, bonded }) => {
-					this.subStakingLedgers[stash] = new StakingLedgerQuery(
-						this.stakingApi,
-						stash,
-						bonded,
-					)
-				})
-			})
+		}
 
 		// Active proxies subscription - manages proxy state
 		this.subActiveProxies = combineLatest([proxies$, reconnectSync$]).subscribe(
@@ -283,22 +292,24 @@ export class SubscriptionManager<
 		)
 
 		// Active pool IDs subscription - manages active pools
-		this.subActivePoolIds = activePoolIds$
-			.pipe(startWith([]), pairwise())
-			.subscribe(([prev, cur]) => {
-				const { added, removed } = diffPoolIds(prev, cur)
-				removed.forEach((poolId) => {
-					this.subActivePools[poolId]?.unsubscribe()
+		if (this.features.nominationPools) {
+			this.subActivePoolIds = activePoolIds$
+				.pipe(startWith([]), pairwise())
+				.subscribe(([prev, cur]) => {
+					const { added, removed } = diffPoolIds(prev, cur)
+					removed.forEach((poolId) => {
+						this.subActivePools[poolId]?.unsubscribe()
+					})
+					added.forEach((poolId) => {
+						this.subActivePools[poolId] = new ActivePoolQuery(
+							this.stakingApi,
+							poolId,
+							this.stakingConsts.poolsPalletId,
+							this.serviceInterface,
+						)
+					})
 				})
-				added.forEach((poolId) => {
-					this.subActivePools[poolId] = new ActivePoolQuery(
-						this.stakingApi,
-						poolId,
-						this.stakingConsts.poolsPalletId,
-						this.serviceInterface,
-					)
-				})
-			})
+		}
 	}
 
 	// Set the active era subscription with the provided observable

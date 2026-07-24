@@ -26,6 +26,8 @@ import type { PoolMembershipQuery } from '../subscribe/poolMembership'
 import type { StakingLedgerQuery } from '../subscribe/stakingLedger'
 
 export type DedotServiceConfig = {
+	nominationPools?: boolean
+	staking?: boolean
 	stablecoins?: {
 		assetHub?: boolean
 		hydration?: boolean
@@ -33,6 +35,8 @@ export type DedotServiceConfig = {
 }
 
 export type DedotServiceFeatures = {
+	nominationPools: boolean
+	staking: boolean
 	stablecoins: {
 		assetHub: boolean
 		hydration: boolean

@@ -53,6 +53,7 @@ export const MenuPopover = ({
 		share: showShare = true,
 		plugins: showPlugins = true,
 		docs: showDocs = true,
+		syncAccounts: showSyncAccounts = true,
 	} = {},
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
@@ -139,7 +140,7 @@ export const MenuPopover = ({
 					</div>
 				</button>
 			</MenuItem>
-			{network === 'polkadot' && (
+			{showSyncAccounts && network === 'polkadot' && (
 				<DefaultButton
 					text={t('syncAccounts', { ns: 'app' })}
 					iconLeft={faQrcode}

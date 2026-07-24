@@ -74,6 +74,8 @@ export class BaseService<
 		features: DedotServiceConfig = {},
 	) {
 		this.features = {
+			nominationPools: features.nominationPools ?? true,
+			staking: features.staking ?? true,
 			stablecoins: {
 				assetHub: features.stablecoins?.assetHub ?? true,
 				hydration: features.stablecoins?.hydration ?? true,
