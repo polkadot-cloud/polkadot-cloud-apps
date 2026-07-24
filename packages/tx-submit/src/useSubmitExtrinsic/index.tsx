@@ -7,11 +7,7 @@ import {
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
 import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
-import {
-	type VaultSignatureResult,
-	VaultSigner,
-	type VaultSignStatus,
-} from '@polkadot-cloud/connect-vault'
+import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import type { HardwareAccount } from '@w3ux/types'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
@@ -35,7 +31,7 @@ import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
 import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
-import { useEffect, useState } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
@@ -75,7 +71,7 @@ export const useSubmitExtrinsic = ({
 		fromAddress && source
 			? getAccount({
 					address: fromAddress,
-					source: source,
+					source,
 				})
 			: null
 
@@ -83,39 +79,44 @@ export const useSubmitExtrinsic = ({
 	let submitAccount: ActiveAccount = fromAccount
 		? { address: fromAccount.address, source: fromAccount.source }
 		: null
+	let submitTx = tx
 
 	// If proxy account is active, wrap tx in a proxy call and set the sender to the proxy account. If
 	// already wrapped, update submitAccount to the proxy account
 	let proxySupported = false
-	if (tx && submitAccount) {
-		proxySupported = isProxySupported(tx, submitAccount.address, proxy)
-		if (tx.call.pallet === 'Proxy' && tx.call.palletCall.name === 'Proxy') {
+	if (submitTx && submitAccount) {
+		proxySupported = isProxySupported(submitTx, submitAccount.address, proxy)
+		if (
+			submitTx.call.pallet === 'Proxy' &&
+			submitTx.call.palletCall.name === 'Proxy'
+		) {
 			if (proxy) {
 				submitAccount = {
 					address: proxy.address,
 					source: proxy.source,
 				}
 			}
-		} else {
-			if (proxy && proxySupported) {
-				// Update submit address to active proxy account
-				const real = submitAccount.address
-				submitAccount = {
-					address: proxy.address,
-					source: proxy.source,
-				}
+		} else if (proxy && proxySupported) {
+			// Update submit address to active proxy account
+			const real = submitAccount.address
+			submitAccount = {
+				address: proxy.address,
+				source: proxy.source,
+			}
 
-				// Check not a batch transaction
-				if (
-					real &&
-					!(tx.call.pallet === 'Utility' && tx.call.palletCall.name === 'Batch')
-				) {
-					// Not a batch transaction: wrap tx in proxy call. Proxy calls should already be wrapping
-					// each tx within the batch via `useBatchCall`
-					const proxiedTx = serviceApi.tx.proxy(real, tx)
-					if (proxiedTx) {
-						tx = proxiedTx
-					}
+			// Check not a batch transaction
+			if (
+				real &&
+				!(
+					submitTx.call.pallet === 'Utility' &&
+					submitTx.call.palletCall.name === 'Batch'
+				)
+			) {
+				// Not a batch transaction: wrap tx in proxy call. Proxy calls should already be wrapping
+				// each tx within the batch via `useBatchCall`
+				const proxiedTx = serviceApi.tx.proxy(real, submitTx)
+				if (proxiedTx) {
+					submitTx = proxiedTx
 				}
 			}
 		}
@@ -123,39 +124,35 @@ export const useSubmitExtrinsic = ({
 
 	// Extrinsic submission handler
 	const onSubmit = async () => {
-		if (!tx || getUid(uid)?.submitted) {
+		if (!submitTx || getUid(uid)?.submitted || !submitAccount) {
 			return
 		}
-		if (!submitAccount) {
-			return
-		}
+
 		const account = getAccount(submitAccount)
 		if (account === null || !shouldSubmit) {
 			return
 		}
 
-		const { specName, specVersion } = tx.client.runtimeVersion
+		const { specName, specVersion } = submitTx.client.runtimeVersion
 		const ss58 = serviceApi.spec.ss58(specName)
 		const { source } = account
 		const isManualSigner = ManualSigners.includes(source)
 
 		// If `activeAccount` is imported from an extension, ensure it is enabled
 		if (!isManualSigner) {
-			const isInstalled = Object.entries(extensionsStatus).find(
-				([id, status]) => id === source && status === 'connected',
-			)
-			if (!isInstalled || !window?.injectedWeb3?.[source]) {
-				throw new Error(`${t('walletNotFound')}`)
+			const isConnected = extensionsStatus[source] === 'connected'
+			const injectedExtension = window.injectedWeb3?.[source]
+			if (!isConnected || !injectedExtension) {
+				throw new Error(t('walletNotFound'))
 			}
 			// NOTE: Summons extension popup if not already connected
-			window.injectedWeb3[source].enable(StakingDappName)
+			injectedExtension.enable(StakingDappName)
 		}
 
 		// Pre-submission state update
 		setUidSubmitted(uid, true)
 
 		// Handle signed transaction
-		let signer: InjectedSigner | undefined
 		let encodedSig
 		const handlers = {
 			onReady,
@@ -187,7 +184,7 @@ export const useSubmitExtrinsic = ({
 						specName,
 						submitAccount.address,
 						serviceApi.signer.extraSignedExtension,
-						tx,
+						submitTx,
 						metadata || '0x',
 						networkInfo,
 						(account as HardwareAccount).index,
@@ -215,25 +212,19 @@ export const useSubmitExtrinsic = ({
 					return
 				}
 				await extra.init()
-				const rawPayload = extra.toRawPayload(tx.callHex)
+				const rawPayload = extra.toRawPayload(submitTx.callHex)
 				const prefixedPayload = concatU8a(
-					compactU32.encode(tx.callLength),
+					compactU32.encode(submitTx.callLength),
 					hexToU8a(rawPayload.data),
 				)
 				const result = await new VaultSigner({
-					openPrompt: (
-						onComplete: (
-							status: VaultSignStatus,
-							result: VaultSignatureResult,
-						) => void,
-						toSign: Uint8Array,
-					) => {
+					openPrompt: (onComplete, toSign) => {
 						openPromptWith(
-							<QRSignPrompt
-								submitAddress={submitAccount.address}
-								onComplete={onComplete}
-								toSign={toSign}
-							/>,
+							createElement(QRSignPrompt, {
+								submitAddress: submitAccount.address,
+								onComplete,
+								toSign,
+							}),
 							'sm',
 							false,
 						)
@@ -260,13 +251,15 @@ export const useSubmitExtrinsic = ({
 				onError('technical', 'invalid_signer')
 				return
 			}
-			addSend(network, uid, tx, encodedSig, handlers)
+			addSend(network, uid, submitTx, encodedSig, handlers)
 		} else {
 			// Extension signer
 			//
 			// Get the signer for this account and submit the transaction
-			signer = getExtensionAccount(submitAccount.address, submitAccount.source)
-				?.signer as InjectedSigner | undefined
+			const signer = getExtensionAccount(
+				submitAccount.address,
+				submitAccount.source,
+			)?.signer as InjectedSigner | undefined
 			if (!signer) {
 				onError('technical', 'missing_signer')
 				return
@@ -275,8 +268,8 @@ export const useSubmitExtrinsic = ({
 				network,
 				uid,
 				submitAccount.address,
-				tx,
-				signer as InjectedSigner,
+				submitTx,
+				signer,
 				getAccountBalance(submitAccount.address).nonce +
 					pendingTxCount(submitAccount.address),
 				handlers,
@@ -289,9 +282,7 @@ export const useSubmitExtrinsic = ({
 			title: t('pending'),
 			subtitle: t('transactionInitiated'),
 		})
-		if (callbackSubmit && typeof callbackSubmit === 'function') {
-			callbackSubmit()
-		}
+		callbackSubmit?.()
 	}
 
 	const onInBlock = () => {
@@ -299,9 +290,7 @@ export const useSubmitExtrinsic = ({
 			title: t('inBlock'),
 			subtitle: t('transactionInBlock'),
 		})
-		if (callbackInBlock && typeof callbackInBlock === 'function') {
-			callbackInBlock()
-		}
+		callbackInBlock?.()
 	}
 
 	const onFinalized = () => {
@@ -321,11 +310,9 @@ export const useSubmitExtrinsic = ({
 			if (
 				/balance|reserve|locked|freeze|insufficient|funds|minimum/.test(msg)
 			) {
-				if (/locked|freeze/.test(msg)) {
-					subtitle = t('errors.balanceErrorLocked')
-				} else {
-					subtitle = t('errors.balanceErrorReserveRequired')
-				}
+				subtitle = /locked|freeze/.test(msg)
+					? t('errors.balanceErrorLocked')
+					: t('errors.balanceErrorReserveRequired')
 			}
 		}
 		emitNotification({
@@ -350,7 +337,7 @@ export const useSubmitExtrinsic = ({
 		if (type === 'insufficient_funds' || hasInsufficientFunds) {
 			title = t('insufficientFunds')
 
-			switch (tx?.call.pallet) {
+			switch (submitTx?.call.pallet) {
 				case 'Staking':
 					subtitle = t('errors.addMoreDotForStaking', { unit })
 					break
@@ -365,7 +352,10 @@ export const useSubmitExtrinsic = ({
 			title = t('userCancelled')
 			subtitle = t('userCancelledTransaction')
 		} else if (type === 'technical') {
-			subtitle = getTechnicalErrorMessage(details)
+			const translationKey = details ? TxErrorKeyMap[details] : undefined
+			subtitle = translationKey
+				? t(translationKey)
+				: t('transactionCancelledTechnical')
 		}
 
 		emitNotification({
@@ -374,22 +364,10 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
-	// Helper function to get specific technical error messages
-	const getTechnicalErrorMessage = (details?: string): string => {
-		if (!details) {
-			return t('transactionCancelledTechnical')
-		}
-
-		const translationKey = TxErrorKeyMap[details]
-		return translationKey
-			? t(translationKey)
-			: t('transactionCancelledTechnical')
-	}
-
 	// Re-fetch tx fee if tx changes
 	const fetchTxFee = async () => {
-		if (tx && submitAccount?.address) {
-			const { partialFee } = await tx.paymentInfo(submitAccount.address)
+		if (submitTx && submitAccount?.address) {
+			const { partialFee } = await submitTx.paymentInfo(submitAccount.address)
 			updateFee(uid, partialFee)
 		}
 	}
@@ -411,10 +389,10 @@ export const useSubmitExtrinsic = ({
 		if (uid > 0) {
 			fetchTxFee()
 		}
-	}, [JSON.stringify(submitAccount), uid, JSON.stringify(tx?.toHex())])
+	}, [JSON.stringify(submitAccount), uid, JSON.stringify(submitTx?.toHex())])
 
 	return {
-		txInitiated: !!tx,
+		txInitiated: !!submitTx,
 		uid,
 		onSubmit,
 		submitAccount,
