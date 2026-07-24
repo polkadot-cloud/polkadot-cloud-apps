@@ -43,6 +43,7 @@ export const Router = () => (
 							share: false,
 							plugins: false,
 							docs: false,
+							syncAccounts: false,
 						}}
 					/>
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>

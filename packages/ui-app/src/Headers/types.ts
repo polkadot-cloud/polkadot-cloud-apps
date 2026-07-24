@@ -9,6 +9,7 @@ export interface MenuPopoverFeatureFlags {
 	share?: boolean
 	plugins?: boolean
 	docs?: boolean
+	syncAccounts?: boolean
 }
 
 export interface HeadersProps {
