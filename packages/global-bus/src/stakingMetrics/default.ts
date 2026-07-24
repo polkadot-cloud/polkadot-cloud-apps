@@ -12,6 +12,7 @@ export const defaultStakingMetrics: StakingMetrics = {
 	lastReward: undefined,
 	lastTotalStake: 0n,
 	minNominatorBond: 0n,
+	minValidatorBond: 0n,
 	totalStaked: 0n,
 	counterForNominators: 0,
 }

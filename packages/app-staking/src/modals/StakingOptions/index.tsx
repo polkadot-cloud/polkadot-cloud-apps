@@ -36,10 +36,10 @@ export const StakingOptions = () => {
 				<ItemsWrapper>
 					<ItemWrapper
 						type="button"
-						onClick={() => {
+						onClick={async () => {
 							closeModal()
 							// Set optimal nominator setup here, ready for canvas to display summary
-							setNominatorSetup(generateOptimalSetup(), 4)
+							setNominatorSetup(await generateOptimalSetup(), 4)
 							openModal({
 								key: 'SimpleNominate',
 								size: 'xs',

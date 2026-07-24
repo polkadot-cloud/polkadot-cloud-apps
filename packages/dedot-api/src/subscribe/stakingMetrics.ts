@@ -56,6 +56,10 @@ export class StakingMetricsQuery<T extends StakingChain> {
 					args: [],
 				},
 				{
+					fn: this.api.query.staking.minValidatorBond,
+					args: [],
+				},
+				{
 					fn: this.api.query.staking.erasTotalStake,
 					args: [this.era],
 				},
@@ -73,6 +77,7 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				lastReward,
 				lastTotalStake,
 				minNominatorBond,
+				minValidatorBond,
 				totalStaked,
 				counterForNominators,
 			]) => {
@@ -85,6 +90,7 @@ export class StakingMetricsQuery<T extends StakingChain> {
 					lastReward,
 					lastTotalStake,
 					minNominatorBond,
+					minValidatorBond,
 					totalStaked,
 					counterForNominators,
 				}

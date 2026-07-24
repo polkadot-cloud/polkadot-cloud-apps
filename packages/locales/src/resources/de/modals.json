@@ -205,7 +205,6 @@
 		"none": "Keine",
 		"notAuthenticated": "Nicht authentifiziert",
 		"notInstalled": "Nicht installiert",
-		"notMeetMinimum": "Du erfüllst nicht die minimale Nominator-Kaution von {{minNominatorBondUnit}} {{unit}}. Bitte sperre zunächst Mittel, bevor du nominierst.",
 		"notStaking": "Nicht im Staking",
 		"notToClaim": "Validatoren fordern Auszahlungen normalerweise im Namen ihrer Nominatoren an. Falls du hier nicht anforderst, erhältst du deine Auszahlungen wahrscheinlich innerhalb von 1-2 Tagen nach deren Verfügbarkeit.",
 		"notePoolDepositorMinBond_depositor": "Als Pool-Einzahler musst du eine Kaution von mindestens {{bond}} {{unit}} halten.",

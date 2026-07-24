@@ -3,7 +3,7 @@
 
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ProductionURL } from 'consts'
+import { StakingProductionURL } from 'consts'
 import { emitNotification } from 'global-bus'
 import { useTooltip } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
@@ -24,7 +24,7 @@ export const ShareLink = ({ paramValue, paramKey }: ShareLinkProps) => {
 	const tooltipText = t('copyShareLink')
 
 	const buildShareUrl = () => {
-		const base = `${ProductionURL}/#/overview`
+		const base = `${StakingProductionURL}/#/overview`
 		return `${base}?${paramKey}=${paramValue}`
 	}
 

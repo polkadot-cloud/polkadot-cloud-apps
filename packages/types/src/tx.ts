@@ -1,12 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { HexString } from 'dedot/utils'
 import type { ActiveAccount, ActiveProxy, MaybeAddress } from './accounts'
 import type { DisplayFor } from './overlay'
 
 export type TxSubmissionItem = {
 	uid: number
+	network: string
 	tag?: string
 	fee: bigint
 	from: MaybeAddress
@@ -14,12 +14,17 @@ export type TxSubmissionItem = {
 	pending: boolean
 }
 
+export type TxFeeDisplay = {
+	unit: string
+	units: number
+}
+
 export interface TxStatusHandlers {
 	onReady: () => void
 	onInBlock: () => void
 	onFinalized: () => void
 	onFailed: (err: Error) => void
-	onError: (type?: string) => void
+	onError: (type?: string, details?: string) => void
 }
 
 export interface ProxySwitcherProps {
@@ -38,6 +43,9 @@ export type SubmitTxProps = SubmitProps &
 		txInitiated: boolean
 		proxyAccount: ActiveProxy | null
 		stacked?: boolean
+		feeDisplay?: TxFeeDisplay
+		feeBalance?: bigint
+		hideSigner?: boolean
 	}
 
 export interface SubmitProps {
@@ -47,13 +55,4 @@ export interface SubmitProps {
 	submitText?: string
 	submitAccount: ActiveAccount
 	displayFor?: DisplayFor
-}
-
-export interface SignerPromptProps {
-	submitAddress: MaybeAddress
-	toSign: Uint8Array
-	onComplete: (
-		status: 'complete' | 'cancelled',
-		signature: HexString | null,
-	) => void
 }

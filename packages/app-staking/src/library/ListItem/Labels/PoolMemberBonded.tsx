@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import type { FetchedPoolMember } from 'hooks/usePoolMembers'
-import { ValidatorStatusWrapper } from 'library/ListItem/Wrappers'
+import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
 import { planckToUnitBn } from 'utils'
 
@@ -34,18 +34,20 @@ export const PoolMemberBonded = ({ member }: { member: FetchedPoolMember }) => {
 	return (
 		<>
 			{bonded.isGreaterThan(0) && (
-				<ValidatorStatusWrapper $status={status}>
-					<h5>
-						{t('bonded')}: {bonded.decimalPlaces(3).toFormat()} {unit}
-					</h5>
-				</ValidatorStatusWrapper>
+				<BondStatus
+					align="left"
+					status={status}
+					label={t('bonded')}
+					value={`${bonded.decimalPlaces(3).toFormat()} ${unit}`}
+				/>
 			)}
 			{totalUnbonding.isGreaterThan(0) && (
-				<ValidatorStatusWrapper $status="inactive">
-					<h5>
-						{t('unbonding')} {totalUnbonding.decimalPlaces(3).toFormat()} {unit}
-					</h5>
-				</ValidatorStatusWrapper>
+				<BondStatus
+					align="left"
+					status="inactive"
+					label={t('unbonding')}
+					value={`${totalUnbonding.decimalPlaces(3).toFormat()} ${unit}`}
+				/>
 			)}
 		</>
 	)

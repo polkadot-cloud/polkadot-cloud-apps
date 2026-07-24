@@ -6,7 +6,7 @@ import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
 import { createProxiesAdaptor } from '@polkadot-cloud/connect-proxies'
 import { withProviders } from '@w3ux/factories'
-import { DappName } from 'consts'
+import { StakingDappName } from 'consts'
 import { getStakingChainData } from 'consts/util'
 import { EraStakersProvider } from 'contexts/EraStakers'
 import { FiltersProvider } from 'contexts/Filters'
@@ -30,7 +30,7 @@ export const Providers = () => {
 				ConnectProvider,
 				{
 					network,
-					dappName: DappName,
+					dappName: StakingDappName,
 					ss58,
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},

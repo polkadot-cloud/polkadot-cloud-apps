@@ -12,7 +12,6 @@ import { planckToUnit } from '@w3ux/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
@@ -40,7 +39,6 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
 	const { pluginEnabled } = usePlugins()
-	const { avgCommission } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { price: tokenPrice } = useTokenPrices()
 	const { getAverageRewardRate } = useAverageRewardRate()
@@ -58,18 +56,12 @@ export const Overview = (props: PayoutHistoryProps) => {
 		skip: !stakingApiEnabled || !activeAddress,
 	})
 
-	// Whether to show base or commission-adjusted rewards
-	const [showAdjusted, setShowCommissionAdjusted] = useState<boolean>(true)
-
 	// Whether to include incoming payout account projections in totals
 	const [includeIncomingProjection, setIncludeIncomingProjection] =
 		useState<boolean>(true)
 
 	const currentStake = stakedBalance.toNumber()
-	const annualRewardBase = currentStake * (getAverageRewardRate() / 100) || 0
-
-	const annualRewardAfterCommission =
-		annualRewardBase * (1 - avgCommission / 100)
+	const stakedAnnualReward = currentStake * (getAverageRewardRate() / 100) || 0
 
 	const incomingPerformance30d = useMemo(() => {
 		const rewards = incomingProjectionData.payeeNominatorRewards.rewards
@@ -118,12 +110,8 @@ export const Overview = (props: PayoutHistoryProps) => {
 		0,
 	)
 
-	const activeAnnualReward = showAdjusted
-		? annualRewardAfterCommission
-		: annualRewardBase
-
 	const annualReward =
-		activeAnnualReward +
+		stakedAnnualReward +
 		(includeIncomingProjection ? incomingAnnualProjection : 0)
 	const monthlyReward = annualReward / 12
 	const dailyReward = annualReward / 365
@@ -180,28 +168,6 @@ export const Overview = (props: PayoutHistoryProps) => {
 								<h3>{t('projectedRewards')}</h3>
 							</CardHeader>
 							<Separator style={{ margin: '0 0 1.5rem 0', border: 0 }} />
-							<div style={{ padding: '0.5rem' }}>
-								<h3>
-									<button
-										type="button"
-										onClick={() => setShowCommissionAdjusted(!showAdjusted)}
-									>
-										<FontAwesomeIcon
-											icon={showAdjusted ? faToggleOn : faToggleOff}
-											style={{
-												color: showAdjusted
-													? 'var(--gray-1000)'
-													: 'var(--text-tertiary)',
-												marginRight: '0.8rem',
-											}}
-											transform={'grow-6'}
-										/>
-										{t('deductAvgCommissionOf', {
-											commission: avgCommission,
-										})}
-									</button>
-								</h3>
-							</div>
 							{showIncomingPayouts && (
 								<div style={{ padding: '0 0.5rem 0.5rem 0.5rem' }}>
 									<h3>

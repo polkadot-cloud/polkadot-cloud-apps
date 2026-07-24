@@ -43,9 +43,9 @@ export const PoolOverview = ({
 					/>
 				</Page.RowSection>
 			</Page.Row>
+			{network === 'polkadot' && <PoolShares />}
 			{activePool !== undefined && (
 				<>
-					{network === 'polkadot' && <PoolShares />}
 					<ManagePool />
 					<Page.Row>
 						<CardWrapper>

@@ -28,14 +28,12 @@ export const setLocalEraValidators = (
 	network: NetworkId,
 	era: string,
 	entries: Validator[],
-	avgCommission: number,
 ) => {
 	localStorage.setItem(
 		`${network}_validators`,
 		JSON.stringify({
 			era,
 			entries,
-			avgCommission,
 		}),
 	)
 }

@@ -6,7 +6,7 @@ import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
-import { ValidatorStatusWrapper } from 'library/ListItem/Wrappers'
+import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
 import { planckToUnitBn } from 'utils'
 import type { NominationStatusProps } from '../types'
@@ -60,13 +60,17 @@ export const NominationStatus = ({
 	}
 
 	return (
-		<ValidatorStatusWrapper $status={status || 'waiting'} $noMargin={noMargin}>
-			<h5>
-				{t(statusTKey)}
-				{stakedAmount.isGreaterThan(0)
-					? ` / ${syncing ? '...' : `${stakedAmount.toFormat()} ${unit}`}`
-					: null}
-			</h5>
-		</ValidatorStatusWrapper>
+		<BondStatus
+			status={status || 'waiting'}
+			noMargin={noMargin}
+			label={t(statusTKey)}
+			value={
+				stakedAmount.isGreaterThan(0)
+					? syncing
+						? '...'
+						: `${stakedAmount.toFormat()} ${unit}`
+					: undefined
+			}
+		/>
 	)
 }

@@ -15,7 +15,7 @@ import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
 import { Subheading } from 'pages/Nominate/Wrappers'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, Validator } from 'types'
 import { usePrompt } from 'ui-overlay'
@@ -66,18 +66,24 @@ export const GenerateNominations = ({
 	} = useManageNominations()
 
 	const defaultNominationsCount = defaultNominations.length
+	const fetchingRef = useRef(false)
 
 	const resizeCallback = () => {
 		setHeight(null)
 	}
 
 	// Fetch nominations based on method
-	const fetchNominationsForMethod = () => {
-		if (method) {
-			const newNominations = fetchFromMethod(method)
-			setNominations([...newNominations])
-			setFetching(false)
-			updateSetters(setters, newNominations)
+	const fetchNominationsForMethod = async () => {
+		if (method && !fetchingRef.current) {
+			fetchingRef.current = true
+			try {
+				const newNominations = await fetchFromMethod(method)
+				setNominations([...newNominations])
+				updateSetters(setters, newNominations)
+			} finally {
+				setFetching(false)
+				fetchingRef.current = false
+			}
 		}
 	}
 

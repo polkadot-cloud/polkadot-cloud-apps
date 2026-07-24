@@ -3,7 +3,6 @@
 
 import {
 	faChartPie,
-	faCoins,
 	faHeart,
 	faUserEdit,
 } from '@fortawesome/free-solid-svg-icons'
@@ -33,16 +32,6 @@ export const Methods = ({
 			icon: faChartPie,
 			onClick: () => {
 				setMethod('Optimal Selection')
-				setNominations([])
-				setFetching(true)
-			},
-		},
-		{
-			title: t('activeLowCommission'),
-			subtitle: t('activeLowCommissionSubtitle'),
-			icon: faCoins,
-			onClick: () => {
-				setMethod('Active Low Commission')
 				setNominations([])
 				setFetching(true)
 			},

@@ -8,7 +8,6 @@ import BigNumber from 'bignumber.js'
 import { ValidatorGeo } from 'canvas/ValidatorMetrics/ValidatorGeo'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -21,7 +20,6 @@ import {
 	GraphContainer,
 	GraphInner,
 	Head,
-	HeadTags,
 	Main,
 	Stat,
 	Subheading,
@@ -42,7 +40,6 @@ export const ValidatorMetrics = () => {
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
-	const { getValidators } = useValidators()
 	const { getActiveValidator } = useEraStakers()
 	const { unit, units } = getStakingChainData(network)
 
@@ -73,11 +70,6 @@ export const ValidatorMetrics = () => {
 
 	const GRAPH_HEIGHT = 250
 
-	const prefs = getValidators().find(
-		(entry) => entry.address === validator,
-	)?.prefs
-	const commission = prefs?.commission ?? 0
-
 	// Era points graph ref & sizing
 	const graphEraPointsRef = useRef<HTMLDivElement | null>(null)
 	const sizeEraPoints = useSize(graphEraPointsRef, {
@@ -107,16 +99,7 @@ export const ValidatorMetrics = () => {
 						/>
 					</div>
 					<div>
-						<div className="title">
-							<h1>{identity}</h1>
-						</div>
-						<HeadTags>
-							<h3>
-								<span>
-									{commission}% {t('commission', { ns: 'modals' })}
-								</span>
-							</h3>
-						</HeadTags>
+						<h1>{identity}</h1>
 					</div>
 				</div>
 			</AccountTitle>

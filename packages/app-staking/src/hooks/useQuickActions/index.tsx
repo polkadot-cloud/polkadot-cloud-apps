@@ -132,7 +132,7 @@ export const useQuickActions = () => {
 			label: t('joinPool', { ns: 'modals' }),
 		},
 		nominate: {
-			onClick: () => {
+			onClick: async () => {
 				if (advancedMode) {
 					openModal({
 						key: 'StakingOptions',
@@ -141,7 +141,7 @@ export const useQuickActions = () => {
 					})
 				} else {
 					// Set optimal nominator setup here, ready for modal to display submission form
-					setNominatorSetup(generateOptimalSetup(), 4)
+					setNominatorSetup(await generateOptimalSetup(), 4)
 					openModal({
 						key: 'SimpleNominate',
 						options: {},

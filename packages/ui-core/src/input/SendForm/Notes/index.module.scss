@@ -1,0 +1,35 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.notes {
+	padding: 1.25rem;
+
+	> * + * {
+		margin-top: 0.75rem;
+	}
+}
+
+.note {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+}
+
+.label {
+	color: var(--gray-700);
+	font-weight: 500;
+}
+
+.value {
+	font-weight: 500;
+}
+
+.defaultValue {
+	font-family: var(--font-family-mono);
+}
+
+.successValue {
+	color: var(--status-success);
+}

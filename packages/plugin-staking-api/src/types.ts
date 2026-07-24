@@ -248,7 +248,6 @@ export interface ValidatorStatsData {
 export interface ValidatorStats {
 	averageRewardRate: AverageRewardRateResult
 	activeValidatorRanks: ValidatorRanksResult
-	averageValidatorCommission: number
 }
 
 export interface RpcEndpointHealthData {
@@ -274,6 +273,20 @@ export interface RpcHealthLabels {
 
 export interface SearchValidatorsData {
 	searchValidators: SearchValidators
+}
+
+export interface SanitizeNomineeCandidatesData {
+	sanitizeNomineeCandidates: SanitizeNomineeCandidate[]
+}
+
+export interface SanitizeNomineeCandidate {
+	address: string
+	prefs: SanitizeNomineeCandidatePrefs
+}
+
+export interface SanitizeNomineeCandidatePrefs {
+	commission: number
+	blocked: boolean
 }
 
 export interface SearchValidators {
@@ -308,8 +321,8 @@ export interface ActiveStatusWithNominees {
 
 export type PoolWarningType =
 	| 'DESTROYING'
-	| 'HIGH_COMMISSION'
 	| 'NO_CHANGE_RATE'
+	| 'HIGH_COMMISSION'
 
 export interface PoolWarningsData {
 	poolWarnings: {

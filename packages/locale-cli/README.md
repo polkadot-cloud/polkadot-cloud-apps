@@ -64,7 +64,7 @@ pnpm add-locale --key "bondMore" --text "Bond More"
 Add a nested key with description:
 
 ```bash
-pnpm add-locale --key "validators.highCommission" --text "High Commission" --description "Refers to validators charging high commission rates"
+pnpm add-locale --key "validators.active" --text "Active Validator" --description "Refers to validators that are currently active"
 ```
 
 Add a key to a specific file:
@@ -104,7 +104,7 @@ pnpm remove-locale --key "bondMore"
 Remove a nested key:
 
 ```bash
-pnpm remove-locale --key "validators.highCommission"
+pnpm remove-locale --key "validators.active"
 ```
 
 Remove a key from a specific file:

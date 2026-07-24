@@ -168,7 +168,6 @@ export const useUi = (): UiHookInterface => {
 
 	return {
 		...state,
-		sideMenuMinimised: state.sideMenuMinimised && !state.advancedMode,
 		setSideMenu,
 		setUserSideMenuMinimised,
 		setContainerRefs,

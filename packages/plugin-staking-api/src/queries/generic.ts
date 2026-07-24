@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { DefaultContext, DocumentNode } from '@apollo/client'
+import type { DefaultContext, DocumentNode, FetchPolicy } from '@apollo/client'
 import { useQuery } from '@apollo/client/react'
 import { client } from '../Client'
 import type { QueryReturn } from '../types'
@@ -10,6 +10,7 @@ type Variables = Record<string, unknown>
 
 interface FetchQueryOptions {
 	context?: DefaultContext
+	fetchPolicy?: FetchPolicy
 }
 
 /**
@@ -27,6 +28,7 @@ export const fetchQuery = async <T>(
 			query,
 			variables,
 			context: options?.context,
+			fetchPolicy: options?.fetchPolicy,
 		})
 		return result?.data || defaultData
 	} catch {

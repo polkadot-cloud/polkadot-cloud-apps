@@ -1,0 +1,16 @@
+{
+	"name": "vite-shared",
+	"version": "0.1.0",
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"check": "biome check .",
+		"lint": "biome check --write ."
+	},
+	"peerDependencies": {
+		"vite": "^8.0.0"
+	}
+}

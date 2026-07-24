@@ -14,7 +14,6 @@ import { Empty } from 'library/Nominations/Empty'
 import { Stats } from 'library/Stats'
 import { useTranslation } from 'react-i18next'
 import { Page, Stat } from 'ui-core/base'
-import { CommissionPrompt } from './CommissionPrompt'
 import { Status } from './Status'
 import { UnstakePrompts } from './UnstakePrompts'
 
@@ -38,7 +37,6 @@ export const Active = () => {
 					items={[activeNominators, minimumNominatorBond, minimumActiveStake]}
 				/>
 			</Stat.Row>
-			<CommissionPrompt />
 			<UnstakePrompts />
 			<Page.Row>
 				<Page.RowSection secondary vLast>

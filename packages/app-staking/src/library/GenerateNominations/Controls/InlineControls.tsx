@@ -40,7 +40,7 @@ export const InlineControls = ({
 						iconTransform="shrink-2"
 						onClick={() => resetNominations(setters)}
 					/>
-					{['Active Low Commission', 'Optimal Selection'].includes(method) && (
+					{['Optimal Selection'].includes(method) && (
 						<ButtonType
 							text={t('reGenerate', { ns: 'app' })}
 							onClick={() => revertNominations()}

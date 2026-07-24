@@ -4,12 +4,6 @@
 import { localeDefinitions } from 'consts/locales'
 import type { Locale } from 'date-fns'
 import { enGB } from 'date-fns/locale/en-GB'
-import appEn from './resources/en/app.json'
-import helpEn from './resources/en/help.json'
-import modalsEn from './resources/en/modals.json'
-import pagesEn from './resources/en/pages.json'
-import tipsEn from './resources/en/tips.json'
-import type { LocaleEntry } from './types'
 
 // The default locale
 export const DefaultLocale = 'en'
@@ -17,7 +11,7 @@ export const DefaultLocale = 'en'
 type LocaleKey = keyof typeof localeDefinitions
 
 // Available locales as key value pairs
-export const locales: Record<string, LocaleEntry> = localeDefinitions
+export const locales = localeDefinitions
 
 // Map app locale codes to date-fns locale loaders so non-default formats stay code-split.
 const dateFormatLoaders = {
@@ -60,22 +54,4 @@ export const loadDateFormat = async (lng: string): Promise<Locale> => {
 	} catch {
 		return enGB
 	}
-}
-
-// Supported namespaces
-export const lngNamespaces: string[] = [
-	'app',
-	'help',
-	'modals',
-	'pages',
-	'tips',
-]
-
-// Default structure of language resources
-export const fallbackResources = {
-	...appEn,
-	...helpEn,
-	...modalsEn,
-	...pagesEn,
-	...tipsEn,
 }
