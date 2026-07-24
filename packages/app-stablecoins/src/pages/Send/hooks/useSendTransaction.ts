@@ -7,6 +7,7 @@ import {
 } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
 	type TxFeeEstimator,
 	useSubmitExtrinsic,
@@ -27,6 +28,7 @@ export const useSendTransaction = ({
 	toAccount,
 	token,
 }: UseSendTransactionProps): SendTransaction => {
+	const { t } = useTranslation('app')
 	const { serviceApi } = useApi()
 	const { getTxSubmission } = useTxMeta()
 	const [resolvedTransferTx, setResolvedTransferTx] =
@@ -164,7 +166,9 @@ export const useSendTransaction = ({
 		selectedDecimals,
 		selectedFeeAssetBalance,
 		submission: activeSubmission,
-		submitText: hydrationFeeSetup.needsSetup ? 'Set Fee Token' : 'Send Assets',
+		submitText: hydrationFeeSetup.needsSetup
+			? t('stablecoins.setFeeToken')
+			: t('stablecoins.sendAssets'),
 		valid: hydrationFeeSetup.needsSetup
 			? hydrationFeeSetup.valid
 			: validTransfer,

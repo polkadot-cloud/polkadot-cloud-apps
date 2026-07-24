@@ -14,6 +14,7 @@ import {
 import { useStablecoinBalances } from 'hooks'
 import type { Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PopoverTab } from 'ui-buttons'
 import { Loader } from 'ui-core/base'
 import {
@@ -37,6 +38,7 @@ export const WalletPopover = ({
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
+	const { t } = useTranslation('app')
 	const { activeAddress } = useActiveAccount()
 	const {
 		getBalanceUnit,
@@ -59,20 +61,27 @@ export const WalletPopover = ({
 	return (
 		<div ref={popoverRef} aria-busy={syncing}>
 			{syncing && (
-				<span aria-label="Syncing balances" aria-live="polite" role="status" />
+				<span
+					aria-label={t('stablecoins.syncingBalances')}
+					aria-live="polite"
+					role="status"
+				/>
 			)}
 			<PopoverTab.Container position="top">
 				<PopoverTab.Button
-					text="Balances"
+					text={t('stablecoins.balances')}
 					onClick={() => setActiveTab('balances')}
 				/>
-				<PopoverTab.Button text="Mix" onClick={() => setActiveTab('mix')} />
+				<PopoverTab.Button
+					text={t('stablecoins.mix')}
+					onClick={() => setActiveTab('mix')}
+				/>
 			</PopoverTab.Container>
 
 			{activeTab === 'mix' && (
 				<div>
 					<ConnectItem.Container>
-						<h4>Stablecoin Mix</h4>
+						<h4>{t('stablecoins.stablecoinMix')}</h4>
 						<MenuItem padded>
 							{syncing ? (
 								<BalancePreloader height="0.72rem" width="100%" />
@@ -131,7 +140,7 @@ export const WalletPopover = ({
 			{activeTab === 'balances' && (
 				<div>
 					<Headline
-						title="Balance"
+						title={t('stablecoins.balance')}
 						value={
 							syncing ? (
 								<BalancePreloader height="1.5rem" width="7.5rem" />
@@ -147,7 +156,7 @@ export const WalletPopover = ({
 								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>
 									<div>
-										<h3>Total</h3>
+										<h3>{t('stablecoins.total')}</h3>
 										<div>
 											{syncing ? (
 												<BalancePreloader width="7rem" />
