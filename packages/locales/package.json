@@ -5,6 +5,8 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
+		"./staking": "./src/apps/staking.ts",
+		"./stablecoins": "./src/apps/stablecoins.ts",
 		"./util": "./src/util/index.ts"
 	},
 	"scripts": {

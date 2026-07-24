@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { setDefaultSideMenuMinimised } from 'hooks/useUi'
-import { i18next } from 'locales'
+import { i18next } from 'locales/stablecoins'
 import { I18nextProvider } from 'react-i18next'
 import { Providers } from './Providers'
 

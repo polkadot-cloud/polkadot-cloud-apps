@@ -38,7 +38,7 @@ export const BalancesPopover = ({
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
-	const { t } = useTranslation('app')
+	const { t } = useTranslation('stablecoins')
 	const { activeAddress } = useActiveAccount()
 	const {
 		getBalanceUnit,
@@ -62,18 +62,18 @@ export const BalancesPopover = ({
 		<div ref={popoverRef} aria-busy={syncing}>
 			{syncing && (
 				<span
-					aria-label={t('stablecoins.syncingBalances')}
+					aria-label={t('syncingBalances')}
 					aria-live="polite"
 					role="status"
 				/>
 			)}
 			<PopoverTab.Container position="top">
 				<PopoverTab.Button
-					text={t('stablecoins.balances')}
+					text={t('balances')}
 					onClick={() => setActiveTab('balances')}
 				/>
 				<PopoverTab.Button
-					text={t('stablecoins.mix')}
+					text={t('mix')}
 					onClick={() => setActiveTab('mix')}
 				/>
 			</PopoverTab.Container>
@@ -81,7 +81,7 @@ export const BalancesPopover = ({
 			{activeTab === 'mix' && (
 				<div>
 					<ConnectItem.Container>
-						<h4>{t('stablecoins.stablecoinMix')}</h4>
+						<h4>{t('stablecoinMix')}</h4>
 						<MenuItem padded>
 							{syncing ? (
 								<BalancePreloader height="0.72rem" width="100%" />
@@ -140,7 +140,7 @@ export const BalancesPopover = ({
 			{activeTab === 'balances' && (
 				<div>
 					<Headline
-						title={t('stablecoins.balance')}
+						title={t('balance')}
 						value={
 							syncing ? (
 								<BalancePreloader height="1.5rem" width="7.5rem" />
@@ -156,7 +156,7 @@ export const BalancesPopover = ({
 								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>
 									<div>
-										<h3>{t('stablecoins.total')}</h3>
+										<h3>{t('total')}</h3>
 										<div>
 											{syncing ? (
 												<BalancePreloader width="7rem" />

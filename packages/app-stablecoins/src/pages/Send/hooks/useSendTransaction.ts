@@ -28,7 +28,7 @@ export const useSendTransaction = ({
 	toAccount,
 	token,
 }: UseSendTransactionProps): SendTransaction => {
-	const { t } = useTranslation('app')
+	const { t } = useTranslation('stablecoins')
 	const { serviceApi } = useApi()
 	const { getTxSubmission } = useTxMeta()
 	const [resolvedTransferTx, setResolvedTransferTx] =
@@ -167,8 +167,8 @@ export const useSendTransaction = ({
 		selectedFeeAssetBalance,
 		submission: activeSubmission,
 		submitText: hydrationFeeSetup.needsSetup
-			? t('stablecoins.setFeeToken')
-			: t('stablecoins.sendAssets'),
+			? t('setFeeToken')
+			: t('sendAssets'),
 		valid: hydrationFeeSetup.needsSetup
 			? hydrationFeeSetup.valid
 			: validTransfer,

@@ -1106,6 +1106,9 @@ importers:
       hooks:
         specifier: workspace:*
         version: link:../hooks
+      locales:
+        specifier: workspace:*
+        version: link:../locales
       react:
         specifier: ^19.2.8
         version: 19.2.8

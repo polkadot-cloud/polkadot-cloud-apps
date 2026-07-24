@@ -16,17 +16,17 @@ export const SendForm = ({
 	selection,
 	transaction,
 }: SendFormProps) => {
-	const { t } = useTranslation('app')
+	const { t } = useTranslation('stablecoins')
 
 	return (
 		<Page.Row>
 			<SendFormUi.Container>
 				<SendFormUi.Header
-					title={t('stablecoins.sendAssets')}
-					subtitle={t('stablecoins.transferStablecoinsDescription')}
+					title={t('sendAssets')}
+					subtitle={t('transferStablecoinsDescription')}
 				/>
 				<SendFormUi.Card>
-					<SendFormUi.Segment title={t('stablecoins.chain')} layer="top">
+					<SendFormUi.Segment title={t('chain')} layer="top">
 						<Dropdown
 							options={selection.chainOptions}
 							selected={selection.selectedChain}
@@ -43,7 +43,7 @@ export const SendForm = ({
 						toAccount={accounts.toAccount}
 					/>
 					<BalanceInputMulti
-						label={t('stablecoins.assetToSend')}
+						label={t('assetToSend')}
 						value={selection.amount}
 						onChange={selection.setAmount}
 						maxAvailable={planckToUnit(
@@ -55,7 +55,7 @@ export const SendForm = ({
 						options={selection.tokenOptions}
 						selected={selection.selectedToken}
 						onSelect={selection.setSelectedToken}
-						ariaLabel={t('stablecoins.amountToSend')}
+						ariaLabel={t('amountToSend')}
 					/>
 					<FeePaymentFields
 						balancesLoading={transaction.balancesLoading}

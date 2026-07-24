@@ -19,31 +19,31 @@ export const AccountFields = ({
 	onToSelect,
 	toAccount,
 }: AccountFieldsProps) => {
-	const { t } = useTranslation('app')
+	const { t } = useTranslation('stablecoins')
 
 	return (
 		<>
-			<SendForm.Segment title={t('stablecoins.sendFrom')} layer="raised">
+			<SendForm.Segment title={t('sendFrom')} layer="raised">
 				<div className={classes.accountDropdown}>
 					<AccountDropdown
 						key={accountKey('from', fromAccount)}
 						initialAccount={fromAccount}
 						accounts={accountsWithSigners}
 						onSelect={onFromSelect}
-						placeholder={t('stablecoins.selectSenderAccount')}
+						placeholder={t('selectSenderAccount')}
 						disabled={!accountsWithSigners.length}
 					/>
 				</div>
 			</SendForm.Segment>
 			<SendForm.DirectionIndicator />
-			<SendForm.Segment title={t('stablecoins.sendTo')} layer="raised">
+			<SendForm.Segment title={t('sendTo')} layer="raised">
 				<div className={classes.accountDropdown}>
 					<AccountDropdown
 						key={accountKey('to', toAccount)}
 						initialAccount={toAccount}
 						accounts={accounts}
 						onSelect={onToSelect}
-						placeholder={t('stablecoins.enterRecipientAddress')}
+						placeholder={t('enterRecipientAddress')}
 					/>
 				</div>
 			</SendForm.Segment>

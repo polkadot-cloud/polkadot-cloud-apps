@@ -21,14 +21,14 @@ export const FeePaymentFields = ({
 	submitText,
 	valid,
 }: FeePaymentFieldsProps) => {
-	const { t } = useTranslation('app')
+	const { t } = useTranslation('stablecoins')
 
 	return (
 		<>
 			<SendForm.Segment
-				title={t('stablecoins.payFeesIn')}
+				title={t('payFeesIn')}
 				headerContent={
-					<SendForm.Label label={t('stablecoins.available')}>
+					<SendForm.Label label={t('available')}>
 						{balancesLoading
 							? '...'
 							: formatBalance(feeBalance, selectedFeeAsset.value)}
@@ -43,12 +43,12 @@ export const FeePaymentFields = ({
 				/>
 			</SendForm.Segment>
 			<SendForm.Notes>
-				<SendForm.Note label={t('stablecoins.networkFee')}>
+				<SendForm.Note label={t('networkFee')}>
 					<EstimatedTxFee uid={submission.uid} feeDisplay={feeDisplay} />
 				</SendForm.Note>
 				{feeSetupRequired && (
-					<SendForm.Note label={t('stablecoins.feeToken')} variant="success">
-						{t('stablecoins.setFeeTokenBeforeSending', {
+					<SendForm.Note label={t('feeToken')} variant="success">
+						{t('setFeeTokenBeforeSending', {
 							symbol: selectedFeeAsset.value,
 						})}
 					</SendForm.Note>

@@ -22,6 +22,7 @@ const modals = lazyOverlayComponents({
 	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
 	ImportAccounts: () => import('ui-modals/ImportAccounts'),
 	SelectCurrency: () => import('ui-modals/SelectCurrency'),
+	SelectLanguage: () => import('ui-modals/SelectLanguage'),
 })
 
 const ErrorFallbackModal = () => null
