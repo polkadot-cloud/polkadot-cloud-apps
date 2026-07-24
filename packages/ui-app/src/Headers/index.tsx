@@ -31,7 +31,11 @@ export const Headers = ({
 				{Object.entries(NodesLeft || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
-				<Account openConnect={openConnect} setOpenConnect={setOpenConnect} />
+				<Account
+					openConnect={openConnect}
+					setOpenConnect={setOpenConnect}
+					sendModal={menuPopoverFeatures?.sendModal}
+				/>
 				{Object.entries(NodesRight || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
