@@ -25,6 +25,20 @@ import type { BondedQuery } from '../subscribe/bonded'
 import type { PoolMembershipQuery } from '../subscribe/poolMembership'
 import type { StakingLedgerQuery } from '../subscribe/stakingLedger'
 
+export type DedotServiceConfig = {
+	stablecoins?: {
+		assetHub?: boolean
+		hydration?: boolean
+	}
+}
+
+export type DedotServiceFeatures = {
+	stablecoins: {
+		assetHub: boolean
+		hydration: boolean
+	}
+}
+
 // All available chains
 export type Chain =
 	| PolkadotApi
