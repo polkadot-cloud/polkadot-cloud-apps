@@ -11,10 +11,11 @@ import {
 	StablecoinChains,
 	StablecoinSymbols,
 } from 'consts/stablecoins'
-import { useStablecoinBalances } from 'hooks'
+import { useStablecoinBalances, useTokenPrices } from 'hooks'
 import type { Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { StablecoinChainId } from 'types'
 import { PopoverTab } from 'ui-buttons'
 import { Loader } from 'ui-core/base'
 import {
@@ -40,6 +41,7 @@ export const BalancesPopover = ({
 }) => {
 	const { t } = useTranslation('stablecoins')
 	const { activeAddress } = useActiveAccount()
+	const { price: dotPrice } = useTokenPrices()
 	const {
 		getBalanceUnit,
 		getStablecoinShare,
@@ -48,6 +50,19 @@ export const BalancesPopover = ({
 	} = useStablecoinBalances(activeAddress)
 	const popoverRef = useRef<HTMLDivElement>(null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
+	const stablecoinTotal = getStablecoinTotal()
+	const dotTotal = StablecoinChains.reduce(
+		(total, chain) => total.plus(getBalanceUnit(chain, 'DOT')),
+		stablecoinTotal.multipliedBy(0),
+	)
+	const getDotTotal = (chain?: StablecoinChainId) =>
+		chain ? getBalanceUnit(chain, 'DOT') : dotTotal
+	const getTotalBalance = (chain?: StablecoinChainId) =>
+		(chain ? getStablecoinTotal({ chain }) : stablecoinTotal).plus(
+			getDotTotal(chain).multipliedBy(dotPrice),
+		)
+	const isTotalBalanceUnavailable = (chain?: StablecoinChainId) =>
+		!getDotTotal(chain).isZero() && dotPrice === 0
 	const stablecoinMix = StablecoinSymbols.map((symbol) => ({
 		share: getStablecoinShare({ symbol }),
 		symbol,
@@ -144,8 +159,10 @@ export const BalancesPopover = ({
 						value={
 							syncing ? (
 								<BalancePreloader height="1.5rem" width="7.5rem" />
+							) : isTotalBalanceUnavailable() ? (
+								<>&mdash;</>
 							) : (
-								`$${getStablecoinTotal().toFormat(2)}`
+								`$${getTotalBalance().toFormat(2)}`
 							)
 						}
 					/>
@@ -160,31 +177,31 @@ export const BalancesPopover = ({
 										<div>
 											{syncing ? (
 												<BalancePreloader width="7rem" />
+											) : isTotalBalanceUnavailable(chain) ? (
+												<h4>&mdash;</h4>
 											) : (
-												<h4>${getStablecoinTotal({ chain }).toFormat(2)}</h4>
+												<h4>${getTotalBalance(chain).toFormat(2)}</h4>
 											)}
 										</div>
 									</div>
 								</MenuItem>
-								{getStablecoinFeeAssets(chain)
-									.filter((symbol) => symbol !== 'DOT')
-									.map((symbol) => (
-										<MenuItem key={`${chain}-${symbol}`} padded>
+								{getStablecoinFeeAssets(chain).map((symbol) => (
+									<MenuItem key={`${chain}-${symbol}`} padded>
+										<div>
+											<img src={getFeeTokenIcon(symbol)} alt="" />
+										</div>
+										<div>
+											<h3>{symbol}</h3>
 											<div>
-												<img src={getFeeTokenIcon(symbol)} alt="" />
+												{syncing ? (
+													<BalancePreloader />
+												) : (
+													<h4>{getBalanceUnit(chain, symbol).toFormat(2)}</h4>
+												)}
 											</div>
-											<div>
-												<h3>{symbol}</h3>
-												<div>
-													{syncing ? (
-														<BalancePreloader />
-													) : (
-														<h4>{getBalanceUnit(chain, symbol).toFormat(2)}</h4>
-													)}
-												</div>
-											</div>
-										</MenuItem>
-									))}
+										</div>
+									</MenuItem>
+								))}
 							</Fragment>
 						))}
 					</ConnectItem.Container>
