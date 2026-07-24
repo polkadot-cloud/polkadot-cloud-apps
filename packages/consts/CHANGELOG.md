@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.5.0...consts-v1.6.0) (2026-07-24)
+
+
+### Features
+
+* Add `app-stablecoins` skeleton [1] ([#3683](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3683)) ([d32024f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d32024fc531ddefa17bfaa797e362bd70ad7835b))
+* **locale:** Add Turkish (Türkçe) language support ([#3514](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3514)) ([b433484](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b4334844513bc595601736b8a9d0f27fef77f016))
+* **locales:** add French (fr) language support ([#3593](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3593)) ([21de8e4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/21de8e494bbf6aa954455b9db1971ab22da29cec))
+* Prepare shared stablecoin support ([#3696](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3696)) ([5f8605f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5f8605f2e90cdaed82a5d03a1dae03fabba66c9d))
+* **refactor:** Amend consts config, abstract rpc endpoints ([#3648](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3648)) ([bc812fb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/bc812fbfa655b72e026d7913a83cda6bf9af17cb))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.4.0...consts-v1.5.0) (2026-05-26)
 
 

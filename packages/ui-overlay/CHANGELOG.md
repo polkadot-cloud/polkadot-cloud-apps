@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.5.0...ui-overlay-v1.6.0) (2026-07-24)
+
+
+### Features
+
+* **fix:** Biome deprecation, lint CSS ([#3609](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3609)) ([2554736](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2554736f2fa465aa82e62b1e8c1c9321c40dbc96))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Move Prompt components to`ui-overlay` ([#3555](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3555)) ([809ef97](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/809ef97fdac54205dc33b560b6a868ba3cfd4c4d))
+* **refactor:** Share `lazyNamed` through `ui-overlay` ([#3684](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3684)) ([6a331cb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6a331cb067c2035e54d5ff047dbca0164f65b915))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.4.0...ui-overlay-v1.5.0) (2026-05-26)
 
 

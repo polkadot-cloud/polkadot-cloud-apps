@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/utils-v1.4.0...utils-v1.5.0) (2026-07-24)
+
+
+### Features
+
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Page config utils to `utils` package ([#3559](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3559)) ([639b747](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/639b747d97a2f8b4cd75dccca253e8f68b02f40c))
+* **ux:** Revise balance inputs, add `BalanceInputMulti` ([#3695](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3695)) ([cb62237](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cb62237a18b0c93246c5843bc728dfa98aa940de))
+
+
+### Bug Fixes
+
+* **balances:** read back stored fee reserve and guard malformed localStorage ([#3564](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3564)) ([2f0e839](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2f0e8397b685402cf0acdd027f36fca8b6f09ba1))
+* hooks, utils config ([#3546](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3546)) ([f31076b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f31076bed2101b6d0d56811f92a2b26e71e6d436))
+
 ## [1.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/utils-v1.3.0...utils-v1.4.0) (2026-05-26)
 
 

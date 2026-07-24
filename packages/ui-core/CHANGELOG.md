@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.6.0...ui-core-v1.7.0) (2026-07-24)
+
+
+### Features
+
+* Add shared popover display components ([#3691](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3691)) ([35b83b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/35b83b07dc3440391eb3c587117c5c83a27162d6))
+* **fix:** Biome deprecation, lint CSS ([#3609](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3609)) ([2554736](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2554736f2fa465aa82e62b1e8c1c9321c40dbc96))
+* Prepare shared stablecoin support ([#3696](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3696)) ([5f8605f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5f8605f2e90cdaed82a5d03a1dae03fabba66c9d))
+* **refactor:** Abstract key library and context components ([#3617](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3617)) ([6fee099](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6fee099114c1bdcd5a7887d7e14b5f8125bf7d3c))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Move `ActionItem` to `ui-core` ([#3615](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3615)) ([8907f84](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8907f846d9bc7be9cb4957852106d53222892e7c))
+* **refactor:** Move Prompt components to`ui-overlay` ([#3555](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3555)) ([809ef97](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/809ef97fdac54205dc33b560b6a868ba3cfd4c4d))
+* **ux:** Improve bond status badge UI ([#3645](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3645)) ([11aaff9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/11aaff9efa26735ee3a69eafb9ad9d0cc99fecf1))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.5.0...ui-core-v1.6.0) (2026-05-26)
 
 
