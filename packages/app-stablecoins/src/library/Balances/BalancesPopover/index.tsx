@@ -33,7 +33,7 @@ const BalancePreloader = ({
 	width?: string
 }) => <Loader as="span" style={{ height, width }} />
 
-export const WalletPopover = ({
+export const BalancesPopover = ({
 	setOpen,
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>

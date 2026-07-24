@@ -4,7 +4,7 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { StablecoinsDappName } from 'consts'
 import { SideMenu } from 'library/SideMenu'
-import { Wallet } from 'library/Wallet'
+import { Wallet } from 'library/Balances'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
 import { Navigate, Route, Routes } from 'react-router-dom'

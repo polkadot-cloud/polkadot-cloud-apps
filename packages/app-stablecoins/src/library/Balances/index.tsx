@@ -6,7 +6,7 @@ import { useTheme } from 'hooks'
 import { useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
-import { WalletPopover } from './WalletPopover'
+import { BalancesPopover } from './BalancesPopover'
 
 export const Wallet = () => {
 	const { themeElementRef } = useTheme()
@@ -16,7 +16,7 @@ export const Wallet = () => {
 		<Popover
 			open={open}
 			portalContainer={themeElementRef.current || undefined}
-			content={<WalletPopover setOpen={setOpen} />}
+			content={<BalancesPopover setOpen={setOpen} />}
 			onTriggerClick={() => setOpen(!open)}
 		>
 			<ButtonHeader className="header-wallet" icon={faWallet} />
