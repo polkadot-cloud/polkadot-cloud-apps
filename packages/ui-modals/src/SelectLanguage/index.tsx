@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { locales } from 'locales'
+import { localeDefinitions } from 'consts/locales'
 import { changeLanguage } from 'locales/util'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
@@ -18,13 +18,14 @@ export const SelectLanguage = () => {
 			<ModalTitle title={t('selectLanguage')} />
 			<Padding horizontalOnly style={{ marginTop: '1rem' }}>
 				<ButtonList>
-					{Object.entries(locales).map(([code, { label }]) => (
+					{Object.entries(localeDefinitions).map(([code, { label }]) => (
 						<ButtonModal
 							key={code}
 							selected={i18n.resolvedLanguage === code}
 							onClick={() => {
 								changeLanguage(code, i18n)
-								closeModal()
+									.then(closeModal)
+									.catch(() => undefined)
 							}}
 							text={label}
 							label={i18n.resolvedLanguage === code ? t('selected') : undefined}
