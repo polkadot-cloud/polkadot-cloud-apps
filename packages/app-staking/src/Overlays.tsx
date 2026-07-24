@@ -1,32 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { type ComponentType, lazy } from 'react'
 import { ErrorFallbackModal } from 'ui-app/ErrorBoundary'
-import { Overlay } from 'ui-overlay'
-
-type OverlayLoader<TModule = Record<string, unknown>> = () => Promise<TModule>
-
-const lazyNamed = <TModule extends Record<string, unknown>>(
-	load: OverlayLoader<TModule>,
-	exportName: string,
-) =>
-	lazy(async () => {
-		const module = await load()
-		const component = module[exportName]
-
-		if (!component) {
-			throw new Error(`Missing overlay export: ${exportName}`)
-		}
-
-		if (typeof component !== 'function') {
-			throw new Error(
-				`Export ${exportName} is not a component (expected function, got ${typeof component})`,
-			)
-		}
-
-		return { default: component as ComponentType }
-	})
+import { lazyNamed, Overlay, type OverlayLoader } from 'ui-overlay'
 
 const lazyOverlayComponents = <
 	T extends Record<string, OverlayLoader<Record<string, unknown>>>,
@@ -44,19 +20,19 @@ const modals = lazyOverlayComponents({
 	ChangePoolRoles: () => import('modals/ChangePoolRoles'),
 	ClaimPayouts: () => import('modals/ClaimPayouts'),
 	ClaimReward: () => import('modals/ClaimReward'),
-	DiscordSupport: () => import('modals/DiscordSupport'),
+	DiscordSupport: () => import('ui-modals/DiscordSupport'),
 	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
 	ImportAccounts: () => import('ui-modals/ImportAccounts'),
 	Invite: () => import('modals/Invite'),
 	JoinPool: () => import('modals/JoinPool'),
 	LeavePool: () => import('modals/LeavePool'),
-	MailSupport: () => import('modals/MailSupport'),
+	MailSupport: () => import('ui-modals/MailSupport'),
 	ManagePool: () => import('modals/ManagePool'),
 	Networks: () => import('modals/Networks'),
 	Plugins: () => import('modals/Plugins'),
 	RewardCalculator: () => import('modals/RewardCalculator'),
 	SelectCurrency: () => import('ui-modals/SelectCurrency'),
-	SelectLanguage: () => import('modals/SelectLanguage'),
+	SelectLanguage: () => import('ui-modals/SelectLanguage'),
 	SetController: () => import('modals/SetController'),
 	SimpleNominate: () => import('modals/SimpleNominate'),
 	StakingOptions: () => import('modals/StakingOptions'),

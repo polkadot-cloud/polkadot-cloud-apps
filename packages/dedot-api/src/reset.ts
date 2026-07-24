@@ -18,6 +18,7 @@ import {
 	resetPoolsConfig,
 	resetPoolWarnings,
 	resetServiceInterface,
+	resetStablecoinBalances,
 	resetStakingLedgers,
 	resetStakingMetrics,
 } from 'global-bus'
@@ -29,6 +30,7 @@ export const onNetworkReset = () => {
 	resetPoolWarnings()
 
 	resetAccountBalances()
+	resetStablecoinBalances()
 	resetPoolMemberships()
 	resetStakingLedgers()
 	resetBonded()

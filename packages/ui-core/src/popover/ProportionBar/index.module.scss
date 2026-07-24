@@ -1,0 +1,22 @@
+.proportionBar {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+.track {
+	width: min(100%, 5.5rem);
+	height: 0.5rem;
+	border-radius: 999px;
+	background-color: var(--gray-300);
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.fill {
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--accent-600), var(--accent-500));
+}

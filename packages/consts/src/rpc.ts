@@ -93,7 +93,7 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	},
 	hydration: {
 		Dwellir: 'wss://hydration-rpc.n.dwellir.com',
-		Nice: 'wss://rpc.nice.hydration.cloud',
+		Subway: 'wss://subway.sin.hydration.cloud',
 	},
 }
 

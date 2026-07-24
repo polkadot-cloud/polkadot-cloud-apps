@@ -9,6 +9,14 @@ let notificationCounter = 0
 
 export const notifications$ = _notifications.asObservable()
 
+export const dismissNotification = (index: number) => {
+	_notifications.next(
+		_notifications
+			.getValue()
+			.filter((notification) => notification.index !== index),
+	)
+}
+
 export const emitNotification = ({ title, subtitle }: NotificationText) => {
 	// Create a new notification with an index based on the current length of the notifications array
 	const index = notificationCounter++
@@ -25,10 +33,6 @@ export const emitNotification = ({ title, subtitle }: NotificationText) => {
 
 	// After a period of time, dismiss the notification
 	setTimeout(() => {
-		_notifications.next(
-			_notifications
-				.getValue()
-				.filter((notification) => notification.index !== index),
-		)
+		dismissNotification(index)
 	}, ToastDelayDuration)
 }

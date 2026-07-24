@@ -3,6 +3,17 @@
 
 import type { ComponentType } from 'react'
 
+export interface MenuPopoverFeatureFlags {
+	advancedMode?: boolean
+	helpPrompts?: boolean
+	share?: boolean
+	plugins?: boolean
+	docs?: boolean
+	syncAccounts?: boolean
+}
+
 export interface HeadersProps {
-	Sync: ComponentType
+	NodesLeft?: Record<string, ComponentType>
+	NodesRight?: Record<string, ComponentType>
+	menuPopoverFeatures?: MenuPopoverFeatureFlags
 }

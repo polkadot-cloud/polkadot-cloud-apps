@@ -4,6 +4,21 @@
 import type { ServiceInterface } from 'types'
 
 export const defaultServiceInterface: ServiceInterface = {
+	stablecoins: {
+		query: {
+			balances: async () => [],
+			balance: async () => undefined,
+			hydrationFeeCurrency: async () => undefined,
+		},
+		tx: {
+			transfer: async () => undefined,
+			setHydrationFeeCurrency: async () => undefined,
+		},
+		fee: {
+			paymentOptions: () => undefined,
+			estimate: async () => 0n,
+		},
+	},
 	query: {
 		accountBalance: {
 			hub: async () => undefined,
