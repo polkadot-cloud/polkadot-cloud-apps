@@ -20,6 +20,6 @@
 		"stablecoinMix": "Stablecoin Dağılımı",
 		"syncingBalances": "Bakiyeler eşitleniyor",
 		"total": "Toplam",
-		"transferStablecoinsDescription": "Stablecoin'leri aynı ağdaki başka bir adrese aktarın."
+		"transferAssetsDescription": "Varlıkları aynı ağdaki başka bir adrese aktarın."
 	}
 }

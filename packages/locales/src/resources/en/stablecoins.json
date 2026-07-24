@@ -20,6 +20,6 @@
 		"stablecoinMix": "Stablecoin Mix",
 		"syncingBalances": "Syncing balances",
 		"total": "Total",
-		"transferStablecoinsDescription": "Transfer stablecoins to another address on the same network."
+		"transferAssetsDescription": "Transfer assets to another address on the same network."
 	}
 }

@@ -7,10 +7,10 @@ import type { TxFeeEstimator, UseSubmitExtrinsic } from 'tx-submit/types'
 import type {
 	FeeAssetSymbol,
 	ImportedAccount,
+	SendAssetSymbol,
 	ServiceInterface,
 	StablecoinBalance,
 	StablecoinChainId,
-	StablecoinSymbol,
 	TxFeeDisplay,
 } from 'types'
 import type { DropdownOption } from 'ui-app/Dropdown'
@@ -28,26 +28,26 @@ export type SendSelectionState = {
 	amount: string
 	chain: StablecoinChainId
 	feeAsset: FeeAssetSymbol
-	token: StablecoinSymbol
+	token: SendAssetSymbol
 }
 
 export type SendSelectionAction =
 	| { type: 'setAmount'; amount: string }
 	| { type: 'selectChain'; chain: StablecoinChainId }
 	| { type: 'selectFeeAsset'; feeAsset: FeeAssetSymbol }
-	| { type: 'selectToken'; token: StablecoinSymbol }
+	| { type: 'selectToken'; token: SendAssetSymbol }
 
 export type SendSelection = SendSelectionState & {
 	availableFeeAssetOptions: DropdownOption<FeeAssetSymbol>[]
 	chainOptions: DropdownOption<StablecoinChainId>[]
 	selectedChain: DropdownOption<StablecoinChainId>
 	selectedFeeAsset: DropdownOption<FeeAssetSymbol>
-	selectedToken: DropdownOption<StablecoinSymbol>
+	selectedToken: DropdownOption<SendAssetSymbol>
 	setAmount: (amount: string) => void
 	setSelectedChain: (option: DropdownOption<StablecoinChainId>) => void
 	setSelectedFeeAsset: (option: DropdownOption<FeeAssetSymbol>) => void
-	setSelectedToken: (option: DropdownOption<StablecoinSymbol>) => void
-	tokenOptions: DropdownOption<StablecoinSymbol>[]
+	setSelectedToken: (option: DropdownOption<SendAssetSymbol>) => void
+	tokenOptions: DropdownOption<SendAssetSymbol>[]
 }
 
 export type FeeCurrencyStatus = 'error' | 'idle' | 'loading' | 'ready'
@@ -92,7 +92,7 @@ export type UseSendTransactionProps = {
 	feeAsset: FeeAssetSymbol
 	fromAccount: ImportedAccount | null
 	toAccount: ImportedAccount | null
-	token: StablecoinSymbol
+	token: SendAssetSymbol
 }
 
 export type SendTransaction = {

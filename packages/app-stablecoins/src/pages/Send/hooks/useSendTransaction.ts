@@ -3,7 +3,7 @@
 
 import {
 	getStablecoinAssetConfig,
-	isStablecoinSendAssetSupported,
+	isAssetSendSupported,
 } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useState } from 'react'
@@ -77,7 +77,7 @@ export const useSendTransaction = ({
 	const transferKey =
 		toAccount?.address &&
 		amountPlanck > 0n &&
-		isStablecoinSendAssetSupported(chain, token)
+		isAssetSendSupported(chain, token)
 			? `${chain}:${token}:${toAccount.address}:${amountPlanck}`
 			: null
 

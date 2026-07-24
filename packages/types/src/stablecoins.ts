@@ -10,6 +10,8 @@ export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR'
 
 export type FeeAssetSymbol = 'DOT' | StablecoinSymbol
 
+export type SendAssetSymbol = FeeAssetSymbol
+
 export type AssetMetadata = Pick<StablecoinAssetConfig, 'color' | 'decimals'>
 
 export type ChainAssetConfigs = Partial<
@@ -38,12 +40,15 @@ export type StablecoinBalance = {
 	decimals: number
 }
 
-export type StablecoinTransferInput = {
+export type AssetTransferInput = {
 	chain: StablecoinChainId
-	symbol: StablecoinSymbol
+	symbol: SendAssetSymbol
 	recipient: string
 	amount: bigint
 }
+
+// Retained for consumers of the original stablecoin service API.
+export type StablecoinTransferInput = AssetTransferInput
 
 export type StablecoinFeePayment = {
 	chain: StablecoinChainId

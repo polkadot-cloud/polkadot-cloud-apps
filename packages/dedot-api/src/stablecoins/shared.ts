@@ -5,10 +5,10 @@ import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import type { SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 import type {
+	AssetTransferInput,
 	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinFeeEstimateInput,
-	StablecoinTransferInput,
 } from 'types'
 
 // Minimal free/frozen balance shape shared by all stablecoin balance sources.
@@ -25,7 +25,7 @@ export type StablecoinAdapter = {
 		symbol: FeeAssetSymbol,
 	) => Promise<StablecoinBalance | undefined>
 	transfer: (
-		input: StablecoinTransferInput,
+		input: AssetTransferInput,
 	) => Promise<SubmittableExtrinsic | undefined>
 	paymentOptions: (symbol: FeeAssetSymbol) => PayloadOptions | undefined
 	estimateFee: (input: StablecoinFeeEstimateInput) => Promise<bigint>

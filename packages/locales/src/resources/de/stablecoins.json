@@ -20,6 +20,6 @@
 		"stablecoinMix": "Stablecoin-Mix",
 		"syncingBalances": "Guthaben werden synchronisiert",
 		"total": "Gesamt",
-		"transferStablecoinsDescription": "Stablecoins an eine andere Adresse im selben Netzwerk übertragen."
+		"transferAssetsDescription": "Assets an eine andere Adresse im selben Netzwerk übertragen."
 	}
 }
