@@ -35,7 +35,16 @@ export const Router = () => (
 			<SideMenu enableAdvancedMenu={false} />
 			<Page.Main>
 				<HelmetProvider>
-					<Headers NodesRight={{ wallet: Wallet }} />
+					<Headers
+						NodesRight={{ wallet: Wallet }}
+						menuPopoverFeatures={{
+							advancedMode: false,
+							helpPrompts: false,
+							share: false,
+							plugins: false,
+							docs: false,
+						}}
+					/>
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 						<Routes>
 							<Route index element={<Navigate to="/send" replace />} />
