@@ -9,11 +9,15 @@ import { Popover } from 'ui-core/popover'
 import { ConnectPopover } from './Popovers/ConnectPopover'
 import { MenuPopover } from './Popovers/MenuPopover'
 import type { ToggleConnectProps } from './Popovers/types'
+import type { MenuPopoverFeatureFlags } from './types'
 
 export const Settings = ({
 	openConnect,
 	setOpenConnect,
-}: ToggleConnectProps) => {
+	menuPopoverFeatures,
+}: ToggleConnectProps & {
+	menuPopoverFeatures?: MenuPopoverFeatureFlags
+}) => {
 	const { themeElementRef } = useTheme()
 
 	const [openSettings, setOpenSettings] = useState<boolean>(false)
@@ -34,7 +38,12 @@ export const Settings = ({
 			<Popover
 				open={openSettings}
 				portalContainer={themeElementRef.current || undefined}
-				content={<MenuPopover setOpen={setOpenSettings} />}
+				content={
+					<MenuPopover
+						setOpen={setOpenSettings}
+						features={menuPopoverFeatures}
+					/>
+				}
 				onTriggerClick={() => {
 					setOpenSettings(!openSettings)
 				}}
