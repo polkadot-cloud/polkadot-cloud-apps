@@ -11,6 +11,7 @@ import {
 	setStablecoinBalancesSyncing,
 } from 'global-bus'
 import type { ServiceInterface, StablecoinBalance } from 'types'
+import type { DedotServiceFeatures } from '../types'
 import { createAssetHubStablecoinAdapter } from './assetHub'
 import {
 	createHydrationStablecoinAdapter,
@@ -33,10 +34,15 @@ type BalanceRequest = {
 export const createStablecoinsInterface = (
 	apiHub: DedotClient<PolkadotAssetHubApi>,
 	getHydrationApi: () => Promise<DedotClient<HydrationApi>>,
+	features: DedotServiceFeatures['stablecoins'],
 ): ServiceInterface['stablecoins'] => {
-	const adapters: StablecoinAdapters = {
-		statemint: createAssetHubStablecoinAdapter(apiHub),
-		hydration: createHydrationStablecoinAdapter(getHydrationApi),
+	const adapters: Partial<StablecoinAdapters> = {
+		...(features.assetHub && {
+			statemint: createAssetHubStablecoinAdapter(apiHub),
+		}),
+		...(features.hydration && {
+			hydration: createHydrationStablecoinAdapter(getHydrationApi),
+		}),
 	}
 	const balanceRequests = new Map<string, BalanceRequest>()
 
@@ -81,19 +87,23 @@ export const createStablecoinsInterface = (
 	return {
 		query: {
 			balances: queryBalances,
-			balance: (address, chain, symbol) =>
-				adapters[chain].balance(address, symbol),
+			balance: async (address, chain, symbol) =>
+				await adapters[chain]?.balance(address, symbol),
 			hydrationFeeCurrency: (address) =>
-				adapters.hydration.hydrationFeeCurrency(address),
+				adapters.hydration?.hydrationFeeCurrency(address) ??
+				Promise.resolve(undefined),
 		},
 		tx: {
-			transfer: (input) => adapters[input.chain].transfer(input),
+			transfer: async (input) => await adapters[input.chain]?.transfer(input),
 			setHydrationFeeCurrency: (symbol) =>
-				adapters.hydration.setHydrationFeeCurrency(symbol),
+				adapters.hydration?.setHydrationFeeCurrency(symbol) ??
+				Promise.resolve(undefined),
 		},
 		fee: {
-			paymentOptions: (chain, symbol) => adapters[chain].paymentOptions(symbol),
-			estimate: (input) => adapters[input.chain].estimateFee(input),
+			paymentOptions: (chain, symbol) =>
+				adapters[chain]?.paymentOptions(symbol),
+			estimate: (input) =>
+				adapters[input.chain]?.estimateFee(input) ?? Promise.resolve(0n),
 		},
 	}
 }

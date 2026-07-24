@@ -42,7 +42,7 @@ import type {
 	ActivePools,
 	AssetHubChain,
 	BondedAccounts,
-	DedotServiceConfig,
+	DedotServiceFeatures,
 	PeopleChain,
 	PoolMemberships,
 	StakingChain,
@@ -98,7 +98,7 @@ export class SubscriptionManager<
 		private subscribeStablecoinBalances:
 			| StablecoinBalanceSubscriber
 			| undefined,
-		private features: Required<DedotServiceConfig>,
+		private features: DedotServiceFeatures,
 	) {}
 
 	// Initialize default service subscriptions
@@ -136,7 +136,10 @@ export class SubscriptionManager<
 						delete this.subBonded[address]
 						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
-						if (this.features.stablecoins) {
+						if (
+							this.features.stablecoins.assetHub ||
+							this.features.stablecoins.hydration
+						) {
 							this.subStablecoinBalances[address]?.()
 							delete this.subStablecoinBalances[address]
 							removeStablecoinBalances(address)
@@ -167,7 +170,10 @@ export class SubscriptionManager<
 							this.ids[2],
 							address,
 						)
-						if (this.features.stablecoins) {
+						if (
+							this.features.stablecoins.assetHub ||
+							this.features.stablecoins.hydration
+						) {
 							let disposed = false
 							let assetHubSubscription:
 								| AssetHubStablecoinBalancesQuery
@@ -191,7 +197,10 @@ export class SubscriptionManager<
 									const onError = () =>
 										setStablecoinBalancesSubscriptionError(address)
 
-									if (this.ids[2] === 'statemint') {
+									if (
+										this.features.stablecoins.assetHub &&
+										this.ids[2] === 'statemint'
+									) {
 										assetHubSubscription = new AssetHubStablecoinBalancesQuery(
 											this
 												.apiHub as unknown as DedotClient<PolkadotAssetHubApi>,
@@ -200,12 +209,14 @@ export class SubscriptionManager<
 											onError,
 										)
 									}
-									unsubscribeChainSubscription =
-										this.subscribeStablecoinBalances?.(
-											address,
-											onBalance,
-											onError,
-										)
+									unsubscribeChainSubscription = this.features.stablecoins
+										.hydration
+										? this.subscribeStablecoinBalances?.(
+												address,
+												onBalance,
+												onError,
+											)
+										: undefined
 								})
 						}
 

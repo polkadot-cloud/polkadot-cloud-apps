@@ -24,6 +24,7 @@ import { PoolsConfigQuery } from '../subscribe/poolsConfig'
 import type {
 	AssetHubChain,
 	DedotServiceConfig,
+	DedotServiceFeatures,
 	PeopleChain,
 	StakingChain,
 } from '../types'
@@ -61,7 +62,7 @@ export class BaseService<
 	// Identity manager
 	identityManager: IdentityManager<PeopleApi>
 
-	features: Required<DedotServiceConfig>
+	features: DedotServiceFeatures
 
 	constructor(
 		public networkConfig: NetworkConfig,
@@ -73,7 +74,10 @@ export class BaseService<
 		features: DedotServiceConfig = {},
 	) {
 		this.features = {
-			stablecoins: features.stablecoins ?? true,
+			stablecoins: {
+				assetHub: features.stablecoins?.assetHub ?? true,
+				hydration: features.stablecoins?.hydration ?? true,
+			},
 		}
 		this.apiStatus = {
 			hub: new ApiStatus(this.apiHub, ids[2], networkConfig),
