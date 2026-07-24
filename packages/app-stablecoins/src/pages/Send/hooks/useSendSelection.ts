@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
+	isAssetSendSupported,
 	isStablecoinFeeAssetSupported,
-	isStablecoinSendAssetSupported,
 } from 'consts/stablecoins'
 import { useMemo, useReducer } from 'react'
 import {
+	assetOptions,
 	chainOptions,
 	feeAssetOptions,
 	findOption,
 	getFeeAssetOptions,
 	getTokenOptions,
-	stablecoinOptions,
 } from '../options'
 import type {
 	SendSelection,
@@ -36,7 +36,7 @@ const reducer = (
 		case 'setAmount':
 			return { ...state, amount: action.amount }
 		case 'selectChain': {
-			const token = isStablecoinSendAssetSupported(action.chain, state.token)
+			const token = isAssetSendSupported(action.chain, state.token)
 				? state.token
 				: getTokenOptions(action.chain)[0]?.value || state.token
 			const feeAsset = isStablecoinFeeAssetSupported(
@@ -72,7 +72,7 @@ export const useSendSelection = (): SendSelection => {
 		chainOptions,
 		selectedChain: findOption(chainOptions, state.chain),
 		selectedFeeAsset: findOption(feeAssetOptions, state.feeAsset),
-		selectedToken: findOption(stablecoinOptions, state.token),
+		selectedToken: findOption(assetOptions, state.token),
 		setAmount: (amount: string) => dispatch({ type: 'setAmount', amount }),
 		setSelectedChain: (option) =>
 			dispatch({ type: 'selectChain', chain: option.value }),

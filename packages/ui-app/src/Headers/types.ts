@@ -10,6 +10,7 @@ export interface MenuPopoverFeatureFlags {
 	plugins?: boolean
 	docs?: boolean
 	syncAccounts?: boolean
+	sendModal?: boolean
 }
 
 export interface HeadersProps {

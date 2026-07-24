@@ -20,6 +20,6 @@
 		"stablecoinMix": "스테이블코인 구성",
 		"syncingBalances": "잔액 동기화 중",
 		"total": "합계",
-		"transferStablecoinsDescription": "동일 네트워크의 다른 주소로 스테이블코인을 전송하세요."
+		"transferAssetsDescription": "동일 네트워크의 다른 주소로 자산을 전송하세요."
 	}
 }

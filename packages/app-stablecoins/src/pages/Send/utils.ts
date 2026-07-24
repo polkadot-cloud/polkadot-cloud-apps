@@ -44,7 +44,11 @@ export const maxSendableBalance = (
 
 	const feeFromSameAsset =
 		feeBalance?.chain === balance.chain && feeBalance.symbol === balance.symbol
-	const reserved = balance.existentialDeposit + (feeFromSameAsset ? fee : 0n)
+	const balanceFloor =
+		balance.frozen > balance.existentialDeposit
+			? balance.frozen
+			: balance.existentialDeposit
+	const reserved = balanceFloor + (feeFromSameAsset ? fee : 0n)
 	const max = balance.free - reserved
 	return max > 0n ? max : 0n
 }

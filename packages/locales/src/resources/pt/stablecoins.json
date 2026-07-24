@@ -20,6 +20,6 @@
 		"stablecoinMix": "Composição de stablecoins",
 		"syncingBalances": "Sincronizando saldos",
 		"total": "Total",
-		"transferStablecoinsDescription": "Transfira stablecoins para outro endereço na mesma rede."
+		"transferAssetsDescription": "Transfira ativos para outro endereço na mesma rede."
 	}
 }
