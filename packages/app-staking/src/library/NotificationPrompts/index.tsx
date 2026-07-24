@@ -1,11 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { notifications$ } from 'global-bus'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { dismissNotification, notifications$ } from 'global-bus'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { NotificationItem } from 'types'
-import { Wrapper } from './Wrapper'
+import { CloseButton, Wrapper } from './Wrapper'
 
 export const NotificationPrompts = () => {
 	// Store the notifications currently in state
@@ -43,6 +45,13 @@ export const NotificationPrompts = () => {
 								whileHover={{ scale: 1.02 }}
 								whileTap={{ scale: 0.98 }}
 							>
+								<CloseButton
+									type="button"
+									onClick={() => dismissNotification(notification.index)}
+									aria-label="Dismiss notification"
+								>
+									<FontAwesomeIcon icon={faXmark} />
+								</CloseButton>
 								{title && <h3>{title}</h3>}
 								{subtitle && <p>{subtitle}</p>}
 							</motion.li>
