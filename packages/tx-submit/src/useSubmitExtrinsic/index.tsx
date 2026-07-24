@@ -39,13 +39,6 @@ import { QRSignPrompt } from '../QRSignPrompt'
 import { stringifyWithBigInt } from '../util'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
-export type {
-	TxFeeEstimator,
-	TxFeeEstimatorInput,
-	UseSubmitExtrinsic,
-	UseSubmitExtrinsicProps,
-} from './types'
-
 export const useSubmitExtrinsic = ({
 	tx,
 	tag,

@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { UseSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
+import type { UseSubmitExtrinsic } from 'tx-submit/types'
 import type {
 	FeeAssetSymbol,
 	ImportedAccount,

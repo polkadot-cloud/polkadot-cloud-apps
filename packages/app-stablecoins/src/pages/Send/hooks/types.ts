@@ -3,10 +3,7 @@
 
 import type { SubmittableExtrinsic } from 'dedot'
 import type { Dispatch, SetStateAction } from 'react'
-import type {
-	TxFeeEstimator,
-	UseSubmitExtrinsic,
-} from 'tx-submit/useSubmitExtrinsic'
+import type { TxFeeEstimator, UseSubmitExtrinsic } from 'tx-submit/types'
 import type {
 	FeeAssetSymbol,
 	ImportedAccount,

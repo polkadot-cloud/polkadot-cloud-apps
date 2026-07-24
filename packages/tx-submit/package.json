@@ -11,6 +11,7 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./util": "./src/util.ts",
+		"./types": "./src/useSubmitExtrinsic/types.ts",
 		"./*": "./src/*/index.tsx"
 	},
 	"dependencies": {

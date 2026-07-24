@@ -8,10 +8,8 @@ import {
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-	type TxFeeEstimator,
-	useSubmitExtrinsic,
-} from 'tx-submit/useSubmitExtrinsic'
+import type { TxFeeEstimator } from 'tx-submit/types'
+import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { isSameAddress, maxSendableBalance, toPlanck } from '../utils'
 import type {
 	ResolvedTransferTx,

@@ -152,23 +152,6 @@ const setUserSideMenuMinimised = (v: boolean) => {
 	})
 }
 
-export const setDefaultSideMenuMinimised = (v: boolean) => {
-	if (hasLocalStorage()) {
-		try {
-			if (localStorage.getItem(SideMenuMinimisedKey) !== null) {
-				return
-			}
-		} catch {
-			// fall back to the app default when storage cannot be read
-		}
-	}
-
-	uiStore.patchSnapshot({
-		userSideMenuMinimised: v,
-		sideMenuMinimised: getResponsiveSideMenuMinimised(v),
-	})
-}
-
 const setContainerRefs = (v: UiState['containerRefs']) => {
 	uiStore.patchSnapshot({ containerRefs: v })
 }
