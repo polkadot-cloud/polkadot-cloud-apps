@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { HexString } from 'dedot/utils'
 import type { ActiveAccount, ActiveProxy, MaybeAddress } from './accounts'
 import type { DisplayFor } from './overlay'
 
@@ -25,7 +24,7 @@ export interface TxStatusHandlers {
 	onInBlock: () => void
 	onFinalized: () => void
 	onFailed: (err: Error) => void
-	onError: (type?: string) => void
+	onError: (type?: string, details?: string) => void
 }
 
 export interface ProxySwitcherProps {
@@ -56,13 +55,4 @@ export interface SubmitProps {
 	submitText?: string
 	submitAccount: ActiveAccount
 	displayFor?: DisplayFor
-}
-
-export interface SignerPromptProps {
-	submitAddress: MaybeAddress
-	toSign: Uint8Array
-	onComplete: (
-		status: 'complete' | 'cancelled',
-		signature: HexString | null,
-	) => void
 }

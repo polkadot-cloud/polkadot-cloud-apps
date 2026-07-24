@@ -9,28 +9,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	QrDisplayPayload,
 	QrScanSignature,
+	type VaultSignatureResult,
+	type VaultSignStatus,
 } from '@polkadot-cloud/connect-vault'
-import { getStakingChain } from 'consts/util'
 import { hexToU8a } from 'dedot/utils'
-import { useApi } from 'hooks/useApi'
-import { useNetwork } from 'hooks/useNetwork'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { SignerPromptProps } from 'types'
 import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
 import { usePrompt } from 'ui-overlay'
 import { Wrapper } from './Wrapper'
 
+export interface QRSignPromptProps {
+	submitAddress: string
+	toSign: Uint8Array
+	genesisHash: string
+	onComplete: (status: VaultSignStatus, result: VaultSignatureResult) => void
+}
+
 export const QRSignPrompt = ({
 	submitAddress,
 	toSign,
+	genesisHash,
 	onComplete,
-}: SignerPromptProps) => {
+}: QRSignPromptProps) => {
 	const { t } = useTranslation('app')
-	const { network } = useNetwork()
-	const { getChainSpec } = useApi()
 	const { setOnClosePrompt } = usePrompt()
-	const { genesisHash } = getChainSpec(getStakingChain(network))
 
 	// Whether user is on sign or submit stage
 	const [stage, setStage] = useState<number>(1)

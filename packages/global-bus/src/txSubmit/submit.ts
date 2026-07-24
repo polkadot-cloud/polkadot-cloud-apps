@@ -3,7 +3,7 @@
 
 import type { SubmittableExtrinsic } from 'dedot'
 import type { ExtrinsicSignatureV4 } from 'dedot/codecs'
-import type { InjectedSigner, TxStatus } from 'dedot/types'
+import type { InjectedSigner, PayloadOptions, TxStatus } from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
 import type { TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
@@ -17,19 +17,22 @@ export const addSignAndSend = async (
 	signer: InjectedSigner,
 	nonce: number,
 	txStatusHandlers: TxStatusHandlers,
+	signerOptions?: Partial<PayloadOptions>,
 ) => {
 	const { onError, ...onRest } = txStatusHandlers
 	try {
+		const options = {
+			...signerOptions,
+			signer,
+			nonce,
+		}
+
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.signAndSend(
-			from,
-			{ signer, nonce },
-			async ({ status }) => {
-				handleResult(uid, status, onRest)
-			},
-		)
+		subs[uid] = await tx.signAndSend(from, options, async ({ status }) => {
+			handleResult(uid, status, onRest)
+		})
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)

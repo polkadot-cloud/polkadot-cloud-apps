@@ -12,6 +12,7 @@ import type { HardwareAccount } from '@w3ux/types'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
+import { SubmittableExtrinsic } from 'dedot'
 import { compactU32 } from 'dedot/shape'
 import type { InjectedSigner } from 'dedot/types'
 import { concatU8a, hexToU8a } from 'dedot/utils'
@@ -27,7 +28,6 @@ import {
 } from 'global-bus'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useApi } from 'hooks/useApi'
-import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
 import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
@@ -36,13 +36,24 @@ import { useTranslation } from 'react-i18next'
 import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
+import { stringifyWithBigInt } from '../util'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
+
+export type {
+	TxFeeEstimator,
+	TxFeeEstimatorInput,
+	UseSubmitExtrinsic,
+	UseSubmitExtrinsicProps,
+} from './types'
 
 export const useSubmitExtrinsic = ({
 	tx,
 	tag,
 	from,
 	shouldSubmit,
+	feePaymentOptions,
+	feeEstimator,
+	feeDisplay,
 	callbackSubmit,
 	callbackInBlock,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
@@ -50,14 +61,13 @@ export const useSubmitExtrinsic = ({
 	const { serviceApi } = useApi()
 	const { network } = useNetwork()
 	const { getTxSubmission } = useTxMeta()
-	const { getAccountBalance } = useBalances()
 	const { extensionsStatus } = useExtensions()
 	const { handleResetLedgerTask } = useLedger()
 	const { isProxySupported } = useProxySupported()
 	const { openPromptWith, closePrompt } = usePrompt()
 	const { getExtensionAccount } = useExtensionAccounts()
 	const { getAccount, requiresManualSign } = useImportedAccounts()
-	const { address: fromAddress, source, proxy } = from
+	const { address: fromAddress, source, proxy = null } = from
 	const {
 		balances: { balanceTxFees },
 	} = useAccountBalances(fromAddress)
@@ -133,8 +143,7 @@ export const useSubmitExtrinsic = ({
 			return
 		}
 
-		const { specName, specVersion } = submitTx.client.runtimeVersion
-		const ss58 = serviceApi.spec.ss58(specName)
+		const { specName } = submitTx.client.runtimeVersion
 		const { source } = account
 		const isManualSigner = ManualSigners.includes(source)
 
@@ -164,11 +173,8 @@ export const useSubmitExtrinsic = ({
 
 		if (requiresManualSign(submitAccount)) {
 			const networkInfo = {
-				decimals: units,
-				tokenSymbol: unit,
-				specName,
-				specVersion,
-				ss58,
+				decimals: feeDisplay?.units ?? units,
+				tokenSymbol: feeDisplay?.unit || unit,
 			}
 
 			const $Signature = serviceApi.codec.$Signature(specName)
@@ -188,6 +194,7 @@ export const useSubmitExtrinsic = ({
 						metadata || '0x',
 						networkInfo,
 						(account as HardwareAccount).index,
+						feePaymentOptions,
 					)
 					if (result) {
 						encodedSig = {
@@ -206,6 +213,7 @@ export const useSubmitExtrinsic = ({
 				const extra = serviceApi.signer.extraSignedExtension(
 					specName,
 					submitAccount.address,
+					feePaymentOptions,
 				)
 				if (!extra) {
 					onError('technical', 'missing_signer')
@@ -222,6 +230,7 @@ export const useSubmitExtrinsic = ({
 						openPromptWith(
 							createElement(QRSignPrompt, {
 								submitAddress: submitAccount.address,
+								genesisHash: submitTx.client.genesisHash,
 								onComplete,
 								toSign,
 							}),
@@ -264,15 +273,18 @@ export const useSubmitExtrinsic = ({
 				onError('technical', 'missing_signer')
 				return
 			}
+			const { nonce } = await submitTx.client.query.system.account(
+				submitAccount.address,
+			)
 			addSignAndSend(
 				network,
 				uid,
 				submitAccount.address,
 				submitTx,
 				signer,
-				getAccountBalance(submitAccount.address).nonce +
-					pendingTxCount(submitAccount.address),
+				nonce + pendingTxCount(network, submitAccount.address),
 				handlers,
+				feePaymentOptions,
 			)
 		}
 	}
@@ -301,7 +313,7 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onFailed = (error?: Error) => {
-		const title = t('failed')
+		const displayUnit = feeDisplay?.unit || unit
 		let subtitle = t('errorWithTransaction')
 
 		// Handle only known, user-reported errors - focus on balance-related issues
@@ -312,11 +324,12 @@ export const useSubmitExtrinsic = ({
 			) {
 				subtitle = /locked|freeze/.test(msg)
 					? t('errors.balanceErrorLocked')
-					: t('errors.balanceErrorReserveRequired')
+					: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
 			}
 		}
+
 		emitNotification({
-			title,
+			title: t('failed'),
 			subtitle,
 		})
 	}
@@ -328,6 +341,7 @@ export const useSubmitExtrinsic = ({
 			handleResetLedgerTask()
 		}
 
+		const displayUnit = feeDisplay?.unit || unit
 		const txFee = getTxSubmission(uid)?.fee || 0n
 		const hasInsufficientFunds = balanceTxFees < txFee
 
@@ -339,19 +353,20 @@ export const useSubmitExtrinsic = ({
 
 			switch (submitTx?.call.pallet) {
 				case 'Staking':
-					subtitle = t('errors.addMoreDotForStaking', { unit })
+					subtitle = t('errors.addMoreDotForStaking', { unit: displayUnit })
 					break
 				case 'NominationPools':
-					subtitle = t('errors.addMoreDotForPooling', { unit })
+					subtitle = t('errors.addMoreDotForPooling', { unit: displayUnit })
 					break
 				default:
-					subtitle = t('errors.addMoreDotForFees', { unit })
+					subtitle = t('errors.addMoreDotForFees', { unit: displayUnit })
 					break
 			}
 		} else if (type === 'user_cancelled') {
 			title = t('userCancelled')
 			subtitle = t('userCancelledTransaction')
 		} else if (type === 'technical') {
+			// Get the specific technical error message
 			const translationKey = details ? TxErrorKeyMap[details] : undefined
 			subtitle = translationKey
 				? t(translationKey)
@@ -367,12 +382,32 @@ export const useSubmitExtrinsic = ({
 	// Re-fetch tx fee if tx changes
 	const fetchTxFee = async () => {
 		if (submitTx && submitAccount?.address) {
-			const { partialFee } = await submitTx.paymentInfo(submitAccount.address)
-			updateFee(uid, partialFee)
+			updateFee(uid, 0n)
+			const feeTx = SubmittableExtrinsic.fromTx(
+				submitTx.client as Parameters<typeof SubmittableExtrinsic.fromTx>[0],
+				submitTx.call,
+			)
+			try {
+				const partialFee = feeEstimator
+					? await feeEstimator({
+							tx: feeTx,
+							from: submitAccount.address,
+							feePaymentOptions,
+						})
+					: (await feeTx.paymentInfo(submitAccount.address, feePaymentOptions))
+							.partialFee
+				updateFee(uid, partialFee)
+			} catch {
+				updateFee(uid, 0n)
+			}
 		}
 	}
 
 	// Initialise tx submission
+	const submitAccountKey = stringifyWithBigInt(submitAccount)
+	const feePaymentOptionsKey = stringifyWithBigInt(feePaymentOptions)
+	const txHex = submitTx?.toHex()
+
 	useEffect(() => {
 		// Add a new uid for this transaction
 		if (uid === 0) {
@@ -383,13 +418,13 @@ export const useSubmitExtrinsic = ({
 			})
 			setUid(newUid)
 		}
-	}, [])
+	}, [submitAccount?.address, tag, network, uid])
 
 	useEffect(() => {
 		if (uid > 0) {
 			fetchTxFee()
 		}
-	}, [JSON.stringify(submitAccount), uid, JSON.stringify(submitTx?.toHex())])
+	}, [submitAccountKey, uid, feePaymentOptionsKey, txHex, feeEstimator])
 
 	return {
 		txInitiated: !!submitTx,
