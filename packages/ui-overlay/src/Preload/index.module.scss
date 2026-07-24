@@ -1,20 +1,20 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .preload {
-  align-items: center;
-  color: var(--text-tertiary);
-  display: flex;
-  justify-content: center;
-  width: 100%;
+	align-items: center;
+	color: var(--text-tertiary);
+	display: flex;
+	justify-content: center;
+	width: 100%;
 }
 
 .modal {
-  min-height: 9rem;
-  padding: 2.5rem;
+	min-height: 9rem;
+	padding: 2.5rem;
 }
 
 .canvas {
-  flex: 1;
-  min-height: 100vh;
+	flex: 1;
+	min-height: 100vh;
 }

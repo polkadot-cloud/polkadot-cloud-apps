@@ -1,18 +1,34 @@
 {
-	"last-release-sha": "142ea86d91de5f89016a0c62f9733c32f6af9fba",
+	"last-release-sha": "7c21a09e069f7078083d7c7a021891f3f84470d4",
 	"include-component-in-tag": true,
 	"packages": {
-		"packages/app": {},
+		"packages/app-stablecoins": {},
+		"packages/app-staking": {},
 		"packages/assets": {},
 		"packages/consts": {},
+		"packages/dedot-api": {},
+		"packages/event-tracking": {},
+		"packages/global-bus": {},
+		"packages/hooks": {},
+		"packages/locale-cli": {},
 		"packages/locales": {},
+		"packages/plugin-gateway": {},
 		"packages/plugin-staking-api": {},
-		"packages/ui-styles": {},
+		"packages/test-smoldot": {},
+		"packages/tests": {},
+		"packages/tx-submit": {},
 		"packages/types": {},
+		"packages/ui-app": {},
 		"packages/ui-buttons": {},
 		"packages/ui-core": {},
 		"packages/ui-graphs": {},
+		"packages/ui-modals": {},
 		"packages/ui-overlay": {},
-		"packages/utils": {}
+		"packages/ui-styles": {},
+		"packages/ui-tips": {},
+		"packages/utils": {},
+		"packages/validator-assets": {},
+		"packages/vite-shared": {},
+		"packages/workers": {}
 	}
 }

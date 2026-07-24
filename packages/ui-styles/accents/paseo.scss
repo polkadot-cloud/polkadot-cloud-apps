@@ -1,7 +1,7 @@
-/* Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use 'sass:list';
+@use "sass:list";
 
 /* Accent scale: green (hue ≈ 145°) */
 $accent-hue: 145;
@@ -11,15 +11,21 @@ $accent-lightness-light: (98, 96, 93, 90, 86, 78, 62, 48, 32, 16);
 $accent-lightness-dark: (5, 8, 12, 15, 20, 27, 41, 52, 63, 88);
 
 .paseo {
-  &.light {
-    @for $i from 1 through 10 {
-      --accent-#{$i * 100}: hsl(#{$accent-hue}deg #{$accent-saturation-light}% #{list.nth($accent-lightness-light, $i)}%);
-    }
-  }
+	&.light {
+		@for $i from 1 through 10 {
+			--accent-#{$i * 100}: hsl(
+				#{$accent-hue}deg #{$accent-saturation-light * 1%}
+					#{list.nth($accent-lightness-light, $i) * 1%}
+			);
+		}
+	}
 
-  &.dark {
-    @for $i from 1 through 10 {
-      --accent-#{$i * 100}: hsl(#{$accent-hue}deg #{$accent-saturation-dark}% #{list.nth($accent-lightness-dark, $i)}%);
-    }
-  }
+	&.dark {
+		@for $i from 1 through 10 {
+			--accent-#{$i * 100}: hsl(
+				#{$accent-hue}deg #{$accent-saturation-dark * 1%}
+					#{list.nth($accent-lightness-dark, $i) * 1%}
+			);
+		}
+	}
 }

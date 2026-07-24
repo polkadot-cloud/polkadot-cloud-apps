@@ -1,7 +1,7 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ComponentType, FC, RefObject } from 'react'
+import type { ComponentType, FC, ReactNode, RefObject } from 'react'
 import type {
 	ActiveOverlayInstance,
 	AnyJson,
@@ -44,6 +44,7 @@ export interface OverlayContextInterface {
 		setModalRef: (modalRef: RefObject<HTMLDivElement | null>) => void
 		setModalHeightRef: (heightRef: RefObject<HTMLDivElement | null>) => void
 	}
+	prompt: PromptContextInterface
 }
 export interface Fallback {
 	fallback: FC
@@ -57,8 +58,6 @@ export type CanvasProps = Fallback & {
 export type ModalProps = Fallback & {
 	modals?: Record<string, ComponentType>
 	externalOverlayStatus: CanvasStatus
-	// Translated accessible label for the backdrop dismiss button
-	closeLabel?: string
 }
 export type OverlayProps = ModalProps & CanvasProps
 export type ConfigOptions = Record<string, AnyJson>
@@ -75,3 +74,31 @@ export interface CanvasConfig {
 	size?: CanvasSize
 	options?: ConfigOptions
 }
+
+export interface PromptContextInterface {
+	setOnClosePrompt: (onClosePrompt: (() => void) | null) => void
+	openPromptWith: (
+		prompt: PromptContent,
+		size?: PromptSize,
+		closeOnOutsideClick?: boolean,
+	) => void
+	closePrompt: () => void
+	setStatus: (status: number) => void
+	setPrompt: (prompt: PromptContent) => void
+	size: PromptSize
+	status: number
+	Prompt: PromptContent
+	closeOnOutsideClick: boolean
+	setCloseOnOutsideClick: (canClose: boolean) => void
+}
+
+export interface PromptState {
+	size: PromptSize
+	status: number
+	Prompt: PromptContent
+	onClosePrompt: (() => void) | null
+}
+
+export type PromptContent = ReactNode | null
+
+export type PromptSize = 'sm' | 'lg'

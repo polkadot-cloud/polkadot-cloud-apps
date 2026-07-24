@@ -1,32 +1,32 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnHelp {
-  background: var(--btn-help-bg);
-  color: var(--gray-900);
-  fill: var(--accent-900);
-  border-radius: 50%;
-  padding: 0;
-  width: 1.35rem;
-  height: 1.35rem;
+	background: var(--btn-help-bg);
+	color: var(--gray-900);
+	fill: var(--gray-900);
+	border-radius: 50%;
+	padding: 0;
+	width: 1.35rem;
+	height: 1.35rem;
 }
 
 .btnHelpSecondaryBackground {
-  background: var(--gray-400);
+	background: var(--gray-400);
 }
 
 .btnHelpNoBackground {
-  background: none;
+	background: none;
 }
 
 .btnHelpOutline {
-  border: 1px solid var(--text-tertiary);
-  color: var(--text-tertiary);
-  fill: var(--text-tertiary);
+	border: 1px solid var(--text-tertiary);
+	color: var(--text-tertiary);
+	fill: var(--text-tertiary);
 }
 
 .btnHelpIcon {
-  &:hover {
-    fill: var(--accent-1000);
-  }
+	&:hover {
+		fill: var(--gray-1000);
+	}
 }

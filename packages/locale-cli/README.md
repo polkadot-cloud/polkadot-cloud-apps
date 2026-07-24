@@ -12,7 +12,7 @@ A command-line tool for adding locale keys with LLM-powered translations to the 
 
 ## Installation
 
-From the root of the polkadot-staking-dashboard repository:
+From the root of the polkadot-cloud-apps repository:
 
 ```bash
 pnpm install
@@ -26,7 +26,7 @@ Set your OpenAI API key as an environment variable:
 export OPENAI_API_KEY=your_api_key_here
 ```
 
-Alternatively, create a `.env` file in the **workspace root** (the root of the `polkadot-staking-dashboard` repository):
+Alternatively, create a `.env` file in the **workspace root** (the root of the `polkadot-cloud-apps` repository):
 
 ```
 OPENAI_API_KEY=your_api_key_here
@@ -64,7 +64,7 @@ pnpm add-locale --key "bondMore" --text "Bond More"
 Add a nested key with description:
 
 ```bash
-pnpm add-locale --key "validators.highCommission" --text "High Commission" --description "Refers to validators charging high commission rates"
+pnpm add-locale --key "validators.active" --text "Active Validator" --description "Refers to validators that are currently active"
 ```
 
 Add a key to a specific file:
@@ -104,7 +104,7 @@ pnpm remove-locale --key "bondMore"
 Remove a nested key:
 
 ```bash
-pnpm remove-locale --key "validators.highCommission"
+pnpm remove-locale --key "validators.active"
 ```
 
 Remove a key from a specific file:

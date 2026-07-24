@@ -1,32 +1,32 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .root {
-  box-shadow: var(--shadow);
-  all: unset;
-  width: 4rem;
-  height: 2.15rem;
-  border-radius: 9999px;
-  position: relative;
-  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
-  background-color: var(--gray-600);
+	box-shadow: var(--shadow);
+	all: unset;
+	width: 4rem;
+	height: 2.15rem;
+	border-radius: 9999px;
+	position: relative;
+	-webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+	background-color: var(--gray-600);
 
-  &[data-state='checked'] {
-    background-color: var(--gray-1000);
-  }
+	&[data-state="checked"] {
+		background-color: var(--gray-1000);
+	}
 }
 
 .thumb {
-  display: block;
-  width: 2rem;
-  height: 2rem;
-  background-color: var(--gray-100);
-  border-radius: 5rem;
-  transition: transform 100ms;
-  transform: translateX(0.15rem);
-  will-change: transform;
+	display: block;
+	width: 2rem;
+	height: 2rem;
+	background-color: var(--gray-100);
+	border-radius: 5rem;
+	transition: transform 100ms;
+	transform: translateX(0.15rem);
+	will-change: transform;
 
-  &[data-state='checked'] {
-    transform: translateX(1.85rem);
-  }
+	&[data-state="checked"] {
+		transform: translateX(1.85rem);
+	}
 }

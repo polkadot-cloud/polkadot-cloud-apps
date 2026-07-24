@@ -1,56 +1,56 @@
-/* Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .btnHeader {
-  transition: all var(--transition-duration);
-  height: calc($header-height - 1px);
-  display: flex;
-  padding: 0 0.85rem;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+	transition: all var(--transition-duration);
+	height: calc($header-height - 1px);
+	display: flex;
+	padding: 0 0.85rem;
+	align-items: center;
+	justify-content: center;
+	position: relative;
 
-  &:hover {
-    background: var(--gray-500);
-    color: var(--gray-1000);
-  }
-  
-  > .active {
-    background-color: var(--gray-1000);
-    box-shadow: 0 0 0 1px var(--gray-1000);
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+	&:hover {
+		background: var(--gray-500);
+		color: var(--gray-1000);
+	}
 
-    &.pulse {
-      border: 1.5px solid var(--bg-primary);
-      animation: pulse 2s infinite;
-      top: 0.6rem;
-      right: 0.6rem;
-      width: 12px;
-      height: 12px;
+	> .active {
+		background-color: var(--gray-1000);
+		box-shadow: 0 0 0 1px var(--gray-1000);
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
 
-      @keyframes pulse {
-        0% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgb(255 82 181 / 70%);
-        }
+		&.pulse {
+			border: 1.5px solid var(--bg-primary);
+			animation: pulse 2s infinite;
+			top: 0.6rem;
+			right: 0.6rem;
+			width: 12px;
+			height: 12px;
 
-        70% {
-          transform: scale(1);
-          box-shadow: 0 0 0 5px rgb(255 82 181 / 0%);
-        }
+			@keyframes pulse {
+				0% {
+					transform: scale(0.95);
+					box-shadow: 0 0 0 0 rgb(255 82 181 / 70%);
+				}
 
-        100% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgb(255 82 181 / 0%);
-        }
-      }
-    }
-  }
+				70% {
+					transform: scale(1);
+					box-shadow: 0 0 0 5px rgb(255 82 181 / 0%);
+				}
+
+				100% {
+					transform: scale(0.95);
+					box-shadow: 0 0 0 0 rgb(255 82 181 / 0%);
+				}
+			}
+		}
+	}
 }

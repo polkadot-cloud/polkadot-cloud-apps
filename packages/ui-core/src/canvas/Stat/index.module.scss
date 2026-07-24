@@ -1,38 +1,38 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .stat {
-  background-color: var(--gray-300);
-  color: var(--gray-900);
-  font-family: var(--font-family-bold);
-  border-radius: 1.5rem;
-  padding: 0 1.25rem;
-  margin-right: 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  height: 2.6rem;
+	background-color: var(--gray-300);
+	color: var(--gray-900);
+	font-family: var(--font-family-bold);
+	border-radius: 1.5rem;
+	padding: 0 1.25rem;
+	margin-right: 1rem;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	height: 2.6rem;
 
-  @media (width <= 600px) {
-    flex-grow: 1;
-    justify-content: center;
-    margin-bottom: 1rem;
-    margin-right: 0;
-    height: 2.9rem;
-    width: 100%;
+	@media (width <= 600px) {
+		flex-grow: 1;
+		justify-content: center;
+		margin-bottom: 1rem;
+		margin-right: 0;
+		height: 2.9rem;
+		width: 100%;
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
 
-  &.withIcon {
-    padding-left: 0.5rem;
-  }
+	&.withIcon {
+		padding-left: 0.5rem;
+	}
 
-  > svg {
-    width: 2.1rem;
-    height: 2.1rem;
-    margin-right: 0.3rem;
-  }
+	> svg {
+		width: 2.1rem;
+		height: 2.1rem;
+		margin-right: 0.3rem;
+	}
 }

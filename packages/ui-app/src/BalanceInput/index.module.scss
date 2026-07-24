@@ -1,0 +1,111 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.wrapper {
+	width: 100%;
+	background-color: var(--gray-300);
+	border-radius: 1rem;
+	padding: 1.25rem;
+	margin-bottom: 0.25rem;
+	transition: background-color var(--transition-duration) ease;
+
+	&:hover {
+		background-color: var(--gray-400);
+	}
+
+	&.canvas {
+		background-color: var(--gray-400);
+
+		&:hover {
+			background-color: var(--gray-500);
+		}
+	}
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.75rem;
+}
+
+.label {
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+	font-weight: 700;
+	color: var(--gray-700);
+	text-transform: uppercase;
+}
+
+.available {
+	margin-left: auto;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
+	font-weight: 500;
+	color: var(--gray-700);
+}
+
+.availableButton {
+	padding: 0;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	color: var(--gray-1000);
+	font-family: var(--font-family-mono);
+	font-size: inherit;
+	font-weight: 700;
+
+	&:hover:not(:disabled) {
+		text-decoration: underline;
+	}
+
+	&:disabled {
+		cursor: default;
+	}
+}
+
+.inputRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+}
+
+.amountInput {
+	background: transparent;
+	color: var(--gray-1000);
+	width: 100%;
+	font-family: var(--font-family-mono);
+	font-size: 3.25rem;
+	line-height: 3.5rem;
+	font-weight: 800;
+	min-width: 0;
+}
+
+.tokenIcon {
+	width: 2.5rem;
+	height: 2.5rem;
+	flex-shrink: 0;
+}
+
+@media (width <= 560px) {
+	.header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.available {
+		margin-left: 0;
+	}
+
+	.inputRowMulti {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.amountInput {
+		font-size: 2.7rem;
+		line-height: 3rem;
+	}
+}

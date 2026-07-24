@@ -1,78 +1,79 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .header {
-  border-bottom: 1px solid var(--gray-500);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 16rem;
-  background: linear-gradient(
-    to top,
-    var(--bg-body) 0%,
-    var(--bg-primary) 100%
-    );
-    
-  &.marginY {
-    margin-bottom: 2rem;
-  }
+	border-bottom: 1px solid var(--gray-500);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 16rem;
+	background: linear-gradient(
+		to top,
+		var(--bg-body) 0%,
+		var(--bg-primary) 100%
+	);
 
-  > div {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+	&.marginY {
+		margin-bottom: 2rem;
+	}
 
-    &:first-child {
-      margin-bottom: 1rem;
+	> div {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
 
-      > img, > svg {
-        max-width: 5rem;
-        max-height: 5rem;
-        filter: drop-shadow(0 0.25rem 0.5rem rgb(0 0 0 / 25%));
-      }
-    }
+		&:first-child {
+			margin-bottom: 1rem;
 
-    &:nth-child(2) {
-      > h4 > a {
-        color: var(--text-tertiary);
-        font-family: var(--font-family-default);
+			> img,
+			> svg {
+				max-width: 5rem;
+				max-height: 5rem;
+				filter: drop-shadow(0 0.25rem 0.5rem rgb(0 0 0 / 25%));
+			}
+		}
 
-        &:hover {
-          color: var(--gray-900);
-        }
-      }
-    }
+		&:nth-child(2) {
+			> h4 > a {
+				color: var(--text-tertiary);
+				font-family: var(--font-family-default);
 
-    &:last-child {
-      position: relative;
-      bottom: -1.25rem;
-      margin: 0.4rem 0;
+				&:hover {
+					color: var(--gray-900);
+				}
+			}
+		}
 
-      &.offset {
-        position: absolute;
-        bottom: -1.5rem;
-        margin: 0;
-      }
+		&:last-child {
+			position: relative;
+			bottom: -1.25rem;
+			margin: 0.4rem 0;
 
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
+			&.offset {
+				position: absolute;
+				bottom: -1.5rem;
+				margin: 0;
+			}
 
-      > span,
-      > div {
-        border: 1px solid var(--gray-600);
-        background: var(--bg-primary);
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.5rem;
-        margin: 0 0.25rem;
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
 
-        > button {
-          font-size: 1.1rem;
-        }
-      }
-    }
-  }
+			> span,
+			> div {
+				border: 1px solid var(--gray-600);
+				background: var(--bg-primary);
+				padding: 0.25rem 0.5rem;
+				border-radius: 0.5rem;
+				margin: 0 0.25rem;
+
+				> button {
+					font-size: 1.1rem;
+				}
+			}
+		}
+	}
 }

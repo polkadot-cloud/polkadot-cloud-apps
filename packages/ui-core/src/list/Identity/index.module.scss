@@ -1,47 +1,47 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .identity {
-  display: flex;
-  margin-right: 0.5rem;
-  align-items: center;
-  align-content: center;
-  overflow: hidden;
-  flex: 1;
-  position: relative;
+	display: flex;
+	margin-right: 0.5rem;
+	align-items: center;
+	align-content: center;
+	overflow: hidden;
+	flex: 1;
+	position: relative;
 
-  > div {
-    &:last-child {
-      display: flex;
-      flex-flow: row wrap;
-      align-items: center;
-      height: 3.25rem;
-      padding-left: 0.2rem;
-      flex-grow: 1;
+	> div {
+		&:last-child {
+			display: flex;
+			flex-flow: row wrap;
+			align-items: center;
+			height: 3.25rem;
+			padding-left: 0.2rem;
+			flex-grow: 1;
 
-      > h4 {
-        color: var(--gray-900);
-        font-family: var(--font-family-semibold);
-        position: absolute;
-        top: 0;
-        height: 3.25rem;
-        line-height: 3.25rem;
-        padding-left: 0.3rem;
-        margin: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 1rem;
-        width: 100%;
+			> h4 {
+				color: var(--gray-900);
+				font-family: var(--font-family-semibold);
+				position: absolute;
+				top: 0;
+				height: 3.25rem;
+				line-height: 3.25rem;
+				padding-left: 0.3rem;
+				margin: 0;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				font-size: 1rem;
+				width: 100%;
 
-        > span {
-          color: var(--text-tertiary);
-          font-size: 0.8rem;
-          position: relative;
-          top: -0.1rem;
-          margin-left: 0.35rem;
-        }
-      }
-    }
-  }
+				> span {
+					color: var(--text-tertiary);
+					font-size: 0.8rem;
+					position: relative;
+					top: -0.1rem;
+					margin-left: 0.35rem;
+				}
+			}
+		}
+	}
 }

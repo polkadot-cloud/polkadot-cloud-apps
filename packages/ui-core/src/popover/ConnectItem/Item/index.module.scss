@@ -1,46 +1,46 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .item {
-  border-bottom: 1px solid var(--gray-500);
-  flex: 1;
-  display: flex;
-  align-items: center;
-  height: 5.4rem;
+	border-bottom: 1px solid var(--gray-500);
+	flex: 1;
+	display: flex;
+	align-items: center;
+	height: 5.4rem;
 
-  &.asButton {
-    &:hover {
-      background: var(--btn-popover-tab-bg);
-      cursor: pointer;
-    }
-  }
+	&.asButton {
+		&:hover {
+			background: var(--btn-popover-tab-bg);
+			cursor: pointer;
+		}
+	}
 
-  &.last {
-    border-bottom: none;
-  }
+	&.last {
+		border-bottom: none;
+	}
 
-  > div {
-    display: flex;
-    align-items: center;
+	> div {
+		display: flex;
+		align-items: center;
 
-    &:first-child {
-      flex: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 4.25rem;
-      max-width: 4.25rem;
-    }
+		&:first-child {
+			flex: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 4.25rem;
+			max-width: 4.25rem;
+		}
 
-    &:last-child {
-      flex-grow: 1;
-      display: flex;
+		&:last-child {
+			flex-grow: 1;
+			display: flex;
 
-      > div {
-        &:first-child {
-          flex-grow: 1;
-        }
-      }
-    }
-  }
+			> div {
+				&:first-child {
+					flex-grow: 1;
+				}
+			}
+		}
+	}
 }

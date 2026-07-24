@@ -1,24 +1,24 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnSecondary {
-  background: var(--btn-bg-secondary);
-  border: 1px solid var(--btn-bg-secondary);
-  border-radius: var(--btn-lg-radius);
-  color: var(--gray-900);
+	background: var(--btn-bg-secondary);
+	border: 1px solid var(--btn-bg-secondary);
+	border-radius: var(--btn-lg-radius);
+	color: var(--gray-900);
 
-  &.asTab {
-    color: var(--gray-900);
-    background: transparent;
-    border-color: var(--gray-500);
-  }
+	&.asTab {
+		color: var(--gray-900);
+		background: transparent;
+		border-color: var(--gray-500);
+	}
 
-  &.active {
-    background: transparent;
-    border-color: var(--accent-400);
+	&.active {
+		background: transparent;
+		border-color: var(--accent-400);
 
-    &.asTab {
-      color: var(--accent-900);
-    }
-  }
+		&.asTab {
+			color: var(--accent-900);
+		}
+	}
 }

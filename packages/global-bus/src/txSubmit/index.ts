@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { Unsub } from 'dedot/types'
@@ -12,7 +12,15 @@ export let subs: Record<number, Unsub> = {}
 export const getUid = (id: number) =>
 	_uids.getValue().find((item) => item.uid === id)
 
-export const addUid = ({ from, tag }: { from: MaybeAddress; tag?: string }) => {
+export const addUid = ({
+	network,
+	from,
+	tag,
+}: {
+	network: string
+	from: MaybeAddress
+	tag?: string
+}) => {
 	let newUids = [..._uids.getValue()]
 	// Ensure uid is unique
 	const newUid = newUids.length + 1
@@ -22,6 +30,7 @@ export const addUid = ({ from, tag }: { from: MaybeAddress; tag?: string }) => {
 	}
 	newUids.push({
 		uid: newUid,
+		network,
 		submitted: false,
 		pending: false,
 		from,
@@ -75,7 +84,14 @@ export const deleteTx = (uid: number) => {
 	removeSub(uid)
 }
 
-export const pendingTxCount = (from: string) =>
-	_uids.getValue().filter((item) => item.from === from && item.pending).length
+export const pendingTxCount = (networkOrFrom: string, from?: string) =>
+	_uids
+		.getValue()
+		.filter(
+			(item) =>
+				item.from === (from ?? networkOrFrom) &&
+				(from === undefined || item.network === networkOrFrom) &&
+				item.pending,
+		).length
 
 export * from './submit'

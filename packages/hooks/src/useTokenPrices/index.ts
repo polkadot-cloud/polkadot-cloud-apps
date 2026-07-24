@@ -1,14 +1,19 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { getStakingChainData } from 'consts/util'
 import { onlineStatus$ } from 'global-bus'
 import { fetchTokenPrice, formatTokenPrice } from 'plugin-staking-api'
-import { useEffect, useSyncExternalStore } from 'react'
+import { useEffect } from 'react'
 import type { NetworkId } from 'types'
 import { useCurrency } from '../useCurrency'
 import { useNetwork } from '../useNetwork'
 import { usePlugins } from '../usePlugins'
+import {
+	createSingletonStore,
+	type SingletonStore,
+	useSingletonStore,
+} from '../util'
 import { defaultTokenPrice } from './defaults'
 import type { TokenPricesHookInterface } from './types'
 
@@ -24,21 +29,13 @@ type TokenPricesConfig = {
 	enabled: boolean
 }
 
-const listeners = new Set<() => void>()
-let currentPrice = defaultTokenPrice
 let currentConfig: TokenPricesConfig | null = null
 let interval: ReturnType<typeof setInterval> | null = null
 let onlineSubscription: { unsubscribe(): void } | null = null
-
-const emitTokenPriceChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
+let tokenPriceStore: SingletonStore<TokenPricesHookInterface>
 
 const setCurrentPrice = (price: TokenPricesHookInterface) => {
-	currentPrice = price
-	emitTokenPriceChange()
+	tokenPriceStore.setSnapshot(price)
 }
 
 const stopTokenPrices = () => {
@@ -82,7 +79,7 @@ const fetchCurrentTokenPrice = async () => {
 }
 
 const startTokenPrices = () => {
-	if (!currentConfig || listeners.size === 0) {
+	if (!currentConfig || tokenPriceStore.getListenerCount() === 0) {
 		return
 	}
 	stopTokenPrices()
@@ -120,29 +117,21 @@ const configureTokenPrices = (config: TokenPricesConfig) => {
 	startTokenPrices()
 }
 
-const subscribeTokenPrices = (listener: () => void) => {
-	listeners.add(listener)
-	if (listeners.size === 1) {
-		startTokenPrices()
-	}
-	return () => {
-		listeners.delete(listener)
-		if (listeners.size === 0) {
-			stopTokenPrices()
-		}
-	}
-}
+tokenPriceStore = createSingletonStore<TokenPricesHookInterface>(
+	defaultTokenPrice,
+	{
+		onFirstSubscribe: startTokenPrices,
+		onLastUnsubscribe: stopTokenPrices,
+		serverSnapshot: defaultTokenPrice,
+	},
+)
 
 export const useTokenPrices = (): TokenPricesHookInterface => {
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
 	const { pluginEnabled } = usePlugins()
 	const enabled = pluginEnabled('staking_api')
-	const tokenPrice = useSyncExternalStore(
-		subscribeTokenPrices,
-		() => currentPrice,
-		() => defaultTokenPrice,
-	)
+	const tokenPrice = useSingletonStore(tokenPriceStore)
 
 	useEffect(() => {
 		configureTokenPrices({ network, currency, enabled })

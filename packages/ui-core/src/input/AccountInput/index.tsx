@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -6,13 +6,18 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ellipsisFn } from '@w3ux/utils'
 import classNames from 'classnames'
-import { type FunctionComponent, forwardRef, type SVGProps } from 'react'
+import {
+	type FunctionComponent,
+	forwardRef,
+	type InputHTMLAttributes,
+	type SVGProps,
+} from 'react'
 import type {
 	ComponentBase,
 	ComponentBaseWithClassName,
 	ImportedAccount,
 } from 'types'
-import type { AccountInputProps } from '../types'
+import type { AccountInputProps, ImportStatus } from '../types'
 import classes from './index.module.scss'
 
 const Container = forwardRef<
@@ -209,6 +214,109 @@ const Label = ({
 		</h4>
 	)
 }
+
+const ImportWrapper = ({
+	children,
+	style,
+	className,
+	inactive,
+	border,
+}: ComponentBaseWithClassName & {
+	inactive?: boolean
+	border?: boolean
+}) => {
+	return (
+		<div
+			className={classNames(classes.importWrapper, className, {
+				[classes.importInactive]: inactive,
+				[classes.importBorder]: border,
+			})}
+			style={style}
+		>
+			{children}
+		</div>
+	)
+}
+
+const ImportInactiveBlock = ({ style }: ComponentBase) => {
+	return <div className={classes.importInactiveBlock} style={style} />
+}
+
+const ImportLabel = ({
+	children,
+	style,
+	status = 'neutral',
+}: ComponentBase & {
+	status?: ImportStatus
+}) => {
+	return (
+		<h5
+			className={classNames(classes.importLabel, classes[status])}
+			style={style}
+		>
+			{children}
+		</h5>
+	)
+}
+
+const ImportContainer = ({
+	children,
+	style,
+	disabled,
+}: ComponentBase & { disabled?: boolean }) => {
+	return (
+		<div
+			className={classNames(classes.importContainer, {
+				[classes.importContainerDisabled]: disabled,
+			})}
+			style={style}
+		>
+			{children}
+		</div>
+	)
+}
+
+const ImportSection = ({ children, style }: ComponentBase) => {
+	return (
+		<section className={classes.importSection} style={style}>
+			{children}
+		</section>
+	)
+}
+
+const ImportIconSlot = ({ children, style }: ComponentBase) => {
+	return (
+		<div className={classes.importIconSlot} style={style}>
+			{children}
+		</div>
+	)
+}
+
+const ImportFieldSlot = ({ children, style }: ComponentBase) => {
+	return (
+		<div className={classes.importFieldSlot} style={style}>
+			{children}
+		</div>
+	)
+}
+
+const ImportIdenticonPlaceholder = ({ style }: ComponentBase) => {
+	return <div className={classes.importIdenticonPlaceholder} style={style} />
+}
+
+const ImportTextInput = forwardRef<
+	HTMLInputElement,
+	InputHTMLAttributes<HTMLInputElement>
+>(({ className, ...props }, ref) => {
+	return (
+		<input
+			{...props}
+			ref={ref}
+			className={classNames(classes.importTextInput, className)}
+		/>
+	)
+})
+
 export const AccountInput = {
 	Container,
 	InnerLeft,
@@ -223,4 +331,13 @@ export const AccountInput = {
 	Chevron,
 	InactiveButton,
 	Label,
+	ImportWrapper,
+	ImportInactiveBlock,
+	ImportLabel,
+	ImportContainer,
+	ImportSection,
+	ImportIconSlot,
+	ImportFieldSlot,
+	ImportIdenticonPlaceholder,
+	ImportTextInput,
 }

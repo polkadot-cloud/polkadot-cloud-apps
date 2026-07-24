@@ -1,4 +1,4 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useAnimate } from 'motion/react'
@@ -68,29 +68,11 @@ export const Canvas = ({
 		}
 	}, [status])
 
-	// Move focus into the canvas on open and restore it to the previously focused
-	// element (the trigger) when the canvas closes.
-	useEffect(() => {
-		if (status !== 'open') {
-			return
-		}
-		const node = scope.current as HTMLElement | null
-		const previouslyFocused = document.activeElement as HTMLElement | null
-		node?.focus()
-		return () => {
-			previouslyFocused?.focus?.()
-		}
-	}, [status])
-
 	const ActiveCanvas: ComponentType | null = canvas?.[key] || null
 
 	return status === 'closed' ? null : (
 		<Container
 			ref={scope}
-			role="dialog"
-			aria-modal="true"
-			aria-label={key}
-			tabIndex={-1}
 			initial={{
 				opacity: 0,
 			}}

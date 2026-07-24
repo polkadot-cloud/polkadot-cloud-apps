@@ -1,12 +1,13 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { unitToPlanck } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
-import { useCallback, useEffect, useSyncExternalStore } from 'react'
+import { useCallback, useEffect } from 'react'
 import type { MaybeAddress } from 'types'
 import { useNetwork } from '../useNetwork'
+import { createSingletonStore, useSingletonStore } from '../util'
 import { defaultPoolProgress } from './defaults'
 import { getLocalPoolSetups, setLocalPoolSetups } from './local'
 import type {
@@ -24,37 +25,25 @@ export type {
 	PoolSetupsHookInterface,
 } from './types'
 
-const listeners = new Set<() => void>()
-let currentPoolSetups: PoolSetups = getLocalPoolSetups()
-
-const emitPoolSetupsChange = () => {
-	for (const listener of listeners) {
-		listener()
-	}
-}
-
-const getPoolSetupsSnapshot = () => currentPoolSetups
-
 const serverPoolSetupsSnapshot: PoolSetups = {}
-const getServerPoolSetupsSnapshot = () => serverPoolSetupsSnapshot
+const poolSetupsStore = createSingletonStore<PoolSetups>(getLocalPoolSetups, {
+	serverSnapshot: serverPoolSetupsSnapshot,
+})
+
+const getPoolSetupsSnapshot = poolSetupsStore.getSnapshot
+
 const setPoolSetups = (setups: PoolSetups) => {
-	currentPoolSetups = setups
 	setLocalPoolSetups(setups)
-	emitPoolSetupsChange()
+	poolSetupsStore.setSnapshot(setups)
 }
 
 const syncPoolSetups = () => {
 	const localSetups = getLocalPoolSetups()
-	if (JSON.stringify(currentPoolSetups) !== JSON.stringify(localSetups)) {
-		currentPoolSetups = localSetups
-		emitPoolSetupsChange()
-	}
-}
-
-const subscribePoolSetups = (listener: () => void) => {
-	listeners.add(listener)
-	return () => {
-		listeners.delete(listener)
+	if (
+		JSON.stringify(poolSetupsStore.getSnapshot()) !==
+		JSON.stringify(localSetups)
+	) {
+		poolSetupsStore.setSnapshot(localSetups)
 	}
 }
 
@@ -93,11 +82,7 @@ export const usePoolSetups = (): PoolSetupsHookInterface => {
 	const { activeAddress } = useActiveAccount()
 	const { accounts, stringifiedAccountsKey } = useImportedAccounts()
 	const { units } = getStakingChainData(network)
-	const poolSetups = useSyncExternalStore(
-		subscribePoolSetups,
-		getPoolSetupsSnapshot,
-		getServerPoolSetupsSnapshot,
-	)
+	const poolSetups = useSingletonStore(poolSetupsStore)
 
 	const getPoolSetup = useCallback(
 		(address: MaybeAddress): PoolSetup => {

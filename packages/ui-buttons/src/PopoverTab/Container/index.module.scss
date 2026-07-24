@@ -1,47 +1,47 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .container {
-  --vertical-spacing: 1.3rem;
-  --gray-500-width: 0.75px;
+	--vertical-spacing: 1.3rem;
+	--gray-500-width: 0.75px;
 
-  display: flex;
-  align-items: center;
-  width: 100%;
+	display: flex;
+	align-items: center;
+	width: 100%;
 
-  &.top {
-    border-bottom: var(--gray-500-width) solid var(--gray-600);
+	&.top {
+		border-bottom: var(--gray-500-width) solid var(--gray-600);
 
-    &.yMargin {
-      margin-bottom: var(--vertical-spacing);
-    }
+		&.yMargin {
+			margin-bottom: var(--vertical-spacing);
+		}
 
-    > button {
-      &:first-child {
-        border-top-left-radius: 1rem;
-      }
+		> button {
+			&:first-child {
+				border-top-left-radius: 1rem;
+			}
 
-      &:last-child {
-        border-top-right-radius: 1rem;
-      }
-    }
-  }
+			&:last-child {
+				border-top-right-radius: 1rem;
+			}
+		}
+	}
 
-  &.bottom {
-    border-top: var(--gray-500-width) solid var(--gray-600);
+	&.bottom {
+		border-top: var(--gray-500-width) solid var(--gray-600);
 
-    &.yMargin {
-      margin-top: var(--vertical-spacing);
-    }
+		&.yMargin {
+			margin-top: var(--vertical-spacing);
+		}
 
-    > button {
-      &:first-child {
-        border-bottom-left-radius: 1rem;
-      }
+		> button {
+			&:first-child {
+				border-bottom-left-radius: 1rem;
+			}
 
-      &:last-child {
-        border-bottom-right-radius: 1rem;
-      }
-    }
-  }
+			&:last-child {
+				border-bottom-right-radius: 1rem;
+			}
+		}
+	}
 }

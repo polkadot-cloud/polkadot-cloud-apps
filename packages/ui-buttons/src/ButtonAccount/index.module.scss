@@ -1,79 +1,79 @@
-/* Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use 'ui-styles/theme/variables' as *;
+@use "ui-styles/theme/variables" as *;
 
 .btnAccount {
-  color: var(--gray-1000);
-  transition: all var(--transition-duration);
-  height: calc($header-height - 1px);
-  display: flex;
-  align-items: center;
-  padding: 0 0.75rem;
-  font-size: 1.2rem;
+	color: var(--gray-1000);
+	transition: all var(--transition-duration);
+	height: calc($header-height - 1px);
+	display: flex;
+	align-items: center;
+	padding: 0 0.75rem;
+	font-size: 1.2rem;
 
-  .polkicon {
-    max-width: 2.5rem;
-  }
+	.polkicon {
+		max-width: 2.5rem;
+	}
 
-  &.marginLeft {
-    margin-left: 0.8rem;
-  }
+	&.marginLeft {
+		margin-left: 0.8rem;
+	}
 
-  > .icon {
-    margin-left: 0.95rem;
-  }
+	> .icon {
+		margin-left: 0.95rem;
+	}
 
-  > .display {
-    max-width: 12rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    margin-left: 1.4rem;
-  }
-  
-  @media(max-width: $page-width-small-threshold) {
-    > .minimize {
-      display: none;
-    }
-  }
+	> .display {
+		max-width: 12rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		margin-left: 1.4rem;
+	}
 
-  > .label {
-    font-size: 0.8em;
-    margin-left: 0.75rem;
-    margin-right: 0.5rem;
-    position: relative;
-    top: -0.05rem;
-  }
+	@media (max-width: $page-width-small-threshold) {
+		> .minimize {
+			display: none;
+		}
+	}
 
-  > .arrow {
-    height: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 0.75rem;
-    margin-left: 0.2rem;
+	> .label {
+		font-size: 0.8em;
+		margin-left: 0.75rem;
+		margin-right: 0.5rem;
+		position: relative;
+		top: -0.05rem;
+	}
 
-    > svg {
-      opacity: 0.75;
-      transition: opacity var(--transition-duration);
-    }
+	> .arrow {
+		height: inherit;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-left: 0.75rem;
+		margin-left: 0.2rem;
 
-    &.open {
-      > svg {
-        opacity: 0.5;
-      }
-    }
-  }
+		> svg {
+			opacity: 0.75;
+			transition: opacity var(--transition-duration);
+		}
 
-  &:hover {
-    background: var(--gray-500);
-    color: var(--gray-1000);
-    
-    > .arrow {
-      svg {
-        opacity: 1;
-      }
-    }
-  }
+		&.open {
+			> svg {
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&:hover {
+		background: var(--gray-500);
+		color: var(--gray-1000);
+
+		> .arrow {
+			svg {
+				opacity: 1;
+			}
+		}
+	}
 }

@@ -1,10 +1,11 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChainConsts } from 'types'
 
 export const defaultConsts: ChainConsts = {
 	bondDuration: 0,
+	unbondDuration: 0,
 	sessionsPerEra: 0,
 	maxExposurePageSize: 0,
 	historyDepth: 0,

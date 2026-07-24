@@ -1,10 +1,11 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ClaimPermission } from 'types'
 import {
 	balanceForTxFees,
 	calculateAllBalances,
+	getFeeReserve,
 	getFreeBalance,
 	getLockedBalance,
 	getTotalBalance,
@@ -306,4 +307,24 @@ test('calculateAllBalances handles edge cases with zero balances', () => {
 	expect(result.lockedBalance).toBe(0n)
 	expect(result.nominator.active).toBe(0n)
 	expect(result.pool.active).toBe(0n)
+})
+
+const defaultReserve = 5000000000000n // 5 DOT
+
+test('getFeeReserve returns the stored reserve when above the default', () => {
+	expect(getFeeReserve('10000000000000', defaultReserve)).toBe(10000000000000n)
+})
+
+test('getFeeReserve falls back to the default when stored is below it', () => {
+	expect(getFeeReserve('1000000000000', defaultReserve)).toBe(defaultReserve)
+})
+
+test('getFeeReserve falls back to the default for missing values', () => {
+	expect(getFeeReserve(undefined, defaultReserve)).toBe(defaultReserve)
+	expect(getFeeReserve(null, defaultReserve)).toBe(defaultReserve)
+	expect(getFeeReserve('', defaultReserve)).toBe(defaultReserve)
+})
+
+test('getFeeReserve falls back to the default for malformed values', () => {
+	expect(getFeeReserve('not-a-bigint', defaultReserve)).toBe(defaultReserve)
 })

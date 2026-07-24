@@ -1,56 +1,56 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .title {
-  font-family: 'JetBrains Mono', monospace;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin-top: 0.1rem;
-  margin-bottom: 0.1rem;
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+	font-family: "JetBrains Mono", monospace;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	margin-top: 0.1rem;
+	margin-bottom: 0.1rem;
+	min-width: 0;
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 
-  > svg {
-    margin-right: 0.5rem;
-  }
+	> svg {
+		margin-right: 0.5rem;
+	}
 
-  &.semibold {
-    font-family: var(--font-family-semibold);
-  }
+	&.semibold {
+		font-family: var(--font-family-semibold);
+	}
 
-  &.primary {
-    color: var(--gray-1000);
-  }
+	&.primary {
+		color: var(--gray-1000);
+	}
 
-  &.text {
-    margin-top: 0.15rem;
-    display: flex;
-    align-items: center;
-  }
+	&.text {
+		margin-top: 0.15rem;
+		display: flex;
+		align-items: center;
+	}
 
-  > label {
-    font-family: var(--font-family-default);
-    margin-left: 0.5rem;
-    font-size: 1rem;
+	> label {
+		font-family: var(--font-family-default);
+		margin-left: 0.5rem;
+		font-size: 1rem;
 
-    &.success {
-      color: var(--status-success);
-    }
+		&.success {
+			color: var(--status-success);
+		}
 
-    &.warning {
-      color: var(--status-warning);
-    }
+		&.warning {
+			color: var(--status-warning);
+		}
 
-    &.error {
-      color: var(--status-error-color);
-    }
+		&.error {
+			color: var(--status-error-color);
+		}
 
-    &.danger {
-      color: var(--status-danger);
-    }
-  }
+		&.danger {
+			color: var(--status-danger);
+		}
+	}
 }

@@ -1,122 +1,122 @@
-// Copyright 2026 @polkadot-cloud/polkadot-staking-dashboard authors & contributors
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
 .btnCopy {
-  position: relative;
-  display: inline-block;
-  font-size: inherit;
-  height: inherit;
+	position: relative;
+	display: inline-block;
+	font-size: inherit;
+	height: inherit;
 
-  &.withChildren {
-    padding-right: 1.3rem;
-  }
+	&.withChildren {
+		padding-right: 1.3rem;
+	}
 
-  &.xMargin {
-    margin-left: 0.4rem;
-    margin-right: 0.4rem;
-  }
+	&.xMargin {
+		margin-left: 0.4rem;
+		margin-right: 0.4rem;
+	}
 
-  > .copy {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    font-size: inherit;
+	> .copy {
+		position: absolute;
+		top: 0;
+		right: 0;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		font-size: inherit;
 
-    &.active {
-      animation: fade-out-in 2s ease-in-out 1;
-    }
+		&.active {
+			animation: fade-out-in 2s ease-in-out 1;
+		}
 
-    > .icon {
-      color: var(--gray-800);
-      width: 100%;
-      height: auto;
-    }
-  }
+		> .icon {
+			color: var(--gray-800);
+			width: 100%;
+			height: auto;
+		}
+	}
 
-  > .check {
-    color: var(--status-success-color);
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    font-size: inherit;
-    opacity: 0;
+	> .check {
+		color: var(--status-success-color);
+		position: absolute;
+		top: 0;
+		right: 0;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		font-size: inherit;
+		opacity: 0;
 
-    &.active {
-      animation: fade-in-out 2s ease-in-out 1;
-    }
+		&.active {
+			animation: fade-in-out 2s ease-in-out 1;
+		}
 
-    > .icon {
-      width: inherit;
-      height: auto;
-    }
-  }
+		> .icon {
+			width: inherit;
+			height: auto;
+		}
+	}
 
-  &.inherit {
-    > svg {
-      width: auto;
-      max-height: 100%;
-    }
-  }
+	&.inherit {
+		> svg {
+			width: auto;
+			max-height: 100%;
+		}
+	}
 
-  &:hover {
-    > .copy {
-      > .icon {
-        color: var(--gray-700);
-      }
-    }
-  }
+	&:hover {
+		> .copy {
+			> .icon {
+				color: var(--gray-700);
+			}
+		}
+	}
 
-  /* Copy icon fade out followed by fade in */
-  @keyframes fade-out-in {
-    0% {
-      opacity: 1;
-      transform: scale(1);
-    }
+	/* Copy icon fade out followed by fade in */
+	@keyframes fade-out-in {
+		0% {
+			opacity: 1;
+			transform: scale(1);
+		}
 
-    12.5% {
-      opacity: 0;
-      transform: scale(0);
-    }
+		12.5% {
+			opacity: 0;
+			transform: scale(0);
+		}
 
-    87.5% {
-      opacity: 0;
-      transform: scale(0);
-    }
+		87.5% {
+			opacity: 0;
+			transform: scale(0);
+		}
 
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
 
-  /* Tick icon fade in followed by fade out */
-  @keyframes fade-in-out {
-    0% {
-      opacity: 0;
-      transform: scale(0);
-    }
+	/* Tick icon fade in followed by fade out */
+	@keyframes fade-in-out {
+		0% {
+			opacity: 0;
+			transform: scale(0);
+		}
 
-    12.5% {
-      opacity: 1;
-      transform: scale(1);
-    }
+		12.5% {
+			opacity: 1;
+			transform: scale(1);
+		}
 
-    87.5% {
-      opacity: 1;
-      transform: scale(1);
-    }
+		87.5% {
+			opacity: 1;
+			transform: scale(1);
+		}
 
-    100% {
-      opacity: 0;
-      transform: scale(0);
-    }
-  }
+		100% {
+			opacity: 0;
+			transform: scale(0);
+		}
+	}
 }

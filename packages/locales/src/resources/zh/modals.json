@@ -198,7 +198,6 @@
 		"none": "无",
 		"notAuthenticated": "未验证",
 		"notInstalled": "未安装",
-		"notMeetMinimum": "未达到{{minNominatorBondUnit}} {{unit}}的提名人最低额.请在提名前质押一些资金",
 		"notStaking": "无抵押",
 		"notToClaim": "验证人通常代表其提名人申领收益。如果您决定现在不申领收益,您很可能会在1-2天内收到收益",
 		"notePoolDepositorMinBond_depositor": "作为提名池存款人，您必须至少持有 {{bond}} {{unit}}",

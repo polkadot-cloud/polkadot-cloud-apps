@@ -1,49 +1,49 @@
 .roleChangeWrapper {
-  position: relative;
-  width: 100%;
-  height: auto;
-  overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: auto;
+	overflow: hidden;
 
-  .label {
-    color: var(--gray-900);
-    margin: 0.25rem 0 0.75rem;
-  }
+	.label {
+		color: var(--gray-900);
+		margin: 0.25rem 0 0.75rem;
+	}
 
-  .roleChange {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
+	.roleChange {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		margin-bottom: 1rem;
 
-    > .arrow {
-      color: var(--gray-900);
-      margin: 0 0.75rem;
-      opacity: 0.5;
-    }
-  }
+		> .arrow {
+			color: var(--gray-900);
+			margin: 0 0.75rem;
+			opacity: 0.5;
+		}
+	}
 
-  .inputWrap {
-    border-bottom: 1px solid var(--gray-500);
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    padding: 0.25rem 0 0;
-    margin: 0.25rem 0.7rem 0;
-    flex: 1;
+	.inputWrap {
+		border-bottom: 1px solid var(--gray-500);
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		padding: 0.25rem 0 0;
+		margin: 0.25rem 0.7rem 0;
+		flex: 1;
 
-    &.selected {
-      border: 1px solid var(--gray-500);
-      border-radius: 1rem;
-      margin: 0;
-      padding: 0.1rem 0.75rem;
-    }
-  }
+		&.selected {
+			border: 1px solid var(--gray-500);
+			border-radius: 1rem;
+			margin: 0;
+			padding: 0.1rem 0.75rem;
+		}
+	}
 
-  .input {
-    padding: 0.75rem;
-    flex: 1;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+	.input {
+		padding: 0.75rem;
+		flex: 1;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
 }
