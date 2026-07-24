@@ -38,6 +38,8 @@ if (
 
 // Initialise global api service
 initDedotService({
+	nominationPools: true,
+	staking: true,
 	stablecoins: {
 		assetHub: false,
 		hydration: false,

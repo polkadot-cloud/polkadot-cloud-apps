@@ -22,6 +22,9 @@ if (!rootElement) {
 	throw new Error('Failed to find the root element')
 }
 
-initDedotService()
+initDedotService({
+	nominationPools: false,
+	staking: false,
+})
 
 createRoot(rootElement).render(<App />)
