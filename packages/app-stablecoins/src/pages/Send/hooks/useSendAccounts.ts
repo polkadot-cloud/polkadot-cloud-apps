@@ -29,7 +29,10 @@ export const useSendAccounts = (): SendAccounts => {
 		})
 			? activeImportedAccount
 			: accountsWithSigners[0] || null
-	const defaultToAccount = accounts[0] || null
+	const defaultToAccount =
+		accounts.find(
+			(account) => account.address !== defaultFromAccount?.address,
+		) || null
 	const [fromAccount, setFromAccount] = useState<ImportedAccount | null>(
 		defaultFromAccount,
 	)
