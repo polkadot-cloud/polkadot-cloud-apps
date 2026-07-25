@@ -66,163 +66,6 @@ importers:
         specifier: 8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
 
-  packages/app-stablecoins:
-    dependencies:
-      '@fortawesome/fontawesome-svg-core':
-        specifier: ^7.2.0
-        version: 7.3.1
-      '@fortawesome/free-brands-svg-icons':
-        specifier: ^7.2.0
-        version: 7.3.1
-      '@fortawesome/free-regular-svg-icons':
-        specifier: ^7.2.0
-        version: 7.3.1
-      '@fortawesome/free-solid-svg-icons':
-        specifier: ^7.2.0
-        version: 7.3.1
-      '@fortawesome/react-fontawesome':
-        specifier: ^3.3.1
-        version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
-      '@polkadot-cloud/connect':
-        specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core':
-        specifier: ^1.0.9
-        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-ledger':
-        specifier: ^1.1.0
-        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@polkadot-cloud/connect-vault':
-        specifier: ^1.0.2
-        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@w3ux/extension-assets':
-        specifier: ^2.3.1
-        version: 2.3.1(react@19.2.8)
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.2.8)
-      '@w3ux/react-odometer':
-        specifier: 2.4.5
-        version: 2.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@w3ux/react-polkicon':
-        specifier: ^4.0.2
-        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
-      assets:
-        specifier: workspace:*
-        version: link:../assets
-      buffer:
-        specifier: ^6.0.3
-        version: 6.0.3
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
-      consts:
-        specifier: workspace:*
-        version: link:../consts
-      dedot:
-        specifier: ^1.3.0
-        version: 1.3.0(typescript@6.0.3)
-      dedot-api:
-        specifier: workspace:*
-        version: link:../dedot-api
-      event-tracking:
-        specifier: workspace:*
-        version: link:../event-tracking
-      hooks:
-        specifier: workspace:*
-        version: link:../hooks
-      locales:
-        specifier: workspace:*
-        version: link:../locales
-      motion:
-        specifier: 12.23.24
-        version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      qrcode-generator:
-        specifier: 1.5.0
-        version: 1.5.0
-      radix-ui:
-        specifier: ^1.4.2
-        version: 1.6.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      react:
-        specifier: ^19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.2.8
-        version: 19.2.8(react@19.2.8)
-      react-error-boundary:
-        specifier: ^6.1.2
-        version: 6.1.2(react@19.2.8)
-      react-helmet-async:
-        specifier: ^3.0.0
-        version: 3.0.0(react@19.2.8)
-      react-i18next:
-        specifier: ^17.0.8
-        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.15.1
-        version: 7.18.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      rxjs:
-        specifier: ^7.8.2
-        version: 7.8.2
-      simplebar:
-        specifier: 6.3.3
-        version: 6.3.3
-      simplebar-react:
-        specifier: 3.3.2
-        version: 3.3.2(react@19.2.8)
-      styled-components:
-        specifier: ^6.4.2
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      tx-submit:
-        specifier: workspace:*
-        version: link:../tx-submit
-      ui-app:
-        specifier: workspace:*
-        version: link:../ui-app
-      ui-buttons:
-        specifier: workspace:*
-        version: link:../ui-buttons
-      ui-core:
-        specifier: workspace:*
-        version: link:../ui-core
-      ui-modals:
-        specifier: workspace:*
-        version: link:../ui-modals
-      ui-overlay:
-        specifier: workspace:*
-        version: link:../ui-overlay
-      ui-styles:
-        specifier: workspace:*
-        version: link:../ui-styles
-    devDependencies:
-      '@w3ux/types':
-        specifier: ^2.4.2
-        version: 2.4.2
-      types:
-        specifier: workspace:*
-        version: link:../types
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 8.1.5
-        version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
-      vite-plugin-checker:
-        specifier: ^0.13.0
-        version: 0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
-      vite-plugin-svgr:
-        specifier: ^5.2.0
-        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
-      vite-shared:
-        specifier: workspace:*
-        version: link:../vite-shared
-
   packages/app-staking:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
@@ -424,6 +267,163 @@ importers:
       vite-plugin-checker:
         specifier: ^0.14.4
         version: 0.14.4(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+      vite-plugin-svgr:
+        specifier: ^5.2.0
+        version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
+      vite-shared:
+        specifier: workspace:*
+        version: link:../vite-shared
+
+  packages/app-swap:
+    dependencies:
+      '@fortawesome/fontawesome-svg-core':
+        specifier: ^7.2.0
+        version: 7.3.1
+      '@fortawesome/free-brands-svg-icons':
+        specifier: ^7.2.0
+        version: 7.3.1
+      '@fortawesome/free-regular-svg-icons':
+        specifier: ^7.2.0
+        version: 7.3.1
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.2.0
+        version: 7.3.1
+      '@fortawesome/react-fontawesome':
+        specifier: ^3.3.1
+        version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
+      '@polkadot-cloud/connect':
+        specifier: ^1.0.9
+        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core':
+        specifier: ^1.0.9
+        version: 1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-ledger':
+        specifier: ^1.1.0
+        version: 1.1.0(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@polkadot-cloud/connect-vault':
+        specifier: ^1.0.2
+        version: 1.0.2(@polkadot-cloud/connect-core@1.0.9(dedot@1.3.0(typescript@6.0.3))(react@19.2.8)(rxjs@7.8.2))(@polkadot-cloud/connect@1.0.9(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2))(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@w3ux/extension-assets':
+        specifier: ^2.3.1
+        version: 2.3.1(react@19.2.8)
+      '@w3ux/hooks':
+        specifier: ^2.4.4
+        version: 2.4.4(react@19.2.8)
+      '@w3ux/react-odometer':
+        specifier: 2.4.5
+        version: 2.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@w3ux/react-polkicon':
+        specifier: ^4.0.2
+        version: 4.0.2(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@w3ux/util-dedot':
+        specifier: ^1.0.0
+        version: 1.0.0(dedot@1.3.0(typescript@6.0.3))
+      '@w3ux/utils':
+        specifier: ^3.1.1
+        version: 3.1.1
+      assets:
+        specifier: workspace:*
+        version: link:../assets
+      buffer:
+        specifier: ^6.0.3
+        version: 6.0.3
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
+      consts:
+        specifier: workspace:*
+        version: link:../consts
+      dedot:
+        specifier: ^1.3.0
+        version: 1.3.0(typescript@6.0.3)
+      dedot-api:
+        specifier: workspace:*
+        version: link:../dedot-api
+      event-tracking:
+        specifier: workspace:*
+        version: link:../event-tracking
+      hooks:
+        specifier: workspace:*
+        version: link:../hooks
+      locales:
+        specifier: workspace:*
+        version: link:../locales
+      motion:
+        specifier: 12.23.24
+        version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      qrcode-generator:
+        specifier: 1.5.0
+        version: 1.5.0
+      radix-ui:
+        specifier: ^1.4.2
+        version: 1.6.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
+      react-error-boundary:
+        specifier: ^6.1.2
+        version: 6.1.2(react@19.2.8)
+      react-helmet-async:
+        specifier: ^3.0.0
+        version: 3.0.0(react@19.2.8)
+      react-i18next:
+        specifier: ^17.0.8
+        version: 17.0.10(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+      react-router-dom:
+        specifier: ^7.15.1
+        version: 7.18.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
+      simplebar:
+        specifier: 6.3.3
+        version: 6.3.3
+      simplebar-react:
+        specifier: 3.3.2
+        version: 3.3.2(react@19.2.8)
+      styled-components:
+        specifier: ^6.4.2
+        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      tx-submit:
+        specifier: workspace:*
+        version: link:../tx-submit
+      ui-app:
+        specifier: workspace:*
+        version: link:../ui-app
+      ui-buttons:
+        specifier: workspace:*
+        version: link:../ui-buttons
+      ui-core:
+        specifier: workspace:*
+        version: link:../ui-core
+      ui-modals:
+        specifier: workspace:*
+        version: link:../ui-modals
+      ui-overlay:
+        specifier: workspace:*
+        version: link:../ui-overlay
+      ui-styles:
+        specifier: workspace:*
+        version: link:../ui-styles
+    devDependencies:
+      '@w3ux/types':
+        specifier: ^2.4.2
+        version: 2.4.2
+      types:
+        specifier: workspace:*
+        version: link:../types
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 8.1.5
+        version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1)
+      vite-plugin-checker:
+        specifier: ^0.13.0
+        version: 0.13.0(@biomejs/biome@2.5.4)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass@1.101.3)(tsx@4.23.1))

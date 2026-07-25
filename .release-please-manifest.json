@@ -1,5 +1,5 @@
 {
-	"packages/app-stablecoins": "0.1.0",
+	"packages/app-swap": "0.1.0",
 	"packages/app-staking": "2.3.0",
 	"packages/assets": "1.5.0",
 	"packages/consts": "1.5.0",

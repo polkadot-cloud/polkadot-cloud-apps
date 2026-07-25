@@ -2,7 +2,7 @@
 	"last-release-sha": "7c21a09e069f7078083d7c7a021891f3f84470d4",
 	"include-component-in-tag": true,
 	"packages": {
-		"packages/app-stablecoins": {},
+		"packages/app-swap": {},
 		"packages/app-staking": {},
 		"packages/assets": {},
 		"packages/consts": {},
