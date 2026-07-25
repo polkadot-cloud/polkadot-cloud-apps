@@ -6,7 +6,7 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./staking": "./src/apps/staking.ts",
-		"./stablecoins": "./src/apps/stablecoins.ts",
+		"./swap": "./src/apps/swap.ts",
 		"./util": "./src/util/index.ts"
 	},
 	"scripts": {

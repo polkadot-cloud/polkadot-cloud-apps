@@ -6,8 +6,8 @@ export const StakingDappName = 'Polkadot Cloud Staking'
 export const StakingProductionURL = 'https://staking.polkadot.cloud'
 export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
 
-// Stablecoins
-export const StablecoinsDappName = 'Polkadot Cloud Stablecoins'
+// Swap
+export const SwapDappName = 'Polkadot Cloud Swap'
 
 // Platform
 export const PlatformName = 'Polkadot Cloud'

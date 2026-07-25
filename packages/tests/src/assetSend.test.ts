@@ -3,7 +3,7 @@
 
 import type { StablecoinBalance } from 'types'
 import { describe, expect, test } from 'vitest'
-import { maxSendableBalance } from '../../app-stablecoins/src/pages/Send/utils'
+import { maxSendableBalance } from '../../app-swap/src/pages/Send/utils'
 
 const dotBalance: StablecoinBalance = {
 	chain: 'statemint',
