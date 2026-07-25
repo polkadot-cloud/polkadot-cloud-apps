@@ -38,6 +38,7 @@ export const Router = () => (
 					<Headers
 						NodesRight={{ wallet: Wallet }}
 						menuPopoverFeatures={{
+							network: false,
 							advancedMode: false,
 							helpPrompts: false,
 							share: false,

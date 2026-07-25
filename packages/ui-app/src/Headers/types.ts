@@ -4,6 +4,7 @@
 import type { ComponentType } from 'react'
 
 export interface MenuPopoverFeatureFlags {
+	network?: boolean
 	advancedMode?: boolean
 	helpPrompts?: boolean
 	share?: boolean
