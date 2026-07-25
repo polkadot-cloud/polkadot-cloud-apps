@@ -124,6 +124,7 @@ export const Transfer = () => {
 				/>
 				<Separator transparent />
 				<BalanceInput
+					displayFor="modal"
 					value={amount}
 					onChange={setAmount}
 					maxAvailable={planckToUnit(transferableBalance, units)}

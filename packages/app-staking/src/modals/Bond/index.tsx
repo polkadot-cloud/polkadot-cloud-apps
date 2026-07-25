@@ -127,6 +127,7 @@ export const Bond = () => {
 						(bondFor === 'nominator' && isBonding) ||
 						(bondFor === 'pool' && !!membership)
 					}
+					displayFor="modal"
 				/>
 				<p>{t('newlyBondedFunds')}</p>
 			</Padding>

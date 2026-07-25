@@ -3,14 +3,22 @@
 
 .wrapper {
 	width: 100%;
-	background-color: var(--gray-300);
+	background-color: var(--gray-200);
 	border-radius: 1rem;
 	padding: 1.25rem;
 	margin-bottom: 0.25rem;
 	transition: background-color var(--transition-duration) ease;
 
 	&:hover {
-		background-color: var(--gray-400);
+		background-color: var(--gray-300);
+	}
+
+	&.modal {
+	background-color: var(--gray-300);
+	
+		&:hover {
+			background-color: var(--gray-400);
+		}
 	}
 
 	&.canvas {
