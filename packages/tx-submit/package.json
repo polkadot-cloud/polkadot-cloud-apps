@@ -27,7 +27,7 @@
 		"global-bus": "workspace:*",
 		"hooks": "workspace:*",
 		"react": "^19.2.8",
-		"react-i18next": "^17.0.10",
+		"react-i18next": "^17.0.11",
 		"styled-components": "^6.4.4",
 		"types": "workspace:*",
 		"ui-buttons": "workspace:*",
