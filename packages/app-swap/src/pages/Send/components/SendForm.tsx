@@ -37,6 +37,7 @@ export const SendForm = ({
 				<SendFormUi.Header
 					title={t('sendAssets')}
 					subtitle={t('transferAssetsDescription')}
+					label="Beta"
 				/>
 				<SendFormUi.Card>
 					<SendFormUi.Segment title={t('chain')} layer="top">
