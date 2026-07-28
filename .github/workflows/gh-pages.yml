@@ -5,36 +5,10 @@ on:
     branches: [main]
 
 jobs:
-  merge:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: gh-deploy
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 11.1.0
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-
-      - name: Merge
-        uses: devmasx/merge-branch@master
-        with:
-          type: now
-          from_branch: main
-          target_branch: gh-deploy
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
   build:
     runs-on: ubuntu-latest
-    needs: merge
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: gh-deploy
       - uses: pnpm/action-setup@v6
         with:
           version: 11.1.0
