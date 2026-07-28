@@ -98,8 +98,8 @@ export const simpleAnalyticsPlugin = (): Plugin => ({
 			{
 				tag: 'script',
 				attrs: {
-					async: true,
 					defer: true,
+					referrerpolicy: 'no-referrer-when-downgrade',
 					src: 'https://apisa.polkadot.cloud/latest.js',
 				},
 				injectTo: 'body',
