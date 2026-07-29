@@ -5,6 +5,7 @@ import {
 	getStablecoinAssetConfig,
 	isAssetSendSupported,
 } from 'consts/stablecoins'
+import { onSendTransactionSubmittedEvent } from 'event-tracking'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -132,6 +133,9 @@ export const useSendTransaction = ({
 		feePaymentOptions,
 		feeEstimator,
 		feeDisplay,
+		callbackSubmit: () => {
+			onSendTransactionSubmittedEvent(chain, token)
+		},
 		callbackInBlock: () => {
 			void refreshBalances()
 		},

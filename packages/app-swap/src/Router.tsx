@@ -12,6 +12,7 @@ import type { PageItem } from 'types'
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
 import { Headers } from 'ui-app/Headers'
 import { MainFooter } from 'ui-app/MainFooter'
+import { NotificationPrompts } from 'ui-app/NotificationPrompts'
 import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
@@ -30,6 +31,7 @@ const SendPage: PageItem = {
 
 export const Router = () => (
 	<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
+		<NotificationPrompts />
 		<Page.Body id="portal-root">
 			<Overlays />
 			<SideMenu enableAdvancedMenu={false} />

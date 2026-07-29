@@ -19,8 +19,8 @@ export type AccountFieldsProps = {
 	accounts: ImportedAccount[]
 	accountsWithSigners: ImportedAccount[]
 	fromAccount: ImportedAccount | null
-	onFromSelect: SendAccounts['setFromAccount']
-	onToSelect: SendAccounts['setToAccount']
+	onFromSelect: (account: ImportedAccount | null) => void
+	onToSelect: (account: ImportedAccount | null) => void
 	toAccount: ImportedAccount | null
 }
 

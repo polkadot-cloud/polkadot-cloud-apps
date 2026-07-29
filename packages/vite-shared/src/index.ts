@@ -76,3 +76,40 @@ export const sharedFaviconPlugins = (): Plugin[] => [
 	serveSharedFavicons(),
 	buildSharedFavicons(),
 ]
+
+export const simpleAnalyticsPlugin = (): Plugin => ({
+	name: 'simple-analytics',
+	apply: (_, { command, mode }) => command === 'build' && mode === 'production',
+	transformIndexHtml() {
+		return [
+			{
+				tag: 'script',
+				children: `window.sa_event =
+  window.sa_event ||
+  ((...args) => {
+    if (window.sa_event.q) {
+      window.sa_event.q.push(args)
+    } else {
+      window.sa_event.q = [args]
+    }
+  })`,
+				injectTo: 'head',
+			},
+			{
+				tag: 'script',
+				attrs: {
+					defer: true,
+					referrerpolicy: 'no-referrer-when-downgrade',
+					src: 'https://apisa.polkadot.cloud/latest.js',
+				},
+				injectTo: 'body',
+			},
+			{
+				tag: 'noscript',
+				children:
+					'<img src="https://apisa.polkadot.cloud/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" />',
+				injectTo: 'body',
+			},
+		]
+	},
+})
