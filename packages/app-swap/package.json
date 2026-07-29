@@ -63,7 +63,7 @@
 		"types": "workspace:*",
 		"typescript": "^6.0.3",
 		"vite": "8.1.5",
-		"vite-plugin-checker": "^0.13.0",
+		"vite-plugin-checker": "^0.14.5",
 		"vite-plugin-svgr": "^5.2.0",
 		"vite-shared": "workspace:*"
 	}

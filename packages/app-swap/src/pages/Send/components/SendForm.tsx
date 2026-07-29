@@ -7,6 +7,7 @@ import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
 import { Page } from 'ui-core/base'
 import { SendForm as SendFormUi } from 'ui-core/input'
+import { isSameAddress } from '../utils'
 import { AccountFields } from './AccountFields'
 import { FeePaymentFields } from './FeePaymentFields'
 import type { SendFormProps } from './types'
@@ -17,6 +18,18 @@ export const SendForm = ({
 	transaction,
 }: SendFormProps) => {
 	const { t } = useTranslation('swap')
+	const handleFromSelect = (account: typeof accounts.fromAccount) => {
+		if (isSameAddress(account, accounts.toAccount)) {
+			accounts.setToAccount(accounts.fromAccount)
+		}
+		accounts.setFromAccount(account)
+	}
+	const handleToSelect = (account: typeof accounts.toAccount) => {
+		if (isSameAddress(account, accounts.fromAccount)) {
+			accounts.setFromAccount(accounts.toAccount)
+		}
+		accounts.setToAccount(account)
+	}
 
 	return (
 		<Page.Row>
@@ -24,6 +37,7 @@ export const SendForm = ({
 				<SendFormUi.Header
 					title={t('sendAssets')}
 					subtitle={t('transferAssetsDescription')}
+					label="Beta"
 				/>
 				<SendFormUi.Card>
 					<SendFormUi.Segment title={t('chain')} layer="top">
@@ -38,8 +52,8 @@ export const SendForm = ({
 						accounts={accounts.accounts}
 						accountsWithSigners={accounts.accountsWithSigners}
 						fromAccount={accounts.fromAccount}
-						onFromSelect={accounts.setFromAccount}
-						onToSelect={accounts.setToAccount}
+						onFromSelect={handleFromSelect}
+						onToSelect={handleToSelect}
 						toAccount={accounts.toAccount}
 					/>
 					<BalanceInputMulti

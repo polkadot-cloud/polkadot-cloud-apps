@@ -21,9 +21,6 @@ export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
 export const AssetHubPolkadotSubscanURL = 'https://assethub-polkadot.subscan.io'
 export const ManualSigners = ['ledger', 'vault', 'wallet_connect']
 
-// Analytics
-export const SAEnabled = false
-
 // Element Thresholds
 export const SideMenuHiddenWidth = 250
 export const SideMenuMaximisedWidth = 145
