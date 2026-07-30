@@ -23,6 +23,7 @@
 		"allowWithdraw": "引き出しを許可",
 		"alreadyImported": "アドレスはすでにインポート済みです",
 		"alreadyStaking": "すでにステーキング中",
+		"amount": "金額",
 		"analyzingPoolPerformance": "プールのパフォーマンスを分析中",
 		"approveTransactionLedger": "Ledgerでトランザクションを承認してください",
 		"areYouSure": "よろしいですか？",
