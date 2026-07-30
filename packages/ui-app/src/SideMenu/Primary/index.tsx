@@ -4,6 +4,7 @@
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { onPageNavigationEvent } from 'event-tracking'
+import { useFitText } from 'hooks/useFitText'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
@@ -30,6 +31,10 @@ export const Primary = ({
 	const { network } = useNetwork()
 	const { themeElementRef } = useTheme()
 
+	// Scale the label down to fit on one line when a translated label is longer
+	// than the menu width allows (e.g. longer-word languages).
+	const nameRef = useFitText<HTMLHeadingElement>(name, { enabled: !minimised })
+
 	const Inner = (
 		<Wrapper
 			className={`${active ? `active` : `inactive`}${
@@ -45,7 +50,9 @@ export const Primary = ({
 			</span>
 			{!minimised && (
 				<>
-					<h4 className="name">{name}</h4>
+					<h4 className="name" ref={nameRef}>
+						{name}
+					</h4>
 					{bullet && (
 						<BulletWrapper className={bullet}>
 							<FontAwesomeIcon icon={faCircle} transform="shrink-6" />
