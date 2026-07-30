@@ -79,6 +79,7 @@
 		"last30DayReward": "過去30日間の報酬",
 		"lastEra": "前回のエラ",
 		"lastEraPayout": "前回のエラの支払い",
+		"lastValidatorSelfStakePayout": "前回のバリデータ自己ステーク報酬",
 		"latestInflationRate": "ステーカーへのインフレ率",
 		"leave": "退出",
 		"leavingPool": "プールから退出中",
