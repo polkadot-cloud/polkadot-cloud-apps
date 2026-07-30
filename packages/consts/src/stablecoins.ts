@@ -9,6 +9,7 @@ import type {
 	AssetMetadata,
 	ChainAssetConfigs,
 	FeeAssetSymbol,
+	SendAssetSymbol,
 	StablecoinChainConfig,
 	StablecoinChainId,
 	StablecoinSymbol,
@@ -38,6 +39,9 @@ export const FeeAssetSymbols = Object.keys(FeeTokenMetadata) as FeeAssetSymbol[]
 export const StablecoinSymbols = FeeAssetSymbols.filter(
 	(symbol): symbol is StablecoinSymbol => symbol !== 'DOT',
 )
+
+// All assets that can be sent from the Asset Send form.
+export const SendAssetSymbols: SendAssetSymbol[] = [...StablecoinSymbols, 'DOT']
 
 // Merges shared fee-token metadata into chain-specific asset configuration.
 const withFeeTokenMetadata = (
@@ -123,10 +127,10 @@ export const getStablecoinFeeAssets = (
 ): FeeAssetSymbol[] =>
 	Object.keys(StablecoinConfigs[chain].assets) as FeeAssetSymbol[]
 
-// Checks whether a stablecoin can be sent on a chain.
-export const isStablecoinSendAssetSupported = (
+// Checks whether an asset can be sent on a chain.
+export const isAssetSendSupported = (
 	chain: StablecoinChainId,
-	symbol: StablecoinSymbol,
+	symbol: SendAssetSymbol,
 ) => !!getStablecoinAssetConfig(chain, symbol)
 
 // Checks whether an asset can pay transaction fees on a chain.

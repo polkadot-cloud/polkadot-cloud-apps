@@ -61,6 +61,7 @@ const BalanceInputControl = ({
 		<div
 			className={classNames(classes.wrapper, {
 				[classes.canvas]: displayFor === 'canvas',
+				[classes.modal]: displayFor === 'modal',
 			})}
 		>
 			<div className={classes.header}>

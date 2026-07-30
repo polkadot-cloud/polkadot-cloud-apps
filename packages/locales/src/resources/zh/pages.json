@@ -79,6 +79,7 @@
 		"last30DayReward": "过去30天的奖励",
 		"lastEra": "最后一个时代",
 		"lastEraPayout": "上Era收益",
+		"lastValidatorSelfStakePayout": "上期验证人自质押收益",
 		"latestInflationRate": "质押者的通货膨胀率",
 		"leave": "离开",
 		"leavingPool": "离开提名池中",

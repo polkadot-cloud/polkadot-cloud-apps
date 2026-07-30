@@ -109,6 +109,7 @@ export const UnbondFeedback = ({
 			))}
 			<Spacer />
 			<BalanceInput
+				displayFor="modal"
 				value={value}
 				onChange={onChange}
 				disabled={

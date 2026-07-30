@@ -4,12 +4,14 @@
 import type { ComponentType } from 'react'
 
 export interface MenuPopoverFeatureFlags {
+	network?: boolean
 	advancedMode?: boolean
 	helpPrompts?: boolean
 	share?: boolean
 	plugins?: boolean
 	docs?: boolean
 	syncAccounts?: boolean
+	sendModal?: boolean
 }
 
 export interface HeadersProps {

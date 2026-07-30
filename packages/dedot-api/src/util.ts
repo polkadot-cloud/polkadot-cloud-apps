@@ -7,6 +7,22 @@ import type { GenericSubstrateApi } from 'dedot/types'
 import type { Bonded, ChainId, ImportedAccount } from 'types'
 import type { ServiceClass } from './types'
 
+// Gets a pallet from the active chain metadata
+export const getPallet = <T extends GenericSubstrateApi>(
+	api: DedotClient<T>,
+	palletName: string,
+) => api.registry.metadata.pallets.find(({ name }) => name === palletName)
+
+// Whether a pallet storage item exists in the active chain metadata
+export const hasStorageItem = <T extends GenericSubstrateApi>(
+	api: DedotClient<T>,
+	palletName: string,
+	storageItemName: string,
+) =>
+	getPallet(api, palletName)?.storage?.entries.some(
+		({ name }) => name === storageItemName,
+	) ?? false
+
 export const hasApiHub = (
 	instance: ServiceClass,
 ): instance is ServiceClass & { apiHub: DedotClient<GenericSubstrateApi> } =>

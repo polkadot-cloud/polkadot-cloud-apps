@@ -106,6 +106,7 @@ export const SimpleNominate = () => {
 					onChange={setBond}
 					bondFor="nominator"
 					listenIsValid={setBondValid}
+					displayFor="modal"
 					txFees={fee}
 					maxWidth
 				/>
