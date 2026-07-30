@@ -17,10 +17,14 @@ export const Announcements = ({ items }: { items: AnnouncementItem[] }) => {
 	const { t } = useTranslation('pages')
 	const { network } = useNetwork()
 	const { bondedPools } = useBondedPools()
-	const { totalStaked, lastReward } = useStakingMetrics()
+	const { totalStaked, lastReward, lastValidatorIncentiveBudget } =
+		useStakingMetrics()
 
 	const { unit, units } = getStakingChainData(network)
-	const lastRewardUnit = new BigNumber(planckToUnit(lastReward || 0, units))
+	const lastRewardUnit = new BigNumber(planckToUnit(lastReward ?? 0n, units))
+	const lastValidatorIncentiveBudgetUnit = new BigNumber(
+		planckToUnit(lastValidatorIncentiveBudget ?? 0n, units),
+	)
 
 	let totalPoolPoints = new BigNumber(0)
 	bondedPools.forEach((b: BondedPool) => {
@@ -87,6 +91,20 @@ export const Announcements = ({ items }: { items: AnnouncementItem[] }) => {
 		)
 	} else {
 		announcements.push(null)
+	}
+
+	// Last era validator self stake payout
+	if (lastValidatorIncentiveBudgetUnit.isGreaterThan(0)) {
+		const lastValidatorIncentiveBudgetValue = lastValidatorIncentiveBudgetUnit
+			.integerValue()
+			.toFormat()
+		if (lastValidatorIncentiveBudgetValue !== '0') {
+			announcements.push({
+				value: `${lastValidatorIncentiveBudgetValue} ${unit}`,
+				label: t('lastValidatorSelfStakePayout'),
+				category: t('participation'),
+			})
+		}
 	}
 
 	announcements.sort(sortWithNull(true))

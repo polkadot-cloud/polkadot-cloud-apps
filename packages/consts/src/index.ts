@@ -6,8 +6,8 @@ export const StakingDappName = 'Polkadot Cloud Staking'
 export const StakingProductionURL = 'https://staking.polkadot.cloud'
 export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
 
-// Stablecoins
-export const StablecoinsDappName = 'Polkadot Cloud Stablecoins'
+// Swap
+export const SwapDappName = 'Polkadot Cloud Swap'
 
 // Platform
 export const PlatformName = 'Polkadot Cloud'
@@ -20,9 +20,6 @@ export const PlatformGitHubURL =
 export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
 export const AssetHubPolkadotSubscanURL = 'https://assethub-polkadot.subscan.io'
 export const ManualSigners = ['ledger', 'vault', 'wallet_connect']
-
-// Analytics
-export const SAEnabled = false
 
 // Element Thresholds
 export const SideMenuHiddenWidth = 250

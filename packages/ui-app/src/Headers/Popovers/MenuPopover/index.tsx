@@ -48,6 +48,7 @@ import { DefaultButton } from './DefaultButton'
 export const MenuPopover = ({
 	setOpen,
 	features: {
+		network: showNetwork = true,
 		advancedMode: showAdvancedMode = true,
 		helpPrompts: showHelpPrompts = true,
 		share: showShare = true,
@@ -84,22 +85,24 @@ export const MenuPopover = ({
 
 	return (
 		<div ref={popoverRef}>
-			<MenuItemButton
-				onClick={() => {
-					setOpen(false)
-					openModal({ key: 'Networks' })
-				}}
-			>
-				<div>
-					<FontAwesomeIcon icon={faWifi} transform="shrink-2" />
-				</div>
-				<div>
-					<h3>{t('network', { ns: 'app' })}</h3>
+			{showNetwork && (
+				<MenuItemButton
+					onClick={() => {
+						setOpen(false)
+						openModal({ key: 'Networks' })
+					}}
+				>
 					<div>
-						<h4>{capitalizeFirstLetter(name)}</h4>
+						<FontAwesomeIcon icon={faWifi} transform="shrink-2" />
 					</div>
-				</div>
-			</MenuItemButton>
+					<div>
+						<h3>{t('network', { ns: 'app' })}</h3>
+						<div>
+							<h4>{capitalizeFirstLetter(name)}</h4>
+						</div>
+					</div>
+				</MenuItemButton>
+			)}
 			<MenuItem>
 				<button
 					type="button"
