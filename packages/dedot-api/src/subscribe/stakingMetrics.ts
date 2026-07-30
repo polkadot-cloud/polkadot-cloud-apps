@@ -10,7 +10,7 @@ import type { StakingChain } from '../types'
 export class StakingMetricsQuery<T extends StakingChain> {
 	stakingMetrics: StakingMetrics = defaultStakingMetrics
 
-	#unsub: Unsub | undefined = undefined
+	#unsubs: Unsub[] = []
 
 	constructor(
 		public api: DedotClient<T>,
@@ -21,7 +21,8 @@ export class StakingMetricsQuery<T extends StakingChain> {
 	}
 
 	async subscribe() {
-		this.#unsub = await this.api.queryMulti(
+		const lastEra = Math.max(this.era - 1, 0)
+		const unsub = await this.api.queryMulti(
 			[
 				{
 					fn: this.api.query.balances.totalIssuance,
@@ -45,11 +46,11 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				},
 				{
 					fn: this.api.query.staking.erasValidatorReward,
-					args: [this.era - 1],
+					args: [lastEra],
 				},
 				{
 					fn: this.api.query.staking.erasTotalStake,
-					args: [Math.max(this.era - 1, 0)],
+					args: [lastEra],
 				},
 				{
 					fn: this.api.query.staking.minNominatorBond,
@@ -82,6 +83,7 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				counterForNominators,
 			]) => {
 				this.stakingMetrics = {
+					...this.stakingMetrics,
 					totalIssuance,
 					minimumActiveStake,
 					counterForValidators,
@@ -97,9 +99,36 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				setStakingMetrics(this.stakingMetrics)
 			},
 		)
+		this.#unsubs.push(unsub)
+
+		// Check if the chain has the `erasValidatorIncentiveBudget` storage item before subscribing to
+		// it
+		const hasValidatorIncentiveBudget = this.api.registry.metadata.pallets
+			.find(({ name }) => name === 'Staking')
+			?.storage?.entries.some(
+				({ name }) => name === 'ErasValidatorIncentiveBudget',
+			)
+
+		// If the chain has the `erasValidatorIncentiveBudget` storage item, subscribe to it
+		if (hasValidatorIncentiveBudget) {
+			const incentiveUnsub =
+				await this.api.query.staking.erasValidatorIncentiveBudget(
+					lastEra,
+					(lastValidatorIncentiveBudget: bigint) => {
+						this.stakingMetrics = {
+							...this.stakingMetrics,
+							lastValidatorIncentiveBudget,
+						}
+						setStakingMetrics(this.stakingMetrics)
+					},
+				)
+			this.#unsubs.push(incentiveUnsub)
+		}
 	}
 
 	unsubscribe() {
-		this.#unsub?.()
+		for (const unsub of this.#unsubs) {
+			unsub()
+		}
 	}
 }

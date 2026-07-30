@@ -81,6 +81,7 @@
 		"last30DayReward": "지난 30일 보상",
 		"lastEra": "마지막 시대",
 		"lastEraPayout": "마지막 에라 지급액",
+		"lastValidatorSelfStakePayout": "마지막 검증인 자체 스테이크 지급액",
 		"latestInflationRate": "스테이커에 대한 인플레이션율",
 		"leave": "나가기",
 		"leavingPool": "풀을 나가는 중",
