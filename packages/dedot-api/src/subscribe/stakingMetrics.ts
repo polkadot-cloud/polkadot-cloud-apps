@@ -6,11 +6,13 @@ import type { Unsub } from 'dedot/types'
 import { defaultStakingMetrics, setStakingMetrics } from 'global-bus'
 import type { StakingMetrics } from 'types'
 import type { StakingChain } from '../types'
+import { hasStorageItem } from '../util'
 
 export class StakingMetricsQuery<T extends StakingChain> {
 	stakingMetrics: StakingMetrics = defaultStakingMetrics
 
 	#unsubs: Unsub[] = []
+	#disposed = false
 
 	constructor(
 		public api: DedotClient<T>,
@@ -82,6 +84,9 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				totalStaked,
 				counterForNominators,
 			]) => {
+				if (this.#disposed) {
+					return
+				}
 				this.stakingMetrics = {
 					...this.stakingMetrics,
 					totalIssuance,
@@ -99,15 +104,17 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				setStakingMetrics(this.stakingMetrics)
 			},
 		)
-		this.#unsubs.push(unsub)
+		if (!this.#trackUnsub(unsub)) {
+			return
+		}
 
 		// Check if the chain has the `erasValidatorIncentiveBudget` storage item before subscribing to
 		// it
-		const hasValidatorIncentiveBudget = this.api.registry.metadata.pallets
-			.find(({ name }) => name === 'Staking')
-			?.storage?.entries.some(
-				({ name }) => name === 'ErasValidatorIncentiveBudget',
-			)
+		const hasValidatorIncentiveBudget = hasStorageItem(
+			this.api,
+			'Staking',
+			'ErasValidatorIncentiveBudget',
+		)
 
 		// If the chain has the `erasValidatorIncentiveBudget` storage item, subscribe to it
 		if (hasValidatorIncentiveBudget) {
@@ -115,6 +122,9 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				await this.api.query.staking.erasValidatorIncentiveBudget(
 					lastEra,
 					(lastValidatorIncentiveBudget: bigint) => {
+						if (this.#disposed) {
+							return
+						}
 						this.stakingMetrics = {
 							...this.stakingMetrics,
 							lastValidatorIncentiveBudget,
@@ -122,13 +132,23 @@ export class StakingMetricsQuery<T extends StakingChain> {
 						setStakingMetrics(this.stakingMetrics)
 					},
 				)
-			this.#unsubs.push(incentiveUnsub)
+			this.#trackUnsub(incentiveUnsub)
 		}
 	}
 
+	#trackUnsub(unsub: Unsub) {
+		if (this.#disposed) {
+			void unsub()
+			return false
+		}
+		this.#unsubs.push(unsub)
+		return true
+	}
+
 	unsubscribe() {
-		for (const unsub of this.#unsubs) {
-			unsub()
+		this.#disposed = true
+		for (const unsub of this.#unsubs.splice(0)) {
+			void unsub()
 		}
 	}
 }
