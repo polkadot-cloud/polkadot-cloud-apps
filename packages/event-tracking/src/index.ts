@@ -68,6 +68,16 @@ export const onTransactionSubmittedEvent = (
 	onSaEvent(`${network.toLowerCase()}_tx_submitted_${txLabel}`)
 }
 
+// Send transaction submitted
+export const onSendTransactionSubmittedEvent = (
+	network: string,
+	tokenSymbol: string,
+) => {
+	onSaEvent(
+		`${network.toLowerCase()}_tx_submitted_send_${tokenSymbol.toLowerCase()}`,
+	)
+}
+
 // Node provider type changed
 export const onNodeProviderTypeChangedEvent = (
 	network: string,

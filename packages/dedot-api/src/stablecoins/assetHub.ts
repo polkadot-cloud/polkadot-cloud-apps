@@ -74,6 +74,10 @@ export const createAssetHubStablecoinAdapter = (
 		}
 	},
 	transfer: async ({ symbol, recipient, amount }) => {
+		if (symbol === 'DOT') {
+			return asTx(api.tx.balances.transferKeepAlive(recipient, amount))
+		}
+
 		const config = getStablecoinAssetConfig('statemint', symbol)
 		if (config?.assetId === undefined) {
 			return undefined

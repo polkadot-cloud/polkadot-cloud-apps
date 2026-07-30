@@ -175,6 +175,7 @@ export const Form = ({
 								listenIsValid={setBondValid}
 								parentErrors={warnings}
 								txFees={BigInt(largestTxFee.toFixed(0))}
+								displayFor="modal"
 							/>
 						</div>
 					</div>

@@ -19,11 +19,11 @@ import type { IdentityOf, SuperOf } from './identity'
 import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
 import type {
+	AssetTransferInput,
 	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinChainId,
 	StablecoinFeeEstimateInput,
-	StablecoinTransferInput,
 } from './stablecoins'
 import type {
 	ErasStakersOverviewEntries,
@@ -45,7 +45,7 @@ export interface ServiceInterface {
 		}
 		tx: {
 			transfer: (
-				input: StablecoinTransferInput,
+				input: AssetTransferInput,
 			) => Promise<SubmittableExtrinsic | undefined>
 			setHydrationFeeCurrency: (
 				symbol: FeeAssetSymbol,
