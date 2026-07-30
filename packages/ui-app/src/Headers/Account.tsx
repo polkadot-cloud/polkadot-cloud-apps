@@ -11,8 +11,12 @@ import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { AccountPopover } from './Popovers/AccountPopover'
 import type { ToggleConnectProps } from './Popovers/types'
+import type { MenuPopoverFeatureFlags } from './types'
 
-export const Account = ({ setOpenConnect }: ToggleConnectProps) => {
+export const Account = ({
+	setOpenConnect,
+	sendModal = true,
+}: ToggleConnectProps & Pick<MenuPopoverFeatureFlags, 'sendModal'>) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
 	const { activeProxy } = useActiveProxy()
@@ -39,7 +43,7 @@ export const Account = ({ setOpenConnect }: ToggleConnectProps) => {
 		<Popover
 			open={open}
 			portalContainer={themeElementRef.current || undefined}
-			content={<AccountPopover setOpen={setOpen} />}
+			content={<AccountPopover setOpen={setOpen} sendModal={sendModal} />}
 			onTriggerClick={() => {
 				if (!totalImportedAccounts) {
 					return

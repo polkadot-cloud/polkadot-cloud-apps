@@ -42,12 +42,23 @@ import { type Dispatch, type SetStateAction, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MenuItem, MenuItemButton } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
+import type { MenuPopoverFeatureFlags } from '../../types'
 import { DefaultButton } from './DefaultButton'
 
 export const MenuPopover = ({
 	setOpen,
+	features: {
+		network: showNetwork = true,
+		advancedMode: showAdvancedMode = true,
+		helpPrompts: showHelpPrompts = true,
+		share: showShare = true,
+		plugins: showPlugins = true,
+		docs: showDocs = true,
+		syncAccounts: showSyncAccounts = true,
+	} = {},
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
+	features?: MenuPopoverFeatureFlags
 }) => {
 	const { network } = useNetwork()
 	const { t } = useTranslation()
@@ -74,22 +85,24 @@ export const MenuPopover = ({
 
 	return (
 		<div ref={popoverRef}>
-			<MenuItemButton
-				onClick={() => {
-					setOpen(false)
-					openModal({ key: 'Networks' })
-				}}
-			>
-				<div>
-					<FontAwesomeIcon icon={faWifi} transform="shrink-2" />
-				</div>
-				<div>
-					<h3>{t('network', { ns: 'app' })}</h3>
+			{showNetwork && (
+				<MenuItemButton
+					onClick={() => {
+						setOpen(false)
+						openModal({ key: 'Networks' })
+					}}
+				>
 					<div>
-						<h4>{capitalizeFirstLetter(name)}</h4>
+						<FontAwesomeIcon icon={faWifi} transform="shrink-2" />
 					</div>
-				</div>
-			</MenuItemButton>
+					<div>
+						<h3>{t('network', { ns: 'app' })}</h3>
+						<div>
+							<h4>{capitalizeFirstLetter(name)}</h4>
+						</div>
+					</div>
+				</MenuItemButton>
+			)}
 			<MenuItem>
 				<button
 					type="button"
@@ -130,7 +143,7 @@ export const MenuPopover = ({
 					</div>
 				</button>
 			</MenuItem>
-			{network === 'polkadot' && (
+			{showSyncAccounts && network === 'polkadot' && (
 				<DefaultButton
 					text={t('syncAccounts', { ns: 'app' })}
 					iconLeft={faQrcode}
@@ -140,23 +153,27 @@ export const MenuPopover = ({
 					}}
 				/>
 			)}
-			<MenuItemButton onClick={() => setAdvancedMode(!advancedMode)}>
-				<div>
-					<FontAwesomeIcon icon={faCog} transform="shrink-2" />
-				</div>
-				<div>
-					<h3>{t('advancedMode', { ns: 'app' })}</h3>
-				</div>
-				<div>
+			{showAdvancedMode && (
+				<MenuItemButton onClick={() => setAdvancedMode(!advancedMode)}>
 					<div>
-						<FontAwesomeIcon
-							icon={advancedMode ? faToggleOn : faToggleOff}
-							color={advancedMode ? 'var(--gray-1000)' : 'var(--text-tertiary)'}
-							transform="grow-8"
-						/>
+						<FontAwesomeIcon icon={faCog} transform="shrink-2" />
 					</div>
-				</div>
-			</MenuItemButton>
+					<div>
+						<h3>{t('advancedMode', { ns: 'app' })}</h3>
+					</div>
+					<div>
+						<div>
+							<FontAwesomeIcon
+								icon={advancedMode ? faToggleOn : faToggleOff}
+								color={
+									advancedMode ? 'var(--gray-1000)' : 'var(--text-tertiary)'
+								}
+								transform="grow-8"
+							/>
+						</div>
+					</div>
+				</MenuItemButton>
+			)}
 			<MenuItemButton onClick={() => toggleTheme()}>
 				<div>
 					<FontAwesomeIcon icon={faMoon} transform="shrink-2" />
@@ -176,34 +193,38 @@ export const MenuPopover = ({
 					</div>
 				</div>
 			</MenuItemButton>
-			<MenuItemButton onClick={() => setShowHelp(!showHelp)}>
-				<div>
-					<FontAwesomeIcon icon={faInfo} transform="shrink-1" />
-				</div>
-				<div>
-					<h3>{t('helpPrompts', { ns: 'app' })}</h3>
-				</div>
-				<div>
+			{showHelpPrompts && (
+				<MenuItemButton onClick={() => setShowHelp(!showHelp)}>
 					<div>
-						<FontAwesomeIcon
-							icon={showHelp ? faToggleOn : faToggleOff}
-							color={showHelp ? 'var(--gray-1000)' : 'var(--text-tertiary)'}
-							transform="grow-8"
-						/>
+						<FontAwesomeIcon icon={faInfo} transform="shrink-1" />
 					</div>
-				</div>
-			</MenuItemButton>
-			<DefaultButton
-				text={t('share', { ns: 'app' })}
-				note={notStaking ? t('notStaking', { ns: 'app' }) : undefined}
-				disabled={notStaking}
-				iconLeft={faShare}
-				onClick={() => {
-					setOpen(false)
-					openModal({ key: 'Invite', size: 'sm' })
-				}}
-			/>
-			{!import.meta.env.PROD && (
+					<div>
+						<h3>{t('helpPrompts', { ns: 'app' })}</h3>
+					</div>
+					<div>
+						<div>
+							<FontAwesomeIcon
+								icon={showHelp ? faToggleOn : faToggleOff}
+								color={showHelp ? 'var(--gray-1000)' : 'var(--text-tertiary)'}
+								transform="grow-8"
+							/>
+						</div>
+					</div>
+				</MenuItemButton>
+			)}
+			{showShare && (
+				<DefaultButton
+					text={t('share', { ns: 'app' })}
+					note={notStaking ? t('notStaking', { ns: 'app' }) : undefined}
+					disabled={notStaking}
+					iconLeft={faShare}
+					onClick={() => {
+						setOpen(false)
+						openModal({ key: 'Invite', size: 'sm' })
+					}}
+				/>
+			)}
+			{showPlugins && !import.meta.env.PROD && (
 				<DefaultButton
 					text={t('plugins', { ns: 'modals' })}
 					iconLeft={faPuzzlePiece}
@@ -243,15 +264,17 @@ export const MenuPopover = ({
 					</div>
 				</button>
 			</MenuItem>
-			<DefaultButton
-				text={t('docs', { ns: 'app' })}
-				iconLeft={faBookOpen}
-				iconRight={faExternalLinkAlt}
-				onClick={() => {
-					setOpen(false)
-					window.open(`${PlatformDocsURL}/${i18n.language}`, '_blank')
-				}}
-			/>
+			{showDocs && (
+				<DefaultButton
+					text={t('docs', { ns: 'app' })}
+					iconLeft={faBookOpen}
+					iconRight={faExternalLinkAlt}
+					onClick={() => {
+						setOpen(false)
+						window.open(`${PlatformDocsURL}/${i18n.language}`, '_blank')
+					}}
+				/>
+			)}
 			<DefaultButton
 				text="GitHub"
 				iconLeft={faGithub}

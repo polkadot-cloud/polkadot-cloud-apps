@@ -3,7 +3,16 @@
 
 import type { MaybeString } from '@w3ux/types'
 import type { SubmittableExtrinsic } from 'dedot'
-import type { ActiveAccount, ActiveProxy } from 'types'
+import type { PayloadOptions } from 'dedot/types'
+import type { ActiveAccount, ActiveProxy, TxFeeDisplay } from 'types'
+
+export type TxFeeEstimatorInput = {
+	tx: SubmittableExtrinsic
+	from: string
+	feePaymentOptions?: PayloadOptions
+}
+
+export type TxFeeEstimator = (input: TxFeeEstimatorInput) => Promise<bigint>
 
 export interface UseSubmitExtrinsicProps {
 	tx: SubmittableExtrinsic | undefined
@@ -11,9 +20,12 @@ export interface UseSubmitExtrinsicProps {
 	from: {
 		address: MaybeString
 		source: MaybeString
-		proxy: ActiveProxy | null
+		proxy?: ActiveProxy | null
 	}
 	shouldSubmit: boolean
+	feePaymentOptions?: PayloadOptions
+	feeEstimator?: TxFeeEstimator
+	feeDisplay?: TxFeeDisplay
 	callbackSubmit?: () => void
 	callbackInBlock?: () => void
 }

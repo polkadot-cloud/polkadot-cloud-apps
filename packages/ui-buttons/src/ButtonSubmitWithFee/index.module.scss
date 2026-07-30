@@ -78,6 +78,10 @@
 .buttonDisabled {
 	background-color: var(--gray-700);
 
+	:global(.dark) & {
+		color: white;
+	}
+
 	&:hover {
 		filter: none;
 	}

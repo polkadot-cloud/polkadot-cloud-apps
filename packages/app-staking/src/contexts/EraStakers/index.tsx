@@ -121,11 +121,10 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			exposures = localExposures
 		} else {
 			exposures = await getPagedErasStakers(era, overviews)
-		}
-
-		// For resource limitation concerns, only store the current era in local storage
-		if (era === activeEra.index.toString()) {
-			setLocalEraExposures(network, era, exposures)
+			// For resource limitation concerns, only store the current era in local storage
+			if (era === activeEra.index.toString()) {
+				setLocalEraExposures(network, era, exposures)
+			}
 		}
 		const totalNominators = countUniqueNominators(exposures)
 		return { exposures, totalNominators }
