@@ -79,6 +79,7 @@
 		"last30DayReward": "Вознаграждение за последние 30 дней",
 		"lastEra": "Последняя эра",
 		"lastEraPayout": "Выплата за последнюю эру",
+		"lastValidatorSelfStakePayout": "Последняя выплата за собственный стейк валидатора",
 		"latestInflationRate": "Уровень инфляции для стейкеров",
 		"leave": "Покинуть",
 		"leavingPool": "Выход из пула",
