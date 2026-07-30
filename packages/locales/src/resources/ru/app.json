@@ -23,6 +23,7 @@
 		"allowWithdraw": "Разрешить вывод",
 		"alreadyImported": "Адрес уже импортирован",
 		"alreadyStaking": "Уже в стейкинге",
+		"amount": "Сумма",
 		"analyzingPoolPerformance": "Анализ производительности пула",
 		"approveTransactionLedger": "Подтвердите транзакцию на Ledger",
 		"areYouSure": "Вы уверены?",
