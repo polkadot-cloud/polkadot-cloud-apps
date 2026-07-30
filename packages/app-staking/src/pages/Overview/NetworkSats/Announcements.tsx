@@ -21,9 +21,9 @@ export const Announcements = ({ items }: { items: AnnouncementItem[] }) => {
 		useStakingMetrics()
 
 	const { unit, units } = getStakingChainData(network)
-	const lastRewardUnit = new BigNumber(planckToUnit(lastReward || 0, units))
+	const lastRewardUnit = new BigNumber(planckToUnit(lastReward ?? 0n, units))
 	const lastValidatorIncentiveBudgetUnit = new BigNumber(
-		planckToUnit(lastValidatorIncentiveBudget || 0, units),
+		planckToUnit(lastValidatorIncentiveBudget ?? 0n, units),
 	)
 
 	let totalPoolPoints = new BigNumber(0)
