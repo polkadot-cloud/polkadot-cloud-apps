@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ReactNode } from 'react'
-import { Stat } from 'ui-core/base'
+import { Stat } from 'ui-app/Stat'
 
 interface WrapperProps {
 	isPreloading?: boolean

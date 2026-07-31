@@ -10,7 +10,8 @@ import { Stats } from 'library/Stats'
 import { Active } from 'pages/Nominate/Active'
 import { PoolOverview } from 'pages/Pools/Overview'
 import { useTranslation } from 'react-i18next'
-import { Page, Stat } from 'ui-core/base'
+import { Stat } from 'ui-app/Stat'
+import { Page } from 'ui-core/base'
 
 export const Stake = () => {
 	const { t } = useTranslation('pages')

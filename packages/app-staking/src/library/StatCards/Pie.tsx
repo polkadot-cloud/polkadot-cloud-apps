@@ -4,8 +4,8 @@
 import { Odometer } from '@w3ux/react-odometer'
 import BigNumber from 'bignumber.js'
 import { useHelp } from 'hooks/useHelp'
+import { Stat } from 'ui-app/Stat'
 import { ButtonHelp } from 'ui-buttons'
-import { Stat } from 'ui-core/base'
 import { Pie as PieGraph } from 'ui-graphs'
 import type { PieProps } from './types'
 import { Wrapper } from './Wrapper'
@@ -18,46 +18,43 @@ export const Pie = ({
 	helpKey,
 	isPreloading,
 }: PieProps) => {
-	const showTotal = !!stat?.total
 	const { openHelpTooltip } = useHelp()
+	const showTotal = !!stat.total
+	const displayValue = new BigNumber(stat.value).toFormat()
+	const displayTotal = new BigNumber(stat.total || 0).toFormat()
+	const titleText = `${displayValue}${stat.unit}${
+		showTotal ? `/${displayTotal}${stat.unit}` : ''
+	}`
+
 	return (
 		<Wrapper isPreloading={isPreloading}>
 			<Stat.Card>
-				<div>
-					<Stat.Graphic>
-						<PieGraph value={pieValue} size="3.2rem" />
-					</Stat.Graphic>
-					{tooltip && (
-						<label>
-							<h3>{tooltip}</h3>
-						</label>
-					)}
-					<Stat.Content>
-						<Stat.Title>
-							<Odometer value={new BigNumber(stat.value).toFormat()} />
-							{stat?.unit && stat.unit}
-							{showTotal ? (
-								<Stat.Total>
-									/&nbsp;
-									<Odometer
-										value={new BigNumber(stat?.total || 0).toFormat()}
-									/>
-									{stat?.unit || null}
-								</Stat.Total>
-							) : null}
-						</Stat.Title>
-						<Stat.Subtitle>
-							{label}{' '}
-							{helpKey !== undefined ? (
-								<ButtonHelp
-									marginLeft
-									definition={helpKey}
-									openHelp={openHelpTooltip}
-								/>
-							) : null}
-						</Stat.Subtitle>
-					</Stat.Content>
-				</div>
+				<Stat.Graphic>
+					<PieGraph value={pieValue} size="3.2rem" />
+				</Stat.Graphic>
+				{tooltip && <Stat.Tooltip>{tooltip}</Stat.Tooltip>}
+				<Stat.Content>
+					<Stat.Title text={titleText}>
+						<Odometer value={displayValue} />
+						{stat.unit}
+						{showTotal ? (
+							<Stat.Total>
+								/&nbsp;
+								<Odometer value={displayTotal} />
+								{stat.unit}
+							</Stat.Total>
+						) : null}
+					</Stat.Title>
+					<Stat.Subtitle text={label}>
+						{helpKey !== undefined ? (
+							<ButtonHelp
+								marginLeft
+								definition={helpKey}
+								openHelp={openHelpTooltip}
+							/>
+						) : null}
+					</Stat.Subtitle>
+				</Stat.Content>
 			</Stat.Card>
 		</Wrapper>
 	)
