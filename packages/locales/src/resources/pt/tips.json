@@ -16,7 +16,7 @@
 			[
 				"Existem múltiplas formas de fazer staking em {NETWORK_NAME}.",
 				"Você pode se tornar um nomeador ou membro de um pool.",
-				"Nomear diretamente requer que você faça staking de {NETWORK_UNIT} e escolha os validadores que deseja apoiar, nomeando até {MAX_NOMINATIONS} deles. Para ganhar recompensas como nomeador, você atualmente precisa fazer staking de pelo menos {MIN_ACTIVE_STAKE} {NETWORK_UNIT}.",
+				"Nomear diretamente requer que você vincule {NETWORK_UNIT} e escolha os validadores que deseja apoiar, nomeando até {MAX_NOMINATIONS} deles. Para ganhar recompensas como nomeador, você atualmente precisa vincular pelo menos {MIN_ACTIVE_STAKE} {NETWORK_UNIT}.",
 				"Entrar em um pool é muito mais barato, exigindo um depósito mínimo de {MIN_POOL_JOIN_BOND} {NETWORK_UNIT}. A nomeação de validadores é feita em seu nome, e você simplesmente reivindica recompensas do pool.",
 				"Criar um pool também é possível, exigindo um mínimo de {MIN_POOL_CREATE_BOND} {NETWORK_UNIT}."
 			]
@@ -25,7 +25,7 @@
 			"Entrando em Outro Pool",
 			"Mude para uma conta diferente para entrar em outro pool.",
 			[
-				"Apenas um pool pode ser adicionado por conta em {NETWORK_NAME}. Para entrar em mais pools, primeiro mude para outra conta."
+				"Só é possível entrar em um pool por conta em {NETWORK_NAME}. Para entrar em mais pools, primeiro mude para outra conta."
 			]
 		],
 		"keepPoolNominating": [
@@ -34,7 +34,7 @@
 			[
 				"É importante manter seu pool nomeando ativamente.",
 				"Se seu pool não estiver ganhando recompensas, os membros serão tentados a sair e entrar em outro pool.",
-				"Suas funções de root e nomeador são importantes para gerenciar suas nomeações. Se as nomeações não estão tendo bom desempenho, escolha outras para aumentar as chances do seu pool de ganhar recompensas."
+				"Suas funções de Root e nomeador são importantes para gerenciar suas nomeações. Se as nomeações não estão tendo bom desempenho, escolha outras para aumentar as chances do seu pool de ganhar recompensas."
 			]
 		],
 		"managingNominations": [
@@ -82,7 +82,7 @@
 			"Revisar regularmente seus pagamentos é uma boa forma de avaliar o desempenho de suas nomeações.",
 			[
 				"Revisar regularmente seus pagamentos é uma boa forma de avaliar o desempenho de suas nomeações.",
-				"Vá para a página Pagamentos para obter um detalhamento detalhado de cada pagamento que você recebe, e de qual validador (ou pool) o pagamento veio."
+				"Vá para a página Pagamentos para obter um detalhamento completo de cada pagamento que você recebe, e de qual validador (ou pool) o pagamento veio."
 			]
 		],
 		"switchPool": [
@@ -97,7 +97,7 @@
 			"Medindo o Desempenho do Validador",
 			"Vários fatores afetam quanto os validadores são recompensados.",
 			[
-				"Vários fatores afetam quanto os validadores são recompensados, como a quantidade de pontos de era que gera e quantos nomeadores estão apoiando.",
+				"Vários fatores afetam quanto os validadores são recompensados, como a quantidade de pontos de era que ele gera e quantos nomeadores o estão apoiando.",
 				"Todas essas métricas mudam ao longo do tempo, às vezes de forma imprevisível. É portanto importante que os nomeadores monitorem ativamente os validadores e seu desempenho.",
 				"Cloud Staking fornece uma variedade de métricas para ajudá-lo a entender como um validador está se desempenhando."
 			]
