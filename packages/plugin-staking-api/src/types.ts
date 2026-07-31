@@ -319,6 +319,12 @@ export interface ActiveStatusWithNominees {
 	}[]
 }
 
+export type StakerNominationStatus = 'active' | 'inactive' | 'waiting'
+
+export interface GetNominationStatusData {
+	getNominationStatus: StakerNominationStatus
+}
+
 export type PoolWarningType =
 	| 'DESTROYING'
 	| 'NO_CHANGE_RATE'
