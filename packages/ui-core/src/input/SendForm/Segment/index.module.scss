@@ -11,6 +11,14 @@
 	&:hover {
 		background-color: var(--gray-300);
 	}
+
+	:global(.dark) & {
+		background-color: var(--gray-300);
+
+		&:hover {
+			background-color: var(--gray-400);
+		}
+	}
 }
 
 .raisedLayer {

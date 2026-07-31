@@ -22,7 +22,7 @@
 		"locales": "workspace:*",
 		"motion": "12.23.24",
 		"react": "^19.2.8",
-		"react-i18next": "^17.0.10",
+		"react-i18next": "^17.0.11",
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-overlay": "workspace:*",

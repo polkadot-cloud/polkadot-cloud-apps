@@ -23,6 +23,7 @@
 		"allowWithdraw": "Permitir Retiro",
 		"alreadyImported": "Dirección Ya Importada",
 		"alreadyStaking": "Ya estás stakeando",
+		"amount": "Cantidad",
 		"analyzingPoolPerformance": "Analizando el rendimiento del pool",
 		"approveTransactionLedger": "Aprobar transacción en Ledger",
 		"areYouSure": "¿Estás seguro?",

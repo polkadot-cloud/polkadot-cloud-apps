@@ -35,7 +35,7 @@ export const getUnlocking = (chunks: UnlockChunk[], currentEra: number) => {
 	let totalUnlocked = 0n
 
 	for (const { value, era } of chunks) {
-		if (currentEra > era) {
+		if (currentEra >= era) {
 			totalUnlocked = totalUnlocked + value
 		} else {
 			totalUnlocking = totalUnlocking + value

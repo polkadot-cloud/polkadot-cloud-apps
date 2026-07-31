@@ -1,0 +1,25 @@
+{
+	"stablecoins": {
+		"amountToSend": "送金額",
+		"assetToSend": "送金するアセット",
+		"available": "利用可能",
+		"balance": "残高",
+		"balances": "残高",
+		"chain": "チェーン",
+		"enterRecipientAddress": "受取人のアドレスを入力...",
+		"feeToken": "手数料トークン",
+		"mix": "構成",
+		"networkFee": "ネットワーク手数料",
+		"payFeesIn": "手数料の支払いトークン",
+		"selectSenderAccount": "送金元アカウントを選択...",
+		"sendAssets": "アセットを送る",
+		"sendFrom": "送金元",
+		"sendTo": "送金先",
+		"setFeeToken": "手数料トークンを設定",
+		"setFeeTokenBeforeSending": "送金前に {{symbol}} を設定してください",
+		"stablecoinMix": "ステーブルコイン構成",
+		"syncingBalances": "残高を同期中",
+		"total": "合計",
+		"transferStablecoinsDescription": "同じネットワーク上の別のアドレスにステーブルコインを送金します。"
+	}
+}
