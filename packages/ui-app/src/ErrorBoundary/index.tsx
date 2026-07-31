@@ -2,62 +2,39 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useTranslation } from 'react-i18next'
-import { ErrorBoundaryFallback } from 'ui-core/base'
+import {
+	ErrorBoundaryFallback,
+	type ErrorBoundaryFallbackVariant,
+} from 'ui-core/base'
 
 interface ErrorFallbackProps {
 	resetErrorBoundary?: () => void
 }
 
-const useErrorFallbackLabels = () => {
+const ErrorFallback = ({
+	resetErrorBoundary,
+	variant,
+}: ErrorFallbackProps & { variant: ErrorBoundaryFallbackVariant }) => {
 	const { t } = useTranslation('app')
 
-	return {
-		action: t('clickToReload'),
-		title: t('errorUnknown'),
-	}
-}
-
-export const ErrorFallbackApp = ({
-	resetErrorBoundary,
-}: ErrorFallbackProps) => {
-	const { action, title } = useErrorFallbackLabels()
-
 	return (
 		<ErrorBoundaryFallback
-			action={action}
+			action={t('tryAgain', { ns: 'modals' })}
 			onReset={resetErrorBoundary}
-			title={title}
-			variant="app"
+			title={t('errorUnknown')}
+			variant={variant}
 		/>
 	)
 }
 
-export const ErrorFallbackRoutes = ({
-	resetErrorBoundary,
-}: ErrorFallbackProps) => {
-	const { action, title } = useErrorFallbackLabels()
+export const ErrorFallbackApp = (props: ErrorFallbackProps) => (
+	<ErrorFallback {...props} variant="app" />
+)
 
-	return (
-		<ErrorBoundaryFallback
-			action={action}
-			onReset={resetErrorBoundary}
-			title={title}
-			variant="routes"
-		/>
-	)
-}
+export const ErrorFallbackRoutes = (props: ErrorFallbackProps) => (
+	<ErrorFallback {...props} variant="routes" />
+)
 
-export const ErrorFallbackModal = ({
-	resetErrorBoundary,
-}: ErrorFallbackProps) => {
-	const { action, title } = useErrorFallbackLabels()
-
-	return (
-		<ErrorBoundaryFallback
-			action={action}
-			onReset={resetErrorBoundary}
-			title={title}
-			variant="modal"
-		/>
-	)
-}
+export const ErrorFallbackModal = (props: ErrorFallbackProps) => (
+	<ErrorFallback {...props} variant="modal" />
+)
