@@ -79,6 +79,7 @@
 		"last30DayReward": "Récompense des 30 derniers jours",
 		"lastEra": "Dernière ère",
 		"lastEraPayout": "Paiement de la dernière ère",
+		"lastValidatorSelfStakePayout": "Dernier paiement de la mise propre des validateurs",
 		"latestInflationRate": "Taux d'inflation pour les stakers",
 		"leave": "Quitter",
 		"leavingPool": "Sortie du pool",

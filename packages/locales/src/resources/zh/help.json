@@ -262,16 +262,6 @@
 					"这个值也会被添加到提名人质押{NETWORK_UNIT}数量中, 作为验证人的总抵押数的一部分."
 				]
 			],
-			"stashAndControllerAccounts": [
-				"Stash和Controller帐户",
-				[
-					"Stash和Controller只是用于管理抵押操作的{NETWORK_NAME}账户.",
-					"Stash账户是用于存放抵押资金的账户,而Controlle账户则用于代表Stash账户执行抵押操作.",
-					"切换帐户实际上是在自动切换Stash帐户到Controller帐户.",
-					"请提前导入Stash和Controller帐户。否则将无法使用该应用的所有功能.",
-					"可在抵押页面上导入不同的Controller帐户."
-				]
-			],
 			"supplyStaked": ["抵押比例", ["目前全球{NETWORK_UNIT}的累计发行量."]],
 			"totalNominators": [
 				"总提名人数",

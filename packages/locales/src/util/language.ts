@@ -4,31 +4,28 @@
 import { extractUrlValue, varToUrlHash } from '@w3ux/utils'
 import { onLocaleFromModalEvent, onLocaleFromUrlEvent } from 'event-tracking'
 import type { i18n } from 'i18next'
-import {
-	DefaultLocale,
-	fallbackResources,
-	lngNamespaces,
-	locales,
-} from '../config'
-import type { LocaleJson, LocaleJsonValue } from '../types'
+import { DefaultLocale, locales } from '../config'
+import type { LocaleJson, LocaleProfile } from '../types'
+
+type ProfiledI18n = i18n & { localeProfile?: LocaleProfile }
 
 /* Language Management */
 export const getInitialLanguage = () => {
 	const urlLng = extractUrlValue('l')
-	if (Object.keys(locales).find((key) => key === urlLng) && urlLng) {
+	if (urlLng && Object.hasOwn(locales, urlLng)) {
 		onLocaleFromUrlEvent(urlLng)
 		localStorage.setItem('lng', urlLng)
 		return urlLng
 	}
 
 	const localLng = localStorage.getItem('lng')
-	if (localLng && Object.keys(locales).find((key) => key === localLng)) {
+	if (localLng && Object.hasOwn(locales, localLng)) {
 		return localLng
 	}
 
-	const supportedBrowser = Object.entries(locales).find(([locale]) =>
+	const supportedBrowser = Object.keys(locales).find((locale) =>
 		navigator.language.startsWith(locale),
-	)?.[0]
+	)
 	if (supportedBrowser) {
 		localStorage.setItem('lng', supportedBrowser)
 		return supportedBrowser
@@ -38,81 +35,106 @@ export const getInitialLanguage = () => {
 	return DefaultLocale
 }
 
-export const getResources = (lng: string, i18n?: i18n) => {
-	let dynamicLoad = false
-	let resources: Record<string, LocaleJson> = {}
-
+export const getResources = (
+	lng: string,
+	fallbackResources: LocaleJson,
+): { resources: Record<string, LocaleJson>; dynamicLoad: boolean } => {
 	if (lng === DefaultLocale) {
-		resources = { [lng]: fallbackResources }
-		localStorage.setItem(
-			'lng_resources',
-			JSON.stringify({ l: lng, r: fallbackResources }),
-		)
-		// Add language to i18n if it does not exist.
-		if (i18n && !i18n.hasResourceBundle(lng, 'app')) {
-			addI18nresources(i18n, lng, fallbackResources)
-		}
-	} else {
-		let localValid = false
-		const localResources = localStorage.getItem('lng_resources')
-		if (localResources !== null) {
-			const { l, r } = JSON.parse(localResources)
-			if (l === lng) {
-				localValid = true
-				resources = { [lng]: { ...r } }
-			}
-		}
-		if (!localValid) {
-			dynamicLoad = true
-			resources = { en: fallbackResources }
+		return {
+			resources: { [lng]: fallbackResources },
+			dynamicLoad: false,
 		}
 	}
-	return { resources, dynamicLoad }
+
+	const localResources = localStorage.getItem('lng_resources')
+	if (localResources) {
+		try {
+			const { l, r } = JSON.parse(localResources)
+			if (
+				l === lng &&
+				typeof r === 'object' &&
+				r !== null &&
+				!Array.isArray(r) &&
+				Object.keys(fallbackResources).every((namespace) =>
+					Object.hasOwn(r, namespace),
+				)
+			) {
+				return {
+					resources: { [lng]: r as LocaleJson },
+					dynamicLoad: false,
+				}
+			}
+		} catch {
+			// Ignore invalid cached resources.
+		}
+	}
+
+	return {
+		resources: { [DefaultLocale]: fallbackResources },
+		dynamicLoad: true,
+	}
 }
 
 export const changeLanguage = async (lng: string, i18next: i18n) => {
+	const profile = (i18next as ProfiledI18n).localeProfile
+	if (!profile) {
+		throw new Error('Missing locale profile for i18next instance')
+	}
+
 	onLocaleFromModalEvent(lng)
 
-	// check whether resources exist and need to by dynamically loaded.
-	const { resources, dynamicLoad } = getResources(lng, i18next)
-	const r = resources?.[lng] || {}
+	// Check whether resources exist and need to be dynamically loaded.
+	const { resources, dynamicLoad } = getResources(
+		lng,
+		profile.fallbackResources,
+	)
 
 	localStorage.setItem('lng', lng)
 	if (dynamicLoad) {
-		await doDynamicImport(lng, i18next)
+		await loadLanguage(lng, i18next, profile)
 	} else {
-		localStorage.setItem('lng_resources', JSON.stringify({ l: lng, r }))
-		i18next.changeLanguage(lng)
+		addI18nResources(i18next, lng, resources[lng])
+		await i18next.changeLanguage(lng)
 	}
 	varToUrlHash('l', lng, false)
 }
 
 /* Resource Loading */
-export const loadLngAsync = async (lng: string) => {
+const loadResources = async (lng: string, profile: LocaleProfile) => {
 	const resources = await Promise.all(
-		lngNamespaces.map(
-			(namespace) => import(`../resources/${lng}/${namespace}.json`),
-		),
+		Object.keys(profile.fallbackResources).map((namespace) => {
+			const path = `../resources/${lng}/${namespace}.json`
+			const load = profile.resourceLoaders[path]
+			if (!load) {
+				throw new Error(`Missing locale resource: ${path}`)
+			}
+			return load()
+		}),
 	)
 
-	const ns: LocaleJson = {}
-	resources.forEach((mod: LocaleJson, i: number) => {
-		ns[lngNamespaces[i]] = mod[lngNamespaces[i]]
-	})
-	return { l: lng, r: ns }
+	return Object.assign({}, ...resources) as LocaleJson
 }
 
-export const doDynamicImport = async (lng: string, i18next: i18n) => {
-	const { l, r } = await loadLngAsync(lng)
-	localStorage.setItem('lng_resources', JSON.stringify({ l: lng, r }))
-	Object.entries(r).forEach(([ns, inner]: [string, LocaleJsonValue]) => {
-		i18next.addResourceBundle(l, ns, inner)
+const addI18nResources = (
+	i18next: i18n,
+	lng: string,
+	resources: LocaleJson,
+) => {
+	Object.entries(resources).forEach(([namespace, resource]) => {
+		i18next.addResourceBundle(lng, namespace, resource)
 	})
-	i18next.changeLanguage(l)
 }
 
-const addI18nresources = (i18n: i18n, lng: string, r: LocaleJson) => {
-	Object.entries(r).forEach(([ns, inner]: [string, LocaleJsonValue]) => {
-		i18n.addResourceBundle(lng, ns, inner)
-	})
+export const loadLanguage = async (
+	lng: string,
+	i18next: i18n,
+	profile: LocaleProfile,
+) => {
+	const resources = await loadResources(lng, profile)
+	localStorage.setItem(
+		'lng_resources',
+		JSON.stringify({ l: lng, r: resources }),
+	)
+	addI18nResources(i18next, lng, resources)
+	await i18next.changeLanguage(lng)
 }

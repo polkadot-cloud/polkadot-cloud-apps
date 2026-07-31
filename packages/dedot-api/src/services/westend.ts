@@ -19,8 +19,10 @@ import { BaseService } from '../defaultService/baseService'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
+import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
+import type { DedotServiceConfig } from '../types'
 
 export class WestendService
 	extends BaseService<
@@ -44,12 +46,22 @@ export class WestendService
 		public apiHub: DedotClient<WestendAssetHubApi>,
 		public providerRelay: WsProvider | SmoldotProvider,
 		public providerPeople: WsProvider | SmoldotProvider,
+		features: DedotServiceConfig = {},
 	) {
 		// For Westend, staking happens on the hub chain
-		super(networkConfig, ids, apiHub, apiHub, providerRelay, providerPeople)
+		super(
+			networkConfig,
+			ids,
+			apiHub,
+			apiHub,
+			providerRelay,
+			providerPeople,
+			features,
+		)
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
+			stablecoins: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
 					hub: async (address) =>

@@ -90,6 +90,7 @@ export interface StakingMetrics {
 	maxValidatorsCount: number | undefined
 	validatorCount: number
 	lastReward: bigint | undefined
+	lastValidatorIncentiveBudget: bigint | undefined
 	lastTotalStake: bigint
 	minNominatorBond: bigint
 	minValidatorBond: bigint

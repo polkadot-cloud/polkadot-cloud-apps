@@ -11,7 +11,8 @@ const localeDir = join(__dirname, '..', 'src', 'resources')
 const ignoreSuffixes = ['_one', '_two', '_few', '_many', '_other']
 
 // Check if value is an object. Do not count arrays as objects.
-const isObject = (o) => (Array.isArray(o) ? false : typeof o === 'object')
+const isObject = (value) =>
+	value !== null && typeof value === 'object' && !Array.isArray(value)
 
 // Checks whether a key contains an ingore suffix.
 const endsWithIgnoreSuffix = (key) =>
@@ -52,35 +53,18 @@ const orderJsonByKeys = (json) => {
 
 // Recursive function to get all keys of a locale object.
 const getDeepKeys = (obj) => {
-	let keys = []
-	for (const key in obj) {
-		let isSubstring = false
+	const keys = []
 
-		// not number
-		if (isNaN(key)) {
-			// check if key includes any special substrings
-			if (endsWithIgnoreSuffix(key)) {
-				isSubstring = true
-				// get the substring up to the last underscore
-				const rawKey = key.substring(0, key.lastIndexOf('_'))
-				// add the key to `keys` if it does not already exist
-				if (!keys.includes(rawKey)) {
-					keys.push(rawKey)
-				}
-			}
-		}
-		// full string, if not already added, go ahead and add
-		if (!isSubstring) {
-			if (!keys.includes(key)) {
-				keys.push(key)
-			}
-		}
-		// if object, recursively get keys
-		if (typeof obj[key] === 'object') {
-			const subkeys = getDeepKeys(obj[key])
-			keys = keys.concat(subkeys.map((subkey) => `${key}.${subkey}`))
+	for (const [key, value] of Object.entries(obj)) {
+		const normalizedKey = endsWithIgnoreSuffix(key)
+			? key.slice(0, key.lastIndexOf('_'))
+			: key
+		if (!keys.includes(normalizedKey)) keys.push(normalizedKey)
+		if (isObject(value)) {
+			keys.push(...getDeepKeys(value).map((subkey) => `${key}.${subkey}`))
 		}
 	}
+
 	return keys
 }
 

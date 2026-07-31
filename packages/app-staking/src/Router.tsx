@@ -23,7 +23,6 @@ import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
-import { NotificationPrompts } from 'library/NotificationPrompts'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
@@ -43,6 +42,7 @@ import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
 import { Headers } from 'ui-app/Headers'
 import { MainFooter } from 'ui-app/MainFooter'
 import { Menu } from 'ui-app/Menu'
+import { NotificationPrompts } from 'ui-app/NotificationPrompts'
 import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
@@ -126,10 +126,10 @@ const RouterInner = () => {
 					<Menu />
 					<Tooltip />
 					<Prompt />
-					<SideMenu />
+					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers Sync={Sync} />
+							<Headers NodesLeft={{ sync: Sync }} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {

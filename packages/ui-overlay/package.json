@@ -12,12 +12,12 @@
 		".": "./src/index.tsx"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^7.3.0",
-		"@fortawesome/free-solid-svg-icons": "^7.3.0",
+		"@fortawesome/fontawesome-svg-core": "^7.3.1",
+		"@fortawesome/free-solid-svg-icons": "^7.3.1",
 		"@w3ux/hooks": "^2.4.4",
 		"@w3ux/utils": "3.1.1",
 		"motion": "12.23.24",
-		"react": "^19.2.7",
+		"react": "^19.2.8",
 		"react-error-boundary": "^6.1.2",
 		"ui-core": "workspace:*"
 	},

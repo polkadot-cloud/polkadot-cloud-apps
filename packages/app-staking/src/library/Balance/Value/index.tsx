@@ -15,6 +15,13 @@ export const Value = ({
 }) => {
 	const { price } = useTokenPrices()
 
+	// `price` is 0 when unknown — price plugin disabled, ignored network, or not
+	// yet loaded. Render an em-dash rather than a misleading "$0.00" fiat value.
+	// A genuine zero balance with a known price still formats as "$0.00" below.
+	if (price === 0) {
+		return <>&mdash;</>
+	}
+
 	// Convert balance to fiat value
 	const freeFiat = new BigNumber(rmCommas(String(tokenBalance)))
 		.multipliedBy(price)

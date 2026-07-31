@@ -1,0 +1,72 @@
+name: GitHub Pages Publish - Swap
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: swap-pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.1.0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Swap
+        working-directory: packages/app-swap
+        run: pnpm build
+
+      - name: Configure deployment key
+        env:
+          SWAP_PAGES_DEPLOY_KEY: ${{ secrets.SWAP_PAGES_DEPLOY_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          install -m 600 /dev/null ~/.ssh/id_ed25519
+          printf '%s\n' "$SWAP_PAGES_DEPLOY_KEY" > ~/.ssh/id_ed25519
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Publish Swap
+        env:
+          DEPLOY_REPOSITORY: git@github.com:polkadot-cloud/polkadot-cloud-swap.git
+        run: |
+          publish_dir="${RUNNER_TEMP}/polkadot-cloud-swap"
+
+          if git ls-remote --exit-code --heads "$DEPLOY_REPOSITORY" gh-pages > /dev/null; then
+            git clone --depth 1 --branch gh-pages "$DEPLOY_REPOSITORY" "$publish_dir"
+          else
+            git clone --depth 1 "$DEPLOY_REPOSITORY" "$publish_dir"
+            git -C "$publish_dir" switch --orphan gh-pages
+          fi
+
+          rsync -a --delete --exclude='.git/' packages/app-swap/build/ "$publish_dir/"
+          touch "$publish_dir/.nojekyll"
+          printf '%s\n' 'swap.polkadot.cloud' > "$publish_dir/CNAME"
+
+          git -C "$publish_dir" config user.name 'github-actions[bot]'
+          git -C "$publish_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$publish_dir" add --all
+
+          if git -C "$publish_dir" diff --cached --quiet; then
+            exit 0
+          fi
+
+          git -C "$publish_dir" commit -m "Deploy Swap from ${GITHUB_SHA}"
+          git -C "$publish_dir" push origin gh-pages

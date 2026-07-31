@@ -13,6 +13,10 @@
 	margin-top: 1rem;
 }
 
+.noPadding {
+	padding: 0;
+}
+
 .inner {
 	background: var(--bg-modal-footer);
 	box-shadow: 0 6px 9px var(--shadow-secondary);
@@ -33,6 +37,18 @@
 
 .transparent {
 	background: none;
+}
+
+.hideSigner {
+	background: none;
+	box-shadow: none;
+	padding: 0;
+
+	> .submit {
+		max-width: 100%;
+		min-width: 0;
+		margin-top: 0;
+	}
 }
 
 .card {

@@ -5,13 +5,14 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
-import { sharedFaviconPlugins } from 'vite-shared'
+import { sharedFaviconPlugins, simpleAnalyticsPlugin } from 'vite-shared'
 
 // https://vitejs.dev/config/
 // - `BASE_URL`env variable is used in the codebase to refer to the supplied base.
 export default defineConfig({
 	plugins: [
 		...sharedFaviconPlugins(),
+		simpleAnalyticsPlugin(),
 		react(),
 		svgr(),
 		checker({
@@ -23,6 +24,12 @@ export default defineConfig({
 	},
 	build: {
 		outDir: 'build',
+		rolldownOptions: {
+			output: {
+				// Keep CSS-in-JS module evaluation deterministic across split chunks.
+				strictExecutionOrder: true,
+			},
+		},
 	},
 	server: {
 		fs: {
