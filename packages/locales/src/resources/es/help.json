@@ -47,7 +47,7 @@
 			"bonding": [
 				"Vinculación",
 				[
-					"La vinculación de fondos es el proceso de 'bloquear' (o hacer stake) de {NETWORK_UNIT}. Los {NETWORK_UNIT} vinculados serán asignados automáticamente a uno o más de tus validadores nominados."
+					"La vinculación de fondos es el proceso de 'bloquear' (o hacer staking) de {NETWORK_UNIT}. Los {NETWORK_UNIT} vinculados serán asignados automáticamente a uno o más de tus validadores nominados."
 				]
 			],
 			"decentralizationAnalyticsPeriod": [
@@ -95,7 +95,7 @@
 			"idealStaked": [
 				"Stake Ideal",
 				[
-					"El porcentaje de suministro total en stake en condiciones ideales de red."
+					"El porcentaje de suministro total en staking en condiciones ideales de red."
 				]
 			],
 			"inactiveNominations": [
@@ -140,9 +140,9 @@
 				]
 			],
 			"lockedBalance": [
-				"Balance Comprometido",
+				"Saldo Bloqueado",
 				[
-					"La cantidad de balance comprometido mostrado en el Cloud Staking representa todos tus compromisos aparte del compromiso de staking - por lo tanto muestra todo el balance comprometido a tu disposición que puedes usar para nominar."
+					"La cantidad de saldo bloqueado mostrada en el Cloud Staking representa todos tus bloqueos aparte del bloqueo de staking. Por lo tanto, muestra todo el saldo bloqueado a tu disposición que puedes usar para nominar."
 				]
 			],
 			"minimumToCreatePool": [
@@ -156,13 +156,13 @@
 				"Mínimo Para Unirse al Pool",
 				[
 					"La cantidad mínima de {NETWORK_UNIT} necesaria para vincular para unirse a un pool.",
-					"Esta cantidad es diferente del bono necesario para crear un pool."
+					"Esta cantidad es diferente de la vinculación necesaria para crear un pool."
 				]
 			],
 			"nominating": [
 				"Nominando",
 				[
-					"Nominar es el proceso de seleccionar validadores a los que deseas hacer stake de tus {NETWORK_UNIT}. Puedes elegir nominar hasta 16 validadores para cada una de tus cuentas.",
+					"Nominar es el proceso de seleccionar los validadores en los que deseas hacer staking con tus {NETWORK_UNIT}. Puedes elegir nominar hasta 16 validadores para cada una de tus cuentas.",
 					"Una vez que hayas nominado tus validadores seleccionados, se convierten en tus nominaciones."
 				]
 			],
@@ -250,9 +250,9 @@
 				["Tu estado de membresía del pool refleja si eres miembro de un pool."]
 			],
 			"poolRewardHistory": [
-				"Pool Reward History",
+				"Historial de Recompensas del Pool",
 				[
-					"La recompensa total generada por el grupo por era. Estas recompensas se distribuyen entre los miembros del grupo según la participación de cada miembro en el grupo."
+					"La recompensa total generada por el pool por era. Estas recompensas se distribuyen entre los miembros del pool según la participación de cada miembro en el pool."
 				]
 			],
 			"poolRewards": [
@@ -278,16 +278,16 @@
 				]
 			],
 			"reserveBalance": [
-				"Balance de Reserva",
+				"Saldo de Reserva",
 				[
-					"En {NETWORK_NAME}, debes tener un balance superior a cierta cantidad para que tu cuenta exista en la cadena. Esta cantidad se llama tu 'depósito existencial'.",
+					"En {NETWORK_NAME}, debes tener un saldo superior a cierta cantidad para que tu cuenta exista en la cadena. Esta cantidad se llama tu 'depósito existencial'.",
 					"El Cloud Staking asegura que esta cantidad de {NETWORK_UNIT} nunca se toque."
 				]
 			],
 			"reserveBalanceForExistentialDeposit": [
-				"Balance de Reserva para Depósito Existencial",
+				"Saldo de Reserva para Depósito Existencial",
 				[
-					"Si tu cuenta ya tiene un balance inmovilizado que cubre el depósito existencial de tu cuenta, como el balance inmovilizado para nominar, entonces el Cloud Staking no inmovilizará ningún balance libre adicional."
+					"Si tu cuenta ya tiene un saldo bloqueado que cubre el depósito existencial de tu cuenta, como el saldo bloqueado para nominar, entonces el Cloud Staking no bloqueará ningún saldo libre adicional."
 				]
 			],
 			"rewardsByCountryAndNetwork": [
@@ -305,15 +305,15 @@
 				]
 			],
 			"supplyStaked": [
-				"Suministro en Stake",
+				"Suministro en Staking",
 				[
-					"El suministro acumulado actual de {NETWORK_UNIT} en stake globalmente."
+					"El suministro acumulado actual de {NETWORK_UNIT} en staking globalmente."
 				]
 			],
 			"totalNominators": [
 				"Total de Nominadores",
 				[
-					"Cuentas que están haciendo stake en la red, independientemente de si están activas o inactivas en la sesión actual."
+					"Cuentas que están haciendo staking en la red, independientemente de si están activas o inactivas en la sesión actual."
 				]
 			],
 			"totalPayoutsAnalysed": [
@@ -331,7 +331,7 @@
 				]
 			],
 			"validatorRewardHistory": [
-				"Validator Reward History",
+				"Historial de Recompensas del Validador",
 				[
 					"La recompensa total generada por el validador por era. La recompensa total es la suma de la recompensa del validador más la recompensa de cada nominador que respalda al validador."
 				]
@@ -345,7 +345,7 @@
 			"yourBalance": [
 				"Tu Balance",
 				[
-					"Tu balance representa el total de {NETWORK_UNIT} que tienes disponible además de tu cantidad total en stake, que incluye la cantidad que has vinculado en un pool."
+					"Tu balance representa el total de {NETWORK_UNIT} que tienes disponible además de tu cantidad total en staking, que incluye la cantidad que has vinculado en un pool."
 				]
 			]
 		}
