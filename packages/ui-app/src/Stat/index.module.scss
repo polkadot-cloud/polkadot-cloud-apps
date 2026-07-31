@@ -87,15 +87,16 @@ button.surface {
 	min-width: 0;
 	padding-left: 1.25rem;
 	overflow: hidden;
+	text-align: left;
 }
 
 .graphic {
 	display: flex;
+	align-self: center;
 	align-items: center;
 	justify-content: center;
 	width: fit-content;
 	min-width: 1.75rem;
-	height: 100%;
 	margin-left: 1rem;
 }
 
