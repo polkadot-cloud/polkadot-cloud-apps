@@ -59,7 +59,7 @@ export const useNominationGroups = (
 	// Keep rendering live nominations while the query is unavailable or in flight. This also makes
 	// the new endpoint safe to deploy independently from the app.
 	const nomineesInEra =
-		canQuery && !loading && !error ? data.nomineesInEra : null
+		canQuery && !loading && !error ? data.getNomineesInEra : null
 
 	return partitionNominees(liveNominees, nomineesInEra)
 }

@@ -19,6 +19,10 @@ export interface QueryReturn<T> extends Query<T> {
 	data: T
 }
 
+export interface GetNomineesInEraData {
+	getNomineesInEra: string[]
+}
+
 export interface TokenPriceData {
 	tokenPrice: TokenPrice
 }
