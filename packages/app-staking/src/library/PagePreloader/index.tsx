@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { CardWrapper } from 'library/Card/Wrappers'
-import { Loader, Page, Stat } from 'ui-core/base'
+import { Stat } from 'ui-app/Stat'
+import { Loader, Page } from 'ui-core/base'
 
 export const PagePreloader = ({
 	showStats = true,
