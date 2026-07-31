@@ -30,6 +30,7 @@ export const NominationList = ({
 	bondFor,
 	toggleFavorites,
 	displayFor = 'default',
+	statusOverride,
 }: NominationListProps) => {
 	const { t } = useTranslation('app')
 	const { syncing } = useSyncing()
@@ -50,6 +51,12 @@ export const NominationList = ({
 
 	// Get nomination status relative to supplied nominator
 	const processNominationStatus = () => {
+		if (statusOverride) {
+			nominationStatus.current = Object.fromEntries(
+				initialValidators.map(({ address }) => [address, statusOverride]),
+			)
+			return
+		}
 		if (bondFor === 'pool') {
 			nominationStatus.current = initialValidators.reduce(
 				(acc: Record<string, NominationStatus>, { address }) => {
@@ -144,7 +151,7 @@ export const NominationList = ({
 	// Reset list when list changes
 	useEffect(() => {
 		setFetched(false)
-	}, [initialValidators, nominator])
+	}, [initialValidators, nominator, statusOverride])
 
 	// Fetch performance queries when list changes
 	useEffect(() => {

@@ -7,15 +7,16 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
+import { useNominationGroups } from 'hooks/useNominationGroups'
+import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { ListStatusHeader } from 'library/List'
-import { NominationList } from 'library/NominationList'
 import { useTranslation } from 'react-i18next'
 import type { MaybeAddress } from 'types'
 import { ButtonHelp, ButtonPrimary } from 'ui-buttons'
 import { ButtonRow, CardHeader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
+import { Content } from './Content'
 import { Wrapper } from './Wrapper'
 
 export const Nominations = ({
@@ -39,6 +40,7 @@ export const Nominations = ({
 	const { isBonding } = useStaking()
 	const { openHelpTooltip } = useHelp()
 	const { getNominations } = useBalances()
+	const { pluginEnabled } = usePlugins()
 	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { syncing } = useSyncing(['era-stakers'])
@@ -48,15 +50,26 @@ export const Nominations = ({
 	const isPool = bondFor === 'pool'
 
 	// Derive nominations from `bondFor` type.
-	const nominated =
+	const liveNominations =
 		bondFor === 'nominator'
 			? formatWithPrefs(getNominations(activeAddress))
 			: activePoolNominations
 				? formatWithPrefs(activePoolNominations.targets)
 				: []
+	const addressGroups = useNominationGroups(
+		nominator,
+		liveNominations.map(({ address }) => address),
+	)
+	const nominationGroups = {
+		continuing: formatWithPrefs(addressGroups.continuing),
+		leaving: formatWithPrefs(addressGroups.leaving),
+		added: formatWithPrefs(addressGroups.added),
+		hasChanges: addressGroups.hasChanges,
+		hasActiveEraData: addressGroups.hasActiveEraData,
+	}
 
 	// Determine if this nominator is actually nominating.
-	const isNominating = nominated?.length ?? false
+	const isNominating = liveNominations.length > 0
 
 	// Determine whether this is a pool that is in Destroying state & not nominating.
 	const poolDestroying =
@@ -67,13 +80,14 @@ export const Nominations = ({
 	// If regular staking and nominating, or if pool and account is nominator or root, display stop
 	// button.
 	const displayBtns =
-		(!isPool && nominated.length) ||
+		(!isPool && liveNominations.length > 0) ||
 		(isPool && (isPoolNominator() || isPoolOwner()))
+	const nominationsSyncing = syncing && !pluginEnabled('staking_api')
 
 	// Determine whether buttons are disabled.
 	const btnsDisabled =
 		(!isPool && !isBonding) ||
-		(!isPool && syncing) ||
+		(!isPool && nominationsSyncing) ||
 		isReadOnlyAccount(activeAddress) ||
 		poolDestroying
 
@@ -121,7 +135,7 @@ export const Nominations = ({
 									options: {
 										bondFor,
 										nominator,
-										nominated,
+										nominated: liveNominations,
 									},
 								})
 							}
@@ -129,21 +143,13 @@ export const Nominations = ({
 					</ButtonRow>
 				)}
 			</CardHeader>
-			{!isPool && syncing ? (
-				<ListStatusHeader>{`${t('syncing')}...`}</ListStatusHeader>
-			) : !nominator ? (
-				<ListStatusHeader>{t('notNominating')}.</ListStatusHeader>
-			) : (nominated?.length || 0) > 0 ? (
-				<NominationList
-					bondFor={bondFor}
-					validators={nominated || []}
-					nominator={nominator}
-				/>
-			) : poolDestroying ? (
-				<ListStatusHeader>{t('poolDestroy')}</ListStatusHeader>
-			) : (
-				<ListStatusHeader>{t('notNominating')}.</ListStatusHeader>
-			)}
+			<Content
+				bondFor={bondFor}
+				nominator={nominator}
+				groups={nominationGroups}
+				poolDestroying={poolDestroying}
+				syncing={!isPool && nominationsSyncing}
+			/>
 		</Wrapper>
 	)
 }

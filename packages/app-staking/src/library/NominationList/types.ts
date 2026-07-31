@@ -20,6 +20,7 @@ export interface NominationListProps {
 	toggleFavorites?: boolean
 	title?: string
 	displayFor?: DisplayFor
+	statusOverride?: NominationStatus
 }
 
 export interface ItemProps {
