@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-const fs = require('node:fs')
+const { readFileSync, readdirSync } = require('node:fs')
 const { join } = require('node:path')
 const {
 	getDeepKeys,
@@ -10,73 +10,74 @@ const {
 	orderJsonByKeys,
 } = require('./utils.cjs')
 
-// Missing key validation function.
-const validateMissingKeys = () => {
-	const defaultPath = join(localeDir, 'en')
-	const languages = getDirectories(localeDir, ['en'])
+const SOURCE_LOCALE = 'en'
+const locales = getDirectories(localeDir, [])
+const translations = locales.filter((locale) => locale !== SOURCE_LOCALE)
 
-	fs.readdir(defaultPath, (error, files) => {
-		if (error) {
-			console.log(error)
+const localePath = (...parts) => join(localeDir, ...parts)
+const readLocale = (...parts) =>
+	JSON.parse(readFileSync(localePath(...parts), 'utf8'))
+const getKeys = (...parts) => new Set(getDeepKeys(readLocale(...parts)))
+const difference = (from, to) => [...from].filter((key) => !to.has(key))
+const formatKeyError = (type, keys, locale, file) =>
+	`${type} ${keys.length} key(s) in locale "${locale}", file "${file}":\n  ${keys.join('\n  ')}`
+
+const getKeyParityErrors = () => {
+	const errors = []
+	const sourceFiles = new Map(
+		readdirSync(localePath(SOURCE_LOCALE)).map((file) => [
+			file,
+			getKeys(SOURCE_LOCALE, file),
+		]),
+	)
+
+	for (const locale of translations) {
+		const localeFiles = new Set(readdirSync(localePath(locale)))
+
+		for (const file of difference(sourceFiles.keys(), localeFiles)) {
+			errors.push(`Locale "${locale}" is missing file "${file}".`)
+		}
+		for (const file of difference(localeFiles, sourceFiles)) {
+			errors.push(`Locale "${locale}" has orphaned file "${file}".`)
 		}
 
-		files.forEach((file) => {
-			const defaultJson = JSON.parse(
-				fs.readFileSync(join(defaultPath, file)).toString(),
-			)
-
-			for (const lng of languages) {
-				const otherPath = join(localeDir, lng)
-				const otherJson = JSON.parse(
-					fs.readFileSync(join(otherPath, file)).toString(),
-				)
-
-				const a = getDeepKeys(defaultJson)
-				const b = getDeepKeys(otherJson)
-
-				if (a.sort().length !== b.sort().length) {
-					const missing = a.filter((item) => b.indexOf(item) < 0)
-					if (missing.join('').trim().length > 0) {
-						throw new Error(
-							`Missing the following keys from locale "${lng}", file: "${file}":\n"${missing}".`,
-						)
-					}
-				}
+		for (const [file, sourceKeys] of sourceFiles) {
+			if (!localeFiles.has(file)) continue
+			const localeKeys = getKeys(locale, file)
+			for (const [type, keys] of [
+				['Missing', difference(sourceKeys, localeKeys)],
+				['Orphaned', difference(localeKeys, sourceKeys)],
+			]) {
+				if (keys.length) errors.push(formatKeyError(type, keys, locale, file))
 			}
-		})
-	})
-}
-
-// Key order validation function.
-const validateKeyOrder = () => {
-	// get all language paths to re-order.
-	const languages = getDirectories(localeDir, [])
-
-	for (const lng of languages) {
-		const pathToLanguage = join(localeDir, `/${lng}`)
-
-		fs.readdir(pathToLanguage, (error, files) => {
-			if (error) {
-				return
-			}
-
-			files.forEach((file) => {
-				const pathToFile = join(pathToLanguage, file)
-				const json = JSON.parse(fs.readFileSync(pathToFile).toString())
-
-				// order json object alphabetically.
-				const orderedJson = orderJsonByKeys(json)
-				if (JSON.stringify(json) !== JSON.stringify(orderedJson)) {
-					throw new Error(
-						`Keys are in the incorrect order from locale "${lng}", file: "${file}".`,
-					)
-				}
-			})
-		})
+		}
 	}
+
+	return errors
 }
 
-// validate missing keys
-validateMissingKeys()
-// validate key order
-validateKeyOrder()
+const getKeyOrderErrors = () => {
+	const errors = []
+
+	for (const locale of locales) {
+		for (const file of readdirSync(localePath(locale))) {
+			const json = readLocale(locale, file)
+			if (JSON.stringify(json) !== JSON.stringify(orderJsonByKeys(json))) {
+				errors.push(
+					`Keys are in the incorrect order in locale "${locale}", file "${file}".`,
+				)
+			}
+		}
+	}
+
+	return errors
+}
+
+const errors = [...getKeyParityErrors(), ...getKeyOrderErrors()]
+
+if (errors.length) {
+	console.error(`Locale validation failed:\n\n${errors.join('\n\n')}`)
+	process.exitCode = 1
+} else {
+	console.log('✓ Locales validated: keys are complete and correctly ordered.')
+}

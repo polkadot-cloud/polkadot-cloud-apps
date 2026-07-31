@@ -205,7 +205,6 @@
 		"none": "なし",
 		"notAuthenticated": "認証されていません",
 		"notInstalled": "インストールされていません",
-		"notMeetMinimum": "最小ノミネーターボンド額{{minNominatorBondUnit}} {{unit}}に達していません。ノミネートする前に資金をボンドしてください。",
 		"notStaking": "ステーキングしていません",
 		"notToClaim": "通常、バリデータはノミネーターに代わって支払いを受け取ります。ここで受け取らないことにした場合でも、支払いが利用可能になってから1〜2日以内に受け取れる可能性が高いです。",
 		"notePoolDepositorMinBond_depositor": "プールのDepositorとして、少なくとも{{bond}} {{unit}}のボンドを維持する必要があります。",
