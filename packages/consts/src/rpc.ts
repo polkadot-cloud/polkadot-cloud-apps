@@ -63,7 +63,7 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		Amforc: 'wss://people-paseo.rpc.amforc.com',
 	},
 	statemint: {
-		DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
+		// DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
 		// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
 		// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
 		StakeWorld: 'wss://dot-rpc.stakeworld.io/assethub',
