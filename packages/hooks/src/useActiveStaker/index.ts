@@ -2,13 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { fetchGetStakerWithNominees } from 'plugin-staking-api'
-import type { ActiveStatusWithNominees } from 'plugin-staking-api/types'
+import { fetchGetNominationStatus } from 'plugin-staking-api'
+import type { StakerNominationStatus } from 'plugin-staking-api/types'
 import { useEffect } from 'react'
 import type { NetworkId } from 'types'
 import { useActivePool } from '../useActivePool'
-import { useApi } from '../useApi'
-import { useBalances } from '../useBalances'
 import { useNetwork } from '../useNetwork'
 import { usePlugins } from '../usePlugins'
 import { createSingletonStore, useSingletonStore } from '../util'
@@ -17,8 +15,8 @@ import type { ActiveStakerHookInterface } from './types'
 export type { ActiveStakerHookInterface } from './types'
 
 const defaultActiveStakerState: ActiveStakerHookInterface = {
-	activePoolData: undefined,
-	activeNominatorData: undefined,
+	activePoolStatus: undefined,
+	activeNominatorStatus: undefined,
 }
 
 type ActiveStakerStateKey = keyof ActiveStakerHookInterface
@@ -33,7 +31,7 @@ let poolRequestId = 0
 
 const setActiveStakerValue = (
 	key: ActiveStakerStateKey,
-	value: ActiveStatusWithNominees | undefined,
+	value: StakerNominationStatus | undefined,
 ) => {
 	if (activeStakerStore.getSnapshot()[key] === value) {
 		return
@@ -41,33 +39,22 @@ const setActiveStakerValue = (
 	activeStakerStore.patchSnapshot({ [key]: value })
 }
 
-const getRequestKey = (
-	network: NetworkId,
-	era: number,
-	who: string,
-	targets: string[],
-	extra = '',
-) => `${network}:${era}:${who}:${extra}:${targets.join('|')}`
+const getRequestKey = (network: NetworkId, who: string) => `${network}:${who}`
 
 const clearNominatorData = () => {
 	nominatorRequestId++
 	nominatorRequestKey = null
-	setActiveStakerValue('activeNominatorData', undefined)
+	setActiveStakerValue('activeNominatorStatus', undefined)
 }
 
 const clearPoolData = () => {
 	poolRequestId++
 	poolRequestKey = null
-	setActiveStakerValue('activePoolData', undefined)
+	setActiveStakerValue('activePoolStatus', undefined)
 }
 
-const fetchNominatorStatus = async (
-	network: NetworkId,
-	era: number,
-	who: string,
-	targets: string[],
-) => {
-	const key = getRequestKey(network, era, who, targets)
+const fetchNominatorStatus = async (network: NetworkId, who: string) => {
+	const key = getRequestKey(network, who)
 	if (nominatorRequestKey === key) {
 		return
 	}
@@ -75,25 +62,19 @@ const fetchNominatorStatus = async (
 	nominatorRequestKey = key
 	const requestId = ++nominatorRequestId
 	try {
-		const result = await fetchGetStakerWithNominees(network, era, who, targets)
+		const result = await fetchGetNominationStatus(network, who)
 		if (requestId === nominatorRequestId && nominatorRequestKey === key) {
-			setActiveStakerValue('activeNominatorData', result)
+			setActiveStakerValue('activeNominatorStatus', result)
 		}
 	} catch {
 		if (requestId === nominatorRequestId && nominatorRequestKey === key) {
-			setActiveStakerValue('activeNominatorData', undefined)
+			setActiveStakerValue('activeNominatorStatus', undefined)
 		}
 	}
 }
 
-const fetchPoolStatus = async (
-	network: NetworkId,
-	era: number,
-	who: string,
-	targets: string[],
-	activeAddress: string,
-) => {
-	const key = getRequestKey(network, era, who, targets, activeAddress)
+const fetchPoolStatus = async (network: NetworkId, who: string) => {
+	const key = getRequestKey(network, who)
 	if (poolRequestKey === key) {
 		return
 	}
@@ -101,85 +82,44 @@ const fetchPoolStatus = async (
 	poolRequestKey = key
 	const requestId = ++poolRequestId
 	try {
-		const result = await fetchGetStakerWithNominees(network, era, who, targets)
+		const result = await fetchGetNominationStatus(network, who)
 		if (requestId === poolRequestId && poolRequestKey === key) {
-			setActiveStakerValue('activePoolData', result)
+			setActiveStakerValue('activePoolStatus', result)
 		}
 	} catch {
 		if (requestId === poolRequestId && poolRequestKey === key) {
-			setActiveStakerValue('activePoolData', undefined)
+			setActiveStakerValue('activePoolStatus', undefined)
 		}
 	}
 }
 
 export const useActiveStaker = (): ActiveStakerHookInterface => {
-	const { activeEra } = useApi()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
-	const { getNominations } = useBalances()
 	const { activeAddress } = useActiveAccount()
-	const { activePool, activePoolNominations } = useActivePool()
+	const { activePool } = useActivePool()
 	const state = useSingletonStore(activeStakerStore)
 
 	const stakingApiEnabled = pluginEnabled('staking_api')
-	const nominations = getNominations(activeAddress)
-	const poolNominations = activePoolNominations?.targets || []
-	const nominationsKey = nominations.join('|')
-	const poolNominationsKey = poolNominations.join('|')
 	const poolStash = activePool?.addresses.stash
 
 	useEffect(() => {
-		if (
-			!stakingApiEnabled ||
-			activeEra.index === 0 ||
-			!activeAddress ||
-			!nominations.length
-		) {
+		if (!stakingApiEnabled || !activeAddress) {
 			clearNominatorData()
 			return
 		}
 
-		void fetchNominatorStatus(
-			network,
-			activeEra.index,
-			activeAddress,
-			nominations,
-		)
-	}, [
-		stakingApiEnabled,
-		network,
-		activeEra.index,
-		activeAddress,
-		nominationsKey,
-	])
+		void fetchNominatorStatus(network, activeAddress)
+	}, [stakingApiEnabled, network, activeAddress])
 
 	useEffect(() => {
-		if (
-			!stakingApiEnabled ||
-			activeEra.index === 0 ||
-			!activeAddress ||
-			!poolStash ||
-			!poolNominations.length
-		) {
+		if (!stakingApiEnabled || !poolStash) {
 			clearPoolData()
 			return
 		}
 
-		void fetchPoolStatus(
-			network,
-			activeEra.index,
-			poolStash,
-			poolNominations,
-			activeAddress,
-		)
-	}, [
-		stakingApiEnabled,
-		network,
-		activeEra.index,
-		activeAddress,
-		poolStash,
-		poolNominationsKey,
-	])
+		void fetchPoolStatus(network, poolStash)
+	}, [stakingApiEnabled, network, poolStash])
 
 	return state
 }
