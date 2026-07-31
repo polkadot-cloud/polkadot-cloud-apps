@@ -73,6 +73,17 @@ test('getUnlocking correctly separates unlocking and unlocked amounts', () => {
 	expect(result.totalUnlocked).toBe(40000000000000n) // 30 + 10 (eras 99, 98)
 })
 
+test('getUnlocking counts a chunk maturing in the current era as unlocked', () => {
+	const chunks = [
+		{ era: 101, value: 50000000000000n }, // matures this era → unlocked (era === current)
+		{ era: 102, value: 20000000000000n }, // still unlocking (era > current)
+	]
+
+	const result = getUnlocking(chunks, 101)
+	expect(result.totalUnlocked).toBe(50000000000000n) // boundary chunk is withdrawable
+	expect(result.totalUnlocking).toBe(20000000000000n)
+})
+
 test('getUnlocking handles empty chunks', () => {
 	const result = getUnlocking([], 101)
 	expect(result.totalUnlocking).toBe(0n)

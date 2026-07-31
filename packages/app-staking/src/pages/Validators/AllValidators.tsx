@@ -8,7 +8,8 @@ import { CardWrapper } from 'library/Card/Wrappers'
 import { Stats } from 'library/Stats'
 import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
-import { Page, Stat } from 'ui-core/base'
+import { Stat } from 'ui-app/Stat'
+import { Page } from 'ui-core/base'
 
 export const AllValidators = () => {
 	const { t } = useTranslation('pages')

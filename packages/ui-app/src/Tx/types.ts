@@ -11,10 +11,11 @@ export interface SignerProps extends SubmitTxProps {
 }
 
 export interface TxProps extends SignerProps {
-	margin?: boolean
 	SubmitComponent: ReactElement
 	PromptComponent?: ReactElement
 	displayFor?: DisplayFor
-	transparent?: boolean
 	stacked?: boolean
+	hideSigner?: boolean
+	margin?: boolean
+	transparent?: boolean
 }

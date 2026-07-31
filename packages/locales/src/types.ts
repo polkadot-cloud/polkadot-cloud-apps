@@ -2,23 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export interface LocaleJson {
-	[key: string]:
-		| string
-		| string[]
-		| string[][]
-		| (string | string[])[]
-		| LocaleJson
-		| LocaleJson[]
+	[key: string]: LocaleJsonValue
 }
 
-export type LocaleJsonValue =
-	| string
-	| string[]
-	| string[][]
-	| (string | string[])[]
-	| LocaleJson
-	| LocaleJson[]
+export type LocaleJsonValue = string | LocaleJson | LocaleJsonValue[]
 
-export interface LocaleEntry {
-	label: string
+export type LocaleResourceLoaders = Record<string, () => Promise<LocaleJson>>
+
+export interface LocaleProfile {
+	fallbackResources: LocaleJson
+	resourceLoaders: LocaleResourceLoaders
 }

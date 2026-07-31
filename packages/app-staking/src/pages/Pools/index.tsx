@@ -5,7 +5,8 @@ import { usePoolStats } from 'hooks/useStats'
 import { PageWarnings } from 'library/PageWarnings'
 import { Stats } from 'library/Stats'
 import { useTranslation } from 'react-i18next'
-import { Page, Stat } from 'ui-core/base'
+import { Stat } from 'ui-app/Stat'
+import { Page } from 'ui-core/base'
 import { PoolOverview } from './Overview'
 
 export const Pools = () => {

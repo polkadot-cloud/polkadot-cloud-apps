@@ -50,7 +50,14 @@ window.addEventListener('vite:preloadError', (event) => {
 })
 
 // Initialise global api service
-initDedotService()
+initDedotService({
+	nominationPools: true,
+	staking: true,
+	stablecoins: {
+		assetHub: false,
+		hydration: false,
+	},
+})
 
 const root = createRoot(rootElement)
 

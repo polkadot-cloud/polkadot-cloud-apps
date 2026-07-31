@@ -1,0 +1,11 @@
+.accountDropdown {
+	:global([class*="selected-account-"]) {
+		background-color: var(--gray-100);
+		border-color: var(--shade-200);
+		box-shadow: var(--shadow-alt);
+
+		&:hover {
+			border-color: var(--shade-200);
+		}
+	}
+}

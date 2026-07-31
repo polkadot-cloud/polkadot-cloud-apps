@@ -25,8 +25,10 @@ import classes from './index.module.scss'
 
 export const AccountPopover = ({
 	setOpen,
+	sendModal,
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
+	sendModal: boolean
 }) => {
 	const { t } = useTranslation()
 	const { network } = useNetwork()
@@ -60,23 +62,25 @@ export const AccountPopover = ({
 				/>
 			)}
 
-			<MenuItemButton
-				style={{ border: 'none' }}
-				onClick={() => {
-					setOpen(false)
-					openModal({ key: 'Transfer', size: 'sm' })
-				}}
-			>
-				<div>
-					<FontAwesomeIcon icon={faPaperPlane} transform="shrink-2" />
-				</div>
-				<div>
-					<h3>{t('send', { ns: 'app' })}</h3>
+			{sendModal && (
+				<MenuItemButton
+					style={{ border: 'none' }}
+					onClick={() => {
+						setOpen(false)
+						openModal({ key: 'Transfer', size: 'sm' })
+					}}
+				>
 					<div>
-						<FontAwesomeIcon icon={faChevronRight} transform="shrink-3" />
+						<FontAwesomeIcon icon={faPaperPlane} transform="shrink-2" />
 					</div>
-				</div>
-			</MenuItemButton>
+					<div>
+						<h3>{t('send', { ns: 'app' })}</h3>
+						<div>
+							<FontAwesomeIcon icon={faChevronRight} transform="shrink-3" />
+						</div>
+					</div>
+				</MenuItemButton>
+			)}
 
 			<ConnectItem.Container>
 				<h4>Account Details</h4>
