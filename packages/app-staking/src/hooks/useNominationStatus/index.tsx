@@ -43,28 +43,28 @@ export const useNominationStatus = () => {
 		// them in a single pass (active / inactive / waiting).
 		const nominees = Object.entries(getNominationSetStatus(who, type))
 		const grouped = groupNomineesByStatus(nominees)
+		const stakingApiEnabled = pluginEnabled('staking_api')
 		const apiStatus =
 			type === 'nominator' ? activeNominatorStatus : activePoolStatus
-		const localStatus: NominationStatus = grouped.active.length
-			? 'active'
-			: grouped.inactive.length
-				? 'inactive'
-				: 'waiting'
-		const status = pluginEnabled('staking_api') ? apiStatus : localStatus
+		const status = stakingApiEnabled
+			? apiStatus
+			: grouped.active.length
+				? 'active'
+				: grouped.inactive.length
+					? 'inactive'
+					: 'waiting'
 		const earningRewards = status === 'active'
 
 		// Determine the localised message to display based on the nomination status
 		let message
 
-		const isSyncing = pluginEnabled('staking_api')
-			? status === undefined
-			: syncing
+		const isSyncing = stakingApiEnabled ? status === undefined : syncing
 
 		if (!isNominator || isSyncing) {
 			message = t('notNominating', { ns: 'pages' })
 		} else if (!nominees.length) {
 			message = t('noNominationsSet', { ns: 'pages' })
-		} else if (grouped.active.length) {
+		} else if (status === 'active') {
 			message = t('nominatingAnd', { ns: 'pages' })
 			if (earningRewards) {
 				message += ` ${t('earningRewards', { ns: 'pages' })}`
