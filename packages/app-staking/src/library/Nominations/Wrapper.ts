@@ -21,3 +21,18 @@ export const Wrapper = styled.div`
     }
   }
 `
+
+export const NominationRow = styled.section`
+  width: 100%;
+
+  & + & {
+    margin-top: 1.5rem;
+  }
+
+  > h4 {
+    color: var(--gray-900);
+    font-family: var(--font-family-semibold);
+    margin: 0 0 0.75rem;
+    padding: 0 0.5rem;
+  }
+`
