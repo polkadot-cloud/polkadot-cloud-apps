@@ -35,14 +35,26 @@ export const useFitText = <T extends HTMLElement>(
 		fit()
 
 		const target = element.parentElement
-		if (!target || typeof ResizeObserver === 'undefined') {
+		if (!target) {
 			return
 		}
 
-		// Observing the element would loop when fitting changes its size.
-		const observer = new ResizeObserver(fit)
-		observer.observe(target)
-		return () => observer.disconnect()
+		const resizeObserver =
+			typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit)
+		const mutationObserver =
+			typeof MutationObserver === 'undefined' ? null : new MutationObserver(fit)
+
+		resizeObserver?.observe(target)
+		mutationObserver?.observe(element, {
+			childList: true,
+			characterData: true,
+			subtree: true,
+		})
+
+		return () => {
+			resizeObserver?.disconnect()
+			mutationObserver?.disconnect()
+		}
 	}, [enabled, minFontSizePx, text])
 
 	return ref

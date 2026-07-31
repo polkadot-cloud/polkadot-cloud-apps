@@ -5,8 +5,8 @@ import { faArrowUpRightDots } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Odometer } from '@w3ux/react-odometer'
 import { useHelp } from 'hooks/useHelp'
+import { Stat } from 'ui-app/Stat'
 import { ButtonHelp } from 'ui-buttons'
-import { Stat } from 'ui-core/base'
 import type { TickerProps } from './types'
 import { Wrapper } from './Wrapper'
 
@@ -27,43 +27,37 @@ export const Ticker = ({
 			: direction === 'down'
 				? 'var(--status-danger)'
 				: 'var(--gray-900)'
+	const titleText = `${value}${unit}${direction === 'up' ? '+' : ''}${changePercent}%`
 
 	return (
 		<Wrapper isPreloading={isPreloading}>
 			<Stat.Card>
-				<div>
-					<Stat.Graphic>
-						<FontAwesomeIcon
-							icon={faArrowUpRightDots}
-							transform="grow-8"
-							color="var(--gray-1000)"
-						/>
-					</Stat.Graphic>
-					<Stat.Content>
-						<Stat.Title primary={primary}>
-							<Odometer value={value} />
-							{unit}
-							<label
-								style={{
-									color: tickerColor,
-								}}
-							>
-								{direction === 'up' && '+'}
-								{changePercent}%
-							</label>
-						</Stat.Title>
-						<Stat.Subtitle>
-							{label}
-							{helpKey !== undefined ? (
-								<ButtonHelp
-									marginLeft
-									definition={helpKey}
-									openHelp={openHelpTooltip}
-								/>
-							) : null}
-						</Stat.Subtitle>
-					</Stat.Content>
-				</div>
+				<Stat.Graphic>
+					<FontAwesomeIcon
+						icon={faArrowUpRightDots}
+						transform="grow-8"
+						color="var(--gray-1000)"
+					/>
+				</Stat.Graphic>
+				<Stat.Content>
+					<Stat.Title text={titleText} primary={primary}>
+						<Odometer value={value} />
+						{unit}
+						<label style={{ color: tickerColor }}>
+							{direction === 'up' && '+'}
+							{changePercent}%
+						</label>
+					</Stat.Title>
+					<Stat.Subtitle text={label}>
+						{helpKey !== undefined ? (
+							<ButtonHelp
+								marginLeft
+								definition={helpKey}
+								openHelp={openHelpTooltip}
+							/>
+						) : null}
+					</Stat.Subtitle>
+				</Stat.Content>
 			</Stat.Card>
 		</Wrapper>
 	)
