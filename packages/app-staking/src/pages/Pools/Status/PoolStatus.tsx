@@ -18,7 +18,7 @@ export const PoolStatus = () => {
 	const { activePool, activePoolNominations } = useActivePool()
 
 	const poolStash = activePool?.addresses?.stash || ''
-	const { earningRewards, nominees } = getNominationStatus(poolStash, 'pool')
+	const { status } = getNominationStatus(poolStash, 'pool')
 	const poolState = activePool?.bondedPool?.state ?? null
 	const poolNominating = !!activePoolNominations?.targets?.length
 
@@ -48,10 +48,8 @@ export const PoolStatus = () => {
 		? t('inactivePoolNotNominating')
 		: !poolNominating
 			? t('inactivePoolNotNominating')
-			: nominees.active.length
-				? `${t('poolsNominatingAnd')} ${
-						earningRewards ? t('earningRewards') : t('notEarningRewards')
-					}`
+			: status === 'active'
+				? `${t('poolsNominatingAnd')} ${t('earningRewards')}`
 				: t('waitingForActiveNominations')
 
 	return (

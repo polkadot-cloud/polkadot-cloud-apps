@@ -22,34 +22,19 @@ export const useNominationStatus = () => {
 	const { activePoolNominations } = useActivePool()
 	const { bondedPools, poolsNominations } = useBondedPools()
 	const { getNominationsStatusFromEraStakers } = useEraStakers()
-	const { activeNominatorData, activePoolData } = useActiveStaker()
+	const { activeNominatorStatus, activePoolStatus } = useActiveStaker()
 
 	// Utility to get an account's nominees alongside their status
 	const getNominationSetStatus = (
 		who: MaybeAddress,
 		bondFor: BondFor,
 	): Record<string, NominationStatus> => {
-		if (pluginEnabled('staking_api')) {
-			const activeStatus =
-				bondFor === 'nominator' ? activeNominatorData : activePoolData
-
-			// convert statuses into record of string -> status
-			const statuses = activeStatus?.statuses.reduce(
-				(acc: Record<string, NominationStatus>, { address, status }) => {
-					acc[address] = status as NominationStatus
-					return acc
-				},
-				{},
-			)
-			return statuses || {}
-		} else {
-			return getNominationsStatusFromEraStakers(
-				who,
-				bondFor === 'nominator'
-					? getNominations(who)
-					: (activePoolNominations?.targets ?? []),
-			)
-		}
+		return getNominationsStatusFromEraStakers(
+			who,
+			bondFor === 'nominator'
+				? getNominations(who)
+				: (activePoolNominations?.targets ?? []),
+		)
 	}
 
 	// Gets the status of the provided account's nominations, and whether they are earning rewards
@@ -58,24 +43,28 @@ export const useNominationStatus = () => {
 		// them in a single pass (active / inactive / waiting).
 		const nominees = Object.entries(getNominationSetStatus(who, type))
 		const grouped = groupNomineesByStatus(nominees)
-		const earningRewards = grouped.active.length > 0
+		const stakingApiEnabled = pluginEnabled('staking_api')
+		const apiStatus =
+			type === 'nominator' ? activeNominatorStatus : activePoolStatus
+		const status = stakingApiEnabled
+			? apiStatus
+			: grouped.active.length
+				? 'active'
+				: grouped.inactive.length
+					? 'inactive'
+					: 'waiting'
+		const earningRewards = status === 'active'
 
 		// Determine the localised message to display based on the nomination status
 		let message
 
-		const isSyncing =
-			(syncing && !pluginEnabled('staking_api')) ||
-			activeNominatorData === undefined
+		const isSyncing = stakingApiEnabled ? status === undefined : syncing
 
-		const displayNotNominating = pluginEnabled('staking_api')
-			? !activeNominatorData?.active
-			: !isNominator
-
-		if (displayNotNominating || isSyncing) {
+		if (!isNominator || isSyncing) {
 			message = t('notNominating', { ns: 'pages' })
 		} else if (!nominees.length) {
 			message = t('noNominationsSet', { ns: 'pages' })
-		} else if (grouped.active.length) {
+		} else if (status === 'active') {
 			message = t('nominatingAnd', { ns: 'pages' })
 			if (earningRewards) {
 				message += ` ${t('earningRewards', { ns: 'pages' })}`
@@ -88,6 +77,7 @@ export const useNominationStatus = () => {
 
 		return {
 			nominees: grouped,
+			status,
 			earningRewards,
 			message,
 			syncing: isSyncing,
