@@ -65,10 +65,17 @@ export interface PayoutLineProps {
 	}
 }
 
+export interface PoolSharesPlotAreaPadding {
+	left: number
+	right: number
+}
+
 export interface PoolSharesBarProps {
 	days: number
 	entries: PoolReward[]
 	claimedEntries: PoolReward[]
+	barColor?: string
+	yAxisMax?: number
 	syncing: boolean
 	height: string
 	hideYAxisLabels?: boolean
@@ -76,10 +83,25 @@ export interface PoolSharesBarProps {
 	unit: string
 	units: number
 	dateFormat: Locale
+	onPlotAreaChange?: (padding: PoolSharesPlotAreaPadding) => void
 	labels: {
-		poolShares: string
+		amount: string
+	}
+}
+
+export interface PoolSharesTrendLineProps {
+	days: number
+	entries: PoolReward[]
+	claimedEntries: PoolReward[]
+	syncing: boolean
+	height: string
+	getThemeValue: (key: string) => string
+	unit: string
+	units: number
+	dateFormat: Locale
+	plotAreaPadding?: PoolSharesPlotAreaPadding
+	labels: {
 		claim: string
-		claimed: string
 	}
 }
 

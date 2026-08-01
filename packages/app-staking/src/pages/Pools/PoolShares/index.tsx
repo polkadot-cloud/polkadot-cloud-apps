@@ -21,10 +21,11 @@ import { CardWrapper } from 'library/Card/Wrappers'
 import { StatusLabel } from 'library/StatusLabel'
 import { fetchCombinedPoolRewards, isPoolShareReward } from 'plugin-staking-api'
 import type { CombinedPoolReward } from 'plugin-staking-api/types'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardHeader, CardLabel, Page } from 'ui-core/base'
-import { GraphWrapper, PoolSharesBar } from 'ui-graphs'
+import { GraphWrapper, PoolSharesBar, PoolSharesTrendLine } from 'ui-graphs'
+import type { PoolSharesPlotAreaPadding } from 'ui-graphs/types'
 import { planckToUnitBn, startOfUTCDay, subUTCDays } from 'utils'
 import { PoolSharesDemoGraph } from './DemoGraph'
 
@@ -51,6 +52,18 @@ export const PoolShares = () => {
 	const [poolClaimRewards, setPoolClaimRewards] = useState<
 		CombinedPoolReward[]
 	>([])
+	const [plotAreaPadding, setPlotAreaPadding] =
+		useState<PoolSharesPlotAreaPadding>({ left: 0, right: 0 })
+	const handlePlotAreaChange = useCallback(
+		(padding: PoolSharesPlotAreaPadding) => {
+			setPlotAreaPadding((current) =>
+				current.left === padding.left && current.right === padding.right
+					? current
+					: padding,
+			)
+		},
+		[],
+	)
 
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const poolShareEnabled = isPoolShareEnabled(network, activePool?.id)
@@ -141,11 +154,12 @@ export const PoolShares = () => {
 	}, [graphActive, network, activeAddress, fromTimestamp])
 
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
-	const graphHeight = '175px'
+	const barGraphHeight = '175px'
+	const trendGraphHeight = '75px'
+	const graphHeight = '283px'
 	const graphLabels = {
-		poolShares: t('share', { ns: 'app' }),
+		amount: t('amount', { ns: 'app' }),
 		claim: t('claim', { ns: 'modals' }),
-		claimed: t('claimed'),
 	}
 
 	return (
@@ -172,7 +186,7 @@ export const PoolShares = () => {
 						</h2>
 					</CardHeader>
 				)}
-				<div className="inner" style={{ minHeight: '205px' }}>
+				<div className="inner" style={{ minHeight: '313px' }}>
 					{!stakingApiEnabled && (
 						<StatusLabel
 							backgroundOpacity={0.95}
@@ -200,7 +214,9 @@ export const PoolShares = () => {
 								dateFormat={dateFormat}
 								getThemeValue={getThemeValue}
 								height={graphHeight}
+								barHeight={barGraphHeight}
 								poolId={activePool?.id}
+								trendHeight={trendGraphHeight}
 								unit={unit}
 								units={units}
 								width="100%"
@@ -216,18 +232,40 @@ export const PoolShares = () => {
 								transition: 'opacity 0.5s',
 							}}
 						>
-							<PoolSharesBar
-								days={PoolSharesDays}
-								entries={graphActive ? poolShareRewards : []}
-								claimedEntries={graphActive ? poolClaimRewards : []}
-								syncing={syncingInitialization || (graphActive && loading)}
-								height={graphHeight}
-								getThemeValue={getThemeValue}
-								unit={unit}
-								units={units}
-								dateFormat={dateFormat}
-								labels={graphLabels}
-							/>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									gap: '0.75rem',
+								}}
+							>
+								<PoolSharesBar
+									days={PoolSharesDays}
+									entries={graphActive ? poolShareRewards : []}
+									claimedEntries={graphActive ? poolClaimRewards : []}
+									syncing={syncingInitialization || (graphActive && loading)}
+									height={barGraphHeight}
+									getThemeValue={getThemeValue}
+									unit={unit}
+									units={units}
+									dateFormat={dateFormat}
+									onPlotAreaChange={handlePlotAreaChange}
+									labels={graphLabels}
+								/>
+								<PoolSharesTrendLine
+									days={PoolSharesDays}
+									entries={graphActive ? poolShareRewards : []}
+									claimedEntries={graphActive ? poolClaimRewards : []}
+									syncing={syncingInitialization || (graphActive && loading)}
+									height={trendGraphHeight}
+									getThemeValue={getThemeValue}
+									unit={unit}
+									units={units}
+									dateFormat={dateFormat}
+									plotAreaPadding={plotAreaPadding}
+									labels={graphLabels}
+								/>
+							</div>
 						</GraphWrapper>
 					)}
 				</div>
