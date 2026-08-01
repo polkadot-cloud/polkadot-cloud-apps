@@ -7,16 +7,17 @@ import { PolkadotKnownPoolIds } from 'consts/pools'
 import type { Locale } from 'date-fns'
 import { getUnixTime } from 'date-fns'
 import type { CombinedPoolReward } from 'plugin-staking-api/types'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { GraphWrapper, PoolSharesBar } from 'ui-graphs'
+import { GraphWrapper, PoolSharesBar, PoolSharesTrendLine } from 'ui-graphs'
+import type { PoolSharesPlotAreaPadding } from 'ui-graphs/types'
 import { startOfUTCDay, subUTCDays } from 'utils'
 
 const PREVIEW_REWARDS = [
-	0.049, 0.051, 0.05, 0.052, 0.049, 0.05, 0.051, 0.05, 0.052, 0.05, 0.049,
-	0.051, 0.05, 0.052, 0.051, 0.05, 0.049, 0.051, 0.05,
+	7.8, 8.2, 8, 8.5, 7.9, 8.1, 8.4, 8.2, 8.7, 8.3, 8, 8.5, 8.2, 8.8, 8.6, 8.3,
+	8.1, 8.5, 8.4,
 ]
-const PREVIEW_CLAIM_DAYS = [6, 15, 24]
+const PREVIEW_CLAIM_DAYS = [6, 10, 15, 20, 24]
 
 const Fade = styled.div`
   height: 100%;
@@ -41,14 +42,17 @@ const Fade = styled.div`
 
 export interface PoolSharesDemoGraphProps {
 	activeAddress?: string
+	barHeight: string
 	dateFormat: Locale
 	getThemeValue: (key: string) => string
 	height: string
 	poolId?: number
+	trendHeight: string
 	unit: string
 	units: number
 	width: string
 	labels: {
+		amount: string
 		poolShares: string
 		claim: string
 		claimed: string
@@ -57,16 +61,30 @@ export interface PoolSharesDemoGraphProps {
 
 export const PoolSharesDemoGraph = ({
 	activeAddress,
+	barHeight,
 	dateFormat,
 	getThemeValue,
 	height,
 	poolId,
+	trendHeight,
 	unit,
 	units,
 	width,
 	labels,
 }: PoolSharesDemoGraphProps) => {
 	const currentDate = useMemo(() => startOfUTCDay(new Date()), [])
+	const [plotAreaPadding, setPlotAreaPadding] =
+		useState<PoolSharesPlotAreaPadding>({ left: 0, right: 0 })
+	const handlePlotAreaChange = useCallback(
+		(padding: PoolSharesPlotAreaPadding) => {
+			setPlotAreaPadding((current) =>
+				current.left === padding.left && current.right === padding.right
+					? current
+					: padding,
+			)
+		},
+		[],
+	)
 	const previewEntries = useMemo<CombinedPoolReward[]>(
 		() =>
 			PREVIEW_REWARDS.map((reward, index) => ({
@@ -111,19 +129,42 @@ export const PoolSharesDemoGraph = ({
 			}}
 		>
 			<Fade>
-				<PoolSharesBar
-					days={PoolSharesDays}
-					entries={previewEntries}
-					claimedEntries={previewClaims}
-					syncing={false}
-					height={height}
-					hideYAxisLabels
-					getThemeValue={getThemeValue}
-					unit={unit}
-					units={units}
-					dateFormat={dateFormat}
-					labels={labels}
-				/>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '0.75rem',
+					}}
+				>
+					<PoolSharesBar
+						barColor={getThemeValue('--gray-800')}
+						days={PoolSharesDays}
+						entries={previewEntries}
+						claimedEntries={previewClaims}
+						syncing={false}
+						height={barHeight}
+						getThemeValue={getThemeValue}
+						unit={unit}
+						units={units}
+						dateFormat={dateFormat}
+						onPlotAreaChange={handlePlotAreaChange}
+						yAxisMax={10}
+						labels={labels}
+					/>
+					<PoolSharesTrendLine
+						days={PoolSharesDays}
+						entries={previewEntries}
+						claimedEntries={previewClaims}
+						syncing={false}
+						height={trendHeight}
+						getThemeValue={getThemeValue}
+						unit={unit}
+						units={units}
+						dateFormat={dateFormat}
+						plotAreaPadding={plotAreaPadding}
+						labels={labels}
+					/>
+				</div>
 			</Fade>
 		</GraphWrapper>
 	)
