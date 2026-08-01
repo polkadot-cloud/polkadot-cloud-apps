@@ -34,14 +34,14 @@
 			"blockedNominations": [
 				"Nomeações Bloqueadas",
 				[
-					"Quando um validador tem nomeações bloqueadas, os nominadores não conseguem nomeá-lo."
+					"Quando um validador tem nomeações bloqueadas, os nomeadores não conseguem nomeá-lo."
 				]
 			],
 			"bondedInPool": [
 				"Participação Vinculada em Pool",
 				[
 					"A quantidade de {NETWORK_UNIT} atualmente vinculada em um pool.",
-					"Diferentemente da nomeação direta, onde seus fundos vinculados permanecem em sua conta mas se tornam bloqueados, o {NETWORK_UNIT} que você vincula a um pool é transferido para a conta de depósito do pool. No entanto, os membros do pool ainda têm acesso para desvincular seus fundos a qualquer momento."
+					"Diferentemente da nomeação direta, onde seus fundos vinculados permanecem em sua conta mas se tornam bloqueados, o {NETWORK_UNIT} que você vincula a um pool é transferido para a conta stash do pool. No entanto, os membros do pool ainda têm acesso para desvincular seus fundos a qualquer momento."
 				]
 			],
 			"bonding": [
@@ -67,7 +67,7 @@
 			"era": [
 				"Era",
 				[
-					"Ao final de cada era, validadores são recompensados com {NETWORK_UNIT} com base em quantos pontos de era acumularam naquela era. Essa recompensa em {NETWORK_UNIT} é então distribuída entre os nominadores do validador via um pagamento.",
+					"Ao final de cada era, validadores são recompensados com {NETWORK_UNIT} com base em quantos pontos de era acumularam naquela era. Essa recompensa em {NETWORK_UNIT} é então distribuída entre os nomeadores do validador via um pagamento.",
 					"1 era é atualmente 24 horas em Polkadot."
 				]
 			],
@@ -83,7 +83,7 @@
 					"Cada validador nomeado roda em um data center específico que pode ser geolocalizado pelo seu endereço IP.",
 					"A tabela exibe a última região, país e rede onde cada validador nomeado foi geolocalizado.",
 					"Quando o validador foi localizado em mais de um local durante o período de análise, um sinal ++ será exibido.",
-					"A porcentagem mostrada é a proporção das recompensas pagos a você por este validador no período de análise."
+					"A porcentagem mostrada é a proporção das recompensas pagas a você por este validador no período de análise."
 				]
 			],
 			"halving": [
@@ -95,7 +95,7 @@
 			"idealStaked": [
 				"Staking Ideal",
 				[
-					"A porcentagem do fornecimento total em staking em condições ideais de rede."
+					"A porcentagem da oferta total em staking em condições ideais de rede."
 				]
 			],
 			"inactiveNominations": [
@@ -142,7 +142,7 @@
 			"lockedBalance": [
 				"Saldo Bloqueado",
 				[
-					"A quantidade de saldo bloqueado exibida no painel de staking representa todos os seus bloqueios além do bloqueio de staking - portanto exibindo todo o saldo bloqueado à sua disposição que você pode usar para nomear."
+					"A quantidade de saldo bloqueado exibida no painel de staking representa todos os seus bloqueios além do bloqueio de staking. Portanto, exibe todo o saldo bloqueado à sua disposição que você pode usar para nomear."
 				]
 			],
 			"minimumToCreatePool": [
@@ -153,9 +153,9 @@
 				]
 			],
 			"minimumToJoinPool": [
-				"Mínimo para Aderir ao Pool",
+				"Mínimo para Entrar no Pool",
 				[
-					"A quantidade mínima de {NETWORK_UNIT} necessária para vincular para aderir a um pool.",
+					"A quantidade mínima de {NETWORK_UNIT} necessária para vincular para entrar em um pool.",
 					"Este valor é diferente do vínculo necessário para criar um pool."
 				]
 			],
@@ -193,7 +193,7 @@
 			"nominatorStake": [
 				"Participação do Nomeador",
 				[
-					"A quantidade de {NETWORK_UNIT} que apoia o validador de seus nomeadores."
+					"A quantidade de {NETWORK_UNIT} de seus nomeadores que apoia o validador."
 				]
 			],
 			"openAppOnLedger": [
@@ -217,9 +217,7 @@
 			],
 			"payoutHistory": [
 				"Histórico de Pagamentos",
-				[
-					"Registros históricos de pagamentos feitos por ser um nominador ativo."
-				]
+				["Registros históricos de pagamentos feitos por ser um nomeador ativo."]
 			],
 			"polkadotVault": [
 				"Polkadot Vault",
@@ -230,13 +228,13 @@
 			"poolCommissionChangeRate": [
 				"Taxa de Mudança de Comissão do Pool",
 				[
-					"A taxa de mudança de comissão é definida pela Raiz do pool, e dita em quanto e com que frequência a comissão pode ser aumentada."
+					"A taxa de mudança de comissão é definida pelo Root do pool, e dita em quanto e com que frequência a comissão pode ser aumentada."
 				]
 			],
 			"poolCommissionRate": [
 				"Taxa de Comissão do Pool",
 				[
-					"A taxa de comissão do pool. Este valor é definido pela Raiz do pool, e é a porcentagem das recompensas que o pool levará de seus membros."
+					"A taxa de comissão do pool. Este valor é definido pelo Root do pool, e é a porcentagem das recompensas que o pool levará de seus membros."
 				]
 			],
 			"poolMaxCommission": [
@@ -307,10 +305,8 @@
 				]
 			],
 			"supplyStaked": [
-				"Fornecimento em Staking",
-				[
-					"O fornecimento cumulativo atual de {NETWORK_UNIT} em staking globalmente."
-				]
+				"Oferta em Staking",
+				["A oferta cumulativa atual de {NETWORK_UNIT} em staking globalmente."]
 			],
 			"totalNominators": [
 				"Total de Nomeadores",
@@ -328,7 +324,7 @@
 			"validator": [
 				"Validador",
 				[
-					"Uma entidade que valida blocos para a Cadeia de Retransmissão {NETWORK_NAME}. Os validadores desempenham um papel fundamental em {NETWORK_NAME} para proteger a rede e produzir blocos.",
+					"Uma entidade que valida blocos para a Relay Chain de {NETWORK_NAME}. Os validadores desempenham um papel fundamental em {NETWORK_NAME} para proteger a rede e produzir blocos.",
 					"Como um nomeador, você escolhe quais validadores deseja apoiar e recebe recompensas por isso."
 				]
 			],
@@ -347,7 +343,7 @@
 			"yourBalance": [
 				"Seu Saldo",
 				[
-					"Seu saldo representa o total de {NETWORK_UNIT} que você tem disponível além do seu valor total stakado, que inclui o valor que você vinculou em um pool."
+					"Seu saldo representa o total de {NETWORK_UNIT} que você tem disponível além do seu valor total em staking, que inclui o valor que você vinculou em um pool."
 				]
 			]
 		}
