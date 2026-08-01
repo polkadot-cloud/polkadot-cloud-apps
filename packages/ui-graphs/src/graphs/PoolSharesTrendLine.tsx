@@ -254,7 +254,6 @@ export const PoolSharesTrendLine = ({
 		),
 		datasets: [
 			{
-				label: labels.claim,
 				data: syncing ? [] : series.map(() => CLAIM_LINE_VALUE),
 				borderColor: lineColor,
 				backgroundColor: 'transparent',

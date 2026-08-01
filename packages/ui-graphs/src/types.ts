@@ -86,7 +86,6 @@ export interface PoolSharesBarProps {
 	onPlotAreaChange?: (padding: PoolSharesPlotAreaPadding) => void
 	labels: {
 		amount: string
-		poolShares: string
 	}
 }
 
@@ -102,7 +101,6 @@ export interface PoolSharesTrendLineProps {
 	dateFormat: Locale
 	plotAreaPadding?: PoolSharesPlotAreaPadding
 	labels: {
-		poolShares: string
 		claim: string
 	}
 }

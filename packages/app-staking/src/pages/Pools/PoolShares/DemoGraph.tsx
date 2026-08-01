@@ -53,9 +53,7 @@ export interface PoolSharesDemoGraphProps {
 	width: string
 	labels: {
 		amount: string
-		poolShares: string
 		claim: string
-		claimed: string
 	}
 }
 

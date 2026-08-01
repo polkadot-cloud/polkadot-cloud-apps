@@ -96,7 +96,6 @@ export const PoolSharesBar = ({
 		labels: chartLabels,
 		datasets: [
 			{
-				label: labels.poolShares,
 				data: chartValues,
 				backgroundColor: color,
 				borderColor: color,

@@ -159,9 +159,7 @@ export const PoolShares = () => {
 	const graphHeight = '283px'
 	const graphLabels = {
 		amount: t('amount', { ns: 'app' }),
-		poolShares: t('share', { ns: 'app' }),
 		claim: t('claim', { ns: 'modals' }),
-		claimed: t('claimed'),
 	}
 
 	return (
