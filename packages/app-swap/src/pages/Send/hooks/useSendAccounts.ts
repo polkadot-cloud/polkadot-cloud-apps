@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
+import { isValidAddress } from '@w3ux/util-dedot'
 import { useEffect, useMemo, useState } from 'react'
 import type { ImportedAccount } from 'types'
 import { isSameImportedAccount } from '../utils'
@@ -51,14 +52,13 @@ export const useSendAccounts = (): SendAccounts => {
 	}, [accountsWithSigners, defaultFromAccount, fromAccount])
 
 	useEffect(() => {
-		const toAccountExists = accounts.some((account) =>
-			isSameImportedAccount(account, toAccount),
-		)
+		const hasValidToAccount =
+			toAccount !== null && isValidAddress(toAccount.address)
 
-		if (!toAccountExists) {
+		if (!hasValidToAccount) {
 			setToAccount(defaultToAccount)
 		}
-	}, [accounts, defaultToAccount, toAccount])
+	}, [defaultToAccount, toAccount])
 
 	return {
 		accounts,
