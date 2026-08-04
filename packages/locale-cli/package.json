@@ -17,12 +17,12 @@
 		"commander": "^15.0.0",
 		"consts": "workspace:*",
 		"dotenv": "^17.4.2",
-		"openai": "^7.0.0"
+		"openai": "^7.3.0"
 	},
 	"devDependencies": {
 		"@types/node": "^26.1.2",
 		"tsx": "^4.23.1",
 		"typescript": "^6.0.3",
-		"vite": "8.1.5"
+		"vite": "8.2.0"
 	}
 }
