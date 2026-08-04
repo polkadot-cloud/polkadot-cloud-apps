@@ -48,7 +48,7 @@ export const JoinPool = () => {
 		<>
 			{alternatePoolIds.length > 0 && <Choose onClick={handleChooseNewPool} />}
 			<Close />
-			<Form bondedPool={bondedPool} metadata={metadata} />
+			<Form key={bondedPool.id} bondedPool={bondedPool} metadata={metadata} />
 		</>
 	)
 }
