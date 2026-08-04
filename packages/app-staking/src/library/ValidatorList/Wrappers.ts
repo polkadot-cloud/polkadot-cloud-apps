@@ -464,7 +464,7 @@ export const RetainmentTitle = styled.strong`
 export const RetainmentBadges = styled.div`
   display: flex;
   align-items: center;
-  background: color-mix(in srgb, var(--bg-primary) 98%, black);
+  background: transparent;
   border: 1px solid var(--gray-500);
   border-radius: 0.65rem;
   flex-wrap: nowrap;
