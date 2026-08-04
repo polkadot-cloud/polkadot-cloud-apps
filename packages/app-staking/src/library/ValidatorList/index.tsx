@@ -69,6 +69,7 @@ export const ValidatorListInner = ({
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
+	const stakingApiEnabled = pluginEnabled('staking_api')
 	const { getThemeValue } = useThemeValues()
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
@@ -221,7 +222,7 @@ export const ValidatorListInner = ({
 
 	// Fetch performance data
 	const getPerformanceData = async (key: string) => {
-		if (!pluginEnabled('staking_api')) {
+		if (!stakingApiEnabled) {
 			return
 		}
 		const results = await fetchValidatorEraPointsBatch(
@@ -281,7 +282,7 @@ export const ValidatorListInner = ({
 	// Fetch performance queries when validator list changes
 	useEffect(() => {
 		getPerformanceData(pageKey)
-	}, [pageKey, pluginEnabled('staking_api')])
+	}, [pageKey, stakingApiEnabled])
 
 	// Configure validator list when network is ready to fetch
 	useEffect(() => {
@@ -307,7 +308,7 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [listFormat, validators, page])
+	}, [listFormat, validators, page, stakingApiEnabled])
 
 	if (!bootstrapped) {
 		return (
@@ -319,7 +320,11 @@ export const ValidatorListInner = ({
 
 	return (
 		<ListWrapper>
-			<List $flexBasisLarge={allowMoreCols ? '33.33%' : '50%'}>
+			<List
+				$flexBasisLarge={
+					stakingApiEnabled ? '50%' : allowMoreCols ? '33.33%' : '50%'
+				}
+			>
 				{allowSearch && (
 					<SearchInput
 						value={searchTerm ?? ''}

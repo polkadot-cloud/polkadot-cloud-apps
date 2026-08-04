@@ -33,17 +33,20 @@ export interface EraPointsHistoricalProps {
 	address: string
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
+	stretch?: boolean
 }
 
 export interface EraPointsGraphInnerProps {
 	points: number[]
 	syncing: boolean
 	displayFor: DisplayFor
+	stretch?: boolean
 }
 
 export interface CurrentEraPointsProps {
 	address: string
 	displayFor: DisplayFor
+	stretch?: boolean
 }
 
 export interface IdentityDisplay {

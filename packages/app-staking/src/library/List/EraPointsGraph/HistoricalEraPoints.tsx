@@ -16,6 +16,7 @@ import { Inner } from './Inner'
 export const HistoricalEraPoints = ({
 	displayFor,
 	eraPoints,
+	stretch = false,
 }: EraPointsHistoricalProps) => {
 	const { t } = useTranslation('app')
 	const { isReady } = useApi()
@@ -54,6 +55,7 @@ export const HistoricalEraPoints = ({
 						points={prefilledPoints}
 						syncing={syncing}
 						displayFor={displayFor}
+						stretch={stretch}
 					/>
 				</>
 			}
