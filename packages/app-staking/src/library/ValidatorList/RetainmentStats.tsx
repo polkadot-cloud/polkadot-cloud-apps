@@ -100,6 +100,7 @@ const RateStat = ({
 
 	return (
 		<FlowMetric>
+			<FlowLabel title={label}>{label}</FlowLabel>
 			<FlowValue
 				$color={getRateColor(value)}
 				role="meter"
@@ -112,7 +113,6 @@ const RateStat = ({
 				{trendIcon && <FontAwesomeIcon icon={trendIcon} aria-hidden="true" />}
 				<span>{valueText}</span>
 			</FlowValue>
-			<FlowLabel title={label}>{label}</FlowLabel>
 		</FlowMetric>
 	)
 }
@@ -235,6 +235,7 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 					maximumLabel={maximumLabel}
 				/>
 				<FlowMetric>
+					<FlowLabel title={selfStakeLabel}>{selfStakeLabel}</FlowLabel>
 					<FlowValue
 						$color={selfStakeColor}
 						aria-label={`${selfStakeLabel}: ${selfStakePrefix}${selfStakeValue} ${unit}`}
@@ -246,9 +247,9 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 						</span>
 						<small>{unit}</small>
 					</FlowValue>
-					<FlowLabel title={selfStakeLabel}>{selfStakeLabel}</FlowLabel>
 				</FlowMetric>
 				<FlowMetric>
+					<FlowLabel title={flowLabel}>{flowLabel}</FlowLabel>
 					<FlowValue
 						$color={flowColor}
 						aria-label={`${flowLabel}: ${flowValue} ${unit}`}
@@ -260,7 +261,6 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 						</span>
 						<small>{unit}</small>
 					</FlowValue>
-					<FlowLabel title={flowLabel}>{flowLabel}</FlowLabel>
 				</FlowMetric>
 			</RetainmentBody>
 		</RetainmentRow>

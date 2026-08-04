@@ -38,7 +38,7 @@ export const ItemWrapper = styled(Wrapper)`
     display: grid;
     flex: 0 0 auto;
     min-height: 5.75rem;
-    padding: 0.75rem 1.5rem 1.35rem;
+    padding: 0.75rem 1.5rem 0.65rem;
   }
 
   > .inner > .card-top > .row.performance {
@@ -46,7 +46,7 @@ export const ItemWrapper = styled(Wrapper)`
     flex: 0 0 auto;
     flex-direction: column;
     height: 11rem;
-    padding: 1rem 1.1rem 0.85rem;
+    padding: 0.75rem 1.1rem 0.85rem;
   }
 
   > .inner > .row.retainment {
@@ -282,6 +282,8 @@ export const SummaryRow = styled.section`
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
   > * {
+    border-block-end: 1px solid var(--gray-500);
+    padding-block-end: 0.75rem;
     padding-inline: 0.75rem;
   }
 
@@ -314,9 +316,6 @@ export const SummaryRow = styled.section`
       padding-inline-end: 0;
     }
 
-    > *:nth-child(n + 3) {
-      border-block-start: 1px solid var(--gray-500);
-    }
   }
 
   @container validator-card (max-width: 21rem) {
@@ -328,9 +327,6 @@ export const SummaryRow = styled.section`
       padding: 0.75rem 0;
     }
 
-    > * + * {
-      border-block-start: 1px solid var(--gray-500);
-    }
   }
 `
 
@@ -563,8 +559,8 @@ export const RetainmentBody = styled.div`
 export const FlowMetric = styled.div`
   display: grid;
   align-items: center;
-  grid-template-rows: minmax(0, 1fr) auto;
-  justify-items: center;
+  grid-template-rows: auto minmax(0, 1fr);
+  justify-items: start;
   gap: 0.65rem;
   min-width: 0;
 `
@@ -586,7 +582,7 @@ export const FlowValue = styled.strong<{ $color: string }>`
   color: ${(props) => props.$color};
   display: flex;
   align-items: baseline;
-  justify-content: center;
+  justify-content: flex-start;
   line-height: 1;
   max-width: 100%;
   white-space: nowrap;
