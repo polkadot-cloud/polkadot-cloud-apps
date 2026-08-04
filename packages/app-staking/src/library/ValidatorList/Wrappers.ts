@@ -8,18 +8,19 @@ export const ItemWrapper = styled(Wrapper)`
   container-name: validator-card;
   container-type: inline-size;
   height: auto;
-  margin: 1.2rem;
-  width: calc(100% - 2.4rem);
+  margin: 0.9rem;
+  width: calc(100% - 1.8rem);
 
   > .inner,
   > .inner.canvas {
     align-items: stretch;
-    background: var(--bg-primary);
-    border-color: var(--gray-500);
-    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
+    border: 0;
+    border-radius: 0.5rem;
     box-shadow: 0 5px 8px -7px rgb(0 0 0 / 45%);
     height: auto;
     inset: auto;
+    overflow: hidden;
     position: relative;
     flex-flow: column nowrap;
   }
@@ -50,12 +51,7 @@ export const ItemWrapper = styled(Wrapper)`
 
   > .inner > .row.retainment {
     align-items: stretch;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg-primary) 95%, black) 0%,
-      color-mix(in srgb, var(--bg-primary) 98%, black) 40%,
-      color-mix(in srgb, var(--bg-primary) 98%, black) 100%
-    );
+    background: transparent;
     flex: 0 0 auto;
     flex-direction: column;
     gap: 1.75rem;
@@ -100,11 +96,7 @@ export const ItemWrapper = styled(Wrapper)`
 `
 
 export const CardTop = styled.div`
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--bg-primary) 99%, black) 0%,
-    color-mix(in srgb, var(--bg-primary) 97%, black) 100%
-  );
+  background: transparent;
   border-bottom: 1px solid var(--gray-500);
   display: flex;
   flex: 0 0 auto;
