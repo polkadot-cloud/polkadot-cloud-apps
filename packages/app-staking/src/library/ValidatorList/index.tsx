@@ -324,6 +324,7 @@ export const ValidatorListInner = ({
 				$flexBasisLarge={
 					stakingApiEnabled ? '50%' : allowMoreCols ? '33.33%' : '50%'
 				}
+				$twoColumnMinWidth={stakingApiEnabled ? 1350 : undefined}
 			>
 				{allowSearch && (
 					<SearchInput

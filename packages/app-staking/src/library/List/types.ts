@@ -12,6 +12,7 @@ export interface PaginationWrapperProps {
 
 export interface ListProps {
 	$flexBasisLarge: string
+	$twoColumnMinWidth?: number
 }
 
 export interface PaginationProps {
