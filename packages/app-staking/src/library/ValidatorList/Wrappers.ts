@@ -56,7 +56,7 @@ export const ItemWrapper = styled(Wrapper)`
     flex-direction: column;
     gap: 1.75rem;
     min-height: 9rem;
-    padding: 0.65rem 1rem 1.25rem;
+    padding: 0.75rem 1rem 1.25rem;
   }
 
   @container validator-card (max-width: 31rem) {
