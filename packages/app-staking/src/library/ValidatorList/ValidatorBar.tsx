@@ -151,10 +151,6 @@ export const ValidatorBar = ({
 
 					<BarStats $withRetainment={stakingApiEnabled}>
 						<BarStat>
-							<BarStatLabel>APY</BarStatLabel>
-							<BarStatValue>{rateLabel}</BarStatValue>
-						</BarStat>
-						<BarStat>
 							<BarStatLabel>
 								<SummaryStatusDot
 									$active={validatorStatus === 'active'}
@@ -168,6 +164,10 @@ export const ValidatorBar = ({
 								<span>{totalStake ?? '—'}</span>
 								{totalStake && <small>{unit}</small>}
 							</BarStatValue>
+						</BarStat>
+						<BarStat>
+							<BarStatLabel>APY</BarStatLabel>
+							<BarStatValue>{rateLabel}</BarStatValue>
 						</BarStat>
 						<BarStat>
 							<BarStatLabel>{t('performance')}</BarStatLabel>

@@ -99,10 +99,6 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 			})}
 		>
 			<SummaryItem>
-				<SummaryLabel>APY</SummaryLabel>
-				<SummaryValue>{rateLabel}</SummaryValue>
-			</SummaryItem>
-			<SummaryItem>
 				<SummaryLabel>
 					<SummaryStatusDot
 						$active={validatorStatus === 'active'}
@@ -114,6 +110,10 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 					<span>{totalStake ?? '—'}</span>
 					{totalStake && <SummaryUnit>{unit}</SummaryUnit>}
 				</SummaryValue>
+			</SummaryItem>
+			<SummaryItem>
+				<SummaryLabel>APY</SummaryLabel>
+				<SummaryValue>{rateLabel}</SummaryValue>
 			</SummaryItem>
 			<SummaryItem>
 				<SummaryLabel>{t('performance')}</SummaryLabel>
