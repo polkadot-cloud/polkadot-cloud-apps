@@ -8,7 +8,7 @@ export const ListFormatSwitch = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 899px) {
+  @media (max-width: 1099px) {
     display: none;
   }
 `
@@ -246,7 +246,6 @@ export const ValidatorMenuWrapper = styled.div`
   height: 2.25rem !important;
   position: relative;
   width: 2.25rem;
-  z-index: 20;
 `
 
 export const ValidatorMenuTrigger = styled.button`
@@ -282,42 +281,6 @@ export const ValidatorMenuTrigger = styled.button`
 
   &[aria-expanded='true'] > svg {
     transform: rotate(180deg);
-  }
-`
-
-export const ValidatorMenuPopover = styled.div`
-  background: var(--bg-primary);
-  border: 1px solid var(--gray-500);
-  border-radius: 0.55rem;
-  box-shadow: 0 0.5rem 1.4rem rgb(0 0 0 / 14%);
-  display: flex;
-  flex-direction: column;
-  min-width: 10.5rem;
-  overflow: hidden;
-  padding: 0.3rem;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.4rem);
-  z-index: 30;
-
-  > button {
-    background: transparent;
-    border: 0;
-    border-radius: 0.35rem;
-    color: var(--gray-1000);
-    font-family: var(--font-family-semibold);
-    font-size: 0.9rem;
-    margin: 0;
-    padding: 0.65rem 0.75rem;
-    text-align: left;
-    width: 100%;
-  }
-
-  > button:hover,
-  > button:focus-visible {
-    background: var(--gray-300);
-    opacity: 1;
-    outline: none;
   }
 `
 
@@ -663,9 +626,9 @@ export const BarWrapper = styled(Wrapper)`
   > .inner.canvas {
     align-items: stretch;
     background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
-    border: 1px solid var(--gray-500);
+    border: 0;
     border-radius: 0.5rem;
-    box-shadow: 0 4px 8px -9px rgb(0 0 0 / 45%);
+    box-shadow: 0 4px 8px -7px rgb(0 0 0 / 45%);
     display: grid;
     height: auto;
     inset: auto;
@@ -673,17 +636,13 @@ export const BarWrapper = styled(Wrapper)`
     overflow: visible;
     position: relative;
   }
-
-  > .inner.selected {
-    border-color: var(--gray-1000);
-  }
 `
 
 export const BarLayout = styled.div`
   align-items: center;
   display: grid;
   gap: 1rem;
-  grid-template-columns: minmax(14rem, 1.35fr) minmax(0, 4fr) auto;
+  grid-template-columns: minmax(25rem, 1.8fr) minmax(0, 4fr) auto;
   min-width: 0;
   padding: 0.75rem 1rem;
   width: 100%;
@@ -728,8 +687,9 @@ export const BarIdentity = styled.div`
 export const BarPerformanceGraph = styled.div`
   background: color-mix(in srgb, var(--gray-400) 48%, transparent);
   border-radius: 0.3rem;
-  flex: 0 0 6rem;
-  height: 2.25rem;
+  flex: 0 0 18rem;
+  height: 3.6rem;
+  margin-inline-end: 0.5rem;
   min-width: 0;
   overflow: hidden;
 
@@ -830,7 +790,7 @@ export const BarStatLabel = styled.span`
   gap: 0.3rem;
   letter-spacing: 0.045em;
   line-height: 1;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;

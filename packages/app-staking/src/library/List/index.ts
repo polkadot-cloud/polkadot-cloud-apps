@@ -125,12 +125,6 @@ export const List = styled.div<ListProps>`
 
       &.row {
         flex-basis: 100%;
-        overflow: visible;
-        position: relative;
-
-        &:has(button[aria-expanded='true']) {
-          z-index: 20;
-        }
       }
 
       &.col {

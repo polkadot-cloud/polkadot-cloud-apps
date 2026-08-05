@@ -34,7 +34,7 @@ import { Item } from './Item'
 import type { ValidatorListProps } from './types'
 import { ListFormatSwitch } from './Wrappers'
 
-const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 899px)'
+const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1099px)'
 
 export const ValidatorListInner = ({
 	// Default list values.
