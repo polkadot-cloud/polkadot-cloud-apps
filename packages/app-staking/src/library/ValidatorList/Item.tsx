@@ -103,7 +103,8 @@ export const Item = ({
 					</div>
 					<div>
 						<LabelRow inline>
-							<APY rate={rateAfterCommission} />
+							{/* Removed temporarily for self-correction */}
+							{/* <APY rate={rateAfterCommission} /> */}
 							<Quartile address={address} />
 							<Blocked prefs={prefs} />
 						</LabelRow>
