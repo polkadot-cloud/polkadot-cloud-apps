@@ -8,7 +8,7 @@ export const ListFormatSwitch = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 1099px) {
+  @media (max-width: 1199px) {
     display: none;
   }
 `
@@ -687,7 +687,7 @@ export const BarIdentity = styled.div`
 export const BarPerformanceGraph = styled.div`
   background: color-mix(in srgb, var(--gray-400) 48%, transparent);
   border-radius: 0.3rem;
-  flex: 0 0 18rem;
+  flex: 0 0 clamp(12rem, 18cqi, 18rem);
   height: 3.6rem;
   margin-inline-end: 0.5rem;
   min-width: 0;
