@@ -29,7 +29,6 @@ export const ValidatorFavorites = () => {
 							validators={favoritesList}
 							title={t('favoriteValidators')}
 							selectable={false}
-							allowListFormat={false}
 							allowFilters
 							allowMoreCols
 							toggleFavorites

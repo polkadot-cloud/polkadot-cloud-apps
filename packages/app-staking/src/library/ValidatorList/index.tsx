@@ -32,6 +32,9 @@ import { FilterBadges } from './Filters/FilterBadges'
 import { FilterHeaders } from './Filters/FilterHeaders'
 import { Item } from './Item'
 import type { ValidatorListProps } from './types'
+import { ListFormatSwitch } from './Wrappers'
+
+const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 899px)'
 
 export const ValidatorListInner = ({
 	// Default list values.
@@ -125,6 +128,12 @@ export const ValidatorListInner = ({
 
 	// Store whether the search bar is being used
 	const [isSearching, setIsSearching] = useState<boolean>(false)
+	const [forceCardLayout, setForceCardLayout] = useState<boolean>(() =>
+		typeof window === 'undefined'
+			? false
+			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
+	)
+	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
 
 	// Store performance data, keyed by address
 	const [performances, setPerformances] = useState<ValidatorEraPointsBatch[]>(
@@ -308,7 +317,20 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [listFormat, validators, page, stakingApiEnabled])
+	}, [effectiveListFormat, validators, page, stakingApiEnabled])
+
+	// Compact viewports always use the full card. Keep listFormat untouched so the
+	// user's preferred desktop layout is restored when the viewport grows again.
+	useEffect(() => {
+		const mediaQuery = window.matchMedia(CARD_LAYOUT_MEDIA_QUERY)
+		const handleChange = (event: MediaQueryListEvent) => {
+			setForceCardLayout(event.matches)
+		}
+
+		setForceCardLayout(mediaQuery.matches)
+		mediaQuery.addEventListener('change', handleChange)
+		return () => mediaQuery.removeEventListener('change', handleChange)
+	}, [])
 
 	if (!bootstrapped) {
 		return (
@@ -337,8 +359,16 @@ export const ValidatorListInner = ({
 					<div>{allowFilters && <FilterHeaders />}</div>
 					<div>
 						{allowListFormat && (
-							<>
-								<button type="button" onClick={() => setListFormat('row')}>
+							<ListFormatSwitch>
+								<button
+									type="button"
+									onClick={() => setListFormat('row')}
+									aria-label={t('rowView', {
+										ns: 'app',
+										defaultValue: 'Compact row view',
+									})}
+									aria-pressed={listFormat === 'row'}
+								>
 									<FontAwesomeIcon
 										icon={faBars}
 										color={
@@ -348,7 +378,15 @@ export const ValidatorListInner = ({
 										}
 									/>
 								</button>
-								<button type="button" onClick={() => setListFormat('col')}>
+								<button
+									type="button"
+									onClick={() => setListFormat('col')}
+									aria-label={t('cardView', {
+										ns: 'app',
+										defaultValue: 'Detailed card view',
+									})}
+									aria-pressed={listFormat === 'col'}
+								>
 									<FontAwesomeIcon
 										icon={faGripVertical}
 										color={
@@ -358,7 +396,7 @@ export const ValidatorListInner = ({
 										}
 									/>
 								</button>
-							</>
+							</ListFormatSwitch>
 						)}
 					</div>
 				</FilterHeaderWrapper>
@@ -372,7 +410,7 @@ export const ValidatorListInner = ({
 						listItems.map((validator) => (
 							<motion.div
 								key={`nomination_${validator.address}`}
-								className={`item ${listFormat === 'row' ? 'row' : 'col'}`}
+								className={`item ${effectiveListFormat === 'row' ? 'row' : 'col'}`}
 								variants={{
 									hidden: {
 										y: 15,
@@ -390,6 +428,7 @@ export const ValidatorListInner = ({
 									toggleFavorites={toggleFavorites}
 									bondFor={bondFor}
 									displayFor={displayFor}
+									format={effectiveListFormat}
 									eraPoints={performanceByAddress.get(validator.address) || []}
 									rate={rates[pageKey]?.[validator.address]}
 									nominationStatus={nominationStatus.current[validator.address]}

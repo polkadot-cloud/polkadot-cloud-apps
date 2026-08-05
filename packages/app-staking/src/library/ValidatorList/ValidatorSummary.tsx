@@ -27,12 +27,11 @@ interface ValidatorSummaryProps {
 	unit: string
 }
 
-export const ValidatorSummary = ({
+export const useValidatorSummaryData = ({
 	address,
 	rate,
 	selfStake,
 	status,
-	unit,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { syncing } = useSyncing()
@@ -69,6 +68,28 @@ export const ValidatorSummary = ({
 					maximumFractionDigits: 1,
 				})
 			: '—'
+
+	return {
+		quartileLabel,
+		rateLabel,
+		selfStakeLabel,
+		statusLabel,
+		totalStake,
+		validatorStatus,
+	}
+}
+
+export const ValidatorSummary = (props: ValidatorSummaryProps) => {
+	const { t } = useTranslation('app')
+	const { selfStake, unit } = props
+	const {
+		quartileLabel,
+		rateLabel,
+		selfStakeLabel,
+		statusLabel,
+		totalStake,
+		validatorStatus,
+	} = useValidatorSummaryData(props)
 
 	return (
 		<SummaryRow

@@ -24,6 +24,7 @@ import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
 import { RetainmentStats } from './RetainmentStats'
 import type { ItemProps } from './types'
+import { ValidatorBar } from './ValidatorBar'
 import { ValidatorSummary } from './ValidatorSummary'
 import {
 	BlockedBadge,
@@ -45,6 +46,7 @@ export const Item = ({
 	eraPoints,
 	onRemove,
 	rate,
+	format,
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { pluginEnabled } = usePlugins()
@@ -79,6 +81,57 @@ export const Item = ({
 		validatorOwnStake !== undefined
 			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
 			: undefined
+	const actions = (
+		<HeaderActions>
+			<HeaderIconAction>
+				<CopyAddress address={address} />
+			</HeaderIconAction>
+			<HeaderIconAction>
+				<ShareLink paramKey="v" paramValue={address} />
+			</HeaderIconAction>
+			{toggleFavorites && (
+				<HeaderIconAction>
+					<FavoriteValidator address={address} />
+				</HeaderIconAction>
+			)}
+			{typeof onRemove === 'function' && (
+				<HeaderIconAction>
+					<Remove
+						address={address}
+						onRemove={() => onRemove({ selected: [validator] })}
+						displayFor={displayFor}
+					/>
+				</HeaderIconAction>
+			)}
+			{displayFor === 'default' && (
+				<HeaderMetricsAction>
+					<Metrics
+						address={address}
+						display={
+							getIdentityDisplay(
+								validatorIdentities[address],
+								validatorSupers[address],
+							).node
+						}
+					/>
+				</HeaderMetricsAction>
+			)}
+		</HeaderActions>
+	)
+
+	if (format === 'row') {
+		return (
+			<ValidatorBar
+				actions={actions}
+				innerClasses={innerClasses}
+				rate={rateAfterCommission}
+				selfStake={selfStake}
+				stakingApiEnabled={stakingApiEnabled}
+				unit={unit}
+				validator={validator}
+			/>
+		)
+	}
 
 	return (
 		<ItemWrapper>
@@ -92,41 +145,7 @@ export const Item = ({
 								<BlockedBadge>{t('blocked')}</BlockedBadge>
 							)}
 						</HeaderIdentity>
-						<HeaderActions>
-							<HeaderIconAction>
-								<CopyAddress address={address} />
-							</HeaderIconAction>
-							<HeaderIconAction>
-								<ShareLink paramKey="v" paramValue={address} />
-							</HeaderIconAction>
-							{toggleFavorites && (
-								<HeaderIconAction>
-									<FavoriteValidator address={address} />
-								</HeaderIconAction>
-							)}
-							{typeof onRemove === 'function' && (
-								<HeaderIconAction>
-									<Remove
-										address={address}
-										onRemove={() => onRemove({ selected: [validator] })}
-										displayFor={displayFor}
-									/>
-								</HeaderIconAction>
-							)}
-							{displayFor === 'default' && (
-								<HeaderMetricsAction>
-									<Metrics
-										address={address}
-										display={
-											getIdentityDisplay(
-												validatorIdentities[address],
-												validatorSupers[address],
-											).node
-										}
-									/>
-								</HeaderMetricsAction>
-							)}
-						</HeaderActions>
+						{actions}
 					</div>
 					<ValidatorSummary
 						address={address}

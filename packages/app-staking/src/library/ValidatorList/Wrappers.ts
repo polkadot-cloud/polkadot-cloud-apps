@@ -4,6 +4,15 @@
 import { Wrapper } from 'library/ListItem/Wrappers'
 import styled from 'styled-components'
 
+export const ListFormatSwitch = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 899px) {
+    display: none;
+  }
+`
+
 export const ItemWrapper = styled(Wrapper)`
   container-name: validator-card;
   container-type: inline-size;
@@ -605,5 +614,207 @@ export const FlowValue = styled.strong<{ $color: string }>`
     font-family: var(--font-family-semibold);
     font-size: 0.78rem;
     margin-left: 0.35rem;
+  }
+`
+
+export const BarWrapper = styled(Wrapper)`
+  container-name: validator-bar;
+  container-type: inline-size;
+  height: auto;
+  margin: 0.45rem 0.9rem;
+  width: calc(100% - 1.8rem);
+
+  > .inner,
+  > .inner.canvas {
+    align-items: stretch;
+    background: var(--bg-primary);
+    border: 1px solid var(--gray-500);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px -9px rgb(0 0 0 / 45%);
+    display: grid;
+    height: auto;
+    inset: auto;
+    min-height: 5.5rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  > .inner.selected {
+    border-color: var(--gray-1000);
+  }
+`
+
+export const BarLayout = styled.div`
+  align-items: center;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(14rem, 1.35fr) minmax(0, 4fr) auto;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  width: 100%;
+
+  @container validator-bar (max-width: 74rem) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.8rem;
+  }
+
+  @container validator-bar (max-width: 38rem) {
+    grid-template-columns: minmax(0, 1fr);
+
+    > ${HeaderActions} {
+      grid-column: 1;
+      grid-row: 2;
+      justify-content: flex-start;
+    }
+  }
+`
+
+export const BarIdentity = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+
+  > ${HeaderIdentity} {
+    min-width: 0;
+  }
+
+  > ${HeaderIdentity} > div > div:first-child {
+    height: 2.25rem;
+    max-width: 2.25rem !important;
+    min-width: 2.25rem !important;
+  }
+
+  > ${HeaderIdentity} > div > div:last-child > h4 {
+    font-size: 1rem;
+  }
+`
+
+export const BarContextBadge = styled.span`
+  border: 1px solid var(--gray-500);
+  border-radius: 0.45rem;
+  color: var(--text-tertiary);
+  flex: 0 0 auto;
+  font-family: var(--font-family-semibold);
+  font-size: 0.65rem;
+  letter-spacing: 0.025em;
+  line-height: 1;
+  padding: 0.35rem 0.45rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  @container validator-bar (max-width: 52rem) {
+    display: none;
+  }
+`
+
+export const BarStats = styled.div<{ $withRetainment: boolean }>`
+  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(
+    ${(props) => (props.$withRetainment ? 7 : 4)},
+    minmax(4.75rem, 1fr)
+  );
+  min-width: 0;
+
+  > * + * {
+    border-inline-start: 1px solid var(--gray-500);
+  }
+
+  @container validator-bar (max-width: 74rem) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  @container validator-bar (max-width: 46rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    > *:nth-child(5) {
+      border-inline-start: 0;
+    }
+
+    > *:nth-child(n + 5) {
+      border-block-start: 1px solid var(--gray-500);
+      padding-block-start: 0.7rem;
+    }
+  }
+
+  @container validator-bar (max-width: 38rem) {
+    grid-row: 3;
+  }
+
+  @container validator-bar (max-width: 29rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > *:nth-child(odd) {
+      border-inline-start: 0;
+    }
+
+    > *:nth-child(n + 3) {
+      border-block-start: 1px solid var(--gray-500);
+      padding-block-start: 0.7rem;
+    }
+  }
+`
+
+export const BarStat = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding-inline: clamp(0.5rem, 1.1cqi, 0.85rem);
+
+  &:first-child {
+    padding-inline-start: 0;
+  }
+`
+
+export const BarStatLabel = styled.span`
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  font-family: var(--font-family-semibold);
+  font-size: 0.68rem;
+  gap: 0.3rem;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  margin-bottom: 0.45rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+`
+
+export const BarStatValue = styled.strong<{ $color?: string }>`
+  color: ${(props) => props.$color ?? 'var(--gray-1000)'};
+  display: flex;
+  align-items: baseline;
+  font-family: var(--font-family-mono);
+  font-size: clamp(0.9rem, 1.7cqi, 1.05rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  gap: 0.25rem;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  min-width: 0;
+  white-space: nowrap;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > small {
+    color: var(--text-tertiary);
+    flex: 0 0 auto;
+    font-family: var(--font-family-semibold);
+    font-size: 0.62rem;
+    font-weight: normal;
+    letter-spacing: 0;
+  }
+
+  > svg {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
   }
 `

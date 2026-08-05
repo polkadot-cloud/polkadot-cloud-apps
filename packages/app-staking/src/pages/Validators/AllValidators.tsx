@@ -47,7 +47,6 @@ export const AllValidators = () => {
 										excludes: ['blocked_nominations', 'missing_identity'],
 									}}
 									defaultOrder="rank"
-									allowListFormat={false}
 									allowMoreCols
 									allowFilters
 									allowSearch

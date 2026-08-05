@@ -10,6 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type BigNumber from 'bignumber.js'
 import { useTranslation } from 'react-i18next'
 import {
+	clampRate,
+	DUMMY_RETAINMENT,
+	getRateColor,
+	MAX_SELF_STAKE_DOT,
+} from './retainment'
+import {
 	FlowLabel,
 	FlowMetric,
 	FlowValue,
@@ -22,52 +28,9 @@ import {
 	RetainmentTitle,
 } from './Wrappers'
 
-interface RetainmentMonth {
-	fromTimestamp: number
-	netFlow: number
-	selfStakeChange: number
-	retainmentRate: number
-	compoundRate: number
-}
-
 interface RetainmentStatsProps {
 	selfStake?: BigNumber
 	unit: string
-}
-
-const MAX_SELF_STAKE_DOT = 100_000
-
-// TODO: Map validatorRetainment into this view model once the query is wired up. The UI currently
-// presents only the latest month. Monthly self stake change and net flow stay dummy until the
-// API exposes signed fields for them.
-const DUMMY_RETAINMENT: {
-	identityCount: number
-	month: RetainmentMonth
-} = {
-	identityCount: 10,
-	month: {
-		fromTimestamp: Date.UTC(2026, 6, 1) / 1000,
-		netFlow: 2_240,
-		selfStakeChange: 50_500,
-		retainmentRate: 88,
-		compoundRate: 64,
-	},
-}
-
-const clampRate = (rate: number) =>
-	Number.isFinite(rate) ? Math.min(Math.max(rate, 0), 100) : 0
-
-const getRateColor = (rate: number): string => {
-	if (rate >= 75) {
-		return 'var(--status-success)'
-	}
-	if (rate >= 50) {
-		return 'var(--status-warning)'
-	}
-	if (rate >= 25) {
-		return 'color-mix(in srgb, var(--status-warning) 55%, var(--status-danger))'
-	}
-	return 'var(--status-danger)'
 }
 
 const formatRate = (rate: number, locale?: string) =>
