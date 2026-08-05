@@ -6,14 +6,11 @@ import classNames from 'classnames'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useList } from 'contexts/List'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
-import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
-import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +22,7 @@ import { Identity } from '../ListItem/Labels/Identity'
 import { RetainmentStats } from './RetainmentStats'
 import type { ItemProps } from './types'
 import { ValidatorBar } from './ValidatorBar'
+import { ValidatorMenu } from './ValidatorMenu'
 import { ValidatorSummary } from './ValidatorSummary'
 import {
 	BlockedBadge,
@@ -32,7 +30,6 @@ import {
 	HeaderActions,
 	HeaderIconAction,
 	HeaderIdentity,
-	HeaderMetricsAction,
 	ItemWrapper,
 	PerformanceGraph,
 	PerformanceHeader,
@@ -54,7 +51,6 @@ export const Item = ({
 	const { network } = useNetwork()
 	const { getActiveValidator } = useEraStakers()
 	const { selectable, selected } = useList()
-	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
 	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
@@ -103,19 +99,7 @@ export const Item = ({
 					/>
 				</HeaderIconAction>
 			)}
-			{displayFor === 'default' && (
-				<HeaderMetricsAction>
-					<Metrics
-						address={address}
-						display={
-							getIdentityDisplay(
-								validatorIdentities[address],
-								validatorSupers[address],
-							).node
-						}
-					/>
-				</HeaderMetricsAction>
-			)}
+			{displayFor === 'default' && <ValidatorMenu />}
 		</HeaderActions>
 	)
 
@@ -124,6 +108,8 @@ export const Item = ({
 			<ValidatorBar
 				actions={actions}
 				innerClasses={innerClasses}
+				displayFor={displayFor}
+				eraPoints={eraPoints}
 				rate={rateAfterCommission}
 				selfStake={selfStake}
 				stakingApiEnabled={stakingApiEnabled}

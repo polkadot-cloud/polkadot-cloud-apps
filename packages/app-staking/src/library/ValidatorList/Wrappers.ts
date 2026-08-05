@@ -241,48 +241,83 @@ export const HeaderIconAction = styled.div`
   }
 `
 
-export const HeaderMetricsAction = styled.div`
-  flex: 0 0 auto;
-  height: 2.25rem;
+export const ValidatorMenuWrapper = styled.div`
+  flex: 0 0 2.25rem;
+  height: 2.25rem !important;
+  position: relative;
+  width: 2.25rem;
+  z-index: 20;
+`
 
-  && div {
-    margin: 0;
-  }
+export const ValidatorMenuTrigger = styled.button`
+  background: transparent !important;
+  border: 1px solid var(--gray-500);
+  border-radius: 0.55rem !important;
+  color: var(--gray-800);
+  display: grid;
+  height: 2.25rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  place-items: center;
+  width: 2.25rem !important;
 
-  && button {
-    background: color-mix(
-      in srgb,
-      var(--gray-500) 80%,
-      var(--gray-400)
-    ) !important;
-    border-radius: 0.65rem !important;
-    color: var(--gray-1000);
-    font-family: var(--font-family-semibold);
-    font-size: 0.95rem;
-    height: 2.25rem !important;
-    letter-spacing: normal;
-    padding: 0 0.85rem !important;
-    width: auto !important;
-  }
-
-  && button:hover {
-    background: color-mix(
-      in srgb,
-      var(--gray-500) 75%,
-      var(--gray-600)
-    ) !important;
+  &:hover,
+  &[aria-expanded='true'] {
+    background: var(--gray-300) !important;
     opacity: 1;
   }
 
-  && button:active {
-    background: var(--gray-600) !important;
-    opacity: 1;
-  }
-
-  && button:focus-visible {
+  &:focus-visible {
+    border-color: var(--gray-900);
     outline: 2px solid
       color-mix(in srgb, var(--gray-1000) 18%, transparent);
     outline-offset: 1px;
+  }
+
+  > svg {
+    color: var(--gray-800) !important;
+    font-size: 0.85rem;
+    transition: transform var(--transition-duration) ease;
+  }
+
+  &[aria-expanded='true'] > svg {
+    transform: rotate(180deg);
+  }
+`
+
+export const ValidatorMenuPopover = styled.div`
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-500);
+  border-radius: 0.55rem;
+  box-shadow: 0 0.5rem 1.4rem rgb(0 0 0 / 14%);
+  display: flex;
+  flex-direction: column;
+  min-width: 10.5rem;
+  overflow: hidden;
+  padding: 0.3rem;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 30;
+
+  > button {
+    background: transparent;
+    border: 0;
+    border-radius: 0.35rem;
+    color: var(--gray-1000);
+    font-family: var(--font-family-semibold);
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  > button:hover,
+  > button:focus-visible {
+    background: var(--gray-300);
+    opacity: 1;
+    outline: none;
   }
 `
 
@@ -627,7 +662,7 @@ export const BarWrapper = styled(Wrapper)`
   > .inner,
   > .inner.canvas {
     align-items: stretch;
-    background: var(--bg-primary);
+    background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
     border: 1px solid var(--gray-500);
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px -9px rgb(0 0 0 / 45%);
@@ -635,7 +670,7 @@ export const BarWrapper = styled(Wrapper)`
     height: auto;
     inset: auto;
     min-height: 5.5rem;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
   }
 
@@ -690,21 +725,38 @@ export const BarIdentity = styled.div`
   }
 `
 
-export const BarContextBadge = styled.span`
-  border: 1px solid var(--gray-500);
-  border-radius: 0.45rem;
-  color: var(--text-tertiary);
-  flex: 0 0 auto;
-  font-family: var(--font-family-semibold);
-  font-size: 0.65rem;
-  letter-spacing: 0.025em;
-  line-height: 1;
-  padding: 0.35rem 0.45rem;
-  text-transform: uppercase;
-  white-space: nowrap;
+export const BarPerformanceGraph = styled.div`
+  background: color-mix(in srgb, var(--gray-400) 48%, transparent);
+  border-radius: 0.3rem;
+  flex: 0 0 6rem;
+  height: 2.25rem;
+  min-width: 0;
+  overflow: hidden;
 
-  @container validator-bar (max-width: 52rem) {
-    display: none;
+  && > div {
+    background: transparent;
+    border: 0;
+    border-radius: inherit;
+    height: 100%;
+    max-width: none;
+    width: 100%;
+  }
+
+  && > div > div:last-child {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 0.2rem 0.25rem;
+  }
+
+  && svg {
+    display: block;
+    height: 100%;
+    shape-rendering: geometricPrecision;
+    width: 100%;
+  }
+
+  && svg line[stroke-width='1'] {
+    stroke: color-mix(in srgb, var(--gray-700) 18%, transparent);
   }
 `
 
@@ -774,11 +826,11 @@ export const BarStatLabel = styled.span`
   display: flex;
   align-items: center;
   font-family: var(--font-family-semibold);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   gap: 0.3rem;
   letter-spacing: 0.045em;
   line-height: 1;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -790,7 +842,7 @@ export const BarStatValue = styled.strong<{ $color?: string }>`
   display: flex;
   align-items: baseline;
   font-family: var(--font-family-mono);
-  font-size: clamp(0.9rem, 1.7cqi, 1.05rem);
+  font-size: clamp(1.05rem, 1.9cqi, 1.22rem);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   gap: 0.25rem;
@@ -808,13 +860,13 @@ export const BarStatValue = styled.strong<{ $color?: string }>`
     color: var(--text-tertiary);
     flex: 0 0 auto;
     font-family: var(--font-family-semibold);
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: normal;
     letter-spacing: 0;
   }
 
   > svg {
     flex: 0 0 auto;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 `

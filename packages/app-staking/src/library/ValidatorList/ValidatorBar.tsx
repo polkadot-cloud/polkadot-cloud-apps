@@ -10,8 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
+import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
+import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
+import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { DisplayFor } from 'types'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
 import {
@@ -22,9 +26,9 @@ import {
 } from './retainment'
 import { useValidatorSummaryData } from './ValidatorSummary'
 import {
-	BarContextBadge,
 	BarIdentity,
 	BarLayout,
+	BarPerformanceGraph,
 	BarStat,
 	BarStatLabel,
 	BarStats,
@@ -37,6 +41,8 @@ import {
 
 interface ValidatorBarProps {
 	actions: ReactNode
+	displayFor: DisplayFor
+	eraPoints: ValidatorEraPoints[]
 	innerClasses: string
 	rate?: number
 	selfStake?: BigNumber
@@ -47,6 +53,8 @@ interface ValidatorBarProps {
 
 export const ValidatorBar = ({
 	actions,
+	displayFor,
+	eraPoints,
 	innerClasses,
 	rate,
 	selfStake,
@@ -65,21 +73,9 @@ export const ValidatorBar = ({
 		totalStake,
 		validatorStatus,
 	} = useValidatorSummaryData({ address, rate, selfStake, status, unit })
-	const { identityCount, month } = DUMMY_RETAINMENT
+	const { month } = DUMMY_RETAINMENT
 	const compoundMax =
 		unit === 'DOT' && selfStake?.gte(MAX_SELF_STAKE_DOT) === true
-	const monthDate = new Date(month.fromTimestamp * 1000)
-	const monthLabel = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-		month: 'short',
-		year: 'numeric',
-		timeZone: 'UTC',
-	}).format(monthDate)
-	const identitiesLabel = t('retainmentIdentityCount', {
-		count: identityCount,
-		defaultValue:
-			identityCount === 1 ? '{{count}} identity' : '{{count}} identities',
-	})
-	const contextLabel = `${monthLabel} · ${identitiesLabel}`
 	const retainmentRate = clampRate(month.retainmentRate)
 	const compoundRate = compoundMax ? 100 : clampRate(month.compoundRate)
 	const retainmentValue = `${retainmentRate.toLocaleString(
@@ -131,12 +127,26 @@ export const ValidatorBar = ({
 							{prefs?.blocked === true && (
 								<BlockedBadge>{t('blocked')}</BlockedBadge>
 							)}
-							{stakingApiEnabled && (
-								<BarContextBadge title={contextLabel}>
-									{monthLabel} · {identityCount} ids
-								</BarContextBadge>
-							)}
 						</HeaderIdentity>
+						<BarPerformanceGraph
+							aria-label={t('performance')}
+							title={t('performance')}
+						>
+							{stakingApiEnabled ? (
+								<HistoricalEraPoints
+									address={address}
+									displayFor={displayFor}
+									eraPoints={eraPoints}
+									stretch
+								/>
+							) : (
+								<CurrentEraPoints
+									address={address}
+									displayFor={displayFor}
+									stretch
+								/>
+							)}
+						</BarPerformanceGraph>
 					</BarIdentity>
 
 					<BarStats $withRetainment={stakingApiEnabled}>
@@ -174,7 +184,7 @@ export const ValidatorBar = ({
 						</BarStat>
 						{stakingApiEnabled && (
 							<>
-								<BarStat title={contextLabel}>
+								<BarStat>
 									<BarStatLabel>
 										{t('retainmentRate', {
 											defaultValue: 'Retainment',
@@ -190,7 +200,7 @@ export const ValidatorBar = ({
 										{retainmentValue}
 									</BarStatValue>
 								</BarStat>
-								<BarStat title={contextLabel}>
+								<BarStat>
 									<BarStatLabel>
 										{t('compoundRate', { defaultValue: 'Compound' })}
 									</BarStatLabel>
@@ -205,7 +215,7 @@ export const ValidatorBar = ({
 										{compoundValue}
 									</BarStatValue>
 								</BarStat>
-								<BarStat title={contextLabel}>
+								<BarStat>
 									<BarStatLabel>{flowLabel}</BarStatLabel>
 									<BarStatValue $color={flowColor}>
 										<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
