@@ -5,7 +5,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { usePlugins } from 'hooks/usePlugins'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
-import { APY } from 'library/ListItem/Labels/APY'
+// import { APY } from 'library/ListItem/Labels/APY'
 import { Quartile } from 'library/ListItem/Labels/Quartile'
 import { Wrapper } from 'library/ListItem/Wrappers'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
@@ -26,24 +26,24 @@ export const Item = ({
 	displayFor,
 	nominationStatus,
 	eraPoints,
-	rate,
+	// rate,
 }: ItemProps) => {
 	const { pluginEnabled } = usePlugins()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs } = validator
-	const commission = prefs?.commission ?? null
+	// const commission = prefs?.commission ?? null
 
 	// Whether buttons should be styled as outline.
 	const outline = displayFor === 'canvas'
 
 	// Rate after commission
-	const rateAfterCommission =
-		typeof rate === 'number' &&
-		!isNaN(rate) &&
-		typeof commission === 'number' &&
-		!isNaN(commission)
-			? rate * (1 - commission / 100)
-			: undefined
+	// const rateAfterCommission =
+	// 	typeof rate === 'number' &&
+	// 	!isNaN(rate) &&
+	// 	typeof commission === 'number' &&
+	// 	!isNaN(commission)
+	// 		? rate * (1 - commission / 100)
+	// 		: undefined
 
 	return (
 		<Wrapper>

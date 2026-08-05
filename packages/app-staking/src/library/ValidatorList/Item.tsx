@@ -12,7 +12,7 @@ import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
-import { APY } from 'library/ListItem/Labels/APY'
+// import { APY } from 'library/ListItem/Labels/APY'
 import { Quartile } from 'library/ListItem/Labels/Quartile'
 import { Wrapper } from 'library/ListItem/Wrappers'
 import type { Validator } from 'types'
@@ -30,13 +30,13 @@ export const Item = ({
 	displayFor,
 	eraPoints,
 	onRemove,
-	rate,
+	// rate,
 }: ItemProps) => {
 	const { pluginEnabled } = usePlugins()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
-	const commission = prefs?.commission ?? null
+	// const commission = prefs?.commission ?? null
 
 	const isSelected = !!selected.filter(
 		(item) => (item as Validator).address === validator.address,
@@ -48,13 +48,13 @@ export const Item = ({
 	})
 
 	// Rate after commission
-	const rateAfterCommission =
-		typeof rate === 'number' &&
-		Number.isFinite(rate) &&
-		typeof commission === 'number' &&
-		Number.isFinite(commission)
-			? rate * (1 - commission / 100)
-			: undefined
+	// const rateAfterCommission =
+	// 	typeof rate === 'number' &&
+	// 	Number.isFinite(rate) &&
+	// 	typeof commission === 'number' &&
+	// 	Number.isFinite(commission)
+	// 		? rate * (1 - commission / 100)
+	// 		: undefined
 
 	return (
 		<Wrapper>
