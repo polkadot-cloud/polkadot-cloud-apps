@@ -21,6 +21,7 @@ import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
 import { RetainmentStats } from './RetainmentStats'
+import { RowActionsMenu } from './RowActionsMenu'
 import type { ItemProps } from './types'
 import { ValidatorBar } from './ValidatorBar'
 import { ValidatorSummary } from './ValidatorSummary'
@@ -77,7 +78,11 @@ export const DetailedItem = ({
 		validatorOwnStake !== undefined
 			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
 			: undefined
-	const actions = (
+	const validatorDisplay = getIdentityDisplay(
+		validatorIdentities[address],
+		validatorSupers[address],
+	).node
+	const cardActions = (
 		<HeaderActions>
 			<HeaderIconAction>
 				<CopyAddress address={address} />
@@ -101,15 +106,7 @@ export const DetailedItem = ({
 			)}
 			{displayFor === 'default' && (
 				<HeaderMetricsAction>
-					<Metrics
-						address={address}
-						display={
-							getIdentityDisplay(
-								validatorIdentities[address],
-								validatorSupers[address],
-							).node
-						}
-					/>
+					<Metrics address={address} display={validatorDisplay} />
 				</HeaderMetricsAction>
 			)}
 		</HeaderActions>
@@ -118,7 +115,19 @@ export const DetailedItem = ({
 	if (format === 'row') {
 		return (
 			<ValidatorBar
-				actions={actions}
+				actions={
+					<RowActionsMenu
+						address={address}
+						display={validatorDisplay}
+						onRemove={
+							typeof onRemove === 'function'
+								? () => onRemove({ selected: [validator] })
+								: undefined
+						}
+						showFavorite={toggleFavorites === true}
+						showMetrics={displayFor === 'default'}
+					/>
+				}
 				innerClasses={innerClasses}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
@@ -142,7 +151,7 @@ export const DetailedItem = ({
 								<BlockedBadge>{t('blocked')}</BlockedBadge>
 							)}
 						</HeaderIdentity>
-						{actions}
+						{cardActions}
 					</div>
 					<ValidatorSummary
 						address={address}

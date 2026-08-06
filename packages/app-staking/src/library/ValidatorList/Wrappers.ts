@@ -253,6 +253,49 @@ export const HeaderMetricsAction = styled(HeaderIconAction)`
   }
 `
 
+export const ValidatorMenuWrapper = styled.div`
+  flex: 0 0 2.25rem;
+  height: 2.25rem !important;
+  position: relative;
+  width: 2.25rem;
+`
+
+export const ValidatorMenuTrigger = styled.button`
+  background: transparent !important;
+  border: 1px solid var(--gray-500);
+  border-radius: 0.55rem !important;
+  color: var(--gray-800);
+  display: grid;
+  height: 2.25rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  place-items: center;
+  width: 2.25rem !important;
+
+  &:hover,
+  &[aria-expanded='true'] {
+    background: var(--gray-300) !important;
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    border-color: var(--gray-900);
+    outline: 2px solid
+      color-mix(in srgb, var(--gray-1000) 18%, transparent);
+    outline-offset: 1px;
+  }
+
+  > svg {
+    color: var(--gray-800) !important;
+    font-size: 0.85rem;
+    transition: transform var(--transition-duration) ease;
+  }
+
+  &[aria-expanded='true'] > svg {
+    transform: rotate(180deg);
+  }
+`
+
 export const SummaryRow = styled.section`
   gap: 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
