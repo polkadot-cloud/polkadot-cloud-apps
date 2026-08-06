@@ -29,9 +29,11 @@ export const VALIDATOR_RETAINMENT_BATCH_FIELDS = gql`
         fromTimestamp
         toTimestamp
         graphRewards
+        netInflow
         retained
         retainmentRate
         validatorRewards
+        selfStakeChange
         compounded
         compoundRate
       }

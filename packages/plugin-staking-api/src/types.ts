@@ -218,9 +218,11 @@ export interface ValidatorRetainmentPeriod {
 	fromTimestamp: number
 	toTimestamp: number
 	graphRewards: string
+	netInflow: string
 	retained: string
 	retainmentRate: number | null
 	validatorRewards: string
+	selfStakeChange: string
 	compounded: string
 	compoundRate: number
 }

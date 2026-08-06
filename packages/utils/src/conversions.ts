@@ -5,10 +5,16 @@ import { planckToUnit, rmCommas } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 
 // Return `planckToUnit` as a BigNumber
-export const planckToUnitBn = (val: BigNumber, units: number): BigNumber =>
-	new BigNumber(
-		planckToUnit(val.decimalPlaces(0).toFormat({ groupSeparator: '' }), units),
-	)
+export const planckToUnitBn = (val: BigNumber, units: number): BigNumber => {
+	const negative = val.isNegative()
+	const absoluteValue = val
+		.abs()
+		.decimalPlaces(0)
+		.toFormat({ groupSeparator: '' })
+	const result = new BigNumber(planckToUnit(absoluteValue, units))
+
+	return negative ? result.negated() : result
+}
 
 // Converts a string to a BigNumber
 export const stringToBn = (value: string): BigNumber =>

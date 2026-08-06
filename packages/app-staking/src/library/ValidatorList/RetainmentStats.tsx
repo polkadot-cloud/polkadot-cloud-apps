@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
+	faArrowRight,
 	faArrowTrendDown,
 	faArrowTrendUp,
 } from '@fortawesome/free-solid-svg-icons'
@@ -83,41 +84,52 @@ const RateStat = ({
 	)
 }
 
-const AmountStat = ({
-	amount,
+const SignedAmountStat = ({
+	value,
 	label,
 	locale,
 	unit,
-	units,
 }: {
-	amount?: string
+	value?: number
 	label: string
 	locale?: string
 	unit: string
-	units: number
 }) => {
-	const value =
-		amount === undefined
-			? undefined
-			: planckToUnitBn(new BigNumber(amount), units).toNumber()
 	const valueText =
 		value === undefined
 			? '—'
-			: value.toLocaleString(locale, {
+			: Math.abs(value).toLocaleString(locale, {
 					notation: 'compact',
 					maximumFractionDigits: 1,
 				})
+	const color =
+		value === undefined || value === 0
+			? 'var(--text-tertiary)'
+			: value > 0
+				? 'var(--status-success)'
+				: 'var(--status-danger)'
+	const icon =
+		value === undefined
+			? undefined
+			: value > 0
+				? faArrowTrendUp
+				: value < 0
+					? faArrowTrendDown
+					: faArrowRight
+	const prefix = value === undefined || value === 0 ? '' : value > 0 ? '+' : '−'
 
 	return (
 		<FlowMetric>
 			<FlowLabel title={label}>{label}</FlowLabel>
 			<FlowValue
-				$color={
-					value === undefined ? 'var(--text-tertiary)' : 'var(--gray-1000)'
-				}
-				aria-label={`${label}: ${valueText}${value === undefined ? '' : ` ${unit}`}`}
+				$color={color}
+				aria-label={`${label}: ${prefix}${valueText}${value === undefined ? '' : ` ${unit}`}`}
 			>
-				<span>{valueText}</span>
+				{icon && <FontAwesomeIcon icon={icon} aria-hidden="true" />}
+				<span>
+					{prefix}
+					{valueText}
+				</span>
 				{value !== undefined && <small>{unit}</small>}
 			</FlowValue>
 		</FlowMetric>
@@ -147,12 +159,19 @@ export const RetainmentStats = ({
 
 	const retainmentLabel = t('retainmentRate')
 	const compoundLabel = t('compoundRate')
-	const retainedLabel = t('retainedRewards', {
-		defaultValue: 'Retained rewards',
-	})
-	const compoundedLabel = t('compoundedRewards', {
-		defaultValue: 'Compounded rewards',
-	})
+	const selfStakeLabel = t('selfStake')
+	const selfStakeChange = period
+		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
+		: undefined
+	const netInflow = period
+		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
+		: undefined
+	const flowLabel =
+		netInflow === undefined || netInflow > 0
+			? t('netInflow')
+			: netInflow < 0
+				? t('netOutflow')
+				: t('noNetFlow')
 	const maximumLabel = t('maximum')
 	const statsLabel = t('retainmentStats')
 
@@ -181,19 +200,17 @@ export const RetainmentStats = ({
 					locale={i18n.resolvedLanguage}
 					maximumLabel={maximumLabel}
 				/>
-				<AmountStat
-					amount={period?.retained}
-					label={retainedLabel}
+				<SignedAmountStat
+					value={selfStakeChange}
+					label={selfStakeLabel}
 					locale={i18n.resolvedLanguage}
 					unit={unit}
-					units={units}
 				/>
-				<AmountStat
-					amount={period?.compounded}
-					label={compoundedLabel}
+				<SignedAmountStat
+					value={netInflow}
+					label={flowLabel}
 					locale={i18n.resolvedLanguage}
 					unit={unit}
-					units={units}
 				/>
 			</RetainmentBody>
 		</RetainmentRow>

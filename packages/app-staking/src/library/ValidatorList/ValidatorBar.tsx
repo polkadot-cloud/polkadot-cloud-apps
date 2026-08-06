@@ -1,6 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import {
+	faArrowRight,
+	faArrowTrendDown,
+	faArrowTrendUp,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
@@ -95,19 +101,38 @@ export const ValidatorBar = ({
 			: `${compoundRate.toLocaleString(i18n.resolvedLanguage, {
 					maximumFractionDigits: 1,
 				})}%`
-	const retained = retainment
-		? planckToUnitBn(new BigNumber(retainment.retained), units).toNumber()
+	const netInflow = retainment
+		? planckToUnitBn(new BigNumber(retainment.netInflow), units).toNumber()
 		: undefined
-	const retainedValue =
-		retained === undefined
+	const flowValue =
+		netInflow === undefined
 			? '—'
-			: retained.toLocaleString(i18n.resolvedLanguage, {
+			: Math.abs(netInflow).toLocaleString(i18n.resolvedLanguage, {
 					notation: 'compact',
 					maximumFractionDigits: 1,
 				})
-	const retainedLabel = t('retainedRewards', {
-		defaultValue: 'Retained rewards',
-	})
+	const flowLabel =
+		netInflow === undefined || netInflow > 0
+			? t('netInflow')
+			: netInflow < 0
+				? t('netOutflow')
+				: t('noNetFlow')
+	const flowColor =
+		netInflow === undefined || netInflow === 0
+			? 'var(--text-tertiary)'
+			: netInflow > 0
+				? 'var(--status-success)'
+				: 'var(--status-danger)'
+	const flowIcon =
+		netInflow === undefined
+			? undefined
+			: netInflow > 0
+				? faArrowTrendUp
+				: netInflow < 0
+					? faArrowTrendDown
+					: faArrowRight
+	const flowPrefix =
+		netInflow === undefined || netInflow === 0 ? '' : netInflow > 0 ? '+' : '−'
 
 	return (
 		<BarWrapper>
@@ -207,10 +232,16 @@ export const ValidatorBar = ({
 							</BarStatValue>
 						</BarStat>
 						<BarStat>
-							<BarStatLabel>{retainedLabel}</BarStatLabel>
-							<BarStatValue>
-								<span>{retainedValue}</span>
-								{retained !== undefined && <small>{unit}</small>}
+							<BarStatLabel>{flowLabel}</BarStatLabel>
+							<BarStatValue $color={flowColor}>
+								{flowIcon && (
+									<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
+								)}
+								<span>
+									{flowPrefix}
+									{flowValue}
+								</span>
+								{netInflow !== undefined && <small>{unit}</small>}
 							</BarStatValue>
 						</BarStat>
 					</BarStats>
