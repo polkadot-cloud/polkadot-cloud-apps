@@ -26,7 +26,7 @@ export const Identity = ({ address }: IdentityProps) => {
 		)
 	}, [validatorSupers, validatorIdentities, address])
 
-	const polkiconSize = '2rem'
+	const polkiconSize = '2.2rem'
 
 	return (
 		<Wrapper>
