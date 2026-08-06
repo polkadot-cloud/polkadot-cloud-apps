@@ -453,7 +453,7 @@ export const ValidatorListInner = ({
 export const ValidatorList = (props: ValidatorListProps) => {
 	const { selectable } = props
 	return (
-		<ListProvider selectable={selectable}>
+		<ListProvider selectable={selectable} initialListFormat="row">
 			<ValidatorListInner {...props} />
 		</ListProvider>
 	)

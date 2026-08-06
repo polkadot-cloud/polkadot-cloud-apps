@@ -19,6 +19,7 @@ export const useListContext = () => {
 export const ListProvider = ({
 	selectable: initialSelectable = false,
 	children,
+	initialListFormat = 'col',
 }: ListProviderProps) => {
 	// Current page
 	const [page, setPage] = useState<number>(1)
@@ -30,7 +31,7 @@ export const ListProvider = ({
 	const [selectable] = useState<boolean>(initialSelectable ?? false)
 
 	// Store the list format of the list
-	const [listFormat, _setListFormat] = useState<ListFormat>('col')
+	const [listFormat, _setListFormat] = useState<ListFormat>(initialListFormat)
 
 	const addToSelected = (_item: SelectableListItem) => {
 		setSelected([...selected].concat(_item))
