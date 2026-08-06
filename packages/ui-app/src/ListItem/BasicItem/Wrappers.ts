@@ -3,7 +3,7 @@
 
 import styled from 'styled-components'
 
-export const Wrapper = styled.div`
+export const BasicItemWrapper = styled.div`
   --height-top-row: 3.25rem;
   --height-bottom-row: 5.5rem;
   --item-border-width: 1.25px;
@@ -11,88 +11,84 @@ export const Wrapper = styled.div`
   &.member {
     --height-bottom-row: 3.75rem;
   }
+
   &.pool {
     --height-bottom-row: 3.25rem;
   }
 
   --height-total: calc(var(--height-top-row) + var(--height-bottom-row));
 
-  height: var(--height-total);
   display: flex;
   flex-flow: row wrap;
-  position: relative;
+  height: var(--height-total);
   margin: 0.5rem;
+  position: relative;
   width: 100%;
 
   > .inner {
+    align-items: center;
     background: var(--bg-list);
     border: var(--item-border-width) solid var(--bg-list);
-
-    &.canvas {
-      background: var(--gray-300);
-      border: var(--item-border-width) solid var(--gray-400)
-    }
-
-    &.canvas {
-      box-shadow: none;
-    }
-
     border-radius: 0.75rem;
     display: flex;
     flex-flow: row wrap;
-    align-items: center;
-    overflow: hidden;
-    position: absolute;
-    padding: 0;
-    top: 0px;
-    left: 0px;
-    width: 100%;
     height: 100%;
+    left: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    top: 0;
     transition: border var(--transition-duration) ease;
+    width: 100%;
+
+    &.canvas {
+      background: var(--gray-300);
+      border: var(--item-border-width) solid var(--gray-400);
+      box-shadow: none;
+    }
 
     &.selected {
       border-color: var(--gray-1000);
     }
 
     .row {
-      flex: 1 0 100%;
-      display: flex;
       align-items: center;
+      display: flex;
+      flex: 1 0 100%;
       padding: 0 0.5rem;
 
       &.top {
         height: var(--height-top-row);
+
         > div {
-          height: inherit;
-          display: flex;
           align-items: center;
+          display: flex;
+          height: inherit;
         }
       }
 
       &.bottom {
         height: var(--height-bottom-row);
-        padding: 0 0.25rem;
-        padding-top: 0.25rem;
+        padding: 0.25rem 0.25rem 0;
 
         &.pools {
           align-items: flex-start;
         }
 
         &.lg {
-          display: flex;
           align-items: center;
+          display: flex;
 
-          > div {
-            &:first-child {
-              flex-grow: 1;
-              padding: 0 0.25rem;
-            }
-            &:last-child {
-              flex-shrink: 1;
-              display: flex;
-              flex-direction: column;
-              align-items: flex-end;
-            }
+          > div:first-child {
+            flex-grow: 1;
+            padding: 0 0.25rem;
+          }
+
+          > div:last-child {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 1;
           }
         }
       }
@@ -100,9 +96,7 @@ export const Wrapper = styled.div`
   }
 `
 
-export const PoolStatusWrapper = styled.div<{
-	$status: string
-}>`
+export const PoolStatusWrapper = styled.div<{ $status: string }>`
   h4,
   h5 {
     display: flex;
@@ -110,26 +104,24 @@ export const PoolStatusWrapper = styled.div<{
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   h4 {
     color: var(--text-tertiary);
     font-size: 1rem;
-
     padding-top: ${(props) =>
 			props.$status === 'active' ? '0.15rem' : '0.25rem'};
 
     > span {
+      border: 0.75px solid
+        ${(props) =>
+					props.$status === 'active' ? 'var(--status-success)' : 'transparent'};
+      border-radius: 0.3rem;
       color: ${(props) =>
 				props.$status === 'active'
 					? 'var(--status-success)'
 					: 'var(--text-tertiary)'};
-
-      border: 0.75px solid
-        ${(props) =>
-					props.$status === 'active' ? 'var(--status-success)' : 'transparent'};
-
-      padding: ${(props) => (props.$status === 'active' ? '0 0.5rem' : '0')};
-      border-radius: 0.3rem;
       opacity: ${(props) => (props.$status === 'active' ? 1 : 0.6)};
+      padding: ${(props) => (props.$status === 'active' ? '0 0.5rem' : '0')};
     }
   }
 `

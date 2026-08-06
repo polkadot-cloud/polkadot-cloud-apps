@@ -4,10 +4,10 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { PoolStatusWrapper } from 'library/ListItem/Wrappers'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
+import { PoolStatusWrapper } from 'ui-app/ListItem'
 import { getPoolNominationStatusCode } from 'utils'
 
 export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {

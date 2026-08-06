@@ -1,8 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faBars, faGripVertical } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { getPeopleChainId } from 'consts/util'
 import { useFilters } from 'contexts/Filters'
@@ -14,7 +12,6 @@ import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useSyncing } from 'hooks/useSyncing'
-import { useThemeValues } from 'hooks/useThemeValues'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer } from 'library/List/MotionContainer'
@@ -27,13 +24,13 @@ import type { FormEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { NominationStatus, Validator } from 'types'
+import { ListFormatToggle } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { FilterBadges } from './Filters/FilterBadges'
 import { FilterHeaders } from './Filters/FilterHeaders'
 import { Item } from './Item'
 import type { ValidatorListProps } from './types'
-import { ListFormatSwitch } from './Wrappers'
 
 const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
 
@@ -75,7 +72,6 @@ export const ValidatorListInner = ({
 	const { erasPerDay } = useErasPerDay()
 	const { pluginEnabled } = usePlugins()
 	const stakingApiEnabled = pluginEnabled('staking_api')
-	const { getThemeValue } = useThemeValues()
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
@@ -256,43 +252,6 @@ export const ValidatorListInner = ({
 		setSearchTerm('validators', newValue)
 	}
 
-	const listFormatButtons = (
-		<>
-			<button
-				type="button"
-				onClick={() => setListFormat('row')}
-				aria-label={t('rowView', {
-					ns: 'app',
-					defaultValue: 'Compact row view',
-				})}
-				aria-pressed={listFormat === 'row'}
-			>
-				<FontAwesomeIcon
-					icon={faBars}
-					color={
-						listFormat === 'row' ? getThemeValue('--gray-1000') : 'inherit'
-					}
-				/>
-			</button>
-			<button
-				type="button"
-				onClick={() => setListFormat('col')}
-				aria-label={t('cardView', {
-					ns: 'app',
-					defaultValue: 'Detailed card view',
-				})}
-				aria-pressed={listFormat === 'col'}
-			>
-				<FontAwesomeIcon
-					icon={faGripVertical}
-					color={
-						listFormat === 'col' ? getThemeValue('--gray-1000') : 'inherit'
-					}
-				/>
-			</button>
-		</>
-	)
-
 	// Handle validator list bootstrapping.
 	const setupValidatorList = () => {
 		setValidatorsDefault(prepareInitialValidators())
@@ -427,12 +386,13 @@ export const ValidatorListInner = ({
 				<FilterHeaderWrapper>
 					<div>{allowFilters && <FilterHeaders />}</div>
 					<div>
-						{allowListFormat &&
-							(stakingApiEnabled ? (
-								<ListFormatSwitch>{listFormatButtons}</ListFormatSwitch>
-							) : (
-								listFormatButtons
-							))}
+						{allowListFormat && (
+							<ListFormatToggle
+								hideOnCompact={stakingApiEnabled}
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</FilterHeaderWrapper>
 				{allowFilters && <FilterBadges />}

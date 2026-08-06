@@ -10,7 +10,7 @@ import {
 import BigNumber from 'bignumber.js'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
-import { planckToUnitBn } from 'utils'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 import { clampRate, getRateColor } from './retainment'
 
 export interface RetainmentStatData {
@@ -111,10 +111,7 @@ const getSignedAmountStat = ({
 		? 'MAX'
 		: value === undefined
 			? '—'
-			: Math.abs(value).toLocaleString(locale, {
-					notation: 'compact',
-					maximumFractionDigits: 1,
-				})
+			: formatCompactNumber(Math.abs(value), locale)
 	const color = max
 		? 'var(--status-success)'
 		: value === undefined || value === 0

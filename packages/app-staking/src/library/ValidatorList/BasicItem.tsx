@@ -12,8 +12,8 @@ import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { APY } from 'library/ListItem/Labels/APY'
 import { Quartile } from 'library/ListItem/Labels/Quartile'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import type { Validator } from 'types'
+import { BasicItemWrapper } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
@@ -53,7 +53,7 @@ export const BasicItem = ({
 			: undefined
 
 	return (
-		<Wrapper>
+		<BasicItemWrapper>
 			<div className={innerClasses}>
 				<div className="row top">
 					{selectable && <Select item={validator} />}
@@ -99,6 +99,6 @@ export const BasicItem = ({
 					</div>
 				</div>
 			</div>
-		</Wrapper>
+		</BasicItemWrapper>
 	)
 }

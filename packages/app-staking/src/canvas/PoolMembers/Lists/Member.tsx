@@ -13,12 +13,12 @@ import { useMenu } from 'hooks/useMenu'
 import { ClaimPermission } from 'library/ListItem/Labels/ClaimPermission'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { PoolMemberBonded } from 'library/ListItem/Labels/PoolMemberBonded'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { motion } from 'motion/react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyJson } from 'types'
+import { BasicItemWrapper } from 'ui-app/ListItem'
 import { MenuList } from 'ui-app/Menu'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { usePrompt } from 'ui-overlay'
@@ -122,7 +122,7 @@ export const Member = ({
 				},
 			}}
 		>
-			<Wrapper className="member">
+			<BasicItemWrapper className="member">
 				<div className="inner canvas">
 					<div className="row top">
 						<Identity address={member.address} />
@@ -149,7 +149,7 @@ export const Member = ({
 						</LabelRow>
 					</div>
 				</div>
-			</Wrapper>
+			</BasicItemWrapper>
 		</motion.div>
 	)
 }

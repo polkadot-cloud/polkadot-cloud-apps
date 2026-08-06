@@ -4,8 +4,8 @@
 import BigNumber from 'bignumber.js'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Identity } from 'library/ListItem/Labels/Identity'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { useTranslation } from 'react-i18next'
+import { BasicItemWrapper } from 'ui-app/ListItem'
 import { HeaderButtonRow, Label, LabelRow, Separator } from 'ui-core/list'
 import { NominationStatus } from '../ListItem/Labels/NominationStatus'
 import type { NominatorListItemProps } from './types'
@@ -26,7 +26,7 @@ export const Item = ({ item, unit }: NominatorListItemProps) => {
 	}
 
 	return (
-		<Wrapper>
+		<BasicItemWrapper>
 			<div className="inner default">
 				<div className="row top">
 					<Identity address={address} />
@@ -63,6 +63,6 @@ export const Item = ({ item, unit }: NominatorListItemProps) => {
 					</div>
 				</div>
 			</div>
-		</Wrapper>
+		</BasicItemWrapper>
 	)
 }

@@ -19,13 +19,13 @@ import { Confirm } from 'library/Prompt/Confirm'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MenuList } from 'ui-app/Menu'
-import { useOverlay, usePrompt } from 'ui-overlay'
 import {
 	HeaderActions,
-	ValidatorMenuTrigger,
-	ValidatorMenuWrapper,
-} from './Wrappers'
+	ListItemMenuTrigger,
+	ListItemMenuWrapper,
+} from 'ui-app/ListItem'
+import { MenuList } from 'ui-app/Menu'
+import { useOverlay, usePrompt } from 'ui-overlay'
 
 interface RowActionsMenuProps {
 	address: string
@@ -151,8 +151,8 @@ export const RowActionsMenu = ({
 
 	return (
 		<HeaderActions>
-			<ValidatorMenuWrapper>
-				<ValidatorMenuTrigger
+			<ListItemMenuWrapper>
+				<ListItemMenuTrigger
 					type="button"
 					aria-label={t('otherOptions')}
 					aria-haspopup="menu"
@@ -160,8 +160,8 @@ export const RowActionsMenu = ({
 					onClick={toggleMenu}
 				>
 					<FontAwesomeIcon icon={faChevronDown} aria-hidden="true" />
-				</ValidatorMenuTrigger>
-			</ValidatorMenuWrapper>
+				</ListItemMenuTrigger>
+			</ListItemMenuWrapper>
 		</HeaderActions>
 	)
 }

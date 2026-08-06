@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useTranslation } from 'react-i18next'
+import { BarWrapper, ItemWrapper } from 'ui-app/ListItem'
 import { Loader } from 'ui-core/base'
-import { BarWrapper, ItemWrapper } from './Wrappers'
 
 export const DetailedItemPreloader = ({
 	format,

@@ -12,8 +12,8 @@ import { PoolBonded } from 'library/ListItem/Labels/PoolBonded'
 import { PoolCommission } from 'library/ListItem/Labels/PoolCommission'
 import { PoolIdentity } from 'library/ListItem/Labels/PoolIdentity'
 import { PoolNominateStatus } from 'library/ListItem/Labels/PoolNominateStatus'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { usePoolsTabs } from 'pages/PoolsList/context'
+import { BasicItemWrapper } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { PoolMetrics } from '../ListItem/Buttons/PoolMetrics'
 import { Members } from '../ListItem/Labels/Members'
@@ -29,7 +29,7 @@ export const Pool = ({ pool }: PoolProps) => {
 	const currentCommission = getCurrentCommission(id)
 
 	return (
-		<Wrapper className="pool">
+		<BasicItemWrapper className="pool">
 			<div className="inner">
 				<div className="row top">
 					<PoolIdentity pool={pool} />
@@ -65,6 +65,6 @@ export const Pool = ({ pool }: PoolProps) => {
 					</div>
 				</div>
 			</div>
-		</Wrapper>
+		</BasicItemWrapper>
 	)
 }

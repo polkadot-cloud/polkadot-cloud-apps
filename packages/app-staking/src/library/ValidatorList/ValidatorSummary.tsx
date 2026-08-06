@@ -9,22 +9,29 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
-import { planckToUnitBn } from 'utils'
 import {
+	DetailLoader,
 	SummaryItem,
 	SummaryLabel,
 	SummaryRow,
 	SummaryStatusDot,
 	SummaryUnit,
 	SummaryValue,
-} from './Wrappers'
+} from 'ui-app/ListItem'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 
 interface ValidatorSummaryProps {
 	address: string
+	ariaLabel?: string
+	isRatePreloading?: boolean
+	isStatusValuePreloading?: boolean
 	rate?: number
 	selfStake?: BigNumber
 	selfStakeMax: boolean
 	status: ValidatorStatus
+	statusActive?: boolean
+	statusLabel?: string
+	statusValue?: BigNumber
 	unit: string
 }
 
@@ -34,6 +41,8 @@ export const useValidatorSummaryData = ({
 	selfStake,
 	selfStakeMax,
 	status,
+	statusLabel: statusLabelOverride,
+	statusValue,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { syncing } = useSyncing()
@@ -43,17 +52,23 @@ export const useValidatorSummaryData = ({
 	const { units } = getStakingChainData(network)
 
 	const validatorStatus = syncing ? 'waiting' : status
-	const statusLabel = syncing
-		? t('syncing')
-		: validatorStatus === 'waiting'
-			? capitalizeFirstLetter(t(validatorStatus) ?? '')
-			: t('listItemActive')
+	const statusLabel =
+		statusLabelOverride ??
+		(syncing
+			? t('syncing')
+			: validatorStatus === 'waiting'
+				? capitalizeFirstLetter(t(validatorStatus) ?? '')
+				: t('listItemActive'))
 	const totalStake =
-		!syncing && validatorStatus !== 'waiting'
-			? planckToUnitBn(new BigNumber(getValidatorTotalStake(address)), units)
-					.integerValue()
-					.toFormat()
-			: undefined
+		statusValue !== undefined
+			? statusValue.isGreaterThan(0)
+				? formatCompactNumber(statusValue.toNumber(), i18n.resolvedLanguage)
+				: undefined
+			: !syncing && validatorStatus !== 'waiting'
+				? planckToUnitBn(new BigNumber(getValidatorTotalStake(address)), units)
+						.integerValue()
+						.toFormat()
+				: undefined
 
 	const quartile = getValidatorRankSegment(address)
 	const quartileLabel = ![100, undefined].includes(quartile)
@@ -66,10 +81,7 @@ export const useValidatorSummaryData = ({
 	const selfStakeLabel = selfStakeMax
 		? 'MAX'
 		: selfStake !== undefined
-			? selfStake.toNumber().toLocaleString(i18n.resolvedLanguage, {
-					notation: 'compact',
-					maximumFractionDigits: 1,
-				})
+			? formatCompactNumber(selfStake.toNumber(), i18n.resolvedLanguage)
 			: '—'
 
 	return {
@@ -85,7 +97,14 @@ export const useValidatorSummaryData = ({
 
 export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	const { t } = useTranslation('app')
-	const { selfStake, unit } = props
+	const {
+		ariaLabel,
+		isRatePreloading = false,
+		isStatusValuePreloading = false,
+		selfStake,
+		statusActive,
+		unit,
+	} = props
 	const {
 		quartileLabel,
 		rateLabel,
@@ -99,26 +118,40 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	return (
 		<SummaryRow
 			className="row summary"
-			aria-label={t('validatorSummary', {
-				defaultValue: 'Validator summary',
-			})}
+			aria-label={
+				ariaLabel ??
+				t('validatorSummary', {
+					defaultValue: 'Validator summary',
+				})
+			}
 		>
 			<SummaryItem>
 				<SummaryLabel>
 					<SummaryStatusDot
-						$active={validatorStatus === 'active'}
+						$active={statusActive ?? validatorStatus === 'active'}
 						aria-hidden="true"
 					/>
 					<span>{statusLabel}</span>
 				</SummaryLabel>
-				<SummaryValue title={totalStake ? `${totalStake} ${unit}` : undefined}>
-					<span>{totalStake ?? '—'}</span>
-					{totalStake && <SummaryUnit>{unit}</SummaryUnit>}
+				<SummaryValue
+					aria-busy={isStatusValuePreloading}
+					title={totalStake ? `${totalStake} ${unit}` : undefined}
+				>
+					{isStatusValuePreloading ? (
+						<DetailLoader />
+					) : (
+						<>
+							<span>{totalStake ?? '—'}</span>
+							{totalStake && <SummaryUnit>{unit}</SummaryUnit>}
+						</>
+					)}
 				</SummaryValue>
 			</SummaryItem>
-			<SummaryItem>
+			<SummaryItem aria-busy={isRatePreloading}>
 				<SummaryLabel>APY</SummaryLabel>
-				<SummaryValue>{rateLabel}</SummaryValue>
+				<SummaryValue>
+					{isRatePreloading ? <DetailLoader /> : rateLabel}
+				</SummaryValue>
 			</SummaryItem>
 			<SummaryItem>
 				<SummaryLabel>{t('performance')}</SummaryLabel>
