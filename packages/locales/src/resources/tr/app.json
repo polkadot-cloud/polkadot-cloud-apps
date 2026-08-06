@@ -332,8 +332,6 @@
 		"resetLedgerAccounts": "Ledger Hesaplarını Sıfırla",
 		"resources": "Kaynaklar",
 		"retainment": "Elde tutma",
-		"retainmentIdentityCount_one": "{{count}} kimlik",
-		"retainmentIdentityCount_other": "{{count}} kimlik",
 		"retainmentRate": "Elde tutma oranı",
 		"retainmentStats": "Elde tutma istatistikleri",
 		"revertedToActiveSelection": "Nominasyonlar aktif seçiminize geri alındı.",

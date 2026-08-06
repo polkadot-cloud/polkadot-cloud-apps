@@ -332,8 +332,6 @@
 		"resetLedgerAccounts": "Ledgerアカウントをリセット",
 		"resources": "リソース",
 		"retainment": "維持",
-		"retainmentIdentityCount_one": "{{count}}件のアイデンティティ",
-		"retainmentIdentityCount_other": "{{count}}件のアイデンティティ",
 		"retainmentRate": "維持率",
 		"retainmentStats": "維持統計",
 		"revertedToActiveSelection": "ノミネーションがアクティブな選択に戻されました。",

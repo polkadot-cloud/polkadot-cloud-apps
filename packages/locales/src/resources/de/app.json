@@ -332,8 +332,6 @@
 		"resetLedgerAccounts": "Ledger-Konten zurücksetzen",
 		"resources": "Ressourcen",
 		"retainment": "Bindung",
-		"retainmentIdentityCount_one": "{{count}} Identität",
-		"retainmentIdentityCount_other": "{{count}} Identitäten",
 		"retainmentRate": "Bindungsrate",
 		"retainmentStats": "Bindungsstatistiken",
 		"revertedToActiveSelection": "Nominierungen wurden auf deine aktive Auswahl zurückgesetzt.",

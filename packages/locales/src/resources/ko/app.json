@@ -332,8 +332,6 @@
 		"resetLedgerAccounts": "Ledger 계정 초기화",
 		"resources": "리소스",
 		"retainment": "유지",
-		"retainmentIdentityCount_one": "신원 {{count}}개",
-		"retainmentIdentityCount_other": "신원 {{count}}개",
 		"retainmentRate": "유지율",
 		"retainmentStats": "유지 통계",
 		"revertedToActiveSelection": "지명이 활성 선택으로 복원되었습니다.",

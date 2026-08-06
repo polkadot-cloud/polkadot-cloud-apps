@@ -19,13 +19,10 @@ import {
 	FlowLabel,
 	FlowMetric,
 	FlowValue,
-	IdentityCount,
 	MonthBadge,
-	RetainmentBadges,
 	RetainmentBody,
-	RetainmentHeader,
 	RetainmentRow,
-	RetainmentTitle,
+	SectionHeader,
 } from './Wrappers'
 
 interface RetainmentStatsProps {
@@ -83,7 +80,7 @@ const RateStat = ({
 export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 	const { t, i18n } = useTranslation('app')
 
-	const { month, identityCount } = DUMMY_RETAINMENT
+	const { month } = DUMMY_RETAINMENT
 	const compoundMax =
 		unit === 'DOT' && selfStake?.gte(MAX_SELF_STAKE_DOT) === true
 
@@ -94,10 +91,6 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 		year: 'numeric',
 		timeZone: 'UTC',
 	}).format(monthDate)
-	const identitiesLabel = t('retainmentIdentityCount', {
-		count: identityCount,
-	})
-
 	const flowDirection =
 		month.netFlow > 0 ? 'inflow' : month.netFlow < 0 ? 'outflow' : 'none'
 
@@ -171,17 +164,10 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 
 	return (
 		<RetainmentRow className="row retainment" aria-label={statsLabel}>
-			<RetainmentHeader>
-				<RetainmentTitle>{t('retainment')}</RetainmentTitle>
-				<RetainmentBadges>
-					<IdentityCount title={identitiesLabel}>
-						{identitiesLabel}
-					</IdentityCount>
-					<MonthBadge dateTime={monthDate.toISOString()}>
-						{monthLabel}
-					</MonthBadge>
-				</RetainmentBadges>
-			</RetainmentHeader>
+			<SectionHeader>
+				<strong>{t('retainment')}</strong>
+				<MonthBadge dateTime={monthDate.toISOString()}>{monthLabel}</MonthBadge>
+			</SectionHeader>
 			<RetainmentBody>
 				<RateStat
 					label={retainmentLabel}

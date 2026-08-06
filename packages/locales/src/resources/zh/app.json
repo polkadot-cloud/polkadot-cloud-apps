@@ -328,7 +328,6 @@
 		"resetLedgerAccounts": "重设Ledger帐户",
 		"resources": "信息",
 		"retainment": "留存",
-		"retainmentIdentityCount": "{{count}} 个身份",
 		"retainmentRate": "留存率",
 		"retainmentStats": "留存统计",
 		"revertedToActiveSelection": "提名已恢复为您原来的选择",

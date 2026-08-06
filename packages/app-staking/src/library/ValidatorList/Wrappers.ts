@@ -63,7 +63,6 @@ export const ItemWrapper = styled(Wrapper)`
     background: transparent;
     flex: 0 0 auto;
     flex-direction: column;
-    gap: 1.75rem;
     min-height: 9rem;
     padding: 0.75rem 1rem 1.25rem;
   }
@@ -241,46 +240,16 @@ export const HeaderIconAction = styled.div`
   }
 `
 
-export const ValidatorMenuWrapper = styled.div`
-  flex: 0 0 2.25rem;
-  height: 2.25rem !important;
-  position: relative;
-  width: 2.25rem;
-`
+export const HeaderMetricsAction = styled(HeaderIconAction)`
+  flex: 0 0 auto;
+  width: auto;
 
-export const ValidatorMenuTrigger = styled.button`
-  background: transparent !important;
-  border: 1px solid var(--gray-500);
-  border-radius: 0.55rem !important;
-  color: var(--gray-800);
-  display: grid;
-  height: 2.25rem !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  place-items: center;
-  width: 2.25rem !important;
-
-  &:hover,
-  &[aria-expanded='true'] {
-    background: var(--gray-300) !important;
-    opacity: 1;
-  }
-
-  &:focus-visible {
-    border-color: var(--gray-900);
-    outline: 2px solid
-      color-mix(in srgb, var(--gray-1000) 18%, transparent);
-    outline-offset: 1px;
-  }
-
-  > svg {
-    color: var(--gray-800) !important;
-    font-size: 0.85rem;
-    transition: transform var(--transition-duration) ease;
-  }
-
-  &[aria-expanded='true'] > svg {
-    transform: rotate(180deg);
+  && button {
+    font-family: var(--font-family-semibold);
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    padding: 0 0.85rem !important;
+    width: auto !important;
   }
 `
 
@@ -400,15 +369,18 @@ export const SummaryStatusDot = styled.span<{ $active: boolean }>`
 
 export const PerformanceRow = styled.section``
 
-export const PerformanceHeader = styled.header`
+export const SectionHeader = styled.header`
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 0.7rem;
   margin-bottom: 0.8rem;
+  min-width: 0;
   width: 100%;
 
   > strong {
-    color: var(--gray-1000);
+    color: var(--gray-900);
     font-family: var(--font-family-bold);
     font-size: 1.15rem;
   }
@@ -448,55 +420,16 @@ export const PerformanceGraph = styled.div`
 
 export const RetainmentRow = styled.section``
 
-export const RetainmentHeader = styled.header`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  min-width: 0;
-  width: 100%;
-`
-
-export const RetainmentTitle = styled.strong`
-  color: var(--gray-1000);
-  font-family: var(--font-family-bold);
-  font-size: 1.2rem;
-  margin-right: 0.15rem;
-`
-
-export const RetainmentBadges = styled.div`
-  display: flex;
-  align-items: center;
+export const MonthBadge = styled.time`
   background: transparent;
   border: 1px solid var(--gray-500);
   border-radius: 0.65rem;
-  flex-wrap: nowrap;
-  margin-inline-start: auto;
-  min-width: 0;
-  overflow: hidden;
-`
-
-export const MonthBadge = styled.time`
-  background: transparent;
-  border-inline-start: 1px solid var(--gray-500);
   color: var(--gray-900);
   font-family: var(--font-family-semibold);
   font-size: 0.95rem;
   letter-spacing: normal;
   line-height: 1;
-  padding: 0.65rem 0.85rem;
-  white-space: nowrap;
-`
-
-export const IdentityCount = styled.span`
-  color: var(--gray-900);
-  font-family: var(--font-family-semibold);
-  font-size: 0.95rem;
-  letter-spacing: normal;
-  line-height: 1;
-  overflow: hidden;
-  padding: 0.65rem 0.85rem;
-  text-overflow: ellipsis;
+  padding: 0.5rem 0.75rem;
   white-space: nowrap;
 `
 

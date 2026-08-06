@@ -332,8 +332,6 @@
 		"resetLedgerAccounts": "Réinitialiser les comptes Ledger",
 		"resources": "Ressources",
 		"retainment": "Rétention",
-		"retainmentIdentityCount_one": "{{count}} identité",
-		"retainmentIdentityCount_other": "{{count}} identités",
 		"retainmentRate": "Taux de rétention",
 		"retainmentStats": "Statistiques de rétention",
 		"revertedToActiveSelection": "Les nominations ont été rétablies à votre sélection active.",

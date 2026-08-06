@@ -14,10 +14,8 @@ export const MAX_SELF_STAKE_DOT = 100_000
 // TODO: Replace this view model with validatorRetainment once the query is wired up.
 // The API months array is expected to be latest-first.
 export const DUMMY_RETAINMENT: {
-	identityCount: number
 	month: RetainmentMonth
 } = {
-	identityCount: 10,
 	month: {
 		fromTimestamp: Date.UTC(2026, 6, 1) / 1000,
 		netFlow: 2_240,
