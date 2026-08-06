@@ -88,6 +88,7 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 		unit === 'DOT' && selfStake?.gte(MAX_SELF_STAKE_DOT) === true
 
 	const monthDate = new Date(month.fromTimestamp * 1000)
+
 	const monthLabel = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
 		month: 'long',
 		year: 'numeric',
@@ -95,31 +96,34 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 	}).format(monthDate)
 	const identitiesLabel = t('retainmentIdentityCount', {
 		count: identityCount,
-		defaultValue:
-			identityCount === 1 ? '{{count}} identity' : '{{count}} identities',
 	})
 
 	const flowDirection =
 		month.netFlow > 0 ? 'inflow' : month.netFlow < 0 ? 'outflow' : 'none'
+
 	const flowLabel =
 		flowDirection === 'inflow'
-			? t('netInflow', { defaultValue: 'Net inflow' })
+			? t('netInflow')
 			: flowDirection === 'outflow'
-				? t('netOutflow', { defaultValue: 'Net outflow' })
-				: t('noNetFlow', { defaultValue: 'No net flow' })
+				? t('netOutflow')
+				: t('noNetFlow')
+
 	const flowColor =
 		flowDirection === 'inflow'
 			? 'var(--status-success)'
 			: flowDirection === 'outflow'
 				? 'var(--status-danger)'
 				: 'var(--text-tertiary)'
+
 	const flowIcon =
 		flowDirection === 'inflow'
 			? faArrowTrendUp
 			: flowDirection === 'outflow'
 				? faArrowTrendDown
 				: faArrowRight
+
 	const flowPrefix = month.netFlow > 0 ? '+' : month.netFlow < 0 ? '−' : ''
+
 	const flowValue = Math.abs(month.netFlow).toLocaleString(
 		i18n.resolvedLanguage,
 		{
@@ -133,20 +137,24 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 			: month.selfStakeChange < 0
 				? 'decrease'
 				: 'none'
+
 	const selfStakeColor =
 		selfStakeDirection === 'increase'
 			? 'var(--status-success)'
 			: selfStakeDirection === 'decrease'
 				? 'var(--status-danger)'
 				: 'var(--text-tertiary)'
+
 	const selfStakeIcon =
 		selfStakeDirection === 'increase'
 			? faArrowTrendUp
 			: selfStakeDirection === 'decrease'
 				? faArrowTrendDown
 				: faArrowRight
+
 	const selfStakePrefix =
-		month.selfStakeChange > 0 ? '+' : month.selfStakeChange < 0 ? '−' : ''
+		month.selfStakeChange > 0 ? '+' : month.selfStakeChange < 0 ? '-' : ''
+
 	const selfStakeValue = Math.abs(month.selfStakeChange).toLocaleString(
 		i18n.resolvedLanguage,
 		{
@@ -154,25 +162,17 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 			maximumFractionDigits: 1,
 		},
 	)
-	const selfStakeLabel = t('selfStake', { defaultValue: 'Self stake' })
+	const selfStakeLabel = t('selfStake')
 
-	const retainmentLabel = t('retainmentRate', {
-		defaultValue: 'Retainment rate',
-	})
-	const compoundLabel = t('compoundRate', {
-		defaultValue: 'Compound rate',
-	})
-	const maximumLabel = t('maximum', { defaultValue: 'Maximum' })
-	const statsLabel = t('retainmentStats', {
-		defaultValue: 'Retainment stats',
-	})
+	const retainmentLabel = t('retainmentRate')
+	const compoundLabel = t('compoundRate')
+	const maximumLabel = t('maximum')
+	const statsLabel = t('retainmentStats')
 
 	return (
 		<RetainmentRow className="row retainment" aria-label={statsLabel}>
 			<RetainmentHeader>
-				<RetainmentTitle>
-					{t('retainment', { defaultValue: 'Retainment' })}
-				</RetainmentTitle>
+				<RetainmentTitle>{t('retainment')}</RetainmentTitle>
 				<RetainmentBadges>
 					<IdentityCount title={identitiesLabel}>
 						{identitiesLabel}

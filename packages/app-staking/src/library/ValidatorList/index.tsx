@@ -133,7 +133,8 @@ export const ValidatorListInner = ({
 			? false
 			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
 	)
-	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
+	const effectiveListFormat =
+		stakingApiEnabled && forceCardLayout ? 'col' : listFormat
 
 	// Store performance data, keyed by address
 	const [performances, setPerformances] = useState<ValidatorEraPointsBatch[]>(
@@ -221,6 +222,43 @@ export const ValidatorListInner = ({
 		setIsSearching(e.currentTarget.value !== '')
 		setSearchTerm('validators', newValue)
 	}
+
+	const listFormatButtons = (
+		<>
+			<button
+				type="button"
+				onClick={() => setListFormat('row')}
+				aria-label={t('rowView', {
+					ns: 'app',
+					defaultValue: 'Compact row view',
+				})}
+				aria-pressed={listFormat === 'row'}
+			>
+				<FontAwesomeIcon
+					icon={faBars}
+					color={
+						listFormat === 'row' ? getThemeValue('--gray-1000') : 'inherit'
+					}
+				/>
+			</button>
+			<button
+				type="button"
+				onClick={() => setListFormat('col')}
+				aria-label={t('cardView', {
+					ns: 'app',
+					defaultValue: 'Detailed card view',
+				})}
+				aria-pressed={listFormat === 'col'}
+			>
+				<FontAwesomeIcon
+					icon={faGripVertical}
+					color={
+						listFormat === 'col' ? getThemeValue('--gray-1000') : 'inherit'
+					}
+				/>
+			</button>
+		</>
+	)
 
 	// Handle validator list bootstrapping.
 	const setupValidatorList = () => {
@@ -358,46 +396,12 @@ export const ValidatorListInner = ({
 				<FilterHeaderWrapper>
 					<div>{allowFilters && <FilterHeaders />}</div>
 					<div>
-						{allowListFormat && (
-							<ListFormatSwitch>
-								<button
-									type="button"
-									onClick={() => setListFormat('row')}
-									aria-label={t('rowView', {
-										ns: 'app',
-										defaultValue: 'Compact row view',
-									})}
-									aria-pressed={listFormat === 'row'}
-								>
-									<FontAwesomeIcon
-										icon={faBars}
-										color={
-											listFormat === 'row'
-												? getThemeValue('--gray-1000')
-												: 'inherit'
-										}
-									/>
-								</button>
-								<button
-									type="button"
-									onClick={() => setListFormat('col')}
-									aria-label={t('cardView', {
-										ns: 'app',
-										defaultValue: 'Detailed card view',
-									})}
-									aria-pressed={listFormat === 'col'}
-								>
-									<FontAwesomeIcon
-										icon={faGripVertical}
-										color={
-											listFormat === 'col'
-												? getThemeValue('--gray-1000')
-												: 'inherit'
-										}
-									/>
-								</button>
-							</ListFormatSwitch>
-						)}
+						{allowListFormat &&
+							(stakingApiEnabled ? (
+								<ListFormatSwitch>{listFormatButtons}</ListFormatSwitch>
+							) : (
+								listFormatButtons
+							))}
 					</div>
 				</FilterHeaderWrapper>
 				{allowFilters && <FilterBadges />}

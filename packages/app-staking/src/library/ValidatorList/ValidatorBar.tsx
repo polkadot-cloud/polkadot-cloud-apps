@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
-import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
 import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
@@ -46,7 +45,6 @@ interface ValidatorBarProps {
 	innerClasses: string
 	rate?: number
 	selfStake?: BigNumber
-	stakingApiEnabled: boolean
 	unit: string
 	validator: ValidatorListEntry
 }
@@ -58,7 +56,6 @@ export const ValidatorBar = ({
 	innerClasses,
 	rate,
 	selfStake,
-	stakingApiEnabled,
 	unit,
 	validator,
 }: ValidatorBarProps) => {
@@ -132,24 +129,16 @@ export const ValidatorBar = ({
 							aria-label={t('performance')}
 							title={t('performance')}
 						>
-							{stakingApiEnabled ? (
-								<HistoricalEraPoints
-									address={address}
-									displayFor={displayFor}
-									eraPoints={eraPoints}
-									stretch
-								/>
-							) : (
-								<CurrentEraPoints
-									address={address}
-									displayFor={displayFor}
-									stretch
-								/>
-							)}
+							<HistoricalEraPoints
+								address={address}
+								displayFor={displayFor}
+								eraPoints={eraPoints}
+								stretch
+							/>
 						</BarPerformanceGraph>
 					</BarIdentity>
 
-					<BarStats $withRetainment={stakingApiEnabled}>
+					<BarStats>
 						<BarStat>
 							<BarStatLabel>
 								<SummaryStatusDot
@@ -182,52 +171,48 @@ export const ValidatorBar = ({
 								{selfStake !== undefined && <small>{unit}</small>}
 							</BarStatValue>
 						</BarStat>
-						{stakingApiEnabled && (
-							<>
-								<BarStat>
-									<BarStatLabel>
-										{t('retainmentRate', {
-											defaultValue: 'Retainment',
-										})}
-									</BarStatLabel>
-									<BarStatValue
-										$color={getRateColor(retainmentRate)}
-										role="meter"
-										aria-valuemin={0}
-										aria-valuemax={100}
-										aria-valuenow={retainmentRate}
-									>
-										{retainmentValue}
-									</BarStatValue>
-								</BarStat>
-								<BarStat>
-									<BarStatLabel>
-										{t('compoundRate', { defaultValue: 'Compound' })}
-									</BarStatLabel>
-									<BarStatValue
-										$color={getRateColor(compoundRate)}
-										role="meter"
-										aria-valuemin={0}
-										aria-valuemax={100}
-										aria-valuenow={compoundRate}
-										aria-valuetext={compoundMax ? 'Maximum' : compoundValue}
-									>
-										{compoundValue}
-									</BarStatValue>
-								</BarStat>
-								<BarStat>
-									<BarStatLabel>{flowLabel}</BarStatLabel>
-									<BarStatValue $color={flowColor}>
-										<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
-										<span>
-											{flowPrefix}
-											{flowValue}
-										</span>
-										<small>{unit}</small>
-									</BarStatValue>
-								</BarStat>
-							</>
-						)}
+						<BarStat>
+							<BarStatLabel>
+								{t('retainmentRate', {
+									defaultValue: 'Retainment',
+								})}
+							</BarStatLabel>
+							<BarStatValue
+								$color={getRateColor(retainmentRate)}
+								role="meter"
+								aria-valuemin={0}
+								aria-valuemax={100}
+								aria-valuenow={retainmentRate}
+							>
+								{retainmentValue}
+							</BarStatValue>
+						</BarStat>
+						<BarStat>
+							<BarStatLabel>
+								{t('compoundRate', { defaultValue: 'Compound' })}
+							</BarStatLabel>
+							<BarStatValue
+								$color={getRateColor(compoundRate)}
+								role="meter"
+								aria-valuemin={0}
+								aria-valuemax={100}
+								aria-valuenow={compoundRate}
+								aria-valuetext={compoundMax ? 'Maximum' : compoundValue}
+							>
+								{compoundValue}
+							</BarStatValue>
+						</BarStat>
+						<BarStat>
+							<BarStatLabel>{flowLabel}</BarStatLabel>
+							<BarStatValue $color={flowColor}>
+								<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
+								<span>
+									{flowPrefix}
+									{flowValue}
+								</span>
+								<small>{unit}</small>
+							</BarStatValue>
+						</BarStat>
 					</BarStats>
 
 					{actions}

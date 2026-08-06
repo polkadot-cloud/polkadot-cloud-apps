@@ -720,13 +720,10 @@ export const BarPerformanceGraph = styled.div`
   }
 `
 
-export const BarStats = styled.div<{ $withRetainment: boolean }>`
+export const BarStats = styled.div`
   align-items: stretch;
   display: grid;
-  grid-template-columns: repeat(
-    ${(props) => (props.$withRetainment ? 7 : 4)},
-    minmax(4.75rem, 1fr)
-  );
+  grid-template-columns: repeat(7, minmax(4.75rem, 1fr));
   min-width: 0;
 
   > * + * {
