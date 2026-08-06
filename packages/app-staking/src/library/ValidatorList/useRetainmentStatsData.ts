@@ -31,6 +31,7 @@ export interface RetainmentStatsData {
 		date: Date
 		label: string
 	}
+	netOutflow: RetainmentStatData
 	retainmentLabel: string
 	retainmentRate: RetainmentStatData
 	selfStakeChange: RetainmentStatData
@@ -159,6 +160,11 @@ export const useRetainmentStatsData = ({
 	const selfStakeChange = period
 		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
 		: undefined
+	const netInflow = period
+		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
+		: undefined
+	const netOutflow =
+		netInflow === undefined ? undefined : Math.min(netInflow, 0)
 	const monthDate = period ? new Date(period.fromTimestamp * 1000) : undefined
 	const month = monthDate
 		? {
@@ -181,6 +187,13 @@ export const useRetainmentStatsData = ({
 			rate: period?.compoundRate,
 		}),
 		month,
+		netOutflow: getSignedAmountStat({
+			label: t('netOutflow'),
+			locale,
+			maximumLabel,
+			unit,
+			value: netOutflow,
+		}),
 		retainmentLabel: t('retainment'),
 		retainmentRate: getRateStat({
 			label: t('retainmentRate'),
