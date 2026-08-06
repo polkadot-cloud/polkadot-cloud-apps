@@ -61,7 +61,6 @@ export const RetainmentStats = ({ data, unit }: RetainmentStatsProps) => {
 	const {
 		compoundRate,
 		month,
-		netFlow,
 		retainmentLabel,
 		retainmentRate,
 		selfStakeChange,
@@ -82,7 +81,7 @@ export const RetainmentStats = ({ data, unit }: RetainmentStatsProps) => {
 				<RateStat stat={retainmentRate} />
 				<RateStat stat={compoundRate} />
 				<SignedAmountStat stat={selfStakeChange} unit={unit} />
-				<SignedAmountStat stat={netFlow} unit={unit} />
+				<FlowMetric aria-hidden="true" />
 			</RetainmentBody>
 		</RetainmentRow>
 	)

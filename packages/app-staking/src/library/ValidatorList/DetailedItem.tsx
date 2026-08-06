@@ -8,6 +8,7 @@ import { useEraStakers } from 'contexts/EraStakers'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
@@ -23,6 +24,7 @@ import { Identity } from '../ListItem/Labels/Identity'
 import { DetailedItemPreloader } from './DetailedItemPreloader'
 import { RetainmentStats } from './RetainmentStats'
 import { RowActionsMenu } from './RowActionsMenu'
+import { isMaxSelfStake } from './retainment'
 import type { ItemProps } from './types'
 import { useRetainmentStatsData } from './useRetainmentStatsData'
 import { ValidatorBar } from './ValidatorBar'
@@ -53,6 +55,7 @@ export const DetailedItem = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const hardCapSelfStake = useHardCapSelfStake()
 	const { getActiveValidator } = useEraStakers()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
@@ -60,13 +63,18 @@ export const DetailedItem = ({
 	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
 	const validatorOwnStake = getActiveValidator(address)?.own
-	const selfStake =
+	const selfStakePlanck =
 		validatorOwnStake !== undefined
-			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
+			? new BigNumber(validatorOwnStake)
 			: undefined
+	const selfStake =
+		selfStakePlanck !== undefined
+			? planckToUnitBn(selfStakePlanck, units)
+			: undefined
+	const selfStakeMax = isMaxSelfStake(selfStakePlanck, hardCapSelfStake)
 	const retainmentStats = useRetainmentStatsData({
 		period: retainment?.months[0],
-		selfStake,
+		selfStakeMax,
 		unit,
 		units,
 	})
@@ -149,6 +157,7 @@ export const DetailedItem = ({
 				rate={rateAfterCommission}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
+				selfStakeMax={selfStakeMax}
 				unit={unit}
 				validator={validator}
 			/>
@@ -173,6 +182,7 @@ export const DetailedItem = ({
 						address={address}
 						rate={rateAfterCommission}
 						selfStake={selfStake}
+						selfStakeMax={selfStakeMax}
 						status={validatorStatus}
 						unit={unit}
 					/>

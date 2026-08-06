@@ -39,6 +39,7 @@ interface ValidatorBarProps {
 	rate?: number
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
+	selfStakeMax: boolean
 	unit: string
 	validator: ValidatorListEntry
 }
@@ -83,6 +84,7 @@ export const ValidatorBar = ({
 	rate,
 	retainmentStats,
 	selfStake,
+	selfStakeMax,
 	unit,
 	validator,
 }: ValidatorBarProps) => {
@@ -96,9 +98,15 @@ export const ValidatorBar = ({
 		statusLabel,
 		totalStake,
 		validatorStatus,
-	} = useValidatorSummaryData({ address, rate, selfStake, status, unit })
-	const { compoundRate, netFlow, retainmentRate, selfStakeChange } =
-		retainmentStats
+	} = useValidatorSummaryData({
+		address,
+		rate,
+		selfStake,
+		selfStakeMax,
+		status,
+		unit,
+	})
+	const { compoundRate, retainmentRate, selfStakeChange } = retainmentStats
 
 	return (
 		<BarWrapper>
@@ -155,13 +163,14 @@ export const ValidatorBar = ({
 							</BarStatLabel>
 							<BarStatValue>
 								<span>{selfStakeLabel}</span>
-								{selfStake !== undefined && <small>{unit}</small>}
+								{selfStake !== undefined && !selfStakeMax && (
+									<small>{unit}</small>
+								)}
 							</BarStatValue>
 						</BarStat>
 						<BarRateStat stat={retainmentRate} />
 						<BarRateStat stat={compoundRate} />
 						<BarSignedAmountStat stat={selfStakeChange} unit={unit} />
-						<BarSignedAmountStat stat={netFlow} unit={unit} />
 					</BarStats>
 
 					{actions}

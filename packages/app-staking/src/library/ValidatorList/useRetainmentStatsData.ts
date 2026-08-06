@@ -11,13 +11,14 @@ import BigNumber from 'bignumber.js'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
 import { planckToUnitBn } from 'utils'
-import { clampRate, getRateColor, MAX_SELF_STAKE_DOT } from './retainment'
+import { clampRate, getRateColor } from './retainment'
 
 export interface RetainmentStatData {
 	ariaLabel: string
 	ariaValueText?: string
 	color: string
 	icon?: IconDefinition
+	isMax: boolean
 	label: string
 	prefix: string
 	value?: number
@@ -30,7 +31,6 @@ export interface RetainmentStatsData {
 		date: Date
 		label: string
 	}
-	netFlow: RetainmentStatData
 	retainmentLabel: string
 	retainmentRate: RetainmentStatData
 	selfStakeChange: RetainmentStatData
@@ -39,7 +39,7 @@ export interface RetainmentStatsData {
 
 interface UseRetainmentStatsDataProps {
 	period?: ValidatorRetainmentPeriod
-	selfStake?: BigNumber
+	selfStakeMax: boolean
 	unit: string
 	units: number
 }
@@ -83,6 +83,7 @@ const getRateStat = ({
 		ariaValueText: max ? maximumLabel : valueText,
 		color: value === undefined ? 'var(--text-tertiary)' : getRateColor(value),
 		icon,
+		isMax: max,
 		label,
 		prefix: '',
 		value,
@@ -93,41 +94,52 @@ const getRateStat = ({
 const getSignedAmountStat = ({
 	label,
 	locale,
+	maximumLabel,
+	max = false,
 	unit,
 	value,
 }: {
 	label: string
 	locale?: string
+	maximumLabel: string
+	max?: boolean
 	unit: string
 	value?: number
 }): RetainmentStatData => {
-	const valueText =
-		value === undefined
+	const valueText = max
+		? 'MAX'
+		: value === undefined
 			? '—'
 			: Math.abs(value).toLocaleString(locale, {
 					notation: 'compact',
 					maximumFractionDigits: 1,
 				})
-	const color =
-		value === undefined || value === 0
+	const color = max
+		? 'var(--status-success)'
+		: value === undefined || value === 0
 			? 'var(--text-tertiary)'
 			: value > 0
 				? 'var(--status-success)'
 				: 'var(--status-danger)'
-	const icon =
-		value === undefined
+	const icon = max
+		? faArrowTrendUp
+		: value === undefined
 			? undefined
 			: value > 0
 				? faArrowTrendUp
 				: value < 0
 					? faArrowTrendDown
 					: faArrowRight
-	const prefix = value === undefined || value === 0 ? '' : value > 0 ? '+' : '−'
+	const prefix =
+		max || value === undefined || value === 0 ? '' : value > 0 ? '+' : '−'
 
 	return {
-		ariaLabel: `${label}: ${prefix}${valueText}${value === undefined ? '' : ` ${unit}`}`,
+		ariaLabel: max
+			? `${label}: ${maximumLabel}`
+			: `${label}: ${prefix}${valueText}${value === undefined ? '' : ` ${unit}`}`,
 		color,
 		icon,
+		isMax: max,
 		label,
 		prefix,
 		value,
@@ -137,28 +149,16 @@ const getSignedAmountStat = ({
 
 export const useRetainmentStatsData = ({
 	period,
-	selfStake,
+	selfStakeMax,
 	unit,
 	units,
 }: UseRetainmentStatsDataProps): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
 	const locale = i18n.resolvedLanguage
-	const compoundMax =
-		period !== undefined &&
-		unit === 'DOT' &&
-		selfStake?.gte(MAX_SELF_STAKE_DOT) === true
+	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
 		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
 		: undefined
-	const netInflow = period
-		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
-		: undefined
-	const netFlowLabel =
-		netInflow === undefined || netInflow > 0
-			? t('netInflow')
-			: netInflow < 0
-				? t('netOutflow')
-				: t('noNetFlow')
 	const monthDate = period ? new Date(period.fromTimestamp * 1000) : undefined
 	const month = monthDate
 		? {
@@ -177,16 +177,10 @@ export const useRetainmentStatsData = ({
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
-			max: compoundMax,
+			max: displaySelfStakeMax,
 			rate: period?.compoundRate,
 		}),
 		month,
-		netFlow: getSignedAmountStat({
-			label: netFlowLabel,
-			locale,
-			unit,
-			value: netInflow,
-		}),
 		retainmentLabel: t('retainment'),
 		retainmentRate: getRateStat({
 			label: t('retainmentRate'),
@@ -198,6 +192,8 @@ export const useRetainmentStatsData = ({
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),
 			locale,
+			maximumLabel,
+			max: displaySelfStakeMax,
 			unit,
 			value: selfStakeChange,
 		}),

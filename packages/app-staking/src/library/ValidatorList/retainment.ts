@@ -1,7 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export const MAX_SELF_STAKE_DOT = 100_000
+import type BigNumber from 'bignumber.js'
+
+export const isMaxSelfStake = (
+	selfStakePlanck: BigNumber | undefined,
+	hardCapSelfStake: bigint | undefined,
+) =>
+	hardCapSelfStake !== undefined &&
+	hardCapSelfStake > 0n &&
+	selfStakePlanck?.gte(hardCapSelfStake.toString()) === true
 
 export const clampRate = (rate: number) =>
 	Number.isFinite(rate) ? Math.min(Math.max(rate, 0), 100) : 0

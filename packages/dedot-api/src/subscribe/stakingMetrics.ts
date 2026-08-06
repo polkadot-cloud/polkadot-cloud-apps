@@ -134,6 +134,28 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				)
 			this.#trackUnsub(incentiveUnsub)
 		}
+
+		const hasHardCapSelfStake = hasStorageItem(
+			this.api,
+			'Staking',
+			'HardCapSelfStake',
+		)
+
+		if (hasHardCapSelfStake) {
+			const hardCapUnsub = await this.api.query.staking.hardCapSelfStake(
+				(hardCapSelfStake: bigint) => {
+					if (this.#disposed) {
+						return
+					}
+					this.stakingMetrics = {
+						...this.stakingMetrics,
+						hardCapSelfStake,
+					}
+					setStakingMetrics(this.stakingMetrics)
+				},
+			)
+			this.#trackUnsub(hardCapUnsub)
+		}
 	}
 
 	#trackUnsub(unsub: Unsub) {

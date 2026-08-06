@@ -17,6 +17,8 @@ export const RetainmentStatValue = ({
 			{stat.prefix}
 			{stat.valueText}
 		</span>
-		{unit !== undefined && stat.value !== undefined && <small>{unit}</small>}
+		{unit !== undefined && stat.value !== undefined && !stat.isMax && (
+			<small>{unit}</small>
+		)}
 	</>
 )

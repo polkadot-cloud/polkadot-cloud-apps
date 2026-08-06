@@ -23,6 +23,7 @@ interface ValidatorSummaryProps {
 	address: string
 	rate?: number
 	selfStake?: BigNumber
+	selfStakeMax: boolean
 	status: ValidatorStatus
 	unit: string
 }
@@ -31,6 +32,7 @@ export const useValidatorSummaryData = ({
 	address,
 	rate,
 	selfStake,
+	selfStakeMax,
 	status,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
@@ -61,8 +63,9 @@ export const useValidatorSummaryData = ({
 		typeof rate === 'number' && Number.isFinite(rate)
 			? `${new BigNumber(rate).decimalPlaces(2).toString()}%`
 			: '—'
-	const selfStakeLabel =
-		selfStake !== undefined
+	const selfStakeLabel = selfStakeMax
+		? 'MAX'
+		: selfStake !== undefined
 			? selfStake.toNumber().toLocaleString(i18n.resolvedLanguage, {
 					notation: 'compact',
 					maximumFractionDigits: 1,
@@ -73,6 +76,7 @@ export const useValidatorSummaryData = ({
 		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
+		selfStakeMax,
 		statusLabel,
 		totalStake,
 		validatorStatus,
@@ -86,6 +90,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
+		selfStakeMax,
 		statusLabel,
 		totalStake,
 		validatorStatus,
@@ -125,7 +130,9 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				</SummaryLabel>
 				<SummaryValue>
 					<span>{selfStakeLabel}</span>
-					{selfStake !== undefined && <SummaryUnit>{unit}</SummaryUnit>}
+					{selfStake !== undefined && !selfStakeMax && (
+						<SummaryUnit>{unit}</SummaryUnit>
+					)}
 				</SummaryValue>
 			</SummaryItem>
 		</SummaryRow>
