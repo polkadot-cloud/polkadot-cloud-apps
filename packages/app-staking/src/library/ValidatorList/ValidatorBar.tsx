@@ -9,20 +9,7 @@ import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
-import {
-	BarIdentity,
-	BarLayout,
-	BarPerformanceGraph,
-	BarStat,
-	BarStatLabel,
-	BarStats,
-	BarStatValue,
-	BarWrapper,
-	BlockedBadge,
-	DetailLoader,
-	HeaderIdentity,
-	SummaryStatusDot,
-} from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
 import { RetainmentStatValue } from './RetainmentStatValue'
@@ -34,15 +21,16 @@ import { useValidatorSummaryData } from './ValidatorSummary'
 
 interface ValidatorBarProps {
 	actions: ReactNode
+	canvas?: boolean
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
-	innerClasses: string
 	isPreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	selfStakeMax: boolean
+	selected?: boolean
 	statusActive?: boolean
 	statusLabel?: string
 	statusValue?: BigNumber
@@ -57,24 +45,25 @@ const BarRateStat = ({
 	isPreloading: boolean
 	stat: RetainmentStatData
 }) => (
-	<BarStat>
-		<BarStatLabel title={stat.label}>{stat.label}</BarStatLabel>
-		<BarStatValue
-			$color={stat.color}
-			role={stat.value === undefined ? undefined : 'meter'}
-			aria-label={stat.ariaLabel}
-			aria-valuemin={stat.value === undefined ? undefined : 0}
-			aria-valuemax={stat.value === undefined ? undefined : 100}
-			aria-valuenow={stat.value}
-			aria-valuetext={stat.ariaValueText}
-		>
-			{isPreloading ? (
-				<DetailLoader height="1.2rem" width="4.5rem" />
-			) : (
-				<RetainmentStatValue stat={stat} />
-			)}
-		</BarStatValue>
-	</BarStat>
+	<ListItem.Metric
+		color={stat.color}
+		label={stat.label}
+		labelProps={{ title: stat.label }}
+		valueProps={{
+			'aria-label': stat.ariaLabel,
+			'aria-valuemax': stat.value === undefined ? undefined : 100,
+			'aria-valuemin': stat.value === undefined ? undefined : 0,
+			'aria-valuenow': stat.value,
+			'aria-valuetext': stat.ariaValueText,
+			role: stat.value === undefined ? undefined : 'meter',
+		}}
+	>
+		{isPreloading ? (
+			<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+		) : (
+			<RetainmentStatValue stat={stat} />
+		)}
+	</ListItem.Metric>
 )
 
 const BarSignedAmountStat = ({
@@ -86,29 +75,32 @@ const BarSignedAmountStat = ({
 	stat: RetainmentStatData
 	unit: string
 }) => (
-	<BarStat>
-		<BarStatLabel title={stat.label}>{stat.label}</BarStatLabel>
-		<BarStatValue $color={stat.color} aria-label={stat.ariaLabel}>
-			{isPreloading ? (
-				<DetailLoader height="1.2rem" width="4.5rem" />
-			) : (
-				<RetainmentStatValue stat={stat} unit={unit} />
-			)}
-		</BarStatValue>
-	</BarStat>
+	<ListItem.Metric
+		color={stat.color}
+		label={stat.label}
+		labelProps={{ title: stat.label }}
+		valueProps={{ 'aria-label': stat.ariaLabel }}
+	>
+		{isPreloading ? (
+			<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+		) : (
+			<RetainmentStatValue stat={stat} unit={unit} />
+		)}
+	</ListItem.Metric>
 )
 
 export const ValidatorBar = ({
 	actions,
+	canvas = false,
 	displayFor,
 	eraPoints,
-	innerClasses,
 	isPreloading = false,
 	isStatusValuePreloading = false,
 	rate,
 	retainmentStats,
 	selfStake,
 	selfStakeMax,
+	selected = false,
 	statusActive,
 	statusLabel,
 	statusValue,
@@ -139,102 +131,91 @@ export const ValidatorBar = ({
 		retainmentStats
 
 	return (
-		<BarWrapper>
-			<div className={innerClasses}>
-				<BarLayout>
-					<BarIdentity>
-						{selectable && <Select item={validator} />}
-						<HeaderIdentity>
-							<Identity address={address} />
-							{prefs?.blocked === true && (
-								<BlockedBadge>{t('blocked')}</BlockedBadge>
-							)}
-						</HeaderIdentity>
-						<BarPerformanceGraph
-							aria-label={t('validatorActivity')}
-							title={t('validatorActivity')}
-						>
-							{isPreloading ? (
-								<DetailLoader
-									borderRadius="0.3rem"
-									height="100%"
-									width="100%"
-								/>
-							) : (
-								<HistoricalEraPoints
-									address={address}
-									displayFor={displayFor}
-									eraPoints={eraPoints}
-									stretch
-								/>
-							)}
-						</BarPerformanceGraph>
-					</BarIdentity>
-
-					<BarStats>
-						<BarStat>
-							<BarStatLabel>
-								<SummaryStatusDot
-									$active={statusActive ?? validatorStatus === 'active'}
-									aria-hidden="true"
-								/>
-								<span>{summaryStatusLabel}</span>
-							</BarStatLabel>
-							<BarStatValue
-								title={totalStake ? `${totalStake} ${unit}` : undefined}
-							>
-								{isStatusValuePreloading ? (
-									<DetailLoader height="1.2rem" width="4.5rem" />
-								) : (
-									<>
-										<span>{totalStake ?? '—'}</span>
-										{totalStake && <small>{unit}</small>}
-									</>
-								)}
-							</BarStatValue>
-						</BarStat>
-						<BarStat>
-							<BarStatLabel>APY</BarStatLabel>
-							<BarStatValue>
-								{isPreloading ? (
-									<DetailLoader height="1.2rem" width="4.5rem" />
-								) : (
-									rateLabel
-								)}
-							</BarStatValue>
-						</BarStat>
-						<BarStat>
-							<BarStatLabel>{t('performance')}</BarStatLabel>
-							<BarStatValue>{quartileLabel}</BarStatValue>
-						</BarStat>
-						<BarStat>
-							<BarStatLabel>
-								{t('selfStake', { defaultValue: 'Self stake' })}
-							</BarStatLabel>
-							<BarStatValue>
-								<span>{selfStakeLabel}</span>
-								{selfStake !== undefined && !selfStakeMax && (
-									<small>{unit}</small>
-								)}
-							</BarStatValue>
-						</BarStat>
-						<BarRateStat isPreloading={isPreloading} stat={retainmentRate} />
-						<BarRateStat isPreloading={isPreloading} stat={compoundRate} />
-						<BarSignedAmountStat
-							isPreloading={isPreloading}
-							stat={selfStakeChange}
-							unit={unit}
+		<ListItem.Row canvas={canvas} selected={selected}>
+			<ListItem.RowIdentity>
+				{selectable && <Select item={validator} />}
+				<ListItem.Identity>
+					<Identity address={address} />
+					{prefs?.blocked === true && (
+						<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
+					)}
+				</ListItem.Identity>
+				<ListItem.Graph
+					layout="row"
+					aria-label={t('validatorActivity')}
+					title={t('validatorActivity')}
+				>
+					{isPreloading ? (
+						<ListItem.DetailLoader
+							borderRadius="0.3rem"
+							height="100%"
+							width="100%"
 						/>
-						<BarSignedAmountStat
-							isPreloading={isPreloading}
-							stat={netOutflow}
-							unit={unit}
+					) : (
+						<HistoricalEraPoints
+							address={address}
+							displayFor={displayFor}
+							eraPoints={eraPoints}
+							stretch
 						/>
-					</BarStats>
+					)}
+				</ListItem.Graph>
+			</ListItem.RowIdentity>
 
-					{actions}
-				</BarLayout>
-			</div>
-		</BarWrapper>
+			<ListItem.RowMetrics>
+				<ListItem.Metric
+					label={
+						<>
+							<ListItem.StatusDot
+								active={statusActive ?? validatorStatus === 'active'}
+								aria-hidden="true"
+							/>
+							<span>{summaryStatusLabel}</span>
+						</>
+					}
+					valueProps={{
+						'aria-busy': isStatusValuePreloading,
+						title: totalStake ? `${totalStake} ${unit}` : undefined,
+					}}
+				>
+					{isStatusValuePreloading ? (
+						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+					) : (
+						<>
+							<span>{totalStake ?? '—'}</span>
+							{totalStake && <small>{unit}</small>}
+						</>
+					)}
+				</ListItem.Metric>
+				<ListItem.Metric aria-busy={isPreloading} label="APY">
+					{isPreloading ? (
+						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+					) : (
+						rateLabel
+					)}
+				</ListItem.Metric>
+				<ListItem.Metric label={t('performance')}>
+					{quartileLabel}
+				</ListItem.Metric>
+				<ListItem.Metric label={t('selfStake', { defaultValue: 'Self stake' })}>
+					<span>{selfStakeLabel}</span>
+					{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
+				</ListItem.Metric>
+				<BarRateStat isPreloading={isPreloading} stat={retainmentRate} />
+				<BarRateStat isPreloading={isPreloading} stat={compoundRate} />
+				<BarSignedAmountStat
+					isPreloading={isPreloading}
+					stat={selfStakeChange}
+					unit={unit}
+				/>
+				<BarSignedAmountStat
+					isPreloading={isPreloading}
+					stat={netOutflow}
+					unit={unit}
+				/>
+			</ListItem.RowMetrics>
+
+			{actions}
+		</ListItem.Row>
 	)
 }

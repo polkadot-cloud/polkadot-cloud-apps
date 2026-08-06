@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import classNames from 'classnames'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
@@ -13,7 +12,7 @@ import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { APY } from 'library/ListItem/Labels/APY'
 import { Quartile } from 'library/ListItem/Labels/Quartile'
 import type { Validator } from 'types'
-import { BasicItemWrapper } from 'ui-app/ListItem'
+import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
@@ -22,7 +21,7 @@ import { EraStatus } from '../ListItem/Labels/EraStatus'
 import { Identity } from '../ListItem/Labels/Identity'
 import type { ItemProps } from './types'
 
-export const BasicItem = ({
+const Basic = ({
 	validator,
 	toggleFavorites,
 	displayFor,
@@ -38,11 +37,6 @@ export const BasicItem = ({
 		(item) => (item as Validator).address === validator.address,
 	).length
 
-	const innerClasses = classNames('inner', {
-		[displayFor]: true,
-		selected: isSelected,
-	})
-
 	// Rate after commission
 	const rateAfterCommission =
 		typeof rate === 'number' &&
@@ -53,52 +47,52 @@ export const BasicItem = ({
 			: undefined
 
 	return (
-		<BasicItemWrapper>
-			<div className={innerClasses}>
-				<div className="row top">
-					{selectable && <Select item={validator} />}
-					<Identity address={address} />
-					<div>
-						<HeaderButtonRow>
-							<CopyAddress address={address} />
-							<ShareLink paramKey="v" paramValue={address} />
-							{toggleFavorites && <FavoriteValidator address={address} />}
-							{displayFor === 'default' && (
-								<Metrics
-									address={address}
-									display={
-										getIdentityDisplay(
-											validatorIdentities[address],
-											validatorSupers[address],
-										).node
-									}
-								/>
-							)}
-						</HeaderButtonRow>
-						{typeof onRemove === 'function' && (
-							<Remove
+		<BasicItem.Root canvas={displayFor === 'canvas'} selected={isSelected}>
+			<BasicItem.Row position="top">
+				{selectable && <Select item={validator} />}
+				<Identity address={address} />
+				<div>
+					<HeaderButtonRow>
+						<CopyAddress address={address} />
+						<ShareLink paramKey="v" paramValue={address} />
+						{toggleFavorites && <FavoriteValidator address={address} />}
+						{displayFor === 'default' && (
+							<Metrics
 								address={address}
-								onRemove={() => onRemove({ selected: [validator] })}
-								displayFor={displayFor}
+								display={
+									getIdentityDisplay(
+										validatorIdentities[address],
+										validatorSupers[address],
+									).node
+								}
 							/>
 						)}
-					</div>
+					</HeaderButtonRow>
+					{typeof onRemove === 'function' && (
+						<Remove
+							address={address}
+							onRemove={() => onRemove({ selected: [validator] })}
+							displayFor={displayFor}
+						/>
+					)}
 				</div>
-				<Separator />
-				<div className="row bottom lg">
-					<div>
-						<CurrentEraPoints address={address} displayFor={displayFor} />
-					</div>
-					<div>
-						<LabelRow inline>
-							<APY rate={rateAfterCommission} />
-							<Quartile address={address} />
-							<Blocked prefs={prefs} />
-						</LabelRow>
-						<EraStatus address={address} status={validatorStatus} noMargin />
-					</div>
+			</BasicItem.Row>
+			<Separator />
+			<BasicItem.Row position="bottom" large>
+				<div>
+					<CurrentEraPoints address={address} displayFor={displayFor} />
 				</div>
-			</div>
-		</BasicItemWrapper>
+				<div>
+					<LabelRow inline>
+						<APY rate={rateAfterCommission} />
+						<Quartile address={address} />
+						<Blocked prefs={prefs} />
+					</LabelRow>
+					<EraStatus address={address} status={validatorStatus} noMargin />
+				</div>
+			</BasicItem.Row>
+		</BasicItem.Root>
 	)
 }
+
+export { Basic as BasicItem }

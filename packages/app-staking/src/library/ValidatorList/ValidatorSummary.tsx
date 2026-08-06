@@ -9,15 +9,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
-import {
-	DetailLoader,
-	SummaryItem,
-	SummaryLabel,
-	SummaryRow,
-	SummaryStatusDot,
-	SummaryUnit,
-	SummaryValue,
-} from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
 
 interface ValidatorSummaryProps {
@@ -116,8 +108,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	} = useValidatorSummaryData(props)
 
 	return (
-		<SummaryRow
-			className="row summary"
+		<ListItem.Summary
 			aria-label={
 				ariaLabel ??
 				t('validatorSummary', {
@@ -125,49 +116,40 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				})
 			}
 		>
-			<SummaryItem>
-				<SummaryLabel>
-					<SummaryStatusDot
-						$active={statusActive ?? validatorStatus === 'active'}
-						aria-hidden="true"
-					/>
-					<span>{statusLabel}</span>
-				</SummaryLabel>
-				<SummaryValue
-					aria-busy={isStatusValuePreloading}
-					title={totalStake ? `${totalStake} ${unit}` : undefined}
-				>
-					{isStatusValuePreloading ? (
-						<DetailLoader />
-					) : (
-						<>
-							<span>{totalStake ?? '—'}</span>
-							{totalStake && <SummaryUnit>{unit}</SummaryUnit>}
-						</>
-					)}
-				</SummaryValue>
-			</SummaryItem>
-			<SummaryItem aria-busy={isRatePreloading}>
-				<SummaryLabel>APY</SummaryLabel>
-				<SummaryValue>
-					{isRatePreloading ? <DetailLoader /> : rateLabel}
-				</SummaryValue>
-			</SummaryItem>
-			<SummaryItem>
-				<SummaryLabel>{t('performance')}</SummaryLabel>
-				<SummaryValue>{quartileLabel}</SummaryValue>
-			</SummaryItem>
-			<SummaryItem>
-				<SummaryLabel>
-					{t('selfStake', { defaultValue: 'Self stake' })}
-				</SummaryLabel>
-				<SummaryValue>
-					<span>{selfStakeLabel}</span>
-					{selfStake !== undefined && !selfStakeMax && (
-						<SummaryUnit>{unit}</SummaryUnit>
-					)}
-				</SummaryValue>
-			</SummaryItem>
-		</SummaryRow>
+			<ListItem.Metric
+				label={
+					<>
+						<ListItem.StatusDot
+							active={statusActive ?? validatorStatus === 'active'}
+							aria-hidden="true"
+						/>
+						<span>{statusLabel}</span>
+					</>
+				}
+				valueProps={{
+					'aria-busy': isStatusValuePreloading,
+					title: totalStake ? `${totalStake} ${unit}` : undefined,
+				}}
+			>
+				{isStatusValuePreloading ? (
+					<ListItem.DetailLoader />
+				) : (
+					<>
+						<span>{totalStake ?? '—'}</span>
+						{totalStake && <small>{unit}</small>}
+					</>
+				)}
+			</ListItem.Metric>
+			<ListItem.Metric aria-busy={isRatePreloading} label="APY">
+				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
+			</ListItem.Metric>
+			<ListItem.Metric label={t('performance')}>
+				{quartileLabel}
+			</ListItem.Metric>
+			<ListItem.Metric label={t('selfStake', { defaultValue: 'Self stake' })}>
+				<span>{selfStakeLabel}</span>
+				{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
+			</ListItem.Metric>
+		</ListItem.Summary>
 	)
 }

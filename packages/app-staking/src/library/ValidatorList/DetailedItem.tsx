@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import classNames from 'classnames'
 import { getStakingChainData } from 'consts/util'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
@@ -14,18 +13,7 @@ import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
-import {
-	BlockedBadge,
-	CardTop,
-	HeaderActions,
-	HeaderIconAction,
-	HeaderIdentity,
-	HeaderMetricsAction,
-	ItemWrapper,
-	PerformanceGraph,
-	PerformanceRow,
-	SectionHeader,
-} from 'ui-app/ListItem'
+import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
@@ -72,11 +60,6 @@ export const DetailedItem = ({
 		(item) => (item as Validator).address === validator.address,
 	).length
 
-	const innerClasses = classNames('inner', {
-		[displayFor]: true,
-		selected: isSelected,
-	})
-
 	// Rate after commission
 	const rateAfterCommission =
 		typeof rate === 'number' &&
@@ -91,33 +74,33 @@ export const DetailedItem = ({
 	).node
 
 	const cardActions = (
-		<HeaderActions>
-			<HeaderIconAction>
+		<ListItem.Actions>
+			<ListItem.Action>
 				<CopyAddress address={address} />
-			</HeaderIconAction>
-			<HeaderIconAction>
+			</ListItem.Action>
+			<ListItem.Action>
 				<ShareLink paramKey="v" paramValue={address} />
-			</HeaderIconAction>
+			</ListItem.Action>
 			{toggleFavorites && (
-				<HeaderIconAction>
+				<ListItem.Action>
 					<FavoriteValidator address={address} />
-				</HeaderIconAction>
+				</ListItem.Action>
 			)}
 			{typeof onRemove === 'function' && (
-				<HeaderIconAction>
+				<ListItem.Action>
 					<Remove
 						address={address}
 						onRemove={() => onRemove({ selected: [validator] })}
 						displayFor={displayFor}
 					/>
-				</HeaderIconAction>
+				</ListItem.Action>
 			)}
 			{displayFor === 'default' && (
-				<HeaderMetricsAction>
+				<ListItem.Action wide>
 					<Metrics address={address} display={validatorDisplay} />
-				</HeaderMetricsAction>
+				</ListItem.Action>
 			)}
-		</HeaderActions>
+		</ListItem.Actions>
 	)
 
 	if (format === 'row') {
@@ -136,13 +119,14 @@ export const DetailedItem = ({
 						showMetrics={displayFor === 'default'}
 					/>
 				}
-				innerClasses={innerClasses}
+				canvas={displayFor === 'canvas'}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
 				rate={rateAfterCommission}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
+				selected={isSelected}
 				unit={unit}
 				validator={validator}
 			/>
@@ -150,43 +134,41 @@ export const DetailedItem = ({
 	}
 
 	return (
-		<ItemWrapper>
-			<div className={innerClasses}>
-				<CardTop className="card-top">
-					<div className="row top">
-						{selectable && <Select item={validator} />}
-						<HeaderIdentity>
-							<Identity address={address} />
-							{prefs?.blocked === true && (
-								<BlockedBadge>{t('blocked')}</BlockedBadge>
-							)}
-						</HeaderIdentity>
-						{cardActions}
-					</div>
-					<ValidatorSummary
-						address={address}
-						rate={rateAfterCommission}
-						selfStake={selfStake}
-						selfStakeMax={selfStakeMax}
-						status={validatorStatus}
-						unit={unit}
-					/>
-					<PerformanceRow className="row performance">
-						<SectionHeader>
-							<strong>{t('activity')}</strong>
-						</SectionHeader>
-						<PerformanceGraph>
-							<HistoricalEraPoints
-								address={address}
-								displayFor={displayFor}
-								eraPoints={eraPoints}
-								stretch
-							/>
-						</PerformanceGraph>
-					</PerformanceRow>
-				</CardTop>
-				<RetainmentStats data={retainmentStats} unit={unit} />
-			</div>
-		</ItemWrapper>
+		<DetailedCard.Root canvas={displayFor === 'canvas'} selected={isSelected}>
+			<DetailedCard.Top>
+				<DetailedCard.Header>
+					{selectable && <Select item={validator} />}
+					<ListItem.Identity>
+						<Identity address={address} />
+						{prefs?.blocked === true && (
+							<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
+						)}
+					</ListItem.Identity>
+					{cardActions}
+				</DetailedCard.Header>
+				<ValidatorSummary
+					address={address}
+					rate={rateAfterCommission}
+					selfStake={selfStake}
+					selfStakeMax={selfStakeMax}
+					status={validatorStatus}
+					unit={unit}
+				/>
+				<ListItem.Activity>
+					<ListItem.SectionHeader>
+						<strong>{t('activity')}</strong>
+					</ListItem.SectionHeader>
+					<ListItem.Graph layout="card">
+						<HistoricalEraPoints
+							address={address}
+							displayFor={displayFor}
+							eraPoints={eraPoints}
+							stretch
+						/>
+					</ListItem.Graph>
+				</ListItem.Activity>
+			</DetailedCard.Top>
+			<RetainmentStats data={retainmentStats} unit={unit} />
+		</DetailedCard.Root>
 	)
 }

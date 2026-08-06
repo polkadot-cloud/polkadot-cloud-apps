@@ -19,11 +19,7 @@ import { Confirm } from 'library/Prompt/Confirm'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-	HeaderActions,
-	ListItemMenuTrigger,
-	ListItemMenuWrapper,
-} from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { MenuList } from 'ui-app/Menu'
 import { useOverlay, usePrompt } from 'ui-overlay'
 
@@ -150,18 +146,16 @@ export const RowActionsMenu = ({
 	}, [open])
 
 	return (
-		<HeaderActions>
-			<ListItemMenuWrapper>
-				<ListItemMenuTrigger
-					type="button"
-					aria-label={t('otherOptions')}
-					aria-haspopup="menu"
-					aria-expanded={open && ownsOpenMenu}
-					onClick={toggleMenu}
-				>
-					<FontAwesomeIcon icon={faChevronDown} aria-hidden="true" />
-				</ListItemMenuTrigger>
-			</ListItemMenuWrapper>
-		</HeaderActions>
+		<ListItem.Actions>
+			<ListItem.MenuTrigger
+				type="button"
+				aria-label={t('otherOptions')}
+				aria-haspopup="menu"
+				aria-expanded={open && ownsOpenMenu}
+				onClick={toggleMenu}
+			>
+				<FontAwesomeIcon icon={faChevronDown} aria-hidden="true" />
+			</ListItem.MenuTrigger>
+		</ListItem.Actions>
 	)
 }

@@ -5,7 +5,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { Quartile } from 'library/ListItem/Labels/Quartile'
-import { BasicItemWrapper } from 'ui-app/ListItem'
+import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { CopyAddress } from '../ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
@@ -15,7 +15,7 @@ import { Identity } from '../ListItem/Labels/Identity'
 import { NominationStatus } from '../ListItem/Labels/NominationStatus'
 import type { ItemProps } from './types'
 
-export const BasicItem = ({
+const Basic = ({
 	validator,
 	nominator,
 	toggleFavorites,
@@ -28,51 +28,51 @@ export const BasicItem = ({
 	const outline = displayFor === 'canvas'
 
 	return (
-		<BasicItemWrapper>
-			<div className={`inner ${displayFor}`}>
-				<div className="row top">
-					<Identity address={address} />
-					<div>
-						<HeaderButtonRow>
-							<CopyAddress address={address} />
-							{toggleFavorites && (
-								<FavoriteValidator address={address} outline={outline} />
-							)}
-							{displayFor !== 'canvas' && (
-								<Metrics
-									address={address}
-									display={
-										getIdentityDisplay(
-											validatorIdentities[address],
-											validatorSupers[address],
-										).node
-									}
-									outline={outline}
-								/>
-							)}
-						</HeaderButtonRow>
-					</div>
+		<BasicItem.Root canvas={displayFor === 'canvas'}>
+			<BasicItem.Row position="top">
+				<Identity address={address} />
+				<div>
+					<HeaderButtonRow>
+						<CopyAddress address={address} />
+						{toggleFavorites && (
+							<FavoriteValidator address={address} outline={outline} />
+						)}
+						{displayFor !== 'canvas' && (
+							<Metrics
+								address={address}
+								display={
+									getIdentityDisplay(
+										validatorIdentities[address],
+										validatorSupers[address],
+									).node
+								}
+								outline={outline}
+							/>
+						)}
+					</HeaderButtonRow>
 				</div>
-				<Separator />
-				<div className="row bottom lg">
-					<div>
-						<CurrentEraPoints address={address} displayFor={displayFor} />
-					</div>
-					<div>
-						<LabelRow inline>
-							<Quartile address={address} />
-							<Blocked prefs={prefs} />
-						</LabelRow>
-						<NominationStatus
-							address={address}
-							bondFor={bondFor}
-							nominator={nominator}
-							status={nominationStatus}
-							noMargin
-						/>
-					</div>
+			</BasicItem.Row>
+			<Separator />
+			<BasicItem.Row position="bottom" large>
+				<div>
+					<CurrentEraPoints address={address} displayFor={displayFor} />
 				</div>
-			</div>
-		</BasicItemWrapper>
+				<div>
+					<LabelRow inline>
+						<Quartile address={address} />
+						<Blocked prefs={prefs} />
+					</LabelRow>
+					<NominationStatus
+						address={address}
+						bondFor={bondFor}
+						nominator={nominator}
+						status={nominationStatus}
+						noMargin
+					/>
+				</div>
+			</BasicItem.Row>
+		</BasicItem.Root>
 	)
 }
+
+export { Basic as BasicItem }

@@ -21,7 +21,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import type { NominationStatus } from 'types'
-import { ListFormatToggle } from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { Item } from './Item'
 import type { NominationListProps } from './types'
@@ -253,7 +253,7 @@ export const NominationListInner = ({
 				<ListFormatHeader>
 					<div />
 					<div>
-						<ListFormatToggle
+						<ListItem.FormatToggle
 							hideOnCompact={stakingApiEnabled}
 							onChange={setListFormat}
 							value={listFormat}

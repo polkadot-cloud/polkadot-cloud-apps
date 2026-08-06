@@ -5,7 +5,7 @@ import type { RewardsByValidationNode } from '@polkawatch/ddp-client'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RewardShare } from 'library/ListItem/Labels/RewardShare'
 import { motion } from 'motion/react'
-import { BasicItemWrapper } from 'ui-app/ListItem'
+import { BasicItem } from 'ui-app/ListItem'
 import { LabelRow, Separator } from 'ui-core/list'
 
 export const Node = ({
@@ -31,26 +31,24 @@ export const Node = ({
 				},
 			}}
 		>
-			<BasicItemWrapper className="member">
-				<div className="inner">
-					<div className="row top">
-						<Identity address={node.Id} />
+			<BasicItem.Root kind="member">
+				<BasicItem.Row position="top">
+					<Identity address={node.Id} />
+				</BasicItem.Row>
+				<Separator />
+				<BasicItem.Row position="bottom">
+					<div>
+						<h4 style={{ paddingLeft: '0.25rem', fontSize: '0.95em' }}>
+							{node.LastNetwork}, {node.LastCountry}, {node.LastRegion}{' '}
+							{node.Countries + node.Regions > 2 ? ', ++' : ''}
+						</h4>
 					</div>
-					<Separator />
-					<div className="row bottom">
-						<div>
-							<h4 style={{ paddingLeft: '0.25rem', fontSize: '0.95em' }}>
-								{node.LastNetwork}, {node.LastCountry}, {node.LastRegion}{' '}
-								{node.Countries + node.Regions > 2 ? ', ++' : ''}
-							</h4>
-						</div>
 
-						<LabelRow>
-							<RewardShare share={rewardShare} />
-						</LabelRow>
-					</div>
-				</div>
-			</BasicItemWrapper>
+					<LabelRow>
+						<RewardShare share={rewardShare} />
+					</LabelRow>
+				</BasicItem.Row>
+			</BasicItem.Root>
 		</motion.div>
 	)
 }

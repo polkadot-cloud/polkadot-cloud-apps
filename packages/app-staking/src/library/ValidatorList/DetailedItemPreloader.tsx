@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useTranslation } from 'react-i18next'
-import { BarWrapper, ItemWrapper } from 'ui-app/ListItem'
-import { Loader } from 'ui-core/base'
+import { ListItem } from 'ui-app/ListItem'
 
 export const DetailedItemPreloader = ({
 	format,
@@ -14,21 +13,6 @@ export const DetailedItemPreloader = ({
 	const label = t('loadingValidatorDetails', {
 		defaultValue: 'Loading validator details',
 	})
-	const height = format === 'row' ? '5.5rem' : '29.5rem'
-	const Wrapper = format === 'row' ? BarWrapper : ItemWrapper
 
-	return (
-		<Wrapper aria-busy="true" aria-label={label}>
-			<div className="inner">
-				<Loader
-					style={{
-						borderRadius: '0.5rem',
-						display: 'block',
-						height,
-						width: '100%',
-					}}
-				/>
-			</div>
-		</Wrapper>
-	)
+	return <ListItem.Skeleton format={format} label={label} />
 }

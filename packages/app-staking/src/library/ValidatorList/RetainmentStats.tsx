@@ -1,16 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	DetailLoader,
-	FlowLabel,
-	FlowMetric,
-	FlowValue,
-	MonthBadge,
-	RetainmentBody,
-	RetainmentRow,
-	SectionHeader,
-} from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { RetainmentStatValue } from './RetainmentStatValue'
 import type {
 	RetainmentStatData,
@@ -33,7 +24,7 @@ const RetainmentValue = ({
 	unit?: string
 }) =>
 	isPreloading ? (
-		<DetailLoader />
+		<ListItem.DetailLoader />
 	) : (
 		<RetainmentStatValue stat={stat} unit={unit} />
 	)
@@ -46,20 +37,21 @@ const RateStat = ({
 	stat: RetainmentStatData
 }) => {
 	return (
-		<FlowMetric>
-			<FlowLabel title={stat.label}>{stat.label}</FlowLabel>
-			<FlowValue
-				$color={stat.color}
-				role={stat.value === undefined ? undefined : 'meter'}
-				aria-label={stat.ariaLabel}
-				aria-valuemin={stat.value === undefined ? undefined : 0}
-				aria-valuemax={stat.value === undefined ? undefined : 100}
-				aria-valuenow={stat.value}
-				aria-valuetext={stat.ariaValueText}
-			>
-				<RetainmentValue isPreloading={isPreloading} stat={stat} />
-			</FlowValue>
-		</FlowMetric>
+		<ListItem.Metric
+			color={stat.color}
+			label={stat.label}
+			labelProps={{ title: stat.label }}
+			valueProps={{
+				'aria-label': stat.ariaLabel,
+				'aria-valuemax': stat.value === undefined ? undefined : 100,
+				'aria-valuemin': stat.value === undefined ? undefined : 0,
+				'aria-valuenow': stat.value,
+				'aria-valuetext': stat.ariaValueText,
+				role: stat.value === undefined ? undefined : 'meter',
+			}}
+		>
+			<RetainmentValue isPreloading={isPreloading} stat={stat} />
+		</ListItem.Metric>
 	)
 }
 
@@ -73,12 +65,14 @@ const SignedAmountStat = ({
 	unit: string
 }) => {
 	return (
-		<FlowMetric>
-			<FlowLabel title={stat.label}>{stat.label}</FlowLabel>
-			<FlowValue $color={stat.color} aria-label={stat.ariaLabel}>
-				<RetainmentValue isPreloading={isPreloading} stat={stat} unit={unit} />
-			</FlowValue>
-		</FlowMetric>
+		<ListItem.Metric
+			color={stat.color}
+			label={stat.label}
+			labelProps={{ title: stat.label }}
+			valueProps={{ 'aria-label': stat.ariaLabel }}
+		>
+			<RetainmentValue isPreloading={isPreloading} stat={stat} unit={unit} />
+		</ListItem.Metric>
 	)
 }
 
@@ -98,22 +92,18 @@ export const RetainmentStats = ({
 	} = data
 
 	return (
-		<RetainmentRow
-			className="row retainment"
-			aria-busy={isPreloading}
-			aria-label={statsLabel}
-		>
-			<SectionHeader>
+		<ListItem.Retainment aria-busy={isPreloading} aria-label={statsLabel}>
+			<ListItem.SectionHeader>
 				<strong>{retainmentLabel}</strong>
 				{isPreloading ? (
-					<DetailLoader height="0.85rem" width="7rem" />
+					<ListItem.DetailLoader height="0.85rem" width="7rem" />
 				) : month ? (
-					<MonthBadge dateTime={month.date.toISOString()}>
+					<ListItem.Month dateTime={month.date.toISOString()}>
 						/ {month.label}
-					</MonthBadge>
+					</ListItem.Month>
 				) : null}
-			</SectionHeader>
-			<RetainmentBody>
+			</ListItem.SectionHeader>
+			<ListItem.RetainmentGrid>
 				<RateStat isPreloading={isPreloading} stat={retainmentRate} />
 				<RateStat isPreloading={isPreloading} stat={compoundRate} />
 				<SignedAmountStat
@@ -126,7 +116,7 @@ export const RetainmentStats = ({
 					stat={netOutflow}
 					unit={unit}
 				/>
-			</RetainmentBody>
-		</RetainmentRow>
+			</ListItem.RetainmentGrid>
+		</ListItem.Retainment>
 	)
 }

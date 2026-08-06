@@ -24,7 +24,7 @@ import type { FormEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { NominationStatus, Validator } from 'types'
-import { ListFormatToggle } from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { FilterBadges } from './Filters/FilterBadges'
@@ -387,7 +387,7 @@ export const ValidatorListInner = ({
 					<div>{allowFilters && <FilterHeaders />}</div>
 					<div>
 						{allowListFormat && (
-							<ListFormatToggle
+							<ListItem.FormatToggle
 								hideOnCompact={stakingApiEnabled}
 								onChange={setListFormat}
 								value={listFormat}

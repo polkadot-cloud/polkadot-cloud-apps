@@ -17,19 +17,7 @@ import { useValidatorSelfStake } from 'library/ValidatorList/useValidatorSelfSta
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
 import { useTranslation } from 'react-i18next'
-import {
-	BlockedBadge,
-	CardTop,
-	DetailLoader,
-	HeaderActions,
-	HeaderIconAction,
-	HeaderIdentity,
-	HeaderMetricsAction,
-	ItemWrapper,
-	PerformanceGraph,
-	PerformanceRow,
-	SectionHeader,
-} from 'ui-app/ListItem'
+import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import { HistoricalEraPoints } from '../List/EraPointsGraph/HistoricalEraPoints'
 import type { ItemProps } from './types'
 
@@ -95,7 +83,7 @@ export const DetailedItem = ({
 				}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
-				innerClasses={`inner ${displayFor}`}
+				canvas={displayFor === 'canvas'}
 				isPreloading={isPreloading}
 				isStatusValuePreloading={backingStakePreloading}
 				rate={rateAfterCommission}
@@ -112,82 +100,80 @@ export const DetailedItem = ({
 	}
 
 	return (
-		<ItemWrapper>
-			<div className={`inner ${displayFor}`}>
-				<CardTop className="card-top">
-					<div className="row top">
-						<HeaderIdentity>
-							<Identity address={address} />
-							{prefs?.blocked === true && (
-								<BlockedBadge>{t('blocked')}</BlockedBadge>
-							)}
-						</HeaderIdentity>
-						<HeaderActions>
-							<HeaderIconAction>
-								<CopyAddress address={address} />
-							</HeaderIconAction>
-							{toggleFavorites && (
-								<HeaderIconAction>
-									<FavoriteValidator address={address} outline={outline} />
-								</HeaderIconAction>
-							)}
-							{displayFor !== 'canvas' && (
-								<HeaderMetricsAction>
-									<Metrics
-										address={address}
-										display={validatorDisplay}
-										outline={outline}
-									/>
-								</HeaderMetricsAction>
-							)}
-						</HeaderActions>
-					</div>
-					<ValidatorSummary
-						address={address}
-						ariaLabel={t('nominationSummary', {
-							defaultValue: 'Nomination summary',
-						})}
-						isRatePreloading={isPreloading}
-						isStatusValuePreloading={backingStakePreloading}
-						rate={rateAfterCommission}
-						selfStake={selfStake}
-						selfStakeMax={selfStakeMax}
-						status={validatorStatus}
-						statusActive={nominationStatus === 'active'}
-						statusLabel={statusLabel}
-						statusValue={backingStake}
-						unit={unit}
-					/>
-					<PerformanceRow className="row performance" aria-busy={isPreloading}>
-						<SectionHeader>
-							<strong>{t('activity')}</strong>
-						</SectionHeader>
-						<PerformanceGraph>
-							{isPreloading ? (
-								<div>
-									<DetailLoader
-										borderRadius="0.45rem"
-										height="100%"
-										width="100%"
-									/>
-								</div>
-							) : (
-								<HistoricalEraPoints
+		<DetailedCard.Root canvas={displayFor === 'canvas'}>
+			<DetailedCard.Top>
+				<DetailedCard.Header>
+					<ListItem.Identity>
+						<Identity address={address} />
+						{prefs?.blocked === true && (
+							<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
+						)}
+					</ListItem.Identity>
+					<ListItem.Actions>
+						<ListItem.Action>
+							<CopyAddress address={address} />
+						</ListItem.Action>
+						{toggleFavorites && (
+							<ListItem.Action>
+								<FavoriteValidator address={address} outline={outline} />
+							</ListItem.Action>
+						)}
+						{displayFor !== 'canvas' && (
+							<ListItem.Action wide>
+								<Metrics
 									address={address}
-									displayFor={displayFor}
-									eraPoints={eraPoints}
-									stretch
+									display={validatorDisplay}
+									outline={outline}
 								/>
-							)}
-						</PerformanceGraph>
-					</PerformanceRow>
-				</CardTop>
-				<RetainmentStats
-					data={retainmentStats}
-					isPreloading={isPreloading}
+							</ListItem.Action>
+						)}
+					</ListItem.Actions>
+				</DetailedCard.Header>
+				<ValidatorSummary
+					address={address}
+					ariaLabel={t('nominationSummary', {
+						defaultValue: 'Nomination summary',
+					})}
+					isRatePreloading={isPreloading}
+					isStatusValuePreloading={backingStakePreloading}
+					rate={rateAfterCommission}
+					selfStake={selfStake}
+					selfStakeMax={selfStakeMax}
+					status={validatorStatus}
+					statusActive={nominationStatus === 'active'}
+					statusLabel={statusLabel}
+					statusValue={backingStake}
 					unit={unit}
 				/>
-			</div>
-		</ItemWrapper>
+				<ListItem.Activity aria-busy={isPreloading}>
+					<ListItem.SectionHeader>
+						<strong>{t('activity')}</strong>
+					</ListItem.SectionHeader>
+					<ListItem.Graph layout="card">
+						{isPreloading ? (
+							<div>
+								<ListItem.DetailLoader
+									borderRadius="0.45rem"
+									height="100%"
+									width="100%"
+								/>
+							</div>
+						) : (
+							<HistoricalEraPoints
+								address={address}
+								displayFor={displayFor}
+								eraPoints={eraPoints}
+								stretch
+							/>
+						)}
+					</ListItem.Graph>
+				</ListItem.Activity>
+			</DetailedCard.Top>
+			<RetainmentStats
+				data={retainmentStats}
+				isPreloading={isPreloading}
+				unit={unit}
+			/>
+		</DetailedCard.Root>
 	)
 }
