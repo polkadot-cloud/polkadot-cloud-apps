@@ -159,7 +159,7 @@ export const RetainmentStats = ({
 
 	const retainmentLabel = t('retainmentRate')
 	const compoundLabel = t('compoundRate')
-	const selfStakeLabel = t('selfStake')
+	const selfStakeChangeLabel = t('selfStakeChange')
 	const selfStakeChange = period
 		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
 		: undefined
@@ -202,7 +202,7 @@ export const RetainmentStats = ({
 				/>
 				<SignedAmountStat
 					value={selfStakeChange}
-					label={selfStakeLabel}
+					label={selfStakeChangeLabel}
 					locale={i18n.resolvedLanguage}
 					unit={unit}
 				/>

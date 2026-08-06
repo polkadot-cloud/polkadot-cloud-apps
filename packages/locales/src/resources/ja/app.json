@@ -343,6 +343,7 @@
 		"select": "選択",
 		"selectAccount": "アカウントを選択",
 		"selfStake": "自己ステーク",
+		"selfStakeChange": "自己ステークの変化",
 		"send": "送金",
 		"share": "共有",
 		"sign": "署名",

@@ -343,6 +343,7 @@
 		"select": "선택",
 		"selectAccount": "계정 선택",
 		"selfStake": "자체 스테이크",
+		"selfStakeChange": "자체 스테이크 변동",
 		"send": "전송",
 		"share": "공유",
 		"sign": "서명",
