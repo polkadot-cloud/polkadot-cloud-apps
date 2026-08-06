@@ -183,6 +183,53 @@ export interface ValidatorAvgRewardRateBatch {
 	rate: number
 }
 
+export interface ValidatorRetainmentBatchData {
+	validatorRetainmentBatch: ValidatorRetainmentBatch[]
+}
+
+export interface ValidatorRetainmentBatch {
+	validator: string
+	result: ValidatorRetainmentResult | null
+}
+
+export interface ValidatorRetainmentResult {
+	identityGraphId: string
+	accounts: ValidatorRetainmentAccount[]
+	validators: string[]
+	era: number
+	timestamp: number
+	assetHubBlockNumber: number
+	peopleBlockNumber: number
+	months: ValidatorRetainmentPeriod[]
+}
+
+export interface ValidatorRetainmentAccount {
+	address: string
+	super: string | null
+	subs: string[]
+	validator: boolean
+}
+
+export interface ValidatorRetainmentPeriod {
+	month: number
+	year: number
+	fromEra: number
+	toEra: number
+	fromTimestamp: number
+	toTimestamp: number
+	graphRewards: string
+	retained: string
+	retainmentRate: number | null
+	validatorRewards: string
+	compounded: string
+	compoundRate: number
+}
+
+export interface ValidatorDetailsBatchData
+	extends ValidatorRetainmentBatchData,
+		ValidatorAvgRewardRateBatchData,
+		ValidatorEraPointsBatchData {}
+
 export interface PoolReward {
 	reward: string
 	timestamp: number

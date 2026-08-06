@@ -20,6 +20,7 @@ import { planckToUnitBn } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
+import { DetailedItemPreloader } from './DetailedItemPreloader'
 import { RetainmentStats } from './RetainmentStats'
 import { RowActionsMenu } from './RowActionsMenu'
 import type { ItemProps } from './types'
@@ -46,6 +47,8 @@ export const DetailedItem = ({
 	onRemove,
 	rate,
 	format,
+	retainment,
+	isPreloading,
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
@@ -55,6 +58,10 @@ export const DetailedItem = ({
 	const { address, prefs, validatorStatus } = validator
 	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
+
+	if (isPreloading) {
+		return <DetailedItemPreloader format={format} />
+	}
 
 	const isSelected = !!selected.filter(
 		(item) => (item as Validator).address === validator.address,
@@ -84,7 +91,7 @@ export const DetailedItem = ({
 		validatorIdentities[address],
 		validatorSupers[address],
 	).node
-	
+
 	const cardActions = (
 		<HeaderActions>
 			<HeaderIconAction>
@@ -137,7 +144,9 @@ export const DetailedItem = ({
 				rate={rateAfterCommission}
 				selfStake={selfStake}
 				unit={unit}
+				units={units}
 				validator={validator}
+				retainment={retainment?.months[0]}
 			/>
 		)
 	}
@@ -177,7 +186,12 @@ export const DetailedItem = ({
 						</PerformanceGraph>
 					</PerformanceRow>
 				</CardTop>
-				<RetainmentStats selfStake={selfStake} unit={unit} />
+				<RetainmentStats
+					period={retainment?.months[0]}
+					selfStake={selfStake}
+					unit={unit}
+					units={units}
+				/>
 			</div>
 		</ItemWrapper>
 	)

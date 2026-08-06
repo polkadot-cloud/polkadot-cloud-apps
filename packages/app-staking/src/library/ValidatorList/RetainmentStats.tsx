@@ -2,19 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
-	faArrowRight,
 	faArrowTrendDown,
 	faArrowTrendUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
+import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
-import {
-	clampRate,
-	DUMMY_RETAINMENT,
-	getRateColor,
-	MAX_SELF_STAKE_DOT,
-} from './retainment'
+import { planckToUnitBn } from 'utils'
+import { clampRate, getRateColor, MAX_SELF_STAKE_DOT } from './retainment'
 import {
 	FlowLabel,
 	FlowMetric,
@@ -26,8 +22,10 @@ import {
 } from './Wrappers'
 
 interface RetainmentStatsProps {
+	period?: ValidatorRetainmentPeriod
 	selfStake?: BigNumber
 	unit: string
+	units: number
 }
 
 const formatRate = (rate: number, locale?: string) =>
@@ -42,31 +40,39 @@ const RateStat = ({
 	maximumLabel,
 }: {
 	label: string
-	rate: number
+	rate?: number | null
 	max?: boolean
 	showTrend?: boolean
 	locale?: string
 	maximumLabel: string
 }) => {
-	const value = max ? 100 : clampRate(rate)
-	const valueText = max ? 'MAX' : formatRate(value, locale)
-	const trendIcon = showTrend
-		? value >= 75
-			? faArrowTrendUp
-			: value < 25
-				? faArrowTrendDown
-				: undefined
-		: undefined
+	const hasRate = typeof rate === 'number' && Number.isFinite(rate)
+	const value = max ? 100 : hasRate ? clampRate(rate) : undefined
+	const valueText = max
+		? 'MAX'
+		: value === undefined
+			? '—'
+			: formatRate(value, locale)
+	const trendIcon =
+		showTrend && value !== undefined
+			? value >= 75
+				? faArrowTrendUp
+				: value < 25
+					? faArrowTrendDown
+					: undefined
+			: undefined
 
 	return (
 		<FlowMetric>
 			<FlowLabel title={label}>{label}</FlowLabel>
 			<FlowValue
-				$color={getRateColor(value)}
-				role="meter"
+				$color={
+					value === undefined ? 'var(--text-tertiary)' : getRateColor(value)
+				}
+				role={value === undefined ? undefined : 'meter'}
 				aria-label={label}
-				aria-valuemin={0}
-				aria-valuemax={100}
+				aria-valuemin={value === undefined ? undefined : 0}
+				aria-valuemax={value === undefined ? undefined : 100}
 				aria-valuenow={value}
 				aria-valuetext={max ? maximumLabel : valueText}
 			>
@@ -77,88 +83,76 @@ const RateStat = ({
 	)
 }
 
-export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
+const AmountStat = ({
+	amount,
+	label,
+	locale,
+	unit,
+	units,
+}: {
+	amount?: string
+	label: string
+	locale?: string
+	unit: string
+	units: number
+}) => {
+	const value =
+		amount === undefined
+			? undefined
+			: planckToUnitBn(new BigNumber(amount), units).toNumber()
+	const valueText =
+		value === undefined
+			? '—'
+			: value.toLocaleString(locale, {
+					notation: 'compact',
+					maximumFractionDigits: 1,
+				})
+
+	return (
+		<FlowMetric>
+			<FlowLabel title={label}>{label}</FlowLabel>
+			<FlowValue
+				$color={
+					value === undefined ? 'var(--text-tertiary)' : 'var(--gray-1000)'
+				}
+				aria-label={`${label}: ${valueText}${value === undefined ? '' : ` ${unit}`}`}
+			>
+				<span>{valueText}</span>
+				{value !== undefined && <small>{unit}</small>}
+			</FlowValue>
+		</FlowMetric>
+	)
+}
+
+export const RetainmentStats = ({
+	period,
+	selfStake,
+	unit,
+	units,
+}: RetainmentStatsProps) => {
 	const { t, i18n } = useTranslation('app')
-
-	const { month } = DUMMY_RETAINMENT
 	const compoundMax =
-		unit === 'DOT' && selfStake?.gte(MAX_SELF_STAKE_DOT) === true
+		period !== undefined &&
+		unit === 'DOT' &&
+		selfStake?.gte(MAX_SELF_STAKE_DOT) === true
 
-	const monthDate = new Date(month.fromTimestamp * 1000)
-
-	const monthLabel = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-		month: 'long',
-		year: 'numeric',
-		timeZone: 'UTC',
-	}).format(monthDate)
-	const flowDirection =
-		month.netFlow > 0 ? 'inflow' : month.netFlow < 0 ? 'outflow' : 'none'
-
-	const flowLabel =
-		flowDirection === 'inflow'
-			? t('netInflow')
-			: flowDirection === 'outflow'
-				? t('netOutflow')
-				: t('noNetFlow')
-
-	const flowColor =
-		flowDirection === 'inflow'
-			? 'var(--status-success)'
-			: flowDirection === 'outflow'
-				? 'var(--status-danger)'
-				: 'var(--text-tertiary)'
-
-	const flowIcon =
-		flowDirection === 'inflow'
-			? faArrowTrendUp
-			: flowDirection === 'outflow'
-				? faArrowTrendDown
-				: faArrowRight
-
-	const flowPrefix = month.netFlow > 0 ? '+' : month.netFlow < 0 ? '−' : ''
-
-	const flowValue = Math.abs(month.netFlow).toLocaleString(
-		i18n.resolvedLanguage,
-		{
-			notation: 'compact',
-			maximumFractionDigits: 1,
-		},
-	)
-	const selfStakeDirection =
-		month.selfStakeChange > 0
-			? 'increase'
-			: month.selfStakeChange < 0
-				? 'decrease'
-				: 'none'
-
-	const selfStakeColor =
-		selfStakeDirection === 'increase'
-			? 'var(--status-success)'
-			: selfStakeDirection === 'decrease'
-				? 'var(--status-danger)'
-				: 'var(--text-tertiary)'
-
-	const selfStakeIcon =
-		selfStakeDirection === 'increase'
-			? faArrowTrendUp
-			: selfStakeDirection === 'decrease'
-				? faArrowTrendDown
-				: faArrowRight
-
-	const selfStakePrefix =
-		month.selfStakeChange > 0 ? '+' : month.selfStakeChange < 0 ? '-' : ''
-
-	const selfStakeValue = Math.abs(month.selfStakeChange).toLocaleString(
-		i18n.resolvedLanguage,
-		{
-			notation: 'compact',
-			maximumFractionDigits: 1,
-		},
-	)
-	const selfStakeLabel = t('selfStake')
+	const monthDate = period ? new Date(period.fromTimestamp * 1000) : undefined
+	const monthLabel = monthDate
+		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
+				month: 'long',
+				year: 'numeric',
+				timeZone: 'UTC',
+			}).format(monthDate)
+		: undefined
 
 	const retainmentLabel = t('retainmentRate')
 	const compoundLabel = t('compoundRate')
+	const retainedLabel = t('retainedRewards', {
+		defaultValue: 'Retained rewards',
+	})
+	const compoundedLabel = t('compoundedRewards', {
+		defaultValue: 'Compounded rewards',
+	})
 	const maximumLabel = t('maximum')
 	const statsLabel = t('retainmentStats')
 
@@ -166,53 +160,41 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 		<RetainmentRow className="row retainment" aria-label={statsLabel}>
 			<SectionHeader>
 				<strong>{t('retainment')}</strong>
-				<MonthBadge dateTime={monthDate.toISOString()}>
-					/ {monthLabel}
-				</MonthBadge>
+				{monthDate && monthLabel && (
+					<MonthBadge dateTime={monthDate.toISOString()}>
+						/ {monthLabel}
+					</MonthBadge>
+				)}
 			</SectionHeader>
 			<RetainmentBody>
 				<RateStat
 					label={retainmentLabel}
-					rate={month.retainmentRate}
+					rate={period?.retainmentRate}
 					showTrend={false}
 					locale={i18n.resolvedLanguage}
 					maximumLabel={maximumLabel}
 				/>
 				<RateStat
 					label={compoundLabel}
-					rate={month.compoundRate}
+					rate={period?.compoundRate}
 					max={compoundMax}
 					locale={i18n.resolvedLanguage}
 					maximumLabel={maximumLabel}
 				/>
-				<FlowMetric>
-					<FlowLabel title={selfStakeLabel}>{selfStakeLabel}</FlowLabel>
-					<FlowValue
-						$color={selfStakeColor}
-						aria-label={`${selfStakeLabel}: ${selfStakePrefix}${selfStakeValue} ${unit}`}
-					>
-						<FontAwesomeIcon icon={selfStakeIcon} aria-hidden="true" />
-						<span>
-							{selfStakePrefix}
-							{selfStakeValue}
-						</span>
-						<small>{unit}</small>
-					</FlowValue>
-				</FlowMetric>
-				<FlowMetric>
-					<FlowLabel title={flowLabel}>{flowLabel}</FlowLabel>
-					<FlowValue
-						$color={flowColor}
-						aria-label={`${flowLabel}: ${flowValue} ${unit}`}
-					>
-						<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
-						<span>
-							{flowPrefix}
-							{flowValue}
-						</span>
-						<small>{unit}</small>
-					</FlowValue>
-				</FlowMetric>
+				<AmountStat
+					amount={period?.retained}
+					label={retainedLabel}
+					locale={i18n.resolvedLanguage}
+					unit={unit}
+					units={units}
+				/>
+				<AmountStat
+					amount={period?.compounded}
+					label={compoundedLabel}
+					locale={i18n.resolvedLanguage}
+					unit={unit}
+					units={units}
+				/>
 			</RetainmentBody>
 		</RetainmentRow>
 	)

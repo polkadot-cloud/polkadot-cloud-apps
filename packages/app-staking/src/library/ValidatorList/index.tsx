@@ -10,6 +10,7 @@ import { ListProvider, useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
+import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useSyncing } from 'hooks/useSyncing'
@@ -20,8 +21,8 @@ import { MotionContainer } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { SearchInput } from 'library/List/SearchInput'
 import { motion } from 'motion/react'
-import { fetchValidatorEraPointsBatch } from 'plugin-staking-api'
-import type { ValidatorEraPointsBatch } from 'plugin-staking-api/types'
+import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
+import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import type { FormEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -71,6 +72,7 @@ export const ValidatorListInner = ({
 	const listProvider = useList()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
+	const { erasPerDay } = useErasPerDay()
 	const { pluginEnabled } = usePlugins()
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const { getThemeValue } = useThemeValues()
@@ -136,10 +138,10 @@ export const ValidatorListInner = ({
 	const effectiveListFormat =
 		stakingApiEnabled && forceCardLayout ? 'col' : listFormat
 
-	// Store performance data, keyed by address
-	const [performances, setPerformances] = useState<ValidatorEraPointsBatch[]>(
-		[],
-	)
+	// Store all API-backed detailed card data by request key.
+	const [detailsByKey, setDetailsByKey] = useState<
+		Record<string, ValidatorDetailsBatchData>
+	>({})
 
 	// Pagination
 	const pageLength: number = itemsPerPage || validators.length
@@ -170,16 +172,6 @@ export const ValidatorListInner = ({
 		[validators, pageStart, pageLength],
 	)
 
-	// Build a lookup for validator performance to avoid repeated array scans when rendering list
-	// items
-	const performanceByAddress = useMemo(
-		() =>
-			new Map(
-				performances.map((entry) => [entry.validator, entry.points] as const),
-			),
-		[performances],
-	)
-
 	const pageKey = useMemo(() => {
 		const itemKeys = listItems
 			.map(({ address }, i) => `${i}${address}`)
@@ -189,6 +181,46 @@ export const ValidatorListInner = ({
 		const search = searchTerm ?? ''
 		return `${itemKeys}|${inc}|${exc}|${order}|${search}`
 	}, [listItems, includes, excludes, order, searchTerm])
+	const detailsKey = useMemo(
+		() =>
+			JSON.stringify({
+				network,
+				era: activeEra.index,
+				rewardRateDepth: erasPerDay,
+				validators: listItems.map(({ address }) => address),
+			}),
+		[network, activeEra.index, erasPerDay, listItems],
+	)
+	const details = detailsByKey[detailsKey]
+	const detailsPreloading = stakingApiEnabled && details === undefined
+
+	const performanceByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorEraPointsBatch ?? []).map(
+					(entry) => [entry.validator, entry.points] as const,
+				),
+			),
+		[details],
+	)
+	const rateByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorAvgRewardRateBatch ?? []).map(
+					(entry) => [entry.validator, entry.rate] as const,
+				),
+			),
+		[details],
+	)
+	const retainmentByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorRetainmentBatch ?? []).map(
+					(entry) => [entry.validator, entry.result] as const,
+				),
+			),
+		[details],
+	)
 
 	// if in modal, handle resize
 	const maybeHandleModalResize = () => {
@@ -201,6 +233,7 @@ export const ValidatorListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		listItems.map(({ address }) => address),
 		pageKey,
+		stakingApiEnabled,
 	)
 
 	const handleSearchChange = (e: FormEvent<HTMLInputElement>) => {
@@ -267,21 +300,19 @@ export const ValidatorListInner = ({
 		setFetched(true)
 	}
 
-	// Fetch performance data
-	const getPerformanceData = async (key: string) => {
-		if (!stakingApiEnabled) {
+	// Fetch all data needed by detailed validator cards in one GraphQL operation.
+	const getDetailedData = async (key: string) => {
+		if (!stakingApiEnabled || activeEra.index === 0 || listItems.length === 0) {
 			return
 		}
-		const results = await fetchValidatorEraPointsBatch(
+		const results = await fetchValidatorDetailsBatch(
 			network,
 			listItems.map(({ address }) => address),
 			Math.max(activeEra.index - 1, 0),
+			erasPerDay,
 			30,
 		)
-		// Update performance if key still matches current page key
-		if (key === pageKey) {
-			setPerformances(results.validatorEraPointsBatch)
-		}
+		setDetailsByKey((current) => ({ ...current, [key]: results }))
 	}
 
 	// Set default filters. Should re-render if era stakers re-syncs as era points effect the
@@ -326,10 +357,10 @@ export const ValidatorListInner = ({
 		setFetched(false)
 	}, [initialValidators, nominator])
 
-	// Fetch performance queries when validator list changes
+	// Fetch detailed card data when the visible validator set changes.
 	useEffect(() => {
-		getPerformanceData(pageKey)
-	}, [pageKey, stakingApiEnabled])
+		getDetailedData(detailsKey)
+	}, [detailsKey, stakingApiEnabled])
 
 	// Configure validator list when network is ready to fetch
 	useEffect(() => {
@@ -434,7 +465,13 @@ export const ValidatorListInner = ({
 									displayFor={displayFor}
 									format={effectiveListFormat}
 									eraPoints={performanceByAddress.get(validator.address) || []}
-									rate={rates[pageKey]?.[validator.address]}
+									rate={
+										stakingApiEnabled
+											? rateByAddress.get(validator.address)
+											: rates[pageKey]?.[validator.address]
+									}
+									retainment={retainmentByAddress.get(validator.address)}
+									isPreloading={detailsPreloading}
 									nominationStatus={nominationStatus.current[validator.address]}
 									onRemove={onRemove}
 								/>

@@ -19,6 +19,7 @@ import {
 export const useValidatorRewardRateBatch = (
 	addresses: string[],
 	pageKey: string,
+	skipStakingApi = false,
 ) => {
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
@@ -110,10 +111,10 @@ export const useValidatorRewardRateBatch = (
 
 	// Fetch average reward rates from staking api when enabled
 	useEffect(() => {
-		if (isStakingApiEnabled) {
+		if (isStakingApiEnabled && !skipStakingApi) {
 			getAvgRewardRates(pageKey)
 		}
-	}, [pageKey, isStakingApiEnabled, activeEra.index])
+	}, [pageKey, isStakingApiEnabled, skipStakingApi, activeEra.index])
 
 	// Fetch average reward rates from previous era when staking api is disabled
 	useEffect(() => {

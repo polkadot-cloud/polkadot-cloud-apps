@@ -3,7 +3,10 @@
 
 import type { ListContextInterface, ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
-import type { ValidatorEraPoints } from 'plugin-staking-api/types'
+import type {
+	ValidatorEraPoints,
+	ValidatorRetainmentResult,
+} from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import type {
 	BondFor,
@@ -52,6 +55,8 @@ export interface ItemProps {
 	nominationStatus?: NominationStatus
 	eraPoints: ValidatorEraPoints[]
 	rate?: number
+	retainment?: ValidatorRetainmentResult | null
+	isPreloading?: boolean
 	onRemove?: (params: {
 		selected: Validator[]
 		resetSelection?: () => void

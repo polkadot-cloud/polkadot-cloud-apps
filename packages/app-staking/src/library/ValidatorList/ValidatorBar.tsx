@@ -1,28 +1,21 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faArrowRight,
-	faArrowTrendDown,
-	faArrowTrendUp,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
-import type { ValidatorEraPoints } from 'plugin-staking-api/types'
+import type {
+	ValidatorEraPoints,
+	ValidatorRetainmentPeriod,
+} from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
+import { planckToUnitBn } from 'utils'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
-import {
-	clampRate,
-	DUMMY_RETAINMENT,
-	getRateColor,
-	MAX_SELF_STAKE_DOT,
-} from './retainment'
+import { clampRate, getRateColor, MAX_SELF_STAKE_DOT } from './retainment'
 import { useValidatorSummaryData } from './ValidatorSummary'
 import {
 	BarIdentity,
@@ -46,7 +39,9 @@ interface ValidatorBarProps {
 	rate?: number
 	selfStake?: BigNumber
 	unit: string
+	units: number
 	validator: ValidatorListEntry
+	retainment?: ValidatorRetainmentPeriod
 }
 
 export const ValidatorBar = ({
@@ -57,7 +52,9 @@ export const ValidatorBar = ({
 	rate,
 	selfStake,
 	unit,
+	units,
 	validator,
+	retainment,
 }: ValidatorBarProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { selectable } = useList()
@@ -70,48 +67,47 @@ export const ValidatorBar = ({
 		totalStake,
 		validatorStatus,
 	} = useValidatorSummaryData({ address, rate, selfStake, status, unit })
-	const { month } = DUMMY_RETAINMENT
 	const compoundMax =
-		unit === 'DOT' && selfStake?.gte(MAX_SELF_STAKE_DOT) === true
-	const retainmentRate = clampRate(month.retainmentRate)
-	const compoundRate = compoundMax ? 100 : clampRate(month.compoundRate)
-	const retainmentValue = `${retainmentRate.toLocaleString(
-		i18n.resolvedLanguage,
-		{ maximumFractionDigits: 1 },
-	)}%`
+		retainment !== undefined &&
+		unit === 'DOT' &&
+		selfStake?.gte(MAX_SELF_STAKE_DOT) === true
+	const retainmentRate =
+		typeof retainment?.retainmentRate === 'number' &&
+		Number.isFinite(retainment.retainmentRate)
+			? clampRate(retainment.retainmentRate)
+			: undefined
+	const compoundRate = compoundMax
+		? 100
+		: typeof retainment?.compoundRate === 'number' &&
+				Number.isFinite(retainment.compoundRate)
+			? clampRate(retainment.compoundRate)
+			: undefined
+	const retainmentValue =
+		retainmentRate === undefined
+			? '—'
+			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
+					maximumFractionDigits: 1,
+				})}%`
 	const compoundValue = compoundMax
 		? 'MAX'
-		: `${compoundRate.toLocaleString(i18n.resolvedLanguage, {
-				maximumFractionDigits: 1,
-			})}%`
-	const flowDirection =
-		month.netFlow > 0 ? 'inflow' : month.netFlow < 0 ? 'outflow' : 'none'
-	const flowLabel =
-		flowDirection === 'inflow'
-			? t('netInflow', { defaultValue: 'Net inflow' })
-			: flowDirection === 'outflow'
-				? t('netOutflow', { defaultValue: 'Net outflow' })
-				: t('noNetFlow', { defaultValue: 'No net flow' })
-	const flowColor =
-		flowDirection === 'inflow'
-			? 'var(--status-success)'
-			: flowDirection === 'outflow'
-				? 'var(--status-danger)'
-				: 'var(--text-tertiary)'
-	const flowIcon =
-		flowDirection === 'inflow'
-			? faArrowTrendUp
-			: flowDirection === 'outflow'
-				? faArrowTrendDown
-				: faArrowRight
-	const flowPrefix = month.netFlow > 0 ? '+' : month.netFlow < 0 ? '−' : ''
-	const flowValue = Math.abs(month.netFlow).toLocaleString(
-		i18n.resolvedLanguage,
-		{
-			notation: 'compact',
-			maximumFractionDigits: 1,
-		},
-	)
+		: compoundRate === undefined
+			? '—'
+			: `${compoundRate.toLocaleString(i18n.resolvedLanguage, {
+					maximumFractionDigits: 1,
+				})}%`
+	const retained = retainment
+		? planckToUnitBn(new BigNumber(retainment.retained), units).toNumber()
+		: undefined
+	const retainedValue =
+		retained === undefined
+			? '—'
+			: retained.toLocaleString(i18n.resolvedLanguage, {
+					notation: 'compact',
+					maximumFractionDigits: 1,
+				})
+	const retainedLabel = t('retainedRewards', {
+		defaultValue: 'Retained rewards',
+	})
 
 	return (
 		<BarWrapper>
@@ -178,10 +174,14 @@ export const ValidatorBar = ({
 								})}
 							</BarStatLabel>
 							<BarStatValue
-								$color={getRateColor(retainmentRate)}
-								role="meter"
-								aria-valuemin={0}
-								aria-valuemax={100}
+								$color={
+									retainmentRate === undefined
+										? 'var(--text-tertiary)'
+										: getRateColor(retainmentRate)
+								}
+								role={retainmentRate === undefined ? undefined : 'meter'}
+								aria-valuemin={retainmentRate === undefined ? undefined : 0}
+								aria-valuemax={retainmentRate === undefined ? undefined : 100}
 								aria-valuenow={retainmentRate}
 							>
 								{retainmentValue}
@@ -192,10 +192,14 @@ export const ValidatorBar = ({
 								{t('compoundRate', { defaultValue: 'Compound' })}
 							</BarStatLabel>
 							<BarStatValue
-								$color={getRateColor(compoundRate)}
-								role="meter"
-								aria-valuemin={0}
-								aria-valuemax={100}
+								$color={
+									compoundRate === undefined
+										? 'var(--text-tertiary)'
+										: getRateColor(compoundRate)
+								}
+								role={compoundRate === undefined ? undefined : 'meter'}
+								aria-valuemin={compoundRate === undefined ? undefined : 0}
+								aria-valuemax={compoundRate === undefined ? undefined : 100}
 								aria-valuenow={compoundRate}
 								aria-valuetext={compoundMax ? 'Maximum' : compoundValue}
 							>
@@ -203,14 +207,10 @@ export const ValidatorBar = ({
 							</BarStatValue>
 						</BarStat>
 						<BarStat>
-							<BarStatLabel>{flowLabel}</BarStatLabel>
-							<BarStatValue $color={flowColor}>
-								<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
-								<span>
-									{flowPrefix}
-									{flowValue}
-								</span>
-								<small>{unit}</small>
+							<BarStatLabel>{retainedLabel}</BarStatLabel>
+							<BarStatValue>
+								<span>{retainedValue}</span>
+								{retained !== undefined && <small>{unit}</small>}
 							</BarStatValue>
 						</BarStat>
 					</BarStats>
