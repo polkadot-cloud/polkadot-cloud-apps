@@ -697,7 +697,8 @@ export const BarStats = styled.div`
   display: grid;
   grid-template-columns:
     repeat(6, minmax(4.75rem, 1fr))
-    minmax(7.5rem, 1.35fr);
+    minmax(7.5rem, 1.35fr)
+    minmax(4.75rem, 1fr);
   min-width: 0;
 
   > * + * {

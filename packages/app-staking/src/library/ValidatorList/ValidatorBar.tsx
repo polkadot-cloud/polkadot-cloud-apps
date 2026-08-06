@@ -106,7 +106,8 @@ export const ValidatorBar = ({
 		status,
 		unit,
 	})
-	const { compoundRate, retainmentRate, selfStakeChange } = retainmentStats
+	const { compoundRate, netOutflow, retainmentRate, selfStakeChange } =
+		retainmentStats
 
 	return (
 		<BarWrapper>
@@ -171,6 +172,7 @@ export const ValidatorBar = ({
 						<BarRateStat stat={retainmentRate} />
 						<BarRateStat stat={compoundRate} />
 						<BarSignedAmountStat stat={selfStakeChange} unit={unit} />
+						<BarSignedAmountStat stat={netOutflow} unit={unit} />
 					</BarStats>
 
 					{actions}
