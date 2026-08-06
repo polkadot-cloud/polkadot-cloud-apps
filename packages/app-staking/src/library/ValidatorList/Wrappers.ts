@@ -417,7 +417,7 @@ export const SectionHeader = styled.header`
   align-items: center;
   flex: 0 0 auto;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 0.6rem;
   margin-bottom: 0.8rem;
   min-width: 0;
   width: 100%;
@@ -464,15 +464,11 @@ export const PerformanceGraph = styled.div`
 export const RetainmentRow = styled.section``
 
 export const MonthBadge = styled.time`
-  background: transparent;
-  border: 1px solid var(--gray-500);
-  border-radius: 0.65rem;
   color: var(--gray-900);
   font-family: var(--font-family-semibold);
-  font-size: 0.95rem;
-  letter-spacing: normal;
+  font-size: 0.85rem;
   line-height: 1;
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0;
   white-space: nowrap;
 `
 

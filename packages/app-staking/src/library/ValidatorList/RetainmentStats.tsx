@@ -166,7 +166,9 @@ export const RetainmentStats = ({ selfStake, unit }: RetainmentStatsProps) => {
 		<RetainmentRow className="row retainment" aria-label={statsLabel}>
 			<SectionHeader>
 				<strong>{t('retainment')}</strong>
-				<MonthBadge dateTime={monthDate.toISOString()}>{monthLabel}</MonthBadge>
+				<MonthBadge dateTime={monthDate.toISOString()}>
+					/ {monthLabel}
+				</MonthBadge>
 			</SectionHeader>
 			<RetainmentBody>
 				<RateStat

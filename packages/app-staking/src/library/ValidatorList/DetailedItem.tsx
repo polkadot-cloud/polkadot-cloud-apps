@@ -74,14 +74,17 @@ export const DetailedItem = ({
 			? rate * (1 - commission / 100)
 			: undefined
 	const validatorOwnStake = getActiveValidator(address)?.own
+
 	const selfStake =
 		validatorOwnStake !== undefined
 			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
 			: undefined
+
 	const validatorDisplay = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
 	).node
+	
 	const cardActions = (
 		<HeaderActions>
 			<HeaderIconAction>
