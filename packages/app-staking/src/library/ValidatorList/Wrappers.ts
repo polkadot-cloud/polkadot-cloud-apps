@@ -695,7 +695,10 @@ export const BarPerformanceGraph = styled.div`
 export const BarStats = styled.div`
   align-items: stretch;
   display: grid;
-  grid-template-columns: repeat(7, minmax(4.75rem, 1fr));
+  grid-template-columns:
+    repeat(6, minmax(4.75rem, 1fr))
+    minmax(7.5rem, 2fr)
+    minmax(4.75rem, 1fr);
   min-width: 0;
 
   > * + * {

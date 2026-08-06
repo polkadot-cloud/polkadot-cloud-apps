@@ -24,6 +24,7 @@ import { DetailedItemPreloader } from './DetailedItemPreloader'
 import { RetainmentStats } from './RetainmentStats'
 import { RowActionsMenu } from './RowActionsMenu'
 import type { ItemProps } from './types'
+import { useRetainmentStatsData } from './useRetainmentStatsData'
 import { ValidatorBar } from './ValidatorBar'
 import { ValidatorSummary } from './ValidatorSummary'
 import {
@@ -58,6 +59,17 @@ export const DetailedItem = ({
 	const { address, prefs, validatorStatus } = validator
 	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
+	const validatorOwnStake = getActiveValidator(address)?.own
+	const selfStake =
+		validatorOwnStake !== undefined
+			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
+			: undefined
+	const retainmentStats = useRetainmentStatsData({
+		period: retainment?.months[0],
+		selfStake,
+		unit,
+		units,
+	})
 
 	if (isPreloading) {
 		return <DetailedItemPreloader format={format} />
@@ -80,13 +92,6 @@ export const DetailedItem = ({
 		Number.isFinite(commission)
 			? rate * (1 - commission / 100)
 			: undefined
-	const validatorOwnStake = getActiveValidator(address)?.own
-
-	const selfStake =
-		validatorOwnStake !== undefined
-			? planckToUnitBn(new BigNumber(validatorOwnStake), units)
-			: undefined
-
 	const validatorDisplay = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
@@ -142,11 +147,10 @@ export const DetailedItem = ({
 				displayFor={displayFor}
 				eraPoints={eraPoints}
 				rate={rateAfterCommission}
+				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				unit={unit}
-				units={units}
 				validator={validator}
-				retainment={retainment?.months[0]}
 			/>
 		)
 	}
@@ -186,12 +190,7 @@ export const DetailedItem = ({
 						</PerformanceGraph>
 					</PerformanceRow>
 				</CardTop>
-				<RetainmentStats
-					period={retainment?.months[0]}
-					selfStake={selfStake}
-					unit={unit}
-					units={units}
-				/>
+				<RetainmentStats data={retainmentStats} unit={unit} />
 			</div>
 		</ItemWrapper>
 	)

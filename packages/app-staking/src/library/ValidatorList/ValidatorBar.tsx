@@ -1,27 +1,21 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faArrowRight,
-	faArrowTrendDown,
-	faArrowTrendUp,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import BigNumber from 'bignumber.js'
+import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
-import type {
-	ValidatorEraPoints,
-	ValidatorRetainmentPeriod,
-} from 'plugin-staking-api/types'
+import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
-import { planckToUnitBn } from 'utils'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
-import { clampRate, getRateColor, MAX_SELF_STAKE_DOT } from './retainment'
+import { RetainmentStatValue } from './RetainmentStatValue'
+import type {
+	RetainmentStatData,
+	RetainmentStatsData,
+} from './useRetainmentStatsData'
 import { useValidatorSummaryData } from './ValidatorSummary'
 import {
 	BarIdentity,
@@ -43,12 +37,43 @@ interface ValidatorBarProps {
 	eraPoints: ValidatorEraPoints[]
 	innerClasses: string
 	rate?: number
+	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	unit: string
-	units: number
 	validator: ValidatorListEntry
-	retainment?: ValidatorRetainmentPeriod
 }
+
+const BarRateStat = ({ stat }: { stat: RetainmentStatData }) => (
+	<BarStat>
+		<BarStatLabel title={stat.label}>{stat.label}</BarStatLabel>
+		<BarStatValue
+			$color={stat.color}
+			role={stat.value === undefined ? undefined : 'meter'}
+			aria-label={stat.ariaLabel}
+			aria-valuemin={stat.value === undefined ? undefined : 0}
+			aria-valuemax={stat.value === undefined ? undefined : 100}
+			aria-valuenow={stat.value}
+			aria-valuetext={stat.ariaValueText}
+		>
+			<RetainmentStatValue stat={stat} />
+		</BarStatValue>
+	</BarStat>
+)
+
+const BarSignedAmountStat = ({
+	stat,
+	unit,
+}: {
+	stat: RetainmentStatData
+	unit: string
+}) => (
+	<BarStat>
+		<BarStatLabel title={stat.label}>{stat.label}</BarStatLabel>
+		<BarStatValue $color={stat.color} aria-label={stat.ariaLabel}>
+			<RetainmentStatValue stat={stat} unit={unit} />
+		</BarStatValue>
+	</BarStat>
+)
 
 export const ValidatorBar = ({
 	actions,
@@ -56,13 +81,12 @@ export const ValidatorBar = ({
 	eraPoints,
 	innerClasses,
 	rate,
+	retainmentStats,
 	selfStake,
 	unit,
-	units,
 	validator,
-	retainment,
 }: ValidatorBarProps) => {
-	const { t, i18n } = useTranslation('app')
+	const { t } = useTranslation('app')
 	const { selectable } = useList()
 	const { address, prefs, validatorStatus: status } = validator
 	const {
@@ -73,66 +97,8 @@ export const ValidatorBar = ({
 		totalStake,
 		validatorStatus,
 	} = useValidatorSummaryData({ address, rate, selfStake, status, unit })
-	const compoundMax =
-		retainment !== undefined &&
-		unit === 'DOT' &&
-		selfStake?.gte(MAX_SELF_STAKE_DOT) === true
-	const retainmentRate =
-		typeof retainment?.retainmentRate === 'number' &&
-		Number.isFinite(retainment.retainmentRate)
-			? clampRate(retainment.retainmentRate)
-			: undefined
-	const compoundRate = compoundMax
-		? 100
-		: typeof retainment?.compoundRate === 'number' &&
-				Number.isFinite(retainment.compoundRate)
-			? clampRate(retainment.compoundRate)
-			: undefined
-	const retainmentValue =
-		retainmentRate === undefined
-			? '—'
-			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
-					maximumFractionDigits: 1,
-				})}%`
-	const compoundValue = compoundMax
-		? 'MAX'
-		: compoundRate === undefined
-			? '—'
-			: `${compoundRate.toLocaleString(i18n.resolvedLanguage, {
-					maximumFractionDigits: 1,
-				})}%`
-	const netInflow = retainment
-		? planckToUnitBn(new BigNumber(retainment.netInflow), units).toNumber()
-		: undefined
-	const flowValue =
-		netInflow === undefined
-			? '—'
-			: Math.abs(netInflow).toLocaleString(i18n.resolvedLanguage, {
-					notation: 'compact',
-					maximumFractionDigits: 1,
-				})
-	const flowLabel =
-		netInflow === undefined || netInflow > 0
-			? t('netInflow')
-			: netInflow < 0
-				? t('netOutflow')
-				: t('noNetFlow')
-	const flowColor =
-		netInflow === undefined || netInflow === 0
-			? 'var(--text-tertiary)'
-			: netInflow > 0
-				? 'var(--status-success)'
-				: 'var(--status-danger)'
-	const flowIcon =
-		netInflow === undefined
-			? undefined
-			: netInflow > 0
-				? faArrowTrendUp
-				: netInflow < 0
-					? faArrowTrendDown
-					: faArrowRight
-	const flowPrefix =
-		netInflow === undefined || netInflow === 0 ? '' : netInflow > 0 ? '+' : '−'
+	const { compoundRate, netFlow, retainmentRate, selfStakeChange } =
+		retainmentStats
 
 	return (
 		<BarWrapper>
@@ -192,58 +158,10 @@ export const ValidatorBar = ({
 								{selfStake !== undefined && <small>{unit}</small>}
 							</BarStatValue>
 						</BarStat>
-						<BarStat>
-							<BarStatLabel>
-								{t('retainmentRate', {
-									defaultValue: 'Retainment',
-								})}
-							</BarStatLabel>
-							<BarStatValue
-								$color={
-									retainmentRate === undefined
-										? 'var(--text-tertiary)'
-										: getRateColor(retainmentRate)
-								}
-								role={retainmentRate === undefined ? undefined : 'meter'}
-								aria-valuemin={retainmentRate === undefined ? undefined : 0}
-								aria-valuemax={retainmentRate === undefined ? undefined : 100}
-								aria-valuenow={retainmentRate}
-							>
-								{retainmentValue}
-							</BarStatValue>
-						</BarStat>
-						<BarStat>
-							<BarStatLabel>
-								{t('compoundRate', { defaultValue: 'Compound' })}
-							</BarStatLabel>
-							<BarStatValue
-								$color={
-									compoundRate === undefined
-										? 'var(--text-tertiary)'
-										: getRateColor(compoundRate)
-								}
-								role={compoundRate === undefined ? undefined : 'meter'}
-								aria-valuemin={compoundRate === undefined ? undefined : 0}
-								aria-valuemax={compoundRate === undefined ? undefined : 100}
-								aria-valuenow={compoundRate}
-								aria-valuetext={compoundMax ? 'Maximum' : compoundValue}
-							>
-								{compoundValue}
-							</BarStatValue>
-						</BarStat>
-						<BarStat>
-							<BarStatLabel>{flowLabel}</BarStatLabel>
-							<BarStatValue $color={flowColor}>
-								{flowIcon && (
-									<FontAwesomeIcon icon={flowIcon} aria-hidden="true" />
-								)}
-								<span>
-									{flowPrefix}
-									{flowValue}
-								</span>
-								{netInflow !== undefined && <small>{unit}</small>}
-							</BarStatValue>
-						</BarStat>
+						<BarRateStat stat={retainmentRate} />
+						<BarRateStat stat={compoundRate} />
+						<BarSignedAmountStat stat={selfStakeChange} unit={unit} />
+						<BarSignedAmountStat stat={netFlow} unit={unit} />
 					</BarStats>
 
 					{actions}
