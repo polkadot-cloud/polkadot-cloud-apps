@@ -160,7 +160,7 @@ export const DetailedItem = ({
 					/>
 					<PerformanceRow className="row performance" aria-busy={isPreloading}>
 						<SectionHeader>
-							<strong>{t('performance')}</strong>
+							<strong>{t('activity')}</strong>
 						</SectionHeader>
 						<PerformanceGraph>
 							{isPreloading ? (

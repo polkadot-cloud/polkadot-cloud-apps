@@ -4,7 +4,6 @@
 import BigNumber from 'bignumber.js'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
-import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useTooltip } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
@@ -20,7 +19,6 @@ export const HistoricalEraPoints = ({
 }: EraPointsHistoricalProps) => {
 	const { t } = useTranslation('app')
 	const { isReady } = useApi()
-	const { erasPerDay } = useErasPerDay()
 	const { validatorsFetched } = useValidators()
 	const { setTooltipTextAndOpen } = useTooltip()
 
@@ -37,9 +35,7 @@ export const HistoricalEraPoints = ({
 	)
 	const prefilledPoints = prefillEraPoints(Object.values(normalisedPoints))
 	const syncing = !isReady || !eraPoints.length || !validatorsFetched
-	const tooltipText = t('validatorPerformance', {
-		count: Math.ceil(30 / erasPerDay),
-	})
+	const tooltipText = t('validatorActivity')
 
 	return (
 		<Graph

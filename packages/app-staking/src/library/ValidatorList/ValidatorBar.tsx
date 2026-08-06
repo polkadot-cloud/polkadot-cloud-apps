@@ -151,8 +151,8 @@ export const ValidatorBar = ({
 							)}
 						</HeaderIdentity>
 						<BarPerformanceGraph
-							aria-label={t('performance')}
-							title={t('performance')}
+							aria-label={t('validatorActivity')}
+							title={t('validatorActivity')}
 						>
 							{isPreloading ? (
 								<DetailLoader

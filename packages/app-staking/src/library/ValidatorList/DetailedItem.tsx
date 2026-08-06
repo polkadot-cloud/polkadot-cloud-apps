@@ -173,7 +173,7 @@ export const DetailedItem = ({
 					/>
 					<PerformanceRow className="row performance">
 						<SectionHeader>
-							<strong>{t('performance')}</strong>
+							<strong>{t('activity')}</strong>
 						</SectionHeader>
 						<PerformanceGraph>
 							<HistoricalEraPoints
