@@ -8,6 +8,7 @@ import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader } from 'ui-core/base'
 import classes from './index.module.scss'
+import { DetailedListSkeleton } from './Skeleton'
 
 interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	canvas?: boolean
@@ -94,14 +95,7 @@ const ListItemSkeleton = ({
 		aria-busy="true"
 		aria-label={label}
 	>
-		<Loader
-			style={{
-				borderRadius: '0.5rem',
-				display: 'block',
-				height: format === 'row' ? '5.5rem' : '29.5rem',
-				width: '100%',
-			}}
-		/>
+		<DetailedListSkeleton format={format} />
 	</ItemShell>
 )
 
