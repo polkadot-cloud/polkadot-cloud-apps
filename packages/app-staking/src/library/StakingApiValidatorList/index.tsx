@@ -166,7 +166,7 @@ export const StakingApiValidatorListInner = () => {
 	return (
 		<ListWrapper>
 			<List $flexBasisLarge="50%" $twoColumnMinWidth={1350}>
-				<Controls disabled={loading} onApply={applyConfig} />
+				<Controls config={config} disabled={loading} onApply={applyConfig} />
 				<FilterHeaderWrapper>
 					<div>
 						{!loading && !error && result.total > 0 && (

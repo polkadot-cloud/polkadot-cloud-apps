@@ -13,17 +13,10 @@ export const ControlsForm = styled.form`
 `
 
 export const SearchField = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-
-  > span {
-    color: var(--gray-900);
-    font-family: var(--font-family-semibold);
-    font-size: 0.9rem;
-  }
+  display: block;
 
   input {
+    background: var(--gray-200);
     border: 1px solid var(--gray-500);
     border-radius: 1.75rem;
     color: var(--gray-900);
@@ -37,20 +30,22 @@ export const SearchField = styled.label`
 export const ConfigRow = styled.div`
   align-items: end;
   display: grid;
-  gap: 1rem 1.5rem;
-  grid-template-columns: minmax(18rem, 1fr) minmax(13rem, 0.45fr) auto;
+  gap: 1.25rem;
+  grid-template-columns: max-content minmax(31rem, 36rem) auto;
+  justify-content: space-between;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1350px) {
     align-items: stretch;
     grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 `
 
 export const FilterGroup = styled.fieldset`
   border: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem 1.25rem;
+  flex-direction: column;
+  gap: 0.45rem;
   margin: 0;
   min-width: 0;
   padding: 0;
@@ -63,38 +58,117 @@ export const FilterGroup = styled.fieldset`
   }
 `
 
-export const CheckLabel = styled.label`
-  align-items: center;
-  color: var(--gray-1000);
+export const FilterButtons = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.55rem;
+`
+
+export const FilterButton = styled.button`
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-500);
+  border-radius: 0.75rem;
+  color: var(--gray-900);
   cursor: pointer;
   display: flex;
-  font-size: 0.95rem;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-family-semibold);
+  font-size: 1rem;
+  min-height: 2.95rem;
+  padding: 0.6rem 0.85rem;
+  transition:
+    background var(--transition-duration),
+    border-color var(--transition-duration),
+    color var(--transition-duration),
+    transform var(--transition-duration);
+  white-space: nowrap;
 
-  input {
-    accent-color: var(--accent-700);
-    height: 1rem;
-    width: 1rem;
+  &:hover {
+    border-color: var(--gray-700);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gray-900);
+    outline-offset: 2px;
   }
 `
 
-export const OrderField = styled.label`
-  color: var(--gray-900);
+export const SwitchTrack = styled.span<{ $active: boolean }>`
+  background: ${(props) =>
+		props.$active ? 'var(--gray-1000)' : 'var(--gray-600)'};
+  border-radius: 1rem;
+  display: flex;
+  flex: 0 0 auto;
+  height: 1.15rem;
+  padding: 0.14rem;
+  transition: background var(--transition-duration);
+  width: 2.1rem;
+
+  &::after {
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+    content: '';
+    height: 0.87rem;
+    transform: translateX(${(props) => (props.$active ? '0.95rem' : '0')});
+    transition: transform var(--transition-duration);
+    width: 0.87rem;
+  }
+`
+
+export const OrderField = styled.fieldset`
+  border: 0;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-family-semibold);
-  font-size: 0.9rem;
   gap: 0.45rem;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
 
-  select {
-    background: var(--bg-primary);
-    border: 1px solid var(--gray-500);
-    border-radius: 0.65rem;
-    color: var(--gray-1000);
+  legend {
+    color: var(--gray-900);
     font-family: var(--font-family-semibold);
-    font-size: 0.95rem;
-    min-height: 2.65rem;
-    padding: 0.55rem 0.75rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.55rem;
+  }
+`
+
+export const OrderTabs = styled.div`
+  background: var(--gray-500);
+  border: 1px solid var(--gray-500);
+  border-radius: 0.8rem;
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0.25rem;
+`
+
+export const OrderTab = styled.button<{ $active: boolean }>`
+  background: ${(props) =>
+		props.$active ? 'var(--bg-primary)' : 'transparent'};
+  border: 0;
+  border-radius: 0.6rem;
+  color: ${(props) => (props.$active ? 'var(--gray-1000)' : 'var(--gray-900)')};
+  cursor: pointer;
+  font-family: var(--font-family-semibold);
+  font-size: 1rem;
+  line-height: 1.2;
+  min-height: 2.35rem;
+  padding: 0.4rem 0.65rem;
+  transition:
+    background var(--transition-duration),
+    color var(--transition-duration);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--bg-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gray-900);
+    outline-offset: 1px;
   }
 `
 
@@ -103,7 +177,7 @@ export const Actions = styled.div`
   gap: 0.65rem;
   justify-content: flex-end;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1350px) {
     justify-content: flex-start;
   }
 `

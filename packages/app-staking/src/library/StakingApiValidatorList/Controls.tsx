@@ -8,15 +8,19 @@ import type {
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
+import { ButtonSecondary, ButtonSubmit } from 'ui-buttons'
 import {
 	Actions,
-	CheckLabel,
 	ConfigRow,
 	ControlsForm,
+	FilterButton,
+	FilterButtons,
 	FilterGroup,
 	OrderField,
+	OrderTab,
+	OrderTabs,
 	SearchField,
+	SwitchTrack,
 } from './styles'
 
 export interface ValidatorListConfig {
@@ -46,28 +50,71 @@ const CLEARED_VALIDATOR_LIST_CONFIG: ValidatorListConfig = {
 }
 
 interface ControlsProps {
+	config: ValidatorListConfig
 	disabled: boolean
 	onApply: (config: ValidatorListConfig) => void
 }
 
-export const Controls = ({ disabled, onApply }: ControlsProps) => {
+export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 	const { t } = useTranslation('app')
 	const [draft, setDraft] = useState<ValidatorListConfig>(
 		DEFAULT_VALIDATOR_LIST_CONFIG,
 	)
 
-	const setFilter = (
-		filter: keyof ValidatorListConfig['filters'],
-		checked: boolean,
-	) => {
+	const setFilter = (filter: keyof ValidatorListConfig['filters']) => {
 		setDraft((current) => ({
 			...current,
-			filters: { ...current.filters, [filter]: checked },
+			filters: {
+				...current.filters,
+				[filter]: !current.filters[filter],
+			},
 		}))
 	}
+	const filterOptions: Array<{
+		key: keyof ValidatorListConfig['filters']
+		label: string
+	}> = [
+		{
+			key: 'activeOnly',
+			label: t('activeValidators'),
+		},
+		{
+			key: 'excludeBlocked',
+			label: t('blockedNominations'),
+		},
+		{
+			key: 'excludeMissingIdentity',
+			label: t('missingIdentity'),
+		},
+	]
+	const orderOptions: Array<{ key: ValidatorListOrder; label: string }> = [
+		{ key: 'ACTIVITY', label: t('activity') },
+		{
+			key: 'RETAINMENT_HIGH',
+			label: t('highRetainment', {
+				defaultValue: 'High Retainment',
+			}),
+		},
+		{
+			key: 'RETAINMENT_LOW',
+			label: t('lowRetainment', {
+				defaultValue: 'Low Retainment',
+			}),
+		},
+	]
+	const nextConfig = { ...draft, search: draft.search.trim() }
+	const hasChanges =
+		nextConfig.search !== config.search ||
+		nextConfig.order !== config.order ||
+		nextConfig.filters.activeOnly !== config.filters.activeOnly ||
+		nextConfig.filters.excludeBlocked !== config.filters.excludeBlocked ||
+		nextConfig.filters.excludeMissingIdentity !==
+			config.filters.excludeMissingIdentity
 
 	const apply = () => {
-		onApply({ ...draft, search: draft.search.trim() })
+		if (!disabled && hasChanges) {
+			onApply(nextConfig)
+		}
 	}
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -77,16 +124,15 @@ export const Controls = ({ disabled, onApply }: ControlsProps) => {
 
 	const clear = () => {
 		setDraft(CLEARED_VALIDATOR_LIST_CONFIG)
-		onApply(CLEARED_VALIDATOR_LIST_CONFIG)
 	}
 
 	return (
 		<ControlsForm onSubmit={handleSubmit}>
 			<SearchField>
-				<span>{t('search', { defaultValue: 'Search' })}</span>
 				<input
 					type="search"
 					value={draft.search}
+					aria-label={t('validatorSearch.searchValidators')}
 					placeholder={t('searchAddress')}
 					onChange={({ currentTarget }) =>
 						setDraft((current) => ({
@@ -99,66 +145,45 @@ export const Controls = ({ disabled, onApply }: ControlsProps) => {
 			<ConfigRow>
 				<FilterGroup>
 					<legend>{t('filter')}</legend>
-					<CheckLabel>
-						<input
-							type="checkbox"
-							checked={draft.filters.activeOnly}
-							onChange={({ currentTarget }) =>
-								setFilter('activeOnly', currentTarget.checked)
-							}
-						/>
-						{t('activeValidators')}
-					</CheckLabel>
-					<CheckLabel>
-						<input
-							type="checkbox"
-							checked={draft.filters.excludeBlocked}
-							onChange={({ currentTarget }) =>
-								setFilter('excludeBlocked', currentTarget.checked)
-							}
-						/>
-						{t('exclude')} {t('blockedNominations')}
-					</CheckLabel>
-					<CheckLabel>
-						<input
-							type="checkbox"
-							checked={draft.filters.excludeMissingIdentity}
-							onChange={({ currentTarget }) =>
-								setFilter('excludeMissingIdentity', currentTarget.checked)
-							}
-						/>
-						{t('exclude')} {t('missingIdentity')}
-					</CheckLabel>
+					<FilterButtons>
+						{filterOptions.map(({ key, label }) => (
+							<FilterButton
+								key={key}
+								type="button"
+								aria-pressed={draft.filters[key]}
+								onClick={() => setFilter(key)}
+							>
+								<SwitchTrack $active={draft.filters[key]} aria-hidden="true" />
+								<span>{label}</span>
+							</FilterButton>
+						))}
+					</FilterButtons>
 				</FilterGroup>
 				<OrderField>
-					{t('order')}
-					<select
-						value={draft.order}
-						onChange={({ currentTarget }) =>
-							setDraft((current) => ({
-								...current,
-								order: currentTarget.value as ValidatorListOrder,
-							}))
-						}
-					>
-						<option value="ACTIVITY">{t('activity')}</option>
-						<option value="RETAINMENT_HIGH">
-							{t('retainmentHighToLow', {
-								defaultValue: 'Retainment: high to low',
-							})}
-						</option>
-						<option value="RETAINMENT_LOW">
-							{t('retainmentLowToHigh', {
-								defaultValue: 'Retainment: low to high',
-							})}
-						</option>
-					</select>
+					<legend>{t('order')}</legend>
+					<OrderTabs role="tablist" aria-label={t('order')}>
+						{orderOptions.map(({ key, label }) => (
+							<OrderTab
+								key={key}
+								type="button"
+								role="tab"
+								$active={draft.order === key}
+								aria-selected={draft.order === key}
+								onClick={() =>
+									setDraft((current) => ({ ...current, order: key }))
+								}
+							>
+								{label}
+							</OrderTab>
+						))}
+					</OrderTabs>
 				</OrderField>
 				<Actions>
 					<ButtonSecondary text={t('clear')} onClick={clear} />
-					<ButtonPrimary
+					<ButtonSubmit
 						text={t('apply', { defaultValue: 'Apply' })}
-						disabled={disabled}
+						disabled={disabled || !hasChanges}
+						pulse={hasChanges && !disabled}
 						onClick={apply}
 					/>
 				</Actions>
