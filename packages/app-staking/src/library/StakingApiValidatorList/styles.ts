@@ -136,7 +136,7 @@ export const OrderField = styled.fieldset`
 `
 
 export const OrderTabs = styled.div`
-  background: var(--gray-500);
+  background: var(--gray-400);
   border: 1px solid var(--gray-500);
   border-radius: 0.8rem;
   display: grid;
