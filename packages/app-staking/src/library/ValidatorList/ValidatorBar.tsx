@@ -24,9 +24,15 @@ interface ValidatorBarProps {
 	canvas?: boolean
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
+	eraPointsSyncing?: boolean
+	identityNode?: ReactNode
+	isEraPointsPreloading?: boolean
 	isPreloading?: boolean
+	isRatePreloading?: boolean
+	isRetainmentPreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
+	rankSegment?: number
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	selfStakeMax: boolean
@@ -94,9 +100,15 @@ export const ValidatorBar = ({
 	canvas = false,
 	displayFor,
 	eraPoints,
+	eraPointsSyncing,
+	identityNode,
+	isEraPointsPreloading,
 	isPreloading = false,
+	isRatePreloading,
+	isRetainmentPreloading,
 	isStatusValuePreloading = false,
 	rate,
+	rankSegment,
 	retainmentStats,
 	selfStake,
 	selfStakeMax,
@@ -120,6 +132,7 @@ export const ValidatorBar = ({
 	} = useValidatorSummaryData({
 		address,
 		rate,
+		rankSegment,
 		selfStake,
 		selfStakeMax,
 		status,
@@ -129,13 +142,16 @@ export const ValidatorBar = ({
 	})
 	const { compoundRate, netOutflow, retainmentRate, selfStakeChange } =
 		retainmentStats
+	const eraPointsPreloading = isEraPointsPreloading ?? isPreloading
+	const ratePreloading = isRatePreloading ?? isPreloading
+	const retainmentPreloading = isRetainmentPreloading ?? isPreloading
 
 	return (
 		<ListItem.Row canvas={canvas} selected={selected}>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>
-					<Identity address={address} />
+					{identityNode ?? <Identity address={address} />}
 					{prefs?.blocked === true && (
 						<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
 					)}
@@ -145,7 +161,7 @@ export const ValidatorBar = ({
 					aria-label={t('validatorActivity')}
 					title={t('validatorActivity')}
 				>
-					{isPreloading ? (
+					{eraPointsPreloading ? (
 						<ListItem.DetailLoader
 							borderRadius="0.3rem"
 							height="100%"
@@ -157,6 +173,7 @@ export const ValidatorBar = ({
 							displayFor={displayFor}
 							eraPoints={eraPoints}
 							stretch
+							syncing={eraPointsSyncing}
 						/>
 					)}
 				</ListItem.Graph>
@@ -187,8 +204,8 @@ export const ValidatorBar = ({
 						</>
 					)}
 				</ListItem.Metric>
-				<ListItem.Metric aria-busy={isPreloading} label="APY">
-					{isPreloading ? (
+				<ListItem.Metric aria-busy={ratePreloading} label="APY">
+					{ratePreloading ? (
 						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
 					) : (
 						rateLabel
@@ -201,15 +218,18 @@ export const ValidatorBar = ({
 					<span>{selfStakeLabel}</span>
 					{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 				</ListItem.Metric>
-				<BarRateStat isPreloading={isPreloading} stat={retainmentRate} />
-				<BarRateStat isPreloading={isPreloading} stat={compoundRate} />
+				<BarRateStat
+					isPreloading={retainmentPreloading}
+					stat={retainmentRate}
+				/>
+				<BarRateStat isPreloading={retainmentPreloading} stat={compoundRate} />
 				<BarSignedAmountStat
-					isPreloading={isPreloading}
+					isPreloading={retainmentPreloading}
 					stat={selfStakeChange}
 					unit={unit}
 				/>
 				<BarSignedAmountStat
-					isPreloading={isPreloading}
+					isPreloading={retainmentPreloading}
 					stat={netOutflow}
 					unit={unit}
 				/>

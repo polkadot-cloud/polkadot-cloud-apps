@@ -37,6 +37,59 @@ export interface IdentityCache {
 	display: string | null
 	superDisplay: string | null
 	superValue: string | null
+	category: string | null
+}
+
+export type ValidatorListOrder =
+	| 'ACTIVITY'
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
+
+export interface ValidatorListFilters {
+	excludeBlocked?: boolean
+	excludeMissingIdentity?: boolean
+	activeOnly?: boolean
+	search?: string
+}
+
+export interface ValidatorListVariables extends Record<string, unknown> {
+	network: string
+	page?: number
+	pageSize?: number
+	order?: ValidatorListOrder
+	filters?: ValidatorListFilters
+}
+
+export interface ValidatorListData {
+	validatorList: ValidatorListResult
+}
+
+export interface ValidatorListResult {
+	validators: ValidatorListItem[]
+	page: number
+	pageSize: number
+	total: number
+	totalPages: number
+	hasNextPage: boolean
+	activityEra: number | null
+	retainmentEra: number | null
+	totalActive: number
+}
+
+export interface ValidatorListItem {
+	address: string
+	prefs: {
+		commission: number
+		blocked: boolean
+	}
+	identity: IdentityCache | null
+	active: boolean
+	selfStake: string | null
+	totalStake: string | null
+	activeLedger: string | null
+	totalLedger: string | null
+	activityRank: number | null
+	retainment: ValidatorRetainmentPeriod | null
 }
 
 export interface AllRewardsData {
@@ -161,6 +214,7 @@ export interface ValidatorUnclaimedReward {
 
 export interface ValidatorEraPoints {
 	era: number
+	validator: string
 	points: string
 	start: number
 }

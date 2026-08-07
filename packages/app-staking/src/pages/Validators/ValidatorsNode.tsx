@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
-export const AllValidators = () => {
+export const ValidatorsNode = () => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
 	const { getValidators } = useValidators()

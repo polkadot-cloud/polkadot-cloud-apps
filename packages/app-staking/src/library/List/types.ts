@@ -35,6 +35,7 @@ export interface EraPointsHistoricalProps {
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
 	stretch?: boolean
+	syncing?: boolean
 }
 
 export interface EraPointsGraphInnerProps {

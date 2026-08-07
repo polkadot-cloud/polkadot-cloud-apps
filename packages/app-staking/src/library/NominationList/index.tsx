@@ -180,7 +180,7 @@ export const NominationListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		addresses,
 		pageKey,
-		stakingApiEnabled,
+		stakingApiEnabled ? 'none' : 'node',
 	)
 
 	// Handle list bootstrapping

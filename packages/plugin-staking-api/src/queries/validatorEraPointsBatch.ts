@@ -21,6 +21,7 @@ const QUERY = gql`
       validator
       points {
         era
+        validator
         points
         start
       }

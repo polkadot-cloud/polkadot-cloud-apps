@@ -18,6 +18,7 @@ interface ValidatorSummaryProps {
 	isRatePreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
+	rankSegment?: number
 	selfStake?: BigNumber
 	selfStakeMax: boolean
 	status: ValidatorStatus
@@ -30,6 +31,7 @@ interface ValidatorSummaryProps {
 export const useValidatorSummaryData = ({
 	address,
 	rate,
+	rankSegment,
 	selfStake,
 	selfStakeMax,
 	status,
@@ -62,7 +64,7 @@ export const useValidatorSummaryData = ({
 						.toFormat()
 				: undefined
 
-	const quartile = getValidatorRankSegment(address)
+	const quartile = rankSegment ?? getValidatorRankSegment(address)
 	const quartileLabel = ![100, undefined].includes(quartile)
 		? `${t('top')} ${quartile}%`
 		: '—'

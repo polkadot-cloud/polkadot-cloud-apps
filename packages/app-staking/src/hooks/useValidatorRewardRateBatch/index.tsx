@@ -14,12 +14,14 @@ import {
 	calculateValidatorEraTotalReward,
 } from 'utils'
 
-// Calculates validator reward rates in a batch. If Staking API is enabled, rates are fetched from
-// it, otherwise they are calculated from the previous era's data
+type RewardRateSource = 'auto' | 'node' | 'none'
+
+// Calculates validator reward rates in a batch from the configured source. Node mode is used by
+// node-owned lists even when the Staking API plugin is enabled elsewhere in the app.
 export const useValidatorRewardRateBatch = (
 	addresses: string[],
 	pageKey: string,
-	skipStakingApi = false,
+	source: RewardRateSource = 'auto',
 ) => {
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
@@ -29,6 +31,9 @@ export const useValidatorRewardRateBatch = (
 
 	const { units } = getStakingChainData(network)
 	const isStakingApiEnabled = pluginEnabled('staking_api')
+	const useStakingApi = source === 'auto' && isStakingApiEnabled
+	const useNode =
+		source === 'node' || (source === 'auto' && !isStakingApiEnabled)
 
 	// Store average reward rates, keyed by address
 	const [rates, setRates] = useState<Record<string, Record<string, number>>>({})
@@ -111,23 +116,17 @@ export const useValidatorRewardRateBatch = (
 
 	// Fetch average reward rates from staking api when enabled
 	useEffect(() => {
-		if (isStakingApiEnabled && !skipStakingApi) {
+		if (useStakingApi) {
 			getAvgRewardRates(pageKey)
 		}
-	}, [pageKey, isStakingApiEnabled, skipStakingApi, activeEra.index])
+	}, [pageKey, useStakingApi, activeEra.index])
 
 	// Fetch average reward rates from previous era when staking api is disabled
 	useEffect(() => {
-		if (!isStakingApiEnabled) {
+		if (useNode) {
 			getPrevEraAvgRewardRates(pageKey)
 		}
-	}, [
-		isReady,
-		pageKey,
-		isStakingApiEnabled,
-		prevEraReward?.points?.total,
-		activeEra.index,
-	])
+	}, [isReady, pageKey, useNode, prevEraReward?.points?.total, activeEra.index])
 
 	return {
 		rates,

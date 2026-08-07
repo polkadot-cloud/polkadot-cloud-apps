@@ -16,6 +16,7 @@ export const HistoricalEraPoints = ({
 	displayFor,
 	eraPoints,
 	stretch = false,
+	syncing: syncingOverride,
 }: EraPointsHistoricalProps) => {
 	const { t } = useTranslation('app')
 	const { isReady } = useApi()
@@ -34,7 +35,8 @@ export const HistoricalEraPoints = ({
 		new BigNumber(high || 1),
 	)
 	const prefilledPoints = prefillEraPoints(Object.values(normalisedPoints))
-	const syncing = !isReady || !eraPoints.length || !validatorsFetched
+	const syncing =
+		syncingOverride ?? (!isReady || !eraPoints.length || !validatorsFetched)
 	const tooltipText = t('validatorActivity')
 
 	return (
