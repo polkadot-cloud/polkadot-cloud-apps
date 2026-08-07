@@ -1,8 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ListContextInterface } from 'contexts/List/types'
+import type { ListContextInterface, ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
+import type {
+	ValidatorEraPoints,
+	ValidatorRetainmentResult,
+} from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
@@ -38,8 +42,12 @@ export interface ValidatorListProps {
 export interface ItemProps {
 	validator: ValidatorListEntry
 	displayFor: DisplayFor
+	format: ListFormat
 	toggleFavorites?: boolean
+	eraPoints: ValidatorEraPoints[]
 	rate?: number
+	retainment?: ValidatorRetainmentResult | null
+	isPreloading?: boolean
 	onRemove?: (params: {
 		selected: Validator[]
 		resetSelection?: () => void

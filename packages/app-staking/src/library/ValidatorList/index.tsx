@@ -7,7 +7,9 @@ import { ListProvider, useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
+import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
+import { usePlugins } from 'hooks/usePlugins'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
@@ -15,6 +17,8 @@ import { MotionContainer } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { SearchInput } from 'library/List/SearchInput'
 import { motion } from 'motion/react'
+import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
+import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import type { FormEvent } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +30,8 @@ import { FilterBadges } from './Filters/FilterBadges'
 import { FilterHeaders } from './Filters/FilterHeaders'
 import { Item } from './Item'
 import type { ValidatorListProps } from './types'
+
+const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
 
 export const ValidatorListInner = ({
 	// Default list values.
@@ -60,6 +66,9 @@ export const ValidatorListInner = ({
 	const listProvider = useList()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
+	const { erasPerDay } = useErasPerDay()
+	const { pluginEnabled } = usePlugins()
+	const stakingApiEnabled = pluginEnabled('staking_api')
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
 	const { isReady, activeEra, getApiStatus } = useApi()
@@ -97,6 +106,18 @@ export const ValidatorListInner = ({
 
 	// Store whether the search bar is being used
 	const [isSearching, setIsSearching] = useState<boolean>(false)
+	const [forceCardLayout, setForceCardLayout] = useState<boolean>(() =>
+		typeof window === 'undefined'
+			? false
+			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
+	)
+	const effectiveListFormat =
+		stakingApiEnabled && forceCardLayout ? 'col' : listFormat
+
+	// Cache API-backed details by the visible validator set and era.
+	const [detailsByKey, setDetailsByKey] = useState<
+		Record<string, ValidatorDetailsBatchData>
+	>({})
 
 	// Pagination
 	const pageLength: number = itemsPerPage || validators.length
@@ -136,6 +157,46 @@ export const ValidatorListInner = ({
 		const search = searchTerm ?? ''
 		return `${itemKeys}|${inc}|${exc}|${order}|${search}`
 	}, [listItems, includes, excludes, order, searchTerm])
+	const detailsKey = useMemo(
+		() =>
+			JSON.stringify({
+				network,
+				era: activeEra.index,
+				rewardRateDepth: erasPerDay,
+				validators: listItems.map(({ address }) => address),
+			}),
+		[network, activeEra.index, erasPerDay, listItems],
+	)
+	const details = detailsByKey[detailsKey]
+	const detailsPreloading =
+		stakingApiEnabled && activeEra.index > 0 && details === undefined
+	const eraPointsByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorEraPointsBatch ?? []).map(
+					(entry) => [entry.validator, entry.points] as const,
+				),
+			),
+		[details],
+	)
+	const rateByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorAvgRewardRateBatch ?? []).map(
+					(entry) => [entry.validator, entry.rate] as const,
+				),
+			),
+		[details],
+	)
+	const retainmentByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorRetainmentBatch ?? []).map(
+					(entry) => [entry.validator, entry.result] as const,
+				),
+			),
+		[details],
+	)
 	// if in modal, handle resize
 	const maybeHandleModalResize = () => {
 		if (displayFor === 'modal') {
@@ -147,7 +208,7 @@ export const ValidatorListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		listItems.map(({ address }) => address),
 		pageKey,
-		'node',
+		stakingApiEnabled ? 'none' : 'node',
 	)
 
 	const handleSearchChange = (e: FormEvent<HTMLInputElement>) => {
@@ -175,6 +236,21 @@ export const ValidatorListInner = ({
 		setValidatorsDefault(prepareInitialValidators())
 		setValidators(prepareInitialValidators())
 		setFetched(true)
+	}
+
+	const getDetailedData = async (key: string) => {
+		if (!stakingApiEnabled || activeEra.index === 0 || listItems.length === 0) {
+			return
+		}
+
+		const results = await fetchValidatorDetailsBatch(
+			network,
+			listItems.map(({ address }) => address),
+			Math.max(activeEra.index - 1, 0),
+			erasPerDay,
+			30,
+		)
+		setDetailsByKey((current) => ({ ...current, [key]: results }))
 	}
 
 	// Set default filters. Should re-render if era stakers re-syncs as era points effect the
@@ -219,6 +295,11 @@ export const ValidatorListInner = ({
 		setFetched(false)
 	}, [initialValidators])
 
+	// Fetch detailed data only for shared node-list consumers when the plugin is enabled.
+	useEffect(() => {
+		void getDetailedData(detailsKey)
+	}, [detailsKey, stakingApiEnabled])
+
 	// Configure validator list when network is ready to fetch
 	useEffect(() => {
 		if (isReady && activeEra.index > 0) {
@@ -243,7 +324,19 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [listFormat, validators, page])
+	}, [effectiveListFormat, validators, page, stakingApiEnabled])
+
+	// Compact API-backed node lists use the full detailed card.
+	useEffect(() => {
+		const mediaQuery = window.matchMedia(CARD_LAYOUT_MEDIA_QUERY)
+		const handleChange = (event: MediaQueryListEvent) => {
+			setForceCardLayout(event.matches)
+		}
+
+		setForceCardLayout(mediaQuery.matches)
+		mediaQuery.addEventListener('change', handleChange)
+		return () => mediaQuery.removeEventListener('change', handleChange)
+	}, [])
 
 	if (!bootstrapped) {
 		return (
@@ -255,7 +348,12 @@ export const ValidatorListInner = ({
 
 	return (
 		<ListWrapper>
-			<List $flexBasisLarge={allowMoreCols ? '33.33%' : '50%'}>
+			<List
+				$flexBasisLarge={
+					stakingApiEnabled ? '50%' : allowMoreCols ? '33.33%' : '50%'
+				}
+				$twoColumnMinWidth={stakingApiEnabled ? 1350 : undefined}
+			>
 				{allowSearch && (
 					<SearchInput
 						value={searchTerm ?? ''}
@@ -268,6 +366,7 @@ export const ValidatorListInner = ({
 					<div>
 						{allowListFormat && (
 							<ListItem.FormatToggle
+								hideOnCompact={stakingApiEnabled}
 								onChange={setListFormat}
 								value={listFormat}
 							/>
@@ -284,7 +383,7 @@ export const ValidatorListInner = ({
 						listItems.map((validator) => (
 							<motion.div
 								key={`nomination_${validator.address}`}
-								className={`item ${listFormat === 'row' ? 'row' : 'col'}`}
+								className={`item ${effectiveListFormat === 'row' ? 'row' : 'col'}`}
 								variants={{
 									hidden: {
 										y: 15,
@@ -300,7 +399,15 @@ export const ValidatorListInner = ({
 									validator={validator}
 									toggleFavorites={toggleFavorites}
 									displayFor={displayFor}
-									rate={rates[pageKey]?.[validator.address]}
+									format={effectiveListFormat}
+									eraPoints={eraPointsByAddress.get(validator.address) ?? []}
+									rate={
+										stakingApiEnabled
+											? rateByAddress.get(validator.address)
+											: rates[pageKey]?.[validator.address]
+									}
+									retainment={retainmentByAddress.get(validator.address)}
+									isPreloading={detailsPreloading}
 									onRemove={onRemove}
 								/>
 							</motion.div>
