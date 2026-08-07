@@ -33,6 +33,12 @@ import type { ValidatorListProps } from './types'
 
 const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
 
+interface ValidatorDetailsCacheEntry {
+	addresses: string[]
+	data: ValidatorDetailsBatchData
+	scopeKey: string
+}
+
 export const ValidatorListInner = ({
 	// Default list values.
 	validators: initialValidators,
@@ -116,7 +122,7 @@ export const ValidatorListInner = ({
 
 	// Cache API-backed details by the visible validator set and era.
 	const [detailsByKey, setDetailsByKey] = useState<
-		Record<string, ValidatorDetailsBatchData>
+		Record<string, ValidatorDetailsCacheEntry>
 	>({})
 
 	// Pagination
@@ -157,45 +163,73 @@ export const ValidatorListInner = ({
 		const search = searchTerm ?? ''
 		return `${itemKeys}|${inc}|${exc}|${order}|${search}`
 	}, [listItems, includes, excludes, order, searchTerm])
-	const detailsKey = useMemo(
+	const detailsScopeKey = useMemo(
 		() =>
 			JSON.stringify({
 				network,
 				era: activeEra.index,
 				rewardRateDepth: erasPerDay,
-				validators: listItems.map(({ address }) => address),
 			}),
-		[network, activeEra.index, erasPerDay, listItems],
+		[network, activeEra.index, erasPerDay],
 	)
-	const details = detailsByKey[detailsKey]
-	const detailsPreloading =
-		stakingApiEnabled && activeEra.index > 0 && details === undefined
+	const scopedDetails = useMemo(
+		() =>
+			Object.values(detailsByKey).filter(
+				({ scopeKey }) => scopeKey === detailsScopeKey,
+			),
+		[detailsByKey, detailsScopeKey],
+	)
+	const detailedAddresses = useMemo(
+		() => new Set(scopedDetails.flatMap(({ addresses }) => addresses)),
+		[scopedDetails],
+	)
+	const pendingDetailedAddresses = useMemo(
+		() =>
+			listItems
+				.map(({ address }) => address)
+				.filter((address) => !detailedAddresses.has(address)),
+		[listItems, detailedAddresses],
+	)
+	const detailsKey = useMemo(
+		() =>
+			JSON.stringify({
+				scopeKey: detailsScopeKey,
+				validators: pendingDetailedAddresses,
+			}),
+		[detailsScopeKey, pendingDetailedAddresses],
+	)
 	const eraPointsByAddress = useMemo(
 		() =>
 			new Map(
-				(details?.validatorEraPointsBatch ?? []).map(
-					(entry) => [entry.validator, entry.points] as const,
+				scopedDetails.flatMap(({ data }) =>
+					data.validatorEraPointsBatch.map(
+						(entry) => [entry.validator, entry.points] as const,
+					),
 				),
 			),
-		[details],
+		[scopedDetails],
 	)
 	const rateByAddress = useMemo(
 		() =>
 			new Map(
-				(details?.validatorAvgRewardRateBatch ?? []).map(
-					(entry) => [entry.validator, entry.rate] as const,
+				scopedDetails.flatMap(({ data }) =>
+					data.validatorAvgRewardRateBatch.map(
+						(entry) => [entry.validator, entry.rate] as const,
+					),
 				),
 			),
-		[details],
+		[scopedDetails],
 	)
 	const retainmentByAddress = useMemo(
 		() =>
 			new Map(
-				(details?.validatorRetainmentBatch ?? []).map(
-					(entry) => [entry.validator, entry.result] as const,
+				scopedDetails.flatMap(({ data }) =>
+					data.validatorRetainmentBatch.map(
+						(entry) => [entry.validator, entry.result] as const,
+					),
 				),
 			),
-		[details],
+		[scopedDetails],
 	)
 	// if in modal, handle resize
 	const maybeHandleModalResize = () => {
@@ -238,19 +272,27 @@ export const ValidatorListInner = ({
 		setFetched(true)
 	}
 
-	const getDetailedData = async (key: string) => {
-		if (!stakingApiEnabled || activeEra.index === 0 || listItems.length === 0) {
+	const getDetailedData = async (key: string, addresses: string[]) => {
+		if (
+			!stakingApiEnabled ||
+			activeEra.index === 0 ||
+			addresses.length === 0 ||
+			detailsByKey[key] !== undefined
+		) {
 			return
 		}
 
 		const results = await fetchValidatorDetailsBatch(
 			network,
-			listItems.map(({ address }) => address),
+			addresses,
 			Math.max(activeEra.index - 1, 0),
 			erasPerDay,
 			30,
 		)
-		setDetailsByKey((current) => ({ ...current, [key]: results }))
+		setDetailsByKey((current) => ({
+			...current,
+			[key]: { addresses, data: results, scopeKey: detailsScopeKey },
+		}))
 	}
 
 	// Set default filters. Should re-render if era stakers re-syncs as era points effect the
@@ -297,7 +339,7 @@ export const ValidatorListInner = ({
 
 	// Fetch detailed data only for shared node-list consumers when the plugin is enabled.
 	useEffect(() => {
-		void getDetailedData(detailsKey)
+		void getDetailedData(detailsKey, pendingDetailedAddresses)
 	}, [detailsKey, stakingApiEnabled])
 
 	// Configure validator list when network is ready to fetch
@@ -407,7 +449,11 @@ export const ValidatorListInner = ({
 											: rates[pageKey]?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
-									isPreloading={detailsPreloading}
+									isPreloading={
+										stakingApiEnabled &&
+										activeEra.index > 0 &&
+										!detailedAddresses.has(validator.address)
+									}
 									onRemove={onRemove}
 								/>
 							</motion.div>
