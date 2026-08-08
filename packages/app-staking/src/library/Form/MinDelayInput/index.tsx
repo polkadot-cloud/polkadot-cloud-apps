@@ -21,8 +21,9 @@ export const MinDelayInput = ({
 	}, [initial])
 
 	const onChange = (value: string) => {
-		if (!new BigNumber(value).isNaN() || value === '') {
-			const newValue = new BigNumber(value || 0).toNumber()
+		const bn = new BigNumber(value || 0)
+		if (value === '' || (!bn.isNaN() && !bn.isNegative())) {
+			const newValue = bn.toNumber()
 			setCurrent(newValue)
 			handleChange(field, newValue)
 		}
