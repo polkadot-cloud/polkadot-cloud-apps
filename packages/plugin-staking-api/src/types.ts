@@ -92,6 +92,23 @@ export interface ValidatorListItem {
 	retainment: ValidatorRetainmentPeriod | null
 }
 
+export type ValidatorCandidateStrategy =
+	| 'HIGH_RETAINER'
+	| 'HIGH_COMPOUNDER'
+
+export interface RandomValidatorCandidateVariables
+	extends Record<string, unknown> {
+	network: string
+	strategy: ValidatorCandidateStrategy
+	active?: boolean
+	excludeAddresses?: string[]
+	topPercent?: number
+}
+
+export interface RandomValidatorCandidateData {
+	randomValidatorCandidate: Pick<ValidatorListItem, 'address' | 'prefs'> | null
+}
+
 export interface AllRewardsData {
 	allRewards: NominatorReward[]
 }
