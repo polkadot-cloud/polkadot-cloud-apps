@@ -95,11 +95,23 @@ export const GenerateNominations = ({
 	}
 
 	// Add nominations based on method
-	const addNominationByType = (type: AddNominationsType) => {
-		if (method) {
-			const newNominations = addNomination(nominations, type)
-			setNominations([...newNominations])
-			updateSetters(setters, [...newNominations])
+	const addNominationByType = async (type: AddNominationsType) => {
+		if (method && !candidateFetching) {
+			const fetchingCandidate =
+				type === 'High Performance Validator' && retainmentStatsEnabled
+			if (fetchingCandidate) {
+				setCandidateFetching(true)
+			}
+
+			try {
+				const newNominations = await addNomination(nominations, type)
+				setNominations([...newNominations])
+				updateSetters(setters, [...newNominations])
+			} finally {
+				if (fetchingCandidate) {
+					setCandidateFetching(false)
+				}
+			}
 		}
 	}
 
@@ -198,7 +210,9 @@ export const GenerateNominations = ({
 			icon: faPlus,
 			isDisabled: () =>
 				maxNominationsReached ||
-				!availableToNominate(nominations).highPerformance.length,
+				candidateFetching ||
+				(!retainmentStatsEnabled &&
+					!availableToNominate(nominations).highPerformance.length),
 		},
 	}
 

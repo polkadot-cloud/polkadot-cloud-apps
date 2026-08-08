@@ -43,10 +43,10 @@ export const useFetchMethods = () => {
 		}
 	}
 
-	const add = (nominations: Validator[], type: AddNominationsType) => {
+	const add = async (nominations: Validator[], type: AddNominationsType) => {
 		switch (type) {
 			case 'High Performance Validator':
-				nominations = addHighPerformanceValidator(nominations)
+				nominations = await addHighPerformanceValidator(nominations)
 				break
 			case 'Active Validator':
 				nominations = addActiveValidator(nominations)
@@ -230,7 +230,18 @@ export const useFetchMethods = () => {
 		return nominations
 	}
 
-	const addHighPerformanceValidator = (nominations: Validator[]) => {
+	const addHighPerformanceValidator = async (nominations: Validator[]) => {
+		if (
+			pluginEnabled('staking_api') &&
+			StakingApiRetainmentSupportedNetworks.includes(network)
+		) {
+			const validator = await fetchCandidate(nominations, 'ACTIVE')
+			if (validator) {
+				nominations.push(validator)
+			}
+			return nominations
+		}
+
 		const all: Validator[] = available(nominations).highPerformance
 
 		// take one validator
