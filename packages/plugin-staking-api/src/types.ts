@@ -104,6 +104,17 @@ export interface ValidatorCandidateBatchVariables
 	topPercent?: number
 }
 
+export interface OptimalValidatorBatchVariables
+	extends Record<string, unknown> {
+	network: string
+	active?: boolean
+	excludeAddresses?: string[]
+}
+
+export interface OptimalValidatorBatchData {
+	fetchOptimalValidatorBatch: ValidatorCandidate[]
+}
+
 export interface AllRewardsData {
 	allRewards: NominatorReward[]
 }

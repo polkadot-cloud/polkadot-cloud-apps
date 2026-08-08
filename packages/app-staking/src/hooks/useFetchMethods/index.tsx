@@ -10,6 +10,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorFilters } from 'hooks/useValidatorFilters'
 import type { AddNominationsType } from 'library/GenerateNominations/types'
 import {
+	fetchOptimalValidatorBatch,
 	fetchSanitizeNomineeCandidates,
 	fetchValidatorCandidateBatch,
 } from 'plugin-staking-api'
@@ -18,12 +19,7 @@ import type { Validator } from 'types'
 
 // Helper function to get a random item from an array
 const getRandomItem = <T,>(items: T[]): T | null => shuffle(items)[0] || null
-
-const OPTIMAL_CANDIDATE_STRATEGIES = [
-	...Array.from({ length: 4 }, () => 'ACTIVE' as const),
-	...Array.from({ length: 6 }, () => 'HIGH_RETAINER' as const),
-	...Array.from({ length: 6 }, () => 'HIGH_COMPOUNDER' as const),
-] satisfies ValidatorCandidateStrategy[]
+const MAX_OPTIMAL_VALIDATORS = 16
 
 export const useFetchMethods = () => {
 	const { network } = useNetwork()
@@ -80,35 +76,10 @@ export const useFetchMethods = () => {
 	}
 
 	const fetchStakingApiOptimal = async () => {
-		const nominations: Validator[] = []
-		const addresses = new Set<string>()
-		let pendingStrategies = [...OPTIMAL_CANDIDATE_STRATEGIES]
+		const { fetchOptimalValidatorBatch: candidates } =
+			await fetchOptimalValidatorBatch({ network })
 
-		while (pendingStrategies.length) {
-			const results = await fetchValidatorCandidateBatch({
-				network,
-				strategies: pendingStrategies,
-				excludeAddresses: [...addresses],
-			})
-			const retryStrategies: ValidatorCandidateStrategy[] = []
-
-			for (const { strategy, candidate } of results) {
-				if (!candidate || addresses.has(candidate.address)) {
-					retryStrategies.push(strategy)
-					continue
-				}
-
-				addresses.add(candidate.address)
-				nominations.push(candidate)
-			}
-
-			if (retryStrategies.length === pendingStrategies.length) {
-				break
-			}
-			pendingStrategies = retryStrategies
-		}
-
-		return nominations
+		return shuffle([...candidates]).slice(0, MAX_OPTIMAL_VALIDATORS)
 	}
 
 	const fetchOptimal = async () => {
