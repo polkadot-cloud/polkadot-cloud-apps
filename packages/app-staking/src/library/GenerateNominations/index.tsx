@@ -262,7 +262,7 @@ export const GenerateNominations = ({
 		filterHandlers = {
 			...filterHandlers,
 			searchValidators: {
-				title: 'Search Validators',
+				title: t('validatorSearch.searchValidators', { ns: 'app' }),
 				onClick: () => {
 					const updateList = (newNominations: Validator[]) => {
 						setNominations([...newNominations])
