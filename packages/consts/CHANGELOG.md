@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.5.0...consts-v1.6.0) (2026-08-08)
+
+
+### Features
+
+* Add `app-stablecoins` skeleton [1] ([#3683](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3683)) ([d32024f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d32024fc531ddefa17bfaa797e362bd70ad7835b))
+* Add simple analytics vite plugin to apps, rm `SAEnabled` flag ([#3715](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3715)) ([86e44d4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/86e44d47d34ed245a0121daf7bcf619e7acf1ccd))
+* **locale:** Add Turkish (Türkçe) language support ([#3514](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3514)) ([b433484](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b4334844513bc595601736b8a9d0f27fef77f016))
+* **locales:** add French (fr) language support ([#3593](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3593)) ([21de8e4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/21de8e494bbf6aa954455b9db1971ab22da29cec))
+* **locales:** add Japanese (ja) language support ([#3595](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3595)) ([4c45305](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4c453058e740711de29d7fc7dd760a16f842205e))
+* **locales:** add Russian (ru) language support ([#3594](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3594)) ([299b4ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/299b4cab28f24ca9636e85fb4bc167b065587d54))
+* Prepare shared stablecoin support ([#3696](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3696)) ([5f8605f](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5f8605f2e90cdaed82a5d03a1dae03fabba66c9d))
+* **refactor:** Amend consts config, abstract rpc endpoints ([#3648](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3648)) ([bc812fb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/bc812fbfa655b72e026d7913a83cda6bf9af17cb))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+* **refactor:** Rename stablecoins -&gt; swap app ([#3701](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3701)) ([8f2bf87](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8f2bf87830d832a179d6cacff747d5b0892d51fb))
+* Support DOT transfers in `SendForm` ([#3700](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3700)) ([27a71ea](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/27a71ea0ccbccc8f1b1be95a7bf6e88395da84c4))
+* Validator Retainment UI - Phase 1 ([#3732](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3732)) ([dd6d864](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd6d86471113e0faaac021cc4ddc6e799f2fc23c))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.4.0...consts-v1.5.0) (2026-05-26)
 
 

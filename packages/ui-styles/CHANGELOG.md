@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-styles-v1.4.0...ui-styles-v1.5.0) (2026-08-08)
+
+
+### Features
+
+* **fix:** Biome deprecation, lint CSS ([#3609](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3609)) ([2554736](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2554736f2fa465aa82e62b1e8c1c9321c40dbc96))
+* **locales:** add Japanese (ja) language support ([#3595](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3595)) ([4c45305](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4c453058e740711de29d7fc7dd760a16f842205e))
+* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+
 ## [1.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/styles-v1.3.0...styles-v1.4.0) (2026-01-12)
 
 
