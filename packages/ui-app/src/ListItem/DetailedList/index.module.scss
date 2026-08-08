@@ -445,6 +445,10 @@
 	&.graph svg line[stroke-width='1'] {
 		stroke: color-mix(in srgb, var(--gray-700) 22%, transparent);
 	}
+
+	&.graph svg line[stroke-width='2'] {
+		stroke-width: 3;
+	}
 }
 
 // Retainment metrics
