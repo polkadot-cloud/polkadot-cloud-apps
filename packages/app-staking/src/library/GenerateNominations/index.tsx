@@ -15,7 +15,8 @@ import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
 import { Subheading } from 'pages/Nominate/Wrappers'
-import { useEffect, useRef } from 'react'
+import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, Validator } from 'types'
 import { Loader } from 'ui-core/base'
@@ -42,6 +43,7 @@ export const GenerateNominations = ({
 	} = useEraStakers()
 	const {
 		fetch: fetchFromMethod,
+		fetchCandidate,
 		add: addNomination,
 		available: availableToNominate,
 	} = useFetchMethods()
@@ -68,6 +70,8 @@ export const GenerateNominations = ({
 
 	const defaultNominationsCount = defaultNominations.length
 	const fetchingRef = useRef(false)
+	const [candidateFetching, setCandidateFetching] = useState(false)
+	const stakingApiEnabled = pluginEnabled('staking_api')
 
 	const resizeCallback = () => {
 		setHeight(null)
@@ -94,6 +98,31 @@ export const GenerateNominations = ({
 			const newNominations = addNomination(nominations, type)
 			setNominations([...newNominations])
 			updateSetters(setters, [...newNominations])
+		}
+	}
+
+	const addCandidateByStrategy = async (
+		strategy: ValidatorCandidateStrategy,
+	) => {
+		if (!method || candidateFetching || nominations.length >= MaxNominations) {
+			return
+		}
+
+		setCandidateFetching(true)
+		try {
+			const candidate = await fetchCandidate(nominations, strategy)
+			if (
+				!candidate ||
+				nominations.some(({ address }) => address === candidate.address)
+			) {
+				return
+			}
+
+			const newNominations = [...nominations, candidate]
+			setNominations(newNominations)
+			updateSetters(setters, newNominations)
+		} finally {
+			setCandidateFetching(false)
 		}
 	}
 
@@ -164,43 +193,67 @@ export const GenerateNominations = ({
 				maxNominationsReached ||
 				!availableToNominate(nominations).highPerformance.length,
 		},
-		getActive: {
-			title: t('activeValidator', { ns: 'app' }),
-			onClick: () => addNominationByType('Active Validator'),
-			onSelected: false,
-			icon: faPlus,
-			isDisabled: () =>
-				maxNominationsReached ||
-				!availableToNominate(nominations).activeValidators.length,
-		},
-		getRandom: {
-			title: t('randomValidator', { ns: 'app' }),
-			onClick: () => addNominationByType('Random Validator'),
-			onSelected: false,
-			icon: faPlus,
-			isDisabled: () =>
-				maxNominationsReached ||
-				!availableToNominate(nominations).randomValidators.length,
-		},
 	}
 
-	if (pluginEnabled('staking_api')) {
-		filterHandlers.searchValidators = {
-			title: 'Search Validators',
-			onClick: () => {
-				const updateList = (newNominations: Validator[]) => {
-					setNominations([...newNominations])
-					updateSetters(setters, newNominations)
-					closePrompt()
-				}
-				openPromptWith(
-					<SearchValidators callback={updateList} nominations={nominations} />,
-					'lg',
-				)
+	if (stakingApiEnabled) {
+		filterHandlers = {
+			...filterHandlers,
+			highRetainer: {
+				title: t('highRetainer', { ns: 'app' }),
+				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
+				onSelected: false,
+				icon: faPlus,
+				isDisabled: () => candidateFetching || maxNominationsReached,
 			},
-			icon: faMagnifyingGlass,
-			onSelected: false,
-			isDisabled: () => MaxNominations <= nominations?.length,
+			highCompounder: {
+				title: t('highCompounder', { ns: 'app' }),
+				onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
+				onSelected: false,
+				icon: faPlus,
+				isDisabled: () => candidateFetching || maxNominationsReached,
+			},
+			searchValidators: {
+				title: 'Search Validators',
+				onClick: () => {
+					const updateList = (newNominations: Validator[]) => {
+						setNominations([...newNominations])
+						updateSetters(setters, newNominations)
+						closePrompt()
+					}
+					openPromptWith(
+						<SearchValidators
+							callback={updateList}
+							nominations={nominations}
+						/>,
+						'lg',
+					)
+				},
+				icon: faMagnifyingGlass,
+				onSelected: false,
+				isDisabled: () => maxNominationsReached,
+			},
+		}
+	} else {
+		filterHandlers = {
+			...filterHandlers,
+			getActive: {
+				title: t('activeValidator', { ns: 'app' }),
+				onClick: () => addNominationByType('Active Validator'),
+				onSelected: false,
+				icon: faPlus,
+				isDisabled: () =>
+					maxNominationsReached ||
+					!availableToNominate(nominations).activeValidators.length,
+			},
+			getRandom: {
+				title: t('randomValidator', { ns: 'app' }),
+				onClick: () => addNominationByType('Random Validator'),
+				onSelected: false,
+				icon: faPlus,
+				isDisabled: () =>
+					maxNominationsReached ||
+					!availableToNominate(nominations).randomValidators.length,
+			},
 		}
 	}
 
@@ -291,9 +344,7 @@ export const GenerateNominations = ({
 							allowListFormat={false}
 							displayFor={displayFor}
 							selectable
-							forceListFormat={
-								!pluginEnabled('staking_api') ? 'col' : undefined
-							}
+							forceListFormat={!stakingApiEnabled ? 'col' : undefined}
 							BeforeListNode={
 								<ListControls
 									selectHandlers={selectHandlers}

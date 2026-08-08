@@ -8,7 +8,11 @@ import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorFilters } from 'hooks/useValidatorFilters'
 import type { AddNominationsType } from 'library/GenerateNominations/types'
-import { fetchSanitizeNomineeCandidates } from 'plugin-staking-api'
+import {
+	fetchRandomValidatorCandidate,
+	fetchSanitizeNomineeCandidates,
+} from 'plugin-staking-api'
+import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
 
 // Helper function to get a random item from an array
@@ -109,6 +113,19 @@ export const useFetchMethods = () => {
 		return sanitizeNomineeCandidates
 	}
 
+	const fetchCandidate = async (
+		nominations: Validator[],
+		strategy: ValidatorCandidateStrategy,
+	): Promise<Validator | null> => {
+		const { randomValidatorCandidate } = await fetchRandomValidatorCandidate({
+			network,
+			strategy,
+			excludeAddresses: nominations.map(({ address }) => address),
+		})
+
+		return randomValidatorCandidate
+	}
+
 	const available = (nominations: Validator[]) => {
 		const all = [...getValidators()]
 
@@ -187,6 +204,7 @@ export const useFetchMethods = () => {
 
 	return {
 		fetch,
+		fetchCandidate,
 		add,
 		available,
 	}
