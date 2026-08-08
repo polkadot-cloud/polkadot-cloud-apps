@@ -5,25 +5,24 @@ import { getStakingChainData } from 'consts/util'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
-import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
-import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
-import { DetailedCard, ListItem } from 'ui-app/ListItem'
+import { ListItem } from 'ui-app/ListItem'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
 import { DetailedItemPreloader } from './DetailedItemPreloader'
-import { RetainmentStats } from './RetainmentStats'
 import { RowActionsMenu } from './RowActionsMenu'
+import { getRateAfterCommission } from './retainment'
 import type { ItemProps } from './types'
 import { useRetainmentStatsData } from './useRetainmentStatsData'
 import { useValidatorSelfStake } from './useValidatorSelfStake'
 import { ValidatorBar } from './ValidatorBar'
+import { ValidatorCard } from './ValidatorCard'
 import { ValidatorSummary } from './ValidatorSummary'
 
 export const DetailedItem = ({
@@ -37,12 +36,10 @@ export const DetailedItem = ({
 	retainment,
 	isPreloading,
 }: ItemProps) => {
-	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
-	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const retainmentStats = useRetainmentStatsData({
@@ -59,13 +56,7 @@ export const DetailedItem = ({
 	const isSelected = selected.some(
 		(item) => (item as Validator).address === validator.address,
 	)
-	const rateAfterCommission =
-		typeof rate === 'number' &&
-		Number.isFinite(rate) &&
-		typeof commission === 'number' &&
-		Number.isFinite(commission)
-			? rate * (1 - commission / 100)
-			: undefined
+	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
 	const validatorDisplay = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
@@ -131,18 +122,17 @@ export const DetailedItem = ({
 	}
 
 	return (
-		<DetailedCard.Root displayFor={displayFor} selected={isSelected}>
-			<DetailedCard.Top>
-				<DetailedCard.Header>
-					{selectable && <Select item={validator} />}
-					<ListItem.Identity>
-						<Identity address={address} />
-						{prefs?.blocked === true && (
-							<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
-						)}
-					</ListItem.Identity>
-					{cardActions}
-				</DetailedCard.Header>
+		<ValidatorCard
+			actions={cardActions}
+			address={address}
+			blocked={prefs?.blocked === true}
+			displayFor={displayFor}
+			eraPoints={eraPoints}
+			headerStart={selectable ? <Select item={validator} /> : undefined}
+			identity={<Identity address={address} />}
+			retainmentStats={retainmentStats}
+			selected={isSelected}
+			summary={
 				<ValidatorSummary
 					address={address}
 					rate={rateAfterCommission}
@@ -151,21 +141,8 @@ export const DetailedItem = ({
 					status={validatorStatus}
 					unit={unit}
 				/>
-				<ListItem.Activity>
-					<ListItem.SectionHeader>
-						<strong>{t('activity')}</strong>
-					</ListItem.SectionHeader>
-					<ListItem.Graph layout="card">
-						<HistoricalEraPoints
-							address={address}
-							displayFor={displayFor}
-							eraPoints={eraPoints}
-							stretch
-						/>
-					</ListItem.Graph>
-				</ListItem.Activity>
-			</DetailedCard.Top>
-			<RetainmentStats data={retainmentStats} unit={unit} />
-		</DetailedCard.Root>
+			}
+			unit={unit}
+		/>
 	)
 }

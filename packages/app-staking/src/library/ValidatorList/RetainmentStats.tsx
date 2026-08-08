@@ -14,64 +14,45 @@ interface RetainmentStatsProps {
 	unit: string
 }
 
-const RetainmentValue = ({
+export const RetainmentMetric = ({
+	compact = false,
 	isPreloading,
 	stat,
 	unit,
 }: {
+	compact?: boolean
 	isPreloading: boolean
 	stat: RetainmentStatData
 	unit?: string
-}) =>
-	isPreloading ? (
-		<ListItem.DetailLoader />
-	) : (
-		<RetainmentStatValue stat={stat} unit={unit} />
-	)
-
-const RateStat = ({
-	isPreloading,
-	stat,
-}: {
-	isPreloading: boolean
-	stat: RetainmentStatData
 }) => {
+	const isRate = unit === undefined
+
 	return (
 		<ListItem.Metric
 			color={stat.color}
 			label={stat.label}
 			labelProps={{ title: stat.label }}
-			valueProps={{
-				'aria-label': stat.ariaLabel,
-				'aria-valuemax': stat.value === undefined ? undefined : 100,
-				'aria-valuemin': stat.value === undefined ? undefined : 0,
-				'aria-valuenow': stat.value,
-				'aria-valuetext': stat.ariaValueText,
-				role: stat.value === undefined ? undefined : 'meter',
-			}}
+			valueProps={
+				isRate
+					? {
+							'aria-label': stat.ariaLabel,
+							'aria-valuemax': stat.value === undefined ? undefined : 100,
+							'aria-valuemin': stat.value === undefined ? undefined : 0,
+							'aria-valuenow': stat.value,
+							'aria-valuetext': stat.ariaValueText,
+							role: stat.value === undefined ? undefined : ('meter' as const),
+						}
+					: { 'aria-label': stat.ariaLabel }
+			}
 		>
-			<RetainmentValue isPreloading={isPreloading} stat={stat} />
-		</ListItem.Metric>
-	)
-}
-
-const SignedAmountStat = ({
-	isPreloading,
-	stat,
-	unit,
-}: {
-	isPreloading: boolean
-	stat: RetainmentStatData
-	unit: string
-}) => {
-	return (
-		<ListItem.Metric
-			color={stat.color}
-			label={stat.label}
-			labelProps={{ title: stat.label }}
-			valueProps={{ 'aria-label': stat.ariaLabel }}
-		>
-			<RetainmentValue isPreloading={isPreloading} stat={stat} unit={unit} />
+			{isPreloading ? (
+				<ListItem.DetailLoader
+					height={compact ? '1.2rem' : undefined}
+					width={compact ? '4.5rem' : undefined}
+				/>
+			) : (
+				<RetainmentStatValue stat={stat} unit={unit} />
+			)}
 		</ListItem.Metric>
 	)
 }
@@ -104,18 +85,21 @@ export const RetainmentStats = ({
 				) : null}
 			</ListItem.SectionHeader>
 			<ListItem.RetainmentGrid>
-				<RateStat isPreloading={isPreloading} stat={retainmentRate} />
-				<RateStat isPreloading={isPreloading} stat={compoundRate} />
-				<SignedAmountStat
-					isPreloading={isPreloading}
-					stat={selfStakeChange}
-					unit={unit}
-				/>
-				<SignedAmountStat
-					isPreloading={isPreloading}
-					stat={netOutflow}
-					unit={unit}
-				/>
+				{[retainmentRate, compoundRate].map((stat) => (
+					<RetainmentMetric
+						key={stat.label}
+						isPreloading={isPreloading}
+						stat={stat}
+					/>
+				))}
+				{[selfStakeChange, netOutflow].map((stat) => (
+					<RetainmentMetric
+						key={stat.label}
+						isPreloading={isPreloading}
+						stat={stat}
+						unit={unit}
+					/>
+				))}
 			</ListItem.RetainmentGrid>
 		</ListItem.Retainment>
 	)

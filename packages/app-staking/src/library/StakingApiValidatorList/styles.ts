@@ -118,22 +118,7 @@ export const SwitchTrack = styled.span<{ $active: boolean }>`
   }
 `
 
-export const OrderField = styled.fieldset`
-  border: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin: 0;
-  min-width: 0;
-  padding: 0;
-
-  legend {
-    color: var(--gray-900);
-    font-family: var(--font-family-semibold);
-    font-size: 0.9rem;
-    margin-bottom: 0.55rem;
-  }
-`
+export const OrderField = FilterGroup
 
 export const OrderTabs = styled.div<{ $columns?: number }>`
   background: var(--gray-400);

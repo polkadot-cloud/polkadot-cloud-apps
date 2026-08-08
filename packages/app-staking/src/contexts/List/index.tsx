@@ -5,48 +5,39 @@ import { createSafeContext } from '@w3ux/hooks'
 import { useState } from 'react'
 import type {
 	ListContextInterface,
-	ListFormat,
 	ListProviderProps,
 	SelectableListItem,
 } from './types'
 
 export const [ListContext, useList] = createSafeContext<ListContextInterface>()
 
-export const useListContext = () => {
-	const context = useList()
-	return context
-}
 export const ListProvider = ({
 	selectable: initialSelectable = false,
 	children,
 	initialListFormat = 'col',
 }: ListProviderProps) => {
 	// Current page
-	const [page, setPage] = useState<number>(1)
+	const [page, setPage] = useState(1)
 
 	// Store the currently selected validators from the list.
 	const [selected, setSelected] = useState<SelectableListItem[]>([])
 
 	// Store whether validator selection is active
-	const [selectable] = useState<boolean>(initialSelectable ?? false)
+	const [selectable] = useState(initialSelectable)
 
 	// Store the list format of the list
-	const [listFormat, _setListFormat] = useState<ListFormat>(initialListFormat)
+	const [listFormat, setListFormat] = useState(initialListFormat)
 
-	const addToSelected = (_item: SelectableListItem) => {
-		setSelected([...selected].concat(_item))
+	const addToSelected = (item: SelectableListItem) => {
+		setSelected((current) => [...current, item])
 	}
 
 	const removeFromSelected = (items: SelectableListItem[]) => {
-		setSelected([...selected].filter((item) => !items.includes(item)))
+		setSelected((current) => current.filter((item) => !items.includes(item)))
 	}
 
 	const resetSelected = () => {
 		setSelected([])
-	}
-
-	const setListFormat = (v: ListFormat) => {
-		_setListFormat(v)
 	}
 
 	return (

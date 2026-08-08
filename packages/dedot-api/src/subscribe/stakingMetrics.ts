@@ -84,11 +84,7 @@ export class StakingMetricsQuery<T extends StakingChain> {
 				totalStaked,
 				counterForNominators,
 			]) => {
-				if (this.#disposed) {
-					return
-				}
-				this.stakingMetrics = {
-					...this.stakingMetrics,
+				this.#update({
 					totalIssuance,
 					minimumActiveStake,
 					counterForValidators,
@@ -100,61 +96,40 @@ export class StakingMetricsQuery<T extends StakingChain> {
 					minValidatorBond,
 					totalStaked,
 					counterForNominators,
-				}
-				setStakingMetrics(this.stakingMetrics)
+				})
 			},
 		)
 		if (!this.#trackUnsub(unsub)) {
 			return
 		}
 
-		// Check if the chain has the `erasValidatorIncentiveBudget` storage item before subscribing to
-		// it
-		const hasValidatorIncentiveBudget = hasStorageItem(
-			this.api,
-			'Staking',
-			'ErasValidatorIncentiveBudget',
-		)
-
-		// If the chain has the `erasValidatorIncentiveBudget` storage item, subscribe to it
-		if (hasValidatorIncentiveBudget) {
+		if (hasStorageItem(this.api, 'Staking', 'ErasValidatorIncentiveBudget')) {
 			const incentiveUnsub =
 				await this.api.query.staking.erasValidatorIncentiveBudget(
 					lastEra,
-					(lastValidatorIncentiveBudget: bigint) => {
-						if (this.#disposed) {
-							return
-						}
-						this.stakingMetrics = {
-							...this.stakingMetrics,
+					(lastValidatorIncentiveBudget: bigint) =>
+						this.#update({
 							lastValidatorIncentiveBudget,
-						}
-						setStakingMetrics(this.stakingMetrics)
-					},
+						}),
 				)
 			this.#trackUnsub(incentiveUnsub)
 		}
 
-		const hasHardCapSelfStake = hasStorageItem(
-			this.api,
-			'Staking',
-			'HardCapSelfStake',
-		)
-
-		if (hasHardCapSelfStake) {
+		if (hasStorageItem(this.api, 'Staking', 'HardCapSelfStake')) {
 			const hardCapUnsub = await this.api.query.staking.hardCapSelfStake(
-				(hardCapSelfStake: bigint) => {
-					if (this.#disposed) {
-						return
-					}
-					this.stakingMetrics = {
-						...this.stakingMetrics,
+				(hardCapSelfStake: bigint) =>
+					this.#update({
 						hardCapSelfStake,
-					}
-					setStakingMetrics(this.stakingMetrics)
-				},
+					}),
 			)
 			this.#trackUnsub(hardCapUnsub)
+		}
+	}
+
+	#update(metrics: Partial<StakingMetrics>) {
+		if (!this.#disposed) {
+			this.stakingMetrics = { ...this.stakingMetrics, ...metrics }
+			setStakingMetrics(this.stakingMetrics)
 		}
 	}
 

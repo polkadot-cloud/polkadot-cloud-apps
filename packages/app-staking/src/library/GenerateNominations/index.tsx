@@ -366,7 +366,6 @@ export const GenerateNominations = ({
 						</div>
 					) : (
 						<ValidatorList
-							bondFor="nominator"
 							validators={nominations}
 							allowListFormat={false}
 							displayFor={displayFor}

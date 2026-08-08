@@ -15,7 +15,9 @@ export const CompulsoryPluginsProduction: Plugin[] = [
 ]
 
 // Networks with validator retainment data available from the staking API.
-export const StakingApiRetainmentSupportedNetworks: NetworkId[] = ['polkadot']
+export const StakingApiRetainmentSupportedNetworks: readonly NetworkId[] = [
+	'polkadot',
+]
 
 // Force plugins to be disabled in production environment on a per-network basis
 //

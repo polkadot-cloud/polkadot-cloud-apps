@@ -1,49 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-// Item foundations
 .item {
-	--height-top-row: 3.25rem;
-	--height-bottom-row: 5.5rem;
-	--item-border-width: 1.25px;
-	--height-total: calc(var(--height-top-row) + var(--height-bottom-row));
-
-	display: flex;
-	flex-flow: row wrap;
-	height: var(--height-total);
-	margin: 0.5rem;
-	position: relative;
-	width: 100%;
-}
-
-.surface {
-	align-items: center;
-	border: var(--item-border-width) solid var(--bg-list);
-	border-radius: 0.75rem;
-	display: flex;
-	flex-flow: row wrap;
-	height: 100%;
-	inset: 0;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	transition: border var(--transition-duration) ease;
-	width: 100%;
-
-	&.canvas {
-		border-color: var(--gray-400);
-	}
-
-	&.selected {
-		border-color: var(--gray-1000);
-	}
-}
-
-// Detailed card and row surfaces
-.item.card,
-.item.bar {
-	container-type: inline-size;
-	height: auto;
 	width: calc(100% - 1.8rem);
 
 	> .surface {
@@ -51,13 +9,13 @@
 		background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
 		border: 0;
 		border-radius: 0.5rem;
-		height: auto;
-		inset: auto;
 		position: relative;
+		transition: border var(--transition-duration) ease;
+		width: 100%;
 
 		&.card {
 			background: var(--gray-200);
-			border: var(--item-border-width) solid var(--gray-200);
+			border: 1.25px solid var(--gray-200);
 			box-shadow: none;
 		}
 
@@ -65,28 +23,29 @@
 			border-color: var(--gray-1000);
 		}
 	}
-}
 
-.item.card {
-	container-name: list-item-card;
-	margin: 0.9rem;
+	&.card {
+		container: list-item-card / inline-size;
+		margin: 0.9rem;
 
-	> .surface {
-		box-shadow: 0 5px 8px -7px rgb(0 0 0 / 45%);
-		flex-flow: column nowrap;
-		overflow: hidden;
+		> .surface {
+			box-shadow: 0 5px 8px -7px rgb(0 0 0 / 45%);
+			display: flex;
+			flex-flow: column nowrap;
+			overflow: hidden;
+		}
 	}
-}
 
-.item.bar {
-	container-name: list-item-bar;
-	margin: 0.45rem 0.9rem;
+	&.bar {
+		container: list-item-bar / inline-size;
+		margin: 0.45rem 0.9rem;
 
-	> .surface {
-		box-shadow: 0 4px 8px -7px rgb(0 0 0 / 45%);
-		display: grid;
-		min-height: 5.5rem;
-		overflow: visible;
+		> .surface {
+			box-shadow: 0 4px 8px -7px rgb(0 0 0 / 45%);
+			display: grid;
+			min-height: 5.5rem;
+			overflow: visible;
+		}
 	}
 }
 
@@ -136,7 +95,6 @@
 			overflow: visible;
 			place-items: center;
 		}
-
 	}
 
 	&.identity > div > div:last-child {
@@ -187,7 +145,6 @@
 		position: relative;
 		width: 2.25rem;
 	}
-
 }
 
 .actions.actions > div button,
@@ -249,8 +206,6 @@
 
 .menuTrigger {
 	flex: 0 0 2.25rem;
-	display: grid;
-	place-items: center;
 	position: relative;
 
 	&[aria-expanded='true'] {
@@ -310,23 +265,13 @@
 	}
 }
 
-// Summary metrics
-.summaryGrid {
+.summaryGrid,
+.retainmentGrid {
 	display: grid;
-	flex: 0 0 auto;
 	gap: 0;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	min-height: 5.75rem;
-	padding: 0.75rem 1.5rem 0.65rem;
 
 	> div {
-		border-block-end: 1px solid var(--gray-500);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		padding-block-end: 0.75rem;
-		padding-inline: 0.75rem;
-
 		&:first-child {
 			padding-inline-start: 0;
 		}
@@ -338,6 +283,22 @@
 		+ div {
 			border-inline-start: 1px solid var(--gray-500);
 		}
+	}
+}
+
+// Summary metrics
+.summaryGrid {
+	flex: 0 0 auto;
+	min-height: 5.75rem;
+	padding: 0.75rem 1.5rem 0.65rem;
+
+	> div {
+		border-block-end: 1px solid var(--gray-500);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-block-end: 0.75rem;
+		padding-inline: 0.75rem;
 
 		> span {
 			align-items: center;
@@ -379,6 +340,14 @@
 }
 
 // Card sections and graph
+.activity,
+.retainment {
+	align-items: stretch;
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: column;
+}
+
 .sectionHeader {
 	align-items: center;
 	display: flex;
@@ -397,10 +366,6 @@
 }
 
 .activity {
-	align-items: stretch;
-	display: flex;
-	flex: 0 0 auto;
-	flex-direction: column;
 	height: 11rem;
 	padding: 0.75rem 1.1rem 0.85rem;
 }
@@ -413,11 +378,11 @@
 		border: 0;
 		height: 100%;
 		max-width: none;
-	}
 
-	&.graph > div > div:last-child {
-		box-sizing: border-box;
-		height: 100%;
+		> div:last-child {
+			box-sizing: border-box;
+			height: 100%;
+		}
 	}
 
 	&.graph svg {
@@ -436,10 +401,10 @@
 	&.graph > div {
 		border-radius: 0.45rem;
 		overflow: hidden;
-	}
 
-	&.graph > div > div:last-child {
-		padding: 0.45rem 0.5rem;
+		> div:last-child {
+			padding: 0.45rem 0.5rem;
+		}
 	}
 
 	&.graph svg line[stroke-width='1'] {
@@ -453,11 +418,6 @@
 
 // Retainment metrics
 .retainment {
-	align-items: stretch;
-	background: transparent;
-	display: flex;
-	flex: 0 0 auto;
-	flex-direction: column;
 	min-height: 9rem;
 	padding: 0.75rem 1rem 1.25rem;
 }
@@ -473,10 +433,7 @@
 
 .retainmentGrid {
 	align-items: stretch;
-	display: grid;
 	flex: 1;
-	gap: 0;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
 	min-height: 4rem;
 	min-width: 0;
 	width: 100%;
@@ -487,18 +444,6 @@
 		grid-template-rows: auto minmax(0, 1fr);
 		padding-inline: 1rem;
 		place-items: center start;
-
-		&:first-child {
-			padding-inline-start: 0;
-		}
-
-		&:last-child {
-			padding-inline-end: 0;
-		}
-
-		+ div {
-			border-inline-start: 1px solid var(--gray-500);
-		}
 
 		> span {
 			font-size: 0.9rem;
@@ -576,10 +521,10 @@
 	&.graph > div {
 		border-radius: inherit;
 		width: 100%;
-	}
 
-	&.graph > div > div:last-child {
-		padding: 0.2rem 0.25rem;
+		> div:last-child {
+			padding: 0.2rem 0.25rem;
+		}
 	}
 
 	&.graph svg line[stroke-width='1'] {
@@ -683,14 +628,11 @@
 		justify-content: flex-end;
 	}
 
-	.summaryGrid {
+	.summaryGrid,
+	.retainmentGrid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		min-height: 8.5rem;
 
 		> div {
-			min-height: 3.4rem;
-			padding: 0.75rem 0.9rem;
-
 			&:nth-child(odd) {
 				border-inline-start: 0;
 				padding-inline-start: 0;
@@ -699,6 +641,15 @@
 			&:nth-child(even) {
 				padding-inline-end: 0;
 			}
+		}
+	}
+
+	.summaryGrid {
+		min-height: 8.5rem;
+
+		> div {
+			min-height: 3.4rem;
+			padding: 0.75rem 0.9rem;
 		}
 	}
 
@@ -711,20 +662,9 @@
 	}
 
 	.retainmentGrid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-
 		> div {
 			min-height: 4.5rem;
 			padding: 0.85rem 0.9rem;
-
-			&:nth-child(odd) {
-				border-inline-start: 0;
-				padding-inline-start: 0;
-			}
-
-			&:nth-child(even) {
-				padding-inline-end: 0;
-			}
 
 			&:nth-child(n + 3) {
 				border-block-start: 1px solid var(--gray-500);
@@ -738,16 +678,22 @@
 	.summaryGrid,
 	.activity,
 	.retainment {
-		padding-left: 0.9rem;
-		padding-right: 0.9rem;
+		padding-inline: 0.9rem;
 	}
 
-	.summaryGrid {
+	.summaryGrid,
+	.retainmentGrid {
 		grid-template-columns: 1fr;
-		min-height: 0;
 
 		> div {
 			border-inline-start: 0;
+		}
+	}
+
+	.summaryGrid {
+		min-height: 0;
+
+		> div {
 			min-height: 3.2rem;
 			padding: 0.75rem 0;
 		}
@@ -758,10 +704,7 @@
 	}
 
 	.retainmentGrid {
-		grid-template-columns: 1fr;
-
 		> div {
-			border-inline-start: 0;
 			min-height: 4.25rem;
 			padding: 0.9rem 0;
 

@@ -19,7 +19,6 @@ const QUERY = gql`
       depth: $depth
     ) {
       era
-      validator
       points
       start
     }

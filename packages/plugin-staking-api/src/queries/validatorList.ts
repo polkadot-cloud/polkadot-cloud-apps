@@ -7,7 +7,7 @@ import type {
 	ValidatorListData,
 	ValidatorListVariables,
 } from '../types'
-import { fetchQuery, useApiQuery } from './generic'
+import { useApiQuery } from './generic'
 
 const QUERY = gql`
   query ValidatorList(
@@ -31,32 +31,19 @@ const QUERY = gql`
           blocked
         }
         identity {
-          address
           display
           superDisplay
           superValue
-          category
         }
         active
         selfStake
         totalStake
-        activeLedger
-        totalLedger
         activityRank
         retainment {
-          month
-          year
-          fromEra
-          toEra
           fromTimestamp
-          toTimestamp
-          graphRewards
           netInflow
-          retained
           retainmentRate
-          validatorRewards
           selfStakeChange
-          compounded
           compoundRate
         }
       }
@@ -66,7 +53,6 @@ const QUERY = gql`
       totalPages
       hasNextPage
       activityEra
-      retainmentEra
       totalActive
     }
   }
@@ -81,7 +67,6 @@ const DEFAULT: ValidatorListData = {
 		totalPages: 0,
 		hasNextPage: false,
 		activityEra: null,
-		retainmentEra: null,
 		totalActive: 0,
 	},
 }
@@ -91,6 +76,3 @@ export const useValidatorList = (
 	options?: { skip?: boolean },
 ): QueryReturn<ValidatorListData> =>
 	useApiQuery<ValidatorListData>(QUERY, variables, DEFAULT, options)
-
-export const fetchValidatorList = (variables: ValidatorListVariables) =>
-	fetchQuery<ValidatorListData>(QUERY, variables, DEFAULT)

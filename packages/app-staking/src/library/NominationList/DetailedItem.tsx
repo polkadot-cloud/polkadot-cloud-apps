@@ -10,15 +10,15 @@ import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { useNominationStatusData } from 'library/ListItem/Labels/NominationStatus'
-import { RetainmentStats } from 'library/ValidatorList/RetainmentStats'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
+import { getRateAfterCommission } from 'library/ValidatorList/retainment'
 import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { useValidatorSelfStake } from 'library/ValidatorList/useValidatorSelfStake'
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
+import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
 import { useTranslation } from 'react-i18next'
-import { DetailedCard, ListItem } from 'ui-app/ListItem'
-import { HistoricalEraPoints } from '../List/EraPointsGraph/HistoricalEraPoints'
+import { ListItem } from 'ui-app/ListItem'
 import type { ItemProps } from './types'
 
 export const DetailedItem = ({
@@ -38,7 +38,6 @@ export const DetailedItem = ({
 	const { network } = useNetwork()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
-	const commission = prefs?.commission ?? null
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const {
@@ -58,13 +57,7 @@ export const DetailedItem = ({
 		units,
 	})
 	const outline = displayFor === 'canvas'
-	const rateAfterCommission =
-		typeof rate === 'number' &&
-		Number.isFinite(rate) &&
-		typeof commission === 'number' &&
-		Number.isFinite(commission)
-			? rate * (1 - commission / 100)
-			: undefined
+	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
 	const validatorDisplay = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
@@ -98,36 +91,40 @@ export const DetailedItem = ({
 		)
 	}
 
+	const cardActions = (
+		<ListItem.Actions>
+			<ListItem.Action>
+				<CopyAddress address={address} />
+			</ListItem.Action>
+			{toggleFavorites && (
+				<ListItem.Action>
+					<FavoriteValidator address={address} outline={outline} />
+				</ListItem.Action>
+			)}
+			{displayFor !== 'canvas' && (
+				<ListItem.Action wide>
+					<Metrics
+						address={address}
+						display={validatorDisplay}
+						outline={outline}
+					/>
+				</ListItem.Action>
+			)}
+		</ListItem.Actions>
+	)
+
 	return (
-		<DetailedCard.Root displayFor={displayFor}>
-			<DetailedCard.Top>
-				<DetailedCard.Header>
-					<ListItem.Identity>
-						<Identity address={address} />
-						{prefs?.blocked === true && (
-							<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
-						)}
-					</ListItem.Identity>
-					<ListItem.Actions>
-						<ListItem.Action>
-							<CopyAddress address={address} />
-						</ListItem.Action>
-						{toggleFavorites && (
-							<ListItem.Action>
-								<FavoriteValidator address={address} outline={outline} />
-							</ListItem.Action>
-						)}
-						{displayFor !== 'canvas' && (
-							<ListItem.Action wide>
-								<Metrics
-									address={address}
-									display={validatorDisplay}
-									outline={outline}
-								/>
-							</ListItem.Action>
-						)}
-					</ListItem.Actions>
-				</DetailedCard.Header>
+		<ValidatorCard
+			actions={cardActions}
+			address={address}
+			blocked={prefs?.blocked === true}
+			displayFor={displayFor}
+			eraPoints={eraPoints}
+			identity={<Identity address={address} />}
+			isActivityPreloading={isPreloading}
+			isRetainmentPreloading={isPreloading}
+			retainmentStats={retainmentStats}
+			summary={
 				<ValidatorSummary
 					address={address}
 					ariaLabel={t('nominationSummary', {
@@ -144,35 +141,8 @@ export const DetailedItem = ({
 					statusValue={backingStake}
 					unit={unit}
 				/>
-				<ListItem.Activity aria-busy={isPreloading}>
-					<ListItem.SectionHeader>
-						<strong>{t('activity')}</strong>
-					</ListItem.SectionHeader>
-					<ListItem.Graph layout="card">
-						{isPreloading ? (
-							<div>
-								<ListItem.DetailLoader
-									borderRadius="0.45rem"
-									height="100%"
-									width="100%"
-								/>
-							</div>
-						) : (
-							<HistoricalEraPoints
-								address={address}
-								displayFor={displayFor}
-								eraPoints={eraPoints}
-								stretch
-							/>
-						)}
-					</ListItem.Graph>
-				</ListItem.Activity>
-			</DetailedCard.Top>
-			<RetainmentStats
-				data={retainmentStats}
-				isPreloading={isPreloading}
-				unit={unit}
-			/>
-		</DetailedCard.Root>
+			}
+			unit={unit}
+		/>
 	)
 }

@@ -15,9 +15,9 @@ export const useValidatorFilters = () => {
 		() => new Set(eraStakers.stakers.map(({ address }) => address)),
 		[eraStakers.stakers],
 	)
-	const identitiesReady =
-		Object.keys(validatorIdentities).length > 0 &&
-		Object.keys(validatorSupers).length > 0
+	// Identity records contain an entry for every validator; super identities may legitimately be
+	// empty after a complete sync.
+	const identitiesReady = Object.keys(validatorIdentities).length > 0
 
 	const filterFunctions = useMemo<
 		Record<string, (list: AnyFilter) => AnyFilter>
@@ -62,8 +62,8 @@ export const useValidatorFilters = () => {
 			order === 'ACTIVITY'
 				? [...list].sort(
 						(a, b) =>
-							(getValidatorRank(a.address) || 9999) -
-							(getValidatorRank(b.address) || 9999),
+							(getValidatorRank(a.address) ?? 9999) -
+							(getValidatorRank(b.address) ?? 9999),
 					)
 				: list,
 		[getValidatorRank],
@@ -100,9 +100,9 @@ export const useValidatorFilters = () => {
 				...(filters.excludeMissingIdentity ? ['missing_identity'] : []),
 			]
 
-			return applySearch(
-				applyFilter(includes, excludes, applyOrder(order, list)),
-				search,
+			return applyOrder(
+				order,
+				applySearch(applyFilter(includes, excludes, list), search),
 			)
 		},
 		[applyFilter, applyOrder, applySearch],

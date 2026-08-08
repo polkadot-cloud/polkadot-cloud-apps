@@ -10,7 +10,6 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorFilters } from 'hooks/useValidatorFilters'
 import type { AddNominationsType } from 'library/GenerateNominations/types'
 import {
-	fetchRandomValidatorCandidate,
 	fetchSanitizeNomineeCandidates,
 	fetchValidatorCandidateBatch,
 } from 'plugin-staking-api'
@@ -31,11 +30,14 @@ export const useFetchMethods = () => {
 	const { applyFilter } = useValidatorFilters()
 	const { favoritesList } = useFavoriteValidators()
 	const { getValidators, getValidatorRankSegment } = useValidators()
+	const stakingApiEnabled = pluginEnabled('staking_api')
+	const stakingApiCandidatesEnabled =
+		stakingApiEnabled && StakingApiRetainmentSupportedNetworks.includes(network)
 
 	const fetch = async (method: string): Promise<Validator[]> => {
 		switch (method) {
 			case 'Optimal Selection':
-				return await fetchOptimal()
+				return fetchOptimal()
 			case 'From Favorites':
 				return fetchFavorites()
 			default:
@@ -46,68 +48,35 @@ export const useFetchMethods = () => {
 	const add = async (nominations: Validator[], type: AddNominationsType) => {
 		switch (type) {
 			case 'High Performance Validator':
-				nominations = await addHighPerformanceValidator(nominations)
-				break
+				return addHighPerformanceValidator(nominations)
 			case 'Active Validator':
-				nominations = addActiveValidator(nominations)
-				break
+				return addActiveValidator(nominations)
 			case 'Random Validator':
-				nominations = addRandomValidator(nominations)
-				break
+				return addRandomValidator(nominations)
 			default:
 				return nominations
 		}
-		return nominations
 	}
 
-	const fetchFavorites = () => {
-		let favs: Validator[] = []
-
-		if (!favoritesList) {
-			return favs
-		}
-
-		if (favoritesList?.length) {
-			// take subset of up to 16 favorites
-			favs = favoritesList.slice(0, 16)
-		}
-		return favs
-	}
+	const fetchFavorites = () => favoritesList?.slice(0, 16) ?? []
 
 	const fetchCurrentOptimal = () => {
-		let active = [...getValidators()]
-		let waiting = [...getValidators()]
-
-		// filter validators to find waiting candidates
-		waiting = applyFilter(
+		const validators = getValidators()
+		const waiting: Validator[] = applyFilter(
 			null,
 			['blocked_nominations', 'missing_identity', 'in_session'],
-			waiting,
+			validators,
 		)
-
-		// filter validators to find active candidates
-		active = applyFilter(
+		const active: Validator[] = applyFilter(
 			['active'],
 			['blocked_nominations', 'missing_identity'],
-			active,
-		)
+			validators,
+		).filter(({ address }: Validator) => getValidatorRankSegment(address) <= 50)
 
-		// keep validators that are in upper 50% performance quartile.
-		active = active.filter((a: Validator) => {
-			const quartile = getValidatorRankSegment(a.address)
-			return quartile <= 50
-		})
-
-		// choose shuffled subset of waiting
-		if (waiting.length) {
-			waiting = shuffle(waiting).slice(0, 2)
-		}
-		// choose shuffled subset of active
-		if (active.length) {
-			active = shuffle(active).slice(0, 14)
-		}
-
-		return shuffle(waiting.concat(active))
+		return shuffle([
+			...shuffle(waiting).slice(0, 2),
+			...shuffle(active).slice(0, 14),
+		])
 	}
 
 	const fetchStakingApiOptimal = async () => {
@@ -143,11 +112,7 @@ export const useFetchMethods = () => {
 	}
 
 	const fetchOptimal = async () => {
-		const stakingApiEnabled = pluginEnabled('staking_api')
-		const useStakingApiCandidates =
-			stakingApiEnabled &&
-			StakingApiRetainmentSupportedNetworks.includes(network)
-		const nominations = useStakingApiCandidates
+		const nominations = stakingApiCandidatesEnabled
 			? await fetchStakingApiOptimal()
 			: fetchCurrentOptimal()
 
@@ -167,101 +132,59 @@ export const useFetchMethods = () => {
 		nominations: Validator[],
 		strategy: ValidatorCandidateStrategy,
 	): Promise<Validator | null> => {
-		const { randomValidatorCandidate } = await fetchRandomValidatorCandidate({
+		const [result] = await fetchValidatorCandidateBatch({
 			network,
-			strategy,
+			strategies: [strategy],
 			excludeAddresses: nominations.map(({ address }) => address),
 		})
 
-		return randomValidatorCandidate
+		return result?.candidate ?? null
 	}
 
 	const available = (nominations: Validator[]) => {
-		const all = [...getValidators()]
-
-		const parachainActive =
+		const nominated = new Set(nominations.map(({ address }) => address))
+		const candidates = (includes: string[] | null) =>
 			applyFilter(
-				['active'],
+				includes,
 				['blocked_nominations', 'missing_identity'],
-				all,
-			).filter(
-				(n: Validator) => !nominations.find((o) => o.address === n.address),
-			) || []
-
-		const active =
-			applyFilter(
-				['active'],
-				['blocked_nominations', 'missing_identity'],
-				all,
-			).filter(
-				(n: Validator) => !nominations.find((o) => o.address === n.address),
-			) || []
-
-		const highPerformance = active.filter((a: Validator) => {
-			const quartile = getValidatorRankSegment(a.address)
-			return quartile <= 50
-		})
-
-		const random =
-			applyFilter(
-				null,
-				['blocked_nominations', 'missing_identity'],
-				all,
-			).filter(
-				(n: Validator) => !nominations.find((o) => o.address === n.address),
-			) || []
+				getValidators(),
+			).filter(({ address }: Validator) => !nominated.has(address))
+		const active: Validator[] = candidates(['active'])
 
 		return {
-			parachainValidators: parachainActive,
-			highPerformance,
+			highPerformance: active.filter(
+				({ address }) => getValidatorRankSegment(address) <= 50,
+			),
 			activeValidators: active,
-			randomValidators: random,
+			randomValidators: candidates(null),
 		}
 	}
 
-	const addActiveValidator = (nominations: Validator[]) => {
-		const all: Validator[] = available(nominations).activeValidators
-
-		// take one validator
-		const validator = getRandomItem(all)
-		if (validator) {
-			nominations.push(validator)
-		}
-		return nominations
+	const appendRandomCandidate = (
+		nominations: Validator[],
+		candidates: Validator[],
+	) => {
+		const candidate = getRandomItem(candidates)
+		return candidate ? [...nominations, candidate] : nominations
 	}
+
+	const addActiveValidator = (nominations: Validator[]) =>
+		appendRandomCandidate(nominations, available(nominations).activeValidators)
 
 	const addHighPerformanceValidator = async (nominations: Validator[]) => {
-		if (
-			pluginEnabled('staking_api') &&
-			StakingApiRetainmentSupportedNetworks.includes(network)
-		) {
+		if (stakingApiCandidatesEnabled) {
 			const validator = await fetchCandidate(nominations, 'ACTIVE')
-			if (validator) {
-				nominations.push(validator)
-			}
-			return nominations
+			return validator ? [...nominations, validator] : nominations
 		}
 
-		const all: Validator[] = available(nominations).highPerformance
-
-		// take one validator
-		const validator = getRandomItem(all)
-		if (validator) {
-			nominations.push(validator)
-		}
-		return nominations
+		return appendRandomCandidate(
+			nominations,
+			available(nominations).highPerformance,
+		)
 	}
 
-	const addRandomValidator = (nominations: Validator[]) => {
-		const all: Validator[] = available(nominations).randomValidators
-
-		// take one validator
-		const validator = getRandomItem(all)
-		if (validator) {
-			nominations.push(validator)
-		}
-		return nominations
-	}
+	const addRandomValidator = (nominations: Validator[]) =>
+		appendRandomCandidate(nominations, available(nominations).randomValidators)
 
 	return {
 		fetch,

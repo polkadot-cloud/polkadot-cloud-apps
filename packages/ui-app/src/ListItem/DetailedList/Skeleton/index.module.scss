@@ -24,7 +24,6 @@
 .cardRegion {
 	height: 50%;
 	overflow: hidden;
-	width: 100%;
 }
 
 .cardHeader {
@@ -36,7 +35,6 @@
 	> .avatar {
 		flex-basis: 4rem;
 		height: 4rem;
-		width: 4rem;
 	}
 
 	.identityPrimary {
@@ -54,7 +52,6 @@
 	border-radius: 50%;
 	flex: 0 0 2.5rem;
 	height: 2.5rem;
-	width: 2.5rem;
 }
 
 .identity {
@@ -92,12 +89,10 @@
 
 .action {
 	flex: 0 0 3.25rem;
-	width: 3.25rem;
 }
 
 .actionWide {
 	flex: 0 0 6.5rem;
-	width: 6.5rem;
 }
 
 .bar {
@@ -115,7 +110,6 @@
 	> .avatar {
 		flex-basis: 3.25rem;
 		height: 3.25rem;
-		width: 3.25rem;
 	}
 
 	> .identity {
@@ -145,11 +139,11 @@
 	.cardHeader {
 		align-content: center;
 		flex-wrap: wrap;
-	}
 
-	.cardHeader > .actions {
-		flex-basis: 100%;
-		justify-content: flex-end;
+		> .actions {
+			flex-basis: 100%;
+			justify-content: flex-end;
+		}
 	}
 }
 
@@ -159,8 +153,7 @@
 	}
 
 	.cardHeader {
-		padding-left: 0.9rem;
-		padding-right: 0.9rem;
+		padding-inline: 0.9rem;
 	}
 }
 

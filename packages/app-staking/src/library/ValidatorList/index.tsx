@@ -11,14 +11,14 @@ import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
-import { MotionContainer } from 'library/List/MotionContainer'
+import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
+import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	Controls,
 	type ValidatorListConfig,
 } from 'library/StakingApiValidatorList/Controls'
 import { ResultSummary } from 'library/StakingApiValidatorList/styles'
-import { motion } from 'motion/react'
 import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -29,7 +29,6 @@ import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { Item } from './Item'
 import type { ValidatorListProps } from './types'
 
-const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
 const DEFAULT_CONFIG: ValidatorListConfig = {
 	filters: {
 		activeOnly: false,
@@ -52,7 +51,6 @@ export const ValidatorListInner = ({
 	// Validator list config options.
 	toggleFavorites,
 	itemsPerPage,
-	onSelected,
 	displayFor = 'default',
 	allowListFormat = true,
 	forceListFormat,
@@ -61,7 +59,6 @@ export const ValidatorListInner = ({
 	onRemove,
 }: ValidatorListProps) => {
 	const { t } = useTranslation()
-	const listProvider = useList()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
@@ -71,12 +68,11 @@ export const ValidatorListInner = ({
 	const { isReady, activeEra } = useApi()
 	const { applyConfig } = useValidatorFilters()
 	const {
-		selected,
 		selectable,
 		listFormat,
 		setListFormat,
 		pagination: { page, setPage },
-	} = listProvider
+	} = useList()
 	const showControls = displayFor === 'default' && !selectable
 	const [config, setConfig] = useState(() => defaultConfig ?? DEFAULT_CONFIG)
 	const controlsOrderOptions = [
@@ -96,11 +92,7 @@ export const ValidatorListInner = ({
 		[applyConfig, config, showControls, validatorsDefault],
 	)
 
-	const [forceCardLayout, setForceCardLayout] = useState<boolean>(() =>
-		typeof window === 'undefined'
-			? false
-			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
-	)
+	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =
 		forceListFormat ??
 		(retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat)
@@ -240,13 +232,6 @@ export const ValidatorListInner = ({
 		void getDetailedData(detailsKey, pendingDetailedAddresses)
 	}, [detailsKey, retainmentStatsEnabled])
 
-	// Trigger `onSelected` when selection changes
-	useEffect(() => {
-		if (onSelected) {
-			onSelected(listProvider)
-		}
-	}, [selected])
-
 	const setControls = (nextConfig: ValidatorListConfig) => {
 		setConfig(nextConfig)
 		setPage(1)
@@ -256,18 +241,6 @@ export const ValidatorListInner = ({
 	useEffect(() => {
 		maybeHandleModalResize()
 	}, [effectiveListFormat, validators, page, retainmentStatsEnabled])
-
-	// Compact API-backed node lists use the full detailed card.
-	useEffect(() => {
-		const mediaQuery = window.matchMedia(CARD_LAYOUT_MEDIA_QUERY)
-		const handleChange = (event: MediaQueryListEvent) => {
-			setForceCardLayout(event.matches)
-		}
-
-		setForceCardLayout(mediaQuery.matches)
-		mediaQuery.addEventListener('change', handleChange)
-		return () => mediaQuery.removeEventListener('change', handleChange)
-	}, [])
 
 	return (
 		<ListWrapper>
@@ -290,8 +263,6 @@ export const ValidatorListInner = ({
 								<ResultSummary>
 									{t('validatorResultRange', {
 										ns: 'app',
-										defaultValue:
-											'Showing {{first}}–{{last}} of {{total}} validators',
 										first: firstResult,
 										last: lastResult,
 										total: validators.length,
@@ -317,19 +288,9 @@ export const ValidatorListInner = ({
 				<MotionContainer>
 					{listItems.length ? (
 						listItems.map((validator) => (
-							<motion.div
+							<MotionItem
 								key={`nomination_${validator.address}`}
 								className={`item ${effectiveListFormat === 'row' ? 'row' : 'col'}`}
-								variants={{
-									hidden: {
-										y: 15,
-										opacity: 0,
-									},
-									show: {
-										y: 0,
-										opacity: 1,
-									},
-								}}
 							>
 								<Item
 									validator={validator}
@@ -350,7 +311,7 @@ export const ValidatorListInner = ({
 									}
 									onRemove={onRemove}
 								/>
-							</motion.div>
+							</MotionItem>
 						))
 					) : (
 						<h4 style={{ marginTop: '1rem' }}>

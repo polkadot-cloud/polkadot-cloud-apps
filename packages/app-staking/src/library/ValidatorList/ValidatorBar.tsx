@@ -12,11 +12,8 @@ import type { DisplayFor } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
-import { RetainmentStatValue } from './RetainmentStatValue'
-import type {
-	RetainmentStatData,
-	RetainmentStatsData,
-} from './useRetainmentStatsData'
+import { RetainmentMetric } from './RetainmentStats'
+import type { RetainmentStatsData } from './useRetainmentStatsData'
 import { useValidatorSummaryData } from './ValidatorSummary'
 
 interface ValidatorBarProps {
@@ -42,57 +39,6 @@ interface ValidatorBarProps {
 	unit: string
 	validator: ValidatorListEntry
 }
-
-const BarRateStat = ({
-	isPreloading,
-	stat,
-}: {
-	isPreloading: boolean
-	stat: RetainmentStatData
-}) => (
-	<ListItem.Metric
-		color={stat.color}
-		label={stat.label}
-		labelProps={{ title: stat.label }}
-		valueProps={{
-			'aria-label': stat.ariaLabel,
-			'aria-valuemax': stat.value === undefined ? undefined : 100,
-			'aria-valuemin': stat.value === undefined ? undefined : 0,
-			'aria-valuenow': stat.value,
-			'aria-valuetext': stat.ariaValueText,
-			role: stat.value === undefined ? undefined : 'meter',
-		}}
-	>
-		{isPreloading ? (
-			<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-		) : (
-			<RetainmentStatValue stat={stat} />
-		)}
-	</ListItem.Metric>
-)
-
-const BarSignedAmountStat = ({
-	isPreloading,
-	stat,
-	unit,
-}: {
-	isPreloading: boolean
-	stat: RetainmentStatData
-	unit: string
-}) => (
-	<ListItem.Metric
-		color={stat.color}
-		label={stat.label}
-		labelProps={{ title: stat.label }}
-		valueProps={{ 'aria-label': stat.ariaLabel }}
-	>
-		{isPreloading ? (
-			<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-		) : (
-			<RetainmentStatValue stat={stat} unit={unit} />
-		)}
-	</ListItem.Metric>
-)
 
 export const ValidatorBar = ({
 	actions,
@@ -212,25 +158,27 @@ export const ValidatorBar = ({
 				<ListItem.Metric label={t('performance')}>
 					{quartileLabel}
 				</ListItem.Metric>
-				<ListItem.Metric label={t('selfStake', { defaultValue: 'Self stake' })}>
+				<ListItem.Metric label={t('selfStake')}>
 					<span>{selfStakeLabel}</span>
 					{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 				</ListItem.Metric>
-				<BarRateStat
-					isPreloading={retainmentPreloading}
-					stat={retainmentRate}
-				/>
-				<BarRateStat isPreloading={retainmentPreloading} stat={compoundRate} />
-				<BarSignedAmountStat
-					isPreloading={retainmentPreloading}
-					stat={selfStakeChange}
-					unit={unit}
-				/>
-				<BarSignedAmountStat
-					isPreloading={retainmentPreloading}
-					stat={netOutflow}
-					unit={unit}
-				/>
+				{[retainmentRate, compoundRate].map((stat) => (
+					<RetainmentMetric
+						compact
+						key={stat.label}
+						isPreloading={retainmentPreloading}
+						stat={stat}
+					/>
+				))}
+				{[selfStakeChange, netOutflow].map((stat) => (
+					<RetainmentMetric
+						compact
+						key={stat.label}
+						isPreloading={retainmentPreloading}
+						stat={stat}
+						unit={unit}
+					/>
+				))}
 			</ListItem.RowMetrics>
 
 			{actions}

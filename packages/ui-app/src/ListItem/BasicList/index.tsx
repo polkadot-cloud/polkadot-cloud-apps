@@ -14,21 +14,16 @@ interface RootProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = ({
-	canvas = false,
+	canvas,
 	children,
 	className,
 	kind,
-	selected = false,
+	selected,
 	...props
 }: RootProps) => (
 	<div
 		{...props}
-		className={classNames(
-			classes.item,
-			kind === 'member' && classes.member,
-			kind === 'pool' && classes.pool,
-			className,
-		)}
+		className={classNames(classes.item, kind && classes[kind], className)}
 	>
 		<div
 			className={classNames(classes.surface, {
@@ -47,13 +42,7 @@ interface RowProps extends ComponentPropsWithoutRef<'div'> {
 	position: 'top' | 'bottom'
 }
 
-const Row = ({
-	className,
-	large = false,
-	pools = false,
-	position,
-	...props
-}: RowProps) => (
+const Row = ({ className, large, pools, position, ...props }: RowProps) => (
 	<div
 		{...props}
 		className={classNames(

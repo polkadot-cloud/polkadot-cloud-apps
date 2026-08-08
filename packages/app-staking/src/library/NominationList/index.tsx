@@ -13,8 +13,8 @@ import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
-import { MotionContainer } from 'library/List/MotionContainer'
-import { motion } from 'motion/react'
+import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
+import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -25,8 +25,6 @@ import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { Item } from './Item'
 import type { NominationListProps } from './types'
-
-const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
 
 const ListFormatHeader = styled(FilterHeaderWrapper)`
   margin-top: 0.75rem;
@@ -106,11 +104,7 @@ export const NominationListInner = ({
 
 	// Store whether the list has been fetched initially
 	const [fetched, setFetched] = useState<boolean>(false)
-	const [forceCardLayout, setForceCardLayout] = useState<boolean>(() =>
-		typeof window === 'undefined'
-			? false
-			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
-	)
+	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =
 		retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat
 
@@ -230,19 +224,6 @@ export const NominationListInner = ({
 		maybeHandleModalResize()
 	}, [effectiveListFormat, validators, retainmentStatsEnabled])
 
-	// Compact viewports always use the full card. Keep listFormat untouched so the
-	// user's preferred desktop layout is restored when the viewport grows again.
-	useEffect(() => {
-		const mediaQuery = window.matchMedia(CARD_LAYOUT_MEDIA_QUERY)
-		const handleChange = (event: MediaQueryListEvent) => {
-			setForceCardLayout(event.matches)
-		}
-
-		setForceCardLayout(mediaQuery.matches)
-		mediaQuery.addEventListener('change', handleChange)
-		return () => mediaQuery.removeEventListener('change', handleChange)
-	}, [])
-
 	return (
 		<ListWrapper>
 			<List
@@ -262,19 +243,9 @@ export const NominationListInner = ({
 				<MotionContainer>
 					{validators.length ? (
 						validators.map((validator) => (
-							<motion.div
+							<MotionItem
 								key={`nomination_${validator.address}`}
 								className={`item ${effectiveListFormat === 'row' ? 'row' : 'col'}`}
-								variants={{
-									hidden: {
-										y: 15,
-										opacity: 0,
-									},
-									show: {
-										y: 0,
-										opacity: 1,
-									},
-								}}
 							>
 								<Item
 									validator={validator}
@@ -293,7 +264,7 @@ export const NominationListInner = ({
 									retainment={retainmentByAddress.get(validator.address)}
 									nominationStatus={nominationStatus.current[validator.address]}
 								/>
-							</motion.div>
+							</MotionItem>
 						))
 					) : (
 						<h4 style={{ marginTop: '1rem' }}>{t('noValidators')}</h4>

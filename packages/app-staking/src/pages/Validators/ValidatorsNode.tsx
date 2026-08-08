@@ -38,9 +38,7 @@ export const ValidatorsNode = () => {
 							)}
 							{validators.length > 0 && (
 								<ValidatorList
-									bondFor="nominator"
 									validators={validators}
-									title={t('networkValidators')}
 									selectable={false}
 									defaultConfig={{
 										filters: {

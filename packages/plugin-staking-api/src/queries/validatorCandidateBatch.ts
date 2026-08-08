@@ -4,8 +4,7 @@
 import type { DocumentNode } from '@apollo/client'
 import { gql } from '@apollo/client'
 import type {
-	ValidatorCandidateBatchData,
-	ValidatorCandidateBatchResult,
+	ValidatorCandidate,
 	ValidatorCandidateBatchVariables,
 } from '../types'
 import { fetchQuery } from './generic'
@@ -59,9 +58,7 @@ const getQuery = (batchSize: number) => {
 export const fetchValidatorCandidateBatch = async ({
 	strategies,
 	...variables
-}: ValidatorCandidateBatchVariables): Promise<
-	ValidatorCandidateBatchResult[]
-> => {
+}: ValidatorCandidateBatchVariables) => {
 	if (!strategies.length) {
 		return []
 	}
@@ -69,7 +66,7 @@ export const fetchValidatorCandidateBatch = async ({
 	const strategyVariables = Object.fromEntries(
 		strategies.map((strategy, index) => [`strategy${index}`, strategy]),
 	)
-	const data = await fetchQuery<ValidatorCandidateBatchData>(
+	const data = await fetchQuery<Record<string, ValidatorCandidate | null>>(
 		getQuery(strategies.length),
 		{ ...variables, ...strategyVariables },
 		{},

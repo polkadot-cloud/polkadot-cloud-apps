@@ -91,7 +91,6 @@ export const Entity = ({ network }: { network: ValidatorSupportedNetwork }) => {
 						)}
 						{operatorValidators.length > 0 && (
 							<ValidatorList
-								bondFor="nominator"
 								validators={operatorValidators}
 								allowListFormat={false}
 								selectable={false}

@@ -4,7 +4,12 @@
 import { faBars, faGripVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
-import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react'
+import {
+	type ComponentPropsWithoutRef,
+	type CSSProperties,
+	createElement,
+	type ReactNode,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { Loader } from 'ui-core/base'
@@ -15,16 +20,14 @@ interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
 	selected?: boolean
-	surfaceChildren?: ReactNode
 }
 
 const ItemShell = ({
 	children,
 	className,
-	displayFor = 'default',
+	displayFor,
 	layout,
-	selected = false,
-	surfaceChildren,
+	selected,
 	...props
 }: ItemShellProps) => (
 	<div
@@ -38,44 +41,42 @@ const ItemShell = ({
 		<div
 			className={classNames(classes.surface, {
 				[classes.card]: displayFor === 'card',
-				[classes.canvas]: displayFor === 'canvas' || displayFor === 'modal',
 				[classes.selected]: selected,
 			})}
 		>
-			{surfaceChildren ?? children}
+			{layout === 'row' ? (
+				<div className={classes.barLayout}>{children}</div>
+			) : (
+				children
+			)}
 		</div>
 	</div>
 )
 
-interface ItemRootProps extends ComponentPropsWithoutRef<'div'> {
-	displayFor?: DisplayFor
-	selected?: boolean
-}
+type ItemRootProps = Omit<ItemShellProps, 'layout'>
 
 const DetailedCardRoot = (props: ItemRootProps) => (
 	<ItemShell layout="card" {...props} />
 )
 
-const DetailedCardTop = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.cardTop, className)} />
-)
+type ClassedElement = 'button' | 'div' | 'header' | 'section' | 'span' | 'time'
 
-const DetailedCardHeader = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.cardHeader, className)} />
-)
+const withClassName = <T extends ClassedElement>(
+	tag: T,
+	baseClassName: string,
+) => {
+	const Component = ({ className, ...props }: ComponentPropsWithoutRef<T>) =>
+		createElement(tag, {
+			...props,
+			className: classNames(baseClassName, className),
+		})
 
-const ListItemRow = ({ children, ...props }: ItemRootProps) => (
-	<ItemShell
-		layout="row"
-		{...props}
-		surfaceChildren={<div className={classes.barLayout}>{children}</div>}
-	/>
+	Component.displayName = baseClassName
+	return Component
+}
+
+const ListItemRow = (props: ItemRootProps) => (
+	<ItemShell layout="row" {...props} />
 )
 
 const ListItemSkeleton = ({
@@ -94,61 +95,15 @@ const ListItemSkeleton = ({
 	</ItemShell>
 )
 
-const ListItemIdentity = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.identity, className)} />
-)
-
-const ListItemBlocked = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'span'>) => (
-	<span {...props} className={classNames(classes.blocked, className)} />
-)
-
-const ListItemActions = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.actions, className)} />
-)
-
 interface ListItemActionProps extends ComponentPropsWithoutRef<'div'> {
 	wide?: boolean
 }
 
-const ListItemAction = ({
-	className,
-	wide = false,
-	...props
-}: ListItemActionProps) => (
+const ListItemAction = ({ className, wide, ...props }: ListItemActionProps) => (
 	<div
 		{...props}
 		className={classNames(wide && classes.metricsAction, className)}
 	/>
-)
-
-const ListItemMenuTrigger = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'button'>) => (
-	<button {...props} className={classNames(classes.menuTrigger, className)} />
-)
-
-const ListItemRowIdentity = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.barIdentity, className)} />
-)
-
-const ListItemSummary = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'section'>) => (
-	<section {...props} className={classNames(classes.summaryGrid, className)} />
 )
 
 interface ListItemMetricProps extends ComponentPropsWithoutRef<'div'> {
@@ -190,34 +145,6 @@ const ListItemStatusDot = ({
 	/>
 )
 
-const ListItemRetainmentGrid = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.retainmentGrid, className)} />
-)
-
-const ListItemRowMetrics = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'div'>) => (
-	<div {...props} className={classNames(classes.barStats, className)} />
-)
-
-const ListItemSectionHeader = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'header'>) => (
-	<header {...props} className={classNames(classes.sectionHeader, className)} />
-)
-
-const ListItemActivity = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'section'>) => (
-	<section {...props} className={classNames(classes.activity, className)} />
-)
-
 const ListItemGraph = ({
 	className,
 	layout,
@@ -231,20 +158,6 @@ const ListItemGraph = ({
 			className,
 		)}
 	/>
-)
-
-const ListItemRetainment = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'section'>) => (
-	<section {...props} className={classNames(classes.retainment, className)} />
-)
-
-const ListItemMonth = ({
-	className,
-	...props
-}: ComponentPropsWithoutRef<'time'>) => (
-	<time {...props} className={classNames(classes.month, className)} />
 )
 
 interface DetailLoaderProps {
@@ -278,17 +191,19 @@ interface ListItemFormatToggleProps {
 }
 
 const ListItemFormatToggle = ({
-	hideOnCompact = false,
+	hideOnCompact,
 	onChange,
 	value,
 }: ListItemFormatToggleProps) => {
 	const { t } = useTranslation('app')
-	const wrapperClasses = classNames(classes.formatToggle, {
-		[classes.hideOnCompact]: hideOnCompact,
-	})
 
 	return (
-		<div className={wrapperClasses}>
+		<div
+			className={classNames(
+				classes.formatToggle,
+				hideOnCompact && classes.hideOnCompact,
+			)}
+		>
 			<button
 				type="button"
 				onClick={() => onChange('row')}
@@ -312,30 +227,30 @@ const ListItemFormatToggle = ({
 }
 
 export const DetailedCard = {
-	Header: DetailedCardHeader,
+	Header: withClassName('div', classes.cardHeader),
 	Root: DetailedCardRoot,
-	Top: DetailedCardTop,
+	Top: withClassName('div', classes.cardTop),
 }
 
 export const ListItem = {
 	Action: ListItemAction,
-	Actions: ListItemActions,
-	Activity: ListItemActivity,
-	Blocked: ListItemBlocked,
+	Actions: withClassName('div', classes.actions),
+	Activity: withClassName('section', classes.activity),
+	Blocked: withClassName('span', classes.blocked),
 	DetailLoader: ListItemDetailLoader,
 	FormatToggle: ListItemFormatToggle,
 	Graph: ListItemGraph,
-	Identity: ListItemIdentity,
-	MenuTrigger: ListItemMenuTrigger,
+	Identity: withClassName('div', classes.identity),
+	MenuTrigger: withClassName('button', classes.menuTrigger),
 	Metric: ListItemMetric,
-	Month: ListItemMonth,
-	Retainment: ListItemRetainment,
-	RetainmentGrid: ListItemRetainmentGrid,
+	Month: withClassName('time', classes.month),
+	Retainment: withClassName('section', classes.retainment),
+	RetainmentGrid: withClassName('div', classes.retainmentGrid),
 	Row: ListItemRow,
-	RowIdentity: ListItemRowIdentity,
-	RowMetrics: ListItemRowMetrics,
-	SectionHeader: ListItemSectionHeader,
+	RowIdentity: withClassName('div', classes.barIdentity),
+	RowMetrics: withClassName('div', classes.barStats),
+	SectionHeader: withClassName('header', classes.sectionHeader),
 	Skeleton: ListItemSkeleton,
 	StatusDot: ListItemStatusDot,
-	Summary: ListItemSummary,
+	Summary: withClassName('section', classes.summaryGrid),
 }

@@ -5,9 +5,9 @@ import { ListProvider, useList } from 'contexts/List'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
-import { MotionContainer } from 'library/List/MotionContainer'
+import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
-import { motion } from 'motion/react'
+import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	fetchValidatorAvgRewardRateBatch,
 	fetchValidatorEraPointsBatch,
@@ -31,19 +31,13 @@ import { ListStatus, ResultSummary } from './styles'
 
 const PAGE_SIZE = 50
 const ERA_POINTS_DEPTH = 30
-const CARD_LAYOUT_MEDIA_QUERY = '(max-width: 1199px)'
-
 export const StakingApiValidatorListInner = () => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
 	const { listFormat, setListFormat } = useList()
 	const [page, setPage] = useState(1)
-	const [forceCardLayout, setForceCardLayout] = useState(() =>
-		typeof window === 'undefined'
-			? false
-			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
-	)
+	const forceCardLayout = useForceCardLayout()
 	const [config, setConfig] = useState<ValidatorListConfig>(
 		DEFAULT_VALIDATOR_LIST_CONFIG,
 	)
@@ -146,17 +140,6 @@ export const StakingApiValidatorListInner = () => {
 		}
 	}, [detailsKey, loading, erasPerDay])
 
-	useEffect(() => {
-		const mediaQuery = window.matchMedia(CARD_LAYOUT_MEDIA_QUERY)
-		const handleChange = (event: MediaQueryListEvent) => {
-			setForceCardLayout(event.matches)
-		}
-
-		setForceCardLayout(mediaQuery.matches)
-		mediaQuery.addEventListener('change', handleChange)
-		return () => mediaQuery.removeEventListener('change', handleChange)
-	}, [])
-
 	const applyConfig = (nextConfig: ValidatorListConfig) => {
 		setConfig(nextConfig)
 		setPage(1)
@@ -175,8 +158,6 @@ export const StakingApiValidatorListInner = () => {
 						{!loading && !error && result.total > 0 && (
 							<ResultSummary>
 								{t('validatorResultRange', {
-									defaultValue:
-										'Showing {{first}}–{{last}} of {{total}} validators',
 									first: firstResult,
 									last: lastResult,
 									total: result.total,
@@ -218,13 +199,9 @@ export const StakingApiValidatorListInner = () => {
 					<MotionContainer>
 						{result.validators.length > 0 ? (
 							result.validators.map((validator) => (
-								<motion.div
+								<MotionItem
 									key={validator.address}
 									className={`item ${effectiveListFormat}`}
-									variants={{
-										hidden: { opacity: 0, y: 15 },
-										show: { opacity: 1, y: 0 },
-									}}
 								>
 									<Item
 										validator={validator}
@@ -235,7 +212,7 @@ export const StakingApiValidatorListInner = () => {
 										isEraPointsLoading={isEraPointsLoading}
 										isRateLoading={isRateLoading}
 									/>
-								</motion.div>
+								</MotionItem>
 							))
 						) : (
 							<ListStatus>

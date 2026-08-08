@@ -39,6 +39,7 @@ export interface BlockedProps {
 
 export interface IdentityProps {
 	address: string
+	display?: ReactNode
 }
 
 export interface PoolIdentityProps {

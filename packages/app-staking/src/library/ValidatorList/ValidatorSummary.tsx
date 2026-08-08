@@ -97,6 +97,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		isStatusValuePreloading = false,
 		selfStake,
 		statusActive,
+		statusValue,
 		unit,
 	} = props
 	const {
@@ -130,7 +131,11 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				}
 				valueProps={{
 					'aria-busy': isStatusValuePreloading,
-					title: totalStake ? `${totalStake} ${unit}` : undefined,
+					title: statusValue
+						? `${statusValue.toFormat()} ${unit}`
+						: totalStake
+							? `${totalStake} ${unit}`
+							: undefined,
 				}}
 			>
 				{isStatusValuePreloading ? (
@@ -148,7 +153,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 			<ListItem.Metric label={t('performance')}>
 				{quartileLabel}
 			</ListItem.Metric>
-			<ListItem.Metric label={t('selfStake', { defaultValue: 'Self stake' })}>
+			<ListItem.Metric label={t('selfStake')}>
 				<span>{selfStakeLabel}</span>
 				{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 			</ListItem.Metric>

@@ -14,6 +14,17 @@ export const isMaxSelfStake = (
 export const clampRate = (rate: number) =>
 	Number.isFinite(rate) ? Math.min(Math.max(rate, 0), 100) : 0
 
+export const getRateAfterCommission = (
+	rate?: number,
+	commission?: number | null,
+) =>
+	typeof rate === 'number' &&
+	Number.isFinite(rate) &&
+	typeof commission === 'number' &&
+	Number.isFinite(commission)
+		? rate * (1 - commission / 100)
+		: undefined
+
 export const getRateColor = (rate: number): string => {
 	if (rate >= 75) {
 		return 'var(--status-success)'

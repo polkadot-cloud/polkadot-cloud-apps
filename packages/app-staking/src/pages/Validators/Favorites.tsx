@@ -25,9 +25,7 @@ export const ValidatorFavorites = () => {
 					isReady &&
 					(favoritesList.length > 0 ? (
 						<ValidatorList
-							bondFor="nominator"
 							validators={favoritesList}
-							title={t('favoriteValidators')}
 							selectable={false}
 							toggleFavorites
 						/>

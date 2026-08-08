@@ -19,6 +19,7 @@ import { Select } from '../ListItem/Buttons/Select'
 import { Blocked } from '../ListItem/Labels/Blocked'
 import { EraStatus } from '../ListItem/Labels/EraStatus'
 import { Identity } from '../ListItem/Labels/Identity'
+import { getRateAfterCommission } from './retainment'
 import type { ItemProps } from './types'
 
 const Basic = ({
@@ -31,20 +32,12 @@ const Basic = ({
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
-	const commission = prefs?.commission ?? null
 
 	const isSelected = !!selected.filter(
 		(item) => (item as Validator).address === validator.address,
 	).length
 
-	// Rate after commission
-	const rateAfterCommission =
-		typeof rate === 'number' &&
-		Number.isFinite(rate) &&
-		typeof commission === 'number' &&
-		Number.isFinite(commission)
-			? rate * (1 - commission / 100)
-			: undefined
+	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
 
 	return (
 		<BasicItem.Root canvas={displayFor === 'canvas'} selected={isSelected}>

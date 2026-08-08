@@ -4,12 +4,8 @@
 .item {
 	--height-top-row: 3.25rem;
 	--height-bottom-row: 5.5rem;
-	--item-border-width: 1.25px;
-	--height-total: calc(var(--height-top-row) + var(--height-bottom-row));
 
-	display: flex;
-	flex-flow: row wrap;
-	height: var(--height-total);
+	height: calc(var(--height-top-row) + var(--height-bottom-row));
 	margin: 0.5rem;
 	position: relative;
 	width: 100%;
@@ -26,14 +22,13 @@
 .surface {
 	align-items: center;
 	background: var(--bg-list);
-	border: var(--item-border-width) solid var(--bg-list);
+	border: 1.25px solid var(--bg-list);
 	border-radius: 0.75rem;
 	display: flex;
 	flex-flow: row wrap;
 	height: 100%;
 	inset: 0;
 	overflow: hidden;
-	padding: 0;
 	position: absolute;
 	transition: border var(--transition-duration) ease;
 	width: 100%;
@@ -41,7 +36,6 @@
 	&.canvas {
 		background: var(--gray-200);
 		border-color: var(--gray-400);
-		box-shadow: none;
 	}
 
 	&.selected {
@@ -84,31 +78,24 @@
 			align-items: flex-end;
 			display: flex;
 			flex-direction: column;
-			flex-shrink: 1;
 		}
 	}
 }
 
 .poolStatus {
-	h4,
-	h5 {
-		display: flex;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
 	h4 {
 		color: var(--text-tertiary);
+		display: flex;
 		font-size: 1rem;
+		overflow: hidden;
 		padding-top: 0.25rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 
 		> span {
 			border: 0.75px solid transparent;
 			border-radius: 0.3rem;
-			color: var(--text-tertiary);
 			opacity: 0.6;
-			padding: 0;
 		}
 	}
 

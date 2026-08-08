@@ -37,7 +37,6 @@ export interface IdentityCache {
 	display: string | null
 	superDisplay: string | null
 	superValue: string | null
-	category: string | null
 }
 
 export type ValidatorListOrder =
@@ -72,7 +71,6 @@ export interface ValidatorListResult {
 	totalPages: number
 	hasNextPage: boolean
 	activityEra: number | null
-	retainmentEra: number | null
 	totalActive: number
 }
 
@@ -82,12 +80,10 @@ export interface ValidatorListItem {
 		commission: number
 		blocked: boolean
 	}
-	identity: IdentityCache | null
+	identity: Omit<IdentityCache, 'address'> | null
 	active: boolean
 	selfStake: string | null
 	totalStake: string | null
-	activeLedger: string | null
-	totalLedger: string | null
 	activityRank: number | null
 	retainment: ValidatorRetainmentPeriod | null
 }
@@ -99,19 +95,6 @@ export type ValidatorCandidateStrategy =
 
 export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
 
-export interface RandomValidatorCandidateVariables
-	extends Record<string, unknown> {
-	network: string
-	strategy: ValidatorCandidateStrategy
-	active?: boolean
-	excludeAddresses?: string[]
-	topPercent?: number
-}
-
-export interface RandomValidatorCandidateData {
-	randomValidatorCandidate: ValidatorCandidate | null
-}
-
 export interface ValidatorCandidateBatchVariables
 	extends Record<string, unknown> {
 	network: string
@@ -119,16 +102,6 @@ export interface ValidatorCandidateBatchVariables
 	active?: boolean
 	excludeAddresses?: string[]
 	topPercent?: number
-}
-
-export type ValidatorCandidateBatchData = Record<
-	string,
-	ValidatorCandidate | null
->
-
-export interface ValidatorCandidateBatchResult {
-	strategy: ValidatorCandidateStrategy
-	candidate: ValidatorCandidate | null
 }
 
 export interface AllRewardsData {
@@ -253,7 +226,6 @@ export interface ValidatorUnclaimedReward {
 
 export interface ValidatorEraPoints {
 	era: number
-	validator: string
 	points: string
 	start: number
 }
@@ -276,54 +248,28 @@ export interface ValidatorAvgRewardRateBatch {
 	rate: number
 }
 
-export interface ValidatorRetainmentBatchData {
-	validatorRetainmentBatch: ValidatorRetainmentBatch[]
-}
-
 export interface ValidatorRetainmentBatch {
 	validator: string
 	result: ValidatorRetainmentResult | null
 }
 
 export interface ValidatorRetainmentResult {
-	identityGraphId: string
-	accounts: ValidatorRetainmentAccount[]
-	validators: string[]
-	era: number
-	timestamp: number
-	assetHubBlockNumber: number
-	peopleBlockNumber: number
 	months: ValidatorRetainmentPeriod[]
 }
 
-export interface ValidatorRetainmentAccount {
-	address: string
-	super: string | null
-	subs: string[]
-	validator: boolean
-}
-
 export interface ValidatorRetainmentPeriod {
-	month: number
-	year: number
-	fromEra: number
-	toEra: number
 	fromTimestamp: number
-	toTimestamp: number
-	graphRewards: string
 	netInflow: string
-	retained: string
 	retainmentRate: number | null
-	validatorRewards: string
 	selfStakeChange: string
-	compounded: string
 	compoundRate: number
 }
 
 export interface ValidatorDetailsBatchData
-	extends ValidatorRetainmentBatchData,
-		ValidatorAvgRewardRateBatchData,
-		ValidatorEraPointsBatchData {}
+	extends ValidatorAvgRewardRateBatchData,
+		ValidatorEraPointsBatchData {
+	validatorRetainmentBatch: ValidatorRetainmentBatch[]
+}
 
 export interface PoolReward {
 	reward: string

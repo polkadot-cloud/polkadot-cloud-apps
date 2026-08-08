@@ -12,7 +12,6 @@ const QUERY = gql`
       display
       superDisplay
       superValue
-      category
     }
   }
 `
