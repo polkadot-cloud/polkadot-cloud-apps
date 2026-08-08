@@ -111,14 +111,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	} = useValidatorSummaryData(props)
 
 	return (
-		<ListItem.Summary
-			aria-label={
-				ariaLabel ??
-				t('validatorSummary', {
-					defaultValue: 'Validator summary',
-				})
-			}
-		>
+		<ListItem.Summary aria-label={ariaLabel ?? t('validatorSummary')}>
 			<ListItem.Metric
 				label={
 					<>

@@ -95,15 +95,11 @@ export const Controls = ({
 		{ key: 'ACTIVITY', label: t('activity') },
 		{
 			key: 'RETAINMENT_HIGH',
-			label: t('highRetainment', {
-				defaultValue: 'High Retainment',
-			}),
+			label: t('highRetainment'),
 		},
 		{
 			key: 'RETAINMENT_LOW',
-			label: t('lowRetainment', {
-				defaultValue: 'Low Retainment',
-			}),
+			label: t('lowRetainment'),
 		},
 	]
 	const orderOptions = suppliedOrderOptions ?? defaultOrderOptions
@@ -190,7 +186,7 @@ export const Controls = ({
 				<Actions>
 					<ButtonSecondary text={t('clear')} onClick={clear} />
 					<ButtonSubmit
-						text={t('apply', { defaultValue: 'Apply' })}
+						text={t('apply')}
 						disabled={disabled || !hasChanges}
 						pulse={hasChanges && !disabled}
 						onClick={apply}

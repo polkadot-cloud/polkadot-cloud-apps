@@ -127,9 +127,7 @@ export const DetailedItem = ({
 			summary={
 				<ValidatorSummary
 					address={address}
-					ariaLabel={t('nominationSummary', {
-						defaultValue: 'Nomination summary',
-					})}
+					ariaLabel={t('nominationSummary')}
 					isRatePreloading={isPreloading}
 					isStatusValuePreloading={backingStakePreloading}
 					rate={rateAfterCommission}

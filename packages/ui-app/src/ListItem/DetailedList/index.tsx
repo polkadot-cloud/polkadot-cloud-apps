@@ -10,7 +10,6 @@ import {
 	createElement,
 	type ReactNode,
 } from 'react'
-import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { Loader } from 'ui-core/base'
 import classes from './index.module.scss'
@@ -195,8 +194,6 @@ const ListItemFormatToggle = ({
 	onChange,
 	value,
 }: ListItemFormatToggleProps) => {
-	const { t } = useTranslation('app')
-
 	return (
 		<div
 			className={classNames(
@@ -207,9 +204,6 @@ const ListItemFormatToggle = ({
 			<button
 				type="button"
 				onClick={() => onChange('row')}
-				aria-label={t('rowView', {
-					defaultValue: 'Compact row view',
-				})}
 				aria-pressed={value === 'row'}
 			>
 				<FontAwesomeIcon icon={faBars} />
@@ -217,7 +211,6 @@ const ListItemFormatToggle = ({
 			<button
 				type="button"
 				onClick={() => onChange('col')}
-				aria-label={t('cardView', { defaultValue: 'Detailed card view' })}
 				aria-pressed={value === 'col'}
 			>
 				<FontAwesomeIcon icon={faGripVertical} />

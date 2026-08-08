@@ -10,9 +10,7 @@ export const DetailedItemPreloader = ({
 	format: 'row' | 'col'
 }) => {
 	const { t } = useTranslation('app')
-	const label = t('loadingValidatorDetails', {
-		defaultValue: 'Loading validator details',
-	})
+	const label = t('loadingValidatorDetails')
 
 	return <ListItem.Skeleton format={format} label={label} />
 }

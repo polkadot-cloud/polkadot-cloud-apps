@@ -185,7 +185,7 @@ export const StakingApiValidatorListInner = () => {
 					<ListStatus>
 						<h4>{t('errorUnknown')}</h4>
 						<ButtonSecondary
-							text={t('tryAgain', { defaultValue: 'Try again' })}
+							text={t('tryAgain')}
 							onClick={() => {
 								void refetch()
 							}}
