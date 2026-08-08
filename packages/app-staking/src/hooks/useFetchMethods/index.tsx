@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { shuffle } from '@w3ux/utils'
+import { StakingApiRetainmentSupportedNetworks } from 'consts/plugins'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { pluginEnabled } from 'global-bus'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
@@ -11,12 +12,19 @@ import type { AddNominationsType } from 'library/GenerateNominations/types'
 import {
 	fetchRandomValidatorCandidate,
 	fetchSanitizeNomineeCandidates,
+	fetchValidatorCandidateBatch,
 } from 'plugin-staking-api'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
 
 // Helper function to get a random item from an array
 const getRandomItem = <T,>(items: T[]): T | null => shuffle(items)[0] || null
+
+const OPTIMAL_CANDIDATE_STRATEGIES = [
+	...Array.from({ length: 4 }, () => 'ACTIVE' as const),
+	...Array.from({ length: 6 }, () => 'HIGH_RETAINER' as const),
+	...Array.from({ length: 6 }, () => 'HIGH_COMPOUNDER' as const),
+] satisfies ValidatorCandidateStrategy[]
 
 export const useFetchMethods = () => {
 	const { network } = useNetwork()
@@ -66,7 +74,7 @@ export const useFetchMethods = () => {
 		return favs
 	}
 
-	const fetchOptimal = async () => {
+	const fetchCurrentOptimal = () => {
 		let active = [...getValidators()]
 		let waiting = [...getValidators()]
 
@@ -99,9 +107,51 @@ export const useFetchMethods = () => {
 			active = shuffle(active).slice(0, 14)
 		}
 
-		const nominations = shuffle(waiting.concat(active))
+		return shuffle(waiting.concat(active))
+	}
 
-		if (!pluginEnabled('staking_api')) {
+	const fetchStakingApiOptimal = async () => {
+		const nominations: Validator[] = []
+		const addresses = new Set<string>()
+		let pendingStrategies = [...OPTIMAL_CANDIDATE_STRATEGIES]
+
+		while (pendingStrategies.length) {
+			const results = await fetchValidatorCandidateBatch({
+				network,
+				strategies: pendingStrategies,
+				excludeAddresses: [...addresses],
+			})
+			const retryStrategies: ValidatorCandidateStrategy[] = []
+
+			for (const { strategy, candidate } of results) {
+				if (!candidate || addresses.has(candidate.address)) {
+					retryStrategies.push(strategy)
+					continue
+				}
+
+				addresses.add(candidate.address)
+				nominations.push(candidate)
+			}
+
+			if (retryStrategies.length === pendingStrategies.length) {
+				break
+			}
+			pendingStrategies = retryStrategies
+		}
+
+		return nominations
+	}
+
+	const fetchOptimal = async () => {
+		const stakingApiEnabled = pluginEnabled('staking_api')
+		const useStakingApiCandidates =
+			stakingApiEnabled &&
+			StakingApiRetainmentSupportedNetworks.includes(network)
+		const nominations = useStakingApiCandidates
+			? await fetchStakingApiOptimal()
+			: fetchCurrentOptimal()
+
+		if (!stakingApiEnabled) {
 			return nominations
 		}
 

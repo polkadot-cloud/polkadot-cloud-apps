@@ -97,6 +97,8 @@ export type ValidatorCandidateStrategy =
 	| 'HIGH_RETAINER'
 	| 'HIGH_COMPOUNDER'
 
+export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
+
 export interface RandomValidatorCandidateVariables
 	extends Record<string, unknown> {
 	network: string
@@ -107,7 +109,26 @@ export interface RandomValidatorCandidateVariables
 }
 
 export interface RandomValidatorCandidateData {
-	randomValidatorCandidate: Pick<ValidatorListItem, 'address' | 'prefs'> | null
+	randomValidatorCandidate: ValidatorCandidate | null
+}
+
+export interface ValidatorCandidateBatchVariables
+	extends Record<string, unknown> {
+	network: string
+	strategies: ValidatorCandidateStrategy[]
+	active?: boolean
+	excludeAddresses?: string[]
+	topPercent?: number
+}
+
+export type ValidatorCandidateBatchData = Record<
+	string,
+	ValidatorCandidate | null
+>
+
+export interface ValidatorCandidateBatchResult {
+	strategy: ValidatorCandidateStrategy
+	candidate: ValidatorCandidate | null
 }
 
 export interface AllRewardsData {
