@@ -87,6 +87,7 @@ export interface StakingMetrics {
 	totalIssuance: bigint
 	minimumActiveStake: bigint
 	counterForValidators: number
+	hardCapSelfStake: bigint | undefined
 	maxValidatorsCount: number | undefined
 	validatorCount: number
 	lastReward: bigint | undefined

@@ -1,0 +1,176 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.card,
+.bar {
+	min-width: 0;
+	overflow: hidden;
+	width: 100%;
+}
+
+.card {
+	height: 29.5rem;
+}
+
+.cardRegion,
+.barRegion {
+	animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.shadow.shadow {
+	animation: none;
+}
+
+.cardRegion {
+	height: 50%;
+	overflow: hidden;
+}
+
+.cardHeader {
+	align-items: center;
+	display: flex;
+	gap: 1rem;
+	padding: 1.5rem;
+
+	> .avatar {
+		flex-basis: 4rem;
+		height: 4rem;
+	}
+
+	.identityPrimary {
+		height: 1.2rem;
+		max-width: 14rem;
+	}
+
+	.identitySecondary {
+		height: 0.75rem;
+		max-width: 9rem;
+	}
+}
+
+.avatar {
+	border-radius: 50%;
+	flex: 0 0 2.5rem;
+	height: 2.5rem;
+}
+
+.identity {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 0.45rem;
+	min-width: 5rem;
+}
+
+.identityPrimary {
+	height: 0.8rem;
+	max-width: 10rem;
+	width: 72%;
+}
+
+.identitySecondary {
+	height: 0.48rem;
+	max-width: 7rem;
+	width: 48%;
+}
+
+.actions {
+	align-items: center;
+	display: flex;
+	flex: 0 0 auto;
+	gap: 0.35rem;
+}
+
+.action,
+.actionWide {
+	border-radius: 0.55rem;
+	height: 3.25rem;
+}
+
+.action {
+	flex: 0 0 3.25rem;
+}
+
+.actionWide {
+	flex: 0 0 6.5rem;
+}
+
+.bar {
+	height: 5.5rem;
+}
+
+.barRegion {
+	align-items: center;
+	display: flex;
+	gap: 0.55rem;
+	height: 100%;
+	padding: 0.75rem 1rem;
+	width: clamp(18rem, 42%, 36rem);
+
+	> .avatar {
+		flex-basis: 3.25rem;
+		height: 3.25rem;
+	}
+
+	> .identity {
+		flex: 1 1 auto;
+		gap: 0.6rem;
+		max-width: 24rem;
+	}
+
+	.identityPrimary {
+		height: 1.1rem;
+		max-width: 20rem;
+		width: 100%;
+	}
+
+	.identitySecondary {
+		height: 0.7rem;
+		max-width: 14rem;
+		width: 72%;
+	}
+}
+
+@container list-item-card (width <= 31rem) {
+	.card {
+		height: 39rem;
+	}
+
+	.cardHeader {
+		align-content: center;
+		flex-wrap: wrap;
+
+		> .actions {
+			flex-basis: 100%;
+			justify-content: flex-end;
+		}
+	}
+}
+
+@container list-item-card (width <= 21rem) {
+	.card {
+		height: 47rem;
+	}
+
+	.cardHeader {
+		padding-inline: 0.9rem;
+	}
+}
+
+@keyframes skeleton-pulse {
+	0%,
+	100% {
+		opacity: 0.6;
+	}
+
+	50% {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cardRegion,
+	.barRegion {
+		animation: none;
+	}
+}

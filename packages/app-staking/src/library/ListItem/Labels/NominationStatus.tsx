@@ -8,18 +8,22 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
 import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
-import { planckToUnitBn } from 'utils'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 import type { NominationStatusProps } from '../types'
 
-export const NominationStatus = ({
+type NominationStatusDataProps = Pick<
+	NominationStatusProps,
+	'address' | 'asIncoming' | 'bondFor' | 'nominator' | 'status'
+>
+
+export const useNominationStatusData = ({
 	address,
 	nominator,
 	bondFor,
-	noMargin = false,
 	asIncoming = false,
 	status,
-}: NominationStatusProps) => {
-	const { t } = useTranslation('app')
+}: NominationStatusDataProps) => {
+	const { t, i18n } = useTranslation('app')
 	const { network } = useNetwork()
 	const {
 		getActiveValidator,
@@ -30,14 +34,17 @@ export const NominationStatus = ({
 
 	let stakedAmount = new BigNumber(0)
 	if (bondFor === 'nominator') {
-		// bonded amount within the validator.
-		stakedAmount =
-			status === 'active'
-				? new BigNumber(
+		if (status === 'active') {
+			const backing = getActiveValidator(address)?.others.find(
+				({ who }) => who === nominator,
+			)
+			stakedAmount = backing
+				? planckToUnitBn(new BigNumber(backing.value), units)
+				: new BigNumber(
 						activeAccountOwnStake?.find((own) => own.address === address)
 							?.value ?? 0,
 					)
-				: new BigNumber(0)
+		}
 	} else {
 		const staker = getActiveValidator(address)
 		const exists = (staker?.others || []).find(({ who }) => who === nominator)
@@ -59,18 +66,41 @@ export const NominationStatus = ({
 		statusTKey = 'waiting'
 	}
 
+	return {
+		label: t(statusTKey),
+		stakedAmount,
+		syncing,
+		unit,
+		value: stakedAmount.isGreaterThan(0)
+			? syncing
+				? '...'
+				: `${formatCompactNumber(stakedAmount.toNumber(), i18n.resolvedLanguage)} ${unit}`
+			: undefined,
+	}
+}
+
+export const NominationStatus = ({
+	address,
+	nominator,
+	bondFor,
+	noMargin = false,
+	asIncoming = false,
+	status,
+}: NominationStatusProps) => {
+	const { label, value } = useNominationStatusData({
+		address,
+		asIncoming,
+		bondFor,
+		nominator,
+		status,
+	})
+
 	return (
 		<BondStatus
 			status={status || 'waiting'}
 			noMargin={noMargin}
-			label={t(statusTKey)}
-			value={
-				stakedAmount.isGreaterThan(0)
-					? syncing
-						? '...'
-						: `${stakedAmount.toFormat()} ${unit}`
-					: undefined
-			}
+			label={label}
+			value={value}
 		/>
 	)
 }

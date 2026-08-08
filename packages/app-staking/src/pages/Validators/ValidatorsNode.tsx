@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
-export const AllValidators = () => {
+export const ValidatorsNode = () => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
 	const { getValidators } = useValidators()
@@ -38,19 +38,19 @@ export const AllValidators = () => {
 							)}
 							{validators.length > 0 && (
 								<ValidatorList
-									bondFor="nominator"
 									validators={validators}
-									title={t('networkValidators')}
 									selectable={false}
-									defaultFilters={{
-										includes: ['active'],
-										excludes: ['blocked_nominations', 'missing_identity'],
+									defaultConfig={{
+										filters: {
+											activeOnly: true,
+											excludeBlocked: true,
+											excludeMissingIdentity: true,
+										},
+										order: 'ACTIVITY',
+										search: '',
 									}}
-									defaultOrder="rank"
 									allowListFormat={false}
-									allowMoreCols
-									allowFilters
-									allowSearch
+									forceListFormat="col"
 									itemsPerPage={50}
 									toggleFavorites
 								/>

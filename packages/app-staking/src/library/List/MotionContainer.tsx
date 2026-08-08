@@ -4,6 +4,11 @@
 import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
 
+const itemVariants = {
+	hidden: { opacity: 0, y: 15 },
+	show: { opacity: 1, y: 0 },
+}
+
 export const MotionContainer = ({
 	children,
 	staggerChildren = 0.015,
@@ -24,6 +29,18 @@ export const MotionContainer = ({
 			},
 		}}
 	>
+		{children}
+	</motion.div>
+)
+
+export const MotionItem = ({
+	children,
+	className,
+}: {
+	children: ReactNode
+	className: string
+}) => (
+	<motion.div className={className} variants={itemVariants}>
 		{children}
 	</motion.div>
 )

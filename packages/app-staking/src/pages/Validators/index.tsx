@@ -3,6 +3,7 @@
 
 import { onTabVisitEvent } from 'event-tracking'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { PagePreloader } from 'library/PagePreloader'
 import { PageTabs } from 'library/PageTabs'
 import { lazy, Suspense, useEffect } from 'react'
@@ -10,17 +11,23 @@ import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
 import { useValidatorsTabs, ValidatorsTabsProvider } from './context'
 
-const AllValidators = lazy(() =>
-	import('./AllValidators').then((m) => ({ default: m.AllValidators })),
+const ValidatorsNode = lazy(() =>
+	import('./ValidatorsNode').then((m) => ({ default: m.ValidatorsNode })),
 )
 const ValidatorFavorites = lazy(() =>
 	import('./Favorites').then((m) => ({ default: m.ValidatorFavorites })),
+)
+const ValidatorsAPI = lazy(() =>
+	import('./ValidatorsAPI').then((m) => ({
+		default: m.ValidatorsAPI,
+	})),
 )
 
 export const ValidatorsInner = () => {
 	const { t } = useTranslation('pages')
 	const { favorites } = useFavoriteValidators()
 	const { activeTab, setActiveTab } = useValidatorsTabs()
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 
 	// back to tab 0 if not in the first tab
 	useEffect(() => {
@@ -55,7 +62,8 @@ export const ValidatorsInner = () => {
 				/>
 			</Page.Title>
 			<Suspense fallback={<PagePreloader showStats={activeTab === 0} />}>
-				{activeTab === 0 && <AllValidators />}
+				{activeTab === 0 &&
+					(retainmentStatsEnabled ? <ValidatorsAPI /> : <ValidatorsNode />)}
 				{activeTab === 1 && <ValidatorFavorites />}
 			</Suspense>
 		</>

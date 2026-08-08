@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { RewardsByValidationNode } from '@polkawatch/ddp-client'
+import { MotionItem } from 'library/List/MotionContainer'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RewardShare } from 'library/ListItem/Labels/RewardShare'
-import { Wrapper } from 'library/ListItem/Wrappers'
-import { motion } from 'motion/react'
+import { BasicItem } from 'ui-app/ListItem'
 import { LabelRow, Separator } from 'ui-core/list'
 
 export const Node = ({
@@ -18,39 +18,25 @@ export const Node = ({
 	const rewardShare = Math.round((node.TokenRewards / rewardTotal) * 1000) / 10
 
 	return (
-		<motion.div
-			className="item col"
-			variants={{
-				hidden: {
-					y: 15,
-					opacity: 0,
-				},
-				show: {
-					y: 0,
-					opacity: 1,
-				},
-			}}
-		>
-			<Wrapper className="member">
-				<div className="inner">
-					<div className="row top">
-						<Identity address={node.Id} />
+		<MotionItem className="item col">
+			<BasicItem.Root kind="member">
+				<BasicItem.Row position="top">
+					<Identity address={node.Id} />
+				</BasicItem.Row>
+				<Separator />
+				<BasicItem.Row position="bottom">
+					<div>
+						<h4 style={{ paddingLeft: '0.25rem', fontSize: '0.95em' }}>
+							{node.LastNetwork}, {node.LastCountry}, {node.LastRegion}{' '}
+							{node.Countries + node.Regions > 2 ? ', ++' : ''}
+						</h4>
 					</div>
-					<Separator />
-					<div className="row bottom">
-						<div>
-							<h4 style={{ paddingLeft: '0.25rem', fontSize: '0.95em' }}>
-								{node.LastNetwork}, {node.LastCountry}, {node.LastRegion}{' '}
-								{node.Countries + node.Regions > 2 ? ', ++' : ''}
-							</h4>
-						</div>
 
-						<LabelRow>
-							<RewardShare share={rewardShare} />
-						</LabelRow>
-					</div>
-				</div>
-			</Wrapper>
-		</motion.div>
+					<LabelRow>
+						<RewardShare share={rewardShare} />
+					</LabelRow>
+				</BasicItem.Row>
+			</BasicItem.Root>
+		</MotionItem>
 	)
 }
