@@ -13,7 +13,10 @@ import {
 	fetchValidatorEraPointsBatch,
 	useValidatorList,
 } from 'plugin-staking-api'
-import type { ValidatorEraPoints } from 'plugin-staking-api/types'
+import type {
+	ValidatorEraPoints,
+	ValidatorListOrder,
+} from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
@@ -59,7 +62,7 @@ export const StakingApiValidatorListInner = () => {
 			network,
 			page,
 			pageSize: PAGE_SIZE,
-			order: config.order,
+			order: config.order as ValidatorListOrder,
 			filters: {
 				...config.filters,
 				search: config.search || undefined,

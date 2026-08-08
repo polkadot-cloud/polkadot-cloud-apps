@@ -407,6 +407,7 @@
 		"validatorCommission": "검증자 수수료",
 		"validatorNotFound": "검증인을 찾을 수 없습니다",
 		"validatorPerformance": "{{count}}일 검증자 성과",
+		"validatorResultRange": "검증인 {{total}}명 중 {{first}}–{{last}} 표시",
 		"validatorSearch": {
 			"addToList": "노미네이션 목록에 검증자 추가",
 			"clearAllSelected": "선택된 항목 모두 지우기",

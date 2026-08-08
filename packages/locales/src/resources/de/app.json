@@ -407,6 +407,7 @@
 		"validatorCommission": "Validator Gebühr",
 		"validatorNotFound": "Validator nicht gefunden",
 		"validatorPerformance": "{{count}}-Tage-Validator-Leistung",
+		"validatorResultRange": "Zeige {{first}}–{{last}} von {{total}} Validatoren",
 		"validatorSearch": {
 			"addToList": "Validatoren zu deiner Nominierungsliste hinzufügen",
 			"clearAllSelected": "Alle Ausgewählten löschen",

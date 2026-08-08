@@ -397,6 +397,7 @@
 		"validatorCommission": "验证人佣金",
 		"validatorNotFound": "未找到验证者",
 		"validatorPerformance": "{{count}}天内验证人表现",
+		"validatorResultRange": "显示 {{total}} 个验证人中的第 {{first}}–{{last}} 个",
 		"validatorSearch": {
 			"addToList": "将验证人添加到您的提名列表",
 			"clearAllSelected": "清除所有选定项",

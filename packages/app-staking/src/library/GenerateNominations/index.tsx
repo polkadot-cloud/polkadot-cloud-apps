@@ -275,10 +275,12 @@ export const GenerateNominations = ({
 							<ValidatorList
 								bondFor="nominator"
 								validators={nominations}
-								allowMoreCols
 								allowListFormat={false}
 								displayFor={displayFor}
 								selectable
+								forceListFormat={
+									!pluginEnabled('staking_api') ? 'col' : undefined
+								}
 								BeforeListNode={
 									<ListControls
 										selectHandlers={selectHandlers}

@@ -419,6 +419,7 @@
 		"validatorCommission": "Комиссия валидатора",
 		"validatorNotFound": "Валидатор не найден",
 		"validatorPerformance": "Производительность валидатора за {{count}} дней",
+		"validatorResultRange": "Показаны валидаторы {{first}}–{{last}} из {{total}}",
 		"validatorSearch": {
 			"addToList": "Добавьте валидаторы в ваш список номинаций",
 			"clearAllSelected": "Очистить все выбранные",

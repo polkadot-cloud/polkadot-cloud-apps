@@ -42,14 +42,17 @@ export const ValidatorsNode = () => {
 									validators={validators}
 									title={t('networkValidators')}
 									selectable={false}
-									defaultFilters={{
-										includes: ['active'],
-										excludes: ['blocked_nominations', 'missing_identity'],
+									defaultConfig={{
+										filters: {
+											activeOnly: true,
+											excludeBlocked: true,
+											excludeMissingIdentity: true,
+										},
+										order: 'ACTIVITY',
+										search: '',
 									}}
-									defaultOrder="rank"
-									allowMoreCols
-									allowFilters
-									allowSearch
+									allowListFormat={false}
+									forceListFormat="col"
 									itemsPerPage={50}
 									toggleFavorites
 								/>

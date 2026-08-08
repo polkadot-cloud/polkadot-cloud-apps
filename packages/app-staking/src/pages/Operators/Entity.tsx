@@ -95,10 +95,8 @@ export const Entity = ({ network }: { network: ValidatorSupportedNetwork }) => {
 								validators={operatorValidators}
 								allowListFormat={false}
 								selectable={false}
-								allowMoreCols
 								itemsPerPage={50}
 								toggleFavorites
-								allowFilters
 							/>
 						)}
 					</>

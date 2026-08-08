@@ -407,6 +407,7 @@
 		"validatorCommission": "バリデータコミッション",
 		"validatorNotFound": "バリデータが見つかりません",
 		"validatorPerformance": "{{count}}日間のバリデータパフォーマンス",
+		"validatorResultRange": "{{total}}人のバリデータのうち{{first}}～{{last}}件を表示",
 		"validatorSearch": {
 			"addToList": "ノミネーションリストにバリデータを追加",
 			"clearAllSelected": "選択をすべてクリア",

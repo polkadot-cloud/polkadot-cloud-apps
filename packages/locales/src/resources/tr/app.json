@@ -407,6 +407,7 @@
 		"validatorCommission": "Validatör Komisyonu",
 		"validatorNotFound": "Validatör bulunamadı",
 		"validatorPerformance": "{{count}} Günlük Validatör Performansı",
+		"validatorResultRange": "{{total}} doğrulayıcıdan {{first}}–{{last}} arası gösteriliyor",
 		"validatorSearch": {
 			"addToList": "Nominasyon listenize validatör ekleyin",
 			"clearAllSelected": "Tüm seçilenleri temizle",

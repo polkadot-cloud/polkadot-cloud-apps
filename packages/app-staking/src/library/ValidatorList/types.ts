@@ -3,6 +3,7 @@
 
 import type { ListContextInterface, ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
+import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
 import type {
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
@@ -10,28 +11,20 @@ import type {
 import type { ReactNode } from 'react'
 import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
-export interface ValidatorListDefaultFilters {
-	includes?: string[]
-	excludes?: string[]
-}
-
 export interface ValidatorListProps {
 	validators: Validator[]
 	bondFor: BondFor
-	allowMoreCols?: boolean
 	generateMethod?: string
 	nominator?: MaybeAddress
-	allowFilters?: boolean
 	toggleFavorites?: boolean
 	itemsPerPage?: number
 	title?: string
 	selectable?: boolean
 	onSelected?: (listProvider: ListContextInterface) => void
 	displayFor?: DisplayFor
-	allowSearch?: boolean
 	allowListFormat?: boolean
-	defaultFilters?: ValidatorListDefaultFilters
-	defaultOrder?: string
+	forceListFormat?: ListFormat
+	defaultConfig?: ValidatorListConfig
 	BeforeListNode?: ReactNode
 	onRemove?: (params: {
 		selected: Validator[]

@@ -1,10 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type {
-	ValidatorListFilters,
-	ValidatorListOrder,
-} from 'plugin-staking-api/types'
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,8 +20,12 @@ import {
 } from './styles'
 
 export interface ValidatorListConfig {
-	filters: Required<Omit<ValidatorListFilters, 'search'>>
-	order: ValidatorListOrder
+	filters: {
+		activeOnly: boolean
+		excludeBlocked: boolean
+		excludeMissingIdentity: boolean
+	}
+	order: string
 	search: string
 }
 
@@ -53,13 +53,17 @@ interface ControlsProps {
 	config: ValidatorListConfig
 	disabled: boolean
 	onApply: (config: ValidatorListConfig) => void
+	orderOptions?: Array<{ key: string; label: string }>
 }
 
-export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
+export const Controls = ({
+	config,
+	disabled,
+	onApply,
+	orderOptions: suppliedOrderOptions,
+}: ControlsProps) => {
 	const { t } = useTranslation('app')
-	const [draft, setDraft] = useState<ValidatorListConfig>(
-		DEFAULT_VALIDATOR_LIST_CONFIG,
-	)
+	const [draft, setDraft] = useState(config)
 
 	const setFilter = (filter: keyof ValidatorListConfig['filters']) => {
 		setDraft((current) => ({
@@ -87,7 +91,7 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 			label: t('missingIdentity'),
 		},
 	]
-	const orderOptions: Array<{ key: ValidatorListOrder; label: string }> = [
+	const defaultOrderOptions = [
 		{ key: 'ACTIVITY', label: t('activity') },
 		{
 			key: 'RETAINMENT_HIGH',
@@ -102,6 +106,7 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 			}),
 		},
 	]
+	const orderOptions = suppliedOrderOptions ?? defaultOrderOptions
 	const nextConfig = { ...draft, search: draft.search.trim() }
 	const hasChanges =
 		nextConfig.search !== config.search ||
@@ -161,7 +166,11 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 				</FilterGroup>
 				<OrderField>
 					<legend>{t('order')}</legend>
-					<OrderTabs role="tablist" aria-label={t('order')}>
+					<OrderTabs
+						$columns={orderOptions.length}
+						role="tablist"
+						aria-label={t('order')}
+					>
 						{orderOptions.map(({ key, label }) => (
 							<OrderTab
 								key={key}

@@ -407,6 +407,7 @@
 		"validatorCommission": "Commission du validateur",
 		"validatorNotFound": "Validateur introuvable",
 		"validatorPerformance": "Performance du validateur sur {{count}} jours",
+		"validatorResultRange": "Affichage de {{first}}–{{last}} sur {{total}} validateurs",
 		"validatorSearch": {
 			"addToList": "Ajoutez des validateurs à votre liste de nomination",
 			"clearAllSelected": "Effacer toute la sélection",

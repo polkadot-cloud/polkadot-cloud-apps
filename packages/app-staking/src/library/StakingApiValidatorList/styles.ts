@@ -135,13 +135,13 @@ export const OrderField = styled.fieldset`
   }
 `
 
-export const OrderTabs = styled.div`
+export const OrderTabs = styled.div<{ $columns?: number }>`
   background: var(--gray-400);
   border: 1px solid var(--gray-500);
   border-radius: 0.8rem;
   display: grid;
   gap: 0.25rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(${(props) => props.$columns ?? 3}, minmax(0, 1fr));
   padding: 0.25rem;
 `
 
