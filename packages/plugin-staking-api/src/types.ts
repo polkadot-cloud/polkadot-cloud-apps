@@ -92,7 +92,10 @@ export interface ValidatorListItem {
 	retainment: ValidatorRetainmentPeriod | null
 }
 
-export type ValidatorCandidateStrategy = 'HIGH_RETAINER' | 'HIGH_COMPOUNDER'
+export type ValidatorCandidateStrategy =
+	| 'ACTIVE'
+	| 'HIGH_RETAINER'
+	| 'HIGH_COMPOUNDER'
 
 export interface RandomValidatorCandidateVariables
 	extends Record<string, unknown> {
