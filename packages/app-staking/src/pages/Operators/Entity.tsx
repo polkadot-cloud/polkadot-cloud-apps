@@ -10,7 +10,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { CardWrapper } from 'library/Card/Wrappers'
 import { ValidatorList } from 'library/ValidatorList'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonSecondary } from 'ui-buttons'
@@ -22,10 +22,10 @@ import { ItemsWrapper } from './Wrappers'
 export const Entity = ({ network }: { network: ValidatorSupportedNetwork }) => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
-	const { getValidators } = useValidators()
+	const { getValidators, validatorsFetched } = useValidators()
 	const { setActiveSection, activeItem } = useOperatorsSections()
 
-	const { name, validators: entityAllValidators } = activeItem
+	const { validators: entityAllValidators } = activeItem
 
 	let validators: string[] = []
 	if (validatorListSupported(network)) {
@@ -33,21 +33,15 @@ export const Entity = ({ network }: { network: ValidatorSupportedNetwork }) => {
 		validators = entityAllValidators?.[key] || []
 	}
 
-	// include validators that exist in validator set
-	const [operatorValidators, setOperatorValidators] = useState<Validator[]>(
-		getValidators().filter((v) => validators.includes(v.address)),
+	const allValidators = getValidators()
+
+	const operatorValidators: Validator[] = useMemo(
+		() => allValidators.filter((v) => validators.includes(v.address)),
+		[allValidators, validators],
 	)
 
-	useEffect(() => {
-		setOperatorValidators(
-			getValidators().filter((v) => validators.includes(v.address)),
-		)
-	}, [getValidators(), network])
-
-	useEffect(() => {
-		const newValidators = [...operatorValidators]
-		setOperatorValidators(newValidators)
-	}, [name, activeItem, network])
+	const isFetchingOperators =
+		validators.length > 0 && validatorsFetched !== 'synced'
 
 	const container = {
 		hidden: { opacity: 0 },
@@ -83,7 +77,7 @@ export const Entity = ({ network }: { network: ValidatorSupportedNetwork }) => {
 						{operatorValidators.length === 0 && (
 							<div className="item">
 								<h3>
-									{validators.length
+									{isFetchingOperators
 										? `${t('fetchingValidators')}...`
 										: t('noValidators')}
 								</h3>
