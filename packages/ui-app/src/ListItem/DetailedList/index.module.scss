@@ -13,6 +13,11 @@
 		transition: border var(--transition-duration) ease;
 		width: 100%;
 
+		:global(.dark) & {
+			background: var(--gray-200);
+			border-color: var(--gray-200);
+		}
+
 		&.card {
 			background: var(--gray-200);
 			border: 1.25px solid var(--gray-200);
