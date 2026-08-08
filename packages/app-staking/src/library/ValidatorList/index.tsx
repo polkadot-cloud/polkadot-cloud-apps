@@ -7,7 +7,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
@@ -65,8 +65,7 @@ export const ValidatorListInner = ({
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
-	const { pluginEnabled } = usePlugins()
-	const stakingApiEnabled = pluginEnabled('staking_api')
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
 	const { isReady, activeEra } = useApi()
@@ -104,7 +103,7 @@ export const ValidatorListInner = ({
 	)
 	const effectiveListFormat =
 		forceListFormat ??
-		(stakingApiEnabled && forceCardLayout ? 'col' : listFormat)
+		(retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat)
 
 	// Cache API-backed details by the visible validator set and era.
 	const [detailsByKey, setDetailsByKey] = useState<
@@ -210,12 +209,12 @@ export const ValidatorListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		listItems.map(({ address }) => address),
 		pageKey,
-		stakingApiEnabled ? 'none' : 'node',
+		retainmentStatsEnabled ? 'none' : 'node',
 	)
 
 	const getDetailedData = async (key: string, addresses: string[]) => {
 		if (
-			!stakingApiEnabled ||
+			!retainmentStatsEnabled ||
 			activeEra.index === 0 ||
 			addresses.length === 0 ||
 			detailsByKey[key] !== undefined
@@ -236,10 +235,10 @@ export const ValidatorListInner = ({
 		}))
 	}
 
-	// Fetch detailed data only for shared node-list consumers when the plugin is enabled.
+	// Fetch detailed data only where staking API retainment stats are supported.
 	useEffect(() => {
 		void getDetailedData(detailsKey, pendingDetailedAddresses)
-	}, [detailsKey, stakingApiEnabled])
+	}, [detailsKey, retainmentStatsEnabled])
 
 	// Trigger `onSelected` when selection changes
 	useEffect(() => {
@@ -256,7 +255,7 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [effectiveListFormat, validators, page, stakingApiEnabled])
+	}, [effectiveListFormat, validators, page, retainmentStatsEnabled])
 
 	// Compact API-backed node lists use the full detailed card.
 	useEffect(() => {
@@ -273,8 +272,8 @@ export const ValidatorListInner = ({
 	return (
 		<ListWrapper>
 			<List
-				$flexBasisLarge={stakingApiEnabled ? '50%' : '33.33%'}
-				$twoColumnMinWidth={stakingApiEnabled ? 1350 : undefined}
+				$flexBasisLarge={retainmentStatsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={retainmentStatsEnabled ? 1350 : undefined}
 			>
 				{showControls && (
 					<Controls
@@ -303,7 +302,7 @@ export const ValidatorListInner = ({
 						<div>
 							{allowListFormat && (
 								<ListItem.FormatToggle
-									hideOnCompact={stakingApiEnabled}
+									hideOnCompact={retainmentStatsEnabled}
 									onChange={setListFormat}
 									value={listFormat}
 								/>
@@ -339,13 +338,13 @@ export const ValidatorListInner = ({
 									format={effectiveListFormat}
 									eraPoints={eraPointsByAddress.get(validator.address) ?? []}
 									rate={
-										stakingApiEnabled
+										retainmentStatsEnabled
 											? rateByAddress.get(validator.address)
 											: rates[pageKey]?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
 									isPreloading={
-										stakingApiEnabled &&
+										retainmentStatsEnabled &&
 										activeEra.index > 0 &&
 										!detailedAddresses.has(validator.address)
 									}

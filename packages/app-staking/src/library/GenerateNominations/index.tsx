@@ -11,6 +11,7 @@ import { pluginEnabled } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
@@ -72,6 +73,7 @@ export const GenerateNominations = ({
 	const fetchingRef = useRef(false)
 	const [candidateFetching, setCandidateFetching] = useState(false)
 	const stakingApiEnabled = pluginEnabled('staking_api')
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 
 	const resizeCallback = () => {
 		setHeight(null)
@@ -104,7 +106,12 @@ export const GenerateNominations = ({
 	const addCandidateByStrategy = async (
 		strategy: ValidatorCandidateStrategy,
 	) => {
-		if (!method || candidateFetching || nominations.length >= MaxNominations) {
+		if (
+			!retainmentStatsEnabled ||
+			!method ||
+			candidateFetching ||
+			nominations.length >= MaxNominations
+		) {
 			return
 		}
 
@@ -195,7 +202,7 @@ export const GenerateNominations = ({
 		},
 	}
 
-	if (stakingApiEnabled) {
+	if (retainmentStatsEnabled) {
 		filterHandlers = {
 			...filterHandlers,
 			highRetainer: {
@@ -211,26 +218,6 @@ export const GenerateNominations = ({
 				onSelected: false,
 				icon: faPlus,
 				isDisabled: () => candidateFetching || maxNominationsReached,
-			},
-			searchValidators: {
-				title: 'Search Validators',
-				onClick: () => {
-					const updateList = (newNominations: Validator[]) => {
-						setNominations([...newNominations])
-						updateSetters(setters, newNominations)
-						closePrompt()
-					}
-					openPromptWith(
-						<SearchValidators
-							callback={updateList}
-							nominations={nominations}
-						/>,
-						'lg',
-					)
-				},
-				icon: faMagnifyingGlass,
-				onSelected: false,
-				isDisabled: () => maxNominationsReached,
 			},
 		}
 	} else {
@@ -253,6 +240,32 @@ export const GenerateNominations = ({
 				isDisabled: () =>
 					maxNominationsReached ||
 					!availableToNominate(nominations).randomValidators.length,
+			},
+		}
+	}
+
+	if (stakingApiEnabled) {
+		filterHandlers = {
+			...filterHandlers,
+			searchValidators: {
+				title: 'Search Validators',
+				onClick: () => {
+					const updateList = (newNominations: Validator[]) => {
+						setNominations([...newNominations])
+						updateSetters(setters, newNominations)
+						closePrompt()
+					}
+					openPromptWith(
+						<SearchValidators
+							callback={updateList}
+							nominations={nominations}
+						/>,
+						'lg',
+					)
+				},
+				icon: faMagnifyingGlass,
+				onSelected: false,
+				isDisabled: () => maxNominationsReached,
 			},
 		}
 	}
@@ -344,7 +357,7 @@ export const GenerateNominations = ({
 							allowListFormat={false}
 							displayFor={displayFor}
 							selectable
-							forceListFormat={!stakingApiEnabled ? 'col' : undefined}
+							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
 							BeforeListNode={
 								<ListControls
 									selectHandlers={selectHandlers}

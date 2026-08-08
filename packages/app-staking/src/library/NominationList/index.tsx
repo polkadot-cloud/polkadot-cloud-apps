@@ -9,7 +9,7 @@ import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useNominationStatus } from 'hooks/useNominationStatus'
-import { usePlugins } from 'hooks/usePlugins'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
@@ -45,8 +45,7 @@ export const NominationListInner = ({
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
-	const { pluginEnabled } = usePlugins()
-	const stakingApiEnabled = pluginEnabled('staking_api')
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { listFormat, setListFormat } = useList()
 	const { isReady, activeEra } = useApi()
 	const { activeAddress } = useActiveAccount()
@@ -113,7 +112,7 @@ export const NominationListInner = ({
 			: window.matchMedia(CARD_LAYOUT_MEDIA_QUERY).matches,
 	)
 	const effectiveListFormat =
-		stakingApiEnabled && forceCardLayout ? 'col' : listFormat
+		retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat
 
 	// Store all API-backed detailed card data by request key.
 	const [detailsByKey, setDetailsByKey] = useState<
@@ -140,7 +139,7 @@ export const NominationListInner = ({
 	)
 	const details = detailsByKey[detailsKey]
 	const detailsPreloading =
-		stakingApiEnabled && validators.length > 0 && details === undefined
+		retainmentStatsEnabled && validators.length > 0 && details === undefined
 	const performanceByAddress = useMemo(
 		() =>
 			new Map(
@@ -180,7 +179,7 @@ export const NominationListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		addresses,
 		pageKey,
-		stakingApiEnabled ? 'none' : 'node',
+		retainmentStatsEnabled ? 'none' : 'node',
 	)
 
 	// Handle list bootstrapping
@@ -189,10 +188,10 @@ export const NominationListInner = ({
 		setFetched(true)
 	}
 
-	// Fetch all data needed by detailed nomination cards in one GraphQL operation.
+	// Fetch all data needed by supported detailed nomination cards in one GraphQL operation.
 	const getDetailedData = async (key: string) => {
 		if (
-			!stakingApiEnabled ||
+			!retainmentStatsEnabled ||
 			activeEra.index === 0 ||
 			addresses.length === 0 ||
 			detailsByKey[key] !== undefined
@@ -217,7 +216,7 @@ export const NominationListInner = ({
 	// Fetch detailed card data when the visible validator set changes.
 	useEffect(() => {
 		getDetailedData(detailsKey)
-	}, [detailsKey, stakingApiEnabled])
+	}, [detailsKey, retainmentStatsEnabled])
 
 	// Configure list when network is ready to fetch
 	useEffect(() => {
@@ -229,7 +228,7 @@ export const NominationListInner = ({
 	// Handle modal resize on list format or content change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [effectiveListFormat, validators, stakingApiEnabled])
+	}, [effectiveListFormat, validators, retainmentStatsEnabled])
 
 	// Compact viewports always use the full card. Keep listFormat untouched so the
 	// user's preferred desktop layout is restored when the viewport grows again.
@@ -247,14 +246,14 @@ export const NominationListInner = ({
 	return (
 		<ListWrapper>
 			<List
-				$flexBasisLarge={stakingApiEnabled ? '50%' : '33.33%'}
-				$twoColumnMinWidth={stakingApiEnabled ? 1350 : undefined}
+				$flexBasisLarge={retainmentStatsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={retainmentStatsEnabled ? 1350 : undefined}
 			>
 				<ListFormatHeader>
 					<div />
 					<div>
 						<ListItem.FormatToggle
-							hideOnCompact={stakingApiEnabled}
+							hideOnCompact={retainmentStatsEnabled}
 							onChange={setListFormat}
 							value={listFormat}
 						/>
@@ -287,7 +286,7 @@ export const NominationListInner = ({
 									eraPoints={performanceByAddress.get(validator.address) || []}
 									isPreloading={detailsPreloading}
 									rate={
-										stakingApiEnabled
+										retainmentStatsEnabled
 											? rateByAddress.get(validator.address)
 											: rates[pageKey]?.[validator.address]
 									}
