@@ -534,7 +534,7 @@
 	align-items: center;
 	display: grid;
 	gap: 1rem;
-	grid-template-columns: minmax(25rem, 1.8fr) minmax(0, 4fr) auto;
+	grid-template-columns: minmax(28rem, 1.75fr) minmax(49.25rem, 5fr) auto;
 	min-width: 0;
 	padding: 0.75rem 1rem;
 	width: 100%;
@@ -564,7 +564,7 @@
 .barGraph {
 	background: color-mix(in srgb, var(--gray-400) 48%, transparent);
 	border-radius: 0.3rem;
-	flex: 0 0 clamp(12rem, 18cqi, 18rem);
+	flex: 0 1 clamp(8.4rem, 10.8cqi, 12rem);
 	height: 3.6rem;
 	margin-inline-end: 0.5rem;
 	overflow: hidden;
@@ -587,7 +587,11 @@
 	align-items: stretch;
 	display: grid;
 	grid-template-columns:
-		repeat(6, minmax(4.75rem, 1fr))
+		minmax(4.75rem, 1fr)
+		minmax(4.25rem, 0.8fr)
+		minmax(5.75rem, 1fr)
+		minmax(5.25rem, 1fr)
+		repeat(2, minmax(8.5rem, 1.15fr))
 		minmax(7.5rem, 1.35fr)
 		minmax(4.75rem, 1fr);
 	min-width: 0;
@@ -613,6 +617,11 @@
 			gap: 0.3rem;
 			letter-spacing: 0.045em;
 			margin-bottom: 0.7rem;
+		}
+
+		&:nth-child(5),
+		&:nth-child(6) {
+			padding-inline: 0.5rem;
 		}
 
 		> strong {
@@ -760,7 +769,7 @@
 }
 
 // Row container responses
-@container list-item-bar (max-width: 74rem) {
+@container list-item-bar (max-width: 84rem) {
 	.barLayout {
 		grid-template-columns: minmax(0, 1fr) auto;
 		row-gap: 0.8rem;
