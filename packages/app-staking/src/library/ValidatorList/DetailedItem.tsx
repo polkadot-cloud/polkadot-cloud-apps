@@ -117,7 +117,6 @@ export const DetailedItem = ({
 						showMetrics={displayFor === 'default'}
 					/>
 				}
-				canvas={displayFor === 'canvas'}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
 				rate={rateAfterCommission}
@@ -132,7 +131,7 @@ export const DetailedItem = ({
 	}
 
 	return (
-		<DetailedCard.Root canvas={displayFor === 'canvas'} selected={isSelected}>
+		<DetailedCard.Root displayFor={displayFor} selected={isSelected}>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					{selectable && <Select item={validator} />}

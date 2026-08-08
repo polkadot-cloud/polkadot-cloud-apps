@@ -46,7 +46,7 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 	}
 
 	// Generation component props
-	const displayFor: DisplayFor = 'canvas'
+	const displayFor: DisplayFor = 'card'
 	const setters = [
 		{
 			current: {

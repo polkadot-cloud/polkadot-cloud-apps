@@ -21,7 +21,6 @@ import { useValidatorSummaryData } from './ValidatorSummary'
 
 interface ValidatorBarProps {
 	actions: ReactNode
-	canvas?: boolean
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
 	eraPointsSyncing?: boolean
@@ -97,7 +96,6 @@ const BarSignedAmountStat = ({
 
 export const ValidatorBar = ({
 	actions,
-	canvas = false,
 	displayFor,
 	eraPoints,
 	eraPointsSyncing,
@@ -147,7 +145,7 @@ export const ValidatorBar = ({
 	const retainmentPreloading = isRetainmentPreloading ?? isPreloading
 
 	return (
-		<ListItem.Row canvas={canvas} selected={selected}>
+		<ListItem.Row displayFor={displayFor} selected={selected}>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>

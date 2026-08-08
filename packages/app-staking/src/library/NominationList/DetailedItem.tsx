@@ -83,7 +83,6 @@ export const DetailedItem = ({
 				}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
-				canvas={displayFor === 'canvas'}
 				isPreloading={isPreloading}
 				isStatusValuePreloading={backingStakePreloading}
 				rate={rateAfterCommission}
@@ -100,7 +99,7 @@ export const DetailedItem = ({
 	}
 
 	return (
-		<DetailedCard.Root canvas={displayFor === 'canvas'}>
+		<DetailedCard.Root displayFor={displayFor}>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					<ListItem.Identity>

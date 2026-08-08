@@ -6,21 +6,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { DisplayFor } from 'types'
 import { Loader } from 'ui-core/base'
 import classes from './index.module.scss'
 import { DetailedListSkeleton } from './Skeleton'
 
 interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
-	canvas?: boolean
+	displayFor?: DisplayFor
 	layout: 'card' | 'row'
 	selected?: boolean
 	surfaceChildren?: ReactNode
 }
 
 const ItemShell = ({
-	canvas = false,
 	children,
 	className,
+	displayFor = 'default',
 	layout,
 	selected = false,
 	surfaceChildren,
@@ -36,7 +37,8 @@ const ItemShell = ({
 	>
 		<div
 			className={classNames(classes.surface, {
-				[classes.canvas]: canvas,
+				[classes.card]: displayFor === 'card',
+				[classes.canvas]: displayFor === 'canvas' || displayFor === 'modal',
 				[classes.selected]: selected,
 			})}
 		>
@@ -46,12 +48,12 @@ const ItemShell = ({
 )
 
 interface ItemRootProps extends ComponentPropsWithoutRef<'div'> {
-	canvas?: boolean
+	displayFor?: DisplayFor
 	selected?: boolean
 }
 
-const DetailedCardRoot = ({ canvas, selected, ...props }: ItemRootProps) => (
-	<ItemShell layout="card" canvas={canvas} selected={selected} {...props} />
+const DetailedCardRoot = (props: ItemRootProps) => (
+	<ItemShell layout="card" {...props} />
 )
 
 const DetailedCardTop = ({
@@ -68,16 +70,9 @@ const DetailedCardHeader = ({
 	<div {...props} className={classNames(classes.cardHeader, className)} />
 )
 
-const ListItemRow = ({
-	canvas,
-	children,
-	selected,
-	...props
-}: ItemRootProps) => (
+const ListItemRow = ({ children, ...props }: ItemRootProps) => (
 	<ItemShell
 		layout="row"
-		canvas={canvas}
-		selected={selected}
 		{...props}
 		surfaceChildren={<div className={classes.barLayout}>{children}</div>}
 	/>

@@ -18,7 +18,6 @@
 
 .surface {
 	align-items: center;
-	background: var(--bg-list);
 	border: var(--item-border-width) solid var(--bg-list);
 	border-radius: 0.75rem;
 	display: flex;
@@ -32,9 +31,7 @@
 	width: 100%;
 
 	&.canvas {
-		background: var(--gray-300);
 		border-color: var(--gray-400);
-		box-shadow: none;
 	}
 
 	&.selected {
@@ -43,8 +40,8 @@
 }
 
 // Detailed card and row surfaces
-.card,
-.bar {
+.item.card,
+.item.bar {
 	container-type: inline-size;
 	height: auto;
 	width: calc(100% - 1.8rem);
@@ -57,10 +54,20 @@
 		height: auto;
 		inset: auto;
 		position: relative;
+
+		&.card {
+			background: var(--gray-200);
+			border: var(--item-border-width) solid var(--gray-200);
+			box-shadow: none;
+		}
+
+		&.selected {
+			border-color: var(--gray-1000);
+		}
 	}
 }
 
-.card {
+.item.card {
 	container-name: list-item-card;
 	margin: 0.9rem;
 
@@ -71,7 +78,7 @@
 	}
 }
 
-.bar {
+.item.bar {
 	container-name: list-item-bar;
 	margin: 0.45rem 0.9rem;
 

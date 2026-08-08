@@ -18,6 +18,7 @@ import { Subheading } from 'pages/Nominate/Wrappers'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, Validator } from 'types'
+import { Loader } from 'ui-core/base'
 import { usePrompt } from 'ui-overlay'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
@@ -267,31 +268,44 @@ export const GenerateNominations = ({
 					</>
 				)}
 			</div>
-			{fetching
-				? null
-				: isReady &&
-					method !== null && (
-						<div ref={heightRef}>
-							<ValidatorList
-								bondFor="nominator"
-								validators={nominations}
-								allowListFormat={false}
-								displayFor={displayFor}
-								selectable
-								forceListFormat={
-									!pluginEnabled('staking_api') ? 'col' : undefined
-								}
-								BeforeListNode={
-									<ListControls
-										selectHandlers={selectHandlers}
-										filterHandlers={Object.values(filterHandlers)}
-										displayFor={displayFor}
-									/>
-								}
-								onRemove={selectHandlers?.removeSelected?.popover.callback}
+			{isReady && method !== null && (
+				<div ref={heightRef}>
+					{fetching ? (
+						<div
+							aria-label={t('fetchingValidators', { ns: 'pages' })}
+							aria-live="polite"
+							role="status"
+						>
+							<Loader
+								style={{
+									height: '5.5rem',
+									margin: '0.9rem',
+									width: 'calc(100% - 1.8rem)',
+								}}
 							/>
 						</div>
+					) : (
+						<ValidatorList
+							bondFor="nominator"
+							validators={nominations}
+							allowListFormat={false}
+							displayFor={displayFor}
+							selectable
+							forceListFormat={
+								!pluginEnabled('staking_api') ? 'col' : undefined
+							}
+							BeforeListNode={
+								<ListControls
+									selectHandlers={selectHandlers}
+									filterHandlers={Object.values(filterHandlers)}
+									displayFor={displayFor}
+								/>
+							}
+							onRemove={selectHandlers?.removeSelected?.popover.callback}
+						/>
 					)}
+				</div>
+			)}
 		</Wrapper>
 	)
 }
