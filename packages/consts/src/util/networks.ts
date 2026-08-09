@@ -2,17 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { NetworkId, Networks } from 'types'
-import { NetworkList, ProductionDisabledNetworks } from '../networks'
-
-const isProd =
-	(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD === true
+import { NetworkList } from '../networks'
 
 // Gets enabled networks depending on environment
 export const getEnabledNetworks = (): Networks =>
 	Object.entries(NetworkList).reduce((acc: Networks, [key, item]) => {
-		if (!(isProd && ProductionDisabledNetworks.includes(key as NetworkId))) {
-			acc[key] = item
-		}
+		acc[key] = item
 		return acc
 	}, {})
 

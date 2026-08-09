@@ -8,7 +8,6 @@ import { version } from '../package.json'
 // Network styles
 import 'ui-styles/accents/default.scss'
 import 'ui-styles/accents/paseo.scss'
-import 'ui-styles/accents/westend.scss'
 
 // App styles
 import 'ui-styles/fonts/font.scss'

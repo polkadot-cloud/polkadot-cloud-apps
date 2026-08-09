@@ -3,7 +3,6 @@
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { useBalances } from 'hooks/useBalances'
-import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
@@ -20,7 +19,6 @@ import { Summaries } from './Summaries'
 
 export const Overview = () => {
 	const { t } = useTranslation('pages')
-	const { network } = useNetwork()
 	const { isBonding } = useStaking()
 	const { pluginEnabled } = usePlugins()
 	const { getStakingLedger } = useBalances()
@@ -31,7 +29,7 @@ export const Overview = () => {
 	const { controllerUnmigrated } = getStakingLedger(activeAddress)
 
 	// Fiat values result in a slightly larger height for Balance & Payouts
-	const showFiat = pluginEnabled('staking_api') && network !== 'westend'
+	const showFiat = pluginEnabled('staking_api')
 
 	const STATUS_HEIGHT = 220
 	const PAYOUTS_HEIGHT = showFiat ? 385 : 380
