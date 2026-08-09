@@ -155,15 +155,17 @@ export const StakingApiValidatorListInner = () => {
 				<Controls config={config} disabled={loading} onApply={applyConfig} />
 				<FilterHeaderWrapper>
 					<div>
-						{!loading && !error && result.total > 0 && (
-							<ResultSummary>
-								{t('validatorResultRange', {
-									first: firstResult,
-									last: lastResult,
-									total: result.total,
-								})}
-							</ResultSummary>
-						)}
+						<ResultSummary>
+							{loading
+								? `${t('fetchingValidators', { ns: 'pages' })}...`
+								: !error &&
+									result.total > 0 &&
+									t('validatorResultRange', {
+										first: firstResult,
+										last: lastResult,
+										total: result.total,
+									})}
+						</ResultSummary>
 					</div>
 					<div>
 						<ListItem.FormatToggle
@@ -191,11 +193,7 @@ export const StakingApiValidatorListInner = () => {
 							}}
 						/>
 					</ListStatus>
-				) : loading ? (
-					<ListStatus>
-						<h3>{t('fetchingValidators', { ns: 'pages' })}...</h3>
-					</ListStatus>
-				) : (
+				) : loading ? null : (
 					<MotionContainer>
 						{result.validators.length > 0 ? (
 							result.validators.map((validator) => (
