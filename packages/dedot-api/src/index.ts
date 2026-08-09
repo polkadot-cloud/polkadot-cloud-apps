@@ -48,18 +48,6 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 
 			const { network, ...rest } = cur
 			// Type narrow services and apis
-			if (network === 'westend') {
-				const { Service, apis, ids, providerRelay, providerPeople } =
-					await getDefaultService(network, rest)
-				service = new Service(
-					cur,
-					ids,
-					...apis,
-					providerRelay,
-					providerPeople,
-					features,
-				)
-			}
 			if (network === 'kusama') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)

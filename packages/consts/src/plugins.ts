@@ -24,8 +24,6 @@ export const StakingApiRetainmentSupportedNetworks: readonly NetworkId[] = [
 // NOTE: If you are forking the staking dashboard and do not wish to enforce a plugin to be
 // disabled, you can remove it from this list
 export const DisabledPluginsPerNetwork: Partial<Record<NetworkId, Plugin[]>> = {
-	// NOTE: Westend is not supported by the staking API plugin
-	westend: ['staking_api'],
 	// NOTE: Paseo is not supported by the staking API plugin
 	paseo: ['staking_api'],
 }

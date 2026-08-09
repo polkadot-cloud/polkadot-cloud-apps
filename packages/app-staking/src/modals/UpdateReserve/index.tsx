@@ -42,9 +42,7 @@ export const UpdateReserve = () => {
 		planckToUnit(edReserved, units),
 		planckToUnit(defaultFeeReserve, units),
 	)
-	const maxReserve = minReserve.plus(
-		['polkadot', 'westend'].includes(network) ? 3 : 1,
-	)
+	const maxReserve = minReserve.plus(['polkadot'].includes(network) ? 3 : 1)
 
 	const [sliderReserve, setSliderReserve] = useState<number>(
 		planckToUnitBn(new BigNumber(feeReserve), units)
