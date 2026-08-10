@@ -210,8 +210,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tx-submit:
         specifier: workspace:*
         version: link:../tx-submit
@@ -385,8 +385,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.4.2
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tx-submit:
         specifier: workspace:*
         version: link:../tx-submit
@@ -763,8 +763,8 @@ importers:
         specifier: ^17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
       styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -881,8 +881,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -1034,8 +1034,8 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(chart.js@4.5.1)(react@19.2.8)
       styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       ui-core:
         specifier: workspace:*
         version: link:../ui-core
@@ -1113,8 +1113,8 @@ importers:
         specifier: ^17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
       styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -4599,8 +4599,8 @@ packages:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
 
-  styled-components@6.4.4:
-    resolution: {integrity: sha512-tJk5CmKUPMDoTsZQ8m0hHInBk9HFKUPSusqmbBuefDX+yUbMBWea2Ob/wdXFyHW8XZqXkprJscysAdKeGWNqlA==}
+  styled-components@6.5.1:
+    resolution: {integrity: sha512-6AsQEXcG7QhtdzjwJ4s5Amx5R9veYH9AP3+U6nF2BAMU0i1iM3cAXKJXuAKZCdv3Y2ntVMcL44cPx4cIDxgYFg==}
     engines: {node: '>= 16'}
     peerDependencies:
       css-to-react-native: '>= 3.2.0'
@@ -8343,7 +8343,7 @@ snapshots:
   strip-json-comments@2.0.1:
     optional: true
 
-  styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       csstype: 3.2.3
