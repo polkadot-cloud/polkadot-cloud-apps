@@ -395,6 +395,7 @@
 		"transactionCancelledTechnical": "Teknik bir sorun nedeniyle işlem iptal edildi",
 		"transactionInBlock": "İşlem blokta",
 		"transactionInitiated": "İşlem başlatıldı.",
+		"transactionRejectedPending": "İşlem reddedildi ve hâlâ beklemede.",
 		"transactionSuccessful": "İşlem başarılı",
 		"tryAgain": "Tekrar dene",
 		"txVersionNotSupported": "İşlem sürümü desteklenmiyor. Lütfen Ledger uygulamasını güncelleyin.",

@@ -395,6 +395,7 @@
 		"transactionCancelledTechnical": "기술적 문제로 인해 거래가 취소되었습니다",
 		"transactionInBlock": "블록에 포함된 거래",
 		"transactionInitiated": "거래가 시작되었습니다.",
+		"transactionRejectedPending": "거래가 거부되었으며 아직 대기 중입니다.",
 		"transactionSuccessful": "거래 성공",
 		"tryAgain": "다시 시도",
 		"txVersionNotSupported": "지원하지 않는 거래 버전입니다. Ledger 앱을 업데이트해주세요.",

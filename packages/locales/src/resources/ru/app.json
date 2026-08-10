@@ -407,6 +407,7 @@
 		"transactionCancelledTechnical": "Транзакция отменена из-за технической проблемы",
 		"transactionInBlock": "Транзакция в блоке",
 		"transactionInitiated": "Транзакция была инициирована.",
+		"transactionRejectedPending": "Транзакция была отклонена и всё ещё ожидает.",
 		"transactionSuccessful": "Транзакция успешна",
 		"tryAgain": "Попробовать снова",
 		"txVersionNotSupported": "Версия транзакции не поддерживается. Пожалуйста, обновите приложение Ledger.",

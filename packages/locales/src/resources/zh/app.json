@@ -385,6 +385,7 @@
 		"transactionCancelledTechnical": "由于技术问题，交易已取消",
 		"transactionInBlock": "交易已入块",
 		"transactionInitiated": "交易已发起",
+		"transactionRejectedPending": "交易被拒后等待处理中",
 		"transactionSuccessful": "交易成功",
 		"tryAgain": "重试",
 		"txVersionNotSupported": "不支持交易版本。 请更新 Ledger 应用程序.",

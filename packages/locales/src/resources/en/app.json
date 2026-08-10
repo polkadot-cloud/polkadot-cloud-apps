@@ -395,6 +395,7 @@
 		"transactionCancelledTechnical": "Transaction cancelled due to technical issue",
 		"transactionInBlock": "Transaction in block",
 		"transactionInitiated": "Transaction was initiated.",
+		"transactionRejectedPending": "Transaction was rejected and is still pending.",
 		"transactionSuccessful": "Transaction successful",
 		"tryAgain": "Try Again",
 		"txVersionNotSupported": "Transaction version not supported. Please update Ledger app.",

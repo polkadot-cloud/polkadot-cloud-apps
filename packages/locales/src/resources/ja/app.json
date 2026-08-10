@@ -395,6 +395,7 @@
 		"transactionCancelledTechnical": "技術的な問題によりトランザクションがキャンセルされました",
 		"transactionInBlock": "トランザクションがブロックに記録されました",
 		"transactionInitiated": "トランザクションが開始されました。",
+		"transactionRejectedPending": "トランザクションは拒否され、まだ保留中です。",
 		"transactionSuccessful": "トランザクションが成功しました",
 		"tryAgain": "もう一度試す",
 		"txVersionNotSupported": "トランザクションバージョンがサポートされていません。Ledgerアプリを更新してください。",
