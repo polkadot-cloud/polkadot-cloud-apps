@@ -49,7 +49,7 @@
 		"rxjs": "^7.8.2",
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
-		"styled-components": "^6.4.2",
+		"styled-components": "^6.5.1",
 		"tx-submit": "workspace:*",
 		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
@@ -62,7 +62,7 @@
 		"@w3ux/types": "^2.4.2",
 		"types": "workspace:*",
 		"typescript": "^6.0.3",
-		"vite": "8.2.0",
+		"vite": "8.2.1",
 		"vite-plugin-checker": "^0.14.5",
 		"vite-plugin-svgr": "^5.2.0",
 		"vite-shared": "workspace:*"
