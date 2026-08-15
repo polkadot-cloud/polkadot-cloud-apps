@@ -29,7 +29,6 @@ const getQuery = (batchSize: number) => {
 			strategy: $strategy${index}
 			active: $active
 			excludeAddresses: $excludeAddresses
-			topPercent: $topPercent
 		) {
 			address
 			prefs {
@@ -44,7 +43,6 @@ const getQuery = (batchSize: number) => {
 			$network: String!
 			$active: Boolean = true
 			$excludeAddresses: [String!] = []
-			$topPercent: Int = 50
 			${strategyVariables}
 		) {
 			${candidateFields}
