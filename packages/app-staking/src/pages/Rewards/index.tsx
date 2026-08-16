@@ -12,7 +12,6 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { PageTabs } from 'library/PageTabs'
 import {
 	fetchPoolEraRewards,
 	fetchPoolRewards,
@@ -21,6 +20,7 @@ import {
 import type { NominatorReward, RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PageTabs } from 'ui-app/PageTabs'
 import { Page } from 'ui-core/base'
 import { filterAndSortRewards } from 'ui-graphs/util'
 import { Overview } from './Overview'

@@ -9,7 +9,6 @@ import { useActivePool } from 'hooks/useActivePool'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { CardWrapper } from 'library/Card/Wrappers'
 import {
 	fetchCombinedPoolRewards,
 	fetchPoolRewards,
@@ -18,6 +17,7 @@ import {
 import type { RewardResults } from 'plugin-staking-api/types'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 import { MAX_REWARD_PAGES, REWARD_ITEMS_PER_PAGE } from '../constants'
 import type { RewardsKind } from '../types'

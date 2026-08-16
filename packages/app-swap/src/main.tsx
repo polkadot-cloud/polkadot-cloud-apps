@@ -23,6 +23,7 @@ if (!rootElement) {
 }
 
 initDedotService({
+	network: 'polkadot',
 	nominationPools: false,
 	staking: false,
 })

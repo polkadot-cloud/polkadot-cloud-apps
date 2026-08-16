@@ -47,6 +47,8 @@ jobs:
       - run: pnpm build:verify
         working-directory: packages/app-staking
       - run: pnpm build:verify
+        working-directory: packages/app-validators
+      - run: pnpm build:verify
         working-directory: packages/app-swap
       - run: pnpm test
       - run: pnpm run validate

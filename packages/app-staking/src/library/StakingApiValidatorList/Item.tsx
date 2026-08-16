@@ -35,6 +35,8 @@ interface ItemProps {
 	isEraPointsLoading: boolean
 	isRateLoading: boolean
 	rate?: number
+	showShareLink: boolean
+	toggleFavorites: boolean
 	totalActive: number
 	validator: ValidatorListItem
 }
@@ -63,6 +65,8 @@ export const Item = ({
 	isEraPointsLoading,
 	isRateLoading,
 	rate,
+	showShareLink,
+	toggleFavorites,
 	totalActive,
 	validator,
 }: ItemProps) => {
@@ -107,8 +111,9 @@ export const Item = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
-						showFavorite
+						showFavorite={toggleFavorites}
 						showMetrics
+						showShareLink={showShareLink}
 					/>
 				}
 				displayFor="default"
@@ -137,12 +142,16 @@ export const Item = ({
 			<ListItem.Action>
 				<CopyAddress address={address} />
 			</ListItem.Action>
-			<ListItem.Action>
-				<ShareLink paramKey="v" paramValue={address} />
-			</ListItem.Action>
-			<ListItem.Action>
-				<FavoriteValidator address={address} />
-			</ListItem.Action>
+			{showShareLink && (
+				<ListItem.Action>
+					<ShareLink paramKey="v" paramValue={address} />
+				</ListItem.Action>
+			)}
+			{toggleFavorites && (
+				<ListItem.Action>
+					<FavoriteValidator address={address} />
+				</ListItem.Action>
+			)}
 			<ListItem.Action wide>
 				<Metrics address={address} display={validatorDisplay} />
 			</ListItem.Action>

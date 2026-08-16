@@ -49,6 +49,7 @@ export const ValidatorListInner = ({
 	// Default list values.
 	validators: initialValidators,
 	// Validator list config options.
+	showShareLink = true,
 	toggleFavorites,
 	itemsPerPage,
 	displayFor = 'default',
@@ -294,6 +295,7 @@ export const ValidatorListInner = ({
 							>
 								<Item
 									validator={validator}
+									showShareLink={showShareLink}
 									toggleFavorites={toggleFavorites}
 									displayFor={displayFor}
 									format={effectiveListFormat}

@@ -27,6 +27,7 @@ import { ValidatorSummary } from './ValidatorSummary'
 
 export const DetailedItem = ({
 	validator,
+	showShareLink = true,
 	toggleFavorites,
 	displayFor,
 	eraPoints,
@@ -67,9 +68,11 @@ export const DetailedItem = ({
 			<ListItem.Action>
 				<CopyAddress address={address} />
 			</ListItem.Action>
-			<ListItem.Action>
-				<ShareLink paramKey="v" paramValue={address} />
-			</ListItem.Action>
+			{showShareLink && (
+				<ListItem.Action>
+					<ShareLink paramKey="v" paramValue={address} />
+				</ListItem.Action>
+			)}
 			{toggleFavorites && (
 				<ListItem.Action>
 					<FavoriteValidator address={address} />
@@ -99,6 +102,7 @@ export const DetailedItem = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
+						showShareLink={showShareLink}
 						onRemove={
 							typeof onRemove === 'function'
 								? () => onRemove({ selected: [validator] })

@@ -3,6 +3,7 @@
 
 import { createProxiesLifecycle } from '@polkadot-cloud/connect-proxies'
 import {
+	lockNetwork,
 	networkConfig$,
 	setNetworkConfig,
 	setServiceInterface,
@@ -22,8 +23,16 @@ const proxiesLifecycle = createProxiesLifecycle()
 
 // Start service for the current network
 export const initDedotService = async (features: DedotServiceConfig = {}) => {
+	const { network: fixedNetwork, ...serviceFeatures } = features
+
+	// Fixed-network apps must override URL and persisted network state before React renders or the
+	// asynchronous RPC configuration is resolved.
+	if (fixedNetwork) {
+		lockNetwork(fixedNetwork)
+	}
+
 	// Populate network config with sanitized RPC endpoints
-	const config = await getInitialNetworkConfig()
+	const config = await getInitialNetworkConfig(fixedNetwork)
 	setNetworkConfig(
 		config.network,
 		config.rpcEndpoints,
@@ -57,7 +66,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 			if (network === 'polkadot') {
@@ -69,7 +78,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 			if (network === 'paseo') {
@@ -81,7 +90,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 

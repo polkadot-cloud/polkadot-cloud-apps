@@ -10,6 +10,7 @@ import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
 import type { HeadersProps } from './types'
 
+export { SettingsMenu } from './Settings'
 export type { HeadersProps, MenuPopoverFeatureFlags } from './types'
 
 export const Headers = ({

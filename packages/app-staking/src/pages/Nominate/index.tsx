@@ -3,9 +3,9 @@
 
 import { onTabVisitEvent } from 'event-tracking'
 import { usePlugins } from 'hooks/usePlugins'
-import { PageTabs } from 'library/PageTabs'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PageTabs } from 'ui-app/PageTabs'
 import { Page } from 'ui-core/base'
 import { Active } from './Active'
 import { NominationGeo } from './NominationGeo'

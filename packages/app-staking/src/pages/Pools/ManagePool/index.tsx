@@ -3,9 +3,9 @@
 
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { Nominations } from 'library/Nominations'
 import { Empty } from 'library/Nominations/Empty'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const ManagePool = () => {
