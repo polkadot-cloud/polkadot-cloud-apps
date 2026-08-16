@@ -37,6 +37,7 @@
 		"styled-components": "^6.5.1",
 		"ui-app": "workspace:*",
 		"ui-core": "workspace:*",
+		"ui-modals": "workspace:*",
 		"ui-overlay": "workspace:*",
 		"ui-styles": "workspace:*"
 	},

@@ -505,6 +505,9 @@ importers:
       ui-core:
         specifier: workspace:*
         version: link:../ui-core
+      ui-modals:
+        specifier: workspace:*
+        version: link:../ui-modals
       ui-overlay:
         specifier: workspace:*
         version: link:../ui-overlay

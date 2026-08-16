@@ -22,13 +22,14 @@ import {
 } from 'react-router-dom'
 import type { PageItem } from 'types'
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
+import { MainFooter } from 'ui-app/MainFooter'
 import { Menu } from 'ui-app/Menu'
 import { NotificationPrompts } from 'ui-app/NotificationPrompts'
 import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
+import { Headers } from './Headers'
 import { Overlays } from './Overlays'
-import { MainFooter } from 'ui-app/MainFooter'
 
 const ValidatorsPage: PageItem = {
 	category: 0,
@@ -69,6 +70,7 @@ const RouterInner = () => {
 					<Tooltip />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
+							<Headers />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									<Route

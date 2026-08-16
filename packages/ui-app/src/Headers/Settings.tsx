@@ -11,6 +11,30 @@ import { MenuPopover } from './Popovers/MenuPopover'
 import type { ToggleConnectProps } from './Popovers/types'
 import type { MenuPopoverFeatureFlags } from './types'
 
+export const SettingsMenu = ({
+	menuPopoverFeatures,
+}: {
+	menuPopoverFeatures?: MenuPopoverFeatureFlags
+}) => {
+	const { themeElementRef } = useTheme()
+	const [openSettings, setOpenSettings] = useState<boolean>(false)
+
+	return (
+		<Popover
+			open={openSettings}
+			portalContainer={themeElementRef.current || undefined}
+			content={
+				<MenuPopover setOpen={setOpenSettings} features={menuPopoverFeatures} />
+			}
+			onTriggerClick={() => {
+				setOpenSettings(!openSettings)
+			}}
+		>
+			<ButtonHeader className="header-settings" icon={faCog} />
+		</Popover>
+	)
+}
+
 export const Settings = ({
 	openConnect,
 	setOpenConnect,
@@ -19,8 +43,6 @@ export const Settings = ({
 	menuPopoverFeatures?: MenuPopoverFeatureFlags
 }) => {
 	const { themeElementRef } = useTheme()
-
-	const [openSettings, setOpenSettings] = useState<boolean>(false)
 
 	return (
 		<>
@@ -35,21 +57,7 @@ export const Settings = ({
 			>
 				<ButtonHeader className="header-connect" icon={faPlug} />
 			</Popover>
-			<Popover
-				open={openSettings}
-				portalContainer={themeElementRef.current || undefined}
-				content={
-					<MenuPopover
-						setOpen={setOpenSettings}
-						features={menuPopoverFeatures}
-					/>
-				}
-				onTriggerClick={() => {
-					setOpenSettings(!openSettings)
-				}}
-			>
-				<ButtonHeader className="header-settings" icon={faCog} />
-			</Popover>
+			<SettingsMenu menuPopoverFeatures={menuPopoverFeatures} />
 		</>
 	)
 }
