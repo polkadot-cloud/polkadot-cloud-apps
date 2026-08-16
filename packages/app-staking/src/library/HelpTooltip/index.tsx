@@ -7,8 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { camelize } from '@w3ux/utils'
-import { HelpNoDocs } from 'config'
 import { PlatformDocsURL } from 'consts'
+import { StakingHelpNoDocs } from 'consts/docs'
 import { useFillVariables } from 'hooks/useFillVariables'
 import { useHelp } from 'hooks/useHelp'
 import { useTheme } from 'hooks/useTheme'
@@ -97,7 +97,7 @@ export const HelpTooltip = () => {
 					) : (
 						<p>{description}</p>
 					)}
-					{!HelpNoDocs.includes(localeKey) ? (
+					{!StakingHelpNoDocs.includes(localeKey) ? (
 						<ButtonSecondary
 							text={t('readMoreOnStakingDocs', { ns: 'app' })}
 							iconRight={faArrowUpRightFromSquare}

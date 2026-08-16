@@ -117,25 +117,3 @@ export const PagesConfig: PagesConfigItems = [
 		advanced: true,
 	},
 ]
-
-// Help items that are not documented on staking docs
-export const HelpNoDocs = [
-	'bondedInPool',
-	'decentralizationAnalyticsPeriod',
-	'geolocationOfEachNomination',
-	'ledgerAppNotOnLatestRuntimeVersion',
-	'ledgerHardwareWallets',
-	'ledgerRejectedTransaction',
-	'ledgerRequestTimeout',
-	'minimumToCreatePool',
-	'minimumToJoinPool',
-	'nominationPayoutDistribution',
-	'openAppOnLedger',
-	'poolRewardHistory',
-	'rewardsByCountryAndNetwork',
-	'selfStake',
-	'totalPayoutsAnalysed',
-	'validatorRewardHistory',
-	'yourBalance',
-	'halving',
-]
