@@ -3,7 +3,6 @@
 
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { ValidatorsDappName } from 'consts'
-import { useNetwork } from 'hooks/useNetwork'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
@@ -43,7 +42,6 @@ const ValidatorsPage: PageItem = {
 
 const RouterInner = () => {
 	const { pathname } = useLocation()
-	const { network } = useNetwork()
 	const { setContainerRefs } = useUi()
 	const mainInterfaceRef = useRef<HTMLDivElement>(null)
 
@@ -51,7 +49,7 @@ const RouterInner = () => {
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
-	}, [pathname, network])
+	}, [pathname])
 
 	useEffect(() => {
 		setContainerRefs({

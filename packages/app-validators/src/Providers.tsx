@@ -10,13 +10,13 @@ import { getStakingChainData } from 'consts/util'
 import { EraStakersProvider } from 'contexts/EraStakers'
 import { FiltersProvider } from 'contexts/Filters'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
-import { useNetwork } from 'hooks/useNetwork'
 import { Tooltip } from 'radix-ui'
 import { OverlayProvider } from 'ui-overlay'
 import { ThemedRouter } from './Themes'
 
+const network = 'polkadot'
+
 export const Providers = () => {
-	const { network } = useNetwork()
 	const { ss58 } = getStakingChainData(network)
 
 	return withProviders(

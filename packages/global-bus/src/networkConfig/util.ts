@@ -143,8 +143,9 @@ export const getInitialAutoRpc = (): boolean => {
 	return result === 'true'
 }
 
-export const getInitialNetworkConfig = async (): Promise<NetworkConfig> => {
-	const network = getInitialNetwork()
+export const getInitialNetworkConfig = async (
+	network: NetworkId = getInitialNetwork(),
+): Promise<NetworkConfig> => {
 	const rpcEndpoints = await getInitialRpcEndpoints(network)
 	const providerType = getInitialProviderType()
 	const autoRpc = getInitialAutoRpc()

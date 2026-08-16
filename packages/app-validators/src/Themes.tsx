@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useNetwork } from 'hooks/useNetwork'
 import { useTheme } from 'hooks/useTheme'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +10,6 @@ import { Router } from './Router'
 
 export const ThemedRouter = () => {
 	const { i18n } = useTranslation()
-	const { network } = useNetwork()
 	const { mode, themeElementRef } = useTheme()
 
 	useEffect(() => {
@@ -26,7 +24,7 @@ export const ThemedRouter = () => {
 		<ThemeProvider theme={{ mode }}>
 			<Page.Entry
 				mode={mode}
-				theme={network}
+				theme="polkadot"
 				language={i18n.resolvedLanguage || 'en'}
 				ref={themeElementRef}
 			>

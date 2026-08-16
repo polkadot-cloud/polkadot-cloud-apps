@@ -8,7 +8,7 @@ import type { PaseoAssetHubApi } from '@dedot/chaintypes/paseo-asset-hub'
 import type { PaseoPeopleApi } from '@dedot/chaintypes/paseo-people'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
-import type { ServiceInterface } from 'types'
+import type { DefaultServiceNetworkId, ServiceInterface } from 'types'
 import type { KusamaService } from '../services/kusama'
 import type { PaseoService } from '../services/paseo'
 import type { PolkadotService } from '../services/polkadot'
@@ -18,6 +18,8 @@ import type { PoolMembershipQuery } from '../subscribe/poolMembership'
 import type { StakingLedgerQuery } from '../subscribe/stakingLedger'
 
 export type DedotServiceConfig = {
+	// Restricts the service and shared network state to a single network.
+	network?: DefaultServiceNetworkId
 	nominationPools?: boolean
 	staking?: boolean
 	stablecoins?: {
