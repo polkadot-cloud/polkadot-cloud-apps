@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import react from '@vitejs/plugin-react'
+import { SimpleAnalyticsStakingHostname } from 'consts'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
@@ -12,7 +13,7 @@ import { sharedFaviconPlugins, simpleAnalyticsPlugin } from 'vite-shared'
 export default defineConfig({
 	plugins: [
 		...sharedFaviconPlugins(),
-		simpleAnalyticsPlugin(),
+		simpleAnalyticsPlugin({ hostname: SimpleAnalyticsStakingHostname }),
 		react(),
 		svgr(),
 		checker({

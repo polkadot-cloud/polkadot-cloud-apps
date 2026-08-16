@@ -77,7 +77,13 @@ export const sharedFaviconPlugins = (): Plugin[] => [
 	buildSharedFavicons(),
 ]
 
-export const simpleAnalyticsPlugin = (): Plugin => ({
+type SimpleAnalyticsPluginOptions = {
+	hostname?: string
+}
+
+export const simpleAnalyticsPlugin = ({
+	hostname,
+}: SimpleAnalyticsPluginOptions = {}): Plugin => ({
 	name: 'simple-analytics',
 	apply: (_, { command, mode }) => command === 'build' && mode === 'production',
 	transformIndexHtml() {
@@ -98,6 +104,7 @@ export const simpleAnalyticsPlugin = (): Plugin => ({
 			{
 				tag: 'script',
 				attrs: {
+					...(hostname ? { 'data-hostname': hostname } : {}),
 					defer: true,
 					referrerpolicy: 'no-referrer-when-downgrade',
 					src: 'https://apisa.polkadot.cloud/latest.js',
@@ -106,8 +113,7 @@ export const simpleAnalyticsPlugin = (): Plugin => ({
 			},
 			{
 				tag: 'noscript',
-				children:
-					'<img src="https://apisa.polkadot.cloud/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" />',
+				children: `<img src="https://apisa.polkadot.cloud/noscript.gif${hostname ? `?hostname=${encodeURIComponent(hostname)}` : ''}" alt="" referrerpolicy="no-referrer-when-downgrade" />`,
 				injectTo: 'body',
 			},
 		]
