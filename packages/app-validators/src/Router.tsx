@@ -33,8 +33,8 @@ import { Overlays } from './Overlays'
 const ValidatorsPage: PageItem = {
 	category: 0,
 	key: 'validators',
-	uri: `${import.meta.env.BASE_URL}validators`,
-	hash: '/validators',
+	uri: import.meta.env.BASE_URL,
+	hash: '/',
 	Entry: ValidatorsStandalone,
 	faIcon: faMagnifyingGlass,
 	advanced: false,
@@ -73,10 +73,6 @@ const RouterInner = () => {
 								<Routes>
 									<Route
 										index
-										element={<Navigate to="/validators" replace />}
-									/>
-									<Route
-										path="/validators"
 										element={
 											<PageWithTitle
 												page={ValidatorsPage}
@@ -84,10 +80,7 @@ const RouterInner = () => {
 											/>
 										}
 									/>
-									<Route
-										path="*"
-										element={<Navigate to="/validators" replace />}
-									/>
+									<Route path="*" element={<Navigate to="/" replace />} />
 								</Routes>
 							</ErrorBoundary>
 							<MainFooter />
