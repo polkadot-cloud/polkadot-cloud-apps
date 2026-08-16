@@ -4,6 +4,7 @@
 	"packages": {
 		"packages/app-swap": {},
 		"packages/app-staking": {},
+		"packages/app-validators": {},
 		"packages/assets": {},
 		"packages/consts": {},
 		"packages/dedot-api": {},

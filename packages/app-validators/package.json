@@ -1,0 +1,52 @@
+{
+	"name": "app-validators",
+	"version": "0.1.0",
+	"type": "module",
+	"license": "GPL-3.0-only",
+	"scripts": {
+		"build": "vite build --base '/'",
+		"build:verify": "tsc --noEmit --skipLibCheck && vite build --base '/' --mode development --emptyOutDir",
+		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
+		"check": "biome check .",
+		"lint": "biome check --write .",
+		"dev": "vite",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^7.3.1",
+		"@polkadot-cloud/connect": "^1.0.9",
+		"@polkadot-cloud/connect-ledger": "^1.1.0",
+		"@polkadot-cloud/connect-proxies": "^0.3.0",
+		"@w3ux/factories": "^2.2.2",
+		"@w3ux/react-odometer": "2.4.5",
+		"app-staking": "workspace:*",
+		"buffer": "^6.0.3",
+		"consts": "workspace:*",
+		"dedot-api": "workspace:*",
+		"hooks": "workspace:*",
+		"locales": "workspace:*",
+		"plugin-staking-api": "workspace:*",
+		"radix-ui": "^1.6.7",
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8",
+		"react-error-boundary": "^6.1.2",
+		"react-helmet-async": "^3.0.0",
+		"react-i18next": "^17.0.11",
+		"react-router-dom": "^7.18.2",
+		"simplebar": "6.3.3",
+		"styled-components": "^6.5.1",
+		"ui-app": "workspace:*",
+		"ui-core": "workspace:*",
+		"ui-overlay": "workspace:*",
+		"ui-styles": "workspace:*"
+	},
+	"devDependencies": {
+		"@w3ux/types": "^2.4.2",
+		"types": "workspace:*",
+		"typescript": "^6.0.3",
+		"vite": "8.2.1",
+		"vite-plugin-checker": "^0.14.5",
+		"vite-plugin-svgr": "^5.2.0",
+		"vite-shared": "workspace:*"
+	}
+}
