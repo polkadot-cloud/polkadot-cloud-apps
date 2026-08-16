@@ -28,6 +28,7 @@ import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
 import { Overlays } from './Overlays'
+import { MainFooter } from 'ui-app/MainFooter'
 
 const ValidatorsPage: PageItem = {
 	category: 0,
@@ -89,6 +90,7 @@ const RouterInner = () => {
 									/>
 								</Routes>
 							</ErrorBoundary>
+							<MainFooter />
 						</HelmetProvider>
 					</Page.Main>
 				</Page.Body>
