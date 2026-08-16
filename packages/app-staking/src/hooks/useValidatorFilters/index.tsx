@@ -4,246 +4,109 @@
 import { useEraStakers } from 'contexts/EraStakers'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import type { AnyFilter } from 'library/Filter/types'
+import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import type { AnyFunction, AnyJson } from 'types'
 
 export const useValidatorFilters = () => {
-	const { t } = useTranslation('app')
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
 	const { eraStakers } = useEraStakers()
 	const eraValidatorSet = useMemo(
-		() => new Set(eraStakers.stakers.map((staker) => staker.address)),
+		() => new Set(eraStakers.stakers.map(({ address }) => address)),
 		[eraStakers.stakers],
 	)
+	// Identity records contain an entry for every validator; super identities may legitimately be
+	// empty after a complete sync.
+	const identitiesReady = Object.keys(validatorIdentities).length > 0
 
-	/*
-	 * filterMissingIdentity: Iterates through the supplied list and filters those with missing
-	 * identities. Returns the updated filtered list.
-	 */
-	const filterMissingIdentity = useCallback(
-		(list: AnyFilter) => {
-			// Return list early if identity sync has not completed.
-			if (
-				!Object.values(validatorIdentities).length ||
-				!Object.values(validatorSupers).length
-			) {
-				return list
-			}
-			const filteredList: AnyFilter = []
-			for (const validator of list) {
-				const identityExists = validatorIdentities[validator.address] ?? false
-				const superExists = validatorSupers[validator.address] ?? false
-
-				// Validator included if identity or super identity has been set.
-				if (identityExists || superExists) {
-					filteredList.push(validator)
-				}
-			}
-			return filteredList
-		},
-		[validatorIdentities, validatorSupers],
-	)
-
-	/*
-	 * filterBlockedNominations: Filters the supplied list and removes items that have blocked
-	 * nominations. Returns the updated filtered list.
-	 */
-	const filterBlockedNominations = useCallback((list: AnyFilter) => {
-		return list.filter((validator: AnyFilter) => {
-			const blocked: boolean | undefined = validator?.prefs?.blocked
-			return !blocked
-		})
-	}, [])
-
-	/*
-	 * filterActive: Filters the supplied list and removes items that are inactive. Returns the
-	 * updated filtered list.
-	 */
-	const filterActive = useCallback(
-		(list: AnyFilter) => {
-			// if list has not yet been populated, return original list
-			if (eraStakers.stakers.length === 0) {
-				return list
-			}
-			return list.filter((validator: AnyFilter) =>
-				eraValidatorSet.has(validator.address),
-			)
-		},
-		[eraStakers.stakers, eraValidatorSet],
-	)
-
-	/*
-	 * filterInSession: Filters the supplied list and removes items that are in the current session.
-	 * Returns the updated filtered list.
-	 */
-	const filterInSession = useCallback(
-		(list: AnyFilter) => {
-			// if list has not yet been populated, return original list
-			if (eraStakers.stakers.length === 0) {
-				return list
-			}
-			return list.filter(
-				(validator: AnyFilter) => !eraValidatorSet.has(validator.address),
-			)
-		},
-		[eraStakers.stakers, eraValidatorSet],
-	)
-
-	const includesToLabels = useMemo<Record<string, string>>(
+	const filterFunctions = useMemo<
+		Record<string, (list: AnyFilter) => AnyFilter>
+	>(
 		() => ({
-			active: t('activeValidators'),
+			active: (list) =>
+				eraValidatorSet.size === 0
+					? list
+					: list.filter(({ address }: AnyFilter) =>
+							eraValidatorSet.has(address),
+						),
+			blocked_nominations: (list) =>
+				list.filter(({ prefs }: AnyFilter) => !prefs?.blocked),
+			in_session: (list) =>
+				eraValidatorSet.size === 0
+					? list
+					: list.filter(
+							({ address }: AnyFilter) => !eraValidatorSet.has(address),
+						),
+			missing_identity: (list) =>
+				!identitiesReady
+					? list
+					: list.filter(
+							({ address }: AnyFilter) =>
+								validatorIdentities[address] || validatorSupers[address],
+						),
 		}),
-		[t],
-	)
-
-	const excludesToLabels = useMemo<Record<string, string>>(
-		() => ({
-			blocked_nominations: t('blockedNominations'),
-			missing_identity: t('missingIdentity'),
-		}),
-		[t],
-	)
-
-	const filterToFunction = useMemo<Record<string, AnyFunction>>(
-		() => ({
-			active: filterActive,
-			missing_identity: filterMissingIdentity,
-			blocked_nominations: filterBlockedNominations,
-			in_session: filterInSession,
-		}),
-		[
-			filterActive,
-			filterMissingIdentity,
-			filterBlockedNominations,
-			filterInSession,
-		],
-	)
-
-	const getFiltersToApply = useCallback(
-		(excludes: string[]) => {
-			const fns = []
-			for (const exclude of excludes) {
-				if (filterToFunction[exclude]) {
-					fns.push(filterToFunction[exclude])
-				}
-			}
-			return fns
-		},
-		[filterToFunction],
+		[eraValidatorSet, identitiesReady, validatorIdentities, validatorSupers],
 	)
 
 	const applyFilter = useCallback(
-		(includes: string[] | null, excludes: string[] | null, list: AnyJson) => {
-			if (!excludes && !includes) {
-				return list
-			}
-			if (includes) {
-				for (const fn of getFiltersToApply(includes)) {
-					list = fn(list)
-				}
-			}
-			if (excludes) {
-				for (const fn of getFiltersToApply(excludes)) {
-					list = fn(list)
-				}
-			}
-			return list
-		},
-		[getFiltersToApply],
-	)
-
-	/*
-	 * orderByRank: Orders a list by validator rank.
-	 */
-	const orderByRank = useCallback(
-		(list: AnyFilter) =>
-			[...list].sort((a, b) => {
-				const aRank = getValidatorRank(a.address) || 9999
-				const bRank = getValidatorRank(b.address) || 9999
-				return aRank - bRank
-			}),
-		[getValidatorRank],
-	)
-
-	const ordersToLabels = useMemo<Record<string, string>>(
-		() => ({
-			rank: `${t('performance')}`,
-			default: t('unordered'),
-		}),
-		[t],
-	)
-
-	const orderToFunction = useMemo<Record<string, AnyFunction>>(
-		() => ({
-			rank: orderByRank,
-		}),
-		[orderByRank],
+		(includes: string[] | null, excludes: string[] | null, list: AnyFilter) =>
+			[...(includes ?? []), ...(excludes ?? [])].reduce(
+				(result, filter) => filterFunctions[filter]?.(result) ?? result,
+				list,
+			),
+		[filterFunctions],
 	)
 
 	const applyOrder = useCallback(
-		(o: string, list: AnyJson) => {
-			const fn = orderToFunction[o]
-			if (fn) {
-				return fn(list)
-			}
-			return list
-		},
-		[orderToFunction],
+		(order: string, list: AnyFilter) =>
+			order === 'ACTIVITY'
+				? [...list].sort(
+						(a, b) =>
+							(getValidatorRank(a.address) ?? 9999) -
+							(getValidatorRank(b.address) ?? 9999),
+					)
+				: list,
+		[getValidatorRank],
 	)
 
-	/*
-	 * applySearch Iterates through the supplied list and filters those that match the search term.
-	 * Returns the updated filtered list.
-	 */
 	const applySearch = useCallback(
-		(list: AnyFilter, searchTerm: string) => {
-			// If we cannot derive data, fallback to include validator in filtered list.
-			if (
-				!searchTerm ||
-				!Object.values(validatorIdentities).length ||
-				!Object.values(validatorSupers).length
-			) {
+		(list: AnyFilter, search: string) => {
+			const term = search.toLowerCase()
+			if (!term || !identitiesReady) {
 				return list
 			}
 
-			const filteredList: AnyFilter = []
-			for (const validator of list) {
-				const identity = validatorIdentities[validator.address]
-				const identityRaw = identity ? identity?.info?.display?.value : ''
+			return list.filter(({ address }: AnyFilter) => {
+				const identity =
+					validatorIdentities[address]?.info?.display?.value ?? ''
+				const superIdentity =
+					validatorSupers[address]?.superOf?.identity?.info?.display?.value ??
+					''
 
-				const identitySearch = (identityRaw || '').toLowerCase()
-
-				const superIdentity = validatorSupers[validator.address] ?? null
-				const superIdentityRaw =
-					superIdentity?.superOf?.identity?.info?.display?.value ?? ''
-
-				const superIdentitySearch = (superIdentityRaw || '').toLowerCase()
-
-				if (
-					validator.address.toLowerCase().includes(searchTerm.toLowerCase())
-				) {
-					filteredList.push(validator)
-				}
-				if (
-					identitySearch.includes(searchTerm.toLowerCase()) ||
-					superIdentitySearch.includes(searchTerm.toLowerCase())
-				) {
-					filteredList.push(validator)
-				}
-			}
-			return filteredList
+				return [address, identity, superIdentity].some((value) =>
+					value.toLowerCase().includes(term),
+				)
+			})
 		},
-		[validatorIdentities, validatorSupers],
+		[identitiesReady, validatorIdentities, validatorSupers],
 	)
 
-	return {
-		includesToLabels,
-		excludesToLabels,
-		ordersToLabels,
-		applyFilter,
-		applyOrder,
-		applySearch,
-	}
+	const applyConfig = useCallback(
+		(config: ValidatorListConfig, list: AnyFilter) => {
+			const { filters, order, search } = config
+			const includes = filters.activeOnly ? ['active'] : null
+			const excludes = [
+				...(filters.excludeBlocked ? ['blocked_nominations'] : []),
+				...(filters.excludeMissingIdentity ? ['missing_identity'] : []),
+			]
+
+			return applyOrder(
+				order,
+				applySearch(applyFilter(includes, excludes, list), search),
+			)
+		},
+		[applyFilter, applyOrder, applySearch],
+	)
+
+	return { applyConfig, applyFilter }
 }

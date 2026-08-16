@@ -21,7 +21,6 @@ export { defaultTokenPrice } from './defaults'
 export type { TokenPricesHookInterface } from './types'
 
 const REFETCH_PRICE_INTERVAL = 30_000
-export const IGNORE_NETWORKS = ['westend']
 
 type TokenPricesConfig = {
 	network: NetworkId
@@ -53,7 +52,7 @@ const fetchCurrentTokenPrice = async () => {
 		return
 	}
 	const { network, currency, enabled } = config
-	if (!enabled || IGNORE_NETWORKS.includes(network)) {
+	if (!enabled) {
 		// Prevent stale calls from overwriting state after a config change.
 		if (currentConfig === config) {
 			setCurrentPrice(defaultTokenPrice)
@@ -83,10 +82,7 @@ const startTokenPrices = () => {
 		return
 	}
 	stopTokenPrices()
-	if (
-		!currentConfig.enabled ||
-		IGNORE_NETWORKS.includes(currentConfig.network)
-	) {
+	if (!currentConfig.enabled) {
 		setCurrentPrice(defaultTokenPrice)
 		return
 	}

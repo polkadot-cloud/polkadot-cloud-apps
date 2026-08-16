@@ -11,6 +11,9 @@ const stakingMetricsStore = createObservableStore<StakingMetrics>(
 	defaultStakingMetrics,
 )
 
+const getHardCapSelfStakeSnapshot = () =>
+	stakingMetricsStore.getSnapshot().hardCapSelfStake
+
 // Subscribes only to staking metrics. Kept separate from `useApi` because staking metrics (e.g.
 // `totalIssuance`) emit a new object roughly every block; bundling this subscription into `useApi`
 // re-rendered every one of its ~90 consumers on each emission.
@@ -19,4 +22,11 @@ export const useStakingMetrics = (): StakingMetrics =>
 		stakingMetricsStore.subscribe,
 		stakingMetricsStore.getSnapshot,
 		stakingMetricsStore.getSnapshot,
+	)
+
+export const useHardCapSelfStake = (): bigint | undefined =>
+	useSyncExternalStore(
+		stakingMetricsStore.subscribe,
+		getHardCapSelfStakeSnapshot,
+		getHardCapSelfStakeSnapshot,
 	)

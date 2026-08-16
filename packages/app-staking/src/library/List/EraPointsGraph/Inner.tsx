@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useId } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 import type { EraPointsGraphInnerProps } from '../types'
 
@@ -8,7 +9,12 @@ export const Inner = ({
 	points: rawPoints = [],
 	syncing,
 	displayFor,
+	stretch = false,
 }: EraPointsGraphInnerProps) => {
+	const gridFadeId = useId().replaceAll(':', '')
+	const gridFadeGradientId = `grid_fade_gradient_${gridFadeId}`
+	const gridFadeMaskId = `grid_fade_mask_${gridFadeId}`
+
 	// Prefill with duplicate of start point.
 	let points = [rawPoints[0] || 0]
 	points = points.concat(rawPoints)
@@ -19,16 +25,19 @@ export const Inner = ({
 	const vbWidth = 520
 	const vbHeight = 115
 	const xPadding = 0
-	const yPadding = 10
+	const yPaddingTop = stretch ? 18 : 10
+	const yPaddingBottom = 10
 	const xArea = vbWidth - 2 * xPadding
-	const yArea = vbHeight - 2 * yPadding
+	const yArea = vbHeight - yPaddingTop - yPaddingBottom
+	const gridStrokeWidth = stretch ? 1 : 4
+	const valueStrokeWidth = stretch ? 3.5 : 5
 	const xSegment = xArea / totalSegments
 	let xCursor = xPadding
 
 	const pointsCoords = points.map((point: number, index: number) => {
 		const coord = {
 			x: xCursor,
-			y: vbHeight - yPadding - yArea * point,
+			y: vbHeight - yPaddingBottom - yArea * point,
 			zero: point === 0,
 		}
 
@@ -59,46 +68,76 @@ export const Inner = ({
 			width="100%"
 			height="100%"
 			viewBox={`0 0 ${vbWidth} ${vbHeight}`}
+			preserveAspectRatio={stretch ? 'none' : undefined}
 			version="1.1"
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			{lineCoords.map(({ x1, y1, x2, y2 }, index) => {
-				if (index === 0 || index === lineCoords.length - 1) {
-					return <Fragment key={`grid_y_coord_${x1}`} />
-				}
-				return (
-					<line
-						key={`grid_coord_${x1}_${y1}_${x2}_${y2}`}
-						strokeWidth={4}
-						stroke={
-							displayFor === 'canvas'
-								? 'var(--grid-secondary)'
-								: 'var(--grid-primary)'
-						}
-						x1={x1}
-						y1={0}
-						x2={x1}
-						y2={vbHeight}
+			<defs>
+				<linearGradient id={gridFadeGradientId} x1="0" y1="0" x2="0" y2="1">
+					<stop offset="0%" stopColor="white" />
+					<stop offset="85%" stopColor="white" />
+					<stop offset="100%" stopColor="black" />
+				</linearGradient>
+				<mask
+					id={gridFadeMaskId}
+					maskUnits="userSpaceOnUse"
+					x={0}
+					y={0}
+					width={vbWidth}
+					height={vbHeight}
+				>
+					<rect
+						x={0}
+						y={0}
+						width={vbWidth}
+						height={vbHeight}
+						fill={`url(#${gridFadeGradientId})`}
 					/>
-				)
-			})}
+				</mask>
+			</defs>
 
-			{!syncing && (
-				<line
-					key="grid_coord_mid"
-					strokeWidth={4}
-					stroke={
-						displayFor === 'canvas'
-							? 'var(--grid-secondary)'
-							: 'var(--grid-primary)'
-					}
-					x1={0}
-					y1={vbHeight * 0.5}
-					x2={vbWidth}
-					y2={vbHeight * 0.5}
-					opacity={0.5}
-				/>
-			)}
+			<g mask={`url(#${gridFadeMaskId})`}>
+				{!syncing &&
+					lineCoords.map(({ x1, y1, x2, y2 }, index) => {
+						if (index === 0 || index === lineCoords.length - 1) {
+							return <Fragment key={`grid_y_coord_${x1}`} />
+						}
+						return (
+							<line
+								key={`grid_coord_${x1}_${y1}_${x2}_${y2}`}
+								strokeWidth={gridStrokeWidth}
+								vectorEffect={stretch ? 'non-scaling-stroke' : undefined}
+								stroke={
+									displayFor === 'canvas'
+										? 'var(--grid-secondary)'
+										: 'var(--grid-primary)'
+								}
+								x1={x1}
+								y1={0}
+								x2={x1}
+								y2={vbHeight}
+							/>
+						)
+					})}
+
+				{!syncing &&
+					[0.25, 0.5, 0.75].map((position) => (
+						<line
+							key={`grid_coord_${position}`}
+							strokeWidth={gridStrokeWidth}
+							vectorEffect={stretch ? 'non-scaling-stroke' : undefined}
+							stroke={
+								displayFor === 'canvas'
+									? 'var(--grid-secondary)'
+									: 'var(--grid-primary)'
+							}
+							x1={0}
+							y1={vbHeight * position}
+							x2={vbWidth}
+							y2={vbHeight * position}
+						/>
+					))}
+			</g>
 
 			{!syncing &&
 				lineCoords.map(({ x1, y1, x2, y2, zero }, index) => {
@@ -107,7 +146,8 @@ export const Inner = ({
 					return (
 						<line
 							key={`line_coord_${x1}_${y1}_${x2}_${y2}`}
-							strokeWidth={5.5}
+							strokeWidth={valueStrokeWidth}
+							vectorEffect={stretch ? 'non-scaling-stroke' : undefined}
 							opacity={opacity}
 							stroke={zero ? 'var(--text-tertiary)' : 'var(--gray-1000)'}
 							x1={x1}

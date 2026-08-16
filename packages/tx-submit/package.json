@@ -1,6 +1,6 @@
 {
 	"name": "tx-submit",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"scripts": {
@@ -28,7 +28,7 @@
 		"hooks": "workspace:*",
 		"react": "^19.2.8",
 		"react-i18next": "^17.0.11",
-		"styled-components": "^6.4.4",
+		"styled-components": "^6.5.1",
 		"types": "workspace:*",
 		"ui-buttons": "workspace:*",
 		"ui-overlay": "workspace:*"

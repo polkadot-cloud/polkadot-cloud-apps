@@ -9,20 +9,14 @@ export type ChainId = NetworkId | SystemChainId
 
 export type NetworkId = DefaultServiceNetworkId
 
-export type DefaultServiceNetworkId =
-	| 'polkadot'
-	| 'kusama'
-	| 'westend'
-	| 'paseo'
+export type DefaultServiceNetworkId = 'polkadot' | 'kusama' | 'paseo'
 
 export type SystemChainId =
 	| 'people-polkadot'
 	| 'people-kusama'
-	| 'people-westend'
 	| 'people-paseo'
 	| 'statemint'
 	| 'statemine'
-	| 'westmint'
 	| 'paseomint'
 
 export type ProviderType = 'ws' | 'sc'
@@ -87,6 +81,7 @@ export interface StakingMetrics {
 	totalIssuance: bigint
 	minimumActiveStake: bigint
 	counterForValidators: number
+	hardCapSelfStake: bigint | undefined
 	maxValidatorsCount: number | undefined
 	validatorCount: number
 	lastReward: bigint | undefined

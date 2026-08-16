@@ -12,8 +12,8 @@ import { PoolBonded } from 'library/ListItem/Labels/PoolBonded'
 import { PoolCommission } from 'library/ListItem/Labels/PoolCommission'
 import { PoolIdentity } from 'library/ListItem/Labels/PoolIdentity'
 import { PoolNominateStatus } from 'library/ListItem/Labels/PoolNominateStatus'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { usePoolsTabs } from 'pages/PoolsList/context'
+import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { PoolMetrics } from '../ListItem/Buttons/PoolMetrics'
 import { Members } from '../ListItem/Labels/Members'
@@ -29,42 +29,40 @@ export const Pool = ({ pool }: PoolProps) => {
 	const currentCommission = getCurrentCommission(id)
 
 	return (
-		<Wrapper className="pool">
-			<div className="inner">
-				<div className="row top">
-					<PoolIdentity pool={pool} />
-					<div>
-						<HeaderButtonRow>
-							<ShareLink paramKey="p" paramValue={String(id)} />
-							<FavoritePool address={addresses.stash} />
-							<PoolMembers pool={pool} memberCounter={memberCounter} />
-							<PoolMetrics
-								pool={pool}
-								setActiveTab={setActiveTab}
-								disabled={syncing}
+		<BasicItem.Root kind="pool">
+			<BasicItem.Row position="top">
+				<PoolIdentity pool={pool} />
+				<div>
+					<HeaderButtonRow>
+						<ShareLink paramKey="p" paramValue={String(id)} />
+						<FavoritePool address={addresses.stash} />
+						<PoolMembers pool={pool} memberCounter={memberCounter} />
+						<PoolMetrics
+							pool={pool}
+							setActiveTab={setActiveTab}
+							disabled={syncing}
+						/>
+					</HeaderButtonRow>
+				</div>
+			</BasicItem.Row>
+			<Separator />
+			<BasicItem.Row position="bottom" large pools>
+				<div>
+					<PoolNominateStatus pool={pool} />
+				</div>
+				<div>
+					<LabelRow>
+						{currentCommission > 0 && (
+							<PoolCommission
+								commission={`${new BigNumber(currentCommission / PerbillMultiplier).decimalPlaces(3).toFormat()}%`}
 							/>
-						</HeaderButtonRow>
-					</div>
+						)}
+						<PoolId id={id} />
+						<Members memberCounter={memberCounter} />
+						<PoolBonded pool={pool} />
+					</LabelRow>
 				</div>
-				<Separator />
-				<div className="row bottom lg pools">
-					<div>
-						<PoolNominateStatus pool={pool} />
-					</div>
-					<div>
-						<LabelRow>
-							{currentCommission > 0 && (
-								<PoolCommission
-									commission={`${new BigNumber(currentCommission / PerbillMultiplier).decimalPlaces(3).toFormat()}%`}
-								/>
-							)}
-							<PoolId id={id} />
-							<Members memberCounter={memberCounter} />
-							<PoolBonded pool={pool} />
-						</LabelRow>
-					</div>
-				</div>
-			</div>
-		</Wrapper>
+			</BasicItem.Row>
+		</BasicItem.Root>
 	)
 }

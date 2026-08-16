@@ -1,6 +1,6 @@
 {
 	"name": "app-staking",
-	"version": "2.3.0",
+	"version": "2.4.0",
 	"type": "module",
 	"license": "GPL-3.0-only",
 	"scripts": {
@@ -61,7 +61,7 @@
 		"rxjs": "^7.8.2",
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
-		"styled-components": "^6.4.4",
+		"styled-components": "^6.5.1",
 		"ui-app": "workspace:*",
 		"tx-submit": "workspace:*",
 		"ui-buttons": "workspace:*",
@@ -79,7 +79,7 @@
 	"devDependencies": {
 		"types": "workspace:*",
 		"typescript": "^6.0.3",
-		"vite": "8.2.0",
+		"vite": "8.2.1",
 		"vite-bundle-visualizer": "^1.2.1",
 		"vite-plugin-checker": "^0.14.5",
 		"vite-plugin-svgr": "^5.2.0",

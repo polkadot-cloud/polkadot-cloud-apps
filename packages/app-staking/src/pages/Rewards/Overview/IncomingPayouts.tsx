@@ -61,11 +61,7 @@ export const IncomingPayouts = ({
 	return (
 		<CardWrapper>
 			<CardHeader>
-				<h4>
-					{t('incomingPayoutAccounts', {
-						defaultValue: 'Incoming Payouts',
-					})}
-				</h4>
+				<h4>{t('incomingPayoutAccounts')}</h4>
 				<h2>
 					{fromDate}
 					{toDate !== fromDate && <>&nbsp;-&nbsp;{toDate}</>}

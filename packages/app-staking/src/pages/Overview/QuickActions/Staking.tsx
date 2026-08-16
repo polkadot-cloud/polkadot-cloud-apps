@@ -10,8 +10,12 @@ import type { ButtonQuickActionProps } from 'ui-buttons/types'
 
 export const Staking = ({ bondFor }: { bondFor: BondFor[] }) => {
 	const { isDepositor } = useActivePool()
-	const { baseQuickActions, getBondQuickAction, getUnbondQuickAction } =
-		useQuickActions()
+	const {
+		baseQuickActions,
+		getBondQuickAction,
+		getManageNominationsQuickAction,
+		getUnbondQuickAction,
+	} = useQuickActions()
 
 	const actions: ButtonQuickActionProps[] = []
 
@@ -26,6 +30,11 @@ export const Staking = ({ bondFor }: { bondFor: BondFor[] }) => {
 
 	if (bondFor.includes('nominator')) {
 		actions.push(baseQuickActions.claimNominatorPayouts)
+	}
+
+	const manageNominationsQuickAction = getManageNominationsQuickAction(bondFor)
+	if (manageNominationsQuickAction) {
+		actions.push(manageNominationsQuickAction)
 	}
 
 	// Do not include bond/unbond actions for dual stakers
@@ -50,9 +59,18 @@ export const Staking = ({ bondFor }: { bondFor: BondFor[] }) => {
 		}
 	}
 
+	const visibleActions =
+		actions.length > 6
+			? actions.filter(
+					(action) =>
+						action !== baseQuickActions.nominatorUnstake &&
+						action !== baseQuickActions.leavePool,
+				)
+			: actions
+
 	return (
 		<QuickAction.Container>
-			{actions.map((action) => (
+			{visibleActions.map((action) => (
 				<QuickAction.Button key={`action-${action.label}`} {...action} />
 			))}
 		</QuickAction.Container>

@@ -4,8 +4,8 @@
 import BigNumber from 'bignumber.js'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Identity } from 'library/ListItem/Labels/Identity'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { useTranslation } from 'react-i18next'
+import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, Label, LabelRow, Separator } from 'ui-core/list'
 import { NominationStatus } from '../ListItem/Labels/NominationStatus'
 import type { NominatorListItemProps } from './types'
@@ -26,43 +26,41 @@ export const Item = ({ item, unit }: NominatorListItemProps) => {
 	}
 
 	return (
-		<Wrapper>
-			<div className="inner default">
-				<div className="row top">
-					<Identity address={address} />
-					<div>
-						<HeaderButtonRow>
-							<CopyAddress address={address} />
-						</HeaderButtonRow>
-					</div>
+		<BasicItem.Root>
+			<BasicItem.Row position="top">
+				<Identity address={address} />
+				<div>
+					<HeaderButtonRow>
+						<CopyAddress address={address} />
+					</HeaderButtonRow>
 				</div>
+			</BasicItem.Row>
 
-				<Separator />
+			<Separator />
 
-				<div className="row bottom lg">
-					<div>
-						<VerticalPayoutPerformance
-							amounts={item.performance30d}
-							tooltipText={tooltipText}
+			<BasicItem.Row position="bottom" large>
+				<div>
+					<VerticalPayoutPerformance
+						amounts={item.performance30d}
+						tooltipText={tooltipText}
+					/>
+				</div>
+				<div>
+					<LabelRow inline>
+						<Label>{formattedStake}</Label>
+					</LabelRow>
+					<LabelRow>
+						<NominationStatus
+							address={address}
+							bondFor={'nominator'}
+							nominator={address}
+							status={'active'}
+							asIncoming
+							noMargin
 						/>
-					</div>
-					<div>
-						<LabelRow inline>
-							<Label>{formattedStake}</Label>
-						</LabelRow>
-						<LabelRow>
-							<NominationStatus
-								address={address}
-								bondFor={'nominator'}
-								nominator={address}
-								status={'active'}
-								asIncoming
-								noMargin
-							/>
-						</LabelRow>
-					</div>
+					</LabelRow>
 				</div>
-			</div>
-		</Wrapper>
+			</BasicItem.Row>
+		</BasicItem.Root>
 	)
 }

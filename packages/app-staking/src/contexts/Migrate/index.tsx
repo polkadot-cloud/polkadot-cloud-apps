@@ -31,7 +31,6 @@ export const MigrateProvider = ({ children }: { children: ReactNode }) => {
 				// Added in 2.1.3
 				localStorage.removeItem('polkadotRpcEndpoints')
 				localStorage.removeItem('kusamaRpcEndpoints')
-				localStorage.removeItem('westendRpcEndpoints')
 
 				// Finally
 				//

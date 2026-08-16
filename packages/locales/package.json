@@ -1,6 +1,6 @@
 {
 	"name": "locales",
-	"version": "1.6.0",
+	"version": "1.7.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"exports": {
@@ -26,6 +26,6 @@
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"vite": "8.2.0"
+		"vite": "8.2.1"
 	}
 }

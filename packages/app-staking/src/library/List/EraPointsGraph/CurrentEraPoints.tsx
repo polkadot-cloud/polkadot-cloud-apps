@@ -21,6 +21,7 @@ import { Inner } from './Inner'
 export const CurrentEraPoints = ({
 	address,
 	displayFor,
+	stretch = false,
 }: CurrentEraPointsProps) => {
 	const { t } = useTranslation()
 	const { isReady, activeEra } = useApi()
@@ -83,6 +84,7 @@ export const CurrentEraPoints = ({
 						points={Array(7).fill(normalisedPoint)}
 						syncing={syncing}
 						displayFor={displayFor}
+						stretch={stretch}
 					/>
 				</>
 			}

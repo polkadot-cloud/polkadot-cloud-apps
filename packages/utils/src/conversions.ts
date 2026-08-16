@@ -4,11 +4,23 @@
 import { planckToUnit, rmCommas } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 
+export const formatCompactNumber = (value: number, locale?: string) =>
+	value.toLocaleString(locale, {
+		notation: 'compact',
+		maximumFractionDigits: 1,
+	})
+
 // Return `planckToUnit` as a BigNumber
-export const planckToUnitBn = (val: BigNumber, units: number): BigNumber =>
-	new BigNumber(
-		planckToUnit(val.decimalPlaces(0).toFormat({ groupSeparator: '' }), units),
+export const planckToUnitBn = (val: BigNumber, units: number): BigNumber => {
+	const result = new BigNumber(
+		planckToUnit(
+			val.abs().decimalPlaces(0).toFormat({ groupSeparator: '' }),
+			units,
+		),
 	)
+
+	return val.isNegative() ? result.negated() : result
+}
 
 // Converts a string to a BigNumber
 export const stringToBn = (value: string): BigNumber =>

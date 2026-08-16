@@ -8,6 +8,7 @@ import {
 	faChartLine,
 	faCircleDown,
 	faCircleXmark,
+	faCog,
 	faCoins,
 	faEnvelope,
 	faMinus,
@@ -21,11 +22,14 @@ import LedgerSquareSVG from '@w3ux/extension-assets/LedgerSquare.svg?react'
 import PolkadotVaultSVG from 'assets/brands/vault.svg?react'
 import { DiscordSupportURL, PlatformSupportEmail } from 'consts'
 import { useNominatorSetups } from 'contexts/NominatorSetups'
+import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useAccountBalances } from 'hooks/useAccountBalances'
+import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { usePayouts } from 'hooks/usePayouts'
 import { useUi } from 'hooks/useUi'
 import { useTranslation } from 'react-i18next'
+import type { BondFor } from 'types'
 import type { ButtonQuickActionProps } from 'ui-buttons/types'
 import { useOverlay } from 'ui-overlay'
 
@@ -36,7 +40,15 @@ export const useQuickActions = () => {
 	const { unclaimedRewards } = usePayouts()
 	const { openCanvas } = useOverlay().canvas
 	const { activeAddress } = useActiveAccount()
-	const { getPendingPoolRewards } = useBalances()
+	const { formatWithPrefs } = useValidators()
+	const { getNominations, getPendingPoolRewards } = useBalances()
+	const {
+		activePool,
+		activePoolNominations,
+		isDepositor,
+		isNominator,
+		isOwner,
+	} = useActivePool()
 	const { hasEnoughToNominate } = useAccountBalances(activeAddress)
 	const { setNominatorSetup, generateOptimalSetup } = useNominatorSetups()
 
@@ -250,5 +262,46 @@ export const useQuickActions = () => {
 		label: t('unbond', { ns: 'pages' }),
 	})
 
-	return { baseQuickActions, getBondQuickAction, getUnbondQuickAction }
+	const getManageNominationsQuickAction = (
+		bondFor: BondFor[],
+	): ButtonQuickActionProps | null => {
+		const forNominator = bondFor.includes('nominator')
+		const forPool =
+			!forNominator &&
+			bondFor.includes('pool') &&
+			(isDepositor() || isOwner() || isNominator())
+
+		if (!forNominator && !forPool) {
+			return null
+		}
+
+		return {
+			onClick: () =>
+				openCanvas({
+					key: 'ManageNominations',
+					scroll: false,
+					options: {
+						bondFor: forPool ? 'pool' : 'nominator',
+						nominator: forPool
+							? (activePool?.addresses?.stash ?? null)
+							: activeAddress,
+						nominated: formatWithPrefs(
+							forPool
+								? (activePoolNominations?.targets ?? [])
+								: getNominations(activeAddress),
+						),
+					},
+				}),
+			disabled: false,
+			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCog} />,
+			label: t('manageNominations', { ns: 'modals' }),
+		}
+	}
+
+	return {
+		baseQuickActions,
+		getBondQuickAction,
+		getManageNominationsQuickAction,
+		getUnbondQuickAction,
+	}
 }

@@ -1,25 +1,17 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type {
-	KusamaApi,
-	PaseoApi,
-	PolkadotApi,
-	WestendApi,
-} from '@dedot/chaintypes'
+import type { KusamaApi, PaseoApi, PolkadotApi } from '@dedot/chaintypes'
 import type { KusamaAssetHubApi } from '@dedot/chaintypes/kusama-asset-hub'
 import type { KusamaPeopleApi } from '@dedot/chaintypes/kusama-people'
 import type { PaseoAssetHubApi } from '@dedot/chaintypes/paseo-asset-hub'
 import type { PaseoPeopleApi } from '@dedot/chaintypes/paseo-people'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
-import type { WestendAssetHubApi } from '@dedot/chaintypes/westend-asset-hub'
-import type { WestendPeopleApi } from '@dedot/chaintypes/westend-people'
 import type { ServiceInterface } from 'types'
 import type { KusamaService } from '../services/kusama'
 import type { PaseoService } from '../services/paseo'
 import type { PolkadotService } from '../services/polkadot'
-import type { WestendService } from '../services/westend'
 import type { ActivePoolQuery } from '../subscribe/activePool'
 import type { BondedQuery } from '../subscribe/bonded'
 import type { PoolMembershipQuery } from '../subscribe/poolMembership'
@@ -51,42 +43,32 @@ export type Chain =
 	| KusamaApi
 	| KusamaPeopleApi
 	| KusamaAssetHubApi
-	| WestendApi
-	| WestendPeopleApi
-	| WestendAssetHubApi
 	| PaseoApi
 	| PaseoPeopleApi
 	| PaseoAssetHubApi
 
 // Relay chains
-export type RelayChain = PolkadotApi | KusamaApi | WestendApi | PaseoApi
+export type RelayChain = PolkadotApi | KusamaApi | PaseoApi
 
 // People chains
-export type PeopleChain =
-	| PolkadotPeopleApi
-	| KusamaPeopleApi
-	| WestendPeopleApi
-	| PaseoPeopleApi
+export type PeopleChain = PolkadotPeopleApi | KusamaPeopleApi | PaseoPeopleApi
 
 // Asset hub chains
 export type AssetHubChain =
 	| PolkadotAssetHubApi
 	| KusamaAssetHubApi
-	| WestendAssetHubApi
 	| PaseoAssetHubApi
 
 // Chains that are used for staking and nomination pools
 export type StakingChain =
 	| PolkadotAssetHubApi
 	| KusamaAssetHubApi
-	| WestendAssetHubApi
 	| PaseoAssetHubApi
 
 // Mapping of service types for each network
 export interface ServiceType {
 	polkadot: typeof PolkadotService
 	kusama: typeof KusamaService
-	westend: typeof WestendService
 	paseo: typeof PaseoService
 }
 
@@ -94,12 +76,6 @@ export interface ServiceType {
 export type Service = {
 	polkadot: [PolkadotApi, PolkadotPeopleApi, PolkadotAssetHubApi, PolkadotApi]
 	kusama: [KusamaApi, KusamaPeopleApi, KusamaAssetHubApi, KusamaApi]
-	westend: [
-		WestendApi,
-		WestendPeopleApi,
-		WestendAssetHubApi,
-		WestendAssetHubApi,
-	]
 	paseo: [PaseoApi, PaseoPeopleApi, PaseoAssetHubApi, PaseoAssetHubApi]
 }
 

@@ -13,9 +13,7 @@ import {
 	PlatformURL,
 } from 'consts'
 import { blockNumber$ } from 'global-bus'
-import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { IGNORE_NETWORKS } from 'hooks/useTokenPrices'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
@@ -26,7 +24,6 @@ import { TokenPrice } from './TokenPrice'
 export const MainFooter = () => {
 	const { t } = useTranslation('app')
 	const { plugins } = usePlugins()
-	const { network } = useNetwork()
 
 	const [blockNumber, setBlockNumber] = useState<number>()
 
@@ -67,8 +64,7 @@ export const MainFooter = () => {
 					</section>
 					<section>
 						<div className={classes.hideSmall}>
-							{plugins.includes('staking_api') &&
-								!IGNORE_NETWORKS.includes(network) && <TokenPrice />}
+							{plugins.includes('staking_api') && <TokenPrice />}
 							{import.meta.env.MODE === 'development' && (
 								<div className={`${classes.stat} ${classes.last}`}>
 									<FontAwesomeIcon icon={faHive} />

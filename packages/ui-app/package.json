@@ -1,6 +1,6 @@
 {
 	"name": "ui-app",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"scripts": {
@@ -42,7 +42,7 @@
 		"react-i18next": "^17.0.11",
 		"react-router-dom": "^7.18.2",
 		"simplebar-react": "3.3.2",
-		"styled-components": "^6.4.4",
+		"styled-components": "^6.5.1",
 		"types": "workspace:*",
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",

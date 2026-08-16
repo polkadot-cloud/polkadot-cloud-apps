@@ -19,11 +19,10 @@ import {
 	ListStatusHeader,
 	Wrapper as ListWrapper,
 } from 'library/List'
-import { MotionContainer } from 'library/List/MotionContainer'
+import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { SearchInput } from 'library/List/SearchInput'
 import { Pool } from 'library/Pool'
-import { motion } from 'motion/react'
 import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -210,22 +209,12 @@ export const PoolList = ({
 				<MotionContainer>
 					{poolsToDisplay.length ? (
 						poolsToDisplay.map((pool) => (
-							<motion.div
+							<MotionItem
 								className={`item ${listFormat === 'row' ? 'row' : 'col'}`}
 								key={`nomination_${pool.id}`}
-								variants={{
-									hidden: {
-										y: 15,
-										opacity: 0,
-									},
-									show: {
-										y: 0,
-										opacity: 1,
-									},
-								}}
 							>
 								<Pool pool={pool} />
-							</motion.div>
+							</MotionItem>
 						))
 					) : (
 						<ListStatusHeader>

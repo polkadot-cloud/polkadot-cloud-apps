@@ -24,14 +24,6 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		OnFinality: 'wss://kusama.api.onfinality.io/public-ws',
 		Stakeworld: 'wss://ksm-rpc.stakeworld.io',
 	},
-	westend: {
-		// Dwellir: 'wss://westend-rpc.dwellir.com',
-		// IBP1: 'wss://rpc.ibp.network/westend',
-		// IBP2: 'wss://rpc.dotters.network/westend',
-		LuckyFriday: 'wss://rpc-westend.luckyfriday.io',
-		OnFinality: 'wss://westend.api.onfinality.io/public-ws',
-		Stakeworld: 'wss://wnd-rpc.stakeworld.io',
-	},
 	paseo: {
 		IBP1: 'wss://rpc.ibp.network/paseo',
 		IBP2: 'wss://paseo.dotters.network',
@@ -56,10 +48,6 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		LuckyFriday: 'wss://rpc-people-kusama.luckyfriday.io',
 		Rotko: 'wss://people-kusama.rotko.net',
 	},
-	'people-westend': {
-		// IBP1: 'wss://sys.ibp.network/people-westend',
-		// IBP2: 'wss://people-westend.dotters.network',
-	},
 	'people-paseo': {
 		IBP2: 'wss://people-paseo.dotters.network',
 		Amforc: 'wss://people-paseo.rpc.amforc.com',
@@ -80,13 +68,6 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		Rotko: 'wss://asset-hub-kusama.rotko.net',
 		// IBP1: 'wss://sys.ibp.network/asset-hub-kusama',
 		// IBP2: 'wss://asset-hub-kusama.dotters.network',
-	},
-	westmint: {
-		Parity: 'wss://westend-asset-hub-rpc.polkadot.io',
-		// Dwellir: 'wss://asset-hub-westend-rpc.dwellir.com',
-		// IBP1: 'wss://sys.ibp.network/asset-hub-westend',
-		// IBP2: 'wss://asset-hub-westend.dotters.network',
-		'Permanence DAO EU': 'wss://asset-hub-westend.rpc.permanence.io',
 	},
 	paseomint: {
 		IBP1: 'wss://sys.ibp.network/asset-hub-paseo',

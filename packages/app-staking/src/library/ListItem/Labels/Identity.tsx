@@ -5,28 +5,24 @@ import { Polkicon } from '@w3ux/react-polkicon'
 import { ellipsisFn } from '@w3ux/utils'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { getIdentityDisplay } from 'library/List/Utils'
-import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
 import { Identity as Wrapper } from 'ui-core/list'
 import type { IdentityProps } from '../types'
 
-export const Identity = ({ address }: IdentityProps) => {
+export const Identity = ({
+	address,
+	display: displayOverride,
+}: IdentityProps) => {
 	const { validatorIdentities, validatorSupers, validatorsFetched } =
 		useValidators()
-
-	const [display, setDisplay] = useState<ReactNode>(
-		getIdentityDisplay(validatorIdentities[address], validatorSupers[address])
-			.node,
-	)
-
-	useEffect(() => {
-		setDisplay(
-			getIdentityDisplay(validatorIdentities[address], validatorSupers[address])
-				.node,
-		)
-	}, [validatorSupers, validatorIdentities, address])
-
-	const polkiconSize = '2rem'
+	const display =
+		displayOverride === undefined
+			? getIdentityDisplay(
+					validatorIdentities[address],
+					validatorSupers[address],
+				).node
+			: displayOverride
+	const identityFetched = displayOverride !== undefined || validatorsFetched
+	const polkiconSize = '2.2rem'
 
 	return (
 		<Wrapper>
@@ -41,7 +37,7 @@ export const Identity = ({ address }: IdentityProps) => {
 				<Polkicon address={address} fontSize={polkiconSize} />
 			</div>
 			<div>
-				{validatorsFetched && display !== null ? (
+				{identityFetched && display !== null ? (
 					<h4>{display}</h4>
 				) : (
 					<h4>{ellipsisFn(address, 6)}</h4>
