@@ -9,8 +9,10 @@ import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
 export const ValidatorsAPI = ({
+	showShareLink = true,
 	toggleFavorites = true,
 }: {
+	showShareLink?: boolean
 	toggleFavorites?: boolean
 }) => {
 	const { activeValidators, totalValidators, minValidatorBond } =
@@ -23,7 +25,10 @@ export const ValidatorsAPI = ({
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>
-					<StakingApiValidatorList toggleFavorites={toggleFavorites} />
+					<StakingApiValidatorList
+						showShareLink={showShareLink}
+						toggleFavorites={toggleFavorites}
+					/>
 				</CardWrapper>
 			</Page.Row>
 		</>

@@ -12,8 +12,10 @@ import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
 export const ValidatorsNode = ({
+	showShareLink = true,
 	toggleFavorites = true,
 }: {
+	showShareLink?: boolean
 	toggleFavorites?: boolean
 }) => {
 	const { t } = useTranslation('pages')
@@ -56,6 +58,7 @@ export const ValidatorsNode = ({
 									allowListFormat={false}
 									forceListFormat="col"
 									itemsPerPage={50}
+									showShareLink={showShareLink}
 									toggleFavorites={toggleFavorites}
 								/>
 							)}

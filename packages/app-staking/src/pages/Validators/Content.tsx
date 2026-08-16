@@ -15,8 +15,10 @@ const ValidatorsAPI = lazy(() =>
 )
 
 export const ValidatorsContent = ({
+	showShareLink = true,
 	toggleFavorites,
 }: {
+	showShareLink?: boolean
 	toggleFavorites: boolean
 }) => {
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
@@ -24,9 +26,15 @@ export const ValidatorsContent = ({
 	return (
 		<Suspense fallback={<PagePreloader showStats />}>
 			{retainmentStatsEnabled ? (
-				<ValidatorsAPI toggleFavorites={toggleFavorites} />
+				<ValidatorsAPI
+					showShareLink={showShareLink}
+					toggleFavorites={toggleFavorites}
+				/>
 			) : (
-				<ValidatorsNode toggleFavorites={toggleFavorites} />
+				<ValidatorsNode
+					showShareLink={showShareLink}
+					toggleFavorites={toggleFavorites}
+				/>
 			)}
 		</Suspense>
 	)

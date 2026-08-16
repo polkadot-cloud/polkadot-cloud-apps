@@ -32,10 +32,12 @@ import { ListStatus, ResultSummary } from './styles'
 const PAGE_SIZE = 50
 const ERA_POINTS_DEPTH = 30
 interface StakingApiValidatorListProps {
+	showShareLink?: boolean
 	toggleFavorites?: boolean
 }
 
 export const StakingApiValidatorListInner = ({
+	showShareLink = true,
 	toggleFavorites = true,
 }: StakingApiValidatorListProps) => {
 	const { t } = useTranslation('app')
@@ -215,6 +217,7 @@ export const StakingApiValidatorListInner = ({
 										rate={rateByAddress.get(validator.address)}
 										isEraPointsLoading={isEraPointsLoading}
 										isRateLoading={isRateLoading}
+										showShareLink={showShareLink}
 										toggleFavorites={toggleFavorites}
 									/>
 								</MotionItem>

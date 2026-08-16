@@ -11,7 +11,7 @@ export const ValidatorsStandalone = () => {
 	return (
 		<>
 			<Page.Title title={t('validators')} />
-			<ValidatorsContent toggleFavorites={false} />
+			<ValidatorsContent showShareLink={false} toggleFavorites={false} />
 		</>
 	)
 }

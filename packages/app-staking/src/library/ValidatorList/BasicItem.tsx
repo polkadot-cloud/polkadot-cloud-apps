@@ -24,6 +24,7 @@ import type { ItemProps } from './types'
 
 const Basic = ({
 	validator,
+	showShareLink = true,
 	toggleFavorites,
 	displayFor,
 	onRemove,
@@ -47,7 +48,7 @@ const Basic = ({
 				<div>
 					<HeaderButtonRow>
 						<CopyAddress address={address} />
-						<ShareLink paramKey="v" paramValue={address} />
+						{showShareLink && <ShareLink paramKey="v" paramValue={address} />}
 						{toggleFavorites && <FavoriteValidator address={address} />}
 						{displayFor === 'default' && (
 							<Metrics

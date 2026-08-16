@@ -13,6 +13,7 @@ import type { DisplayFor, Validator } from 'types'
 
 export interface ValidatorListProps {
 	validators: Validator[]
+	showShareLink?: boolean
 	toggleFavorites?: boolean
 	itemsPerPage?: number
 	selectable?: boolean
@@ -31,6 +32,7 @@ export interface ItemProps {
 	validator: ValidatorListEntry
 	displayFor: DisplayFor
 	format: ListFormat
+	showShareLink?: boolean
 	toggleFavorites?: boolean
 	eraPoints: ValidatorEraPoints[]
 	rate?: number

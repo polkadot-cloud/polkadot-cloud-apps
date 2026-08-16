@@ -29,6 +29,7 @@ interface RowActionsMenuProps {
 	onRemove?: () => void
 	showFavorite: boolean
 	showMetrics: boolean
+	showShareLink?: boolean
 }
 
 export const RowActionsMenu = ({
@@ -37,6 +38,7 @@ export const RowActionsMenu = ({
 	onRemove,
 	showFavorite,
 	showMetrics,
+	showShareLink = true,
 }: RowActionsMenuProps) => {
 	const { t } = useTranslation('app')
 	const { open, openMenu } = useMenu()
@@ -62,12 +64,15 @@ export const RowActionsMenu = ({
 			title: t('copyAddress'),
 			cb: () => void copyToClipboard(address, t('copied')),
 		},
-		{
+	]
+
+	if (showShareLink) {
+		menuItems.push({
 			icon: <FontAwesomeIcon icon={faLink} transform="shrink-3" />,
 			title: t('copyShareLink'),
 			cb: () => void copyToClipboard(shareUrl, t('linkCopied')),
-		},
-	]
+		})
+	}
 
 	if (showFavorite) {
 		menuItems.push({
