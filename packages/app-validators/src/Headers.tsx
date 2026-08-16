@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useUi } from 'hooks/useUi'
+import { Sync } from 'library/Sync'
 import { type MenuPopoverFeatureFlags, SettingsMenu } from 'ui-app/Headers'
 import { Header } from 'ui-core/base'
 
@@ -23,6 +24,7 @@ export const Headers = () => {
 		<Header minimized={sideMenuMinimised}>
 			<section />
 			<section>
+				<Sync />
 				<SettingsMenu menuPopoverFeatures={menuPopoverFeatures} />
 			</section>
 		</Header>
