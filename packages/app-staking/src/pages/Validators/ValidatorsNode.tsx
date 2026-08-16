@@ -4,14 +4,18 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useValidatorStats } from 'hooks/useStats'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { Stats } from 'library/Stats'
 import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
-export const ValidatorsNode = () => {
+export const ValidatorsNode = ({
+	toggleFavorites = true,
+}: {
+	toggleFavorites?: boolean
+}) => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
 	const { getValidators } = useValidators()
@@ -52,7 +56,7 @@ export const ValidatorsNode = () => {
 									allowListFormat={false}
 									forceListFormat="col"
 									itemsPerPage={50}
-									toggleFavorites
+									toggleFavorites={toggleFavorites}
 								/>
 							)}
 						</>

@@ -3,12 +3,12 @@
 
 import { PageWidthLargeThreshold, PageWidthMediumThreshold } from 'consts'
 import styled from 'styled-components'
-import type { CardWrapperProps } from './types'
 
-/* CardWrapper
- *
- * Used to separate the main modules throughout the app.
- */
+export interface CardWrapperProps {
+	height?: string | number
+}
+
+/** Used to separate the main modules throughout an app. */
 export const CardWrapper = styled.div<CardWrapperProps>`
   box-shadow: var(--shadow);
   background: var(--bg-primary);

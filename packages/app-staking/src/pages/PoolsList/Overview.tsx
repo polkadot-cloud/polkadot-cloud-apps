@@ -3,8 +3,8 @@
 
 import { ListProvider } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { PoolList } from 'library/PoolList'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const PoolsOverview = () => {

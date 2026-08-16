@@ -31,7 +31,13 @@ import { ListStatus, ResultSummary } from './styles'
 
 const PAGE_SIZE = 50
 const ERA_POINTS_DEPTH = 30
-export const StakingApiValidatorListInner = () => {
+interface StakingApiValidatorListProps {
+	toggleFavorites?: boolean
+}
+
+export const StakingApiValidatorListInner = ({
+	toggleFavorites = true,
+}: StakingApiValidatorListProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
@@ -209,6 +215,7 @@ export const StakingApiValidatorListInner = () => {
 										rate={rateByAddress.get(validator.address)}
 										isEraPointsLoading={isEraPointsLoading}
 										isRateLoading={isRateLoading}
+										toggleFavorites={toggleFavorites}
 									/>
 								</MotionItem>
 							))
@@ -224,8 +231,10 @@ export const StakingApiValidatorListInner = () => {
 	)
 }
 
-export const StakingApiValidatorList = () => (
+export const StakingApiValidatorList = (
+	props: StakingApiValidatorListProps,
+) => (
 	<ListProvider initialListFormat="row">
-		<StakingApiValidatorListInner />
+		<StakingApiValidatorListInner {...props} />
 	</ListProvider>
 )

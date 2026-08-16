@@ -5,9 +5,9 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useThemeValues } from 'hooks/useThemeValues'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
+import { CardWrapper } from 'ui-app/Card'
 import { MembersList as FetchPageMemberList } from './Lists/FetchPage'
 
 export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {

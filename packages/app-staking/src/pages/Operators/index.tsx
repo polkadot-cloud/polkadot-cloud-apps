@@ -6,10 +6,10 @@ import {
 	validatorListSupported,
 } from '@w3ux/validator-assets'
 import { useNetwork } from 'hooks/useNetwork'
-import { PagePreloader } from 'library/PagePreloader'
 import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { PageProps } from 'types'
+import { PagePreloader } from 'ui-app/PagePreloader'
 import { Page } from 'ui-core/base'
 import { OperatorsSectionsProvider, useOperatorsSections } from './context'
 import { Wrapper } from './Wrappers'

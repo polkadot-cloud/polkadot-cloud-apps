@@ -6,12 +6,12 @@ import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useApi } from 'hooks/useApi'
 import { useFavoritePools } from 'hooks/useFavoritePools'
 import { useSyncing } from 'hooks/useSyncing'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { ListStatusHeader } from 'library/List'
 import { PoolList } from 'library/PoolList'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const PoolFavorites = () => {

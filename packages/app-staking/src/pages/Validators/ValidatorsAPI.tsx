@@ -2,13 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useValidatorStats } from 'hooks/useStats'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { StakingApiValidatorList } from 'library/StakingApiValidatorList'
 import { Stats } from 'library/Stats'
+import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 
-export const ValidatorsAPI = () => {
+export const ValidatorsAPI = ({
+	toggleFavorites = true,
+}: {
+	toggleFavorites?: boolean
+}) => {
 	const { activeValidators, totalValidators, minValidatorBond } =
 		useValidatorStats()
 
@@ -19,7 +23,7 @@ export const ValidatorsAPI = () => {
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>
-					<StakingApiValidatorList />
+					<StakingApiValidatorList toggleFavorites={toggleFavorites} />
 				</CardWrapper>
 			</Page.Row>
 		</>

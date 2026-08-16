@@ -4,10 +4,10 @@
 import { onTabVisitEvent } from 'event-tracking'
 import { useFavoritePools } from 'hooks/useFavoritePools'
 import { useNetwork } from 'hooks/useNetwork'
-import { PagePreloader } from 'library/PagePreloader'
-import { PageTabs } from 'library/PageTabs'
 import { lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PagePreloader } from 'ui-app/PagePreloader'
+import { PageTabs } from 'ui-app/PageTabs'
 import { Page } from 'ui-core/base'
 import { PoolsTabsProvider, usePoolsTabs } from './context'
 

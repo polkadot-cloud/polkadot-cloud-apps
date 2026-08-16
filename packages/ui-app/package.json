@@ -47,6 +47,7 @@
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-overlay": "workspace:*",
+		"ui-styles": "workspace:*",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
