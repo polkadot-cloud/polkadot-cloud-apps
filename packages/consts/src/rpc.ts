@@ -2,19 +2,25 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChainId, RpcEndpoints } from 'types'
+import { PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
 
+const isProduction =
+	(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD === true
+
 export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
-	polkadot: {
-		'Automata 1RPC': 'wss://1rpc.io/dot',
-		// Dwellir: 'wss://polkadot-rpc.dwellir.com',
-		// IBP1: 'wss://rpc.ibp.network/polkadot',
-		// IBP2: 'wss://rpc.dotters.network/polkadot',
-		LuckyFriday: 'wss://rpc-polkadot.luckyfriday.io',
-		OnFinality: 'wss://polkadot.api.onfinality.io/public-ws',
-		Stakeworld: 'wss://dot-rpc.stakeworld.io',
-	},
+	polkadot: isProduction
+		? { 'Polkadot Cloud': PolkadotCloudRpcStatemintUrl }
+		: {
+				'Automata 1RPC': 'wss://1rpc.io/dot',
+				// Dwellir: 'wss://polkadot-rpc.dwellir.com',
+				// IBP1: 'wss://rpc.ibp.network/polkadot',
+				// IBP2: 'wss://rpc.dotters.network/polkadot',
+				LuckyFriday: 'wss://rpc-polkadot.luckyfriday.io',
+				OnFinality: 'wss://polkadot.api.onfinality.io/public-ws',
+				Stakeworld: 'wss://dot-rpc.stakeworld.io',
+			},
 	kusama: {
 		'Automata 1RPC': 'wss://1rpc.io/ksm',
 		// Dwellir: 'wss://kusama-rpc.dwellir.com',
