@@ -34,7 +34,7 @@
 		"locales": "workspace:*",
 		"react": "^19.2.8",
 		"react-i18next": "^17.0.11",
-		"styled-components": "^6.5.1",
+		"styled-components": "^6.5.2",
 		"types": "workspace:*",
 		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
