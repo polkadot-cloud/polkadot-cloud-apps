@@ -34,7 +34,7 @@
 		"react-i18next": "^17.0.11",
 		"react-router-dom": "^7.18.2",
 		"simplebar": "6.3.3",
-		"styled-components": "^6.5.1",
+		"styled-components": "^6.5.2",
 		"ui-app": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-modals": "workspace:*",
