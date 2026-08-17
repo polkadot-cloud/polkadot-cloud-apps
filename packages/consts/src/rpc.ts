@@ -6,8 +6,9 @@ import { PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
 
-const isProduction =
-	(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD === true
+export const DefaultRpcProviderByChain: Partial<Record<RpcChainId, string>> = {
+	statemint: 'Polkadot Cloud',
+}
 
 export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	polkadot: {
@@ -57,17 +58,16 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		Amforc: 'wss://people-paseo.rpc.amforc.com',
 		Rotko: 'wss://people-paseo.rotko.net',
 	},
-	statemint: isProduction
-		? { 'Polkadot Cloud': PolkadotCloudRpcStatemintUrl }
-		: {
-				DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
-				// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
-				// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
-				StakeWorld: 'wss://dot-rpc.stakeworld.io/assethub',
-				// Dwellir: 'wss://asset-hub-polkadot-rpc.dwellir.com',
-				// IBP1: 'wss://sys.ibp.network/asset-hub-polkadot',
-				// IBP2: 'wss://asset-hub-polkadot.dotters.network',
-			},
+	statemint: {
+		'Polkadot Cloud': PolkadotCloudRpcStatemintUrl,
+		DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
+		// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
+		// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
+		StakeWorld: 'wss://dot-rpc.stakeworld.io/assethub',
+		// Dwellir: 'wss://asset-hub-polkadot-rpc.dwellir.com',
+		// IBP1: 'wss://sys.ibp.network/asset-hub-polkadot',
+		// IBP2: 'wss://asset-hub-polkadot.dotters.network',
+	},
 	statemine: {
 		LuckyFriday: 'wss://rpc-asset-hub-kusama.luckyfriday.io',
 		Parity: 'wss://kusama-asset-hub-rpc.polkadot.io',
