@@ -349,27 +349,6 @@ export interface ValidatorStats {
 	activeValidatorRanks: ValidatorRanksResult
 }
 
-export interface RpcEndpointHealthData {
-	rpcEndpointHealth: RpcEndpointChainHealth
-}
-
-export interface RpcEndpointChainHealth {
-	chains: {
-		chain: string
-		endpoints: {
-			label: string
-			url: string
-		}[]
-	}[]
-}
-
-export interface RpcHealthLabels {
-	chains: {
-		chain: string
-		endpoints: string[]
-	}[]
-}
-
 export interface SearchValidatorsData {
 	searchValidators: SearchValidators
 }

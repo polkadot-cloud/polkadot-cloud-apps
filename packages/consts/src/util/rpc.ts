@@ -31,7 +31,3 @@ export const getDefaultRpcEndpoints = (network: NetworkId) => {
 		...systemChainRpc,
 	}
 }
-
-// Gets the RPC endpoints for a given chain
-export const getChainRpcEndpoints = (chain: string): Record<string, string> =>
-	(NetworkList[chain] || SystemChainList[chain])?.endpoints?.rpc || {}
