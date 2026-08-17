@@ -1,28 +1,16 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	extractUrlValue,
-	localStorageOrDefault,
-	withTimeout,
-} from '@w3ux/utils'
+import { extractUrlValue, localStorageOrDefault } from '@w3ux/utils'
 import { AutoRpcKey, NetworkKey, ProviderTypeKey, rpcEndpointKey } from 'consts'
 import { DefaultNetwork, NetworkList, SystemChainList } from 'consts/networks'
 import { getDefaultRpcEndpoints, getEnabledNetworks } from 'consts/util'
-import { fetchRpcEndpointHealth } from 'plugin-staking-api'
-import type {
-	RpcEndpointHealthData,
-	RpcHealthLabels,
-} from 'plugin-staking-api/types'
 import type {
 	NetworkConfig,
 	NetworkId,
 	ProviderType,
 	RpcEndpoints,
 } from 'types'
-import { pluginEnabled } from '../plugins'
-import { sanitizeEndpoints } from './health'
-import { getLocalRpcHealthCache, setLocalRpcHealthCache } from './local'
 
 export const getInitialNetwork = () => {
 	// Attempt to get network from URL
@@ -79,51 +67,14 @@ export const getInitialRpcEndpoints = async (
 	) as RpcEndpoints
 	const fallback = getDefaultRpcEndpoints(network)
 
-	// If staking API is enabled, fetch health of RPC endpoints
-	let healthResult: RpcHealthLabels = { chains: [] }
-
-	const stakingApiEnabled = pluginEnabled('staking_api')
-	if (stakingApiEnabled) {
-		// Try to get cached health data first
-		const cachedHealth = getLocalRpcHealthCache(network)
-
-		if (cachedHealth) {
-			// Use cached data if available and fresh
-			healthResult = cachedHealth
-		} else {
-			// Fetch fresh data from API if cache is stale or missing
-			const result = (await withTimeout(
-				2000,
-				fetchRpcEndpointHealth(network),
-			)) as RpcEndpointHealthData | undefined
-
-			// Cache the fresh data if it was successfully fetched
-			if (result && result.rpcEndpointHealth.chains.length > 0) {
-				// Format result to only include endpoint labels
-				const healthLabels: RpcHealthLabels = {
-					chains: result.rpcEndpointHealth.chains.map((chain) => ({
-						...chain,
-						endpoints: chain.endpoints.map((endpoint) => endpoint.label),
-					})),
-				}
-				healthResult = healthLabels
-				setLocalRpcHealthCache(network, healthLabels)
-			}
-		}
-	}
-
-	// Return sanitized local endpoints if valid
+	// Return local endpoints if valid
 	if (local) {
 		if (validateRpcEndpoints(local, fallback)) {
-			return stakingApiEnabled
-				? sanitizeEndpoints(network, local, healthResult)
-				: local
+			return local
 		}
 	}
-	// Return sanitized fallback endpoints
-	return stakingApiEnabled
-		? sanitizeEndpoints(network, fallback, healthResult)
-		: fallback
+	// Return fallback endpoints
+	return fallback
 }
 
 export const getInitialProviderType = (): ProviderType => {
