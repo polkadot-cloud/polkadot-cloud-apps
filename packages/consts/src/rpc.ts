@@ -6,9 +6,11 @@ import { PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
 
-export const DefaultRpcProviderByChain: Partial<Record<RpcChainId, string>> = {
-	statemint: 'Polkadot Cloud',
-}
+const isProduction =
+	(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD === true
+
+export const DefaultRpcProviderByChain: Partial<Record<RpcChainId, string>> =
+	isProduction ? { statemint: 'Polkadot Cloud' } : {}
 
 export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	polkadot: {
@@ -59,7 +61,7 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		Rotko: 'wss://people-paseo.rotko.net',
 	},
 	statemint: {
-		'Polkadot Cloud': PolkadotCloudRpcStatemintUrl,
+		...(isProduction ? { 'Polkadot Cloud': PolkadotCloudRpcStatemintUrl } : {}),
 		DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
 		// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
 		// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
