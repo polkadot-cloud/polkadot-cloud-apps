@@ -54,6 +54,9 @@ const identityMatches = (...parts: Array<string | null | undefined>) => {
 export const GenerateNominations = ({
 	setters = [],
 	displayFor = 'default',
+	healthCheckFixRequest,
+	onHealthCheckDangerChange,
+	onHealthCheckFixingChange,
 }: GenerateNominationsProps) => {
 	const { t } = useTranslation()
 	const {
@@ -97,6 +100,17 @@ export const GenerateNominations = ({
 	const [candidateFetching, setCandidateFetching] = useState(false)
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+
+	useEffect(() => {
+		onHealthCheckFixingChange?.(candidateFetching)
+	}, [candidateFetching, onHealthCheckFixingChange])
+
+	useEffect(
+		() => () => {
+			onHealthCheckFixingChange?.(false)
+		},
+		[onHealthCheckFixingChange],
+	)
 
 	const resizeCallback = () => {
 		setHeight(null)
@@ -497,8 +511,9 @@ export const GenerateNominations = ({
 							}
 							renderRetainmentSummary={({ isLoading, retainmentByAddress }) => (
 								<RetainmentSummary
+									fixRequest={healthCheckFixRequest}
 									isLoading={isLoading}
-									isFixing={candidateFetching}
+									onDangerWarningsChange={onHealthCheckDangerChange}
 									onFix={fixRetainment}
 									retainmentByAddress={retainmentByAddress}
 									validators={nominations}

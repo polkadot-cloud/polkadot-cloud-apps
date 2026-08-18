@@ -255,7 +255,7 @@
 		"nominateActive": "Actif",
 		"nominateInactive": "Inactif",
 		"nominationHealthCheck": "Bilan de Santé des Nominations",
-		"nominationHealthCheckNeedsAttention": "Certaines de vos nominations nécessitent votre attention. Corrigez-les automatiquement pour améliorer leur rétention.",
+		"nominationHealthCheckNeedsAttention": "Certaines de vos nominations nécessitent votre attention.",
 		"nominationSummary": "Résumé de nomination",
 		"nominationsAdded": "Ajoutées",
 		"nominationsRemoved": "Supprimées",

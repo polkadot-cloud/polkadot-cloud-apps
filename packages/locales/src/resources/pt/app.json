@@ -255,7 +255,7 @@
 		"nominateActive": "Ativo",
 		"nominateInactive": "Inativo",
 		"nominationHealthCheck": "Verificação de Saúde das Nomeações",
-		"nominationHealthCheckNeedsAttention": "Algumas das suas nomeações precisam de atenção. Corrija-as automaticamente para melhorar a retenção.",
+		"nominationHealthCheckNeedsAttention": "Algumas das suas nomeações precisam de atenção.",
 		"nominationSummary": "Resumo de Nomeação",
 		"nominationsAdded": "Adicionadas",
 		"nominationsRemoved": "Removidas",

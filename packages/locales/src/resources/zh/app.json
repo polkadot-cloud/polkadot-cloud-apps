@@ -252,7 +252,7 @@
 		"nominateActive": "激活",
 		"nominateInactive": "未激活",
 		"nominationHealthCheck": "提名健康检查",
-		"nominationHealthCheckNeedsAttention": "部分提名需要处理。自动修复以提高留存率。",
+		"nominationHealthCheckNeedsAttention": "部分提名需要处理。",
 		"nominationSummary": "提名摘要",
 		"nominations": "提名",
 		"nominationsAdded": "已添加",

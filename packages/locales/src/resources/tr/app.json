@@ -255,7 +255,7 @@
 		"nominateActive": "Aktif",
 		"nominateInactive": "Pasif",
 		"nominationHealthCheck": "Adaylık Sağlık Kontrolü",
-		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor. Tutma oranını iyileştirmek için bunları otomatik olarak düzeltin.",
+		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor.",
 		"nominationSummary": "Nominasyon Özeti",
 		"nominationsAdded": "Eklendi",
 		"nominationsRemoved": "Kaldırıldı",

@@ -10,9 +10,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
 import { clampRate } from 'library/ValidatorList/retainment'
 import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
-import { ButtonHelp, ButtonSubmit } from 'ui-buttons'
+import { ButtonHelp } from 'ui-buttons'
 import {
 	HealthCheckFixCopy,
 	HealthCheckFixPrompt,
@@ -28,7 +29,6 @@ import {
 
 const HIGH_RETAINMENT_THRESHOLD = 75
 const LOW_RETAINMENT_THRESHOLD = 50
-const SHOW_ALL_VARIATIONS = true
 
 type RetainmentStatus = 'success' | 'warning' | 'danger'
 
@@ -50,8 +50,9 @@ const StatusIcon = ({ status }: { status: RetainmentStatus }) =>
 	)
 
 interface RetainmentSummaryProps {
+	fixRequest?: number
 	isLoading: boolean
-	isFixing: boolean
+	onDangerWarningsChange?: (hasDangerWarnings: boolean) => void
 	onFix: (validators: Validator[]) => Promise<void>
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	validators: Validator[]
@@ -68,8 +69,9 @@ const getRetainmentStatus = (rate: number): RetainmentStatus => {
 }
 
 export const RetainmentSummary = ({
+	fixRequest = 0,
 	isLoading,
-	isFixing,
+	onDangerWarningsChange,
 	onFix,
 	retainmentByAddress,
 	validators,
@@ -87,54 +89,6 @@ export const RetainmentSummary = ({
 			/>
 		</RetainmentSummaryHeading>
 	)
-
-	// Temporary preview for comparing every retainment warning state.
-	if (SHOW_ALL_VARIATIONS) {
-		const previewScores: Array<{
-			status: RetainmentStatus
-			value: string
-		}> = [
-			{ status: 'success', value: '85%' },
-			{ status: 'warning', value: '60%' },
-			{ status: 'danger', value: '35%' },
-		]
-
-		return (
-			<RetainmentSummaryWrapper>
-				<RetainmentSummaryHeader>{healthCheckHeading}</RetainmentSummaryHeader>
-				<HealthCheckFixPrompt>
-					<HealthCheckFixCopy>
-						{t('nominationHealthCheckNeedsAttention')}
-					</HealthCheckFixCopy>
-					<ButtonSubmit asLabel lg text={t('fixIssues')} />
-				</HealthCheckFixPrompt>
-				{previewScores.map(({ status, value }) => (
-					<StatusBox $status={status} key={status}>
-						<StatusMessage>
-							<StatusIconWrapper $status={status}>
-								<StatusIcon status={status} />
-							</StatusIconWrapper>
-							<StatusCopy $status={status}>
-								<strong>
-									{t('averageRetainmentScore')}: {value}
-								</strong>
-								<span>{t(descriptionKeys[status])}</span>
-							</StatusCopy>
-						</StatusMessage>
-					</StatusBox>
-				))}
-				<StatusBox $status="danger" role="status">
-					<WarningCopy>
-						<StatusIconWrapper $status="danger">
-							<FontAwesomeIcon icon={faCircleXmark} />
-						</StatusIconWrapper>
-						<span>{t('retainmentThresholdWarning', { count: 2 })}</span>
-					</WarningCopy>
-				</StatusBox>
-			</RetainmentSummaryWrapper>
-		)
-	}
-
 	const validatorsWithRetainment = validators.flatMap((validator) => {
 		const rate = retainmentByAddress.get(validator.address)?.months[0]
 			?.retainmentRate
@@ -142,6 +96,35 @@ export const RetainmentSummary = ({
 			? [{ rate: clampRate(rate), validator }]
 			: []
 	})
+	const validatorsBelowThreshold = validatorsWithRetainment
+		.filter(({ rate }) => rate < HIGH_RETAINMENT_THRESHOLD)
+		.map(({ validator }) => validator)
+	const hasDangerWarnings =
+		!isLoading &&
+		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
+	const lastFixRequest = useRef(fixRequest)
+
+	useEffect(() => {
+		onDangerWarningsChange?.(hasDangerWarnings)
+	}, [hasDangerWarnings, onDangerWarningsChange])
+
+	useEffect(
+		() => () => {
+			onDangerWarningsChange?.(false)
+		},
+		[onDangerWarningsChange],
+	)
+
+	useEffect(() => {
+		if (fixRequest === lastFixRequest.current) {
+			return
+		}
+
+		lastFixRequest.current = fixRequest
+		if (hasDangerWarnings && validatorsBelowThreshold.length > 0) {
+			void onFix(validatorsBelowThreshold)
+		}
+	}, [fixRequest, hasDangerWarnings, onFix, validatorsBelowThreshold])
 
 	if (isLoading || validatorsWithRetainment.length === 0) {
 		return null
@@ -150,9 +133,6 @@ export const RetainmentSummary = ({
 	const averageRetainment =
 		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
 		validatorsWithRetainment.length
-	const validatorsBelowThreshold = validatorsWithRetainment
-		.filter(({ rate }) => rate < HIGH_RETAINMENT_THRESHOLD)
-		.map(({ validator }) => validator)
 	const thresholdWarningStatus: RetainmentStatus =
 		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
 			? 'danger'
@@ -171,12 +151,6 @@ export const RetainmentSummary = ({
 					<HealthCheckFixCopy>
 						{t('nominationHealthCheckNeedsAttention')}
 					</HealthCheckFixCopy>
-					<ButtonSubmit
-						lg
-						text={t('fixIssues')}
-						disabled={isFixing}
-						onClick={() => void onFix(validatorsBelowThreshold)}
-					/>
 				</HealthCheckFixPrompt>
 			)}
 			<StatusBox $status={status}>

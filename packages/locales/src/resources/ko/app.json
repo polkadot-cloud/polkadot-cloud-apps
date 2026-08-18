@@ -255,7 +255,7 @@
 		"nominateActive": "활성",
 		"nominateInactive": "비활성",
 		"nominationHealthCheck": "추천 상태 점검",
-		"nominationHealthCheckNeedsAttention": "일부 추천에 주의가 필요합니다. 자동으로 수정하여 리테인먼트를 개선하세요.",
+		"nominationHealthCheckNeedsAttention": "일부 추천에 주의가 필요합니다.",
 		"nominationSummary": "지명 요약",
 		"nominationsAdded": "추가됨",
 		"nominationsRemoved": "제거됨",

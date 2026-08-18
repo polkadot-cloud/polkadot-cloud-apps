@@ -51,8 +51,10 @@ export const Inner = () => {
 	const canvasSize = 'xl'
 
 	// Valid to submit transaction
-	const [valid, setValid] = useState<boolean>(false)
 	const [submitOpen, setSubmitOpen] = useState<boolean>(false)
+	const [hasDangerWarnings, setHasDangerWarnings] = useState<boolean>(false)
+	const [healthCheckFixing, setHealthCheckFixing] = useState<boolean>(false)
+	const [healthCheckFixRequest, setHealthCheckFixRequest] = useState(0)
 
 	// Handler for updating setup
 	const handleSetupUpdate = (value: NominationSelection) => {
@@ -66,6 +68,11 @@ export const Inner = () => {
 		) &&
 		nominations.length > 0 &&
 		nominations.length === defaultNominations.length
+	const hasSubmittableChanges =
+		MaxNominations >= nominations.length &&
+		nominations.length > 0 &&
+		!nominationsMatch()
+	const valid = hasSubmittableChanges && !hasDangerWarnings
 
 	const getTx = () => {
 		if (!valid) {
@@ -102,18 +109,11 @@ export const Inner = () => {
 		},
 	})
 
-	// Valid if there are between 1 and `MaxNominations` nominations
 	useEffect(() => {
-		const nextValid =
-			MaxNominations >= nominations.length &&
-			nominations.length > 0 &&
-			!nominationsMatch()
-
-		setValid(nextValid)
-		if (!nextValid) {
+		if (!valid) {
 			setSubmitOpen(false)
 		}
-	}, [nominations])
+	}, [valid])
 
 	// Generation component props
 	const displayFor: DisplayFor = 'canvas'
@@ -141,38 +141,55 @@ export const Inner = () => {
 					setters={setters}
 					action={
 						method ? (
-							<Popover
-								open={submitOpen}
-								onOpenChange={setSubmitOpen}
-								disabled={!valid}
-								portalContainer={themeElementRef.current || undefined}
-								width="min(380px, calc(100vw - 2rem))"
-								side="bottom"
-								align="end"
-								sideOffset={8}
-								content={
-									<Form
-										valid={valid}
-										requiresMigratedController={!isPool}
-										submitExtrinsic={submitExtrinsic}
-									/>
-								}
-							>
+							hasDangerWarnings ? (
 								<ButtonSubmit
-									asLabel
 									lg
-									text={t('submit', { ns: 'modals' })}
-									pulse={valid}
-									disabled={!valid}
+									text={t('fixIssues')}
+									disabled={healthCheckFixing}
+									onClick={() =>
+										setHealthCheckFixRequest((current) => current + 1)
+									}
 								/>
-							</Popover>
+							) : (
+								<Popover
+									open={submitOpen}
+									onOpenChange={setSubmitOpen}
+									disabled={!valid}
+									portalContainer={themeElementRef.current || undefined}
+									width="min(380px, calc(100vw - 2rem))"
+									side="bottom"
+									align="end"
+									sideOffset={8}
+									content={
+										<Form
+											valid={valid}
+											requiresMigratedController={!isPool}
+											submitExtrinsic={submitExtrinsic}
+										/>
+									}
+								>
+									<ButtonSubmit
+										asLabel
+										lg
+										text={t('submit', { ns: 'modals' })}
+										pulse={valid}
+										disabled={!valid}
+									/>
+								</Popover>
+							)
 						) : undefined
 					}
 				/>
 			)}
 			<Main size={canvasSize} withMenu>
 				{displayFor !== 'canvas' && <InlineControls displayFor={displayFor} />}
-				<GenerateNominations displayFor={displayFor} setters={setters} />
+				<GenerateNominations
+					displayFor={displayFor}
+					healthCheckFixRequest={healthCheckFixRequest}
+					onHealthCheckDangerChange={setHasDangerWarnings}
+					onHealthCheckFixingChange={setHealthCheckFixing}
+					setters={setters}
+				/>
 			</Main>
 		</>
 	)

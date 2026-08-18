@@ -258,7 +258,7 @@
 		"nominateActive": "Активно",
 		"nominateInactive": "Неактивно",
 		"nominationHealthCheck": "Проверка состояния номинаций",
-		"nominationHealthCheckNeedsAttention": "Некоторые номинации требуют внимания. Исправьте их автоматически, чтобы улучшить удержание.",
+		"nominationHealthCheckNeedsAttention": "Некоторые номинации требуют внимания.",
 		"nominationSummary": "Сводка номинаций",
 		"nominationsAdded": "Добавлено",
 		"nominationsRemoved": "Удалено",

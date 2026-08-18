@@ -42,14 +42,8 @@ export const HealthCheckFixPrompt = styled.div`
   gap: 1rem;
   justify-content: space-between;
   margin-top: -0.4rem;
-  padding: 0 0.15rem 0.35rem;
+  padding: 0 0.15rem 0.5rem;
   width: 100%;
-
-  > button,
-  > div:last-child {
-    flex-shrink: 0;
-    margin-bottom: 0.15rem;
-  }
 `
 
 export const HealthCheckFixCopy = styled.p`

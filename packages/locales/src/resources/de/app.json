@@ -255,7 +255,7 @@
 		"nominateActive": "Aktiv",
 		"nominateInactive": "Inaktiv",
 		"nominationHealthCheck": "Nominierungs-Gesundheitscheck",
-		"nominationHealthCheckNeedsAttention": "Einige deiner Nominierungen erfordern Aufmerksamkeit. Behebe sie automatisch, um ihre Retention zu verbessern.",
+		"nominationHealthCheckNeedsAttention": "Einige deiner Nominierungen erfordern Aufmerksamkeit.",
 		"nominationSummary": "Nominierungsübersicht",
 		"nominationsAdded": "Hinzugefügt",
 		"nominationsRemoved": "Entfernt",

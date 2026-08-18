@@ -255,7 +255,7 @@
 		"nominateActive": "アクティブ",
 		"nominateInactive": "非アクティブ",
 		"nominationHealthCheck": "推薦ヘルスチェック",
-		"nominationHealthCheckNeedsAttention": "一部の推薦には対応が必要です。自動修正してリテインメントを改善します。",
+		"nominationHealthCheckNeedsAttention": "一部の推薦には対応が必要です。",
 		"nominationSummary": "ノミネーション概要",
 		"nominationsAdded": "追加済み",
 		"nominationsRemoved": "削除済み",
