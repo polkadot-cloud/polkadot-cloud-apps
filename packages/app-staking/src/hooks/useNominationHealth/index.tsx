@@ -3,6 +3,7 @@
 
 import { createSafeContext } from '@w3ux/hooks'
 import { usePlugins } from 'hooks/usePlugins'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import type {
@@ -19,6 +20,7 @@ export const NominationHealthProvider = ({
 	children: ReactNode
 }) => {
 	const { pluginEnabled } = usePlugins()
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const [enabled, setEnabled] = useState(true)
 	const [nominationHealth, setNominationHealth] =
 		useState<NominationHealthState>({
@@ -32,8 +34,9 @@ export const NominationHealthProvider = ({
 		<NominationHealthContext.Provider
 			value={{
 				...nominationHealth,
-				active: stakingApiEnabled && enabled,
+				active: retainmentStatsEnabled && enabled,
 				enabled,
+				retainmentStatsEnabled,
 				setEnabled,
 				setNominationHealth,
 				stakingApiEnabled,

@@ -17,9 +17,9 @@ import { ConnectItem, MenuItem, MenuItemButton, Popover } from 'ui-core/popover'
 export const Settings = () => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
-	const { enabled, setEnabled, stakingApiEnabled } = useNominationHealth()
+	const { enabled, retainmentStatsEnabled, setEnabled } = useNominationHealth()
 
-	if (!stakingApiEnabled) {
+	if (!retainmentStatsEnabled) {
 		return null
 	}
 

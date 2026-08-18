@@ -11,7 +11,6 @@ import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
@@ -74,8 +73,11 @@ export const GenerateNominations = ({
 	const defaultNominationsCount = defaultNominations.length
 	const fetchingRef = useRef(false)
 	const [candidateFetching, setCandidateFetching] = useState(false)
-	const { active: healthCheckActive, stakingApiEnabled } = useNominationHealth()
-	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const {
+		active: healthCheckActive,
+		retainmentStatsEnabled,
+		stakingApiEnabled,
+	} = useNominationHealth()
 	const validatorDetails = useValidatorDetails(
 		nominations.map(({ address }) => address),
 		retainmentStatsEnabled && isReady && method !== null && !fetching,
@@ -363,7 +365,7 @@ export const GenerateNominations = ({
 										filterHandlers={Object.values(filterHandlers)}
 										displayFor={displayFor}
 									/>
-									{healthCheckActive && retainmentStatsEnabled && (
+									{healthCheckActive && (
 										<NominationHealth
 											isLoading={validatorDetails.isLoading}
 											retainmentByAddress={validatorDetails.retainmentByAddress}

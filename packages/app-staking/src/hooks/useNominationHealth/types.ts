@@ -14,6 +14,7 @@ export interface NominationHealthContextInterface
 	extends NominationHealthState {
 	active: boolean
 	enabled: boolean
+	retainmentStatsEnabled: boolean
 	setEnabled: Dispatch<SetStateAction<boolean>>
 	setNominationHealth: Dispatch<SetStateAction<NominationHealthState>>
 	stakingApiEnabled: boolean
