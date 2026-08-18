@@ -29,6 +29,13 @@ export const MenuControls = ({
 	return (
 		<MenuWrapper>
 			<div className="inner">
+				{!method && (
+					<ButtonMenu
+						asLabel
+						disabled
+						text={t('chooseNominationMethod', { ns: 'app' })}
+					/>
+				)}
 				{method && (
 					<>
 						<ButtonMenu

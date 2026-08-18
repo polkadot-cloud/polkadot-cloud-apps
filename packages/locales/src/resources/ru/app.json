@@ -46,6 +46,7 @@
 		"cancel": "Отменить",
 		"cancelled": "Отменено",
 		"chooseAnotherPool": "Выбрать другой пул",
+		"chooseNominationMethod": "Выберите способ номинации",
 		"chooseValidators": "Выберите до {{maxNominations}} валидаторов для номинации.",
 		"chooseValidators2": "Сгенерируйте номинации автоматически или добавьте их вручную.",
 		"claimSetting": "Настройка получения",

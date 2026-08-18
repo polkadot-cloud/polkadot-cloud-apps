@@ -46,6 +46,7 @@
 		"cancel": "Abbrechen",
 		"cancelled": "Abgebrochen",
 		"chooseAnotherPool": "Wähle einen anderen Pool",
+		"chooseNominationMethod": "Nominierungsmethode wählen",
 		"chooseValidators": "Wähle bis zu {{maxNominations}} Validatoren zur Nominierung.",
 		"chooseValidators2": "Generiere deine Nominierungen automatisch oder füge diese manuell ein.",
 		"claimSetting": "Auszahlungseinstellung",

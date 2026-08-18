@@ -46,6 +46,7 @@
 		"cancel": "Annuler",
 		"cancelled": "Annulé",
 		"chooseAnotherPool": "Choisir un autre pool",
+		"chooseNominationMethod": "Choisissez une méthode de nomination",
 		"chooseValidators": "Choisissez jusqu'à {{maxNominations}} validateurs à nominer.",
 		"chooseValidators2": "Générez vos nominations automatiquement ou insérez-les manuellement.",
 		"claimSetting": "Paramètre de réclamation",

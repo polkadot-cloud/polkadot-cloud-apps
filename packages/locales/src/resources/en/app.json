@@ -46,6 +46,7 @@
 		"cancel": "Cancel",
 		"cancelled": "Cancelled",
 		"chooseAnotherPool": "Choose Another Pool",
+		"chooseNominationMethod": "Choose a Nomination Method",
 		"chooseValidators": "Choose up to {{maxNominations}} validators to nominate.",
 		"chooseValidators2": "Generate your nominations automatically or manually insert them.",
 		"claimSetting": "Claim Setting",

@@ -46,6 +46,7 @@
 		"cancel": "キャンセル",
 		"cancelled": "キャンセル済み",
 		"chooseAnotherPool": "別のプールを選択",
+		"chooseNominationMethod": "ノミネーション方法を選択",
 		"chooseValidators": "ノミネートするバリデータを{{maxNominations}}個まで選択してください。",
 		"chooseValidators2": "ノミネーションを自動生成するか、手動で挿入してください。",
 		"claimSetting": "受け取り設定",

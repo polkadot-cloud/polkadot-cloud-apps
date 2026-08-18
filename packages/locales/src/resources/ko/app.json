@@ -46,6 +46,7 @@
 		"cancel": "취소",
 		"cancelled": "취소됨",
 		"chooseAnotherPool": "다른 풀 선택",
+		"chooseNominationMethod": "노미네이션 방식 선택",
 		"chooseValidators": "지명할 검증인을 최대 {{maxNominations}}명 선택하세요.",
 		"chooseValidators2": "지명을 자동으로 생성하거나 수동으로 삽입합니다.",
 		"claimSetting": "청구 설정",

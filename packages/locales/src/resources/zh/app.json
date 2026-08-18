@@ -46,6 +46,7 @@
 		"cancel": "取消",
 		"cancelled": "已取消",
 		"chooseAnotherPool": "选择另一个池",
+		"chooseNominationMethod": "选择提名方式",
 		"chooseValidators": "最多能选择 {{maxNominations}} 个验证人。",
 		"chooseValidators2": "自动生成提名或手动加入提名",
 		"claimSetting": "申领设置",

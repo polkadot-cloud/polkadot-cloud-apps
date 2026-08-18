@@ -46,6 +46,7 @@
 		"cancel": "İptal",
 		"cancelled": "İptal Edildi",
 		"chooseAnotherPool": "Başka Bir Havuz Seç",
+		"chooseNominationMethod": "Bir nominasyon yöntemi seçin",
 		"chooseValidators": "Nominasyon yapmak için en fazla {{maxNominations}} validatör seçin.",
 		"chooseValidators2": "Nominasyonlarınızı otomatik olarak oluşturun veya manuel olarak ekleyin.",
 		"claimSetting": "Talep Ayarı",

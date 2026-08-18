@@ -140,29 +140,31 @@ export const Inner = () => {
 					allowRevert={allowRevert}
 					setters={setters}
 					action={
-						<Popover
-							open={submitOpen}
-							onOpenChange={setSubmitOpen}
-							disabled={!valid}
-							portalContainer={themeElementRef.current || undefined}
-							width="min(380px, calc(100vw - 2rem))"
-							side="bottom"
-							align="end"
-							sideOffset={8}
-							content={
-								<Form
-									valid={valid}
-									requiresMigratedController={!isPool}
-									submitExtrinsic={submitExtrinsic}
-								/>
-							}
-						>
-							<ButtonSubmit
-								asLabel
-								text={t('submit', { ns: 'modals' })}
+						method ? (
+							<Popover
+								open={submitOpen}
+								onOpenChange={setSubmitOpen}
 								disabled={!valid}
-							/>
-						</Popover>
+								portalContainer={themeElementRef.current || undefined}
+								width="min(380px, calc(100vw - 2rem))"
+								side="bottom"
+								align="end"
+								sideOffset={8}
+								content={
+									<Form
+										valid={valid}
+										requiresMigratedController={!isPool}
+										submitExtrinsic={submitExtrinsic}
+									/>
+								}
+							>
+								<ButtonSubmit
+									asLabel
+									text={t('submit', { ns: 'modals' })}
+									disabled={!valid}
+								/>
+							</Popover>
+						) : undefined
 					}
 				/>
 			)}
