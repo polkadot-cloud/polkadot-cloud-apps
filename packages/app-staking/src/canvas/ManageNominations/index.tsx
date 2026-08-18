@@ -55,6 +55,8 @@ export const Inner = () => {
 
 	// Valid to submit transaction
 	const [submitOpen, setSubmitOpen] = useState<boolean>(false)
+
+	// Health check states
 	const [hasDangerWarnings, setHasDangerWarnings] = useState<boolean>(false)
 	const [healthCheckFixing, setHealthCheckFixing] = useState<boolean>(false)
 	const [healthCheckFixRequest, setHealthCheckFixRequest] = useState(0)

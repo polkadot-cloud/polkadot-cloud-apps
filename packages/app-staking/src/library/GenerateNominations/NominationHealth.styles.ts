@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 type RetainmentStatus = 'success' | 'warning' | 'danger'
 
-export const RetainmentSummaryWrapper = styled.section`
+export const NominationHealthWrapper = styled.section`
   background: var(--gray-200);
   border: 1px solid var(--gray-400);
   border-radius: 1.25rem;
@@ -16,7 +16,7 @@ export const RetainmentSummaryWrapper = styled.section`
   width: calc(100% - 1.8rem);
 `
 
-export const RetainmentSummaryHeading = styled.h3`
+export const NominationHealthHeading = styled.h3`
   align-items: center;
   color: var(--gray-1000);
   display: flex;
@@ -26,7 +26,7 @@ export const RetainmentSummaryHeading = styled.h3`
   padding: 0.1rem 0.15rem;
 `
 
-export const RetainmentSummaryHeader = styled.div`
+export const NominationHealthHeader = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;

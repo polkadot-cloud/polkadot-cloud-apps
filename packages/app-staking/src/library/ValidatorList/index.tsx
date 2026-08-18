@@ -108,6 +108,7 @@ export const ValidatorListInner = ({
 			.join(',')
 		return `${itemKeys}|${showControls ? JSON.stringify(config) : ''}`
 	}, [config, listItems, showControls])
+
 	const internalValidatorDetails = useValidatorDetails(
 		listItems.map(({ address }) => address),
 		retainmentStatsEnabled && suppliedValidatorDetails === undefined,

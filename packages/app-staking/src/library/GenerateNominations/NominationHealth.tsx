@@ -17,15 +17,15 @@ import { ButtonHelp } from 'ui-buttons'
 import {
 	HealthCheckFixCopy,
 	HealthCheckFixPrompt,
-	RetainmentSummaryHeader,
-	RetainmentSummaryHeading,
-	RetainmentSummaryWrapper,
+	NominationHealthHeader,
+	NominationHealthHeading,
+	NominationHealthWrapper,
 	StatusBox,
 	StatusCopy,
 	StatusIconWrapper,
 	StatusMessage,
 	WarningCopy,
-} from './RetainmentSummary.styles'
+} from './NominationHealth.styles'
 
 const HIGH_RETAINMENT_THRESHOLD = 75
 const LOW_RETAINMENT_THRESHOLD = 50
@@ -49,7 +49,7 @@ const StatusIcon = ({ status }: { status: RetainmentStatus }) =>
 		/>
 	)
 
-interface RetainmentSummaryProps {
+interface NominationHealthProps {
 	fixRequest?: number
 	isLoading: boolean
 	onDangerWarningsChange?: (hasDangerWarnings: boolean) => void
@@ -68,18 +68,18 @@ const getRetainmentStatus = (rate: number): RetainmentStatus => {
 	return 'danger'
 }
 
-export const RetainmentSummary = ({
+export const NominationHealth = ({
 	fixRequest = 0,
 	isLoading,
 	onDangerWarningsChange,
 	onFix,
 	retainmentByAddress,
 	validators,
-}: RetainmentSummaryProps) => {
+}: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { openHelpTooltip } = useHelp()
 	const healthCheckHeading = (
-		<RetainmentSummaryHeading>
+		<NominationHealthHeading>
 			{t('nominationHealthCheck')}
 			<ButtonHelp
 				marginLeft
@@ -87,7 +87,7 @@ export const RetainmentSummary = ({
 				definition="Nomination Health Check"
 				openHelp={openHelpTooltip}
 			/>
-		</RetainmentSummaryHeading>
+		</NominationHealthHeading>
 	)
 	const validatorsWithRetainment = validators.flatMap((validator) => {
 		const rate = retainmentByAddress.get(validator.address)?.months[0]
@@ -144,8 +144,8 @@ export const RetainmentSummary = ({
 	)}%`
 
 	return (
-		<RetainmentSummaryWrapper>
-			<RetainmentSummaryHeader>{healthCheckHeading}</RetainmentSummaryHeader>
+		<NominationHealthWrapper>
+			<NominationHealthHeader>{healthCheckHeading}</NominationHealthHeader>
 			{validatorsBelowThreshold.length > 0 && (
 				<HealthCheckFixPrompt role="status">
 					<HealthCheckFixCopy>
@@ -180,6 +180,6 @@ export const RetainmentSummary = ({
 					</WarningCopy>
 				</StatusBox>
 			)}
-		</RetainmentSummaryWrapper>
+		</NominationHealthWrapper>
 	)
 }

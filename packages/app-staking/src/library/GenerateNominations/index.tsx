@@ -28,9 +28,9 @@ import { Loader } from 'ui-core/base'
 import { usePrompt } from 'ui-overlay'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
+import { NominationHealth } from './NominationHealth'
 import { SearchValidators } from './Prompts/SearchValidators'
 import { SelectFavorites } from './Prompts/SelectFavorites'
-import { RetainmentSummary } from './RetainmentSummary'
 import type {
 	AddNominationsType,
 	FilterHandlers,
@@ -516,7 +516,7 @@ export const GenerateNominations = ({
 										displayFor={displayFor}
 									/>
 									{healthCheckEnabled && retainmentStatsEnabled && (
-										<RetainmentSummary
+										<NominationHealth
 											fixRequest={healthCheckFixRequest}
 											isLoading={validatorDetails.isLoading}
 											onDangerWarningsChange={onHealthCheckDangerChange}
