@@ -46,18 +46,28 @@ export const NominationHealth = ({
 	const warningCount = validatorsBelowThreshold.length - dangerCount
 
 	// Whether any validator falls below the medium retainment threshold.
-	const hasDangerWarnings = !isLoading && dangerCount > 0
+	const hasDangerWarnings = dangerCount > 0
 
 	const { setNominationHealth } = useNominationHealth()
 	useEffect(() => {
-		setNominationHealth({ hasDangerWarnings, validatorsBelowThreshold })
+		setNominationHealth({
+			hasDangerWarnings,
+			isLoading,
+			validatorsBelowThreshold,
+		})
 		return () => {
 			setNominationHealth({
 				hasDangerWarnings: false,
+				isLoading: false,
 				validatorsBelowThreshold: [],
 			})
 		}
-	}, [hasDangerWarnings, setNominationHealth, validatorsBelowThreshold])
+	}, [
+		hasDangerWarnings,
+		isLoading,
+		setNominationHealth,
+		validatorsBelowThreshold,
+	])
 
 	// If the data is still loading or there are no validators with retainment data, return null to
 	// avoid rendering the component.

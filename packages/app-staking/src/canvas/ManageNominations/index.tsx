@@ -30,7 +30,11 @@ export const Inner = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { serviceApi } = useApi()
-	const { active: healthCheckActive, hasDangerWarnings } = useNominationHealth()
+	const {
+		active: healthCheckActive,
+		hasDangerWarnings,
+		isLoading: healthCheckLoading,
+	} = useNominationHealth()
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
@@ -55,7 +59,8 @@ export const Inner = () => {
 
 	// Whether the current nominations can be submitted
 	const valid =
-		hasSubmittableChanges && (!healthCheckActive || !hasDangerWarnings)
+		hasSubmittableChanges &&
+		(!healthCheckActive || (!healthCheckLoading && !hasDangerWarnings))
 
 	// Addresses of the current nominations
 	const nominationAddresses = nominations.map(({ address }) => address)

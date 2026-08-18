@@ -23,6 +23,7 @@ export const NominationHealthProvider = ({
 	const [nominationHealth, setNominationHealth] =
 		useState<NominationHealthState>({
 			hasDangerWarnings: false,
+			isLoading: false,
 			validatorsBelowThreshold: [],
 		})
 	const stakingApiEnabled = pluginEnabled('staking_api')

@@ -6,6 +6,7 @@ import type { Validator } from 'types'
 
 export interface NominationHealthState {
 	hasDangerWarnings: boolean
+	isLoading: boolean
 	validatorsBelowThreshold: Validator[]
 }
 
