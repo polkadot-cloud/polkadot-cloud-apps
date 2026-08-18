@@ -12,6 +12,7 @@ import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNetwork } from 'hooks/useNetwork'
+import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useUi } from 'hooks/useUi'
 import { getIdentityDisplay } from 'library/List/Utils'
@@ -55,10 +56,6 @@ const identityMatches = (...parts: Array<string | null | undefined>) => {
 export const GenerateNominations = ({
 	setters = [],
 	displayFor = 'default',
-	healthCheckEnabled = true,
-	healthCheckFixRequest,
-	onHealthCheckDangerChange,
-	onHealthCheckFixingChange,
 }: GenerateNominationsProps) => {
 	const { t } = useTranslation()
 	const {
@@ -100,22 +97,14 @@ export const GenerateNominations = ({
 	const defaultNominationsCount = defaultNominations.length
 	const fetchingRef = useRef(false)
 	const [candidateFetching, setCandidateFetching] = useState(false)
+	const { active: healthCheckActive } = useNominationHealth({
+		isFixing: candidateFetching,
+	})
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const validatorDetails = useValidatorDetails(
 		nominations.map(({ address }) => address),
 		retainmentStatsEnabled && isReady && method !== null && !fetching,
-	)
-
-	useEffect(() => {
-		onHealthCheckFixingChange?.(candidateFetching)
-	}, [candidateFetching, onHealthCheckFixingChange])
-
-	useEffect(
-		() => () => {
-			onHealthCheckFixingChange?.(false)
-		},
-		[onHealthCheckFixingChange],
 	)
 
 	const resizeCallback = () => {
@@ -515,11 +504,9 @@ export const GenerateNominations = ({
 										filterHandlers={Object.values(filterHandlers)}
 										displayFor={displayFor}
 									/>
-									{healthCheckEnabled && retainmentStatsEnabled && (
+									{healthCheckActive && retainmentStatsEnabled && (
 										<NominationHealth
-											fixRequest={healthCheckFixRequest}
 											isLoading={validatorDetails.isLoading}
-											onDangerWarningsChange={onHealthCheckDangerChange}
 											onFix={fixRetainment}
 											retainmentByAddress={validatorDetails.retainmentByAddress}
 											validators={nominations}

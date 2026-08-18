@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { createSafeContext } from '@w3ux/hooks'
+import { NominationHealthProvider } from 'hooks/useNominationHealth'
 import type { ReactNode } from 'react'
 import { useRef, useState } from 'react'
 import type { AnyFunction, Validator } from 'types'
@@ -62,23 +63,25 @@ export const ManageNominationsProvider = ({
 	}
 
 	return (
-		<ManageNominationsContext.Provider
-			value={{
-				method,
-				setMethod,
-				fetching,
-				setFetching,
-				height,
-				setHeight,
-				defaultNominations,
-				nominations,
-				setNominations,
-				heightRef,
-				updateSetters,
-				revertNominations,
-			}}
-		>
-			{children}
-		</ManageNominationsContext.Provider>
+		<NominationHealthProvider>
+			<ManageNominationsContext.Provider
+				value={{
+					method,
+					setMethod,
+					fetching,
+					setFetching,
+					height,
+					setHeight,
+					defaultNominations,
+					nominations,
+					setNominations,
+					heightRef,
+					updateSetters,
+					revertNominations,
+				}}
+			>
+				{children}
+			</ManageNominationsContext.Provider>
+		</NominationHealthProvider>
 	)
 }

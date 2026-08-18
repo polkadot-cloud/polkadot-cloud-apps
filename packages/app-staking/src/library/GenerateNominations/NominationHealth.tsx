@@ -8,9 +8,9 @@ import {
 import { faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
+import { useNominationHealth } from 'hooks/useNominationHealth'
 import { clampRate } from 'library/ValidatorList/retainment'
 import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
-import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonHelp } from 'ui-buttons'
@@ -50,9 +50,7 @@ const StatusIcon = ({ status }: { status: RetainmentStatus }) =>
 	)
 
 interface NominationHealthProps {
-	fixRequest?: number
 	isLoading: boolean
-	onDangerWarningsChange?: (hasDangerWarnings: boolean) => void
 	onFix: (validators: Validator[]) => Promise<void>
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	validators: Validator[]
@@ -69,9 +67,7 @@ const getRetainmentStatus = (rate: number): RetainmentStatus => {
 }
 
 export const NominationHealth = ({
-	fixRequest = 0,
 	isLoading,
-	onDangerWarningsChange,
 	onFix,
 	retainmentByAddress,
 	validators,
@@ -102,29 +98,11 @@ export const NominationHealth = ({
 	const hasDangerWarnings =
 		!isLoading &&
 		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
-	const lastFixRequest = useRef(fixRequest)
-
-	useEffect(() => {
-		onDangerWarningsChange?.(hasDangerWarnings)
-	}, [hasDangerWarnings, onDangerWarningsChange])
-
-	useEffect(
-		() => () => {
-			onDangerWarningsChange?.(false)
-		},
-		[onDangerWarningsChange],
-	)
-
-	useEffect(() => {
-		if (fixRequest === lastFixRequest.current) {
-			return
-		}
-
-		lastFixRequest.current = fixRequest
-		if (hasDangerWarnings && validatorsBelowThreshold.length > 0) {
-			void onFix(validatorsBelowThreshold)
-		}
-	}, [fixRequest, hasDangerWarnings, onFix, validatorsBelowThreshold])
+	useNominationHealth({
+		hasDangerWarnings,
+		onFix,
+		validatorsToFix: validatorsBelowThreshold,
+	})
 
 	if (isLoading || validatorsWithRetainment.length === 0) {
 		return null

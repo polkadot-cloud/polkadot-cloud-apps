@@ -13,10 +13,6 @@ import type {
 export interface GenerateNominationsProps {
 	setters: AnyFunction[]
 	displayFor?: DisplayFor
-	healthCheckEnabled?: boolean
-	healthCheckFixRequest?: number
-	onHealthCheckDangerChange?: (hasDangerWarnings: boolean) => void
-	onHealthCheckFixingChange?: (isFixing: boolean) => void
 }
 
 export type NominationSelectionWithResetCounter = NominationSelection & {

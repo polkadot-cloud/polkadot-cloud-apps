@@ -8,6 +8,7 @@ import {
 	faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,18 +19,16 @@ import {
 	SettingsWarning,
 } from './Settings.styles'
 
-export const Settings = ({
-	disabled,
-	healthCheckEnabled,
-	onHealthCheckEnabledChange,
-}: {
-	disabled: boolean
-	healthCheckEnabled: boolean
-	onHealthCheckEnabledChange: (enabled: boolean) => void
-}) => {
+export const Settings = () => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
+	const { enabled, fixing, stakingApiEnabled, toggleEnabled } =
+		useNominationHealth()
 	const [open, setOpen] = useState(false)
+
+	if (!stakingApiEnabled) {
+		return null
+	}
 
 	return (
 		<SettingsControl>
@@ -41,8 +40,8 @@ export const Settings = ({
 							{t('settings', { ns: 'modals' })}
 						</h4>
 						<MenuItemButton
-							disabled={disabled}
-							onClick={() => onHealthCheckEnabledChange(!healthCheckEnabled)}
+							disabled={fixing}
+							onClick={() => toggleEnabled(!enabled)}
 						>
 							<div>
 								<FontAwesomeIcon icon={faCircleCheck} transform="shrink-1" />
@@ -54,11 +53,9 @@ export const Settings = ({
 								<div>
 									<FontAwesomeIcon
 										color={
-											healthCheckEnabled
-												? 'var(--gray-1000)'
-												: 'var(--text-tertiary)'
+											enabled ? 'var(--gray-1000)' : 'var(--text-tertiary)'
 										}
-										icon={healthCheckEnabled ? faToggleOn : faToggleOff}
+										icon={enabled ? faToggleOn : faToggleOff}
 										transform="grow-8"
 									/>
 								</div>
