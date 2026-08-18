@@ -17,26 +17,60 @@ export const RetainmentSummaryWrapper = styled.section`
 `
 
 export const RetainmentSummaryHeading = styled.h3`
+  align-items: center;
   color: var(--gray-1000);
+  display: flex;
   font-family: var(--font-family-semibold);
   font-size: 1.3rem;
   margin: 0;
-  padding: 0.1rem 0.15rem 0.25rem;
+  padding: 0.1rem 0.15rem;
+`
+
+export const RetainmentSummaryHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-height: 2.5rem;
+  padding-bottom: 0.25rem;
+`
+
+export const HealthCheckFixPrompt = styled.div`
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid var(--gray-500);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: -0.4rem;
+  padding: 0 0.15rem 0.35rem;
+  width: 100%;
+
+  > button,
+  > div:last-child {
+    flex-shrink: 0;
+    margin-bottom: 0.15rem;
+  }
+`
+
+export const HealthCheckFixCopy = styled.p`
+  color: var(--gray-1000);
+  font-family: var(--font-family-semibold);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
 `
 
 export const StatusBox = styled.div<{ $status: RetainmentStatus }>`
   align-items: center;
   background: ${({ $status }) =>
 		`color-mix(in srgb, var(--status-${$status}) 8%, var(--gray-200))`};
-  border: 1px solid
-    ${({ $status }) =>
-			`color-mix(in srgb, var(--status-${$status}) 16%, var(--gray-200))`};
   border-radius: 0.9rem;
   display: flex;
   gap: 1rem;
   justify-content: space-between;
   min-height: 4.5rem;
-  padding: 0.85rem 1rem;
+  padding: 1rem 1rem;
   width: 100%;
 `
 
@@ -65,12 +99,29 @@ export const StatusCopy = styled.div<{ $status: RetainmentStatus }>`
   }
 `
 
-export const StatusMessage = styled.div<{ $status: RetainmentStatus }>`
+export const StatusMessage = styled.div`
   align-items: center;
+  align-self: stretch;
   display: flex;
   flex: 1;
-  gap: 0.85rem;
+  gap: 1rem;
   min-width: 0;
+`
+
+export const StatusIconWrapper = styled.div<{
+	$status: RetainmentStatus
+}>`
+  align-items: center;
+  align-self: stretch;
+  border-right: 1px solid
+    ${({ $status }) =>
+			`color-mix(in srgb, var(--status-${$status}) 24%, var(--gray-200))`};
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 3.25rem;
+  justify-content: center;
+  padding-right: 1rem;
+  width: 3.25rem;
 
   > svg {
     color: ${({ $status }) =>
@@ -94,11 +145,12 @@ export const StatusMessage = styled.div<{ $status: RetainmentStatus }>`
   }
 `
 
-export const WarningCopy = styled.div`
+export const WarningCopy = styled.div<{ $status?: RetainmentStatus }>`
   align-items: center;
+  align-self: stretch;
   color: color-mix(
     in srgb,
-    var(--status-danger) 60%,
+    var(--status-${({ $status = 'danger' }) => $status}) 60%,
     var(--gray-1000)
   );
   display: flex;
@@ -106,9 +158,4 @@ export const WarningCopy = styled.div`
   font-family: var(--font-family-semibold);
 	font-size: 1.1rem;
   gap: 1rem;
-
-  > svg {
-    flex-shrink: 0;
-		font-size: 1.75rem;
-  }
 `

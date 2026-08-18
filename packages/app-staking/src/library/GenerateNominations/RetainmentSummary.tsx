@@ -7,16 +7,21 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 import { faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useHelp } from 'hooks/useHelp'
 import { clampRate } from 'library/ValidatorList/retainment'
 import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
-import { ButtonSecondary } from 'ui-buttons'
+import { ButtonHelp, ButtonSubmit } from 'ui-buttons'
 import {
+	HealthCheckFixCopy,
+	HealthCheckFixPrompt,
+	RetainmentSummaryHeader,
 	RetainmentSummaryHeading,
 	RetainmentSummaryWrapper,
 	StatusBox,
 	StatusCopy,
+	StatusIconWrapper,
 	StatusMessage,
 	WarningCopy,
 } from './RetainmentSummary.styles'
@@ -46,7 +51,8 @@ const StatusIcon = ({ status }: { status: RetainmentStatus }) =>
 
 interface RetainmentSummaryProps {
 	isLoading: boolean
-	onRemove: (validators: Validator[]) => void
+	isFixing: boolean
+	onFix: (validators: Validator[]) => Promise<void>
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	validators: Validator[]
 }
@@ -63,11 +69,24 @@ const getRetainmentStatus = (rate: number): RetainmentStatus => {
 
 export const RetainmentSummary = ({
 	isLoading,
-	onRemove,
+	isFixing,
+	onFix,
 	retainmentByAddress,
 	validators,
 }: RetainmentSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
+	const { openHelpTooltip } = useHelp()
+	const healthCheckHeading = (
+		<RetainmentSummaryHeading>
+			{t('nominationHealthCheck')}
+			<ButtonHelp
+				marginLeft
+				background="secondary"
+				definition="Nomination Health Check"
+				openHelp={openHelpTooltip}
+			/>
+		</RetainmentSummaryHeading>
+	)
 
 	// Temporary preview for comparing every retainment warning state.
 	if (SHOW_ALL_VARIATIONS) {
@@ -82,13 +101,19 @@ export const RetainmentSummary = ({
 
 		return (
 			<RetainmentSummaryWrapper>
-				<RetainmentSummaryHeading>
-					{t('nominationHealthCheck')}
-				</RetainmentSummaryHeading>
+				<RetainmentSummaryHeader>{healthCheckHeading}</RetainmentSummaryHeader>
+				<HealthCheckFixPrompt>
+					<HealthCheckFixCopy>
+						{t('nominationHealthCheckNeedsAttention')}
+					</HealthCheckFixCopy>
+					<ButtonSubmit asLabel lg text={t('fixIssues')} />
+				</HealthCheckFixPrompt>
 				{previewScores.map(({ status, value }) => (
 					<StatusBox $status={status} key={status}>
-						<StatusMessage $status={status}>
-							<StatusIcon status={status} />
+						<StatusMessage>
+							<StatusIconWrapper $status={status}>
+								<StatusIcon status={status} />
+							</StatusIconWrapper>
 							<StatusCopy $status={status}>
 								<strong>
 									{t('averageRetainmentScore')}: {value}
@@ -100,10 +125,11 @@ export const RetainmentSummary = ({
 				))}
 				<StatusBox $status="danger" role="status">
 					<WarningCopy>
-						<FontAwesomeIcon icon={faCircleXmark} />
-						<span>{t('lowRetainmentValidatorsWarning', { count: 2 })}</span>
+						<StatusIconWrapper $status="danger">
+							<FontAwesomeIcon icon={faCircleXmark} />
+						</StatusIconWrapper>
+						<span>{t('retainmentThresholdWarning', { count: 2 })}</span>
 					</WarningCopy>
-					<ButtonSecondary asLabel text={t('remove')} variant="danger" />
 				</StatusBox>
 			</RetainmentSummaryWrapper>
 		)
@@ -124,9 +150,13 @@ export const RetainmentSummary = ({
 	const averageRetainment =
 		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
 		validatorsWithRetainment.length
-	const lowRetainmentValidators = validatorsWithRetainment
-		.filter(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
+	const validatorsBelowThreshold = validatorsWithRetainment
+		.filter(({ rate }) => rate < HIGH_RETAINMENT_THRESHOLD)
 		.map(({ validator }) => validator)
+	const thresholdWarningStatus: RetainmentStatus =
+		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
+			? 'danger'
+			: 'warning'
 	const status = getRetainmentStatus(averageRetainment)
 	const averageRetainmentLabel = `${averageRetainment.toLocaleString(
 		i18n.resolvedLanguage,
@@ -135,12 +165,25 @@ export const RetainmentSummary = ({
 
 	return (
 		<RetainmentSummaryWrapper>
-			<RetainmentSummaryHeading>
-				{t('nominationHealthCheck')}
-			</RetainmentSummaryHeading>
+			<RetainmentSummaryHeader>{healthCheckHeading}</RetainmentSummaryHeader>
+			{validatorsBelowThreshold.length > 0 && (
+				<HealthCheckFixPrompt role="status">
+					<HealthCheckFixCopy>
+						{t('nominationHealthCheckNeedsAttention')}
+					</HealthCheckFixCopy>
+					<ButtonSubmit
+						lg
+						text={t('fixIssues')}
+						disabled={isFixing}
+						onClick={() => void onFix(validatorsBelowThreshold)}
+					/>
+				</HealthCheckFixPrompt>
+			)}
 			<StatusBox $status={status}>
-				<StatusMessage $status={status}>
-					<StatusIcon status={status} />
+				<StatusMessage>
+					<StatusIconWrapper $status={status}>
+						<StatusIcon status={status} />
+					</StatusIconWrapper>
 					<StatusCopy $status={status}>
 						<strong>
 							{t('averageRetainmentScore')}: {averageRetainmentLabel}
@@ -149,21 +192,18 @@ export const RetainmentSummary = ({
 					</StatusCopy>
 				</StatusMessage>
 			</StatusBox>
-			{lowRetainmentValidators.length > 0 && (
-				<StatusBox $status="danger" role="status">
-					<WarningCopy>
-						<FontAwesomeIcon icon={faCircleXmark} />
+			{validatorsBelowThreshold.length > 0 && (
+				<StatusBox $status={thresholdWarningStatus} role="status">
+					<WarningCopy $status={thresholdWarningStatus}>
+						<StatusIconWrapper $status={thresholdWarningStatus}>
+							<StatusIcon status={thresholdWarningStatus} />
+						</StatusIconWrapper>
 						<span>
-							{t('lowRetainmentValidatorsWarning', {
-								count: lowRetainmentValidators.length,
+							{t('retainmentThresholdWarning', {
+								count: validatorsBelowThreshold.length,
 							})}
 						</span>
 					</WarningCopy>
-					<ButtonSecondary
-						text={t('remove')}
-						variant="danger"
-						onClick={() => onRemove(lowRetainmentValidators)}
-					/>
 				</StatusBox>
 			)}
 		</RetainmentSummaryWrapper>

@@ -12,6 +12,7 @@ export const StakingHelpNoDocs = [
 	'ledgerRequestTimeout',
 	'minimumToCreatePool',
 	'minimumToJoinPool',
+	'nominationHealthCheck',
 	'nominationPayoutDistribution',
 	'openAppOnLedger',
 	'poolRewardHistory',

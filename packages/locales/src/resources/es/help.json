@@ -166,6 +166,12 @@
 					"Una vez que hayas nominado tus validadores seleccionados, se convierten en tus nominaciones."
 				]
 			],
+			"nominationHealthCheck": [
+				"Comprobación de Salud de Nominaciones",
+				[
+					"La comprobación de salud de nominaciones analiza los validadores seleccionados en busca de actores maliciosos, garantiza que tu lista de nominaciones solo incluya validadores de alta calidad y mantiene la continuidad de las recompensas con al menos un 99 % de probabilidad de recibir recompensas en la próxima era."
+				]
+			],
 			"nominationPayoutDistribution": [
 				"Distribución de Pagos de Nominación",
 				[

@@ -162,6 +162,12 @@
 					"Seçtiğiniz validatörlere nominasyon yaptığınızda, bunlar nominasyonlarınız haline gelir."
 				]
 			],
+			"nominationHealthCheck": [
+				"Adaylık Sağlık Kontrolü",
+				[
+					"Adaylık Sağlık Kontrolü, seçtiğiniz doğrulayıcıları kötü niyetli aktörlere karşı tarar, adaylık listenizde yalnızca yüksek kaliteli doğrulayıcıların bulunmasını sağlar ve bir sonraki erada ödül alma olasılığını en az %99 tutarak ödül sürekliliğini korur."
+				]
+			],
 			"nominationPayoutDistribution": [
 				"Nominasyon Ödeme Dağılımı",
 				[

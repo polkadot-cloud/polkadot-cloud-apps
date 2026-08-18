@@ -170,6 +170,12 @@
 					"Sobald du deine ausgewählten Validatoren nominiert hast, werden sie zu deinen Nominierungen."
 				]
 			],
+			"nominationHealthCheck": [
+				"Nominierungs-Gesundheitscheck",
+				[
+					"Der Nominierungs-Gesundheitscheck prüft ausgewählte Validatoren auf böswillige Akteure, sorgt dafür, dass deine Nominierungsliste nur hochwertige Validatoren enthält, und gewährleistet die Kontinuität der Belohnungen mit einer Wahrscheinlichkeit von mindestens 99 %, in der nächsten Ära Belohnungen zu erhalten."
+				]
+			],
 			"nominationPayoutDistribution": [
 				"Auszahlungsverteilung von Nominierungen",
 				[
