@@ -69,9 +69,8 @@ export const NominationHealth = ({
 		validatorsBelowThreshold,
 	])
 
-	// If the data is still loading or there are no validators with retainment data, return null to
-	// avoid rendering the component.
-	if (isLoading || validatorsWithRetainment.length === 0) {
+	// Keep displaying cached results while additional validator details load.
+	if (validatorsWithRetainment.length === 0) {
 		return null
 	}
 
