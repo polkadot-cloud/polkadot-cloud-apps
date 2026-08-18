@@ -6,10 +6,10 @@
 .main {
 	padding: 3rem 1.5rem 5rem;
 	width: 100%;
-	min-height: calc(100vh - 12rem);
+	min-height: calc(100vh - 12rem - var(--canvas-window-offset, 0rem));
 
 	&.withMenu {
-		min-height: calc(100vh - 18rem);
+		min-height: calc(100vh - 20rem - var(--canvas-window-offset, 0rem));
 	}
 
 	&.lg {
