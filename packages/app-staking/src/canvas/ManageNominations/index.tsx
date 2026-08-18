@@ -160,6 +160,7 @@ export const Inner = () => {
 							>
 								<ButtonSubmit
 									asLabel
+									lg
 									text={t('submit', { ns: 'modals' })}
 									pulse={valid}
 									disabled={!valid}
