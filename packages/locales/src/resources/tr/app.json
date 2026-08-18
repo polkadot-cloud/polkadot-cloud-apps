@@ -255,6 +255,7 @@
 		"nominateActive": "Aktif",
 		"nominateInactive": "Pasif",
 		"nominationHealthCheck": "Adaylık Sağlık Kontrolü",
+		"nominationHealthCheckDisableWarning": "Sağlık kontrolünün kapatılması önerilmez. Potansiyel olarak zararlı veya düşük kaliteli doğrulayıcılar artık adaylıklarınızda işaretlenmeyecek veya filtrelenmeyecektir.",
 		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor.",
 		"nominationSummary": "Nominasyon Özeti",
 		"nominationsAdded": "Eklendi",

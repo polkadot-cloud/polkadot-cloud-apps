@@ -252,6 +252,7 @@
 		"nominateActive": "激活",
 		"nominateInactive": "未激活",
 		"nominationHealthCheck": "提名健康检查",
+		"nominationHealthCheckDisableWarning": "不建议关闭健康检查。系统将不再标记或从您的提名中筛除潜在恶意或低质量的验证者。",
 		"nominationHealthCheckNeedsAttention": "部分提名需要处理。",
 		"nominationSummary": "提名摘要",
 		"nominations": "提名",

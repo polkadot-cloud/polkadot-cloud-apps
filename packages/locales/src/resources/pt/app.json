@@ -255,6 +255,7 @@
 		"nominateActive": "Ativo",
 		"nominateInactive": "Inativo",
 		"nominationHealthCheck": "Verificação de Saúde das Nomeações",
+		"nominationHealthCheckDisableWarning": "Não é recomendável desativar a verificação de saúde. Validadores potencialmente nocivos ou de baixa qualidade deixarão de ser sinalizados ou filtrados das suas nomeações.",
 		"nominationHealthCheckNeedsAttention": "Algumas das suas nomeações precisam de atenção.",
 		"nominationSummary": "Resumo de Nomeação",
 		"nominationsAdded": "Adicionadas",

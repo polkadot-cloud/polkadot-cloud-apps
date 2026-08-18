@@ -255,6 +255,7 @@
 		"nominateActive": "Aktiv",
 		"nominateInactive": "Inaktiv",
 		"nominationHealthCheck": "Nominierungs-Gesundheitscheck",
+		"nominationHealthCheckDisableWarning": "Das Deaktivieren der Zustandsprüfung wird nicht empfohlen. Potenziell schädliche oder minderwertige Validatoren werden dann in deinen Nominierungen nicht mehr gekennzeichnet oder herausgefiltert.",
 		"nominationHealthCheckNeedsAttention": "Einige deiner Nominierungen erfordern Aufmerksamkeit.",
 		"nominationSummary": "Nominierungsübersicht",
 		"nominationsAdded": "Hinzugefügt",

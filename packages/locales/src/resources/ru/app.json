@@ -258,6 +258,7 @@
 		"nominateActive": "Активно",
 		"nominateInactive": "Неактивно",
 		"nominationHealthCheck": "Проверка состояния номинаций",
+		"nominationHealthCheckDisableWarning": "Отключать проверку состояния не рекомендуется. Потенциально вредоносные или низкокачественные валидаторы больше не будут отмечаться или исключаться из ваших номинаций.",
 		"nominationHealthCheckNeedsAttention": "Некоторые номинации требуют внимания.",
 		"nominationSummary": "Сводка номинаций",
 		"nominationsAdded": "Добавлено",

@@ -26,6 +26,12 @@ SPDX-License-Identifier: GPL-3.0-only */
 		border-radius: 0;
 	}
 
+	&.noShadow {
+		border: 1px solid var(--gray-500);
+		box-shadow: none;
+		overflow: hidden;
+	}
+
 	> div > p {
 		margin: 0.5rem 0 0;
 	}

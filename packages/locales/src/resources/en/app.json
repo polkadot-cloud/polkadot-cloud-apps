@@ -255,6 +255,7 @@
 		"nominateActive": "Active",
 		"nominateInactive": "Inactive",
 		"nominationHealthCheck": "Nomination Health Check",
+		"nominationHealthCheckDisableWarning": "Disabling health checks is not recommended. Potentially harmful or low-quality validators will no longer be flagged or filtered from your nominations.",
 		"nominationHealthCheckNeedsAttention": "Some of your nominations need attention.",
 		"nominationSummary": "Nomination Summary",
 		"nominationsAdded": "Added",

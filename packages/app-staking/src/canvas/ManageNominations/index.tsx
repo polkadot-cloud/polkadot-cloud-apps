@@ -11,6 +11,7 @@ import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
+import { usePlugins } from 'hooks/usePlugins'
 import { useTheme } from 'hooks/useTheme'
 import { GenerateNominations } from 'library/GenerateNominations'
 import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
@@ -25,6 +26,7 @@ import { HeadFullWidth, Main, Title } from 'ui-core/canvas'
 import { Popover } from 'ui-core/popover'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
 import { Form } from './Form'
+import { Settings } from './Settings'
 
 export const Inner = () => {
 	const { t } = useTranslation('app')
@@ -33,6 +35,7 @@ export const Inner = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { serviceApi } = useApi()
+	const { pluginEnabled } = usePlugins()
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
@@ -55,6 +58,16 @@ export const Inner = () => {
 	const [hasDangerWarnings, setHasDangerWarnings] = useState<boolean>(false)
 	const [healthCheckFixing, setHealthCheckFixing] = useState<boolean>(false)
 	const [healthCheckFixRequest, setHealthCheckFixRequest] = useState(0)
+	const [healthCheckEnabled, setHealthCheckEnabled] = useState(true)
+	const stakingApiEnabled = pluginEnabled('staking_api')
+	const healthCheckActive = stakingApiEnabled && healthCheckEnabled
+
+	const toggleHealthCheck = (enabled: boolean) => {
+		setHealthCheckEnabled(enabled)
+		if (!enabled) {
+			setHasDangerWarnings(false)
+		}
+	}
 
 	// Handler for updating setup
 	const handleSetupUpdate = (value: NominationSelection) => {
@@ -72,7 +85,8 @@ export const Inner = () => {
 		MaxNominations >= nominations.length &&
 		nominations.length > 0 &&
 		!nominationsMatch()
-	const valid = hasSubmittableChanges && !hasDangerWarnings
+	const valid =
+		hasSubmittableChanges && (!healthCheckActive || !hasDangerWarnings)
 
 	const getTx = () => {
 		if (!valid) {
@@ -133,6 +147,13 @@ export const Inner = () => {
 				<Title fullWidth>
 					<h1>{t('manageNominations', { ns: 'modals' })}</h1>
 				</Title>
+				{stakingApiEnabled && (
+					<Settings
+						disabled={healthCheckFixing}
+						healthCheckEnabled={healthCheckEnabled}
+						onHealthCheckEnabledChange={toggleHealthCheck}
+					/>
+				)}
 				<CloseCanvas />
 			</HeadFullWidth>
 			{displayFor === 'canvas' && (
@@ -141,7 +162,7 @@ export const Inner = () => {
 					setters={setters}
 					action={
 						method ? (
-							hasDangerWarnings ? (
+							healthCheckActive && hasDangerWarnings ? (
 								<ButtonSubmit
 									lg
 									text={t('fixIssues')}
@@ -185,6 +206,7 @@ export const Inner = () => {
 				{displayFor !== 'canvas' && <InlineControls displayFor={displayFor} />}
 				<GenerateNominations
 					displayFor={displayFor}
+					healthCheckEnabled={healthCheckActive}
 					healthCheckFixRequest={healthCheckFixRequest}
 					onHealthCheckDangerChange={setHasDangerWarnings}
 					onHealthCheckFixingChange={setHealthCheckFixing}

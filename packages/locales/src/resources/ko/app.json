@@ -255,6 +255,7 @@
 		"nominateActive": "활성",
 		"nominateInactive": "비활성",
 		"nominationHealthCheck": "추천 상태 점검",
+		"nominationHealthCheckDisableWarning": "상태 점검을 끄는 것은 권장하지 않습니다. 잠재적으로 유해하거나 품질이 낮은 검증인이 더 이상 추천 목록에서 표시되거나 필터링되지 않습니다.",
 		"nominationHealthCheckNeedsAttention": "일부 추천에 주의가 필요합니다.",
 		"nominationSummary": "지명 요약",
 		"nominationsAdded": "추가됨",

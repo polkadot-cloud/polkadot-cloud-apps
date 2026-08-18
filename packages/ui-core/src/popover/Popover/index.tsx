@@ -18,6 +18,7 @@ export const Popover = ({
 	side,
 	align,
 	transparent = false,
+	shadow = true,
 	arrow = true,
 	sideOffset = 3,
 }: {
@@ -33,11 +34,13 @@ export const Popover = ({
 	align?: 'start' | 'center' | 'end'
 	arrow?: boolean
 	transparent?: boolean
+	shadow?: boolean
 	sideOffset?: number
 }) => {
 	width = width || '310px'
 
 	const contentClasses = classNames(classes.content, {
+		[classes.noShadow]: !shadow,
 		[classes.transparent]: !!transparent,
 	})
 

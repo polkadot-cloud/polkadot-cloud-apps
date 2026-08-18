@@ -54,6 +54,7 @@ const identityMatches = (...parts: Array<string | null | undefined>) => {
 export const GenerateNominations = ({
 	setters = [],
 	displayFor = 'default',
+	healthCheckEnabled = true,
 	healthCheckFixRequest,
 	onHealthCheckDangerChange,
 	onHealthCheckFixingChange,
@@ -509,16 +510,20 @@ export const GenerateNominations = ({
 									displayFor={displayFor}
 								/>
 							}
-							renderRetainmentSummary={({ isLoading, retainmentByAddress }) => (
-								<RetainmentSummary
-									fixRequest={healthCheckFixRequest}
-									isLoading={isLoading}
-									onDangerWarningsChange={onHealthCheckDangerChange}
-									onFix={fixRetainment}
-									retainmentByAddress={retainmentByAddress}
-									validators={nominations}
-								/>
-							)}
+							renderRetainmentSummary={
+								healthCheckEnabled
+									? ({ isLoading, retainmentByAddress }) => (
+											<RetainmentSummary
+												fixRequest={healthCheckFixRequest}
+												isLoading={isLoading}
+												onDangerWarningsChange={onHealthCheckDangerChange}
+												onFix={fixRetainment}
+												retainmentByAddress={retainmentByAddress}
+												validators={nominations}
+											/>
+										)
+									: undefined
+							}
 							onRemove={selectHandlers?.removeSelected?.popover.callback}
 						/>
 					)}
