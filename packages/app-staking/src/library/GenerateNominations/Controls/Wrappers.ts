@@ -28,7 +28,7 @@ export const MenuWrapper = styled.div`
     > .actions {
       align-items: center;
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       margin-left: auto;
       flex-shrink: 0;
 
