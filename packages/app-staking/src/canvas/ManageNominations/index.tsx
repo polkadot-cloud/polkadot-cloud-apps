@@ -28,6 +28,7 @@ import {
 	Title,
 } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
+import classes from './index.module.scss'
 
 export const Inner = () => {
 	const { t } = useTranslation('app')
@@ -150,12 +151,13 @@ export const Inner = () => {
 				/>
 			</Main>
 			<FootFullWidth>
-				<Footer size={canvasSize}>
+				<Footer size={canvasSize} className={classes.footer}>
 					<SubmitTx
 						noMargin
 						requiresMigratedController={!isPool}
 						valid={valid}
 						displayFor="canvas"
+						transparent
 						{...submitExtrinsic}
 					/>
 				</Footer>

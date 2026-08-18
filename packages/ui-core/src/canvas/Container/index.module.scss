@@ -8,4 +8,24 @@
 	align-items: center;
 	position: fixed;
 	z-index: 10;
+
+	&.card {
+		--canvas-window-inset: 1.5rem;
+		--canvas-window-offset: 3rem;
+
+		background: color-mix(in srgb, var(--gray-500) 82%, transparent);
+		backdrop-filter: blur(12px);
+		padding: var(--canvas-window-inset);
+		align-items: flex-start;
+		overflow-y: auto;
+
+		:global(.dark) & {
+			background: color-mix(in srgb, var(--gray-100) 88%, transparent);
+		}
+
+		@media (width <= 600px) {
+			--canvas-window-inset: 1rem;
+			--canvas-window-offset: 1rem;
+		}
+	}
 }

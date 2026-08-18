@@ -11,6 +11,10 @@
 	align-items: center;
 	margin: 0 auto;
 
+	&.card {
+		min-height: calc(100vh - var(--canvas-window-offset, 0rem));
+	}
+
 	&.lg {
 		max-width: $canvas-width-lg;
 	}
