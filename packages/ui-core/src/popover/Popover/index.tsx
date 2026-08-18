@@ -13,11 +13,13 @@ export const Popover = ({
 	open,
 	onOpenChange,
 	onTriggerClick,
+	triggerLabel,
 	disabled = false,
 	width,
 	side,
 	align,
 	transparent = false,
+	shadow = true,
 	arrow = true,
 	sideOffset = 3,
 }: {
@@ -27,23 +29,30 @@ export const Popover = ({
 	open?: boolean
 	onOpenChange?: (open: boolean) => void
 	onTriggerClick?: () => void
+	triggerLabel?: string
 	disabled?: boolean
 	width?: string | number
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
 	arrow?: boolean
 	transparent?: boolean
+	shadow?: boolean
 	sideOffset?: number
 }) => {
 	width = width || '310px'
 
 	const contentClasses = classNames(classes.content, {
+		[classes.noShadow]: !shadow,
 		[classes.transparent]: !!transparent,
 	})
 
 	return (
 		<RadixPopover.Root open={open} onOpenChange={onOpenChange}>
-			<RadixPopover.Trigger onClick={onTriggerClick} disabled={disabled}>
+			<RadixPopover.Trigger
+				onClick={onTriggerClick}
+				disabled={disabled}
+				aria-label={triggerLabel}
+			>
 				{children}
 			</RadixPopover.Trigger>
 			<RadixPopover.Portal container={portalContainer}>

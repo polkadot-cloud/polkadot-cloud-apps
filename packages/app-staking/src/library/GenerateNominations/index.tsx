@@ -7,23 +7,24 @@ import { MaxNominations } from 'consts'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
-import { pluginEnabled } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
-import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
+import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AnyFunction, AnyJson, Validator } from 'types'
+import type { AnyFunction, Validator } from 'types'
 import { Loader } from 'ui-core/base'
 import { usePrompt } from 'ui-overlay'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
+import { NominationHealth } from './NominationHealth'
 import { SearchValidators } from './Prompts/SearchValidators'
 import { SelectFavorites } from './Prompts/SelectFavorites'
 import type {
@@ -72,45 +73,57 @@ export const GenerateNominations = ({
 	const defaultNominationsCount = defaultNominations.length
 	const fetchingRef = useRef(false)
 	const [candidateFetching, setCandidateFetching] = useState(false)
-	const stakingApiEnabled = pluginEnabled('staking_api')
-	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const {
+		active: healthCheckActive,
+		retainmentStatsEnabled,
+		stakingApiEnabled,
+	} = useNominationHealth()
+	const validatorDetails = useValidatorDetails(
+		nominations.map(({ address }) => address),
+		retainmentStatsEnabled && isReady && method !== null && !fetching,
+	)
 
 	const resizeCallback = () => {
 		setHeight(null)
 	}
 
+	const updateNominations = (newNominations: Validator[]) => {
+		setNominations([...newNominations])
+		updateSetters(setters, newNominations)
+	}
+
 	// Fetch nominations based on method
 	const fetchNominationsForMethod = async () => {
-		if (method && !fetchingRef.current) {
-			fetchingRef.current = true
-			try {
-				const newNominations = await fetchFromMethod(method)
-				setNominations([...newNominations])
-				updateSetters(setters, newNominations)
-			} finally {
-				setFetching(false)
-				fetchingRef.current = false
-			}
+		if (!method || fetchingRef.current) {
+			return
+		}
+
+		fetchingRef.current = true
+		try {
+			updateNominations(await fetchFromMethod(method))
+		} finally {
+			setFetching(false)
+			fetchingRef.current = false
 		}
 	}
 
 	// Add nominations based on method
 	const addNominationByType = async (type: AddNominationsType) => {
-		if (method && !candidateFetching) {
-			const fetchingCandidate =
-				type === 'High Performance Validator' && retainmentStatsEnabled
-			if (fetchingCandidate) {
-				setCandidateFetching(true)
-			}
+		if (!method || candidateFetching) {
+			return
+		}
 
-			try {
-				const newNominations = await addNomination(nominations, type)
-				setNominations([...newNominations])
-				updateSetters(setters, [...newNominations])
-			} finally {
-				if (fetchingCandidate) {
-					setCandidateFetching(false)
-				}
+		const fetchingCandidate =
+			type === 'High Performance Validator' && retainmentStatsEnabled
+		if (fetchingCandidate) {
+			setCandidateFetching(true)
+		}
+
+		try {
+			updateNominations(await addNomination(nominations, type))
+		} finally {
+			if (fetchingCandidate) {
+				setCandidateFetching(false)
 			}
 		}
 	}
@@ -137,57 +150,50 @@ export const GenerateNominations = ({
 				return
 			}
 
-			const newNominations = [...nominations, candidate]
-			setNominations(newNominations)
-			updateSetters(setters, newNominations)
+			updateNominations([...nominations, candidate])
 		} finally {
 			setCandidateFetching(false)
 		}
 	}
 
-	const maxNominationsReached = MaxNominations <= nominations?.length
+	const maxNominationsReached = MaxNominations <= nominations.length
+	const removeNominations = ({
+		selected,
+		callback,
+	}: {
+		selected: Validator[]
+		callback?: AnyFunction
+	}) => {
+		const selectedAddresses = new Set(selected.map(({ address }) => address))
+		const newNominations = nominations.filter(
+			({ address }) => !selectedAddresses.has(address),
+		)
+		updateNominations(newNominations)
+		callback?.()
+	}
 
 	// Define handlers
 	const selectHandlers: Record<string, SelectHandler> = {
 		removeSelected: {
-			title: `${t('removeSelected', { ns: 'app' })}`,
+			title: t('removeSelected', { ns: 'app' }),
 			popover: {
 				text: t('removeSelectedItems', { ns: 'app' }),
 				node: Confirm,
-				callback: ({
-					selected,
-					callback,
-				}: {
-					selected: AnyJson
-					callback?: AnyFunction
-				}) => {
-					const selectedAddresses = new Set(
-						selected.map(({ address }: { address: string }) => address),
-					)
-					const newNominations = nominations.filter(
-						(n) => !selectedAddresses.has(n.address),
-					)
-					setNominations(newNominations)
-					updateSetters(setters, newNominations)
-					if (typeof callback === 'function') {
-						callback()
-					}
-				},
+				callback: removeNominations,
 			},
 			onSelected: true,
 			isDisabled: () => false,
 		},
 	}
 
-	let filterHandlers: FilterHandlers = {}
+	const filterHandlers: FilterHandlers = {}
 
 	if (advancedMode) {
 		filterHandlers.addFromFavorites = {
 			title: t('addFromFavorites', { ns: 'app' }),
 			onClick: () => {
 				const updateList = (newNominations: Validator[]) => {
-					setNominations([...newNominations])
-					updateSetters(setters, newNominations)
+					updateNominations(newNominations)
 					closePrompt()
 				}
 				openPromptWith(
@@ -196,91 +202,74 @@ export const GenerateNominations = ({
 				)
 			},
 			onSelected: false,
-			isDisabled: () =>
-				!favoritesList?.length || MaxNominations <= nominations?.length,
+			isDisabled: () => !favoritesList?.length || maxNominationsReached,
 		}
 	}
 
-	filterHandlers = {
-		...filterHandlers,
-		highPerformance: {
-			title: t('highPerformanceValidator', { ns: 'app' }),
-			onClick: () => addNominationByType('High Performance Validator'),
+	filterHandlers.highPerformance = {
+		title: t('highPerformanceValidator', { ns: 'app' }),
+		onClick: () => addNominationByType('High Performance Validator'),
+		onSelected: false,
+		icon: faPlus,
+		isDisabled: () =>
+			maxNominationsReached ||
+			candidateFetching ||
+			(!retainmentStatsEnabled &&
+				!availableToNominate(nominations).highPerformance.length),
+	}
+
+	if (retainmentStatsEnabled) {
+		filterHandlers.highRetainer = {
+			title: t('highRetainer', { ns: 'app' }),
+			onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
+			onSelected: false,
+			icon: faPlus,
+			isDisabled: () => candidateFetching || maxNominationsReached,
+		}
+		filterHandlers.highCompounder = {
+			title: t('highCompounder', { ns: 'app' }),
+			onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
+			onSelected: false,
+			icon: faPlus,
+			isDisabled: () => candidateFetching || maxNominationsReached,
+		}
+	} else {
+		filterHandlers.getActive = {
+			title: t('activeValidator', { ns: 'app' }),
+			onClick: () => addNominationByType('Active Validator'),
 			onSelected: false,
 			icon: faPlus,
 			isDisabled: () =>
 				maxNominationsReached ||
-				candidateFetching ||
-				(!retainmentStatsEnabled &&
-					!availableToNominate(nominations).highPerformance.length),
-		},
-	}
-
-	if (retainmentStatsEnabled) {
-		filterHandlers = {
-			...filterHandlers,
-			highRetainer: {
-				title: t('highRetainer', { ns: 'app' }),
-				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
-				onSelected: false,
-				icon: faPlus,
-				isDisabled: () => candidateFetching || maxNominationsReached,
-			},
-			highCompounder: {
-				title: t('highCompounder', { ns: 'app' }),
-				onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
-				onSelected: false,
-				icon: faPlus,
-				isDisabled: () => candidateFetching || maxNominationsReached,
-			},
+				!availableToNominate(nominations).activeValidators.length,
 		}
-	} else {
-		filterHandlers = {
-			...filterHandlers,
-			getActive: {
-				title: t('activeValidator', { ns: 'app' }),
-				onClick: () => addNominationByType('Active Validator'),
-				onSelected: false,
-				icon: faPlus,
-				isDisabled: () =>
-					maxNominationsReached ||
-					!availableToNominate(nominations).activeValidators.length,
-			},
-			getRandom: {
-				title: t('randomValidator', { ns: 'app' }),
-				onClick: () => addNominationByType('Random Validator'),
-				onSelected: false,
-				icon: faPlus,
-				isDisabled: () =>
-					maxNominationsReached ||
-					!availableToNominate(nominations).randomValidators.length,
-			},
+		filterHandlers.getRandom = {
+			title: t('randomValidator', { ns: 'app' }),
+			onClick: () => addNominationByType('Random Validator'),
+			onSelected: false,
+			icon: faPlus,
+			isDisabled: () =>
+				maxNominationsReached ||
+				!availableToNominate(nominations).randomValidators.length,
 		}
 	}
 
 	if (stakingApiEnabled) {
-		filterHandlers = {
-			...filterHandlers,
-			searchValidators: {
-				title: t('validatorSearch.searchValidators', { ns: 'app' }),
-				onClick: () => {
-					const updateList = (newNominations: Validator[]) => {
-						setNominations([...newNominations])
-						updateSetters(setters, newNominations)
-						closePrompt()
-					}
-					openPromptWith(
-						<SearchValidators
-							callback={updateList}
-							nominations={nominations}
-						/>,
-						'lg',
-					)
-				},
-				icon: faMagnifyingGlass,
-				onSelected: false,
-				isDisabled: () => maxNominationsReached,
+		filterHandlers.searchValidators = {
+			title: t('validatorSearch.searchValidators', { ns: 'app' }),
+			onClick: () => {
+				const updateList = (newNominations: Validator[]) => {
+					updateNominations(newNominations)
+					closePrompt()
+				}
+				openPromptWith(
+					<SearchValidators callback={updateList} nominations={nominations} />,
+					'lg',
+				)
 			},
+			icon: faMagnifyingGlass,
+			onSelected: false,
+			isDisabled: () => maxNominationsReached,
 		}
 	}
 
@@ -290,10 +279,8 @@ export const GenerateNominations = ({
 			JSON.stringify(nominations) !== JSON.stringify(defaultNominations) &&
 			defaultNominationsCount > 0
 		) {
-			setNominations([...(defaultNominations || [])])
-			if (defaultNominationsCount) {
-				setMethod('manual')
-			}
+			setNominations([...defaultNominations])
+			setMethod('manual')
 		}
 	}, [activeAddress, defaultNominations])
 
@@ -372,13 +359,23 @@ export const GenerateNominations = ({
 							selectable
 							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
 							BeforeListNode={
-								<ListControls
-									selectHandlers={selectHandlers}
-									filterHandlers={Object.values(filterHandlers)}
-									displayFor={displayFor}
-								/>
+								<>
+									<ListControls
+										selectHandlers={selectHandlers}
+										filterHandlers={Object.values(filterHandlers)}
+										displayFor={displayFor}
+									/>
+									{healthCheckActive && (
+										<NominationHealth
+											isLoading={validatorDetails.isLoading}
+											retainmentByAddress={validatorDetails.retainmentByAddress}
+											validators={nominations}
+										/>
+									)}
+								</>
 							}
 							onRemove={selectHandlers?.removeSelected?.popover.callback}
+							validatorDetails={validatorDetails}
 						/>
 					)}
 				</div>

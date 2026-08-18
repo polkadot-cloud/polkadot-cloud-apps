@@ -10,8 +10,6 @@ import {
 } from '../util'
 import type { UiHookInterface } from './types'
 
-export type { UiHookInterface } from './types'
-
 const SideMenuMinimisedKey = 'side_menu_minimised'
 const defaultAdvancedMode = false
 

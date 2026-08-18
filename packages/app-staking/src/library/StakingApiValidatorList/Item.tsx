@@ -12,10 +12,6 @@ import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
-import {
-	getRateAfterCommission,
-	isMaxSelfStake,
-} from 'library/ValidatorList/retainment'
 import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
@@ -27,7 +23,7 @@ import type {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
-import { planckToUnitBn } from 'utils'
+import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
 interface ItemProps {
 	eraPoints: ValidatorEraPoints[]

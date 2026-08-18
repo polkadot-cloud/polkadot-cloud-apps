@@ -251,7 +251,6 @@
 		"reserveText": "Kontrolliere, wie viel {{unit}} für Transaktionsgebühren reserviert wird. Dieser Betrag wird zu allen Mitteln hinzugefügt, die erforderlich sind, um die Existenzminimumanforderung für dein Konto zu decken.",
 		"revertChanges": "Änderungen rückgängig machen",
 		"revertNominationChanges": "Bist du sicher, dass du die Änderungen an deinen ausgewählten Nominierungen rückgängig machen möchtest?",
-		"revertNominations": "Nominierungen rückgängig machen",
 		"reward": "Belohnung",
 		"rewards": "Belohnungen",
 		"rewardsByCountryAndNetwork": "Belohnungen nach Land und Netzwerkanbieter",

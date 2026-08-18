@@ -251,7 +251,6 @@
 		"reserveText": "Controle quanto {{unit}} é reservado para pagar as taxas de transação. Este valor é adicionado ao valor necessário para cobrir o depósito existencial da sua conta.",
 		"revertChanges": "Reverter Alterações",
 		"revertNominationChanges": "Tem certeza de que deseja reverter as alterações nas suas nomeações selecionadas?",
-		"revertNominations": "Reverter Nomeações",
 		"reward": "Recompensa",
 		"rewards": "Recompensas",
 		"rewardsByCountryAndNetwork": "Recompensas por País, Provedor de Rede",

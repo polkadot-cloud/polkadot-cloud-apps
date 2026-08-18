@@ -12,3 +12,10 @@ export const Wrapper = styled.div`
     width: 100%;
   }
 `
+
+export const NominationHealthWrapper = styled.section`
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0.9rem 1rem;
+  width: calc(100% - 1.8rem);
+`

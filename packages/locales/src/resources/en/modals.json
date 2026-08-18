@@ -251,7 +251,6 @@
 		"reserveText": "Control how much {{unit}} is reserved to pay for transaction fees. This amount is added on top of any funds needed to cover the existential deposit to your account.",
 		"revertChanges": "Revert Changes",
 		"revertNominationChanges": "Are you sure you wish to revert the changes to your selected nominations?",
-		"revertNominations": "Revert Nominations",
 		"reward": "Reward",
 		"rewards": "Rewards",
 		"rewardsByCountryAndNetwork": "Rewards by Country, Network Provider",

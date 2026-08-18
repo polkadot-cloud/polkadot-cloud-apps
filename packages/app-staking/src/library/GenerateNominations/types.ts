@@ -49,7 +49,3 @@ export interface PromptProps {
 	callback: (newNominations: Validator[]) => void
 	nominations: Validator[]
 }
-
-export interface RevertPromptProps {
-	onRevert: () => void
-}

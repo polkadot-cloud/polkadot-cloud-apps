@@ -1346,6 +1346,9 @@ importers:
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
+      consts:
+        specifier: workspace:*
+        version: link:../consts
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0

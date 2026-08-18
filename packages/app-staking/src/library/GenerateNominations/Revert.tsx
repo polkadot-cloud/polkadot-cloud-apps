@@ -5,35 +5,26 @@ import { useTheme } from 'hooks/useTheme'
 import { Confirm } from 'library/Prompt/Confirm'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
+import { ButtonSecondary } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
-import { usePrompt } from 'ui-overlay'
-import { RevertChanges } from './Prompts/RevertChanges'
 
 export const Revert = ({
-	inMenu,
 	disabled,
 	onClick,
 }: {
-	inMenu?: boolean
 	disabled: boolean
 	onClick: () => void
 }) => {
 	const { t } = useTranslation('modals')
 	const { themeElementRef } = useTheme()
-	const { openPromptWith, closePrompt } = usePrompt()
 	const [open, setOpen] = useState(false)
 
 	const onRevert = () => {
 		onClick()
-		if (inMenu) {
-			setOpen(false)
-		} else {
-			closePrompt()
-		}
+		setOpen(false)
 	}
 
-	return inMenu ? (
+	return (
 		<Popover
 			open={open}
 			onOpenChange={setOpen}
@@ -59,13 +50,5 @@ export const Revert = ({
 				disabled={disabled}
 			/>
 		</Popover>
-	) : (
-		<ButtonPrimary
-			text={t('revertChanges')}
-			disabled={disabled}
-			onClick={() => {
-				openPromptWith(<RevertChanges onRevert={onRevert} />)
-			}}
-		/>
 	)
 }

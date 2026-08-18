@@ -3,8 +3,8 @@
 
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import classNames from 'classnames'
 import type { ComponentBase } from 'types'
+import { CanvasHeaderControl } from '../HeaderControl'
 import type { CanvasVariant } from '../types'
 import classes from './index.module.scss'
 
@@ -16,15 +16,15 @@ export const Close = ({
 	onClose: () => void
 	variant?: CanvasVariant
 }) => {
-	const allClasses = classNames(classes.close, {
-		[classes.card]: variant === 'card',
-	})
-
-	return (
-		<div className={allClasses}>
-			<button type="button" onClick={() => onClose()} style={style}>
-				<FontAwesomeIcon icon={faXmark} />
-			</button>
-		</div>
+	const button = (
+		<button type="button" onClick={() => onClose()} style={style}>
+			<FontAwesomeIcon icon={faXmark} />
+		</button>
 	)
+
+	if (variant === 'card') {
+		return <CanvasHeaderControl>{button}</CanvasHeaderControl>
+	}
+
+	return <div className={classes.close}>{button}</div>
 }

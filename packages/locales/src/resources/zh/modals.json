@@ -243,7 +243,6 @@
 		"reserveText": "控制预存多少{{unit}}用于支付交易费用. 这笔金额是在您账户最低存款基础上增加的.",
 		"revertChanges": "回复原状",
 		"revertNominationChanges": "您确定要还原更改前的提名吗？",
-		"revertNominations": "还原提名",
 		"reward": "收益",
 		"rewards": "收益",
 		"rewardsByCountryAndNetwork": "按国家/地区和网络供应商划分的收益",

@@ -5,11 +5,20 @@ import type { ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
 import type {
+	ValidatorAvgRewardRateBatch,
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
 } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import type { DisplayFor, Validator } from 'types'
+
+export interface ValidatorDetailsData {
+	detailedAddresses: ReadonlySet<string>
+	eraPointsByAddress: ReadonlyMap<string, ValidatorEraPoints[]>
+	isLoading: boolean
+	rateByAddress: ReadonlyMap<string, ValidatorAvgRewardRateBatch['rate']>
+	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
+}
 
 export interface ValidatorListProps {
 	validators: Validator[]
@@ -22,6 +31,7 @@ export interface ValidatorListProps {
 	forceListFormat?: ListFormat
 	defaultConfig?: ValidatorListConfig
 	BeforeListNode?: ReactNode
+	validatorDetails?: ValidatorDetailsData
 	onRemove?: (params: {
 		selected: Validator[]
 		resetSelection?: () => void
