@@ -17,6 +17,7 @@ import { useUi } from 'hooks/useUi'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
+import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import { fetchSearchValidators } from 'plugin-staking-api'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
@@ -101,6 +102,10 @@ export const GenerateNominations = ({
 	const [candidateFetching, setCandidateFetching] = useState(false)
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const validatorDetails = useValidatorDetails(
+		nominations.map(({ address }) => address),
+		retainmentStatsEnabled && isReady && method !== null && !fetching,
+	)
 
 	useEffect(() => {
 		onHealthCheckFixingChange?.(candidateFetching)
@@ -504,27 +509,26 @@ export const GenerateNominations = ({
 							selectable
 							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
 							BeforeListNode={
-								<ListControls
-									selectHandlers={selectHandlers}
-									filterHandlers={Object.values(filterHandlers)}
-									displayFor={displayFor}
-								/>
-							}
-							renderRetainmentSummary={
-								healthCheckEnabled
-									? ({ isLoading, retainmentByAddress }) => (
-											<RetainmentSummary
-												fixRequest={healthCheckFixRequest}
-												isLoading={isLoading}
-												onDangerWarningsChange={onHealthCheckDangerChange}
-												onFix={fixRetainment}
-												retainmentByAddress={retainmentByAddress}
-												validators={nominations}
-											/>
-										)
-									: undefined
+								<>
+									<ListControls
+										selectHandlers={selectHandlers}
+										filterHandlers={Object.values(filterHandlers)}
+										displayFor={displayFor}
+									/>
+									{healthCheckEnabled && retainmentStatsEnabled && (
+										<RetainmentSummary
+											fixRequest={healthCheckFixRequest}
+											isLoading={validatorDetails.isLoading}
+											onDangerWarningsChange={onHealthCheckDangerChange}
+											onFix={fixRetainment}
+											retainmentByAddress={validatorDetails.retainmentByAddress}
+											validators={nominations}
+										/>
+									)}
+								</>
 							}
 							onRemove={selectHandlers?.removeSelected?.popover.callback}
+							validatorDetails={validatorDetails}
 						/>
 					)}
 				</div>
