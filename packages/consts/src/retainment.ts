@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export const RetainmentThresholds = {
-	high: 75,
+	high: 70,
 	medium: 50,
 	low: 25,
 } as const

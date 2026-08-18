@@ -117,6 +117,7 @@ export const NominationHealth = ({
 				<StatusCard status="warning" role="status">
 					{t('retainmentThresholdWarning', {
 						count: warningCount,
+						threshold: RetainmentThresholds.high,
 					})}
 				</StatusCard>
 			)}
