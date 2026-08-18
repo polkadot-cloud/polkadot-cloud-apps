@@ -4,8 +4,7 @@
 import BigNumber from 'bignumber.js'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
-import { planckToUnitBn } from 'utils'
-import { isMaxSelfStake } from './retainment'
+import { isMaxSelfStake, planckToUnitBn } from 'utils'
 
 export const useValidatorSelfStake = (address: string, units: number) => {
 	const hardCapSelfStake = useHardCapSelfStake()

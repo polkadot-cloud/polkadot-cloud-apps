@@ -14,12 +14,12 @@ import { Quartile } from 'library/ListItem/Labels/Quartile'
 import type { Validator } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
+import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Blocked } from '../ListItem/Labels/Blocked'
 import { EraStatus } from '../ListItem/Labels/EraStatus'
 import { Identity } from '../ListItem/Labels/Identity'
-import { getRateAfterCommission } from './retainment'
 import type { ItemProps } from './types'
 
 const Basic = ({

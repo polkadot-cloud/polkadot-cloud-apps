@@ -10,8 +10,12 @@ import {
 import BigNumber from 'bignumber.js'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
-import { formatCompactNumber, planckToUnitBn } from 'utils'
-import { clampRate, getRateColor } from './retainment'
+import {
+	clampRate,
+	formatCompactNumber,
+	getRateColor,
+	planckToUnitBn,
+} from 'utils'
 
 export interface RetainmentStatData {
 	ariaLabel: string

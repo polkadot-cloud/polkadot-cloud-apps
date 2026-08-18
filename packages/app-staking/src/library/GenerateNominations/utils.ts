@@ -1,9 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { clampRate } from 'library/ValidatorList/retainment'
 import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
+import { clampRate } from 'utils'
 
 export const getValidatorsWithRetainment = (
 	validators: Validator[],
