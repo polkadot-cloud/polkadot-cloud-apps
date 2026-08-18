@@ -4,14 +4,13 @@
 import { createSafeContext } from '@w3ux/hooks'
 import { usePlugins } from 'hooks/usePlugins'
 import type { ReactNode } from 'react'
-import { useCallback, useEffect, useState } from 'react'
-import type { Validator } from 'types'
+import { useState } from 'react'
 import type {
 	NominationHealthContextInterface,
-	NominationHealthSync,
+	NominationHealthState,
 } from './types'
 
-const [NominationHealthContext, useNominationHealthContext] =
+export const [NominationHealthContext, useNominationHealth] =
 	createSafeContext<NominationHealthContextInterface>()
 
 export const NominationHealthProvider = ({
@@ -21,61 +20,25 @@ export const NominationHealthProvider = ({
 }) => {
 	const { pluginEnabled } = usePlugins()
 	const [enabled, setEnabled] = useState(true)
-	const [hasDangerWarnings, setHasDangerWarnings] = useState(false)
-	const [validatorsBelowThreshold, setValidatorsBelowThreshold] = useState<
-		Validator[]
-	>([])
+	const [nominationHealth, setNominationHealth] =
+		useState<NominationHealthState>({
+			hasDangerWarnings: false,
+			validatorsBelowThreshold: [],
+		})
 	const stakingApiEnabled = pluginEnabled('staking_api')
-
-	const toggleEnabled = useCallback((nextEnabled: boolean) => {
-		setEnabled(nextEnabled)
-		if (!nextEnabled) {
-			setHasDangerWarnings(false)
-			setValidatorsBelowThreshold([])
-		}
-	}, [])
 
 	return (
 		<NominationHealthContext.Provider
 			value={{
+				...nominationHealth,
 				active: stakingApiEnabled && enabled,
 				enabled,
-				hasDangerWarnings,
-				setHasDangerWarnings,
-				setValidatorsBelowThreshold,
+				setEnabled,
+				setNominationHealth,
 				stakingApiEnabled,
-				toggleEnabled,
-				validatorsBelowThreshold,
 			}}
 		>
 			{children}
 		</NominationHealthContext.Provider>
 	)
-}
-
-export const useNominationHealth = ({
-	hasDangerWarnings,
-	validatorsBelowThreshold,
-}: NominationHealthSync = {}) => {
-	const context = useNominationHealthContext()
-
-	useEffect(() => {
-		if (hasDangerWarnings === undefined) {
-			return
-		}
-
-		context.setHasDangerWarnings(hasDangerWarnings)
-		return () => context.setHasDangerWarnings(false)
-	}, [context.setHasDangerWarnings, hasDangerWarnings])
-
-	useEffect(() => {
-		if (validatorsBelowThreshold === undefined) {
-			return
-		}
-
-		context.setValidatorsBelowThreshold(validatorsBelowThreshold)
-		return () => context.setValidatorsBelowThreshold([])
-	}, [context.setValidatorsBelowThreshold, validatorsBelowThreshold])
-
-	return context
 }

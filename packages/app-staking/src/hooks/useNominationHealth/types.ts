@@ -1,20 +1,19 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { Validator } from 'types'
 
-export interface NominationHealthContextInterface {
-	active: boolean
-	enabled: boolean
+export interface NominationHealthState {
 	hasDangerWarnings: boolean
-	setHasDangerWarnings: (hasDangerWarnings: boolean) => void
-	setValidatorsBelowThreshold: (validators: Validator[]) => void
-	stakingApiEnabled: boolean
-	toggleEnabled: (enabled: boolean) => void
 	validatorsBelowThreshold: Validator[]
 }
 
-export interface NominationHealthSync {
-	hasDangerWarnings?: boolean
-	validatorsBelowThreshold?: Validator[]
+export interface NominationHealthContextInterface
+	extends NominationHealthState {
+	active: boolean
+	enabled: boolean
+	setEnabled: Dispatch<SetStateAction<boolean>>
+	setNominationHealth: Dispatch<SetStateAction<NominationHealthState>>
+	stakingApiEnabled: boolean
 }

@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { RetainmentThresholds } from 'consts/retainment'
-import { useHelp } from 'hooks/useHelp'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonHelp } from 'ui-buttons'
-import { Badge, CardHeader, Separator, StatusCard } from 'ui-core/base'
+import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
 import type { NominationHealthProps } from './types'
 import { getValidatorsWithRetainment } from './utils'
@@ -19,7 +17,6 @@ export const NominationHealth = ({
 	validators,
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
-	const { openHelpTooltip } = useHelp()
 	const validatorsWithRetainment = useMemo(
 		() => getValidatorsWithRetainment(validators, retainmentByAddress),
 		[retainmentByAddress, validators],
@@ -47,11 +44,16 @@ export const NominationHealth = ({
 	// Get the validators that are below the medium retainment threshold and need attention.
 	const hasDangerWarnings = !isLoading && dangerCount > 0
 
-	// Use the useNominationHealth hook to manage the nomination health state.
-	useNominationHealth({
-		hasDangerWarnings,
-		validatorsBelowThreshold,
-	})
+	const { setNominationHealth } = useNominationHealth()
+	useEffect(() => {
+		setNominationHealth({ hasDangerWarnings, validatorsBelowThreshold })
+		return () => {
+			setNominationHealth({
+				hasDangerWarnings: false,
+				validatorsBelowThreshold: [],
+			})
+		}
+	}, [hasDangerWarnings, setNominationHealth, validatorsBelowThreshold])
 
 	// If the data is still loading or there are no validators with retainment data, return null to
 	// avoid rendering the component.
@@ -69,17 +71,6 @@ export const NominationHealth = ({
 
 	return (
 		<NominationHealthWrapper>
-			<CardHeader action>
-				<h3>
-					{t('nominationHealthCheck')}
-					<ButtonHelp
-						marginLeft
-						background="secondary"
-						definition="Nomination Health Check"
-						openHelp={openHelpTooltip}
-					/>
-				</h3>
-			</CardHeader>
 			{validatorsBelowThreshold.length > 0 && (
 				<div role="status">
 					<Separator

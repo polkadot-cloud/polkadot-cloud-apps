@@ -14,12 +14,8 @@ export const Wrapper = styled.div`
 `
 
 export const NominationHealthWrapper = styled.section`
-  background: var(--gray-200);
-  border: 1px solid var(--gray-500);
-  border-radius: 1.25rem;
   display: grid;
-  gap: 0.75rem;
-  margin: 0 0.9rem 1rem;
-  padding: 1rem;
+  gap: 1rem;
+  margin: 1.5rem 0.9rem 1rem;
   width: calc(100% - 1.8rem);
 `

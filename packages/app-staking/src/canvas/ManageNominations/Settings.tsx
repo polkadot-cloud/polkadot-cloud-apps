@@ -18,7 +18,7 @@ import { ConnectItem, MenuItem, MenuItemButton, Popover } from 'ui-core/popover'
 export const Settings = () => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
-	const { enabled, stakingApiEnabled, toggleEnabled } = useNominationHealth()
+	const { enabled, setEnabled, stakingApiEnabled } = useNominationHealth()
 	const [open, setOpen] = useState(false)
 
 	if (!stakingApiEnabled) {
@@ -34,7 +34,7 @@ export const Settings = () => {
 						<h4 style={{ background: 'transparent' }}>
 							{t('settings', { ns: 'modals' })}
 						</h4>
-						<MenuItemButton onClick={() => toggleEnabled(!enabled)}>
+						<MenuItemButton onClick={() => setEnabled((current) => !current)}>
 							<div>
 								<FontAwesomeIcon icon={faCircleCheck} transform="shrink-1" />
 							</div>
