@@ -11,7 +11,9 @@ export const Popover = ({
 	content,
 	portalContainer,
 	open,
+	onOpenChange,
 	onTriggerClick,
+	disabled = false,
 	width,
 	side,
 	align,
@@ -23,7 +25,9 @@ export const Popover = ({
 	content: ReactNode
 	portalContainer?: HTMLDivElement
 	open?: boolean
+	onOpenChange?: (open: boolean) => void
 	onTriggerClick?: () => void
+	disabled?: boolean
 	width?: string | number
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
@@ -38,8 +42,8 @@ export const Popover = ({
 	})
 
 	return (
-		<RadixPopover.Root open={open}>
-			<RadixPopover.Trigger onClick={onTriggerClick}>
+		<RadixPopover.Root open={open} onOpenChange={onOpenChange}>
+			<RadixPopover.Trigger onClick={onTriggerClick} disabled={disabled}>
 				{children}
 			</RadixPopover.Trigger>
 			<RadixPopover.Portal container={portalContainer}>

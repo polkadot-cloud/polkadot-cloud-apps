@@ -131,6 +131,7 @@ export type ButtonSecondaryProps = ComponentBaseWithClassName &
 export type ButtonSubmitProps = ComponentBaseWithClassName &
 	ButtonIconProps &
 	ButtonCommonProps & {
+		asLabel?: boolean
 		text: string
 		lg?: boolean
 		pulse?: boolean
