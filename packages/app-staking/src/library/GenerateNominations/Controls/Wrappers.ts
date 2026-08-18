@@ -25,12 +25,21 @@ export const MenuWrapper = styled.div`
       margin-right: 2.25rem;
     }
 
-    > .action {
+    > .actions {
+      align-items: center;
+      display: flex;
+      gap: 0.5rem;
       margin-left: auto;
       flex-shrink: 0;
 
       > button {
         display: flex;
+      }
+
+      .revert {
+        background: var(--gray-400);
+        border-color: var(--gray-400);
+        border-radius: var(--btn-sm-radius);
       }
     }
   }

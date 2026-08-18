@@ -121,6 +121,7 @@ export type ButtonPrimaryInvertProps = ComponentBaseWithClassName &
 export type ButtonSecondaryProps = ComponentBaseWithClassName &
 	ButtonIconProps &
 	ButtonCommonProps & {
+		asLabel?: boolean
 		size?: ButtonSize
 		text: string
 		variant?: 'warning' | 'danger'
