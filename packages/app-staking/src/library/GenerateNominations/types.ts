@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import type {
 	AnyFunction,
 	AnyJson,
@@ -13,6 +14,13 @@ import type {
 export interface GenerateNominationsProps {
 	setters: AnyFunction[]
 	displayFor?: DisplayFor
+}
+
+export interface NominationHealthProps {
+	isLoading: boolean
+	onFix: (validators: Validator[]) => Promise<void>
+	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
+	validators: Validator[]
 }
 
 export type NominationSelectionWithResetCounter = NominationSelection & {

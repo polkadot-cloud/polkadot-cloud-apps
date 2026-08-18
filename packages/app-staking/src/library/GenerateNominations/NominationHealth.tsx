@@ -3,10 +3,7 @@
 
 import { useHelp } from 'hooks/useHelp'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { clampRate } from 'library/ValidatorList/retainment'
-import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
-import type { Validator } from 'types'
 import { ButtonHelp } from 'ui-buttons'
 import {
 	Badge,
@@ -15,29 +12,20 @@ import {
 	StatusCard,
 	type StatusCardStatus,
 } from 'ui-core/base'
+import type { NominationHealthProps } from './types'
+import { getValidatorsWithRetainment } from './utils'
 import { NominationHealthWrapper } from './Wrapper'
 
-const HIGH_RETAINMENT_THRESHOLD = 75
-const LOW_RETAINMENT_THRESHOLD = 50
-
-const descriptionKeys: Record<StatusCardStatus, string> = {
-	danger: 'averageRetainmentDescriptionDanger',
-	success: 'averageRetainmentDescriptionSuccess',
-	warning: 'averageRetainmentDescriptionWarning',
-}
-
-interface NominationHealthProps {
-	isLoading: boolean
-	onFix: (validators: Validator[]) => Promise<void>
-	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
-	validators: Validator[]
-}
+export const RetainmentThresholds = {
+	high: 75,
+	low: 50,
+} as const
 
 const getRetainmentStatus = (rate: number): StatusCardStatus => {
-	if (rate >= HIGH_RETAINMENT_THRESHOLD) {
+	if (rate >= RetainmentThresholds.high) {
 		return 'success'
 	}
-	if (rate >= LOW_RETAINMENT_THRESHOLD) {
+	if (rate >= RetainmentThresholds.low) {
 		return 'warning'
 	}
 	return 'danger'
@@ -51,19 +39,16 @@ export const NominationHealth = ({
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { openHelpTooltip } = useHelp()
-	const validatorsWithRetainment = validators.flatMap((validator) => {
-		const rate = retainmentByAddress.get(validator.address)?.months[0]
-			?.retainmentRate
-		return typeof rate === 'number' && Number.isFinite(rate)
-			? [{ rate: clampRate(rate), validator }]
-			: []
-	})
+	const validatorsWithRetainment = getValidatorsWithRetainment(
+		validators,
+		retainmentByAddress,
+	)
 	const validatorsBelowThreshold = validatorsWithRetainment
-		.filter(({ rate }) => rate < HIGH_RETAINMENT_THRESHOLD)
+		.filter(({ rate }) => rate < RetainmentThresholds.high)
 		.map(({ validator }) => validator)
 	const hasDangerWarnings =
 		!isLoading &&
-		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
+		validatorsWithRetainment.some(({ rate }) => rate < RetainmentThresholds.low)
 	useNominationHealth({
 		hasDangerWarnings,
 		onFix,
@@ -78,10 +63,11 @@ export const NominationHealth = ({
 		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
 		validatorsWithRetainment.length
 	const thresholdWarningStatus: StatusCardStatus =
-		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
+		validatorsWithRetainment.some(({ rate }) => rate < RetainmentThresholds.low)
 			? 'danger'
 			: 'warning'
 	const status = getRetainmentStatus(averageRetainment)
+	const descriptionKey = `averageRetainmentDescription${status[0].toUpperCase()}${status.slice(1)}`
 	const averageRetainmentLabel = `${averageRetainment.toLocaleString(
 		i18n.resolvedLanguage,
 		{ maximumFractionDigits: 1 },
@@ -122,7 +108,7 @@ export const NominationHealth = ({
 					</>
 				}
 			>
-				{t(descriptionKeys[status])}
+				{t(descriptionKey)}
 			</StatusCard>
 			{validatorsBelowThreshold.length > 0 && (
 				<StatusCard status={thresholdWarningStatus} role="status">
