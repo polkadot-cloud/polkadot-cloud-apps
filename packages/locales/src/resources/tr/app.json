@@ -222,6 +222,8 @@
 		"locked": "Kilitli",
 		"lockedPools": "Kilitli Havuzlar",
 		"lowRetainment": "Düşük Elde Tutma",
+		"lowRetainmentRemoval_one": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
+		"lowRetainmentRemoval_other": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Validatörleri sıfırdan ekleyin.",
 		"manual_selection": "Manuel Seçim",

@@ -222,6 +222,8 @@
 		"locked": "Bloqueado",
 		"lockedPools": "Pools Bloqueados",
 		"lowRetainment": "Baixa Retenção",
+		"lowRetainmentRemoval_one": "Será removido {{count}} validador com baixa retenção.",
+		"lowRetainmentRemoval_other": "Serão removidos {{count}} validadores com baixa retenção.",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Adicione validadores do zero.",
 		"manual_selection": "Seleção Manual",

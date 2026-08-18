@@ -5,6 +5,7 @@ import { createSafeContext } from '@w3ux/hooks'
 import { usePlugins } from 'hooks/usePlugins'
 import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
+import type { Validator } from 'types'
 import type {
 	NominationHealthContextInterface,
 	NominationHealthSync,
@@ -21,12 +22,16 @@ export const NominationHealthProvider = ({
 	const { pluginEnabled } = usePlugins()
 	const [enabled, setEnabled] = useState(true)
 	const [hasDangerWarnings, setHasDangerWarnings] = useState(false)
+	const [validatorsBelowThreshold, setValidatorsBelowThreshold] = useState<
+		Validator[]
+	>([])
 	const stakingApiEnabled = pluginEnabled('staking_api')
 
 	const toggleEnabled = useCallback((nextEnabled: boolean) => {
 		setEnabled(nextEnabled)
 		if (!nextEnabled) {
 			setHasDangerWarnings(false)
+			setValidatorsBelowThreshold([])
 		}
 	}, [])
 
@@ -37,8 +42,10 @@ export const NominationHealthProvider = ({
 				enabled,
 				hasDangerWarnings,
 				setHasDangerWarnings,
+				setValidatorsBelowThreshold,
 				stakingApiEnabled,
 				toggleEnabled,
+				validatorsBelowThreshold,
 			}}
 		>
 			{children}
@@ -48,6 +55,7 @@ export const NominationHealthProvider = ({
 
 export const useNominationHealth = ({
 	hasDangerWarnings,
+	validatorsBelowThreshold,
 }: NominationHealthSync = {}) => {
 	const context = useNominationHealthContext()
 
@@ -59,6 +67,15 @@ export const useNominationHealth = ({
 		context.setHasDangerWarnings(hasDangerWarnings)
 		return () => context.setHasDangerWarnings(false)
 	}, [context.setHasDangerWarnings, hasDangerWarnings])
+
+	useEffect(() => {
+		if (validatorsBelowThreshold === undefined) {
+			return
+		}
+
+		context.setValidatorsBelowThreshold(validatorsBelowThreshold)
+		return () => context.setValidatorsBelowThreshold([])
+	}, [context.setValidatorsBelowThreshold, validatorsBelowThreshold])
 
 	return context
 }

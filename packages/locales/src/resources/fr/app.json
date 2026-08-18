@@ -222,6 +222,8 @@
 		"locked": "Verrouillé",
 		"lockedPools": "Pools verrouillés",
 		"lowRetainment": "Rétention faible",
+		"lowRetainmentRemoval_one": "{{count}} validateur à faible rétention sera supprimé.",
+		"lowRetainmentRemoval_other": "{{count}} validateurs à faible rétention seront supprimés.",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Ajoutez des validateurs à partir de zéro.",
 		"manual_selection": "Sélection manuelle",

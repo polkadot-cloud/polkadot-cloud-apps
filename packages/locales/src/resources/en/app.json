@@ -222,6 +222,8 @@
 		"locked": "Locked",
 		"lockedPools": "Locked Pools",
 		"lowRetainment": "Low Retainment",
+		"lowRetainmentRemoval_one": "{{count}} low-retainment validator will be removed.",
+		"lowRetainmentRemoval_other": "{{count}} low-retainment validators will be removed.",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Add validators from scratch.",
 		"manual_selection": "Manual Selection",

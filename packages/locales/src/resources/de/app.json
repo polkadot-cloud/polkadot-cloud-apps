@@ -222,6 +222,8 @@
 		"locked": "Gesperrt",
 		"lockedPools": "Gesperrte Pools",
 		"lowRetainment": "Niedrige Retention",
+		"lowRetainmentRemoval_one": "{{count}} Validator mit niedriger Retention wird entfernt.",
+		"lowRetainmentRemoval_other": "{{count}} Validatoren mit niedriger Retention werden entfernt.",
 		"manual": "Manuell",
 		"manualSelectionSubtitle": "Validatoren von Grund auf hinzufügen.",
 		"manual_selection": "Manuelle Auswahl",

@@ -222,6 +222,8 @@
 		"locked": "잠금",
 		"lockedPools": "잠금 풀",
 		"lowRetainment": "저유지율",
+		"lowRetainmentRemoval_one": "유지율이 낮은 검증자 {{count}}명이 제거됩니다.",
+		"lowRetainmentRemoval_other": "유지율이 낮은 검증자 {{count}}명이 제거됩니다.",
 		"manual": "수동",
 		"manualSelectionSubtitle": "처음부터 검증자를 추가합니다.",
 		"manual_selection": "수동 선택",

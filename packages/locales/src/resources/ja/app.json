@@ -222,6 +222,8 @@
 		"locked": "ロック済み",
 		"lockedPools": "ロック済みのプール",
 		"lowRetainment": "低リテンション",
+		"lowRetainmentRemoval_one": "{{count}}件の低リテンションバリデータが削除されます。",
+		"lowRetainmentRemoval_other": "{{count}}件の低リテンションバリデータが削除されます。",
 		"manual": "手動",
 		"manualSelectionSubtitle": "バリデータを一から追加します。",
 		"manual_selection": "手動選択",

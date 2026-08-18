@@ -220,6 +220,8 @@
 		"locked": "己锁",
 		"lockedPools": "已锁定提名池",
 		"lowRetainment": "低留存",
+		"lowRetainmentRemoval_one": "将移除 {{count}} 个低留存率验证者。",
+		"lowRetainmentRemoval_other": "将移除 {{count}} 个低留存率验证者。",
 		"manual": "手动",
 		"manualSelectionSubtitle": "从头开始添加验证人",
 		"manual_selection": "手动选择",

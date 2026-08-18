@@ -4,6 +4,7 @@
 import { RetainmentThresholds } from 'consts/retainment'
 import { useHelp } from 'hooks/useHelp'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RetainmentStatus } from 'types'
 import { ButtonHelp } from 'ui-buttons'
@@ -20,13 +21,17 @@ export const NominationHealth = ({
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { openHelpTooltip } = useHelp()
-	const validatorsWithRetainment = getValidatorsWithRetainment(
-		validators,
-		retainmentByAddress,
+	const validatorsWithRetainment = useMemo(
+		() => getValidatorsWithRetainment(validators, retainmentByAddress),
+		[retainmentByAddress, validators],
 	)
 	// Get the validators that are below the high retainment threshold and need attention.
-	const validatorsBelowThreshold = validatorsWithRetainment.filter(
-		({ rate }) => rate < RetainmentThresholds.high,
+	const validatorsBelowThreshold = useMemo(
+		() =>
+			validatorsWithRetainment
+				.filter(({ rate }) => rate < RetainmentThresholds.high)
+				.map(({ validator }) => validator),
+		[validatorsWithRetainment],
 	)
 
 	// Get the validators that are below the medium retainment threshold and need attention.
@@ -39,6 +44,7 @@ export const NominationHealth = ({
 	// Use the useNominationHealth hook to manage the nomination health state.
 	useNominationHealth({
 		hasDangerWarnings,
+		validatorsBelowThreshold,
 	})
 
 	// If the data is still loading or there are no validators with retainment data, return null to
@@ -80,7 +86,7 @@ export const NominationHealth = ({
 				<div role="status">
 					<Separator
 						style={{
-							margin: '-0.4rem 0 0',
+							margin: '0.5rem 0 0',
 							padding: '0 0.15rem 0.5rem',
 						}}
 					>

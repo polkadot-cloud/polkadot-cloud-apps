@@ -16,6 +16,7 @@ import { useTheme } from 'hooks/useTheme'
 import { GenerateNominations } from 'library/GenerateNominations'
 import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { MenuControls } from 'library/GenerateNominations/Controls/MenuControls'
+import { Confirm } from 'library/Prompt/Confirm'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
@@ -35,7 +36,11 @@ export const Inner = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { serviceApi } = useApi()
-	const { active: healthCheckActive, hasDangerWarnings } = useNominationHealth()
+	const {
+		active: healthCheckActive,
+		hasDangerWarnings,
+		validatorsBelowThreshold,
+	} = useNominationHealth()
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
@@ -54,6 +59,7 @@ export const Inner = () => {
 	const canvasSize = 'xl'
 
 	// Valid to submit transaction
+	const [fixIssuesOpen, setFixIssuesOpen] = useState<boolean>(false)
 	const [submitOpen, setSubmitOpen] = useState<boolean>(false)
 
 	// Handler for updating setup
@@ -74,6 +80,15 @@ export const Inner = () => {
 		!nominationsMatch()
 	const valid =
 		hasSubmittableChanges && (!healthCheckActive || !hasDangerWarnings)
+	const removeLowRetainers = () => {
+		const addressesToRemove = new Set(
+			validatorsBelowThreshold.map(({ address }) => address),
+		)
+		setNominations(
+			nominations.filter(({ address }) => !addressesToRemove.has(address)),
+		)
+		setFixIssuesOpen(false)
+	}
 
 	const getTx = () => {
 		if (!valid) {
@@ -116,6 +131,12 @@ export const Inner = () => {
 		}
 	}, [valid])
 
+	useEffect(() => {
+		if (!healthCheckActive || !hasDangerWarnings) {
+			setFixIssuesOpen(false)
+		}
+	}, [hasDangerWarnings, healthCheckActive])
+
 	// Generation component props
 	const displayFor: DisplayFor = 'canvas'
 	const setters = [
@@ -144,7 +165,26 @@ export const Inner = () => {
 					action={
 						method ? (
 							healthCheckActive && hasDangerWarnings ? (
-								<ButtonSubmit lg text={t('fixIssues')} onClick={() => {}} />
+								<Popover
+									open={fixIssuesOpen}
+									onOpenChange={setFixIssuesOpen}
+									portalContainer={themeElementRef.current || undefined}
+									side="bottom"
+									align="end"
+									sideOffset={8}
+									content={
+										<Confirm
+											text={t('lowRetainmentRemoval', {
+												count: validatorsBelowThreshold.length,
+											})}
+											controlKey="fix_nomination_issues"
+											onClose={() => setFixIssuesOpen(false)}
+											onRevert={removeLowRetainers}
+										/>
+									}
+								>
+									<ButtonSubmit asLabel lg text={t('fixIssues')} />
+								</Popover>
 							) : (
 								<Popover
 									open={submitOpen}

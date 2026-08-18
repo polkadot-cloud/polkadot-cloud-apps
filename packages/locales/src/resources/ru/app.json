@@ -224,6 +224,8 @@
 		"locked": "Заблокировано",
 		"lockedPools": "Заблокированные пулы",
 		"lowRetainment": "Низкое удержание",
+		"lowRetainmentRemoval_one": "Будет удалён {{count}} валидатор с низким удержанием.",
+		"lowRetainmentRemoval_other": "Будут удалены {{count}} валидаторов с низким удержанием.",
 		"manual": "Вручную",
 		"manualSelectionSubtitle": "Добавьте валидаторы с нуля.",
 		"manual_selection": "Выбор вручную",
