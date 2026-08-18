@@ -167,7 +167,7 @@
 			"nominationHealthCheck": [
 				"Nomination Health Check",
 				[
-					"The Nomination Health Check screens selected validators for bad actors, ensures your nomination list contains only high-quality validators, and maintains reward continuity with at least a 99% chance of receiving rewards in the next era."
+					"The Nomination Health Check screens selected validators for potentially harmful behavior and helps optimize your nomination list to support network security."
 				]
 			],
 			"nominationPayoutDistribution": [

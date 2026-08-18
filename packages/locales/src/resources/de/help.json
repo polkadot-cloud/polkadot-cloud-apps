@@ -173,7 +173,7 @@
 			"nominationHealthCheck": [
 				"Nominierungs-Gesundheitscheck",
 				[
-					"Der Nominierungs-Gesundheitscheck prüft ausgewählte Validatoren auf böswillige Akteure, sorgt dafür, dass deine Nominierungsliste nur hochwertige Validatoren enthält, und gewährleistet die Kontinuität der Belohnungen mit einer Wahrscheinlichkeit von mindestens 99 %, in der nächsten Ära Belohnungen zu erhalten."
+					"Der Nominierungs-Gesundheitscheck prüft ausgewählte Validatoren auf potenziell schädliches Verhalten und hilft, deine Nominierungsliste zur Unterstützung der Netzwerksicherheit zu optimieren."
 				]
 			],
 			"nominationPayoutDistribution": [

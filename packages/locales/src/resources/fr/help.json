@@ -171,7 +171,7 @@
 			"nominationHealthCheck": [
 				"Bilan de Santé des Nominations",
 				[
-					"Le bilan de santé des nominations analyse les validateurs sélectionnés afin de détecter les acteurs malveillants, garantit que votre liste de nominations ne contient que des validateurs de haute qualité et assure la continuité des récompenses, avec au moins 99 % de chances d'en recevoir lors de la prochaine ère."
+					"Le bilan de santé des nominations analyse les validateurs sélectionnés afin de détecter les comportements potentiellement nuisibles et aide à optimiser votre liste de nominations pour renforcer la sécurité du réseau."
 				]
 			],
 			"nominationPayoutDistribution": [

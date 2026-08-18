@@ -169,7 +169,7 @@
 			"nominationHealthCheck": [
 				"Comprobación de Salud de Nominaciones",
 				[
-					"La comprobación de salud de nominaciones analiza los validadores seleccionados en busca de actores maliciosos, garantiza que tu lista de nominaciones solo incluya validadores de alta calidad y mantiene la continuidad de las recompensas con al menos un 99 % de probabilidad de recibir recompensas en la próxima era."
+					"La comprobación de salud de nominaciones analiza los validadores seleccionados para detectar comportamientos potencialmente perjudiciales y ayuda a optimizar tu lista de nominaciones para reforzar la seguridad de la red."
 				]
 			],
 			"nominationPayoutDistribution": [
