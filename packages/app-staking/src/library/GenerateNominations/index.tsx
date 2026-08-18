@@ -19,13 +19,14 @@ import { Subheading } from 'pages/Nominate/Wrappers'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AnyFunction, AnyJson, Validator } from 'types'
+import type { AnyFunction, Validator } from 'types'
 import { Loader } from 'ui-core/base'
 import { usePrompt } from 'ui-overlay'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
 import { SearchValidators } from './Prompts/SearchValidators'
 import { SelectFavorites } from './Prompts/SelectFavorites'
+import { RetainmentSummary } from './RetainmentSummary'
 import type {
 	AddNominationsType,
 	FilterHandlers,
@@ -146,6 +147,23 @@ export const GenerateNominations = ({
 	}
 
 	const maxNominationsReached = MaxNominations <= nominations?.length
+	const removeNominations = ({
+		selected,
+		callback,
+	}: {
+		selected: Validator[]
+		callback?: AnyFunction
+	}) => {
+		const selectedAddresses = new Set(selected.map(({ address }) => address))
+		const newNominations = nominations.filter(
+			({ address }) => !selectedAddresses.has(address),
+		)
+		setNominations(newNominations)
+		updateSetters(setters, newNominations)
+		if (typeof callback === 'function') {
+			callback()
+		}
+	}
 
 	// Define handlers
 	const selectHandlers: Record<string, SelectHandler> = {
@@ -154,25 +172,7 @@ export const GenerateNominations = ({
 			popover: {
 				text: t('removeSelectedItems', { ns: 'app' }),
 				node: Confirm,
-				callback: ({
-					selected,
-					callback,
-				}: {
-					selected: AnyJson
-					callback?: AnyFunction
-				}) => {
-					const selectedAddresses = new Set(
-						selected.map(({ address }: { address: string }) => address),
-					)
-					const newNominations = nominations.filter(
-						(n) => !selectedAddresses.has(n.address),
-					)
-					setNominations(newNominations)
-					updateSetters(setters, newNominations)
-					if (typeof callback === 'function') {
-						callback()
-					}
-				},
+				callback: removeNominations,
 			},
 			onSelected: true,
 			isDisabled: () => false,
@@ -378,6 +378,14 @@ export const GenerateNominations = ({
 									displayFor={displayFor}
 								/>
 							}
+							renderRetainmentSummary={({ isLoading, retainmentByAddress }) => (
+								<RetainmentSummary
+									isLoading={isLoading}
+									onRemove={(selected) => removeNominations({ selected })}
+									retainmentByAddress={retainmentByAddress}
+									validators={nominations}
+								/>
+							)}
 							onRemove={selectHandlers?.removeSelected?.popover.callback}
 						/>
 					)}

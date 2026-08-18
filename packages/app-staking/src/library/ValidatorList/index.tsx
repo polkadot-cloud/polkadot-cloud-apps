@@ -57,6 +57,7 @@ export const ValidatorListInner = ({
 	forceListFormat,
 	defaultConfig,
 	BeforeListNode = null,
+	renderRetainmentSummary,
 	onRemove,
 }: ValidatorListProps) => {
 	const { t } = useTranslation()
@@ -191,6 +192,10 @@ export const ValidatorListInner = ({
 			),
 		[scopedDetails],
 	)
+	const retainmentDetailsLoading =
+		retainmentStatsEnabled &&
+		activeEra.index > 0 &&
+		pendingDetailedAddresses.length > 0
 	// if in modal, handle resize
 	const maybeHandleModalResize = () => {
 		if (displayFor === 'modal') {
@@ -286,6 +291,11 @@ export const ValidatorListInner = ({
 					<Pagination page={page} total={totalPages} setter={setPage} />
 				)}
 				{BeforeListNode}
+				{retainmentStatsEnabled &&
+					renderRetainmentSummary?.({
+						isLoading: retainmentDetailsLoading,
+						retainmentByAddress,
+					})}
 				<MotionContainer>
 					{listItems.length ? (
 						listItems.map((validator) => (

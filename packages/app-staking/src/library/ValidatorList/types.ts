@@ -11,6 +11,11 @@ import type {
 import type { ReactNode } from 'react'
 import type { DisplayFor, Validator } from 'types'
 
+export interface RetainmentSummaryData {
+	isLoading: boolean
+	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
+}
+
 export interface ValidatorListProps {
 	validators: Validator[]
 	showShareLink?: boolean
@@ -22,6 +27,7 @@ export interface ValidatorListProps {
 	forceListFormat?: ListFormat
 	defaultConfig?: ValidatorListConfig
 	BeforeListNode?: ReactNode
+	renderRetainmentSummary?: (data: RetainmentSummaryData) => ReactNode
 	onRemove?: (params: {
 		selected: Validator[]
 		resetSelection?: () => void
