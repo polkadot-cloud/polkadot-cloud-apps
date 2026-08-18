@@ -38,5 +38,5 @@ export const NominationSummary = styled.div`
 `
 
 export const SubmitTxContainer = styled.div`
-  padding-bottom: 1.75rem;
+  padding-bottom: 1rem;
 `

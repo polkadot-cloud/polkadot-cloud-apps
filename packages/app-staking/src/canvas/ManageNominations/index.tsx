@@ -20,12 +20,11 @@ import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection } from 'types'
-import { SubmitTx } from 'ui-app/SubmitTx'
 import { ButtonSubmit } from 'ui-buttons'
 import { HeadFullWidth, Main, Title } from 'ui-core/canvas'
 import { Popover } from 'ui-core/popover'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
-import { NominationSummary, SubmitTxContainer } from './Wrappers'
+import { Form } from './Form'
 
 export const Inner = () => {
 	const { t } = useTranslation('app')
@@ -67,21 +66,6 @@ export const Inner = () => {
 		) &&
 		nominations.length > 0 &&
 		nominations.length === defaultNominations.length
-
-	const defaultNominationAddresses = new Set(
-		defaultNominations.map(({ address }) => address),
-	)
-	const nominationAddresses = new Set(nominations.map(({ address }) => address))
-	const addedNominations = nominations.filter(
-		({ address }) => !defaultNominationAddresses.has(address),
-	).length
-	const removedNominations = defaultNominations.filter(
-		({ address }) => !nominationAddresses.has(address),
-	).length
-	const nominationCountLabel = (count: number) =>
-		count === 0
-			? t('none', { ns: 'pages' })
-			: `${count} ${t('nominations', { count })}`
 
 	const getTx = () => {
 		if (!valid) {
@@ -166,35 +150,11 @@ export const Inner = () => {
 							align="end"
 							sideOffset={8}
 							content={
-								<>
-									<NominationSummary>
-										<h3>{t('summary', { ns: 'pages' })}</h3>
-										<div className="row">
-											<span>{t('nominationsAdded')}</span>
-											<span>{nominationCountLabel(addedNominations)}</span>
-										</div>
-										<div className="row">
-											<span>{t('nominationsRemoved')}</span>
-											<span>{nominationCountLabel(removedNominations)}</span>
-										</div>
-										<div className="row total">
-											<span>{t('totalNominations')}:</span>
-											<span>{nominations.length}</span>
-										</div>
-									</NominationSummary>
-									<SubmitTxContainer>
-										<SubmitTx
-											noMargin
-											requiresMigratedController={!isPool}
-											valid={valid}
-											displayFor="card"
-											stacked
-											transparent
-											hideSigner
-											{...submitExtrinsic}
-										/>
-									</SubmitTxContainer>
-								</>
+								<Form
+									valid={valid}
+									requiresMigratedController={!isPool}
+									submitExtrinsic={submitExtrinsic}
+								/>
 							}
 						>
 							<ButtonSubmit
