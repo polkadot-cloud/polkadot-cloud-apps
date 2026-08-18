@@ -27,7 +27,7 @@ export const MenuAction = ({
 	const {
 		active: healthCheckActive,
 		hasDangerWarnings,
-		validatorsBelowThreshold,
+		lowRetainmentValidators,
 	} = useNominationHealth()
 	const [open, setOpen] = useState(false)
 	const needsFix = healthCheckActive && hasDangerWarnings
@@ -36,7 +36,7 @@ export const MenuAction = ({
 
 	const removeLowRetainers = () => {
 		const addressesToRemove = new Set(
-			validatorsBelowThreshold.map(({ address }) => address),
+			lowRetainmentValidators.map(({ address }) => address),
 		)
 		setNominations((current) =>
 			current.filter(({ address }) => !addressesToRemove.has(address)),
@@ -56,7 +56,7 @@ export const MenuAction = ({
 				content={
 					<Confirm
 						text={t('lowRetainmentRemoval', {
-							count: validatorsBelowThreshold.length,
+							count: lowRetainmentValidators.length,
 						})}
 						controlKey="fix_nomination_issues"
 						onClose={() => setOpen(false)}

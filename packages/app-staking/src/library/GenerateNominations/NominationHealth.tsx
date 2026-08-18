@@ -29,7 +29,7 @@ export const NominationHealth = ({
 		[retainmentByAddress, validators],
 	)
 	// Get the validators that are below the high retainment threshold and need attention.
-	const validatorsBelowThreshold = useMemo(
+	const validatorsBelowHighThreshold = useMemo(
 		() =>
 			validatorsWithRetainment
 				.filter(({ rate }) => rate < RetainmentThresholds.high)
@@ -37,13 +37,18 @@ export const NominationHealth = ({
 		[validatorsWithRetainment],
 	)
 
-	// Count the number of validators that fall into the danger category based on their retainment.
-	const dangerCount = validatorsWithRetainment.filter(
-		({ rate }) => rate < RetainmentThresholds.medium,
-	).length
+	// Get the validators that fall into the danger category and can be removed by Fix Issues.
+	const lowRetainmentValidators = useMemo(
+		() =>
+			validatorsWithRetainment
+				.filter(({ rate }) => rate < RetainmentThresholds.medium)
+				.map(({ validator }) => validator),
+		[validatorsWithRetainment],
+	)
+	const dangerCount = lowRetainmentValidators.length
 
 	// Remaining validators below the high threshold fall into the warning category.
-	const warningCount = validatorsBelowThreshold.length - dangerCount
+	const warningCount = validatorsBelowHighThreshold.length - dangerCount
 
 	// Whether any validator falls below the medium retainment threshold.
 	const hasDangerWarnings = dangerCount > 0
@@ -53,20 +58,20 @@ export const NominationHealth = ({
 		setNominationHealth({
 			hasDangerWarnings,
 			isLoading,
-			validatorsBelowThreshold,
+			lowRetainmentValidators,
 		})
 		return () => {
 			setNominationHealth({
 				hasDangerWarnings: false,
 				isLoading: false,
-				validatorsBelowThreshold: [],
+				lowRetainmentValidators: [],
 			})
 		}
 	}, [
 		hasDangerWarnings,
 		isLoading,
+		lowRetainmentValidators,
 		setNominationHealth,
-		validatorsBelowThreshold,
 	])
 
 	// Keep displaying cached results while additional validator details load.
@@ -84,7 +89,7 @@ export const NominationHealth = ({
 
 	return (
 		<NominationHealthWrapper>
-			{validatorsBelowThreshold.length > 0 && (
+			{validatorsBelowHighThreshold.length > 0 && (
 				<div role="status">
 					<Separator
 						style={{

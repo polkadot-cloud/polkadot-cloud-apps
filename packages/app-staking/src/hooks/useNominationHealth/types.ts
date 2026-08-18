@@ -7,7 +7,7 @@ import type { Validator } from 'types'
 export interface NominationHealthState {
 	hasDangerWarnings: boolean
 	isLoading: boolean
-	validatorsBelowThreshold: Validator[]
+	lowRetainmentValidators: Validator[]
 }
 
 export interface NominationHealthContextInterface
