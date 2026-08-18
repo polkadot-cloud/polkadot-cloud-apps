@@ -15,7 +15,6 @@ import { NominationHealthWrapper } from './Wrapper'
 
 export const NominationHealth = ({
 	isLoading,
-	onFix,
 	retainmentByAddress,
 	validators,
 }: NominationHealthProps) => {
@@ -26,9 +25,9 @@ export const NominationHealth = ({
 		retainmentByAddress,
 	)
 	// Get the validators that are below the high retainment threshold and need attention.
-	const validatorsBelowThreshold = validatorsWithRetainment
-		.filter(({ rate }) => rate < RetainmentThresholds.high)
-		.map(({ validator }) => validator)
+	const validatorsBelowThreshold = validatorsWithRetainment.filter(
+		({ rate }) => rate < RetainmentThresholds.high,
+	)
 
 	// Get the validators that are below the medium retainment threshold and need attention.
 	const hasDangerWarnings =
@@ -37,11 +36,9 @@ export const NominationHealth = ({
 			({ rate }) => rate < RetainmentThresholds.medium,
 		)
 
-	// Use the useNominationHealth hook to manage the nomination health state and actions.
+	// Use the useNominationHealth hook to manage the nomination health state.
 	useNominationHealth({
 		hasDangerWarnings,
-		onFix,
-		validatorsToFix: validatorsBelowThreshold,
 	})
 
 	// If the data is still loading or there are no validators with retainment data, return null to

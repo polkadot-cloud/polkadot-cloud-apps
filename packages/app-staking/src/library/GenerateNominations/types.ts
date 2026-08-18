@@ -18,7 +18,6 @@ export interface GenerateNominationsProps {
 
 export interface NominationHealthProps {
 	isLoading: boolean
-	onFix: (validators: Validator[]) => Promise<void>
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	validators: Validator[]
 }

@@ -7,20 +7,17 @@ import { MaxNominations } from 'consts'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
-import { emitNotification, pluginEnabled } from 'global-bus'
+import { pluginEnabled } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
-import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useUi } from 'hooks/useUi'
-import { getIdentityDisplay } from 'library/List/Utils'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
-import { fetchSearchValidators } from 'plugin-staking-api'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,19 +37,6 @@ import type {
 } from './types'
 import { Wrapper } from './Wrapper'
 
-const POLKADOT_CLOUD_VALIDATOR_NAME = 'Polkadot Cloud Validator 1'
-const normalizeIdentity = (value: string) =>
-	value.toLowerCase().replace(/[^a-z0-9]/g, '')
-const identityMatches = (...parts: Array<string | null | undefined>) => {
-	const target = normalizeIdentity(POLKADOT_CLOUD_VALIDATOR_NAME)
-	const labels = parts.filter((part): part is string => !!part)
-	return (
-		labels.some((label) => normalizeIdentity(label) === target) ||
-		normalizeIdentity(labels.join(' ')) === target ||
-		normalizeIdentity([...labels].reverse().join(' ')) === target
-	)
-}
-
 export const GenerateNominations = ({
 	setters = [],
 	displayFor = 'default',
@@ -68,18 +52,12 @@ export const GenerateNominations = ({
 		available: availableToNominate,
 	} = useFetchMethods()
 	const { isReady } = useApi()
-	const { network } = useNetwork()
 	const { advancedMode } = useUi()
 	const { activeAddress } = useActiveAccount()
 	const { favoritesList } = useFavoriteValidators()
 	const { openPromptWith, closePrompt } = usePrompt()
 	const { isReadOnlyAccount } = useImportedAccounts()
-	const {
-		getValidators,
-		validatorIdentities,
-		validatorSupers,
-		validatorsFetched,
-	} = useValidators()
+	const { getValidators, validatorsFetched } = useValidators()
 	const {
 		method,
 		height,
@@ -97,9 +75,7 @@ export const GenerateNominations = ({
 	const defaultNominationsCount = defaultNominations.length
 	const fetchingRef = useRef(false)
 	const [candidateFetching, setCandidateFetching] = useState(false)
-	const { active: healthCheckActive } = useNominationHealth({
-		isFixing: candidateFetching,
-	})
+	const { active: healthCheckActive } = useNominationHealth()
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const validatorDetails = useValidatorDetails(
@@ -172,101 +148,6 @@ export const GenerateNominations = ({
 			const newNominations = [...nominations, candidate]
 			setNominations(newNominations)
 			updateSetters(setters, newNominations)
-		} finally {
-			setCandidateFetching(false)
-		}
-	}
-
-	const getPolkadotCloudValidator = async (): Promise<Validator | null> => {
-		const localValidator = getValidators().find(({ address }) => {
-			const identity = getIdentityDisplay(
-				validatorIdentities[address],
-				validatorSupers[address],
-			).data
-			return identityMatches(identity?.display, identity?.super)
-		})
-		if (localValidator) {
-			return localValidator
-		}
-
-		const { searchValidators } = await fetchSearchValidators(
-			network,
-			POLKADOT_CLOUD_VALIDATOR_NAME,
-		)
-		const searchValidator =
-			searchValidators.validators.find(({ display, superDisplay }) =>
-				identityMatches(display, superDisplay),
-			) ||
-			(searchValidators.validators.length === 1
-				? searchValidators.validators[0]
-				: undefined)
-
-		return searchValidator
-			? {
-					address: searchValidator.address,
-					prefs: {
-						blocked: searchValidator.blocked,
-						commission: searchValidator.commission,
-					},
-				}
-			: null
-	}
-
-	const getHealthCheckFallback = async (): Promise<Validator[] | null> => {
-		const cloudValidator = await getPolkadotCloudValidator()
-		if (!cloudValidator) {
-			return null
-		}
-
-		const fallback = [cloudValidator]
-		const strategies: ValidatorCandidateStrategy[] = [
-			'ACTIVE',
-			'HIGH_RETAINER',
-			'HIGH_RETAINER',
-		]
-		for (const strategy of strategies) {
-			const candidate = await fetchCandidate(fallback, strategy)
-			if (
-				!candidate ||
-				fallback.some(({ address }) => address === candidate.address)
-			) {
-				return null
-			}
-			fallback.push(candidate)
-		}
-
-		return fallback
-	}
-
-	const fixRetainment = async (validatorsToRemove: Validator[]) => {
-		if (candidateFetching) {
-			return
-		}
-
-		setCandidateFetching(true)
-		try {
-			const removeAddresses = new Set(
-				validatorsToRemove.map(({ address }) => address),
-			)
-			let nextNominations = nominations.filter(
-				({ address }) => !removeAddresses.has(address),
-			)
-
-			if (nextNominations.length === 0) {
-				const fallback = await getHealthCheckFallback()
-				if (!fallback) {
-					throw new Error('Unable to build nomination health check fallback')
-				}
-				nextNominations = fallback
-			}
-
-			setNominations(nextNominations)
-			updateSetters(setters, nextNominations)
-		} catch {
-			emitNotification({
-				title: t('errorUnknown', { ns: 'app' }),
-				subtitle: t('tryAgain', { ns: 'app' }),
-			})
 		} finally {
 			setCandidateFetching(false)
 		}
@@ -507,7 +388,6 @@ export const GenerateNominations = ({
 									{healthCheckActive && retainmentStatsEnabled && (
 										<NominationHealth
 											isLoading={validatorDetails.isLoading}
-											onFix={fixRetainment}
 											retainmentByAddress={validatorDetails.retainmentByAddress}
 											validators={nominations}
 										/>

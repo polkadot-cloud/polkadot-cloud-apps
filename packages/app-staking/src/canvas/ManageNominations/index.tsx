@@ -35,12 +35,7 @@ export const Inner = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { serviceApi } = useApi()
-	const {
-		active: healthCheckActive,
-		fixing: healthCheckFixing,
-		hasDangerWarnings,
-		requestFix,
-	} = useNominationHealth()
+	const { active: healthCheckActive, hasDangerWarnings } = useNominationHealth()
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
@@ -149,12 +144,7 @@ export const Inner = () => {
 					action={
 						method ? (
 							healthCheckActive && hasDangerWarnings ? (
-								<ButtonSubmit
-									lg
-									text={t('fixIssues')}
-									disabled={healthCheckFixing}
-									onClick={requestFix}
-								/>
+								<ButtonSubmit lg text={t('fixIssues')} onClick={() => {}} />
 							) : (
 								<Popover
 									open={submitOpen}
