@@ -12,21 +12,15 @@ import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useTheme } from 'hooks/useTheme'
 import { GenerateNominations } from 'library/GenerateNominations'
-import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { MenuControls } from 'library/GenerateNominations/Controls/MenuControls'
-import { Confirm } from 'library/Prompt/Confirm'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
-import type { DisplayFor, NominationSelection } from 'types'
-import { ButtonSubmit } from 'ui-buttons'
+import type { NominationSelection } from 'types'
 import { HeadFullWidth, Main, Title } from 'ui-core/canvas'
-import { Popover } from 'ui-core/popover'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
-import { Form } from './Form'
+import { MenuAction } from './MenuAction'
 import { Settings } from './Settings'
 
 export const Inner = () => {
@@ -36,74 +30,45 @@ export const Inner = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { serviceApi } = useApi()
-	const {
-		active: healthCheckActive,
-		hasDangerWarnings,
-		validatorsBelowThreshold,
-	} = useNominationHealth()
+	const { active: healthCheckActive, hasDangerWarnings } = useNominationHealth()
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
-	const { themeElementRef } = useTheme()
 	const { updatePoolNominations } = useBondedPools()
 	const { defaultNominations, nominations, setNominations, method } =
 		useManageNominations()
 
-	const bondFor = options?.bondFor || 'nominator'
-	const isPool = bondFor === 'pool'
-
-	// Whether to display revert changes button
-	const allowRevert = !!method
-
-	// Canvas content size
-	const canvasSize = 'xl'
-
-	// Valid to submit transaction
-	const [fixIssuesOpen, setFixIssuesOpen] = useState<boolean>(false)
-	const [submitOpen, setSubmitOpen] = useState<boolean>(false)
-
-	// Handler for updating setup
-	const handleSetupUpdate = (value: NominationSelection) => {
-		setNominations(value.nominations)
-	}
+	const isPool = options?.bondFor === 'pool'
 
 	// Check if default nominations match new ones
-	const nominationsMatch = () =>
-		nominations.every((n) =>
-			defaultNominations.find((d) => d.address === n.address),
-		) &&
-		nominations.length > 0 &&
-		nominations.length === defaultNominations.length
+	const nominationsMatch =
+		nominations.length === defaultNominations.length &&
+		nominations.every(({ address }) =>
+			defaultNominations.some((nomination) => nomination.address === address),
+		)
+
+	// Whether the current nominations contain submittable changes
 	const hasSubmittableChanges =
 		MaxNominations >= nominations.length &&
 		nominations.length > 0 &&
-		!nominationsMatch()
+		!nominationsMatch
+
+	// Whether the current nominations can be submitted
 	const valid =
 		hasSubmittableChanges && (!healthCheckActive || !hasDangerWarnings)
-	const removeLowRetainers = () => {
-		const addressesToRemove = new Set(
-			validatorsBelowThreshold.map(({ address }) => address),
-		)
-		setNominations(
-			nominations.filter(({ address }) => !addressesToRemove.has(address)),
-		)
-		setFixIssuesOpen(false)
-	}
+
+	// Addresses of the current nominations
+	const nominationAddresses = nominations.map(({ address }) => address)
 
 	const getTx = () => {
 		if (!valid) {
 			return
 		}
 		if (!isPool) {
-			return serviceApi.tx.stakingNominate(
-				nominations.map((nominee) => nominee.address),
-			)
+			return serviceApi.tx.stakingNominate(nominationAddresses)
 		}
 		if (isPool && activePool) {
-			return serviceApi.tx.poolNominate(
-				activePool.id,
-				nominations.map((nominee) => nominee.address),
-			)
+			return serviceApi.tx.poolNominate(activePool.id, nominationAddresses)
 		}
 	}
 
@@ -111,41 +76,24 @@ export const Inner = () => {
 		tx: getTx(),
 		from: formatFromProp(activeAccount, activeProxy),
 		shouldSubmit: valid,
-		callbackSubmit: () => {
-			closeCanvas()
-		},
+		callbackSubmit: closeCanvas,
 		callbackInBlock: () => {
 			if (isPool && activePool) {
 				// Update bonded pool targets if updating pool nominations
-				updatePoolNominations(
-					activePool.id,
-					nominations.map((n) => n.address),
-				)
+				updatePoolNominations(activePool.id, nominationAddresses)
 			}
 		},
 	})
 
-	useEffect(() => {
-		if (!valid) {
-			setSubmitOpen(false)
-		}
-	}, [valid])
-
-	useEffect(() => {
-		if (!healthCheckActive || !hasDangerWarnings) {
-			setFixIssuesOpen(false)
-		}
-	}, [hasDangerWarnings, healthCheckActive])
-
-	// Generation component props
-	const displayFor: DisplayFor = 'canvas'
+	// Setter configuration for synchronizing generated nominations
 	const setters = [
 		{
 			current: {
 				callable: true,
 				fn: () => nominations,
 			},
-			set: handleSetupUpdate,
+			set: ({ nominations: nextNominations }: NominationSelection) =>
+				setNominations(nextNominations),
 		},
 	]
 
@@ -158,67 +106,21 @@ export const Inner = () => {
 				<Settings />
 				<CloseCanvas />
 			</HeadFullWidth>
-			{displayFor === 'canvas' && (
-				<MenuControls
-					allowRevert={allowRevert}
-					setters={setters}
-					action={
-						method ? (
-							healthCheckActive && hasDangerWarnings ? (
-								<Popover
-									open={fixIssuesOpen}
-									onOpenChange={setFixIssuesOpen}
-									portalContainer={themeElementRef.current || undefined}
-									side="bottom"
-									align="end"
-									sideOffset={8}
-									content={
-										<Confirm
-											text={t('lowRetainmentRemoval', {
-												count: validatorsBelowThreshold.length,
-											})}
-											controlKey="fix_nomination_issues"
-											onClose={() => setFixIssuesOpen(false)}
-											onRevert={removeLowRetainers}
-										/>
-									}
-								>
-									<ButtonSubmit asLabel lg text={t('fixIssues')} />
-								</Popover>
-							) : (
-								<Popover
-									open={submitOpen}
-									onOpenChange={setSubmitOpen}
-									disabled={!valid}
-									portalContainer={themeElementRef.current || undefined}
-									width="min(380px, calc(100vw - 2rem))"
-									side="bottom"
-									align="end"
-									sideOffset={8}
-									content={
-										<Form
-											valid={valid}
-											requiresMigratedController={!isPool}
-											submitExtrinsic={submitExtrinsic}
-										/>
-									}
-								>
-									<ButtonSubmit
-										asLabel
-										lg
-										text={t('submit', { ns: 'modals' })}
-										pulse={valid}
-										disabled={!valid}
-									/>
-								</Popover>
-							)
-						) : undefined
-					}
-				/>
-			)}
-			<Main size={canvasSize} withMenu>
-				{displayFor !== 'canvas' && <InlineControls displayFor={displayFor} />}
-				<GenerateNominations displayFor={displayFor} setters={setters} />
+			<MenuControls
+				allowRevert={Boolean(method)}
+				setters={setters}
+				action={
+					method ? (
+						<MenuAction
+							isPool={isPool}
+							submitExtrinsic={submitExtrinsic}
+							valid={valid}
+						/>
+					) : undefined
+				}
+			/>
+			<Main size="xl" withMenu>
+				<GenerateNominations displayFor="canvas" setters={setters} />
 			</Main>
 		</>
 	)
