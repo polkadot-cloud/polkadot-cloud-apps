@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { ReactNode } from 'react'
 import type { AnyFunction, AnyJson, DisplayFor } from 'types'
 import type { SelectHandler } from '../types'
 
@@ -19,4 +20,5 @@ export interface ListControlsProps {
 export interface MenuControlsProps {
 	setters: AnyFunction[]
 	allowRevert: boolean
+	action?: ReactNode
 }

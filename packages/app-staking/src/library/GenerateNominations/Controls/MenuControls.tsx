@@ -8,7 +8,11 @@ import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
 import { MenuWrapper } from './Wrappers'
 
-export const MenuControls = ({ setters, allowRevert }: MenuControlsProps) => {
+export const MenuControls = ({
+	setters,
+	allowRevert,
+	action,
+}: MenuControlsProps) => {
 	const { t } = useTranslation()
 
 	const {
@@ -25,6 +29,13 @@ export const MenuControls = ({ setters, allowRevert }: MenuControlsProps) => {
 	return (
 		<MenuWrapper>
 			<div className="inner">
+				{!method && (
+					<ButtonMenu
+						asLabel
+						disabled
+						text={t('chooseNominationMethod', { ns: 'app' })}
+					/>
+				)}
 				{method && (
 					<>
 						<ButtonMenu
@@ -52,6 +63,7 @@ export const MenuControls = ({ setters, allowRevert }: MenuControlsProps) => {
 						}}
 					/>
 				)}
+				{action && <div className="action">{action}</div>}
 			</div>
 		</MenuWrapper>
 	)

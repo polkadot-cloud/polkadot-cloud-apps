@@ -11,6 +11,7 @@ import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
+import { useTheme } from 'hooks/useTheme'
 import { GenerateNominations } from 'library/GenerateNominations'
 import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { MenuControls } from 'library/GenerateNominations/Controls/MenuControls'
@@ -19,16 +20,11 @@ import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection } from 'types'
-import { SubmitTx } from 'ui-app/SubmitTx'
-import {
-	Footer,
-	FootFullWidth,
-	HeadFullWidth,
-	Main,
-	Title,
-} from 'ui-core/canvas'
+import { ButtonSubmit } from 'ui-buttons'
+import { HeadFullWidth, Main, Title } from 'ui-core/canvas'
+import { Popover } from 'ui-core/popover'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
-import classes from './index.module.scss'
+import { Form } from './Form'
 
 export const Inner = () => {
 	const { t } = useTranslation('app')
@@ -40,6 +36,7 @@ export const Inner = () => {
 	const { activePool } = useActivePool()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
+	const { themeElementRef } = useTheme()
 	const { updatePoolNominations } = useBondedPools()
 	const { defaultNominations, nominations, setNominations, method } =
 		useManageNominations()
@@ -50,11 +47,12 @@ export const Inner = () => {
 	// Whether to display revert changes button
 	const allowRevert = !!method
 
-	// Canvas content and footer size
+	// Canvas content size
 	const canvasSize = 'xl'
 
 	// Valid to submit transaction
 	const [valid, setValid] = useState<boolean>(false)
+	const [submitOpen, setSubmitOpen] = useState<boolean>(false)
 
 	// Handler for updating setup
 	const handleSetupUpdate = (value: NominationSelection) => {
@@ -106,11 +104,15 @@ export const Inner = () => {
 
 	// Valid if there are between 1 and `MaxNominations` nominations
 	useEffect(() => {
-		setValid(
+		const nextValid =
 			MaxNominations >= nominations.length &&
-				nominations.length > 0 &&
-				!nominationsMatch(),
-		)
+			nominations.length > 0 &&
+			!nominationsMatch()
+
+		setValid(nextValid)
+		if (!nextValid) {
+			setSubmitOpen(false)
+		}
 	}, [nominations])
 
 	// Generation component props
@@ -134,7 +136,39 @@ export const Inner = () => {
 				<CloseCanvas />
 			</HeadFullWidth>
 			{displayFor === 'canvas' && (
-				<MenuControls allowRevert={allowRevert} setters={setters} />
+				<MenuControls
+					allowRevert={allowRevert}
+					setters={setters}
+					action={
+						method ? (
+							<Popover
+								open={submitOpen}
+								onOpenChange={setSubmitOpen}
+								disabled={!valid}
+								portalContainer={themeElementRef.current || undefined}
+								width="min(380px, calc(100vw - 2rem))"
+								side="bottom"
+								align="end"
+								sideOffset={8}
+								content={
+									<Form
+										valid={valid}
+										requiresMigratedController={!isPool}
+										submitExtrinsic={submitExtrinsic}
+									/>
+								}
+							>
+								<ButtonSubmit
+									asLabel
+									lg
+									text={t('submit', { ns: 'modals' })}
+									pulse={valid}
+									disabled={!valid}
+								/>
+							</Popover>
+						) : undefined
+					}
+				/>
 			)}
 			<Main size={canvasSize} withMenu>
 				{displayFor !== 'canvas' && (
@@ -150,18 +184,6 @@ export const Inner = () => {
 					allowRevert={allowRevert}
 				/>
 			</Main>
-			<FootFullWidth>
-				<Footer size={canvasSize} className={classes.footer}>
-					<SubmitTx
-						noMargin
-						requiresMigratedController={!isPool}
-						valid={valid}
-						displayFor="canvas"
-						transparent
-						{...submitExtrinsic}
-					/>
-				</Footer>
-			</FootFullWidth>
 		</>
 	)
 }

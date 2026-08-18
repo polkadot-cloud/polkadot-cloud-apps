@@ -9,7 +9,7 @@
 	min-height: calc(100vh - 12rem - var(--canvas-window-offset, 0rem));
 
 	&.withMenu {
-		min-height: calc(100vh - 20rem - var(--canvas-window-offset, 0rem));
+		min-height: calc(100vh - 9rem - var(--canvas-window-offset, 0rem));
 	}
 
 	&.lg {
