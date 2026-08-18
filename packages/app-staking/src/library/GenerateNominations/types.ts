@@ -13,7 +13,6 @@ import type {
 export interface GenerateNominationsProps {
 	setters: AnyFunction[]
 	displayFor?: DisplayFor
-	allowRevert?: boolean
 }
 
 export type NominationSelectionWithResetCounter = NominationSelection & {

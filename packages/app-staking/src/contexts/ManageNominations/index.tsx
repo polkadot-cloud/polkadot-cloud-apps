@@ -53,13 +53,6 @@ export const ManageNominationsProvider = ({
 		}
 	}
 
-	// Handle resetting manage nominations
-	const resetNominations = (setters: AnyFunction[]) => {
-		setMethod(null)
-		setNominations([])
-		updateSetters(setters, [])
-	}
-
 	// Handle reverting nomination changes
 	const revertNominations = () => {
 		// Set a temporary height to prevent height snapping on re-renders
@@ -82,7 +75,6 @@ export const ManageNominationsProvider = ({
 				setNominations,
 				heightRef,
 				updateSetters,
-				resetNominations,
 				revertNominations,
 			}}
 		>
