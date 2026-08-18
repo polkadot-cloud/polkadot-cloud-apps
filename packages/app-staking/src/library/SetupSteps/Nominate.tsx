@@ -77,7 +77,7 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 						})}
 					</h4>
 				</Subheading>
-				<InlineControls displayFor={displayFor} allowRevert setters={setters} />
+				<InlineControls displayFor={displayFor} />
 				<GenerateNominations setters={setters} displayFor={displayFor} />
 				<Footer complete={progress.nominations.length > 0} bondFor={bondFor} />
 			</MotionContainer>

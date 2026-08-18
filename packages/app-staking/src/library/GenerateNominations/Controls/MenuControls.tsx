@@ -21,8 +21,7 @@ export const MenuControls = ({
 		nominations,
 		updateSetters,
 		setNominations,
-		resetNominations,
-		revertNominations,
+		setFetching,
 		defaultNominations,
 	} = useManageNominations()
 
@@ -37,33 +36,34 @@ export const MenuControls = ({
 					/>
 				)}
 				{method && (
-					<>
-						<ButtonMenu
-							text={t('startAgain', { ns: 'app' })}
-							onClick={() => resetNominations(setters)}
-						/>
-						{['Optimal Selection'].includes(method) && (
-							<ButtonMenu
-								text={t('reGenerate', { ns: 'app' })}
-								onClick={() => revertNominations()}
-							/>
-						)}
-					</>
-				)}
-				{allowRevert && (
-					<Revert
-						inMenu
-						disabled={
-							JSON.stringify(nominations) === JSON.stringify(defaultNominations)
-						}
+					<ButtonMenu
+						text={t('reGenerate', { ns: 'app' })}
 						onClick={() => {
-							setMethod('manual')
-							updateSetters(setters, defaultNominations)
-							setNominations(defaultNominations)
+							setMethod('Optimal Selection')
+							setNominations([])
+							setFetching(true)
 						}}
 					/>
 				)}
-				{action && <div className="action">{action}</div>}
+				{(allowRevert || action) && (
+					<div className="actions">
+						{allowRevert && (
+							<Revert
+								inMenu
+								disabled={
+									JSON.stringify(nominations) ===
+									JSON.stringify(defaultNominations)
+								}
+								onClick={() => {
+									setMethod('manual')
+									updateSetters(setters, defaultNominations)
+									setNominations(defaultNominations)
+								}}
+							/>
+						)}
+						{action}
+					</div>
+				)}
 			</div>
 		</MenuWrapper>
 	)

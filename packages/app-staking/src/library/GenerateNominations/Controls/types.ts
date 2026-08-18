@@ -6,9 +6,7 @@ import type { AnyFunction, AnyJson, DisplayFor } from 'types'
 import type { SelectHandler } from '../types'
 
 export interface InlineControlsProps {
-	setters: AnyFunction[]
 	displayFor: DisplayFor
-	allowRevert: boolean
 }
 
 export interface ListControlsProps {

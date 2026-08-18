@@ -171,18 +171,8 @@ export const Inner = () => {
 				/>
 			)}
 			<Main size={canvasSize} withMenu>
-				{displayFor !== 'canvas' && (
-					<InlineControls
-						displayFor={displayFor}
-						allowRevert={allowRevert}
-						setters={setters}
-					/>
-				)}
-				<GenerateNominations
-					displayFor={displayFor}
-					setters={setters}
-					allowRevert={allowRevert}
-				/>
+				{displayFor !== 'canvas' && <InlineControls displayFor={displayFor} />}
+				<GenerateNominations displayFor={displayFor} setters={setters} />
 			</Main>
 		</>
 	)
