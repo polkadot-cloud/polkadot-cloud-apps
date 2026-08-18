@@ -9,11 +9,32 @@ import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
 import type { ValidatorDetailsData } from './types'
 
+// Number of eras included in validator era-point details.
+const ERA_POINTS_DEPTH = 30
+
 interface ValidatorDetailsCacheEntry {
 	addresses: string[]
 	data: ValidatorDetailsBatchData
-	scopeKey: string
 }
+
+// Merge newly fetched details into an existing scope cache.
+const mergeDetails = (
+	current: ValidatorDetailsBatchData | undefined,
+	next: ValidatorDetailsBatchData,
+): ValidatorDetailsBatchData => ({
+	validatorAvgRewardRateBatch: [
+		...(current?.validatorAvgRewardRateBatch ?? []),
+		...next.validatorAvgRewardRateBatch,
+	],
+	validatorEraPointsBatch: [
+		...(current?.validatorEraPointsBatch ?? []),
+		...next.validatorEraPointsBatch,
+	],
+	validatorRetainmentBatch: [
+		...(current?.validatorRetainmentBatch ?? []),
+		...next.validatorRetainmentBatch,
+	],
+})
 
 export const useValidatorDetails = (
 	addresses: string[],
@@ -22,124 +43,105 @@ export const useValidatorDetails = (
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
 	const { activeEra } = useApi()
-	const [detailsByKey, setDetailsByKey] = useState<
+
+	// Current era index used to scope and fetch validator details.
+	const era = activeEra.index
+
+	// Fetched validator details, cached by network and era scope.
+	const [detailsByScope, setDetailsByScope] = useState<
 		Record<string, ValidatorDetailsCacheEntry>
 	>({})
+
+	// Stable signature for the requested validator addresses.
 	const addressesKey = JSON.stringify(addresses)
+
+	// Stable address list that changes only when its contents change.
 	const stableAddresses = useMemo(() => [...addresses], [addressesKey])
-	const scopeKey = useMemo(
-		() =>
-			JSON.stringify({
-				network,
-				era: activeEra.index,
-				rewardRateDepth: erasPerDay,
-			}),
-		[network, activeEra.index, erasPerDay],
-	)
-	const scopedDetails = useMemo(
-		() =>
-			Object.values(detailsByKey).filter(
-				(entry) => entry.scopeKey === scopeKey,
-			),
-		[detailsByKey, scopeKey],
-	)
+
+	// Cache key for the current network, era, and reward-rate depth.
+	const scopeKey = `${network}:${era}:${erasPerDay}`
+
+	// Cached details for the current scope.
+	const scopedDetails = detailsByScope[scopeKey]
+
+	// Addresses already fetched within the current scope.
 	const detailedAddresses = useMemo(
-		() => new Set(scopedDetails.flatMap((entry) => entry.addresses)),
+		() => new Set(scopedDetails?.addresses ?? []),
 		[scopedDetails],
 	)
+
+	// Requested addresses that still need details.
 	const pendingAddresses = useMemo(
 		() => stableAddresses.filter((address) => !detailedAddresses.has(address)),
 		[stableAddresses, detailedAddresses],
 	)
-	const detailsKey = useMemo(
-		() => JSON.stringify({ scopeKey, validators: pendingAddresses }),
-		[scopeKey, pendingAddresses],
-	)
 
+	// Fetch and merge details for addresses missing from the current scope cache.
 	useEffect(() => {
-		if (
-			!enabled ||
-			activeEra.index === 0 ||
-			pendingAddresses.length === 0 ||
-			detailsByKey[detailsKey] !== undefined
-		) {
+		if (!enabled || era === 0 || pendingAddresses.length === 0) {
 			return
 		}
 
+		// Whether this request may still update the cache.
 		let active = true
 		void fetchValidatorDetailsBatch(
 			network,
 			pendingAddresses,
-			Math.max(activeEra.index - 1, 0),
+			era - 1,
 			erasPerDay,
-			30,
+			ERA_POINTS_DEPTH,
 		).then((data) => {
 			if (!active) {
 				return
 			}
-			setDetailsByKey((current) => ({
-				...current,
-				[detailsKey]: {
-					addresses: pendingAddresses,
-					data,
-					scopeKey,
-				},
-			}))
+			setDetailsByScope((current) => {
+				// Existing details to merge with this response.
+				const cached = current[scopeKey]
+				return {
+					...current,
+					[scopeKey]: {
+						addresses: [
+							...new Set([...(cached?.addresses ?? []), ...pendingAddresses]),
+						],
+						data: mergeDetails(cached?.data, data),
+					},
+				}
+			})
 		})
 
 		return () => {
 			active = false
 		}
-	}, [
-		activeEra.index,
-		detailsByKey,
-		detailsKey,
-		enabled,
-		erasPerDay,
-		network,
-		pendingAddresses,
-		scopeKey,
-	])
+	}, [enabled, era, erasPerDay, network, pendingAddresses, scopeKey])
 
-	const eraPointsByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorEraPointsBatch.map(
-						(entry) => [entry.validator, entry.points] as const,
-					),
+	// Validator details indexed by address for list consumption.
+	const detailsByAddress = useMemo(
+		() => ({
+			eraPointsByAddress: new Map(
+				(scopedDetails?.data.validatorEraPointsBatch ?? []).map(
+					(entry) => [entry.validator, entry.points] as const,
 				),
 			),
-		[scopedDetails],
-	)
-	const rateByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorAvgRewardRateBatch.map(
-						(entry) => [entry.validator, entry.rate] as const,
-					),
+			rateByAddress: new Map(
+				(scopedDetails?.data.validatorAvgRewardRateBatch ?? []).map(
+					(entry) => [entry.validator, entry.rate] as const,
 				),
 			),
-		[scopedDetails],
-	)
-	const retainmentByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorRetainmentBatch.map(
-						(entry) => [entry.validator, entry.result] as const,
-					),
+			retainmentByAddress: new Map(
+				(scopedDetails?.data.validatorRetainmentBatch ?? []).map(
+					(entry) => [entry.validator, entry.result] as const,
 				),
 			),
+		}),
 		[scopedDetails],
 	)
+
+	// Whether requested details are still being fetched.
+	const isLoading = enabled && era > 0 && pendingAddresses.length > 0
 
 	return {
+		...detailsByAddress,
 		detailedAddresses,
-		eraPointsByAddress,
-		isLoading: enabled && activeEra.index > 0 && pendingAddresses.length > 0,
-		rateByAddress,
-		retainmentByAddress,
+		isLoading,
 	}
 }
