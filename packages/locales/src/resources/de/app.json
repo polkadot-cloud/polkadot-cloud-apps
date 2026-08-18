@@ -354,6 +354,8 @@
 		"retainment": "Bindung",
 		"retainmentRate": "Bindungsrate",
 		"retainmentStats": "Bindungsstatistiken",
+		"retainmentThresholdDanger_one": "In deiner Nominierungsliste liegt {{count}} Validator unter dem Retentionsschwellenwert von 50 %.",
+		"retainmentThresholdDanger_other": "In deiner Nominierungsliste liegen {{count}} Validatoren unter dem Retentionsschwellenwert von 50 %.",
 		"retainmentThresholdWarning_one": "In deiner Nominierungsliste liegt {{count}} Validator unter dem empfohlenen Retentionsschwellenwert von 75 %.",
 		"retainmentThresholdWarning_other": "In deiner Nominierungsliste liegen {{count}} Validatoren unter dem empfohlenen Retentionsschwellenwert von 75 %.",
 		"revertedToActiveSelection": "Nominierungen wurden auf deine aktive Auswahl zurückgesetzt.",

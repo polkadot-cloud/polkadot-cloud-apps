@@ -354,6 +354,8 @@
 		"retainment": "Elde tutma",
 		"retainmentRate": "Elde tutma oranı",
 		"retainmentStats": "Elde tutma istatistikleri",
+		"retainmentThresholdDanger_one": "Aday listenizde %50 elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
+		"retainmentThresholdDanger_other": "Aday listenizde %50 elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
 		"retainmentThresholdWarning_one": "Aday listenizde önerilen %75 elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
 		"retainmentThresholdWarning_other": "Aday listenizde önerilen %75 elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
 		"revertedToActiveSelection": "Nominasyonlar aktif seçiminize geri alındı.",

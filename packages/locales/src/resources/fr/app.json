@@ -354,6 +354,8 @@
 		"retainment": "Rétention",
 		"retainmentRate": "Taux de rétention",
 		"retainmentStats": "Statistiques de rétention",
+		"retainmentThresholdDanger_one": "Votre liste contient {{count}} validateur sous le seuil de rétention de 50 %.",
+		"retainmentThresholdDanger_other": "Votre liste contient {{count}} validateurs sous le seuil de rétention de 50 %.",
 		"retainmentThresholdWarning_one": "Votre liste contient {{count}} validateur sous le seuil de rétention recommandé de 75 %.",
 		"retainmentThresholdWarning_other": "Votre liste contient {{count}} validateurs sous le seuil de rétention recommandé de 75 %.",
 		"revertedToActiveSelection": "Les nominations ont été rétablies à votre sélection active.",

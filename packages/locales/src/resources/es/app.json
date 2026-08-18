@@ -354,6 +354,8 @@
 		"retainment": "Retención",
 		"retainmentRate": "Tasa de retención",
 		"retainmentStats": "Estadísticas de retención",
+		"retainmentThresholdDanger_one": "Tienes {{count}} validador por debajo del umbral de retención del 50 %.",
+		"retainmentThresholdDanger_other": "Tienes {{count}} validadores por debajo del umbral de retención del 50 %.",
 		"retainmentThresholdWarning_one": "Tienes {{count}} validador por debajo del umbral de retención recomendado del 75 %.",
 		"retainmentThresholdWarning_other": "Tienes {{count}} validadores por debajo del umbral de retención recomendado del 75 %.",
 		"revertedToActiveSelection": "Las nominaciones se han revertido a tu selección activa.",

@@ -350,6 +350,8 @@
 		"retainment": "留存",
 		"retainmentRate": "留存率",
 		"retainmentStats": "留存统计",
+		"retainmentThresholdDanger_one": "您的提名列表中有 {{count}} 个验证者低于 50% 留存阈值。",
+		"retainmentThresholdDanger_other": "您的提名列表中有 {{count}} 个验证者低于 50% 留存阈值。",
 		"retainmentThresholdWarning_one": "您的提名列表中有 {{count}} 个验证者低于建议的 75% 留存阈值。",
 		"retainmentThresholdWarning_other": "您的提名列表中有 {{count}} 个验证者低于建议的 75% 留存阈值。",
 		"revertedToActiveSelection": "提名已恢复为您原来的选择",

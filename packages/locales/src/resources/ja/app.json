@@ -354,6 +354,8 @@
 		"retainment": "維持",
 		"retainmentRate": "維持率",
 		"retainmentStats": "維持統計",
+		"retainmentThresholdDanger_one": "推薦リストにリテンション基準の50%を下回るバリデーターが{{count}}件あります。",
+		"retainmentThresholdDanger_other": "推薦リストにリテンション基準の50%を下回るバリデーターが{{count}}件あります。",
 		"retainmentThresholdWarning_one": "推薦リストに推奨リテンション基準の75%を下回るバリデーターが{{count}}件あります。",
 		"retainmentThresholdWarning_other": "推薦リストに推奨リテンション基準の75%を下回るバリデーターが{{count}}件あります。",
 		"revertedToActiveSelection": "ノミネーションがアクティブな選択に戻されました。",

@@ -6,7 +6,6 @@ import { useHelp } from 'hooks/useHelp'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { RetainmentStatus } from 'types'
 import { ButtonHelp } from 'ui-buttons'
 import { Badge, CardHeader, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
@@ -34,12 +33,19 @@ export const NominationHealth = ({
 		[validatorsWithRetainment],
 	)
 
+	// Count the number of validators that fall into the warning category based on their retainment.
+	const warningCount = validatorsWithRetainment.filter(
+		({ rate }) =>
+			rate >= RetainmentThresholds.medium && rate < RetainmentThresholds.high,
+	).length
+
+	// Count the number of validators that fall into the danger category based on their retainment.
+	const dangerCount = validatorsWithRetainment.filter(
+		({ rate }) => rate < RetainmentThresholds.medium,
+	).length
+
 	// Get the validators that are below the medium retainment threshold and need attention.
-	const hasDangerWarnings =
-		!isLoading &&
-		validatorsWithRetainment.some(
-			({ rate }) => rate < RetainmentThresholds.medium,
-		)
+	const hasDangerWarnings = !isLoading && dangerCount > 0
 
 	// Use the useNominationHealth hook to manage the nomination health state.
 	useNominationHealth({
@@ -57,14 +63,6 @@ export const NominationHealth = ({
 	const averageRetainment =
 		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
 		validatorsWithRetainment.length
-
-	// Determine the status of the threshold warning based on the retainment rates of the validators.
-	const thresholdWarningStatus: RetainmentStatus =
-		validatorsWithRetainment.some(
-			({ rate }) => rate < RetainmentThresholds.medium,
-		)
-			? 'danger'
-			: 'warning'
 
 	// Determine the overall retainment status based on the average retainment rate.
 	const status = getRetainmentStatus(averageRetainment)
@@ -111,10 +109,17 @@ export const NominationHealth = ({
 					`averageRetainmentDescription${status[0].toUpperCase()}${status.slice(1)}`,
 				)}
 			</StatusCard>
-			{validatorsBelowThreshold.length > 0 && (
-				<StatusCard status={thresholdWarningStatus} role="status">
+			{warningCount > 0 && (
+				<StatusCard status="warning" role="status">
 					{t('retainmentThresholdWarning', {
-						count: validatorsBelowThreshold.length,
+						count: warningCount,
+					})}
+				</StatusCard>
+			)}
+			{dangerCount > 0 && (
+				<StatusCard status="danger" role="status">
+					{t('retainmentThresholdDanger', {
+						count: dangerCount,
 					})}
 				</StatusCard>
 			)}

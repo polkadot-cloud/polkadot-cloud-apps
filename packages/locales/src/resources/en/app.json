@@ -354,6 +354,8 @@
 		"retainment": "Retainment",
 		"retainmentRate": "Retainment rate",
 		"retainmentStats": "Retainment stats",
+		"retainmentThresholdDanger_one": "You have {{count}} validator below the 50% retainment threshold.",
+		"retainmentThresholdDanger_other": "You have {{count}} validators below the 50% retainment threshold.",
 		"retainmentThresholdWarning_one": "You have {{count}} validator below the recommended 75% retainment threshold.",
 		"retainmentThresholdWarning_other": "You have {{count}} validators below the recommended 75% retainment threshold.",
 		"revertedToActiveSelection": "Nominations have been reverted to your active selection.",

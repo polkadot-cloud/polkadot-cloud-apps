@@ -354,6 +354,8 @@
 		"retainment": "Retenção",
 		"retainmentRate": "Taxa de retenção",
 		"retainmentStats": "Estatísticas de retenção",
+		"retainmentThresholdDanger_one": "Você tem {{count}} validador abaixo do limite de retenção de 50%.",
+		"retainmentThresholdDanger_other": "Você tem {{count}} validadores abaixo do limite de retenção de 50%.",
 		"retainmentThresholdWarning_one": "Você tem {{count}} validador abaixo do limite de retenção recomendado de 75%.",
 		"retainmentThresholdWarning_other": "Você tem {{count}} validadores abaixo do limite de retenção recomendado de 75%.",
 		"revertedToActiveSelection": "As nomeações foram revertidas para sua seleção ativa.",
