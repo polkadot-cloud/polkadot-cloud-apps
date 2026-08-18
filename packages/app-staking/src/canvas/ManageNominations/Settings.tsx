@@ -12,12 +12,8 @@ import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ConnectItem, MenuItemButton, Popover } from 'ui-core/popover'
-import {
-	SettingsControl,
-	SettingsTrigger,
-	SettingsWarning,
-} from './Settings.styles'
+import { CanvasHeaderControl } from 'ui-core/canvas'
+import { ConnectItem, MenuItem, MenuItemButton, Popover } from 'ui-core/popover'
 
 export const Settings = () => {
 	const { t } = useTranslation('app')
@@ -31,7 +27,7 @@ export const Settings = () => {
 	}
 
 	return (
-		<SettingsControl>
+		<CanvasHeaderControl right="4.5rem">
 			<Popover
 				align="end"
 				content={
@@ -61,9 +57,11 @@ export const Settings = () => {
 								</div>
 							</div>
 						</MenuItemButton>
-						<SettingsWarning role="note">
-							{t('nominationHealthCheckDisableWarning')}
-						</SettingsWarning>
+						<MenuItem padded>
+							<p role="note" style={{ margin: 0 }}>
+								{t('nominationHealthCheckDisableWarning')}
+							</p>
+						</MenuItem>
 					</ConnectItem.Container>
 				}
 				onOpenChange={setOpen}
@@ -72,13 +70,11 @@ export const Settings = () => {
 				shadow={false}
 				side="bottom"
 				sideOffset={8}
+				triggerLabel={t('settings', { ns: 'modals' })}
 				width="min(300px, calc(100vw - 2rem))"
 			>
-				<SettingsTrigger>
-					<FontAwesomeIcon aria-hidden icon={faCog} />
-					<span>{t('settings', { ns: 'modals' })}</span>
-				</SettingsTrigger>
+				<FontAwesomeIcon aria-hidden icon={faCog} />
 			</Popover>
-		</SettingsControl>
+		</CanvasHeaderControl>
 	)
 }

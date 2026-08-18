@@ -1,0 +1,17 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import type { ReactNode } from 'react'
+import classes from './index.module.scss'
+
+export const CanvasHeaderControl = ({
+	children,
+	right = '1rem',
+}: {
+	children: ReactNode
+	right?: string
+}) => (
+	<div className={classes.control} style={{ right }}>
+		{children}
+	</div>
+)

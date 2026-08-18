@@ -13,6 +13,7 @@ export const Popover = ({
 	open,
 	onOpenChange,
 	onTriggerClick,
+	triggerLabel,
 	disabled = false,
 	width,
 	side,
@@ -28,6 +29,7 @@ export const Popover = ({
 	open?: boolean
 	onOpenChange?: (open: boolean) => void
 	onTriggerClick?: () => void
+	triggerLabel?: string
 	disabled?: boolean
 	width?: string | number
 	side?: 'top' | 'right' | 'bottom' | 'left'
@@ -46,7 +48,11 @@ export const Popover = ({
 
 	return (
 		<RadixPopover.Root open={open} onOpenChange={onOpenChange}>
-			<RadixPopover.Trigger onClick={onTriggerClick} disabled={disabled}>
+			<RadixPopover.Trigger
+				onClick={onTriggerClick}
+				disabled={disabled}
+				aria-label={triggerLabel}
+			>
 				{children}
 			</RadixPopover.Trigger>
 			<RadixPopover.Portal container={portalContainer}>
