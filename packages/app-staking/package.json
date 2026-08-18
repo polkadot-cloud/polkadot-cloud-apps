@@ -61,7 +61,7 @@
 		"rxjs": "^7.8.2",
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
-		"styled-components": "^6.5.1",
+		"styled-components": "^6.5.2",
 		"ui-app": "workspace:*",
 		"tx-submit": "workspace:*",
 		"ui-buttons": "workspace:*",

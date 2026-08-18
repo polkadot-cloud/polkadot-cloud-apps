@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@biomejs/biome':
-        specifier: 2.5.7
-        version: 2.5.7
+        specifier: 2.5.8
+        version: 2.5.8
       '@kt3k/license-checker':
         specifier: 3.2.2
         version: 3.2.2
@@ -33,8 +33,8 @@ importers:
         specifier: ^2.4.2
         version: 2.4.2
       globals:
-        specifier: ^17.9.0
-        version: 17.9.0
+        specifier: ^17.11.0
+        version: 17.11.0
       postcss:
         specifier: ^8.5.26
         version: 8.5.26
@@ -210,8 +210,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tx-submit:
         specifier: workspace:*
         version: link:../tx-submit
@@ -266,7 +266,7 @@ importers:
         version: 1.2.1(rolldown@1.2.3)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.7)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
+        version: 0.14.5(@biomejs/biome@2.5.8)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
@@ -385,8 +385,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tx-submit:
         specifier: workspace:*
         version: link:../tx-submit
@@ -423,7 +423,7 @@ importers:
         version: 8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.7)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
+        version: 0.14.5(@biomejs/biome@2.5.8)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
@@ -497,8 +497,8 @@ importers:
         specifier: 6.3.3
         version: 6.3.3
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       ui-app:
         specifier: workspace:*
         version: link:../ui-app
@@ -529,7 +529,7 @@ importers:
         version: 8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.7)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
+        version: 0.14.5(@biomejs/biome@2.5.8)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11))
@@ -608,8 +608,8 @@ importers:
         specifier: ^7.8.2
         version: 7.8.2
       smoldot:
-        specifier: ^3.4.0
-        version: 3.4.0
+        specifier: ^3.4.1
+        version: 3.4.1
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -771,8 +771,8 @@ importers:
   packages/plugin-staking-api:
     dependencies:
       '@apollo/client':
-        specifier: ^4.2.10
-        version: 4.2.10(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+        specifier: ^4.2.12
+        version: 4.2.12(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       graphql:
         specifier: ^17.0.2
         version: 17.0.2
@@ -798,8 +798,8 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(typescript@6.0.3)
       smoldot:
-        specifier: ^3.4.0
-        version: 3.4.0
+        specifier: ^3.4.1
+        version: 3.4.1
     devDependencies:
       tsx:
         specifier: ^4.23.11
@@ -869,8 +869,8 @@ importers:
         specifier: ^17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -987,8 +987,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(react@19.2.8)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -1143,8 +1143,8 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(chart.js@4.5.1)(react@19.2.8)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       ui-core:
         specifier: workspace:*
         version: link:../ui-core
@@ -1222,8 +1222,8 @@ importers:
         specifier: ^17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
       styled-components:
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^6.5.2
+        version: 6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
@@ -1400,8 +1400,8 @@ packages:
   '@adraffy/ens-normalize@1.11.1':
     resolution: {integrity: sha512-nhCBV3quEgesuf7c7KYfperqSS14T8bYuvJ8PcLJp6znkZpFc0AuW4qBtr8eKVyPPe/8RSr7sglCWPU5eaxwKQ==}
 
-  '@apollo/client@4.2.10':
-    resolution: {integrity: sha512-SCHzOEcfInIN9DGZvlDR4F+1zd3954WAy+g8dKwi7mrI09Tdh6YzDH+eXbH0LNpB4de2Qyb53RVKe3Ljv5/bMg==}
+  '@apollo/client@4.2.12':
+    resolution: {integrity: sha512-+KS+LM/gZ58z92p9owZZpI54yCc27KfUi1HOtLrxmxz9kDIqUcp/zh+mNjCWCbNZkWGzWslvbbmXGGtTWT8nkw==}
     peerDependencies:
       graphql: ^16.0.0 || ^17.0.0
       graphql-ws: ^5.5.5 || ^6.0.3
@@ -1490,59 +1490,59 @@ packages:
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
 
-  '@biomejs/biome@2.5.7':
-    resolution: {integrity: sha512-zr8K/DcY5tYsQOQwqMJ0AWElo6QgmgNI7idXgXLhevVszlt8RGVpesEJPqx3ThazLaOwjJ5Y8fz3BtH5fGZNsw==}
+  '@biomejs/biome@2.5.8':
+    resolution: {integrity: sha512-aeAeeJB9fSDc7Gq+2GqpQxA0qBj6gj1k2R6L1cYqGePKP/baIq1WX8y6B+D+nRsO5ViQL22K/8IwbqERW0q1nw==}
     engines: {node: '>=14.21.3'}
     hasBin: true
 
-  '@biomejs/cli-darwin-arm64@2.5.7':
-    resolution: {integrity: sha512-vxo/Ls3/PYdQWyLhYYcgMOCzQypAjcY+iihS8M0wW03l16TCLW4zqZzGo75gm1VdCMj38hTVZ31KBWrZ4G9dJw==}
+  '@biomejs/cli-darwin-arm64@2.5.8':
+    resolution: {integrity: sha512-mk1QON9PHllvvLN5gU3f4rMxeh4syK5p9OvKyWH6/W8ueh04uaC8TUXXByhGufWf/y5mQc03ZLM45zU+cmqMjA==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [darwin]
 
-  '@biomejs/cli-darwin-x64@2.5.7':
-    resolution: {integrity: sha512-Cd3Ga61amT/Yl/0x8elP5hhGYaFy4bw6WuysTgf7oo8TA5tJ5A1k+DkVoJ2BHbTVil51gTX9VPzArnrlLJ3Kyg==}
+  '@biomejs/cli-darwin-x64@2.5.8':
+    resolution: {integrity: sha512-bsGwFMBNyHPyiLSsQcZJxdoRrg1V4JL+d7wEsvUBczlP9U9lwM+7mzQHxI4o1mhBsTmdOBbAb6fHU3Z3snN45w==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [darwin]
 
-  '@biomejs/cli-linux-arm64-musl@2.5.7':
-    resolution: {integrity: sha512-xPI5yB6XlpDbNkS+bm1t42olw5c4l3UrlOmLg7KtLJvjvkNF/1V4tnUgfkylGIeb3u/T+BzMGYqgQhzjAoJzuQ==}
+  '@biomejs/cli-linux-arm64-musl@2.5.8':
+    resolution: {integrity: sha512-VcJNbstduTHx83NGAdhp78/JOcP45BZHXL7yNsfI1uGzdUgegAz2s+mSoT7wK6PBNzLoqG0zDOXaz/RQYVtSiw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-arm64@2.5.7':
-    resolution: {integrity: sha512-rR2QE0yF2GYSuYuKIa7pKvODGJqnOH+2eDREAM8wV+mWKSkMQKdAp4zXEZfTaxY8PMoNONnpgSWcBCyLDPDOKg==}
+  '@biomejs/cli-linux-arm64@2.5.8':
+    resolution: {integrity: sha512-XmFiA0WPYFC+uiUDC8WRFzAIH9bo7vwQLav38Uoq4ETC+T/+uBi0TsYGJECkugY3r8USl3jc+Ae2/irAF6F2lQ==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-linux-x64-musl@2.5.7':
-    resolution: {integrity: sha512-rE5VZi+qtmPgQH+l7jVxYoZ18b/TiHEhulhMpjmCZH1PltSbjRcxNWywC3HZ9tYottG7ORkeTtoscBilKSBm0g==}
+  '@biomejs/cli-linux-x64-musl@2.5.8':
+    resolution: {integrity: sha512-kKmiyokeISRGq2FLwvr+TzsgBusfxaZ0FZNLcOYOpCK/78tRrEjeEBLvq3xLZMpqbANgJdRPI7vZX8ZL37u9/w==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-x64@2.5.7':
-    resolution: {integrity: sha512-FQgqJhscrqJUFptGaRSUJWlXAExwWcDwLuK49dvKfkQ1bB5SEEyFssnsxQY83Xm6jR0EbbX3+8+D5bfvYqUG2Q==}
+  '@biomejs/cli-linux-x64@2.5.8':
+    resolution: {integrity: sha512-S5wcm9OBDvLHodD4PUaN488hCpco9QD/9ZxuYJiw4euWtr/oQvLR72z2ixItH8Wd5BCm6FZaeb+YNvOoM1xHtQ==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-win32-arm64@2.5.7':
-    resolution: {integrity: sha512-Oq4x0CCwP4jirrcTywXs5kOGZ4v5vuEP+gWrbtjApOA2CL9F3F9GlIdQIci8AKSCa/zURanMRpX/4wQ7Am6hHg==}
+  '@biomejs/cli-win32-arm64@2.5.8':
+    resolution: {integrity: sha512-nILH0mzm3Hi3iEdd7o7GpB8kBR/mSQwfQG/tyBqyNrY2GFtcgwfV9nV8xLmbtUpMNY/Oi0Ml1XgfR4flOdq+AA==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [win32]
 
-  '@biomejs/cli-win32-x64@2.5.7':
-    resolution: {integrity: sha512-V+0wu/nrj2S+MhP4EQ0uHNolP0IALEsz45pg0WoKkHfDeh0+ItHwP/p7bX5RPoMOl9NkpHYWdYPhIcy2mACHvQ==}
+  '@biomejs/cli-win32-x64@2.5.8':
+    resolution: {integrity: sha512-I2czzXTY61f3nFJxXoMDq80t7MivxDEnCjE+8sDKoFfcKMaoQdkqhIFQ3KyY0XLzeSpUBYeNAXgD+iOV/BU0VA==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
@@ -3804,8 +3804,8 @@ packages:
     resolution: {integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==}
     engines: {node: '>=6'}
 
-  globals@17.9.0:
-    resolution: {integrity: sha512-m/MvAW61QVU5VDNF1Vj8axt016h8w7L5TU1e9zlab7XIttAT2YAlCwl75K1fOqvMM9apmD7lbCIRhpfkhmxhCg==}
+  globals@17.11.0:
+    resolution: {integrity: sha512-Z2I8hM+PbJDXQDq3Icgpzv+mPdwr68iZUU9d5WW4FuXfDUQfkZaZuvjMv42/5crNyw154+9+VWXbYrUgDXbxNw==}
     engines: {node: '>=18'}
 
   globby@16.2.2:
@@ -4634,8 +4634,8 @@ packages:
   smoldot@2.0.40:
     resolution: {integrity: sha512-h6XC/kKDLdZBBTI0X8y4ZxmaZ2KYVVB0+5isCQm6j26ljeNjHZUDOV+hf8VyoE23+jg00wrxNJ2IVcIAURxwtg==}
 
-  smoldot@3.4.0:
-    resolution: {integrity: sha512-XYCV8U9UUAwmJ/QguGlxW+I2o/5leEV7oYNMrRCc2jlaFeek0JJCXkJ4GaD8VgAzLLQnLY5k7SyOTM5AUeUWbw==}
+  smoldot@3.4.1:
+    resolution: {integrity: sha512-Ht3gPaRIjFWlBjen3+7xgms5rNYqhxvY0xyBwaV7Z1iBGyaOInQwvaZxPgZQw0ihk/h35+NTPPi47xqUvKkkxg==}
 
   snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
@@ -4685,8 +4685,8 @@ packages:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
 
-  styled-components@6.5.1:
-    resolution: {integrity: sha512-6AsQEXcG7QhtdzjwJ4s5Amx5R9veYH9AP3+U6nF2BAMU0i1iM3cAXKJXuAKZCdv3Y2ntVMcL44cPx4cIDxgYFg==}
+  styled-components@6.5.2:
+    resolution: {integrity: sha512-49qBCjwsBmt08/UXIr3KYa1wdntVkhU5cxvQ4uqytl/fITQC85B0PI5EN1GWetRYOzyzcgxqukiitqFRemZ7pg==}
     engines: {node: '>= 16'}
     peerDependencies:
       css-to-react-native: '>= 3.2.0'
@@ -5150,7 +5150,7 @@ snapshots:
 
   '@adraffy/ens-normalize@1.11.1': {}
 
-  '@apollo/client@4.2.10(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
+  '@apollo/client@4.2.12(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@17.0.2)
       '@wry/caches': 1.0.1
@@ -5267,39 +5267,39 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@biomejs/biome@2.5.7':
+  '@biomejs/biome@2.5.8':
     optionalDependencies:
-      '@biomejs/cli-darwin-arm64': 2.5.7
-      '@biomejs/cli-darwin-x64': 2.5.7
-      '@biomejs/cli-linux-arm64': 2.5.7
-      '@biomejs/cli-linux-arm64-musl': 2.5.7
-      '@biomejs/cli-linux-x64': 2.5.7
-      '@biomejs/cli-linux-x64-musl': 2.5.7
-      '@biomejs/cli-win32-arm64': 2.5.7
-      '@biomejs/cli-win32-x64': 2.5.7
+      '@biomejs/cli-darwin-arm64': 2.5.8
+      '@biomejs/cli-darwin-x64': 2.5.8
+      '@biomejs/cli-linux-arm64': 2.5.8
+      '@biomejs/cli-linux-arm64-musl': 2.5.8
+      '@biomejs/cli-linux-x64': 2.5.8
+      '@biomejs/cli-linux-x64-musl': 2.5.8
+      '@biomejs/cli-win32-arm64': 2.5.8
+      '@biomejs/cli-win32-x64': 2.5.8
 
-  '@biomejs/cli-darwin-arm64@2.5.7':
+  '@biomejs/cli-darwin-arm64@2.5.8':
     optional: true
 
-  '@biomejs/cli-darwin-x64@2.5.7':
+  '@biomejs/cli-darwin-x64@2.5.8':
     optional: true
 
-  '@biomejs/cli-linux-arm64-musl@2.5.7':
+  '@biomejs/cli-linux-arm64-musl@2.5.8':
     optional: true
 
-  '@biomejs/cli-linux-arm64@2.5.7':
+  '@biomejs/cli-linux-arm64@2.5.8':
     optional: true
 
-  '@biomejs/cli-linux-x64-musl@2.5.7':
+  '@biomejs/cli-linux-x64-musl@2.5.8':
     optional: true
 
-  '@biomejs/cli-linux-x64@2.5.7':
+  '@biomejs/cli-linux-x64@2.5.8':
     optional: true
 
-  '@biomejs/cli-win32-arm64@2.5.7':
+  '@biomejs/cli-win32-arm64@2.5.8':
     optional: true
 
-  '@biomejs/cli-win32-x64@2.5.7':
+  '@biomejs/cli-win32-x64@2.5.8':
     optional: true
 
   '@cacheable/memory@2.2.0':
@@ -7558,7 +7558,7 @@ snapshots:
       kind-of: 6.0.3
       which: 1.3.1
 
-  globals@17.9.0: {}
+  globals@17.11.0: {}
 
   globby@16.2.2:
     dependencies:
@@ -8355,7 +8355,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  smoldot@3.4.0:
+  smoldot@3.4.1:
     dependencies:
       ws: 8.21.3
     transitivePeerDependencies:
@@ -8406,7 +8406,7 @@ snapshots:
   strip-json-comments@2.0.1:
     optional: true
 
-  styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  styled-components@6.5.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       csstype: 3.2.3
@@ -8653,7 +8653,7 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-checker@0.14.5(@biomejs/biome@2.5.7)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11)):
+  vite-plugin-checker@0.14.5(@biomejs/biome@2.5.8)(meow@14.1.0)(stylelint@17.14.1(typescript@6.0.3))(typescript@6.0.3)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11)):
     dependencies:
       '@babel/code-frame': 7.29.7
       chokidar: 5.0.0
@@ -8664,7 +8664,7 @@ snapshots:
       tiny-invariant: 1.3.3
       vite: 8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.102.0)(tsx@4.23.11)
     optionalDependencies:
-      '@biomejs/biome': 2.5.7
+      '@biomejs/biome': 2.5.8
       meow: 14.1.0
       stylelint: 17.14.1(typescript@6.0.3)
       typescript: 6.0.3
