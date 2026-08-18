@@ -2,11 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 .scroll {
-	background: var(--bg-primary);
-	border-radius: 1.25rem;
-	overflow: hidden;
 	width: 100%;
-	height: 100%;
 	position: relative;
 	z-index: 9;
+
+	&.default {
+		height: 100%;
+	}
+
+	&.card {
+		background: var(--bg-primary);
+		border-radius: 1.25rem;
+		overflow: hidden;
+		min-height: calc(100vh - var(--canvas-window-offset, 0rem));
+		flex-shrink: 0;
+	}
 }

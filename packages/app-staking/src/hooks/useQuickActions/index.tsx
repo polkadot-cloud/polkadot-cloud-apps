@@ -280,6 +280,7 @@ export const useQuickActions = () => {
 				openCanvas({
 					key: 'ManageNominations',
 					scroll: false,
+					variant: 'card',
 					options: {
 						bondFor: forPool ? 'pool' : 'nominator',
 						nominator: forPool

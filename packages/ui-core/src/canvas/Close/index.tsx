@@ -5,13 +5,20 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import type { ComponentBase } from 'types'
+import type { CanvasVariant } from '../types'
 import classes from './index.module.scss'
 
 export const Close = ({
 	onClose,
 	style,
-}: ComponentBase & { onClose: () => void }) => {
-	const allClasses = classNames(classes.close)
+	variant = 'default',
+}: ComponentBase & {
+	onClose: () => void
+	variant?: CanvasVariant
+}) => {
+	const allClasses = classNames(classes.close, {
+		[classes.card]: variant === 'card',
+	})
 
 	return (
 		<div className={allClasses}>

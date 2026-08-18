@@ -12,6 +12,7 @@ import type {
 	OverlayInstanceDirection,
 	OverlayType,
 } from 'types'
+import type { CanvasVariant } from 'ui-core/canvas'
 
 export interface OverlayContextInterface {
 	openOverlayInstances: number
@@ -73,6 +74,7 @@ export interface CanvasConfig {
 	scroll?: boolean
 	size?: CanvasSize
 	options?: ConfigOptions
+	variant?: CanvasVariant
 }
 
 export interface PromptContextInterface {

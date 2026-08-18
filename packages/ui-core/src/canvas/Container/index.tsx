@@ -6,13 +6,20 @@ import type { HTMLMotionProps } from 'motion/react'
 import { motion } from 'motion/react'
 import type { ComponentBase } from 'types'
 import commonClasses from '../../common.module.scss'
+import type { CanvasVariant } from '../types'
 import classes from './index.module.scss'
 
 export const Container = ({
 	children,
+	variant = 'default',
 	...rest
-}: ComponentBase & HTMLMotionProps<'div'>) => {
-	const allClasses = classNames(commonClasses.fixed, classes.container)
+}: ComponentBase &
+	HTMLMotionProps<'div'> & {
+		variant?: CanvasVariant
+	}) => {
+	const allClasses = classNames(commonClasses.fixed, classes.container, {
+		[classes.card]: variant === 'card',
+	})
 	return (
 		<motion.div className={allClasses} {...rest}>
 			{children}

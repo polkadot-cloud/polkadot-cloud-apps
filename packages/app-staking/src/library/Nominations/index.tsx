@@ -118,6 +118,7 @@ export const Nominations = ({
 								openCanvas({
 									key: 'ManageNominations',
 									scroll: false,
+									variant: 'card',
 									options: {
 										bondFor,
 										nominator,
