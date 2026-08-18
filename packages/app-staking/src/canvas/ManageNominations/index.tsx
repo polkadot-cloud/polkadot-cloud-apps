@@ -161,6 +161,7 @@ export const Inner = () => {
 								<ButtonSubmit
 									asLabel
 									text={t('submit', { ns: 'modals' })}
+									pulse={valid}
 									disabled={!valid}
 								/>
 							</Popover>
