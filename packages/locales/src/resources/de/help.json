@@ -170,12 +170,6 @@
 					"Sobald du deine ausgewählten Validatoren nominiert hast, werden sie zu deinen Nominierungen."
 				]
 			],
-			"nominationHealthCheck": [
-				"Nominierungs-Gesundheitscheck",
-				[
-					"Der Nominierungs-Gesundheitscheck prüft ausgewählte Validatoren auf potenziell schädliches Verhalten und hilft, deine Nominierungsliste zur Unterstützung der Netzwerksicherheit zu optimieren."
-				]
-			],
 			"nominationPayoutDistribution": [
 				"Auszahlungsverteilung von Nominierungen",
 				[

@@ -251,7 +251,6 @@
 		"reserveText": "거래 수수료를 지불하기 위해 예약할 {{unit}} 금액을 제어합니다. 이 금액은 계정의 실존적 예치금을 충당하는 데 필요한 자금 위에 추가됩니다.",
 		"revertChanges": "변경 사항 되돌리기",
 		"revertNominationChanges": "선택한 지명에 대한 변경 사항을 되돌리겠습니까?",
-		"revertNominations": "지명 되돌리기",
 		"reward": "보상",
 		"rewards": "보상",
 		"rewardsByCountryAndNetwork": "국가별, 네트워크 제공자별 보상",

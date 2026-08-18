@@ -4,9 +4,6 @@
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"main": "src/index.ts",
-	"exports": {
-		".": "./src/index.ts"
-	},
 	"scripts": {
 		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
 		"check": "biome check .",

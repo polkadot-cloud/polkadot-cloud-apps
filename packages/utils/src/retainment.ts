@@ -3,7 +3,6 @@
 
 import type BigNumber from 'bignumber.js'
 import { RetainmentThresholds } from 'consts/retainment'
-import type { RetainmentStatus } from 'types'
 
 // Check if the self-stake is at or above the hard cap. If the hard cap is not defined or is zero,
 // return false.
@@ -34,7 +33,7 @@ export const getRateAfterCommission = (
 		: undefined
 
 // Get the retainment status based on the retainment rate.
-export const getRetainmentStatus = (rate: number): RetainmentStatus => {
+export const getRetainmentStatus = (rate: number) => {
 	if (rate >= RetainmentThresholds.high) {
 		return 'success'
 	}

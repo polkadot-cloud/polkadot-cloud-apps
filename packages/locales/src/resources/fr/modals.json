@@ -251,7 +251,6 @@
 		"reserveText": "Contrôlez la quantité de {{unit}} réservée pour payer les frais de transaction. Ce montant s'ajoute aux fonds nécessaires pour couvrir le dépôt existentiel de votre compte.",
 		"revertChanges": "Annuler les modifications",
 		"revertNominationChanges": "Êtes-vous sûr de vouloir annuler les modifications apportées à vos nominations sélectionnées ?",
-		"revertNominations": "Annuler les nominations",
 		"reward": "Récompense",
 		"rewards": "Récompenses",
 		"rewardsByCountryAndNetwork": "Récompenses par pays, fournisseur de réseau",

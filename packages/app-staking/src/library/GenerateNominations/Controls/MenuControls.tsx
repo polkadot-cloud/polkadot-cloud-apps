@@ -49,7 +49,6 @@ export const MenuControls = ({
 					<div className="actions">
 						{allowRevert && (
 							<Revert
-								inMenu
 								disabled={
 									JSON.stringify(nominations) ===
 									JSON.stringify(defaultNominations)

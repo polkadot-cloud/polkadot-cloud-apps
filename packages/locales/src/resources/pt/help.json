@@ -166,12 +166,6 @@
 					"Depois que você nomear seus validadores selecionados, eles se tornam suas nomeações."
 				]
 			],
-			"nominationHealthCheck": [
-				"Verificação de Saúde das Nomeações",
-				[
-					"A verificação de saúde das nomeações analisa os validadores selecionados para detetar comportamentos potencialmente prejudiciais e ajuda a otimizar a sua lista de nomeações para reforçar a segurança da rede."
-				]
-			],
 			"nominationPayoutDistribution": [
 				"Distribuição de Pagamento de Nomeação",
 				[

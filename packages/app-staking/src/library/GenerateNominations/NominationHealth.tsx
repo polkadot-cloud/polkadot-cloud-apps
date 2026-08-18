@@ -3,13 +3,20 @@
 
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { Validator } from 'types'
 import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
-import type { NominationHealthProps } from './types'
 import { getValidatorsWithRetainment } from './utils'
 import { NominationHealthWrapper } from './Wrapper'
+
+interface NominationHealthProps {
+	isLoading: boolean
+	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
+	validators: Validator[]
+}
 
 export const NominationHealth = ({
 	isLoading,
@@ -30,18 +37,15 @@ export const NominationHealth = ({
 		[validatorsWithRetainment],
 	)
 
-	// Count the number of validators that fall into the warning category based on their retainment.
-	const warningCount = validatorsWithRetainment.filter(
-		({ rate }) =>
-			rate >= RetainmentThresholds.medium && rate < RetainmentThresholds.high,
-	).length
-
 	// Count the number of validators that fall into the danger category based on their retainment.
 	const dangerCount = validatorsWithRetainment.filter(
 		({ rate }) => rate < RetainmentThresholds.medium,
 	).length
 
-	// Get the validators that are below the medium retainment threshold and need attention.
+	// Remaining validators below the high threshold fall into the warning category.
+	const warningCount = validatorsBelowThreshold.length - dangerCount
+
+	// Whether any validator falls below the medium retainment threshold.
 	const hasDangerWarnings = !isLoading && dangerCount > 0
 
 	const { setNominationHealth } = useNominationHealth()

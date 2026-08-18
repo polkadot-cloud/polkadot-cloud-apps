@@ -164,12 +164,6 @@
 					"Once you have nominated your selected validators, they become your nominations."
 				]
 			],
-			"nominationHealthCheck": [
-				"Nomination Health Check",
-				[
-					"The Nomination Health Check screens selected validators for potentially harmful behavior and helps optimize your nomination list to support network security."
-				]
-			],
 			"nominationPayoutDistribution": [
 				"Nomination Payout Distribution",
 				[

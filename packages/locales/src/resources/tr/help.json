@@ -162,12 +162,6 @@
 					"Seçtiğiniz validatörlere nominasyon yaptığınızda, bunlar nominasyonlarınız haline gelir."
 				]
 			],
-			"nominationHealthCheck": [
-				"Adaylık Sağlık Kontrolü",
-				[
-					"Adaylık Sağlık Kontrolü, seçilen doğrulayıcıları potansiyel olarak zararlı davranışlara karşı tarar ve ağ güvenliğini desteklemek için adaylık listenizi optimize etmenize yardımcı olur."
-				]
-			],
 			"nominationPayoutDistribution": [
 				"Nominasyon Ödeme Dağılımı",
 				[

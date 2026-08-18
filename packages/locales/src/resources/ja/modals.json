@@ -251,7 +251,6 @@
 		"reserveText": "トランザクション手数料の支払いに{{unit}}をどれだけ予約するかを設定します。この額は、アカウントの存在維持デポジットを賄うために必要な資金に上乗せされます。",
 		"revertChanges": "変更を元に戻す",
 		"revertNominationChanges": "選択したノミネーションへの変更を元に戻してもよろしいですか?",
-		"revertNominations": "ノミネーションを元に戻す",
 		"reward": "報酬",
 		"rewards": "報酬",
 		"rewardsByCountryAndNetwork": "国・ネットワークプロバイダー別の報酬",

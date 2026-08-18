@@ -25,14 +25,14 @@ export const ManageNominationsProvider = ({
 	const [nominations, setNominations] =
 		useState<Validator[]>(initialNominations)
 
-	const defaultNominationsCount = defaultNominations?.length || 0
+	const defaultNominationsCount = defaultNominations.length
 
 	// Store the method of fetching nominees
 	const [method, setMethod] = useState<string | null>(
 		defaultNominationsCount ? 'Manual' : null,
 	)
 	// Store whether validators are being fetched
-	const [fetching, setFetching] = useState<boolean>(false)
+	const [fetching, setFetching] = useState(false)
 
 	// Store the height of the container
 	const [height, setHeight] = useState<number | null>(null)

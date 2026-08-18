@@ -10,7 +10,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CanvasHeaderControl } from 'ui-core/canvas'
 import { ConnectItem, MenuItem, MenuItemButton, Popover } from 'ui-core/popover'
@@ -19,7 +18,6 @@ export const Settings = () => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
 	const { enabled, setEnabled, stakingApiEnabled } = useNominationHealth()
-	const [open, setOpen] = useState(false)
 
 	if (!stakingApiEnabled) {
 		return null
@@ -60,8 +58,6 @@ export const Settings = () => {
 						</MenuItem>
 					</ConnectItem.Container>
 				}
-				onOpenChange={setOpen}
-				open={open}
 				portalContainer={themeElementRef.current || undefined}
 				shadow={false}
 				side="bottom"

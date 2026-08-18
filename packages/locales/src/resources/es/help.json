@@ -166,12 +166,6 @@
 					"Una vez que hayas nominado tus validadores seleccionados, se convierten en tus nominaciones."
 				]
 			],
-			"nominationHealthCheck": [
-				"Comprobación de Salud de Nominaciones",
-				[
-					"La comprobación de salud de nominaciones analiza los validadores seleccionados para detectar comportamientos potencialmente perjudiciales y ayuda a optimizar tu lista de nominaciones para reforzar la seguridad de la red."
-				]
-			],
 			"nominationPayoutDistribution": [
 				"Distribución de Pagos de Nominación",
 				[

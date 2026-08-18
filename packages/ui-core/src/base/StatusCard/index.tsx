@@ -9,23 +9,18 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import type { RetainmentStatus } from 'types'
 import classes from './index.module.scss'
 
-const statusIcons = {
+const STATUS_ICONS = {
 	danger: faXmark,
 	success: faCheck,
 	warning: faExclamation,
-}
+} as const
 
-const StatusIcon = ({ status }: { status: RetainmentStatus }) => (
-	<span aria-hidden className={classes.statusIcon}>
-		<FontAwesomeIcon icon={statusIcons[status]} />
-	</span>
-)
+type StatusCardStatus = keyof typeof STATUS_ICONS
 
 type StatusCardProps = Omit<ComponentPropsWithoutRef<'div'>, 'title'> & {
-	status: RetainmentStatus
+	status: StatusCardStatus
 	title?: ReactNode
 }
 
@@ -41,7 +36,9 @@ export const StatusCard = ({
 		className={classNames(classes.statusCard, classes[status], className)}
 	>
 		<div className={classes.icon}>
-			<StatusIcon status={status} />
+			<span aria-hidden className={classes.statusIcon}>
+				<FontAwesomeIcon icon={STATUS_ICONS[status]} />
+			</span>
 		</div>
 		<div className={classes.copy}>
 			{title && <strong>{title}</strong>}
