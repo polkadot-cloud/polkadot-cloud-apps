@@ -1,0 +1,83 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.statusCard {
+	--status-card-color: var(--status-success);
+	--status-card-text: color-mix(
+		in srgb,
+		var(--status-card-color) 60%,
+		var(--gray-1000)
+	);
+
+	align-items: center;
+	background: color-mix(
+		in srgb,
+		var(--status-card-color) 8%,
+		var(--gray-200)
+	);
+	border-radius: 0.9rem;
+	display: flex;
+	gap: 1rem;
+	min-height: 4.5rem;
+	padding: 1rem;
+	width: 100%;
+}
+
+.warning {
+	--status-card-color: var(--status-warning);
+}
+
+.danger {
+	--status-card-color: var(--status-danger);
+}
+
+.icon {
+	align-items: center;
+	align-self: stretch;
+	border-right: 1px solid
+		color-mix(in srgb, var(--status-card-color) 24%, var(--gray-200));
+	box-sizing: border-box;
+	color: var(--status-card-text);
+	display: flex;
+	flex: 0 0 3.25rem;
+	justify-content: center;
+	padding-right: 1rem;
+	width: 3.25rem;
+}
+
+.statusIcon {
+	align-items: center;
+	border: 2px solid currentcolor;
+	border-radius: 50%;
+	display: flex;
+	flex: 0 0 1.75rem;
+	font-size: 0.9rem;
+	height: 1.75rem;
+	justify-content: center;
+	width: 1.75rem;
+}
+
+.copy {
+	color: var(--status-card-text);
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.3rem;
+	justify-content: center;
+	min-width: 0;
+
+	> strong,
+	> span {
+		color: inherit;
+		font-family: var(--font-family-semibold);
+		font-weight: 600;
+	}
+
+	> strong {
+		font-size: 1.2rem;
+	}
+
+	> span {
+		font-size: 1.1rem;
+	}
+}

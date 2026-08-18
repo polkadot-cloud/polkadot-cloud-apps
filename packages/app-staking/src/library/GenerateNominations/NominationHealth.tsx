@@ -1,12 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faCircleCheck,
-	faCircleXmark,
-} from '@fortawesome/free-regular-svg-icons'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { clampRate } from 'library/ValidatorList/retainment'
@@ -15,39 +9,22 @@ import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonHelp } from 'ui-buttons'
 import {
-	HealthCheckFixCopy,
-	HealthCheckFixPrompt,
-	NominationHealthHeader,
-	NominationHealthHeading,
-	NominationHealthWrapper,
-	StatusBox,
-	StatusCopy,
-	StatusIconWrapper,
-	StatusMessage,
-	WarningCopy,
-} from './NominationHealth.styles'
+	Badge,
+	CardHeader,
+	Separator,
+	StatusCard,
+	type StatusCardStatus,
+} from 'ui-core/base'
+import { NominationHealthWrapper } from './Wrapper'
 
 const HIGH_RETAINMENT_THRESHOLD = 75
 const LOW_RETAINMENT_THRESHOLD = 50
 
-type RetainmentStatus = 'success' | 'warning' | 'danger'
-
-const descriptionKeys: Record<RetainmentStatus, string> = {
+const descriptionKeys: Record<StatusCardStatus, string> = {
 	danger: 'averageRetainmentDescriptionDanger',
 	success: 'averageRetainmentDescriptionSuccess',
 	warning: 'averageRetainmentDescriptionWarning',
 }
-
-const StatusIcon = ({ status }: { status: RetainmentStatus }) =>
-	status === 'warning' ? (
-		<span className="warningIcon">
-			<FontAwesomeIcon icon={faExclamation} />
-		</span>
-	) : (
-		<FontAwesomeIcon
-			icon={status === 'success' ? faCircleCheck : faCircleXmark}
-		/>
-	)
 
 interface NominationHealthProps {
 	isLoading: boolean
@@ -56,7 +33,7 @@ interface NominationHealthProps {
 	validators: Validator[]
 }
 
-const getRetainmentStatus = (rate: number): RetainmentStatus => {
+const getRetainmentStatus = (rate: number): StatusCardStatus => {
 	if (rate >= HIGH_RETAINMENT_THRESHOLD) {
 		return 'success'
 	}
@@ -74,17 +51,6 @@ export const NominationHealth = ({
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { openHelpTooltip } = useHelp()
-	const healthCheckHeading = (
-		<NominationHealthHeading>
-			{t('nominationHealthCheck')}
-			<ButtonHelp
-				marginLeft
-				background="secondary"
-				definition="Nomination Health Check"
-				openHelp={openHelpTooltip}
-			/>
-		</NominationHealthHeading>
-	)
 	const validatorsWithRetainment = validators.flatMap((validator) => {
 		const rate = retainmentByAddress.get(validator.address)?.months[0]
 			?.retainmentRate
@@ -111,7 +77,7 @@ export const NominationHealth = ({
 	const averageRetainment =
 		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
 		validatorsWithRetainment.length
-	const thresholdWarningStatus: RetainmentStatus =
+	const thresholdWarningStatus: StatusCardStatus =
 		validatorsWithRetainment.some(({ rate }) => rate < LOW_RETAINMENT_THRESHOLD)
 			? 'danger'
 			: 'warning'
@@ -123,40 +89,47 @@ export const NominationHealth = ({
 
 	return (
 		<NominationHealthWrapper>
-			<NominationHealthHeader>{healthCheckHeading}</NominationHealthHeader>
+			<CardHeader action>
+				<h3>
+					{t('nominationHealthCheck')}
+					<ButtonHelp
+						marginLeft
+						background="secondary"
+						definition="Nomination Health Check"
+						openHelp={openHelpTooltip}
+					/>
+				</h3>
+			</CardHeader>
 			{validatorsBelowThreshold.length > 0 && (
-				<HealthCheckFixPrompt role="status">
-					<HealthCheckFixCopy>
-						{t('nominationHealthCheckNeedsAttention')}
-					</HealthCheckFixCopy>
-				</HealthCheckFixPrompt>
+				<div role="status">
+					<Separator
+						style={{
+							margin: '-0.4rem 0 0',
+							padding: '0 0.15rem 0.5rem',
+						}}
+					>
+						<Badge.Inner variant="primary">
+							{t('nominationHealthCheckNeedsAttention')}
+						</Badge.Inner>
+					</Separator>
+				</div>
 			)}
-			<StatusBox $status={status}>
-				<StatusMessage>
-					<StatusIconWrapper $status={status}>
-						<StatusIcon status={status} />
-					</StatusIconWrapper>
-					<StatusCopy $status={status}>
-						<strong>
-							{t('averageRetainmentScore')}: {averageRetainmentLabel}
-						</strong>
-						<span>{t(descriptionKeys[status])}</span>
-					</StatusCopy>
-				</StatusMessage>
-			</StatusBox>
+			<StatusCard
+				status={status}
+				title={
+					<>
+						{t('averageRetainmentScore')}: {averageRetainmentLabel}
+					</>
+				}
+			>
+				{t(descriptionKeys[status])}
+			</StatusCard>
 			{validatorsBelowThreshold.length > 0 && (
-				<StatusBox $status={thresholdWarningStatus} role="status">
-					<WarningCopy $status={thresholdWarningStatus}>
-						<StatusIconWrapper $status={thresholdWarningStatus}>
-							<StatusIcon status={thresholdWarningStatus} />
-						</StatusIconWrapper>
-						<span>
-							{t('retainmentThresholdWarning', {
-								count: validatorsBelowThreshold.length,
-							})}
-						</span>
-					</WarningCopy>
-				</StatusBox>
+				<StatusCard status={thresholdWarningStatus} role="status">
+					{t('retainmentThresholdWarning', {
+						count: validatorsBelowThreshold.length,
+					})}
+				</StatusCard>
 			)}
 		</NominationHealthWrapper>
 	)
