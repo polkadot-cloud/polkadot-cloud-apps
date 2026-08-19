@@ -3,8 +3,7 @@
 
 import { createSafeContext } from '@w3ux/hooks'
 import { NominationHealthProvider } from 'hooks/useNominationHealth'
-import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
+import { Fragment, type ReactNode, useRef, useState } from 'react'
 import type { AnyFunction, Validator } from 'types'
 import type { ManageNominationsContextInterface } from './types'
 
@@ -70,30 +69,30 @@ export const ManageNominationsProvider = ({
 		setFetching(true)
 	}
 
-	const content = (
-		<ManageNominationsContext.Provider
-			value={{
-				method,
-				setMethod,
-				fetching,
-				setFetching,
-				height,
-				setHeight,
-				defaultNominations,
-				nominations,
-				setNominations,
-				heightRef,
-				updateSetters,
-				revertNominations,
-			}}
-		>
-			{children}
-		</ManageNominationsContext.Provider>
-	)
+	const HealthProvider = provideNominationHealth
+		? NominationHealthProvider
+		: Fragment
 
-	return provideNominationHealth ? (
-		<NominationHealthProvider>{content}</NominationHealthProvider>
-	) : (
-		content
+	return (
+		<HealthProvider>
+			<ManageNominationsContext.Provider
+				value={{
+					method,
+					setMethod,
+					fetching,
+					setFetching,
+					height,
+					setHeight,
+					defaultNominations,
+					nominations,
+					setNominations,
+					heightRef,
+					updateSetters,
+					revertNominations,
+				}}
+			>
+				{children}
+			</ManageNominationsContext.Provider>
+		</HealthProvider>
 	)
 }

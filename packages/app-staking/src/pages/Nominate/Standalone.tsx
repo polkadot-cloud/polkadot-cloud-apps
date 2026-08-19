@@ -5,96 +5,20 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { NominateDappName } from 'consts'
 import { ManageNominationsProvider } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
-import { hexToString } from 'dedot/utils'
 import { useActivePool } from 'hooks/useActivePool'
-import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { Editor } from 'library/ManageNominations/Editor'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
 import { StandaloneStatus } from './Wrappers'
-
-const usePoolName = (poolId?: number) => {
-	const { serviceApi } = useApi()
-	const [poolName, setPoolName] = useState('')
-
-	useEffect(() => {
-		let mounted = true
-		setPoolName('')
-
-		if (poolId === undefined) {
-			return () => {
-				mounted = false
-			}
-		}
-
-		void serviceApi.query
-			.poolMetadataMulti([poolId])
-			.then(([metadata]) => {
-				if (mounted) {
-					setPoolName(metadata ? hexToString(metadata) : '')
-				}
-			})
-			.catch(() => {
-				if (mounted) {
-					setPoolName('')
-				}
-			})
-
-		return () => {
-			mounted = false
-		}
-	}, [poolId, serviceApi])
-
-	return poolName
-}
-
-const Inner = ({
-	accountStatus,
-	bondFor,
-	canManageNominations,
-	eligibilityLoading,
-	poolId,
-}: {
-	accountStatus: string | null
-	bondFor: 'nominator' | 'pool'
-	canManageNominations: boolean
-	eligibilityLoading: boolean
-	poolId?: number
-}) => {
-	const { t } = useTranslation('app')
-
-	return (
-		<>
-			<Page.Title title={t('nominate')}>
-				{!eligibilityLoading && accountStatus && (
-					<StandaloneStatus>{accountStatus}</StandaloneStatus>
-				)}
-			</Page.Title>
-			<Page.Row>
-				<Editor
-					bondFor={bondFor}
-					canSubmit={canManageNominations}
-					dappName={NominateDappName}
-					displayFor="default"
-					eligibilityLoading={eligibilityLoading}
-					optimalSelectionOnly
-					poolId={poolId}
-					standaloneCards
-				/>
-			</Page.Row>
-		</>
-	)
-}
 
 export const NominateStandalone = () => {
 	const { t } = useTranslation('app')
 	const { activeAddress } = useActiveAccount()
 	const { getNominations } = useBalances()
-	const { isBonding } = useStaking()
+	const { isBonding, isNominator } = useStaking()
 	const { accountSynced, activePoolSynced } = useSyncing()
 	const { formatWithPrefs } = useValidators()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
@@ -107,7 +31,7 @@ export const NominateStandalone = () => {
 	const nominationsKey = nominated.map(({ address }) => address).join(':')
 	const bondFor = isPool ? 'pool' : 'nominator'
 	const poolId = isPool ? activePool?.id : undefined
-	const poolName = usePoolName(poolId)
+	const poolName = isPool ? activePool?.metadata : undefined
 	const canManageNominations = Boolean(activeAddress) && (isPool || isBonding)
 	const eligibilityLoading = Boolean(
 		activeAddress &&
@@ -119,24 +43,36 @@ export const NominateStandalone = () => {
 					poolId,
 					poolName,
 				})
-			: isBonding
+			: isNominator
 				? t('activelyNominating')
 				: null
 
 	return (
-		<ManageNominationsProvider
-			key={`${activeAddress || 'disconnected'}:${bondFor}:${activePool?.id || ''}:${nominationsKey}`}
-			nominations={nominated}
-			initialMethod="Optimal Selection"
-			provideNominationHealth={false}
-		>
-			<Inner
-				accountStatus={accountStatus}
-				bondFor={bondFor}
-				canManageNominations={canManageNominations}
-				eligibilityLoading={eligibilityLoading}
-				poolId={poolId}
-			/>
-		</ManageNominationsProvider>
+		<>
+			<Page.Title title={t('nominate')}>
+				{!eligibilityLoading && accountStatus && (
+					<StandaloneStatus>{accountStatus}</StandaloneStatus>
+				)}
+			</Page.Title>
+			<Page.Row>
+				<ManageNominationsProvider
+					key={`${activeAddress || 'disconnected'}:${bondFor}:${activePool?.id || ''}:${nominationsKey}`}
+					nominations={nominated}
+					initialMethod="Optimal Selection"
+					provideNominationHealth={false}
+				>
+					<Editor
+						bondFor={bondFor}
+						canSubmit={canManageNominations}
+						dappName={NominateDappName}
+						displayFor="default"
+						eligibilityLoading={eligibilityLoading}
+						optimalSelectionOnly
+						poolId={poolId}
+						standaloneCards
+					/>
+				</ManageNominationsProvider>
+			</Page.Row>
+		</>
 	)
 }

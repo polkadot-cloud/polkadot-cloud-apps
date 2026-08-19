@@ -12,7 +12,6 @@ export interface InlineControlsProps {
 export interface ListControlsProps {
 	selectHandlers: Record<string, SelectHandler>
 	filterHandlers: AnyJson[]
-	displayFor: DisplayFor
 	standalone?: boolean
 }
 

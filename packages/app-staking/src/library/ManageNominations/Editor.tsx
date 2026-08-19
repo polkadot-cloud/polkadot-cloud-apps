@@ -67,20 +67,16 @@ export const Editor = ({
 		(!healthCheckActive || (!healthCheckLoading && !hasDangerWarnings))
 	const nominationAddresses = nominations.map(({ address }) => address)
 
-	const getTx = () => {
-		if (!valid) {
-			return
-		}
-		if (!isPool) {
-			return serviceApi.tx.stakingNominate(nominationAddresses)
-		}
-		if (poolId !== undefined) {
-			return serviceApi.tx.poolNominate(poolId, nominationAddresses)
-		}
-	}
+	const tx = valid
+		? isPool
+			? poolId === undefined
+				? undefined
+				: serviceApi.tx.poolNominate(poolId, nominationAddresses)
+			: serviceApi.tx.stakingNominate(nominationAddresses)
+		: undefined
 
 	const submitExtrinsic = useSubmitExtrinsic({
-		tx: getTx(),
+		tx,
 		dappName,
 		from: formatFromProp(activeAccount, activeProxy),
 		shouldSubmit: valid,

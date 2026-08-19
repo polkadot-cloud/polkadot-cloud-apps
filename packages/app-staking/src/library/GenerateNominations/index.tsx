@@ -15,7 +15,7 @@ import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
-import { ValidatorList, ValidatorListInner } from 'library/ValidatorList'
+import { ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
@@ -362,27 +362,55 @@ export const GenerateNominations = ({
 			/>
 		</div>
 	)
-
-	if (standaloneCards) {
-		const showNominationUi =
-			Boolean(activeAddress) && canManageNominations && !eligibilityLoading
-
-		return (
-			<StandaloneCards>
-				<ListProvider
+	const listControls = (
+		<ListControls
+			selectHandlers={selectHandlers}
+			filterHandlers={Object.values(filterHandlers)}
+			standalone={standaloneCards}
+		/>
+	)
+	const nominationsList = isReady && method !== null && (
+		<div ref={heightRef}>
+			{fetching ? (
+				loading
+			) : (
+				<ValidatorListInner
+					validators={nominations}
+					allowListFormat={false}
+					displayFor={displayFor}
+					highlightRetainmentWarnings={healthCheckActive}
 					selectable
-					initialListFormat={!retainmentStatsEnabled ? 'col' : 'row'}
-				>
+					forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
+					BeforeListNode={
+						standaloneCards ? (
+							nominationHealth
+						) : (
+							<>
+								{listControls}
+								{nominationHealth}
+							</>
+						)
+					}
+					onRemove={selectHandlers.removeSelected.popover.callback}
+					validatorDetails={validatorDetails}
+				/>
+			)}
+		</div>
+	)
+
+	const showNominationUi =
+		Boolean(activeAddress) && canManageNominations && !eligibilityLoading
+
+	return (
+		<ListProvider
+			selectable
+			initialListFormat={!retainmentStatsEnabled ? 'col' : 'row'}
+		>
+			{standaloneCards ? (
+				<StandaloneCards>
 					<CardWrapper className="transparent">
 						{menuControls}
-						{showNominationUi && isReady && method !== null && (
-							<ListControls
-								selectHandlers={selectHandlers}
-								filterHandlers={Object.values(filterHandlers)}
-								displayFor={displayFor}
-								standalone
-							/>
-						)}
+						{showNominationUi && isReady && method !== null && listControls}
 					</CardWrapper>
 					{!activeAddress ? (
 						<Connect />
@@ -391,90 +419,39 @@ export const GenerateNominations = ({
 					) : !canManageNominations ? (
 						<Connect status="notStaking" />
 					) : (
-						<CardWrapper>
-							{isReady && method !== null && (
-								<div ref={heightRef}>
-									{fetching ? (
-										loading
-									) : (
-										<ValidatorListInner
-											validators={nominations}
-											allowListFormat={false}
-											displayFor={displayFor}
-											highlightRetainmentWarnings={healthCheckActive}
-											selectable
-											forceListFormat={
-												!retainmentStatsEnabled ? 'col' : undefined
-											}
-											BeforeListNode={nominationHealth}
-											onRemove={selectHandlers.removeSelected.popover.callback}
-											validatorDetails={validatorDetails}
-										/>
-									)}
-								</div>
-							)}
-						</CardWrapper>
+						<CardWrapper>{nominationsList}</CardWrapper>
 					)}
-				</ListProvider>
-			</StandaloneCards>
-		)
-	}
-
-	return (
-		<Wrapper
-			style={{
-				height: height ? `${height}px` : 'auto',
-				marginTop: method ? '1rem' : 0,
-			}}
-		>
-			<div>
-				{!isReadOnlyAccount(activeAddress) && !method && (
-					<>
-						<Subheading>
-							<h4>
-								{t('chooseValidators2', {
-									maxNominations: MaxNominations,
-									ns: 'app',
-								})}
-							</h4>
-						</Subheading>
-						<Methods
-							setMethod={setMethod}
-							setNominations={setNominations}
-							setFetching={setFetching}
-							key="methods"
-						/>
-					</>
-				)}
-			</div>
-			{isReady && method !== null && (
-				<div ref={heightRef}>
-					{fetching ? (
-						loading
-					) : (
-						<ValidatorList
-							validators={nominations}
-							allowListFormat={false}
-							displayFor={displayFor}
-							highlightRetainmentWarnings={healthCheckActive}
-							selectable
-							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
-							BeforeListNode={
-								<>
-									<ListControls
-										selectHandlers={selectHandlers}
-										filterHandlers={Object.values(filterHandlers)}
-										displayFor={displayFor}
-									/>
-									{nominationHealth}
-								</>
-							}
-							onRemove={selectHandlers?.removeSelected?.popover.callback}
-							validatorDetails={validatorDetails}
-						/>
-					)}
-				</div>
+				</StandaloneCards>
+			) : (
+				<Wrapper
+					style={{
+						height: height ? `${height}px` : 'auto',
+						marginTop: method ? '1rem' : 0,
+					}}
+				>
+					<div>
+						{!isReadOnlyAccount(activeAddress) && !method && (
+							<>
+								<Subheading>
+									<h4>
+										{t('chooseValidators2', {
+											maxNominations: MaxNominations,
+											ns: 'app',
+										})}
+									</h4>
+								</Subheading>
+								<Methods
+									setMethod={setMethod}
+									setNominations={setNominations}
+									setFetching={setFetching}
+									key="methods"
+								/>
+							</>
+						)}
+					</div>
+					{nominationsList}
+				</Wrapper>
 			)}
-		</Wrapper>
+		</ListProvider>
 	)
 }

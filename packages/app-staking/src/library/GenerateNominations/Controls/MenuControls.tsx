@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
-import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
@@ -19,8 +18,6 @@ export const MenuControls = ({
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
-	const { activeAddress } = useActiveAccount()
-	const generateDisabled = disabled || (optimalSelectionOnly && !activeAddress)
 
 	const {
 		method,
@@ -46,7 +43,7 @@ export const MenuControls = ({
 					<ConfirmAction
 						align="start"
 						controlKey="regenerate_nominations"
-						disabled={generateDisabled}
+						disabled={disabled}
 						onConfirm={() => {
 							setMethod('Optimal Selection')
 							setNominations([])
@@ -56,8 +53,8 @@ export const MenuControls = ({
 					>
 						<ButtonMenu
 							asLabel
-							className={generateDisabled ? 'generateDisabled' : undefined}
-							disabled={generateDisabled}
+							className={disabled ? 'generateDisabled' : undefined}
+							disabled={disabled}
 							iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
 							text={
 								optimalSelectionOnly

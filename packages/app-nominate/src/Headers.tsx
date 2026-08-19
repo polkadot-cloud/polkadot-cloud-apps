@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useUi } from 'hooks/useUi'
+import { NominationHealthSetting } from 'library/ManageNominations/NominationHealthSetting'
 import { Sync } from 'library/Sync'
 import { useState } from 'react'
 import { Account, type MenuPopoverFeatureFlags, Settings } from 'ui-app/Headers'
 import { Header } from 'ui-core/base'
-import { NominationHealthSetting } from './NominationHealthSetting'
 
 const menuPopoverFeatures = {
 	network: false,
