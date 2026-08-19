@@ -34,4 +34,7 @@ const DEFAULT: OptimalValidatorBatchData = {
 
 export const fetchOptimalValidatorBatch = (
 	variables: OptimalValidatorBatchVariables,
-) => fetchQuery<OptimalValidatorBatchData>(QUERY, variables, DEFAULT)
+) =>
+	fetchQuery<OptimalValidatorBatchData>(QUERY, variables, DEFAULT, {
+		fetchPolicy: 'no-cache',
+	})
