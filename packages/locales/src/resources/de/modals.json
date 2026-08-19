@@ -241,6 +241,7 @@
 		"recentEraPoints": "Aktuelle Epochenpunkte",
 		"recipient": "Empfänger",
 		"refreshAccounts": "Konten aktualisieren",
+		"regenerateNominationSelection": "Möchtest du deine Nominierungen wirklich neu generieren? Dadurch wird deine aktuelle Validatorenauswahl ersetzt.",
 		"remove": "Entfernen",
 		"removeAccount": "Konto entfernen",
 		"removeBond": "Bindung aufheben",

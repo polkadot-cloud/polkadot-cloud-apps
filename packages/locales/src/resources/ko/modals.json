@@ -241,6 +241,7 @@
 		"recentEraPoints": "최근 에라 포인트",
 		"recipient": "수취인",
 		"refreshAccounts": "계정 새로고침",
+		"regenerateNominationSelection": "추천을 다시 생성하시겠습니까? 현재 검증인 선택이 대체됩니다.",
 		"remove": "제거",
 		"removeAccount": "계정 제거",
 		"removeBond": "본드 제거",

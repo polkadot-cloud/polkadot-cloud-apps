@@ -241,6 +241,7 @@
 		"recentEraPoints": "Recent Era Points",
 		"recipient": "Recipient",
 		"refreshAccounts": "Refresh Accounts",
+		"regenerateNominationSelection": "Are you sure you want to re-generate your nominations? This will replace your current validator selection.",
 		"remove": "Remove",
 		"removeAccount": "Remove Account",
 		"removeBond": "Remove Bond",

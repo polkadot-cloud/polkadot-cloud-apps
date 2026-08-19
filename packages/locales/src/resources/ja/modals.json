@@ -241,6 +241,7 @@
 		"recentEraPoints": "最近のエラポイント",
 		"recipient": "受取人",
 		"refreshAccounts": "アカウントを更新",
+		"regenerateNominationSelection": "ノミネーションを再生成してもよろしいですか？現在のバリデーター選択は置き換えられます。",
 		"remove": "削除",
 		"removeAccount": "アカウントを削除",
 		"removeBond": "ボンドを削除",

@@ -5,6 +5,7 @@ import { useManageNominations } from 'contexts/ManageNominations'
 import { SelectableWrapper } from 'library/List'
 import { useTranslation } from 'react-i18next'
 import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
+import { ConfirmAction } from '../ConfirmAction'
 import type { InlineControlsProps } from './types'
 
 export const InlineControls = ({ displayFor }: InlineControlsProps) => {
@@ -21,12 +22,14 @@ export const InlineControls = ({ displayFor }: InlineControlsProps) => {
 
 	return (
 		<SelectableWrapper>
-			{allowRegenerate && (
-				<ButtonType
-					text={t('reGenerate', { ns: 'app' })}
-					onClick={() => revertNominations()}
-				/>
-			)}
+			<ConfirmAction
+				align="start"
+				controlKey="regenerate_nominations"
+				onConfirm={revertNominations}
+				text={t('regenerateNominationSelection', { ns: 'modals' })}
+			>
+				<ButtonType asLabel text={t('reGenerate', { ns: 'app' })} />
+			</ConfirmAction>
 		</SelectableWrapper>
 	)
 }
