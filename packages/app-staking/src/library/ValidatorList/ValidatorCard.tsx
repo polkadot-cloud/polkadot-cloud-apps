@@ -46,7 +46,11 @@ export const ValidatorCard = ({
 	const { t } = useTranslation('app')
 
 	return (
-		<DetailedCard.Root displayFor={displayFor} selected={selected}>
+		<DetailedCard.Root
+			displayFor={displayFor}
+			selected={selected}
+			statusAccent={retainmentStats.statusAccent}
+		>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					{headerStart}

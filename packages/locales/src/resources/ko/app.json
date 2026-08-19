@@ -247,6 +247,7 @@
 		"nextHalving": "다음 반감",
 		"nextRewardsIn": "다음 보상까지",
 		"noAccountSelected": "선택된 계정 없음",
+		"noActiveValidatorsWarning": "추천한 검증인 중 활성 상태인 검증인이 없어 보상을 받지 못할 수 있습니다.",
 		"noFilters": "필터 없음",
 		"noFree": "본딩할 수 있는 자유 {{unit}}이(가) 없습니다.",
 		"noMatch": "이 조건에 맞는 풀이 없습니다.",

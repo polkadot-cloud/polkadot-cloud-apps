@@ -34,6 +34,7 @@ export const DetailedItem = ({
 	onRemove,
 	rate,
 	format,
+	highlightRetainmentWarnings,
 	retainment,
 	isPreloading,
 }: ItemProps) => {
@@ -44,6 +45,7 @@ export const DetailedItem = ({
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const retainmentStats = useRetainmentStatsData({
+		highlightWarnings: highlightRetainmentWarnings,
 		period: retainment?.months[0],
 		selfStakeMax,
 		unit,

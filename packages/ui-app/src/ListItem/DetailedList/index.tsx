@@ -19,6 +19,7 @@ interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
 	selected?: boolean
+	statusAccent?: 'warning' | 'danger'
 }
 
 const ItemShell = ({
@@ -27,6 +28,7 @@ const ItemShell = ({
 	displayFor,
 	layout,
 	selected,
+	statusAccent,
 	...props
 }: ItemShellProps) => (
 	<div
@@ -42,6 +44,7 @@ const ItemShell = ({
 				[classes.card]: displayFor === 'card',
 				[classes.selected]: selected,
 			})}
+			data-status-accent={statusAccent}
 		>
 			{layout === 'row' ? (
 				<div className={classes.barLayout}>{children}</div>

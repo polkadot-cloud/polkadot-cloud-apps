@@ -91,7 +91,11 @@ export const ValidatorBar = ({
 	const retainmentPreloading = isRetainmentPreloading ?? isPreloading
 
 	return (
-		<ListItem.Row displayFor={displayFor} selected={selected}>
+		<ListItem.Row
+			displayFor={displayFor}
+			selected={selected}
+			statusAccent={retainmentStats.statusAccent}
+		>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>

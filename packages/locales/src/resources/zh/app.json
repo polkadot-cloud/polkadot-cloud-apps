@@ -244,6 +244,7 @@
 		"nextHalving": "下一次减半",
 		"nextRewardsIn": "下一次奖励于",
 		"noAccountSelected": "无账户被选中",
+		"noActiveValidatorsWarning": "由于您提名的验证者均未处于活跃状态，您可能无法获得奖励。",
 		"noFilters": "无筛选",
 		"noFree": "您没有可用的 {{unit}} 可质押",
 		"noMatch": "没有符合此条件的池",

@@ -247,6 +247,7 @@
 		"nextHalving": "Sonraki Halving",
 		"nextRewardsIn": "Sonraki Ödüllere Kalan Süre",
 		"noAccountSelected": "Hesap Seçilmedi",
+		"noActiveValidatorsWarning": "Aday gösterdiğiniz doğrulayıcıların hiçbiri aktif olmadığı için ödül kazanamayabilirsiniz.",
 		"noFilters": "Filtre yok",
 		"noFree": "Bağlanacak serbest {{unit}} bakiyeniz yok.",
 		"noMatch": "Bu kritere uyan havuz yok.",

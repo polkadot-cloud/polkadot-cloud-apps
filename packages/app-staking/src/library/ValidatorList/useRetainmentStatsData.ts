@@ -14,6 +14,7 @@ import {
 	clampRate,
 	formatCompactNumber,
 	getRateColor,
+	getRetainmentStatus,
 	planckToUnitBn,
 } from 'utils'
 
@@ -39,10 +40,12 @@ export interface RetainmentStatsData {
 	retainmentLabel: string
 	retainmentRate: RetainmentStatData
 	selfStakeChange: RetainmentStatData
+	statusAccent?: 'warning' | 'danger'
 	statsLabel: string
 }
 
 interface UseRetainmentStatsDataProps {
+	highlightWarnings?: boolean
 	period?: ValidatorRetainmentPeriod
 	selfStakeMax: boolean
 	unit: string
@@ -150,6 +153,7 @@ const getSignedAmountStat = ({
 }
 
 export const useRetainmentStatsData = ({
+	highlightWarnings = false,
 	period,
 	selfStakeMax,
 	unit,
@@ -178,6 +182,21 @@ export const useRetainmentStatsData = ({
 			}
 		: undefined
 	const maximumLabel = t('maximum')
+	const retainmentRate = getRateStat({
+		label: t('retainmentRate'),
+		locale,
+		maximumLabel,
+		rate: period?.retainmentRate,
+		showTrend: false,
+	})
+	const retainmentStatus =
+		highlightWarnings && retainmentRate.value !== undefined
+			? getRetainmentStatus(retainmentRate.value)
+			: undefined
+	const statusAccent =
+		retainmentStatus === 'warning' || retainmentStatus === 'danger'
+			? retainmentStatus
+			: undefined
 
 	return {
 		compoundRate: getRateStat({
@@ -196,13 +215,7 @@ export const useRetainmentStatsData = ({
 			value: netOutflow,
 		}),
 		retainmentLabel: t('retainment'),
-		retainmentRate: getRateStat({
-			label: t('retainmentRate'),
-			locale,
-			maximumLabel,
-			rate: period?.retainmentRate,
-			showTrend: false,
-		}),
+		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),
 			locale,
@@ -211,6 +224,7 @@ export const useRetainmentStatsData = ({
 			unit,
 			value: selfStakeChange,
 		}),
+		statusAccent,
 		statsLabel: t('retainmentStats'),
 	}
 }

@@ -247,6 +247,7 @@
 		"nextHalving": "Next Halving",
 		"nextRewardsIn": "Next Rewards In",
 		"noAccountSelected": "No Account Selected",
+		"noActiveValidatorsWarning": "You may not earn rewards because none of your nominated validators are active.",
 		"noFilters": "No filters",
 		"noFree": "You have no free {{unit}} to bond.",
 		"noMatch": "No pools match this criteria.",

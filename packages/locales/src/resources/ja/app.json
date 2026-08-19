@@ -247,6 +247,7 @@
 		"nextHalving": "次回の半減",
 		"nextRewardsIn": "次回の報酬まで",
 		"noAccountSelected": "アカウントが選択されていません",
+		"noActiveValidatorsWarning": "指名したバリデーターが1つもアクティブではないため、報酬を獲得できない可能性があります。",
 		"noFilters": "フィルターなし",
 		"noFree": "ボンドできる{{unit}}がありません。",
 		"noMatch": "この条件に一致するプールはありません。",

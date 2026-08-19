@@ -247,6 +247,7 @@
 		"nextHalving": "Próximo Halving",
 		"nextRewardsIn": "Próximas Recompensas Em",
 		"noAccountSelected": "Nenhuma Conta Selecionada",
+		"noActiveValidatorsWarning": "Talvez você não receba recompensas porque nenhum dos validadores indicados está ativo.",
 		"noFilters": "Sem filtros",
 		"noFree": "Você não tem {{unit}} livres para vincular.",
 		"noMatch": "Nenhum pool corresponde a este critério.",
