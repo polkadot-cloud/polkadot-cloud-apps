@@ -32,7 +32,7 @@ if (
 
 initDedotService({
 	network: 'polkadot',
-	nominationPools: false,
+	nominationPools: true,
 	staking: true,
 	stablecoins: {
 		assetHub: false,
