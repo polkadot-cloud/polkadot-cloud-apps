@@ -19,6 +19,7 @@ export class StakingLedgerQuery<T extends StakingChain> {
 		public api: DedotClient<T>,
 		public address: string,
 		public bonded: string,
+		private onProcessed?: (address: string) => void,
 	) {
 		this.api = api
 		this.subscribe()
@@ -40,7 +41,7 @@ export class StakingLedgerQuery<T extends StakingChain> {
 					args: [this.address],
 				},
 			],
-			async ([ledger, payee, nominators]) => {
+			([ledger, payee, nominators]) => {
 				const stakingLedger: StakingLedger = {
 					ledger:
 						ledger === undefined
@@ -81,6 +82,7 @@ export class StakingLedgerQuery<T extends StakingChain> {
 					controllerUnmigrated: this.bonded !== this.address,
 				}
 				setStakingLedger(this.address, stakingLedger)
+				this.onProcessed?.(this.address)
 			},
 		)
 	}

@@ -16,12 +16,6 @@ export const useSyncing = (config: SyncConfig = '*') => {
 	// Keep a record of active sync statuses
 	const [syncIds, setSyncIds] = useState<SyncId[]>(getSyncIds(ids))
 
-	// Handle new syncing status events
-	const newSyncStatusCallback = async (result: SyncId[]) => {
-		const activeSyncIds = result.filter((syncId) => syncIds.includes(syncId))
-		setSyncIds(activeSyncIds)
-	}
-
 	// Helper to determine if active pools have synced
 	const getPoolStatusSynced = (): boolean => {
 		const POOL_SYNC_IDS: SyncId[] = [
@@ -69,12 +63,10 @@ export const useSyncing = (config: SyncConfig = '*') => {
 
 	// Subscribe to global bus
 	useEffect(() => {
-		const subSyncStatus = syncStatus$.subscribe((result) => {
-			newSyncStatusCallback(result)
-		})
-		return () => {
-			subSyncStatus.unsubscribe()
-		}
+		const subSyncStatus = syncStatus$.subscribe(() =>
+			setSyncIds(getSyncIds(ids)),
+		)
+		return () => subSyncStatus.unsubscribe()
 	}, [])
 	return {
 		syncing: syncIds.length > 0,

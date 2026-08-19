@@ -12,6 +12,7 @@ export class BondedQuery<T extends StakingChain> {
 	constructor(
 		public api: DedotClient<T>,
 		public address: string,
+		private onProcessed?: (address: string) => void,
 	) {
 		this.api = api
 		this.subscribe()
@@ -20,7 +21,7 @@ export class BondedQuery<T extends StakingChain> {
 	async subscribe() {
 		this.#unsub = await this.api.query.staking.bonded(
 			this.address,
-			async (result) => {
+			(result) => {
 				if (result) {
 					setBonded({
 						stash: this.address,
@@ -28,6 +29,7 @@ export class BondedQuery<T extends StakingChain> {
 					})
 				} else {
 					removeBonded(this.address)
+					this.onProcessed?.(this.address)
 				}
 			},
 		)

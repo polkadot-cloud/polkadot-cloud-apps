@@ -23,6 +23,7 @@ export const NominateStandalone = () => {
 	const { isLoading: validatorStatusLoading, isValidator } =
 		useValidatorStatus()
 	const { accountSynced, activePoolSynced } = useSyncing()
+	const { syncing: stakingLedgersSyncing } = useSyncing(['staking-ledgers'])
 	const { formatWithPrefs } = useValidators()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
 	const isPool = Boolean(activePool) && isOwner()
@@ -42,6 +43,7 @@ export const NominateStandalone = () => {
 		activeAddress &&
 			(!accountSynced(activeAddress) ||
 				!activePoolSynced(activeAddress) ||
+				stakingLedgersSyncing ||
 				validatorStatusLoading),
 	)
 	const accountStatus =

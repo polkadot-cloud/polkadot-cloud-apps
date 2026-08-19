@@ -22,6 +22,7 @@ import {
 	removeSyncing,
 	setStablecoinBalance,
 	setStablecoinBalancesSubscriptionError,
+	setSyncing,
 } from 'global-bus'
 import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
 import type {
@@ -88,6 +89,19 @@ export class SubscriptionManager<
 	// Query objects that may need to be recreated
 	stakingMetrics: StakingMetricsQuery<StakingApi>
 	eraRewardPoints: EraRewardPointsQuery<StakingApi>
+	private pendingStakingLedgers = new Set<string>()
+
+	private startStakingLedgerSync = (address: string) => {
+		this.pendingStakingLedgers.add(address)
+		setSyncing('staking-ledgers')
+	}
+
+	private finishStakingLedgerSync = (address: string) => {
+		this.pendingStakingLedgers.delete(address)
+		if (this.pendingStakingLedgers.size === 0) {
+			removeSyncing('staking-ledgers')
+		}
+	}
 
 	constructor(
 		private apiHub: DedotClient<HubApi>,
@@ -134,6 +148,7 @@ export class SubscriptionManager<
 						})
 						this.subBonded[address]?.unsubscribe()
 						delete this.subBonded[address]
+						this.finishStakingLedgerSync(address)
 						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
 						if (
@@ -221,9 +236,11 @@ export class SubscriptionManager<
 						}
 
 						if (this.features.staking) {
+							this.startStakingLedgerSync(address)
 							this.subBonded[address] = new BondedQuery(
 								this.stakingApi,
 								address,
+								this.finishStakingLedgerSync,
 							)
 						}
 						if (this.features.nominationPools) {
@@ -252,10 +269,12 @@ export class SubscriptionManager<
 						this.subStakingLedgers?.[stash]?.unsubscribe()
 					})
 					added.forEach(({ stash, bonded }) => {
+						this.startStakingLedgerSync(stash)
 						this.subStakingLedgers[stash] = new StakingLedgerQuery(
 							this.stakingApi,
 							stash,
 							bonded,
+							this.finishStakingLedgerSync,
 						)
 					})
 				})
@@ -368,5 +387,7 @@ export class SubscriptionManager<
 
 		this.stakingMetrics?.unsubscribe()
 		this.eraRewardPoints?.unsubscribe()
+		this.pendingStakingLedgers.clear()
+		removeSyncing('staking-ledgers')
 	}
 }

@@ -9,6 +9,7 @@ export const allSyncIds: SyncId[] = [
 	'bonded-pools',
 	'active-pools',
 	'active-proxy',
+	'staking-ledgers',
 ]
 
 export const defaultSyncStatus: SyncId[] = [
