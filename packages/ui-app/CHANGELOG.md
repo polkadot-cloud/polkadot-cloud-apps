@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-app-v0.2.0...ui-app-v0.3.0) (2026-08-19)
+
+
+### Features
+
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+* **ux:** Strip UI for warnings, add waiting only warning ([#3761](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3761)) ([7c19c78](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c19c78bda656fa3ceba3a5cf839593f57eee3c4))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-app-v0.1.0...ui-app-v0.2.0) (2026-08-09)
 
 

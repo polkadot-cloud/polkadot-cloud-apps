@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.2.0...hooks-v0.3.0) (2026-08-19)
+
+
+### Features
+
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.1.0...hooks-v0.2.0) (2026-08-09)
 
 
