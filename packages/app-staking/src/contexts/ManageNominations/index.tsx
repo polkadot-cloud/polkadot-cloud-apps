@@ -3,8 +3,7 @@
 
 import { createSafeContext } from '@w3ux/hooks'
 import { NominationHealthProvider } from 'hooks/useNominationHealth'
-import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
+import { Fragment, type ReactNode, useRef, useState } from 'react'
 import type { AnyFunction, Validator } from 'types'
 import type { ManageNominationsContextInterface } from './types'
 
@@ -14,9 +13,13 @@ export const [ManageNominationsContext, useManageNominations] =
 export const ManageNominationsProvider = ({
 	children,
 	nominations: initialNominations,
+	initialMethod,
+	provideNominationHealth = true,
 }: {
 	children: ReactNode
 	nominations: Validator[]
+	initialMethod?: string | null
+	provideNominationHealth?: boolean
 }) => {
 	// The initially provided set of nominees
 	const [defaultNominations] = useState<Validator[]>(initialNominations)
@@ -29,7 +32,11 @@ export const ManageNominationsProvider = ({
 
 	// Store the method of fetching nominees
 	const [method, setMethod] = useState<string | null>(
-		defaultNominationsCount ? 'Manual' : null,
+		initialMethod === undefined
+			? defaultNominationsCount
+				? 'Manual'
+				: null
+			: initialMethod,
 	)
 	// Store whether validators are being fetched
 	const [fetching, setFetching] = useState(false)
@@ -62,8 +69,12 @@ export const ManageNominationsProvider = ({
 		setFetching(true)
 	}
 
+	const HealthProvider = provideNominationHealth
+		? NominationHealthProvider
+		: Fragment
+
 	return (
-		<NominationHealthProvider>
+		<HealthProvider>
 			<ManageNominationsContext.Provider
 				value={{
 					method,
@@ -82,6 +93,6 @@ export const ManageNominationsProvider = ({
 			>
 				{children}
 			</ManageNominationsContext.Provider>
-		</NominationHealthProvider>
+		</HealthProvider>
 	)
 }

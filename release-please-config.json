@@ -3,6 +3,7 @@
 	"include-component-in-tag": true,
 	"packages": {
 		"packages/app-swap": {},
+		"packages/app-nominate": {},
 		"packages/app-staking": {},
 		"packages/app-validators": {},
 		"packages/assets": {},

@@ -38,7 +38,12 @@ import { useShowHelp } from 'hooks/useShowHelp'
 import { useStaking } from 'hooks/useStaking'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
-import { type Dispatch, type SetStateAction, useRef } from 'react'
+import {
+	type Dispatch,
+	type ReactNode,
+	type SetStateAction,
+	useRef,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { MenuItem, MenuItemButton } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
@@ -47,6 +52,7 @@ import { DefaultButton } from './DefaultButton'
 
 export const MenuPopover = ({
 	setOpen,
+	children,
 	features: {
 		network: showNetwork = true,
 		advancedMode: showAdvancedMode = true,
@@ -58,6 +64,7 @@ export const MenuPopover = ({
 	} = {},
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
+	children?: ReactNode
 	features?: MenuPopoverFeatureFlags
 }) => {
 	const { network } = useNetwork()
@@ -193,6 +200,7 @@ export const MenuPopover = ({
 					</div>
 				</div>
 			</MenuItemButton>
+			{children}
 			{showHelpPrompts && (
 				<MenuItemButton onClick={() => setShowHelp(!showHelp)}>
 					<div>

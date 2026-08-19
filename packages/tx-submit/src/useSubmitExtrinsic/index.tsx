@@ -42,6 +42,7 @@ import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 export const useSubmitExtrinsic = ({
 	tx,
 	tag,
+	dappName = StakingDappName,
 	from,
 	shouldSubmit,
 	feePaymentOptions,
@@ -148,7 +149,7 @@ export const useSubmitExtrinsic = ({
 				throw new Error(t('walletNotFound'))
 			}
 			// NOTE: Summons extension popup if not already connected
-			injectedExtension.enable(StakingDappName)
+			injectedExtension.enable(dappName)
 		}
 
 		// Pre-submission state update

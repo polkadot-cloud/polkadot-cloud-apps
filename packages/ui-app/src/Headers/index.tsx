@@ -12,6 +12,7 @@ import type { HeadersProps } from './types'
 
 export { SettingsMenu } from './Settings'
 export type { HeadersProps, MenuPopoverFeatureFlags } from './types'
+export { Account, Settings }
 
 export const Headers = ({
 	NodesLeft,

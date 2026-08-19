@@ -10,6 +10,9 @@ export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
 // Validators
 export const ValidatorsDappName = 'Polkadot Cloud Validators'
 
+// Nominate
+export const NominateDappName = 'Polkadot Cloud Nominate'
+
 // Swap
 export const SwapDappName = 'Polkadot Cloud Swap'
 

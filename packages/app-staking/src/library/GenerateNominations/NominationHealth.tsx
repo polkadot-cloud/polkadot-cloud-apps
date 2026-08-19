@@ -3,26 +3,20 @@
 
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
+import type { NominationHealthProps } from './types'
 import { getValidatorsWithRetainment } from './utils'
 import { NominationHealthWrapper } from './Wrapper'
-
-interface NominationHealthProps {
-	allValidatorsWaiting: boolean
-	isLoading: boolean
-	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
-	validators: Validator[]
-}
 
 export const NominationHealth = ({
 	allValidatorsWaiting,
 	isLoading,
 	retainmentByAddress,
+	standalone = false,
 	validators,
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
@@ -91,7 +85,7 @@ export const NominationHealth = ({
 		averageRetainment === null ? null : getRetainmentStatus(averageRetainment)
 
 	return (
-		<NominationHealthWrapper>
+		<NominationHealthWrapper $standalone={standalone}>
 			{(hasRetainmentWarnings || allValidatorsWaiting) && (
 				<div role="status">
 					<Separator

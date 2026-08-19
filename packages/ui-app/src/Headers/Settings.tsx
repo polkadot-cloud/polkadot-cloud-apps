@@ -3,7 +3,7 @@
 
 import { faCog, faPlug } from '@fortawesome/free-solid-svg-icons'
 import { useTheme } from 'hooks/useTheme'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import { ConnectPopover } from './Popovers/ConnectPopover'
@@ -13,8 +13,10 @@ import type { MenuPopoverFeatureFlags } from './types'
 
 export const SettingsMenu = ({
 	menuPopoverFeatures,
+	children,
 }: {
 	menuPopoverFeatures?: MenuPopoverFeatureFlags
+	children?: ReactNode
 }) => {
 	const { themeElementRef } = useTheme()
 	const [openSettings, setOpenSettings] = useState<boolean>(false)
@@ -24,7 +26,9 @@ export const SettingsMenu = ({
 			open={openSettings}
 			portalContainer={themeElementRef.current || undefined}
 			content={
-				<MenuPopover setOpen={setOpenSettings} features={menuPopoverFeatures} />
+				<MenuPopover setOpen={setOpenSettings} features={menuPopoverFeatures}>
+					{children}
+				</MenuPopover>
 			}
 			onTriggerClick={() => {
 				setOpenSettings(!openSettings)
@@ -39,8 +43,10 @@ export const Settings = ({
 	openConnect,
 	setOpenConnect,
 	menuPopoverFeatures,
+	children,
 }: ToggleConnectProps & {
 	menuPopoverFeatures?: MenuPopoverFeatureFlags
+	children?: ReactNode
 }) => {
 	const { themeElementRef } = useTheme()
 
@@ -57,7 +63,9 @@ export const Settings = ({
 			>
 				<ButtonHeader className="header-connect" icon={faPlug} />
 			</Popover>
-			<SettingsMenu menuPopoverFeatures={menuPopoverFeatures} />
+			<SettingsMenu menuPopoverFeatures={menuPopoverFeatures}>
+				{children}
+			</SettingsMenu>
 		</>
 	)
 }

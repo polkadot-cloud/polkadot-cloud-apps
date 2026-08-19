@@ -8,7 +8,8 @@ import type { MaybeAddress, SyncConfig, SyncId } from 'types'
 import { useBalances } from '../useBalances'
 
 export const useSyncing = (config: SyncConfig = '*') => {
-	const { getAccountBalance, getPoolMembership } = useBalances()
+	const { getAccountBalance, getPoolMembership, getStakingLedger } =
+		useBalances()
 
 	// Retrieve the ids from the config provided
 	const ids = getIdsFromSyncConfig(config)
@@ -43,10 +44,13 @@ export const useSyncing = (config: SyncConfig = '*') => {
 		}
 		const { synced: poolMembershipSynced } = getPoolMembership(address)
 		const { synced: accountBalanceSynced } = getAccountBalance(address)
+		const stakingLedgerSynced =
+			getStakingLedger(address).nominators !== undefined
 
 		return (
 			poolMembershipSynced &&
 			accountBalanceSynced &&
+			stakingLedgerSynced &&
 			!syncIds.includes('initialization')
 		)
 	}
