@@ -6,7 +6,6 @@ import { useApi } from 'hooks/useApi'
 import { useSyncing } from 'hooks/useSyncing'
 import type { ReactNode } from 'react'
 import { createContext, useState } from 'react'
-import { migrateLocalStorageKeys, migrateRpcConfig } from 'utils'
 import { version } from '../../../package.json'
 
 export const MigrateContext = createContext<null>(null)
@@ -23,17 +22,9 @@ export const MigrateProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffectIgnoreInitial(() => {
 		if (isReady && !syncing && !done) {
-			// Carry out migrations if local version is different to current version
+			// Global migrations have already run before service initialization. Keep the app version
+			// lifecycle here so app-specific cache refreshes and reloads remain intact.
 			if (localAppVersion !== version) {
-				// Added in 2.4.1
-				migrateRpcConfig()
-
-				// Added in 2.2.2
-				migrateLocalStorageKeys()
-
-				// Finally
-				//
-				// Update local version to current app version
 				localStorage.setItem('app_version', version)
 				setDone(true)
 

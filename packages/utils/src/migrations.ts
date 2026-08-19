@@ -4,67 +4,48 @@
 import { AutoRpcKey, rpcEndpointKey } from 'consts'
 import { NetworkList } from 'consts/networks'
 
-const RpcConfigMigrationKey = 'rpcConfigMigrationVersion'
-const RpcConfigMigrationVersion = '1'
+export const GlobalMigrationVersion = 1
+
+const GlobalMigrationVersionKey = 'migrationVersion'
 
 /**
- * Clears persisted RPC choices once so the current defaults can be applied.
+ * Clears persisted RPC choices so the current defaults can be applied.
  */
-export const migrateRpcConfig = (): void => {
-	if (
-		localStorage.getItem(RpcConfigMigrationKey) === RpcConfigMigrationVersion
-	) {
-		return
-	}
-
+const migrateRpcConfig = (): void => {
 	localStorage.removeItem(AutoRpcKey)
 	Object.keys(NetworkList).forEach((network) => {
 		localStorage.removeItem(rpcEndpointKey(network))
 	})
-	localStorage.setItem(RpcConfigMigrationKey, RpcConfigMigrationVersion)
+}
+
+const migrations: Record<number, () => void> = {
+	1: migrateRpcConfig,
 }
 
 /**
- * Migrates legacy localStorage keys to their new pc_-prefixed versions.
- * Handles static keys and dynamic network-based keys.
- *
- * Migrations:
- * - active_extensions -> pc_active_extensions
- * - hardware_accounts -> pc_hardware_accounts
- * - external_accounts -> pc_external_accounts
- * - activeProxies -> pc_activeProxies
- * - {network}_active_account -> pc_{network}_active_account
+ * Runs pending storage migrations using a version shared by every app.
  */
-export const migrateLocalStorageKeys = (): void => {
-	// Static key migrations
-	const staticMigrations = [
-		{ oldKey: 'active_extensions', newKey: 'pc_active_extensions' },
-		{ oldKey: 'hardware_accounts', newKey: 'pc_hardware_accounts' },
-		{ oldKey: 'external_accounts', newKey: 'pc_external_accounts' },
-		{ oldKey: 'activeProxies', newKey: 'pc_activeProxies' },
-	]
-
-	staticMigrations.forEach(({ oldKey, newKey }) => {
-		const value = localStorage.getItem(oldKey)
-		if (value !== null) {
-			localStorage.setItem(newKey, value)
-			localStorage.removeItem(oldKey)
-		}
-	})
-
-	// Dynamic network-based migrations
-	// Find all keys matching the pattern: {network}_active_account
-	const allKeys = Object.keys(localStorage)
-	const networkActiveAccountKeys = allKeys.filter(
-		(key) => key.match(/^[a-z]+_active_account$/) && !key.startsWith('pc_'),
+export const runMigrations = (): void => {
+	const storedVersion = Number.parseInt(
+		localStorage.getItem(GlobalMigrationVersionKey) || '0',
+		10,
 	)
+	const currentVersion = Number.isNaN(storedVersion) ? 0 : storedVersion
 
-	networkActiveAccountKeys.forEach((oldKey) => {
-		const newKey = `pc_${oldKey}`
-		const value = localStorage.getItem(oldKey)
-		if (value !== null) {
-			localStorage.setItem(newKey, value)
-			localStorage.removeItem(oldKey)
-		}
-	})
+	if (currentVersion >= GlobalMigrationVersion) {
+		return
+	}
+
+	for (
+		let version = currentVersion + 1;
+		version <= GlobalMigrationVersion;
+		version++
+	) {
+		migrations[version]?.()
+	}
+
+	localStorage.setItem(
+		GlobalMigrationVersionKey,
+		String(GlobalMigrationVersion),
+	)
 }

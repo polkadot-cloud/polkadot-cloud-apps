@@ -10,7 +10,7 @@ import {
 } from 'global-bus'
 import { getInitialNetworkConfig } from 'global-bus/util'
 import { pairwise, startWith } from 'rxjs'
-import { migrateRpcConfig } from 'utils'
+import { runMigrations } from 'utils'
 import { onNetworkReset } from './reset'
 import { getDefaultService } from './start'
 import type { DedotServiceConfig, ServiceClass } from './types'
@@ -26,8 +26,8 @@ const proxiesLifecycle = createProxiesLifecycle()
 export const initDedotService = async (features: DedotServiceConfig = {}) => {
 	const { network: fixedNetwork, ...serviceFeatures } = features
 
-	// Apply connection-setting migrations before reading the initial RPC configuration.
-	migrateRpcConfig()
+	// Apply global storage migrations before reading the initial RPC configuration.
+	runMigrations()
 
 	// Fixed-network apps must override URL and persisted network state before React renders or the
 	// asynchronous RPC configuration is resolved.
