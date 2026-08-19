@@ -369,7 +369,7 @@ export const GenerateNominations = ({
 							validators={nominations}
 							allowListFormat={false}
 							displayFor={displayFor}
-							highlightRetainmentWarnings
+							highlightRetainmentWarnings={healthCheckActive}
 							selectable
 							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
 							BeforeListNode={

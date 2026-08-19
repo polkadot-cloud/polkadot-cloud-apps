@@ -121,7 +121,6 @@ export const DetailedItem = ({
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				selected={isSelected}
-				statusAccent={retainmentStats.statusAccent}
 				unit={unit}
 				validator={validator}
 			/>
@@ -139,7 +138,6 @@ export const DetailedItem = ({
 			identity={<Identity address={address} />}
 			retainmentStats={retainmentStats}
 			selected={isSelected}
-			statusAccent={retainmentStats.statusAccent}
 			summary={
 				<ValidatorSummary
 					address={address}

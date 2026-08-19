@@ -30,30 +30,30 @@ export const NominationHealth = ({
 		() => getValidatorsWithRetainment(validators, retainmentByAddress),
 		[retainmentByAddress, validators],
 	)
-	// Get the validators that are below the high retainment threshold and need attention.
-	const validatorsBelowHighThreshold = useMemo(
-		() =>
-			validatorsWithRetainment
-				.filter(({ rate }) => rate < RetainmentThresholds.high)
-				.map(({ validator }) => validator),
-		[validatorsWithRetainment],
-	)
+	const { lowRetainmentValidators, retainmentTotal, warningCount } =
+		useMemo(() => {
+			const lowRetainment: Validator[] = []
+			let total = 0
+			let warnings = 0
 
-	// Get the validators that fall into the danger category and can be removed by Fix Issues.
-	const lowRetainmentValidators = useMemo(
-		() =>
-			validatorsWithRetainment
-				.filter(({ rate }) => rate < RetainmentThresholds.medium)
-				.map(({ validator }) => validator),
-		[validatorsWithRetainment],
-	)
+			for (const { rate, validator } of validatorsWithRetainment) {
+				total += rate
+				if (rate < RetainmentThresholds.medium) {
+					lowRetainment.push(validator)
+				} else if (rate < RetainmentThresholds.high) {
+					warnings += 1
+				}
+			}
+
+			return {
+				lowRetainmentValidators: lowRetainment,
+				retainmentTotal: total,
+				warningCount: warnings,
+			}
+		}, [validatorsWithRetainment])
 	const dangerCount = lowRetainmentValidators.length
-
-	// Remaining validators below the high threshold fall into the warning category.
-	const warningCount = validatorsBelowHighThreshold.length - dangerCount
-
-	// Whether any validator falls below the medium retainment threshold.
 	const hasDangerWarnings = dangerCount > 0
+	const hasRetainmentWarnings = hasDangerWarnings || warningCount > 0
 
 	const { setNominationHealth } = useNominationHealth()
 	useEffect(() => {
@@ -83,8 +83,7 @@ export const NominationHealth = ({
 
 	// Calculate the average retainment rate across all validators with retainment data.
 	const averageRetainment = validatorsWithRetainment.length
-		? validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
-			validatorsWithRetainment.length
+		? retainmentTotal / validatorsWithRetainment.length
 		: null
 
 	// Determine the overall retainment status based on the average retainment rate.
@@ -93,7 +92,7 @@ export const NominationHealth = ({
 
 	return (
 		<NominationHealthWrapper>
-			{(validatorsBelowHighThreshold.length > 0 || allValidatorsWaiting) && (
+			{(hasRetainmentWarnings || allValidatorsWaiting) && (
 				<div role="status">
 					<Separator
 						style={{
