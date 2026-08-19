@@ -16,7 +16,11 @@ export const GenerateNominations = ({
 }: GenerateNominationsProps) => {
 	// Keep nomination actions separate from synchronization and presentation.
 	const { fetchNominations, filterHandlers, selectHandler, updateNominations } =
-		useNominationControls({ canManageNominations, setters })
+		useNominationControls({
+			allowFavorites: !standaloneCards,
+			canManageNominations,
+			setters,
+		})
 
 	useNominationSync({ fetchNominations, updateNominations })
 

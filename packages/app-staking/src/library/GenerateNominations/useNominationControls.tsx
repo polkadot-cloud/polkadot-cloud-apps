@@ -24,11 +24,13 @@ import type {
 } from './types'
 
 interface UseNominationControlsProps {
+	allowFavorites: boolean
 	canManageNominations: boolean
 	setters: AnyFunction[]
 }
 
 export const useNominationControls = ({
+	allowFavorites,
 	canManageNominations,
 	setters,
 }: UseNominationControlsProps) => {
@@ -148,7 +150,7 @@ export const useNominationControls = ({
 	// Build filter controls in their display order.
 	const filterHandlers: FilterHandler[] = []
 
-	if (advancedMode) {
+	if (allowFavorites && advancedMode) {
 		filterHandlers.push({
 			title: t('addFromFavorites', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SelectFavorites),
