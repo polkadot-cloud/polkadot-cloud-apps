@@ -258,6 +258,7 @@
 		"nominate": "Nominasyon Yap",
 		"nominateActive": "Aktif",
 		"nominateInactive": "Pasif",
+		"nominatingWouldRemoveValidatorRole": "Bu hesapla nominasyon yapmak doğrulayıcı rolünüzü kaldırır.",
 		"nominationHealthCheck": "Adaylık Sağlık Kontrolü",
 		"nominationHealthCheckDisableWarning": "Sağlık kontrolünün kapatılması önerilmez. Potansiyel olarak zararlı veya düşük kaliteli doğrulayıcılar artık adaylıklarınızda işaretlenmeyecek veya filtrelenmeyecektir.",
 		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor.",
@@ -371,6 +372,7 @@
 		"searchAddress": "Adres veya Kimlik Ara",
 		"select": "Seç",
 		"selectAccount": "Hesap Seç",
+		"selectAnotherAccount": "Başka Bir Hesap Seç",
 		"selectNominatingOrPoolOwner": "Nominasyonları yönetmek için nominasyon yapan veya bir havuza sahip olan bir hesap seçin.",
 		"selfStake": "Öz stake",
 		"selfStakeChange": "Öz stake değişimi",
@@ -467,6 +469,7 @@
 		"whenActivelyNominating": "aktif olarak nominasyon yaparken.",
 		"wrongTransaction": "Yanlış işlem, lütfen tekrar imzalayın.",
 		"year": "yıl",
+		"youAreValidator": "Bir doğrulayıcısınız",
 		"yourPayouts": "Ödemeleriniz"
 	}
 }

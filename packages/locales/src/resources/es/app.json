@@ -258,6 +258,7 @@
 		"nominate": "Nominar",
 		"nominateActive": "Activo",
 		"nominateInactive": "Inactivo",
+		"nominatingWouldRemoveValidatorRole": "Nominar con esta cuenta eliminaría tu rol de validador.",
 		"nominationHealthCheck": "Comprobación de Salud de Nominaciones",
 		"nominationHealthCheckDisableWarning": "No se recomienda desactivar la comprobación de salud. Los validadores potencialmente perjudiciales o de baja calidad dejarán de identificarse o filtrarse de tus nominaciones.",
 		"nominationHealthCheckNeedsAttention": "Algunas de tus nominaciones requieren atención.",
@@ -371,6 +372,7 @@
 		"searchAddress": "Buscar Dirección o Identidad",
 		"select": "Seleccionar",
 		"selectAccount": "Seleccionar Cuenta",
+		"selectAnotherAccount": "Seleccionar otra cuenta",
 		"selectNominatingOrPoolOwner": "Selecciona una cuenta que esté nominando o sea propietaria de un pool para gestionar nominaciones.",
 		"selfStake": "Stake propio",
 		"selfStakeChange": "Cambio de stake propio",
@@ -467,6 +469,7 @@
 		"whenActivelyNominating": "cuando nominas activamente.",
 		"wrongTransaction": "Transacción incorrecta, Por favor firma de nuevo.",
 		"year": "año",
+		"youAreValidator": "Eres un validador",
 		"yourPayouts": "Tus Pagos"
 	}
 }

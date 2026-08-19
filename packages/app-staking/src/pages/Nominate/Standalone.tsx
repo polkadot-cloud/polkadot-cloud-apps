@@ -9,6 +9,7 @@ import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { Editor } from 'library/ManageNominations/Editor'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
@@ -19,6 +20,8 @@ export const NominateStandalone = () => {
 	const { activeAddress } = useActiveAccount()
 	const { getNominations } = useBalances()
 	const { isBonding, isNominator } = useStaking()
+	const { isLoading: validatorStatusLoading, isValidator } =
+		useValidatorStatus()
 	const { accountSynced, activePoolSynced } = useSyncing()
 	const { formatWithPrefs } = useValidators()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
@@ -33,10 +36,13 @@ export const NominateStandalone = () => {
 	const poolId = isPool ? activePool?.id : undefined
 	const poolName = isPool ? activePool?.metadata : undefined
 	const activelyNominating = !isPool && isNominator
-	const canManageNominations = Boolean(activeAddress) && (isPool || isBonding)
+	const canManageNominations =
+		Boolean(activeAddress) && (isPool || (isBonding && !isValidator))
 	const eligibilityLoading = Boolean(
 		activeAddress &&
-			(!accountSynced(activeAddress) || !activePoolSynced(activeAddress)),
+			(!accountSynced(activeAddress) ||
+				!activePoolSynced(activeAddress) ||
+				validatorStatusLoading),
 	)
 	const accountStatus =
 		isPool && poolId !== undefined
@@ -70,6 +76,7 @@ export const NominateStandalone = () => {
 						dappName={NominateDappName}
 						displayFor="default"
 						eligibilityLoading={eligibilityLoading}
+						ineligibleStatus={isValidator ? 'validator' : 'notStaking'}
 						optimalSelectionOnly
 						poolId={poolId}
 						standaloneCards

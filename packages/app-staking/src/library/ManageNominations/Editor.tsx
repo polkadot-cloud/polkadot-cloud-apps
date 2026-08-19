@@ -13,6 +13,7 @@ import {
 	MenuWrapper,
 	StandaloneMenuWrapper,
 } from 'library/GenerateNominations/Controls/Wrappers'
+import type { ConnectStatus } from 'library/GenerateNominations/types'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection, Validator } from 'types'
@@ -25,6 +26,7 @@ interface EditorProps {
 	canSubmit?: boolean
 	dappName?: string
 	eligibilityLoading?: boolean
+	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	optimalSelectionOnly?: boolean
 	standaloneCards?: boolean
 	poolId?: number
@@ -48,6 +50,7 @@ export const Editor = ({
 	canSubmit = true,
 	dappName,
 	eligibilityLoading = false,
+	ineligibleStatus,
 	optimalSelectionOnly = false,
 	standaloneCards = false,
 	poolId,
@@ -158,6 +161,7 @@ export const Editor = ({
 			canManageNominations={canSubmit}
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}
+			ineligibleStatus={ineligibleStatus}
 			menuControls={standaloneCards ? menuControls : undefined}
 			setters={nominationSetters}
 			standaloneCards={standaloneCards}

@@ -11,6 +11,7 @@ export const GenerateNominations = ({
 	canManageNominations = true,
 	displayFor = 'default',
 	eligibilityLoading = false,
+	ineligibleStatus,
 	menuControls,
 	standaloneCards = false,
 }: GenerateNominationsProps) => {
@@ -30,6 +31,7 @@ export const GenerateNominations = ({
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}
 			filterHandlers={filterHandlers}
+			ineligibleStatus={ineligibleStatus}
 			menuControls={menuControls}
 			selectHandler={selectHandler}
 			standaloneCards={standaloneCards}

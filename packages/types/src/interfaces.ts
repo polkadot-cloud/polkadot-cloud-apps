@@ -96,6 +96,7 @@ export interface ServiceInterface {
 		poolMetadataMulti: (ids: number[]) => Promise<HexString[]>
 		superOfMulti: (addresses: string[]) => Promise<SuperOf[]>
 		validatorEntries: () => Promise<[string, PalletStakingValidatorPrefs][]>
+		validatorExists: (address: string) => Promise<boolean>
 		validatorsMulti: (
 			addresses: string[],
 		) => Promise<PalletStakingValidatorPrefs[]>

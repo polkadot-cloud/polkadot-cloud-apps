@@ -255,6 +255,7 @@
 		"nominate": "抵押",
 		"nominateActive": "激活",
 		"nominateInactive": "未激活",
+		"nominatingWouldRemoveValidatorRole": "使用此账户提名将移除您的验证者角色。",
 		"nominationHealthCheck": "提名健康检查",
 		"nominationHealthCheckDisableWarning": "不建议关闭健康检查。系统将不再标记或从您的提名中筛除潜在恶意或低质量的验证者。",
 		"nominationHealthCheckNeedsAttention": "部分提名需要处理。",
@@ -367,6 +368,7 @@
 		"searchAddress": "搜索地址或身份",
 		"select": "选择",
 		"selectAccount": "选择账户",
+		"selectAnotherAccount": "选择其他账户",
 		"selectNominatingOrPoolOwner": "请选择正在参与提名或拥有提名池的账户来管理提名。",
 		"selfStake": "自有质押",
 		"selfStakeChange": "自有质押变化",
@@ -457,6 +459,7 @@
 		"whenActivelyNominating": "当活跃提名时",
 		"wrongTransaction": "错误交易，请重新签名",
 		"year": "年",
+		"youAreValidator": "您是验证者",
 		"yourPayouts": "您的收益"
 	}
 }

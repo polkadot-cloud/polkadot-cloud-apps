@@ -258,6 +258,7 @@
 		"nominate": "Nominate",
 		"nominateActive": "Active",
 		"nominateInactive": "Inactive",
+		"nominatingWouldRemoveValidatorRole": "Nominating with this account would remove your validator role.",
 		"nominationHealthCheck": "Nomination Health Check",
 		"nominationHealthCheckDisableWarning": "Disabling health checks is not recommended. Potentially harmful or low-quality validators will no longer be flagged or filtered from your nominations.",
 		"nominationHealthCheckNeedsAttention": "Some of your nominations need attention.",
@@ -371,6 +372,7 @@
 		"searchAddress": "Search Address or Identity",
 		"select": "Select",
 		"selectAccount": "Select Account",
+		"selectAnotherAccount": "Select Another Account",
 		"selectNominatingOrPoolOwner": "Select an account that is nominating or owns a pool to manage nominations.",
 		"selfStake": "Self stake",
 		"selfStakeChange": "Self stake change",
@@ -467,6 +469,7 @@
 		"whenActivelyNominating": "when actively nominating.",
 		"wrongTransaction": "Wrong transaction, please sign again.",
 		"year": "year",
+		"youAreValidator": "You are a validator",
 		"yourPayouts": "Your Payouts"
 	}
 }

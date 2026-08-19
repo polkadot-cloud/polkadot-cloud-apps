@@ -261,6 +261,7 @@
 		"nominate": "Номинировать",
 		"nominateActive": "Активно",
 		"nominateInactive": "Неактивно",
+		"nominatingWouldRemoveValidatorRole": "Номинация с этого аккаунта приведёт к утрате роли валидатора.",
 		"nominationHealthCheck": "Проверка состояния номинаций",
 		"nominationHealthCheckDisableWarning": "Отключать проверку состояния не рекомендуется. Потенциально вредоносные или низкокачественные валидаторы больше не будут отмечаться или исключаться из ваших номинаций.",
 		"nominationHealthCheckNeedsAttention": "Некоторые номинации требуют внимания.",
@@ -377,6 +378,7 @@
 		"searchAddress": "Искать по адресу или идентификации",
 		"select": "Выбрать",
 		"selectAccount": "Выбрать аккаунт",
+		"selectAnotherAccount": "Выбрать другой аккаунт",
 		"selectNominatingOrPoolOwner": "Выберите аккаунт, который номинирует или владеет пулом, чтобы управлять номинациями.",
 		"selfStake": "Собственный стейк",
 		"selfStakeChange": "Изменение собственного стейка",
@@ -479,6 +481,7 @@
 		"whenActivelyNominating": "при активной номинации.",
 		"wrongTransaction": "Неверная транзакция, пожалуйста, подпишите снова.",
 		"year": "год",
+		"youAreValidator": "Вы являетесь валидатором",
 		"yourPayouts": "Ваши выплаты"
 	}
 }

@@ -17,6 +17,7 @@ export interface GenerateNominationsProps {
 	canManageNominations?: boolean
 	displayFor?: DisplayFor
 	eligibilityLoading?: boolean
+	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	menuControls?: ReactNode
 	standaloneCards?: boolean
 }
@@ -26,6 +27,7 @@ export interface NominationsViewProps {
 	displayFor: DisplayFor
 	eligibilityLoading: boolean
 	filterHandlers: FilterHandler[]
+	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	menuControls?: ReactNode
 	selectHandler: SelectHandler
 	standaloneCards: boolean
@@ -41,8 +43,10 @@ export interface ConfirmActionProps {
 }
 
 export interface ConnectProps {
-	status?: 'disconnected' | 'notStaking'
+	status?: ConnectStatus
 }
+
+export type ConnectStatus = 'disconnected' | 'notStaking' | 'validator'
 
 export interface MethodsProps {
 	setMethod: Dispatch<SetStateAction<string | null>>

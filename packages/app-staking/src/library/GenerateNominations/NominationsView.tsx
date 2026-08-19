@@ -30,6 +30,7 @@ export const NominationsView = ({
 	displayFor,
 	eligibilityLoading,
 	filterHandlers,
+	ineligibleStatus = 'notStaking',
 	menuControls,
 	selectHandler,
 	standaloneCards,
@@ -149,7 +150,7 @@ export const NominationsView = ({
 	) : !activeAddress ? (
 		<Connect />
 	) : !canManageNominations ? (
-		<Connect status="notStaking" />
+		<Connect status={ineligibleStatus} />
 	) : (
 		<CardWrapper>{nominationsList}</CardWrapper>
 	)

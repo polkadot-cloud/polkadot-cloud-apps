@@ -258,6 +258,7 @@
 		"nominate": "지명",
 		"nominateActive": "활성",
 		"nominateInactive": "비활성",
+		"nominatingWouldRemoveValidatorRole": "이 계정으로 노미네이션하면 검증인 역할이 해제됩니다.",
 		"nominationHealthCheck": "추천 상태 점검",
 		"nominationHealthCheckDisableWarning": "상태 점검을 끄는 것은 권장하지 않습니다. 잠재적으로 유해하거나 품질이 낮은 검증인이 더 이상 추천 목록에서 표시되거나 필터링되지 않습니다.",
 		"nominationHealthCheckNeedsAttention": "일부 추천에 주의가 필요합니다.",
@@ -371,6 +372,7 @@
 		"searchAddress": "주소 또는 신원 검색",
 		"select": "선택",
 		"selectAccount": "계정 선택",
+		"selectAnotherAccount": "다른 계정 선택",
 		"selectNominatingOrPoolOwner": "지명을 관리하려면 지명 중이거나 풀을 소유한 계정을 선택하세요.",
 		"selfStake": "자체 스테이크",
 		"selfStakeChange": "자체 스테이크 변동",
@@ -467,6 +469,7 @@
 		"whenActivelyNominating": "활발하게 노미네이션할 때.",
 		"wrongTransaction": "잘못된 거래입니다. 다시 서명해주세요.",
 		"year": "년",
+		"youAreValidator": "검증인 계정입니다",
 		"yourPayouts": "내 지급"
 	}
 }

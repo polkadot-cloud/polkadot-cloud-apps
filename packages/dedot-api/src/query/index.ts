@@ -17,6 +17,7 @@ import { poolMembersMulti } from './poolMembersMulti'
 import { poolMetadataMulti } from './poolMetadataMulti'
 import { superOfMulti } from './superOfMulti'
 import { validatorEntries } from './validatorEntries'
+import { validatorExists } from './validatorExists'
 import { validatorsMulti } from './validatorsMulti'
 
 export const query = {
@@ -36,5 +37,6 @@ export const query = {
 	poolMetadataMulti,
 	superOfMulti,
 	validatorEntries,
+	validatorExists,
 	validatorsMulti,
 }
