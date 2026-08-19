@@ -11,13 +11,14 @@ import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import { ValidatorList } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, Validator } from 'types'
 import { Loader } from 'ui-core/base'
@@ -56,6 +57,7 @@ export const GenerateNominations = ({
 	const { openPromptWith, closePrompt } = usePrompt()
 	const { isReadOnlyAccount } = useImportedAccounts()
 	const { getValidators, validatorsFetched } = useValidators()
+	const { syncing: eraStakersSyncing } = useSyncing(['era-stakers'])
 	const {
 		method,
 		height,
@@ -82,6 +84,17 @@ export const GenerateNominations = ({
 		nominations.map(({ address }) => address),
 		retainmentStatsEnabled && isReady && method !== null && !fetching,
 	)
+	const allValidatorsWaiting = useMemo(() => {
+		if (eraStakersSyncing || !stakers.length || !nominations.length) {
+			return false
+		}
+		const activeValidatorAddresses = new Set(
+			stakers.map(({ address }) => address),
+		)
+		return nominations.every(
+			({ address }) => !activeValidatorAddresses.has(address),
+		)
+	}, [eraStakersSyncing, nominations, stakers])
 
 	const resizeCallback = () => {
 		setHeight(null)
@@ -356,6 +369,7 @@ export const GenerateNominations = ({
 							validators={nominations}
 							allowListFormat={false}
 							displayFor={displayFor}
+							highlightRetainmentWarnings
 							selectable
 							forceListFormat={!retainmentStatsEnabled ? 'col' : undefined}
 							BeforeListNode={
@@ -367,6 +381,7 @@ export const GenerateNominations = ({
 									/>
 									{healthCheckActive && (
 										<NominationHealth
+											allValidatorsWaiting={allValidatorsWaiting}
 											isLoading={validatorDetails.isLoading}
 											retainmentByAddress={validatorDetails.retainmentByAddress}
 											validators={nominations}

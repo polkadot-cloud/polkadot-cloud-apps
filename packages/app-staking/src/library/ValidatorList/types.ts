@@ -29,6 +29,7 @@ export interface ValidatorListProps {
 	displayFor?: DisplayFor
 	allowListFormat?: boolean
 	forceListFormat?: ListFormat
+	highlightRetainmentWarnings?: boolean
 	defaultConfig?: ValidatorListConfig
 	BeforeListNode?: ReactNode
 	validatorDetails?: ValidatorDetailsData
@@ -42,6 +43,7 @@ export interface ItemProps {
 	validator: ValidatorListEntry
 	displayFor: DisplayFor
 	format: ListFormat
+	highlightRetainmentWarnings?: boolean
 	showShareLink?: boolean
 	toggleFavorites?: boolean
 	eraPoints: ValidatorEraPoints[]

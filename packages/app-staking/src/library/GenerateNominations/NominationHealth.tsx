@@ -13,12 +13,14 @@ import { getValidatorsWithRetainment } from './utils'
 import { NominationHealthWrapper } from './Wrapper'
 
 interface NominationHealthProps {
+	allValidatorsWaiting: boolean
 	isLoading: boolean
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	validators: Validator[]
 }
 
 export const NominationHealth = ({
+	allValidatorsWaiting,
 	isLoading,
 	retainmentByAddress,
 	validators,
@@ -75,21 +77,23 @@ export const NominationHealth = ({
 	])
 
 	// Keep displaying cached results while additional validator details load.
-	if (validatorsWithRetainment.length === 0) {
+	if (validatorsWithRetainment.length === 0 && !allValidatorsWaiting) {
 		return null
 	}
 
 	// Calculate the average retainment rate across all validators with retainment data.
-	const averageRetainment =
-		validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
-		validatorsWithRetainment.length
+	const averageRetainment = validatorsWithRetainment.length
+		? validatorsWithRetainment.reduce((total, { rate }) => total + rate, 0) /
+			validatorsWithRetainment.length
+		: null
 
 	// Determine the overall retainment status based on the average retainment rate.
-	const status = getRetainmentStatus(averageRetainment)
+	const status =
+		averageRetainment === null ? null : getRetainmentStatus(averageRetainment)
 
 	return (
 		<NominationHealthWrapper>
-			{validatorsBelowHighThreshold.length > 0 && (
+			{(validatorsBelowHighThreshold.length > 0 || allValidatorsWaiting) && (
 				<div role="status">
 					<Separator
 						style={{
@@ -103,21 +107,28 @@ export const NominationHealth = ({
 					</Separator>
 				</div>
 			)}
-			<StatusCard
-				status={status}
-				title={
-					<>
-						{t('averageRetainmentScore')}:{' '}
-						{`${averageRetainment.toLocaleString(i18n.resolvedLanguage, {
-							maximumFractionDigits: 1,
-						})}%`}
-					</>
-				}
-			>
-				{t(
-					`averageRetainmentDescription${status[0].toUpperCase()}${status.slice(1)}`,
-				)}
-			</StatusCard>
+			{averageRetainment !== null && status !== null && (
+				<StatusCard
+					status={status}
+					title={
+						<>
+							{t('averageRetainmentScore')}:{' '}
+							{`${averageRetainment.toLocaleString(i18n.resolvedLanguage, {
+								maximumFractionDigits: 1,
+							})}%`}
+						</>
+					}
+				>
+					{t(
+						`averageRetainmentDescription${status[0].toUpperCase()}${status.slice(1)}`,
+					)}
+				</StatusCard>
+			)}
+			{allValidatorsWaiting && (
+				<StatusCard status="warning" role="status">
+					{t('noActiveValidatorsWarning')}
+				</StatusCard>
+			)}
 			{warningCount > 0 && (
 				<StatusCard status="warning" role="status">
 					{t('retainmentThresholdWarning', {

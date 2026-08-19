@@ -23,6 +23,7 @@ interface ValidatorCardProps {
 	isRetainmentPreloading?: boolean
 	retainmentStats: RetainmentStatsData
 	selected?: boolean
+	statusAccent?: 'warning' | 'danger'
 	summary: ReactNode
 	unit: string
 }
@@ -40,13 +41,18 @@ export const ValidatorCard = ({
 	isRetainmentPreloading = false,
 	retainmentStats,
 	selected = false,
+	statusAccent,
 	summary,
 	unit,
 }: ValidatorCardProps) => {
 	const { t } = useTranslation('app')
 
 	return (
-		<DetailedCard.Root displayFor={displayFor} selected={selected}>
+		<DetailedCard.Root
+			displayFor={displayFor}
+			selected={selected}
+			statusAccent={statusAccent}
+		>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					{headerStart}

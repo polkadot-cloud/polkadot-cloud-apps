@@ -46,6 +46,7 @@ export const ValidatorListInner = ({
 	displayFor = 'default',
 	allowListFormat = true,
 	forceListFormat,
+	highlightRetainmentWarnings = false,
 	defaultConfig,
 	BeforeListNode = null,
 	validatorDetails: suppliedValidatorDetails,
@@ -199,6 +200,7 @@ export const ValidatorListInner = ({
 									toggleFavorites={toggleFavorites}
 									displayFor={displayFor}
 									format={effectiveListFormat}
+									highlightRetainmentWarnings={highlightRetainmentWarnings}
 									eraPoints={eraPointsByAddress.get(validator.address) ?? []}
 									rate={
 										retainmentStatsEnabled

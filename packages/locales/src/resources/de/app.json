@@ -247,6 +247,7 @@
 		"nextHalving": "Nächste Halbierung",
 		"nextRewardsIn": "Nächste Belohnungen in",
 		"noAccountSelected": "Kein Konto ausgewählt",
+		"noActiveValidatorsWarning": "Du erhältst möglicherweise keine Belohnungen, da keiner deiner nominierten Validatoren aktiv ist.",
 		"noFilters": "Keine Filter",
 		"noFree": "du hast keine freien {{unit}} zum Binden.",
 		"noMatch": "Keine Pools entsprechen diesen Kriterien.",

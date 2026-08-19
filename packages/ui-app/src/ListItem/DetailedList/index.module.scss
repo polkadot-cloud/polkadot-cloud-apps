@@ -27,6 +27,24 @@
 		&.selected {
 			border-color: var(--gray-1000);
 		}
+
+		&[data-status-accent]::before {
+			border-radius: 0.5rem 0 0 0.5rem;
+			content: '';
+			inset: 0 auto 0 0;
+			pointer-events: none;
+			position: absolute;
+			width: 3px;
+			z-index: 1;
+		}
+
+		&[data-status-accent='warning']::before {
+			background: var(--status-warning);
+		}
+
+		&[data-status-accent='danger']::before {
+			background: var(--status-danger);
+		}
 	}
 
 	&.card {
