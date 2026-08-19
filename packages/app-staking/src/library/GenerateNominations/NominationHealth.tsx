@@ -3,22 +3,14 @@
 
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
+import type { NominationHealthProps } from './types'
 import { getValidatorsWithRetainment } from './utils'
 import { NominationHealthWrapper } from './Wrapper'
-
-interface NominationHealthProps {
-	allValidatorsWaiting: boolean
-	isLoading: boolean
-	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
-	standalone?: boolean
-	validators: Validator[]
-}
 
 export const NominationHealth = ({
 	allValidatorsWaiting,

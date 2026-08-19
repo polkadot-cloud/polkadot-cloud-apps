@@ -4,6 +4,7 @@
 import styled from 'styled-components'
 import { CardWrapper } from 'ui-app/Card'
 import { Loader } from 'ui-core/base'
+import type { StandaloneStyleProps } from './types'
 
 export const NominationEditorWrapper = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ export const StandaloneCards = styled(NominationEditorWrapper)`
   }
 `
 
-export const NominationsLoader = styled(Loader)<{ $standalone?: boolean }>`
+export const NominationsLoader = styled(Loader)<StandaloneStyleProps>`
   height: 5.5rem;
   margin: 0.9rem;
   width: calc(100% - 1.8rem);
@@ -48,9 +49,7 @@ export const NominationsLoader = styled(Loader)<{ $standalone?: boolean }>`
   `}
 `
 
-export const NominationHealthWrapper = styled.section<{
-	$standalone?: boolean
-}>`
+export const NominationHealthWrapper = styled.section<StandaloneStyleProps>`
   display: grid;
   gap: 1rem;
   margin: ${({ $standalone }) =>

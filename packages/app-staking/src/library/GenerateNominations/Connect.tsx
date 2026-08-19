@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { CardWrapper } from 'ui-app/Card'
 import { Badge } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
+import type { ConnectProps } from './types'
 
 const AccountPrompt = styled.section`
 	align-items: center;
@@ -53,11 +54,7 @@ const AccountPromptGraphic = styled.div`
 	width: 5.5rem;
 `
 
-export const Connect = ({
-	status = 'disconnected',
-}: {
-	status?: 'disconnected' | 'notStaking'
-}) => {
+export const Connect = ({ status = 'disconnected' }: ConnectProps) => {
 	const { t } = useTranslation('app')
 	const { openModal } = useOverlay().modal
 	const notStaking = status === 'notStaking'

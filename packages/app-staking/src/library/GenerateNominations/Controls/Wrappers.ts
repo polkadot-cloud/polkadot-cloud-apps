@@ -3,6 +3,7 @@
 
 import { SelectableWrapper } from 'library/List'
 import styled from 'styled-components'
+import type { InlineControlsWrapperProps } from './types'
 
 const BaseMenuWrapper = styled.div`
   width: 100%;
@@ -88,9 +89,9 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
   }
 `
 
-export const InlineControlsWrapper = styled(SelectableWrapper)<{
-	$standalone?: boolean
-}>`
+export const InlineControlsWrapper = styled(
+	SelectableWrapper,
+)<InlineControlsWrapperProps>`
   margin-top: ${({ $standalone }) => ($standalone ? '1.25rem' : '0.25rem')};
   margin-bottom: ${({ $standalone }) => ($standalone ? '0' : '0.75rem')};
 `

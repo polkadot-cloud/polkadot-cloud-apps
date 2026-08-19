@@ -3,9 +3,9 @@
 
 import { useTheme } from 'hooks/useTheme'
 import { Confirm } from 'library/Prompt/Confirm'
-import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { Popover } from 'ui-core/popover'
+import type { ConfirmActionProps } from './types'
 
 export const ConfirmAction = ({
 	align = 'end',
@@ -14,14 +14,7 @@ export const ConfirmAction = ({
 	disabled = false,
 	onConfirm,
 	text,
-}: {
-	align?: 'start' | 'center' | 'end'
-	children: ReactNode
-	controlKey: string
-	disabled?: boolean
-	onConfirm: () => void
-	text: string
-}) => {
+}: ConfirmActionProps) => {
 	const { themeElementRef } = useTheme()
 	const [open, setOpen] = useState(false)
 

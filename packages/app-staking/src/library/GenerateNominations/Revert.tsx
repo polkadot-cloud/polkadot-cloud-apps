@@ -4,14 +4,9 @@
 import { useTranslation } from 'react-i18next'
 import { ButtonSecondary } from 'ui-buttons'
 import { ConfirmAction } from './ConfirmAction'
+import type { RevertProps } from './types'
 
-export const Revert = ({
-	disabled,
-	onClick,
-}: {
-	disabled: boolean
-	onClick: () => void
-}) => {
+export const Revert = ({ disabled, onClick }: RevertProps) => {
 	const { t } = useTranslation('modals')
 
 	return (
