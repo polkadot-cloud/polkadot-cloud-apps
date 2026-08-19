@@ -8,51 +8,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 import { CardWrapper } from 'ui-app/Card'
 import { Badge } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import type { ConnectProps } from './types'
-
-const AccountPrompt = styled.section`
-	align-items: center;
-	display: flex;
-	flex-flow: column nowrap;
-	gap: 0.6rem;
-	justify-content: center;
-	margin-top: 1.4rem;
-	min-height: 13rem;
-	padding: 2rem 1rem;
-	text-align: center;
-
-	h3 {
-		font-size: 1.5rem;
-		line-height: 1.25;
-		margin: 0;
-	}
-
-	p {
-		color: var(--text-tertiary);
-		font-size: 1.2rem;
-		line-height: 1.45;
-		margin: -0.2rem 0 0.2rem;
-	}
-`
-
-const AccountPromptGraphic = styled.div`
-	align-items: center;
-	background: var(--gray-300);
-	border: 1px solid var(--gray-500);
-	border-radius: 50%;
-	color: var(--gray-900);
-	display: flex;
-	font-size: 2.25rem;
-	height: 5.5rem;
-	justify-content: center;
-	margin-bottom: 0.65rem;
-	position: relative;
-	width: 5.5rem;
-`
+import { AccountPrompt, AccountPromptGraphic } from './Wrappers'
 
 export const Connect = ({ status = 'disconnected' }: ConnectProps) => {
 	const { t } = useTranslation('app')

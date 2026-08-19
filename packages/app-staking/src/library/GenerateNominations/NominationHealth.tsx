@@ -10,7 +10,7 @@ import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
 import type { NominationHealthProps } from './types'
 import { getValidatorsWithRetainment } from './utils'
-import { NominationHealthWrapper } from './Wrapper'
+import { NominationHealthWrapper } from './Wrappers'
 
 export const NominationHealth = ({
 	allValidatorsWaiting,

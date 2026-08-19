@@ -23,7 +23,7 @@ import {
 	NominationsLoader,
 	StandaloneCards,
 	StandalonePreloader,
-} from './Wrapper'
+} from './Wrappers'
 
 export const NominationsView = ({
 	canManageNominations,
