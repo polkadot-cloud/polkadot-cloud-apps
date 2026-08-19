@@ -4,6 +4,7 @@
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
+import { ConfirmAction } from '../ConfirmAction'
 import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
 import { MenuWrapper } from './Wrappers'
@@ -36,14 +37,18 @@ export const MenuControls = ({
 					/>
 				)}
 				{method && (
-					<ButtonMenu
-						text={t('reGenerate', { ns: 'app' })}
-						onClick={() => {
+					<ConfirmAction
+						align="start"
+						controlKey="regenerate_nominations"
+						onConfirm={() => {
 							setMethod('Optimal Selection')
 							setNominations([])
 							setFetching(true)
 						}}
-					/>
+						text={t('regenerateNominationSelection', { ns: 'modals' })}
+					>
+						<ButtonMenu asLabel text={t('reGenerate', { ns: 'app' })} />
+					</ConfirmAction>
 				)}
 				{(allowRevert || action) && (
 					<div className="actions">

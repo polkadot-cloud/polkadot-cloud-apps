@@ -233,6 +233,7 @@
 		"recentEraPoints": "最近Era点数",
 		"recipient": "接收人",
 		"refreshAccounts": "刷新账户",
+		"regenerateNominationSelection": "您确定要重新生成提名吗？这将替换您当前选择的验证者。",
 		"remove": "解除",
 		"removeAccount": "删除帐户",
 		"removeBond": "解除质押",

@@ -249,6 +249,7 @@
 		"recentEraPoints": "Недавние очки эры",
 		"recipient": "Получатель",
 		"refreshAccounts": "Обновить аккаунты",
+		"regenerateNominationSelection": "Вы уверены, что хотите повторно сгенерировать номинации? Текущий выбор валидаторов будет заменён.",
 		"remove": "Удалить",
 		"removeAccount": "Удалить аккаунт",
 		"removeBond": "Убрать блокировку",

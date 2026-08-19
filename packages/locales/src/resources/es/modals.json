@@ -241,6 +241,7 @@
 		"recentEraPoints": "Puntos de Era Recientes",
 		"recipient": "Destinatario",
 		"refreshAccounts": "Actualizar Cuentas",
+		"regenerateNominationSelection": "¿Seguro que quieres volver a generar tus nominaciones? Esto reemplazará tu selección actual de validadores.",
 		"remove": "Eliminar",
 		"removeAccount": "Eliminar Cuenta",
 		"removeBond": "Eliminar Vinculación",
