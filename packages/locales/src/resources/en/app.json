@@ -270,6 +270,7 @@
 		"nominations_one": "Nomination",
 		"nominations_other": "Nominations",
 		"nominator": "Nominator",
+		"notANominator": "Not a Nominator",
 		"notBacking": "Not Backing",
 		"notEnough": "Not Enough",
 		"notEnoughAfter": "Not enough {{unit}} to bond after transaction fees.",
@@ -396,6 +397,7 @@
 		"switchAccount": "Switch Account",
 		"syncAccounts": "Sync Accounts",
 		"syncing": "Syncing",
+		"syncingAccounts": "Syncing Accounts...",
 		"syncingPoolData": "Finding Pools to Join",
 		"syncingPoolList": "Syncing Pool list",
 		"time": {

@@ -274,6 +274,7 @@
 		"nominations_many": "Номинаций",
 		"nominations_one": "Номинация",
 		"nominator": "Номинатор",
+		"notANominator": "Не номинатор",
 		"notBacking": "Не поддерживает",
 		"notEnough": "Недостаточно",
 		"notEnoughAfter": "Недостаточно {{unit}} для блокировки после комиссий за транзакцию.",
@@ -402,6 +403,7 @@
 		"switchAccount": "Сменить аккаунт",
 		"syncAccounts": "Синхронизировать аккаунты",
 		"syncing": "Синхронизация",
+		"syncingAccounts": "Синхронизация аккаунтов...",
 		"syncingPoolData": "Поиск пулов для присоединения",
 		"syncingPoolList": "Синхронизация списка пулов",
 		"time": {

@@ -270,6 +270,7 @@
 		"nominations_one": "지명",
 		"nominations_other": "지명",
 		"nominator": "지명인",
+		"notANominator": "노미네이터가 아님",
 		"notBacking": "지원하지 않음",
 		"notEnough": "부족함",
 		"notEnoughAfter": "거래 수수료 후 본딩할 {{unit}}이(가) 부족합니다.",
@@ -396,6 +397,7 @@
 		"switchAccount": "계정 전환",
 		"syncAccounts": "계정 동기화",
 		"syncing": "동기화 중",
+		"syncingAccounts": "계정 동기화 중...",
 		"syncingPoolData": "참여할 풀 찾는 중",
 		"syncingPoolList": "풀 목록 동기화 중",
 		"time": {

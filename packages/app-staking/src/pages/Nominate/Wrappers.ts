@@ -30,7 +30,9 @@ export const Subheading = styled.div`
   }
 `
 
-export const StandaloneStatus = styled.div<{ $active?: boolean }>`
+export const StandaloneStatus = styled.div<{
+	$indicator?: 'active' | 'inactive'
+}>`
   align-items: center;
   align-self: flex-start;
   color: var(--text-tertiary);
@@ -42,10 +44,10 @@ export const StandaloneStatus = styled.div<{ $active?: boolean }>`
   margin-bottom: 0.5rem;
   margin-top: 0.8rem;
 
-  ${({ $active }) =>
-		$active &&
+  ${({ $indicator }) =>
+		$indicator &&
 		`&::before {
-      background: var(--status-success);
+      background: ${$indicator === 'active' ? 'var(--status-success)' : 'var(--text-tertiary)'};
       border-radius: 50%;
       content: '';
       flex: 0 0 0.5rem;

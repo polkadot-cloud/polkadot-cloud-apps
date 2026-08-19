@@ -270,6 +270,7 @@
 		"nominations_one": "Nominasyon",
 		"nominations_other": "Nominasyonlar",
 		"nominator": "Nominatör",
+		"notANominator": "Nominatör Değil",
 		"notBacking": "Desteklemiyor",
 		"notEnough": "Yetersiz",
 		"notEnoughAfter": "İşlem ücretlerinden sonra bağlanacak yeterli {{unit}} yok.",
@@ -396,6 +397,7 @@
 		"switchAccount": "Hesap Değiştir",
 		"syncAccounts": "Hesapları Senkronize Et",
 		"syncing": "Senkronize Ediliyor",
+		"syncingAccounts": "Hesaplar Senkronize Ediliyor...",
 		"syncingPoolData": "Katılınacak Havuzlar Bulunuyor",
 		"syncingPoolList": "Havuz listesi senkronize ediliyor",
 		"time": {

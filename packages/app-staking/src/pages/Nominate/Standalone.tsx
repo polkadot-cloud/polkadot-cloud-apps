@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useActiveAccount } from '@polkadot-cloud/connect'
+import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { NominateDappName } from 'consts'
 import { ManageNominationsProvider } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
@@ -18,6 +18,7 @@ import { StandaloneStatus } from './Wrappers'
 export const NominateStandalone = () => {
 	const { t } = useTranslation('app')
 	const { activeAddress } = useActiveAccount()
+	const { accountsInitialised } = useImportedAccounts()
 	const { getNominations } = useBalances()
 	const { isBonding, isNominator } = useStaking()
 	const { isLoading: validatorStatusLoading, isValidator } =
@@ -46,24 +47,34 @@ export const NominateStandalone = () => {
 				stakingLedgersSyncing ||
 				validatorStatusLoading),
 	)
-	const accountStatus =
-		isPool && poolId !== undefined
-			? t(poolName ? 'poolOwnerStatusWithName' : 'poolOwnerStatus', {
-					poolId,
-					poolName,
-				})
-			: activelyNominating
-				? t('activelyNominating')
-				: null
+	const accountStatus = !accountsInitialised
+		? t('syncingAccounts')
+		: !activeAddress
+			? t('noAccountSelected')
+			: eligibilityLoading
+				? t('syncingAccounts')
+				: isPool && poolId !== undefined
+					? t(poolName ? 'poolOwnerStatusWithName' : 'poolOwnerStatus', {
+							poolId,
+							poolName,
+						})
+					: activelyNominating
+						? t('activelyNominating')
+						: t('notANominator')
+
+	const statusIndicator =
+		accountsInitialised && activeAddress && !eligibilityLoading && !isPool
+			? activelyNominating
+				? 'active'
+				: 'inactive'
+			: undefined
 
 	return (
 		<>
 			<Page.Title title={t('nominate')}>
-				{!eligibilityLoading && accountStatus && (
-					<StandaloneStatus $active={activelyNominating}>
-						{accountStatus}
-					</StandaloneStatus>
-				)}
+				<StandaloneStatus $indicator={statusIndicator}>
+					{accountStatus}
+				</StandaloneStatus>
 			</Page.Title>
 			<Page.Row>
 				<ManageNominationsProvider

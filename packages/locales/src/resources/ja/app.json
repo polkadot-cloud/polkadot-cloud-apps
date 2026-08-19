@@ -270,6 +270,7 @@
 		"nominations_one": "ノミネーション",
 		"nominations_other": "ノミネーション",
 		"nominator": "ノミネーター",
+		"notANominator": "ノミネーターではありません",
 		"notBacking": "支持なし",
 		"notEnough": "不足しています",
 		"notEnoughAfter": "トランザクション手数料を差し引くとボンドするための{{unit}}が不足しています。",
@@ -396,6 +397,7 @@
 		"switchAccount": "アカウントを切り替え",
 		"syncAccounts": "アカウントを同期",
 		"syncing": "同期中",
+		"syncingAccounts": "アカウントを同期中...",
 		"syncingPoolData": "参加するプールを検索中",
 		"syncingPoolList": "プールリストを同期中",
 		"time": {

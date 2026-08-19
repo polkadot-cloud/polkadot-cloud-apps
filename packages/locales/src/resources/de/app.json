@@ -270,6 +270,7 @@
 		"nominations_one": "Nominierung",
 		"nominations_other": "Nominierungen",
 		"nominator": "Nominator",
+		"notANominator": "Kein Nominator",
 		"notBacking": "Nicht unterstützt",
 		"notEnough": "Nicht genug",
 		"notEnoughAfter": "Nicht genug {{unit}} zum Binden nach Transaktionsgebühren.",
@@ -396,6 +397,7 @@
 		"switchAccount": "Konto wechseln",
 		"syncAccounts": "Konten synchronisieren",
 		"syncing": "Wird synchronisiert",
+		"syncingAccounts": "Konten werden synchronisiert...",
 		"syncingPoolData": "Verfügbare Pools suchen",
 		"syncingPoolList": "Pool-Liste wird synchronisiert",
 		"time": {
