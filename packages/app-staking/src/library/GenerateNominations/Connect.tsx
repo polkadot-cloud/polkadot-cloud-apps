@@ -38,12 +38,7 @@ const AccountPrompt = styled.section`
 	}
 `
 
-const AccountPromptGraphic = styled.div<{
-	$status: 'disconnected' | 'notStaking'
-}>`
-	--prompt-accent: ${({ $status }) =>
-		$status === 'notStaking' ? 'var(--status-warning)' : 'var(--accent-800)'};
-
+const AccountPromptGraphic = styled.div`
 	align-items: center;
 	background: var(--gray-300);
 	border: 1px solid var(--gray-500);
@@ -56,18 +51,6 @@ const AccountPromptGraphic = styled.div<{
 	margin-bottom: 0.65rem;
 	position: relative;
 	width: 5.5rem;
-
-	&::after {
-		background: var(--prompt-accent);
-		border: 0.25rem solid var(--bg-body);
-		border-radius: 50%;
-		bottom: 0.1rem;
-		content: '';
-		height: 1rem;
-		position: absolute;
-		right: 0.1rem;
-		width: 1rem;
-	}
 `
 
 export const Connect = ({
@@ -82,7 +65,7 @@ export const Connect = ({
 	return (
 		<CardWrapper className="transparent">
 			<AccountPrompt>
-				<AccountPromptGraphic $status={status}>
+				<AccountPromptGraphic>
 					<FontAwesomeIcon icon={notStaking ? faCoins : faUserLargeSlash} />
 				</AccountPromptGraphic>
 				<h3>
