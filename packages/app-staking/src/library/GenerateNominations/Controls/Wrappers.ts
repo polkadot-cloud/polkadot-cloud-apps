@@ -4,39 +4,15 @@
 import { SelectableWrapper } from 'library/List'
 import styled from 'styled-components'
 
-export const MenuWrapper = styled.div<{ $compact?: boolean }>`
+const BaseMenuWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   position: relative;
-  background: ${({ $compact }) =>
-		$compact ? 'transparent' : 'rgb(from var(--gray-300) r g b / 75%)'};
-  margin-top: ${({ $compact }) => ($compact ? '1rem' : '0')};
-
-  &::before {
-    background: var(--gray-400);
-    content: '';
-    display: ${({ $compact }) => ($compact ? 'block' : 'none')};
-    inset: 0 auto 0 50%;
-    position: absolute;
-    transform: translateX(-50%);
-    width: 100vw;
-
-    @media (min-width: 826px) {
-      left: calc(50% + 1.25rem);
-    }
-  }
-
-  @media (max-width: 1200px) {
-    padding: ${({ $compact }) => ($compact ? '0' : '0 1.5rem')};
-  }
 
   > .menuControlsInner {
     width: 100%;
-    max-width: ${({ $compact }) => ($compact ? 'none' : '1200px')};
-    margin: ${({ $compact }) => ($compact ? '0' : '0 auto')};
     display: flex;
-    padding: ${({ $compact }) => ($compact ? '0.4rem 0.75rem' : '0.4rem 0')};
     align-items: center;
     position: relative;
 
@@ -61,12 +37,53 @@ export const MenuWrapper = styled.div<{ $compact?: boolean }>`
       }
 
       .revert {
-        background: ${({ $compact }) =>
-					$compact ? 'var(--gray-500)' : 'var(--gray-400)'};
-        border-color: ${({ $compact }) =>
-					$compact ? 'var(--gray-500)' : 'var(--gray-400)'};
         border-radius: var(--btn-sm-radius);
       }
+    }
+  }
+`
+
+export const MenuWrapper = styled(BaseMenuWrapper)`
+  background: rgb(from var(--gray-300) r g b / 75%);
+
+  @media (max-width: 1200px) {
+    padding: 0 1.5rem;
+  }
+
+  > .menuControlsInner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.4rem 0;
+
+    > .actions .revert {
+      background: var(--gray-400);
+      border-color: var(--gray-400);
+    }
+  }
+`
+
+export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
+  margin-top: 1rem;
+
+  &::before {
+    background: var(--gray-400);
+    content: '';
+    inset: 0 auto 0 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 100vw;
+
+    @media (min-width: 826px) {
+      left: calc(50% + 1.25rem);
+    }
+  }
+
+  > .menuControlsInner {
+    padding: 0.4rem 0.75rem;
+
+    > .actions .revert {
+      background: var(--gray-500);
+      border-color: var(--gray-500);
     }
   }
 `

@@ -9,6 +9,10 @@ import { useApi } from 'hooks/useApi'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { GenerateNominations } from 'library/GenerateNominations'
 import { MenuControls } from 'library/GenerateNominations/Controls/MenuControls'
+import {
+	MenuWrapper,
+	StandaloneMenuWrapper,
+} from 'library/GenerateNominations/Controls/Wrappers'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection } from 'types'
@@ -94,23 +98,28 @@ export const Editor = ({
 				setNominations(nextNominations),
 		},
 	]
+	const MenuControlsWrapper = standaloneCards
+		? StandaloneMenuWrapper
+		: MenuWrapper
 
 	const menuControls = (
-		<MenuControls
-			allowRevert={Boolean(method)}
-			disabled={!canSubmit || eligibilityLoading}
-			optimalSelectionOnly={optimalSelectionOnly}
-			setters={setters}
-			action={
-				method ? (
-					<MenuAction
-						isPool={isPool}
-						submitExtrinsic={submitExtrinsic}
-						valid={valid}
-					/>
-				) : undefined
-			}
-		/>
+		<MenuControlsWrapper>
+			<MenuControls
+				allowRevert={Boolean(method)}
+				disabled={!canSubmit || eligibilityLoading}
+				optimalSelectionOnly={optimalSelectionOnly}
+				setters={setters}
+				action={
+					method ? (
+						<MenuAction
+							isPool={isPool}
+							submitExtrinsic={submitExtrinsic}
+							valid={valid}
+						/>
+					) : undefined
+				}
+			/>
+		</MenuControlsWrapper>
 	)
 
 	const nominationsList = (

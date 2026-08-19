@@ -8,7 +8,6 @@ import { ButtonMenu } from 'ui-buttons'
 import { ConfirmAction } from '../ConfirmAction'
 import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
-import { MenuWrapper } from './Wrappers'
 
 export const MenuControls = ({
 	setters,
@@ -30,61 +29,57 @@ export const MenuControls = ({
 	} = useManageNominations()
 
 	return (
-		<MenuWrapper $compact={optimalSelectionOnly}>
-			<div className="menuControlsInner">
-				{!method && (
+		<div className="menuControlsInner">
+			{!method && (
+				<ButtonMenu
+					asLabel
+					disabled
+					text={t('chooseNominationMethod', { ns: 'app' })}
+				/>
+			)}
+			{method && (
+				<ConfirmAction
+					align="start"
+					controlKey="regenerate_nominations"
+					disabled={disabled}
+					onConfirm={() => {
+						setMethod('Optimal Selection')
+						setNominations([])
+						setFetching(true)
+					}}
+					text={t('regenerateNominationSelection', { ns: 'modals' })}
+				>
 					<ButtonMenu
 						asLabel
-						disabled
-						text={t('chooseNominationMethod', { ns: 'app' })}
-					/>
-				)}
-				{method && (
-					<ConfirmAction
-						align="start"
-						controlKey="regenerate_nominations"
+						className={disabled ? 'generateDisabled' : undefined}
 						disabled={disabled}
-						onConfirm={() => {
-							setMethod('Optimal Selection')
-							setNominations([])
-							setFetching(true)
-						}}
-						text={t('regenerateNominationSelection', { ns: 'modals' })}
-					>
-						<ButtonMenu
-							asLabel
-							className={disabled ? 'generateDisabled' : undefined}
-							disabled={disabled}
-							iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
-							text={
-								optimalSelectionOnly
-									? t('generate', { ns: 'app' })
-									: t('reGenerate', { ns: 'app' })
+						iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
+						text={
+							optimalSelectionOnly
+								? t('generate', { ns: 'app' })
+								: t('reGenerate', { ns: 'app' })
+						}
+					/>
+				</ConfirmAction>
+			)}
+			{(allowRevert || action) && (
+				<div className="actions">
+					{allowRevert && (
+						<Revert
+							disabled={
+								JSON.stringify(nominations) ===
+								JSON.stringify(defaultNominations)
 							}
+							onClick={() => {
+								setMethod(optimalSelectionOnly ? 'Optimal Selection' : 'manual')
+								updateSetters(setters, defaultNominations)
+								setNominations(defaultNominations)
+							}}
 						/>
-					</ConfirmAction>
-				)}
-				{(allowRevert || action) && (
-					<div className="actions">
-						{allowRevert && (
-							<Revert
-								disabled={
-									JSON.stringify(nominations) ===
-									JSON.stringify(defaultNominations)
-								}
-								onClick={() => {
-									setMethod(
-										optimalSelectionOnly ? 'Optimal Selection' : 'manual',
-									)
-									updateSetters(setters, defaultNominations)
-									setNominations(defaultNominations)
-								}}
-							/>
-						)}
-						{action}
-					</div>
-				)}
-			</div>
-		</MenuWrapper>
+					)}
+					{action}
+				</div>
+			)}
+		</div>
 	)
 }
