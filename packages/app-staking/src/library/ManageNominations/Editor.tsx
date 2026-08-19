@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useActiveAccount } from '@polkadot-cloud/connect'
+import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { MaxNominations } from 'consts'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useActiveProxy } from 'hooks/useActiveProxy'
@@ -57,6 +57,7 @@ export const Editor = ({
 	const { serviceApi } = useApi()
 	const { activeProxy } = useActiveProxy()
 	const { activeAccount } = useActiveAccount()
+	const { accountHasSigner } = useImportedAccounts()
 	const {
 		active: healthCheckActive,
 		hasDangerWarnings,
@@ -86,10 +87,12 @@ export const Editor = ({
 	// Whether nomination health permits the current selection to be submitted.
 	const healthCheckPassed =
 		!healthCheckActive || (!healthCheckLoading && !hasDangerWarnings)
+	const hasSigner =
+		accountHasSigner(activeAccount) || accountHasSigner(activeProxy)
 
 	// The final submission guard shared by the transaction and submit control.
 	const submissionValid =
-		canSubmit && hasSubmittableChanges && healthCheckPassed
+		canSubmit && hasSigner && hasSubmittableChanges && healthCheckPassed
 
 	// Build the appropriate nomination transaction once submission is valid.
 	const tx = submissionValid
