@@ -44,6 +44,19 @@ export const NominationsLoader = styled(Loader)<{ $standalone?: boolean }>`
   `}
 `
 
+export const AccountPrompt = styled.section`
+  align-items: flex-start;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.25rem;
+  margin-top: 1.4rem;
+  padding: 0.25rem;
+
+  h3 {
+    margin: 0;
+  }
+`
+
 export const NominationHealthWrapper = styled.section<{
 	$standalone?: boolean
 }>`

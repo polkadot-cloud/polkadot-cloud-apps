@@ -44,6 +44,11 @@ export const MenuWrapper = styled.div<{ $compact?: boolean }>`
       margin-right: 2.25rem;
     }
 
+    .generateDisabled {
+      background: transparent;
+      opacity: var(--opacity-disabled);
+    }
+
     > .actions {
       align-items: center;
       display: flex;

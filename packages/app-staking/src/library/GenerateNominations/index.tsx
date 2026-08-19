@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import type { AnyFunction, Validator } from 'types'
 import { CardWrapper } from 'ui-app/Card'
 import { usePrompt } from 'ui-overlay'
+import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
 import { NominationHealth } from './NominationHealth'
@@ -360,7 +361,7 @@ export const GenerateNominations = ({
 				>
 					<CardWrapper className="transparent">
 						{menuControls}
-						{isReady && method !== null && (
+						{activeAddress && isReady && method !== null && (
 							<ListControls
 								selectHandlers={selectHandlers}
 								filterHandlers={Object.values(filterHandlers)}
@@ -369,29 +370,33 @@ export const GenerateNominations = ({
 							/>
 						)}
 					</CardWrapper>
-					<CardWrapper>
-						{isReady && method !== null && (
-							<div ref={heightRef}>
-								{fetching ? (
-									loading
-								) : (
-									<ValidatorListInner
-										validators={nominations}
-										allowListFormat={false}
-										displayFor={displayFor}
-										highlightRetainmentWarnings={healthCheckActive}
-										selectable
-										forceListFormat={
-											!retainmentStatsEnabled ? 'col' : undefined
-										}
-										BeforeListNode={nominationHealth}
-										onRemove={selectHandlers.removeSelected.popover.callback}
-										validatorDetails={validatorDetails}
-									/>
-								)}
-							</div>
-						)}
-					</CardWrapper>
+					{!activeAddress ? (
+						<Connect />
+					) : (
+						<CardWrapper>
+							{isReady && method !== null && (
+								<div ref={heightRef}>
+									{fetching ? (
+										loading
+									) : (
+										<ValidatorListInner
+											validators={nominations}
+											allowListFormat={false}
+											displayFor={displayFor}
+											highlightRetainmentWarnings={healthCheckActive}
+											selectable
+											forceListFormat={
+												!retainmentStatsEnabled ? 'col' : undefined
+											}
+											BeforeListNode={nominationHealth}
+											onRemove={selectHandlers.removeSelected.popover.callback}
+											validatorDetails={validatorDetails}
+										/>
+									)}
+								</div>
+							)}
+						</CardWrapper>
+					)}
 				</ListProvider>
 			</StandaloneCards>
 		)
