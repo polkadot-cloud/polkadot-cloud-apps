@@ -1,6 +1,6 @@
 {
-	"name": "Polkadot Cloud Nominate",
-	"short_name": "Nominate",
+	"name": "Polkadot Cloud Nomination Manager",
+	"short_name": "Nomination Manager",
 	"icons": [
 		{
 			"src": "/favicons/web-app-manifest-192x192.png",

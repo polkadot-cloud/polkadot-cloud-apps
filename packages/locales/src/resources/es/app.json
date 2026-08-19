@@ -262,6 +262,7 @@
 		"nominationHealthCheck": "Comprobación de Salud de Nominaciones",
 		"nominationHealthCheckDisableWarning": "No se recomienda desactivar la comprobación de salud. Los validadores potencialmente perjudiciales o de baja calidad dejarán de identificarse o filtrarse de tus nominaciones.",
 		"nominationHealthCheckNeedsAttention": "Algunas de tus nominaciones requieren atención.",
+		"nominationManager": "Gestor de nominaciones",
 		"nominationSummary": "Resumen de Nominación",
 		"nominationsAdded": "Añadidas",
 		"nominationsRemoved": "Eliminadas",

@@ -265,6 +265,7 @@
 		"nominationHealthCheck": "Проверка состояния номинаций",
 		"nominationHealthCheckDisableWarning": "Отключать проверку состояния не рекомендуется. Потенциально вредоносные или низкокачественные валидаторы больше не будут отмечаться или исключаться из ваших номинаций.",
 		"nominationHealthCheckNeedsAttention": "Некоторые номинации требуют внимания.",
+		"nominationManager": "Менеджер номинаций",
 		"nominationSummary": "Сводка номинаций",
 		"nominationsAdded": "Добавлено",
 		"nominationsRemoved": "Удалено",

@@ -262,6 +262,7 @@
 		"nominationHealthCheck": "Bilan de Santé des Nominations",
 		"nominationHealthCheckDisableWarning": "Il est déconseillé de désactiver le bilan de santé. Les validateurs potentiellement malveillants ou de faible qualité ne seront plus signalés ni filtrés de vos nominations.",
 		"nominationHealthCheckNeedsAttention": "Certaines de vos nominations nécessitent votre attention.",
+		"nominationManager": "Gestionnaire de nominations",
 		"nominationSummary": "Résumé de nomination",
 		"nominationsAdded": "Ajoutées",
 		"nominationsRemoved": "Supprimées",

@@ -262,6 +262,7 @@
 		"nominationHealthCheck": "Nominierungs-Gesundheitscheck",
 		"nominationHealthCheckDisableWarning": "Das Deaktivieren der Zustandsprüfung wird nicht empfohlen. Potenziell schädliche oder minderwertige Validatoren werden dann in deinen Nominierungen nicht mehr gekennzeichnet oder herausgefiltert.",
 		"nominationHealthCheckNeedsAttention": "Einige deiner Nominierungen erfordern Aufmerksamkeit.",
+		"nominationManager": "Nominationsmanager",
 		"nominationSummary": "Nominierungsübersicht",
 		"nominationsAdded": "Hinzugefügt",
 		"nominationsRemoved": "Entfernt",

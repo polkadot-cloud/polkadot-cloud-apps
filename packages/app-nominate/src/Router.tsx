@@ -31,9 +31,9 @@ import { Prompt } from 'ui-overlay'
 import { Headers } from './Headers'
 import { Overlays } from './Overlays'
 
-const NominatePage: PageItem = {
+const NominationManagerPage: PageItem = {
 	category: 0,
-	key: 'nominate',
+	key: 'nominationManager',
 	uri: import.meta.env.BASE_URL,
 	hash: '/',
 	Entry: NominateStandalone,
@@ -77,7 +77,7 @@ const RouterInner = () => {
 										index
 										element={
 											<PageWithTitle
-												page={NominatePage}
+												page={NominationManagerPage}
 												appTitle={NominateDappName}
 											/>
 										}

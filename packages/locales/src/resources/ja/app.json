@@ -262,6 +262,7 @@
 		"nominationHealthCheck": "推薦ヘルスチェック",
 		"nominationHealthCheckDisableWarning": "ヘルスチェックを無効にすることは推奨されません。悪意がある可能性のあるバリデーターや品質の低いバリデーターが、推薦から警告または除外されなくなります。",
 		"nominationHealthCheckNeedsAttention": "一部の推薦には対応が必要です。",
+		"nominationManager": "ノミネーションマネージャー",
 		"nominationSummary": "ノミネーション概要",
 		"nominationsAdded": "追加済み",
 		"nominationsRemoved": "削除済み",

@@ -11,7 +11,7 @@ export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
 export const ValidatorsDappName = 'Polkadot Cloud Validators'
 
 // Nominate
-export const NominateDappName = 'Polkadot Cloud Nominate'
+export const NominateDappName = 'Polkadot Cloud Nomination Manager'
 
 // Swap
 export const SwapDappName = 'Polkadot Cloud Swap'

@@ -262,6 +262,7 @@
 		"nominationHealthCheck": "Adaylık Sağlık Kontrolü",
 		"nominationHealthCheckDisableWarning": "Sağlık kontrolünün kapatılması önerilmez. Potansiyel olarak zararlı veya düşük kaliteli doğrulayıcılar artık adaylıklarınızda işaretlenmeyecek veya filtrelenmeyecektir.",
 		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor.",
+		"nominationManager": "Adaylık Yöneticisi",
 		"nominationSummary": "Nominasyon Özeti",
 		"nominationsAdded": "Eklendi",
 		"nominationsRemoved": "Kaldırıldı",
