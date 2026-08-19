@@ -36,7 +36,11 @@ import type {
 	GenerateNominationsProps,
 	SelectHandler,
 } from './types'
-import { NominationsLoader, StandaloneCards, Wrapper } from './Wrapper'
+import {
+	NominationEditorWrapper,
+	NominationsLoader,
+	StandaloneCards,
+} from './Wrapper'
 
 export const GenerateNominations = ({
 	setters = [],
@@ -352,14 +356,7 @@ export const GenerateNominations = ({
 			aria-live="polite"
 			role="status"
 		>
-			<NominationsLoader
-				$standalone={standaloneCards}
-				style={{
-					height: '5.5rem',
-					margin: '0.9rem',
-					width: 'calc(100% - 1.8rem)',
-				}}
-			/>
+			<NominationsLoader $standalone={standaloneCards} />
 		</div>
 	)
 	const listControls = (
@@ -423,7 +420,7 @@ export const GenerateNominations = ({
 					)}
 				</StandaloneCards>
 			) : (
-				<Wrapper
+				<NominationEditorWrapper
 					style={{
 						height: height ? `${height}px` : 'auto',
 						marginTop: method ? '1rem' : 0,
@@ -450,7 +447,7 @@ export const GenerateNominations = ({
 						)}
 					</div>
 					{nominationsList}
-				</Wrapper>
+				</NominationEditorWrapper>
 			)}
 		</ListProvider>
 	)
