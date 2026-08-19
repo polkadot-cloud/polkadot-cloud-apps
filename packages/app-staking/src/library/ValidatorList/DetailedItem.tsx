@@ -12,7 +12,7 @@ import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import type { Validator } from 'types'
 import { ListItem } from 'ui-app/ListItem'
-import { getRateAfterCommission, getRetainmentStatus } from 'utils'
+import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Identity } from '../ListItem/Labels/Identity'
@@ -45,22 +45,12 @@ export const DetailedItem = ({
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const retainmentStats = useRetainmentStatsData({
+		highlightWarnings: highlightRetainmentWarnings,
 		period: retainment?.months[0],
 		selfStakeMax,
 		unit,
 		units,
 	})
-	const retainmentRate = retainment?.months[0]?.retainmentRate
-	const retainmentStatus =
-		highlightRetainmentWarnings &&
-		typeof retainmentRate === 'number' &&
-		Number.isFinite(retainmentRate)
-			? getRetainmentStatus(retainmentRate)
-			: undefined
-	const statusAccent =
-		retainmentStatus === 'warning' || retainmentStatus === 'danger'
-			? retainmentStatus
-			: undefined
 
 	if (isPreloading) {
 		return <DetailedItemPreloader format={format} />
@@ -131,7 +121,7 @@ export const DetailedItem = ({
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				selected={isSelected}
-				statusAccent={statusAccent}
+				statusAccent={retainmentStats.statusAccent}
 				unit={unit}
 				validator={validator}
 			/>
@@ -149,7 +139,7 @@ export const DetailedItem = ({
 			identity={<Identity address={address} />}
 			retainmentStats={retainmentStats}
 			selected={isSelected}
-			statusAccent={statusAccent}
+			statusAccent={retainmentStats.statusAccent}
 			summary={
 				<ValidatorSummary
 					address={address}
