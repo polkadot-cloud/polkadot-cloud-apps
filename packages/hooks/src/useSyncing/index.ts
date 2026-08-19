@@ -8,8 +8,7 @@ import type { MaybeAddress, SyncConfig, SyncId } from 'types'
 import { useBalances } from '../useBalances'
 
 export const useSyncing = (config: SyncConfig = '*') => {
-	const { getAccountBalance, getPoolMembership, getStakingLedger } =
-		useBalances()
+	const { getAccountBalance, getPoolMembership } = useBalances()
 
 	// Retrieve the ids from the config provided
 	const ids = getIdsFromSyncConfig(config)
@@ -42,15 +41,14 @@ export const useSyncing = (config: SyncConfig = '*') => {
 		if (!address) {
 			return !syncIds.includes('initialization')
 		}
+		// Only use data subscribed for every account here. Unbonded accounts never receive a staking
+		// ledger, so it cannot be used as an account-ready signal.
 		const { synced: poolMembershipSynced } = getPoolMembership(address)
 		const { synced: accountBalanceSynced } = getAccountBalance(address)
-		const stakingLedgerSynced =
-			getStakingLedger(address).nominators !== undefined
 
 		return (
 			poolMembershipSynced &&
 			accountBalanceSynced &&
-			stakingLedgerSynced &&
 			!syncIds.includes('initialization')
 		)
 	}
