@@ -16,6 +16,7 @@ interface NominationHealthProps {
 	allValidatorsWaiting: boolean
 	isLoading: boolean
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
+	standalone?: boolean
 	validators: Validator[]
 }
 
@@ -23,6 +24,7 @@ export const NominationHealth = ({
 	allValidatorsWaiting,
 	isLoading,
 	retainmentByAddress,
+	standalone = false,
 	validators,
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
@@ -91,7 +93,7 @@ export const NominationHealth = ({
 		averageRetainment === null ? null : getRetainmentStatus(averageRetainment)
 
 	return (
-		<NominationHealthWrapper>
+		<NominationHealthWrapper $standalone={standalone}>
 			{(hasRetainmentWarnings || allValidatorsWaiting) && (
 				<div role="status">
 					<Separator

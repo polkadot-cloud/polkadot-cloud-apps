@@ -5,6 +5,7 @@
 	"license": "GPL-3.0-only",
 	"scripts": {
 		"clear": "pnpm -r --if-present clear && rm -rf build dist tsconfig.tsbuildinfo node_modules",
+		"dev:nominate": "cd packages/app-nominate && pnpm dev",
 		"dev:staking": "cd packages/app-staking && pnpm dev",
 		"dev:swap": "cd packages/app-swap && pnpm dev",
 		"dev:validators": "cd packages/app-validators && pnpm dev",

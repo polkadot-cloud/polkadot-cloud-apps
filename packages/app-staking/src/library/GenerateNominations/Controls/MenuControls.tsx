@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
@@ -13,6 +14,7 @@ export const MenuControls = ({
 	setters,
 	allowRevert,
 	action,
+	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
 
@@ -27,8 +29,8 @@ export const MenuControls = ({
 	} = useManageNominations()
 
 	return (
-		<MenuWrapper>
-			<div className="inner">
+		<MenuWrapper $compact={optimalSelectionOnly}>
+			<div className="menuControlsInner">
 				{!method && (
 					<ButtonMenu
 						asLabel
@@ -47,7 +49,15 @@ export const MenuControls = ({
 						}}
 						text={t('regenerateNominationSelection', { ns: 'modals' })}
 					>
-						<ButtonMenu asLabel text={t('reGenerate', { ns: 'app' })} />
+						<ButtonMenu
+							asLabel
+							iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
+							text={
+								optimalSelectionOnly
+									? 'Generate'
+									: t('reGenerate', { ns: 'app' })
+							}
+						/>
 					</ConfirmAction>
 				)}
 				{(allowRevert || action) && (
@@ -59,7 +69,9 @@ export const MenuControls = ({
 									JSON.stringify(defaultNominations)
 								}
 								onClick={() => {
-									setMethod('manual')
+									setMethod(
+										optimalSelectionOnly ? 'Optimal Selection' : 'manual',
+									)
 									updateSetters(setters, defaultNominations)
 									setNominations(defaultNominations)
 								}}

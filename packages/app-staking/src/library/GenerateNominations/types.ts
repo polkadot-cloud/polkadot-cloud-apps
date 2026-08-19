@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import type { ReactNode } from 'react'
 import type {
 	AnyFunction,
 	AnyJson,
@@ -13,6 +14,8 @@ import type {
 export interface GenerateNominationsProps {
 	setters: AnyFunction[]
 	displayFor?: DisplayFor
+	menuControls?: ReactNode
+	standaloneCards?: boolean
 }
 
 export type NominationSelectionWithResetCounter = NominationSelection & {

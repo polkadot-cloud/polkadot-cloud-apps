@@ -14,9 +14,13 @@ export const [ManageNominationsContext, useManageNominations] =
 export const ManageNominationsProvider = ({
 	children,
 	nominations: initialNominations,
+	initialMethod,
+	provideNominationHealth = true,
 }: {
 	children: ReactNode
 	nominations: Validator[]
+	initialMethod?: string | null
+	provideNominationHealth?: boolean
 }) => {
 	// The initially provided set of nominees
 	const [defaultNominations] = useState<Validator[]>(initialNominations)
@@ -29,7 +33,11 @@ export const ManageNominationsProvider = ({
 
 	// Store the method of fetching nominees
 	const [method, setMethod] = useState<string | null>(
-		defaultNominationsCount ? 'Manual' : null,
+		initialMethod === undefined
+			? defaultNominationsCount
+				? 'Manual'
+				: null
+			: initialMethod,
 	)
 	// Store whether validators are being fetched
 	const [fetching, setFetching] = useState(false)
@@ -62,26 +70,30 @@ export const ManageNominationsProvider = ({
 		setFetching(true)
 	}
 
-	return (
-		<NominationHealthProvider>
-			<ManageNominationsContext.Provider
-				value={{
-					method,
-					setMethod,
-					fetching,
-					setFetching,
-					height,
-					setHeight,
-					defaultNominations,
-					nominations,
-					setNominations,
-					heightRef,
-					updateSetters,
-					revertNominations,
-				}}
-			>
-				{children}
-			</ManageNominationsContext.Provider>
-		</NominationHealthProvider>
+	const content = (
+		<ManageNominationsContext.Provider
+			value={{
+				method,
+				setMethod,
+				fetching,
+				setFetching,
+				height,
+				setHeight,
+				defaultNominations,
+				nominations,
+				setNominations,
+				heightRef,
+				updateSetters,
+				revertNominations,
+			}}
+		>
+			{children}
+		</ManageNominationsContext.Provider>
+	)
+
+	return provideNominationHealth ? (
+		<NominationHealthProvider>{content}</NominationHealthProvider>
+	) : (
+		content
 	)
 }

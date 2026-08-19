@@ -17,6 +17,7 @@ export type TxFeeEstimator = (input: TxFeeEstimatorInput) => Promise<bigint>
 export interface UseSubmitExtrinsicProps {
 	tx: SubmittableExtrinsic | undefined
 	tag?: string
+	dappName?: string
 	from: {
 		address: MaybeString
 		source: MaybeString

@@ -3,15 +3,16 @@
 
 import { useList } from 'contexts/List'
 import { useTheme } from 'hooks/useTheme'
-import { SelectableWrapper } from 'library/List'
 import { useState } from 'react'
 import { ButtonMonoInvert, ButtonPrimaryInvert } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import type { ListControlsProps } from './types'
+import { InlineControlsWrapper } from './Wrappers'
 
 export const ListControls = ({
 	selectHandlers,
 	filterHandlers,
+	standalone = false,
 }: ListControlsProps) => {
 	const provider = useList()
 	const { themeElementRef } = useTheme()
@@ -23,7 +24,7 @@ export const ListControls = ({
 	const [opens, setOpens] = useState<Record<string, boolean>>({})
 
 	return (
-		<SelectableWrapper>
+		<InlineControlsWrapper $standalone={standalone}>
 			{selected.length > 0 &&
 				Object.entries(selectHandlers).map(([k, a]) => {
 					const open = opens[k] || false
@@ -63,6 +64,6 @@ export const ListControls = ({
 					marginRight
 				/>
 			))}
-		</SelectableWrapper>
+		</InlineControlsWrapper>
 	)
 }

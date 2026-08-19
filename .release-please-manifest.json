@@ -1,5 +1,6 @@
 {
 	"packages/app-swap": "0.2.0",
+	"packages/app-nominate": "0.1.0",
 	"packages/app-staking": "2.4.0",
 	"packages/app-validators": "0.1.0",
 	"packages/assets": "1.6.0",

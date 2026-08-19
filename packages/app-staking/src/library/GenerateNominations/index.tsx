@@ -5,6 +5,7 @@ import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { MaxNominations } from 'consts'
 import { useEraStakers } from 'contexts/EraStakers'
+import { ListProvider } from 'contexts/List'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
@@ -14,14 +15,14 @@ import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
-import { ValidatorList } from 'library/ValidatorList'
+import { ValidatorList, ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, Validator } from 'types'
-import { Loader } from 'ui-core/base'
+import { CardWrapper } from 'ui-app/Card'
 import { usePrompt } from 'ui-overlay'
 import { ListControls } from './Controls/ListControls'
 import { Methods } from './Methods'
@@ -34,11 +35,13 @@ import type {
 	GenerateNominationsProps,
 	SelectHandler,
 } from './types'
-import { Wrapper } from './Wrapper'
+import { NominationsLoader, StandaloneCards, Wrapper } from './Wrapper'
 
 export const GenerateNominations = ({
 	setters = [],
 	displayFor = 'default',
+	menuControls,
+	standaloneCards = false,
 }: GenerateNominationsProps) => {
 	const { t } = useTranslation()
 	const {
@@ -321,6 +324,79 @@ export const GenerateNominations = ({
 		}
 	}, [])
 
+	const nominationHealth = healthCheckActive ? (
+		<NominationHealth
+			allValidatorsWaiting={allValidatorsWaiting}
+			isLoading={validatorDetails.isLoading}
+			retainmentByAddress={validatorDetails.retainmentByAddress}
+			standalone={standaloneCards}
+			validators={nominations}
+		/>
+	) : null
+
+	const loading = (
+		<div
+			aria-label={t('fetchingValidators', { ns: 'pages' })}
+			aria-live="polite"
+			role="status"
+		>
+			<NominationsLoader
+				$standalone={standaloneCards}
+				style={{
+					height: '5.5rem',
+					margin: '0.9rem',
+					width: 'calc(100% - 1.8rem)',
+				}}
+			/>
+		</div>
+	)
+
+	if (standaloneCards) {
+		return (
+			<StandaloneCards>
+				<ListProvider
+					selectable
+					initialListFormat={!retainmentStatsEnabled ? 'col' : 'row'}
+				>
+					<CardWrapper className="transparent">
+						{menuControls}
+						{isReady && method !== null && (
+							<ListControls
+								selectHandlers={selectHandlers}
+								filterHandlers={Object.values(filterHandlers)}
+								displayFor={displayFor}
+								standalone
+							/>
+						)}
+					</CardWrapper>
+					<CardWrapper>
+						{isReady && method !== null && (
+							<div ref={heightRef}>
+								{fetching ? (
+									loading
+								) : (
+									<ValidatorListInner
+										validators={nominations}
+										allowListFormat={false}
+										displayFor={displayFor}
+										highlightRetainmentWarnings={healthCheckActive}
+										selectable
+										forceListFormat={
+											!retainmentStatsEnabled ? 'col' : undefined
+										}
+										BeforeListNode={nominationHealth}
+										onRemove={selectHandlers.removeSelected.popover.callback}
+										validatorDetails={validatorDetails}
+									/>
+								)}
+							</div>
+						)}
+					</CardWrapper>
+				</ListProvider>
+			</StandaloneCards>
+		)
+	}
+
 	return (
 		<Wrapper
 			style={{
@@ -351,19 +427,7 @@ export const GenerateNominations = ({
 			{isReady && method !== null && (
 				<div ref={heightRef}>
 					{fetching ? (
-						<div
-							aria-label={t('fetchingValidators', { ns: 'pages' })}
-							aria-live="polite"
-							role="status"
-						>
-							<Loader
-								style={{
-									height: '5.5rem',
-									margin: '0.9rem',
-									width: 'calc(100% - 1.8rem)',
-								}}
-							/>
-						</div>
+						loading
 					) : (
 						<ValidatorList
 							validators={nominations}
@@ -379,14 +443,7 @@ export const GenerateNominations = ({
 										filterHandlers={Object.values(filterHandlers)}
 										displayFor={displayFor}
 									/>
-									{healthCheckActive && (
-										<NominationHealth
-											allValidatorsWaiting={allValidatorsWaiting}
-											isLoading={validatorDetails.isLoading}
-											retainmentByAddress={validatorDetails.retainmentByAddress}
-											validators={nominations}
-										/>
-									)}
+									{nominationHealth}
 								</>
 							}
 							onRemove={selectHandlers?.removeSelected?.popover.callback}
