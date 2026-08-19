@@ -32,6 +32,7 @@ export const NominateStandalone = () => {
 	const bondFor = isPool ? 'pool' : 'nominator'
 	const poolId = isPool ? activePool?.id : undefined
 	const poolName = isPool ? activePool?.metadata : undefined
+	const activelyNominating = !isPool && isNominator
 	const canManageNominations = Boolean(activeAddress) && (isPool || isBonding)
 	const eligibilityLoading = Boolean(
 		activeAddress &&
@@ -43,7 +44,7 @@ export const NominateStandalone = () => {
 					poolId,
 					poolName,
 				})
-			: isNominator
+			: activelyNominating
 				? t('activelyNominating')
 				: null
 
@@ -51,7 +52,9 @@ export const NominateStandalone = () => {
 		<>
 			<Page.Title title={t('nominate')}>
 				{!eligibilityLoading && accountStatus && (
-					<StandaloneStatus>{accountStatus}</StandaloneStatus>
+					<StandaloneStatus $active={activelyNominating}>
+						{accountStatus}
+					</StandaloneStatus>
 				)}
 			</Page.Title>
 			<Page.Row>

@@ -22,6 +22,7 @@ import {
 	NominationEditorWrapper,
 	NominationsLoader,
 	StandaloneCards,
+	StandalonePreloader,
 } from './Wrapper'
 
 export const NominationsView = ({
@@ -36,7 +37,7 @@ export const NominationsView = ({
 	// Resolve shared application state before deriving view conditions.
 	const { t } = useTranslation()
 	const { activeAddress } = useActiveAccount()
-	const { isReadOnlyAccount } = useImportedAccounts()
+	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 	const { isReady } = useApi()
 	const { active: healthCheckActive, retainmentStatsEnabled } =
 		useNominationHealth()
@@ -77,6 +78,15 @@ export const NominationsView = ({
 			role="status"
 		>
 			<NominationsLoader $standalone={standaloneCards} />
+		</div>
+	)
+	const standaloneLoading = (
+		<div
+			aria-label={t('initializing', { ns: 'app' })}
+			aria-live="polite"
+			role="status"
+		>
+			<StandalonePreloader $standalone />
 		</div>
 	)
 
@@ -132,10 +142,12 @@ export const NominationsView = ({
 	)
 
 	// Resolve the standalone card state in account, loading, and eligibility order.
-	const standaloneList = !activeAddress ? (
-		<Connect />
+	const standaloneList = !accountsInitialised ? (
+		standaloneLoading
 	) : eligibilityLoading ? (
-		<CardWrapper>{loading}</CardWrapper>
+		standaloneLoading
+	) : !activeAddress ? (
+		<Connect />
 	) : !canManageNominations ? (
 		<Connect status="notStaking" />
 	) : (

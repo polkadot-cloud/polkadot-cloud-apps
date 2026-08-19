@@ -30,12 +30,26 @@ export const Subheading = styled.div`
   }
 `
 
-export const StandaloneStatus = styled.div`
+export const StandaloneStatus = styled.div<{ $active?: boolean }>`
+  align-items: center;
   align-self: flex-start;
   color: var(--text-tertiary);
+  display: flex;
   font-family: var(--font-family-semibold);
   font-size: 1.25rem;
+  gap: 0.55rem;
   line-height: 1.35;
   margin-bottom: 0.5rem;
   margin-top: 0.8rem;
+
+  ${({ $active }) =>
+		$active &&
+		`&::before {
+      background: var(--status-success);
+      border-radius: 50%;
+      content: '';
+      flex: 0 0 0.5rem;
+      height: 0.5rem;
+      width: 0.5rem;
+    }`}
 `

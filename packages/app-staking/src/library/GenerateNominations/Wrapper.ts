@@ -49,6 +49,20 @@ export const NominationsLoader = styled(Loader)<StandaloneStyleProps>`
   `}
 `
 
+export const StandalonePreloader = styled(NominationsLoader)`
+  margin-top: 1.4rem;
+
+  .light & {
+    --shimmer-fg: var(--gray-500);
+    --shimmer-bg: var(--gray-600);
+  }
+
+  .dark & {
+    --shimmer-fg: var(--gray-200);
+    --shimmer-bg: var(--gray-400);
+  }
+`
+
 export const NominationHealthWrapper = styled.section<StandaloneStyleProps>`
   display: grid;
   gap: 1rem;
