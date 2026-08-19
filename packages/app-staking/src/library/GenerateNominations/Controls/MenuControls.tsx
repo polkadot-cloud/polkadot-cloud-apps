@@ -61,7 +61,7 @@ export const MenuControls = ({
 							iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
 							text={
 								optimalSelectionOnly
-									? 'Generate'
+									? t('generate', { ns: 'app' })
 									: t('reGenerate', { ns: 'app' })
 							}
 						/>

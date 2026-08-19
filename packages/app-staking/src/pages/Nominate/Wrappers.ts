@@ -37,5 +37,5 @@ export const StandaloneStatus = styled.div`
   font-size: 1.25rem;
   line-height: 1.35;
   margin-bottom: 0.5rem;
-  margin-top: 0.7rem;
+  margin-top: 0.8rem;
 `

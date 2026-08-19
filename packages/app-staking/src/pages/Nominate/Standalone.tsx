@@ -13,6 +13,7 @@ import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { Editor } from 'library/ManageNominations/Editor'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
 import { StandaloneStatus } from './Wrappers'
 
@@ -64,9 +65,11 @@ const Inner = ({
 	eligibilityLoading: boolean
 	poolId?: number
 }) => {
+	const { t } = useTranslation('app')
+
 	return (
 		<>
-			<Page.Title title="Nominate">
+			<Page.Title title={t('nominate')}>
 				{!eligibilityLoading && accountStatus && (
 					<StandaloneStatus>{accountStatus}</StandaloneStatus>
 				)}
@@ -88,6 +91,7 @@ const Inner = ({
 }
 
 export const NominateStandalone = () => {
+	const { t } = useTranslation('app')
 	const { activeAddress } = useActiveAccount()
 	const { getNominations } = useBalances()
 	const { isBonding } = useStaking()
@@ -109,11 +113,15 @@ export const NominateStandalone = () => {
 		activeAddress &&
 			(!accountSynced(activeAddress) || !activePoolSynced(activeAddress)),
 	)
-	const accountStatus = isPool
-		? `Pool Owner · Pool ID ${poolId}${poolName ? ` · ${poolName}` : ''}`
-		: isBonding
-			? 'Actively Nominating'
-			: null
+	const accountStatus =
+		isPool && poolId !== undefined
+			? t(poolName ? 'poolOwnerStatusWithName' : 'poolOwnerStatus', {
+					poolId,
+					poolName,
+				})
+			: isBonding
+				? t('activelyNominating')
+				: null
 
 	return (
 		<ManageNominationsProvider

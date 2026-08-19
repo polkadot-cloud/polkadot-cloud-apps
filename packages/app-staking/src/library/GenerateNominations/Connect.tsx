@@ -22,7 +22,7 @@ export const Connect = ({
 }: {
 	status?: 'disconnected' | 'notStaking'
 }) => {
-	const { t } = useTranslation()
+	const { t } = useTranslation('app')
 	const { openModal } = useOverlay().modal
 	const notStaking = status === 'notStaking'
 
@@ -33,16 +33,9 @@ export const Connect = ({
 					<FontAwesomeIcon icon={notStaking ? faCoins : faUserLargeSlash} />
 				</AccountPromptGraphic>
 				<h3>
-					{notStaking
-						? 'Not Nominating or a Pool Owner'
-						: t('noAccountSelected', { ns: 'app' })}
+					{notStaking ? t('notNominatingOrPoolOwner') : t('noAccountSelected')}
 				</h3>
-				{notStaking && (
-					<p>
-						Select an account that is nominating or owns a pool to manage
-						nominations.
-					</p>
-				)}
+				{notStaking && <p>{t('selectNominatingOrPoolOwner')}</p>}
 				<AccountPromptAction>
 					<Badge.Container format="button">
 						<Badge.Inner>
@@ -50,7 +43,7 @@ export const Connect = ({
 								type="button"
 								onClick={() => openModal({ key: 'Accounts' })}
 							>
-								{t('selectAccount', { ns: 'app' })}
+								{t('selectAccount')}
 								<FontAwesomeIcon icon={faChevronRight} transform="shrink-4" />
 							</button>
 						</Badge.Inner>
