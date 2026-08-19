@@ -45,7 +45,7 @@ const BaseMenuWrapper = styled.div`
 `
 
 export const MenuWrapper = styled(BaseMenuWrapper)`
-  background: rgb(from var(--gray-300) r g b / 75%);
+  background: rgb(from var(--gray-400) r g b / 75%);
 
   @media (max-width: 1200px) {
     padding: 0 1.5rem;
@@ -57,8 +57,8 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
     padding: 0.4rem 0;
 
     > .actions .revert {
-      background: var(--gray-400);
-      border-color: var(--gray-400);
+      background: var(--gray-500);
+      border-color: var(--gray-500);
     }
   }
 `
