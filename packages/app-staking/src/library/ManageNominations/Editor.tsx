@@ -20,6 +20,7 @@ interface EditorProps {
 	displayFor: DisplayFor
 	canSubmit?: boolean
 	dappName?: string
+	eligibilityLoading?: boolean
 	optimalSelectionOnly?: boolean
 	standaloneCards?: boolean
 	poolId?: number
@@ -32,6 +33,7 @@ export const Editor = ({
 	displayFor,
 	canSubmit = true,
 	dappName,
+	eligibilityLoading = false,
 	optimalSelectionOnly = false,
 	standaloneCards = false,
 	poolId,
@@ -100,6 +102,7 @@ export const Editor = ({
 	const menuControls = (
 		<MenuControls
 			allowRevert={Boolean(method)}
+			disabled={!canSubmit || eligibilityLoading}
 			optimalSelectionOnly={optimalSelectionOnly}
 			setters={setters}
 			action={
@@ -116,7 +119,9 @@ export const Editor = ({
 
 	const nominationsList = (
 		<GenerateNominations
+			canManageNominations={canSubmit}
 			displayFor={displayFor}
+			eligibilityLoading={eligibilityLoading}
 			menuControls={standaloneCards ? menuControls : undefined}
 			setters={setters}
 			standaloneCards={standaloneCards}

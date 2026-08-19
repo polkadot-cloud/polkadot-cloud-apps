@@ -13,7 +13,9 @@ import type {
 
 export interface GenerateNominationsProps {
 	setters: AnyFunction[]
+	canManageNominations?: boolean
 	displayFor?: DisplayFor
+	eligibilityLoading?: boolean
 	menuControls?: ReactNode
 	standaloneCards?: boolean
 }

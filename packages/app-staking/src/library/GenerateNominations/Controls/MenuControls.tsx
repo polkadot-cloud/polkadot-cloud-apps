@@ -15,11 +15,12 @@ export const MenuControls = ({
 	setters,
 	allowRevert,
 	action,
+	disabled = false,
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
 	const { activeAddress } = useActiveAccount()
-	const generateDisabled = optimalSelectionOnly && !activeAddress
+	const generateDisabled = disabled || (optimalSelectionOnly && !activeAddress)
 
 	const {
 		method,

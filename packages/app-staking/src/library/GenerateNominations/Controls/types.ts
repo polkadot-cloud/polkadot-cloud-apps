@@ -20,5 +20,6 @@ export interface MenuControlsProps {
 	setters: AnyFunction[]
 	allowRevert: boolean
 	action?: ReactNode
+	disabled?: boolean
 	optimalSelectionOnly?: boolean
 }

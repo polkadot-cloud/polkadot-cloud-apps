@@ -40,7 +40,9 @@ import { NominationsLoader, StandaloneCards, Wrapper } from './Wrapper'
 
 export const GenerateNominations = ({
 	setters = [],
+	canManageNominations = true,
 	displayFor = 'default',
+	eligibilityLoading = false,
 	menuControls,
 	standaloneCards = false,
 }: GenerateNominationsProps) => {
@@ -126,7 +128,7 @@ export const GenerateNominations = ({
 
 	// Add nominations based on method
 	const addNominationByType = async (type: AddNominationsType) => {
-		if (!method || candidateFetching) {
+		if (!canManageNominations || !method || candidateFetching) {
 			return
 		}
 
@@ -149,6 +151,7 @@ export const GenerateNominations = ({
 		strategy: ValidatorCandidateStrategy,
 	) => {
 		if (
+			!canManageNominations ||
 			!retainmentStatsEnabled ||
 			!method ||
 			candidateFetching ||
@@ -219,7 +222,10 @@ export const GenerateNominations = ({
 				)
 			},
 			onSelected: false,
-			isDisabled: () => !favoritesList?.length || maxNominationsReached,
+			isDisabled: () =>
+				!canManageNominations ||
+				!favoritesList?.length ||
+				maxNominationsReached,
 		}
 	}
 
@@ -229,6 +235,7 @@ export const GenerateNominations = ({
 		onSelected: false,
 		icon: faPlus,
 		isDisabled: () =>
+			!canManageNominations ||
 			maxNominationsReached ||
 			candidateFetching ||
 			(!retainmentStatsEnabled &&
@@ -241,14 +248,16 @@ export const GenerateNominations = ({
 			onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
 			onSelected: false,
 			icon: faPlus,
-			isDisabled: () => candidateFetching || maxNominationsReached,
+			isDisabled: () =>
+				!canManageNominations || candidateFetching || maxNominationsReached,
 		}
 		filterHandlers.highCompounder = {
 			title: t('highCompounder', { ns: 'app' }),
 			onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
 			onSelected: false,
 			icon: faPlus,
-			isDisabled: () => candidateFetching || maxNominationsReached,
+			isDisabled: () =>
+				!canManageNominations || candidateFetching || maxNominationsReached,
 		}
 	} else {
 		filterHandlers.getActive = {
@@ -257,6 +266,7 @@ export const GenerateNominations = ({
 			onSelected: false,
 			icon: faPlus,
 			isDisabled: () =>
+				!canManageNominations ||
 				maxNominationsReached ||
 				!availableToNominate(nominations).activeValidators.length,
 		}
@@ -266,6 +276,7 @@ export const GenerateNominations = ({
 			onSelected: false,
 			icon: faPlus,
 			isDisabled: () =>
+				!canManageNominations ||
 				maxNominationsReached ||
 				!availableToNominate(nominations).randomValidators.length,
 		}
@@ -286,7 +297,7 @@ export const GenerateNominations = ({
 			},
 			icon: faMagnifyingGlass,
 			onSelected: false,
-			isDisabled: () => maxNominationsReached,
+			isDisabled: () => !canManageNominations || maxNominationsReached,
 		}
 	}
 
@@ -353,6 +364,9 @@ export const GenerateNominations = ({
 	)
 
 	if (standaloneCards) {
+		const showNominationUi =
+			Boolean(activeAddress) && canManageNominations && !eligibilityLoading
+
 		return (
 			<StandaloneCards>
 				<ListProvider
@@ -361,7 +375,7 @@ export const GenerateNominations = ({
 				>
 					<CardWrapper className="transparent">
 						{menuControls}
-						{activeAddress && isReady && method !== null && (
+						{showNominationUi && isReady && method !== null && (
 							<ListControls
 								selectHandlers={selectHandlers}
 								filterHandlers={Object.values(filterHandlers)}
@@ -372,6 +386,10 @@ export const GenerateNominations = ({
 					</CardWrapper>
 					{!activeAddress ? (
 						<Connect />
+					) : eligibilityLoading ? (
+						<CardWrapper>{loading}</CardWrapper>
+					) : !canManageNominations ? (
+						<Connect status="notStaking" />
 					) : (
 						<CardWrapper>
 							{isReady && method !== null && (
