@@ -1,6 +1,29 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { AutoRpcKey, rpcEndpointKey } from 'consts'
+import { NetworkList } from 'consts/networks'
+
+const RpcConfigMigrationKey = 'rpcConfigMigrationVersion'
+const RpcConfigMigrationVersion = '1'
+
+/**
+ * Clears persisted RPC choices once so the current defaults can be applied.
+ */
+export const migrateRpcConfig = (): void => {
+	if (
+		localStorage.getItem(RpcConfigMigrationKey) === RpcConfigMigrationVersion
+	) {
+		return
+	}
+
+	localStorage.removeItem(AutoRpcKey)
+	Object.keys(NetworkList).forEach((network) => {
+		localStorage.removeItem(rpcEndpointKey(network))
+	})
+	localStorage.setItem(RpcConfigMigrationKey, RpcConfigMigrationVersion)
+}
+
 /**
  * Migrates legacy localStorage keys to their new pc_-prefixed versions.
  * Handles static keys and dynamic network-based keys.

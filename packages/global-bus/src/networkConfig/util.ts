@@ -87,9 +87,9 @@ export const getInitialProviderType = (): ProviderType => {
 
 export const getInitialAutoRpc = (): boolean => {
 	const result = localStorage.getItem(AutoRpcKey)
-	// Default to true if not set
+	// Default to a specific RPC provider if no preference has been stored
 	if (result === null) {
-		return true
+		return false
 	}
 	return result === 'true'
 }

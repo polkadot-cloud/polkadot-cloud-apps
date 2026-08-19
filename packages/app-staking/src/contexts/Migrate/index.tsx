@@ -6,7 +6,7 @@ import { useApi } from 'hooks/useApi'
 import { useSyncing } from 'hooks/useSyncing'
 import type { ReactNode } from 'react'
 import { createContext, useState } from 'react'
-import { migrateLocalStorageKeys } from 'utils'
+import { migrateLocalStorageKeys, migrateRpcConfig } from 'utils'
 import { version } from '../../../package.json'
 
 export const MigrateContext = createContext<null>(null)
@@ -25,12 +25,11 @@ export const MigrateProvider = ({ children }: { children: ReactNode }) => {
 		if (isReady && !syncing && !done) {
 			// Carry out migrations if local version is different to current version
 			if (localAppVersion !== version) {
+				// Added in 2.4.1
+				migrateRpcConfig()
+
 				// Added in 2.2.2
 				migrateLocalStorageKeys()
-
-				// Added in 2.1.3
-				localStorage.removeItem('polkadotRpcEndpoints')
-				localStorage.removeItem('kusamaRpcEndpoints')
 
 				// Finally
 				//
