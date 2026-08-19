@@ -29,3 +29,13 @@ export const Subheading = styled.div`
     }
   }
 `
+
+export const StandaloneStatus = styled.div`
+  align-self: flex-start;
+  color: var(--text-tertiary);
+  font-family: var(--font-family-semibold);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  margin-top: 0.7rem;
+`

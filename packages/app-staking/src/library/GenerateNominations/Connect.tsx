@@ -3,7 +3,7 @@
 
 import {
 	faChevronRight,
-	faSackXmark,
+	faCoins,
 	faUserLargeSlash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -30,7 +30,7 @@ export const Connect = ({
 		<CardWrapper className="transparent">
 			<AccountPrompt>
 				<AccountPromptGraphic $status={status}>
-					<FontAwesomeIcon icon={notStaking ? faSackXmark : faUserLargeSlash} />
+					<FontAwesomeIcon icon={notStaking ? faCoins : faUserLargeSlash} />
 				</AccountPromptGraphic>
 				<h3>
 					{notStaking
