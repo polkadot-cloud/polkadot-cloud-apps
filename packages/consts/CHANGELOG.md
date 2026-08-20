@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.6.0...consts-v1.7.0) (2026-08-19)
+
+
+### Features
+
+* Add Polkadot Cloud RPC, use in production ([#3747](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3747)) ([8bdeab8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8bdeab85379fba0a8be3ff3d9746a4ce55887f5e))
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* Remove RPC health check ([#3750](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3750)) ([128e3da](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/128e3dacd2738f659ab8e600bb0da216136398e5))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+
+
+### Bug Fixes
+
+* use Polkadot Cloud RPC for statemint ([#3749](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3749)) ([af7cd2e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/af7cd2e74f9a4f391ca9988b2c9bbf712fd8af2c))
+
+
+### Reverts
+
+* Polkadot Cloud RPC production override ([#3748](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3748)) ([b4408c6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b4408c6d964b774f9509264e8eb3650f506b36bb))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/consts-v1.5.0...consts-v1.6.0) (2026-08-09)
 
 

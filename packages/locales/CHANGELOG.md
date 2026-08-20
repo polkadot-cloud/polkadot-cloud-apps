@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.7.0...locales-v1.8.0) (2026-08-19)
+
+
+### Features
+
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+* **ux:** Confirm re-generate optimal selection ([#3762](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3762)) ([593ff3c](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/593ff3ce60295b6989582c6881646c8bb753bb8a))
+* **ux:** Manage nomination submission to head, with summary popover ([#3758](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3758)) ([db5b1c0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db5b1c01fdb4ad867363d6dfb381769b4714e93f))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+* **ux:** Strip UI for warnings, add waiting only warning ([#3761](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3761)) ([7c19c78](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c19c78bda656fa3ceba3a5cf839593f57eee3c4))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.6.0...locales-v1.7.0) (2026-08-09)
 
 
