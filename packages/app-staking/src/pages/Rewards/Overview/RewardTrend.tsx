@@ -67,7 +67,10 @@ export const RewardTrend = () => {
 	if (rewardTrend) {
 		const { reward, change } = rewardTrend
 		value = reward
-		direction = Number(change.percent) > 0 ? 'up' : 'down'
+		// A flat (0%) change is neutral — use Ticker's grey/undefined direction
+		// rather than falsely showing a red downward arrow.
+		const percent = Number(change.percent)
+		direction = percent === 0 ? undefined : percent > 0 ? 'up' : 'down'
 		changePercent = new BigNumber(change.percent).toFormat(2)
 	}
 
