@@ -18,7 +18,7 @@ export interface ValidatorsContextInterface {
 	formatWithPrefs: (addresses: string[]) => Validator[]
 	getValidatorTotalStake: (address: string) => bigint
 	getValidatorRank: (address: string) => number | undefined
-	getValidatorRankSegment: (address: string) => number
+	isValidatorHighPerformance: (address: string) => boolean
 	getValidatorActivityTier: (
 		address: string,
 	) => ValidatorActivityTier | undefined

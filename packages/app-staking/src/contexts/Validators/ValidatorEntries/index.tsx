@@ -294,50 +294,23 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	}
 
 	const getValidatorRank = (validator: string): number | undefined => {
-		if (pluginEnabled('staking_api')) {
-			return activeValidatorRanks.find((r) => r.validator === validator)?.rank
-		} else {
-			const rank = getValidatorRankBus(validator)
-			if (!rank) {
-				return undefined
-			}
-			return rank
-		}
+		return pluginEnabled('staking_api')
+			? activeValidatorRanks.find((r) => r.validator === validator)?.rank
+			: (getValidatorRankBus(validator) ?? undefined)
 	}
 
-	const getValidatorRankSegment = (validator: string): number => {
-		const fallbackSegment = 100
-		if (pluginEnabled('staking_api')) {
-			const totalValidators = activeValidatorRanks.length
-			if (totalValidators === 0) {
-				return fallbackSegment
-			}
-			// Find the rank of the given validator
-			const rank = getValidatorRank(validator)
-			if (!rank) {
-				return fallbackSegment
-			}
-			const percentile = (rank / totalValidators) * 100
-			const segment = Math.ceil(percentile / 10) * 10
-			return segment
-		} else {
-			const rank = getValidatorRankBus(validator)
-			if (!rank) {
-				return fallbackSegment
-			}
-			const percentile = (rank / countValidatorRanks()) * 100
-			const segment = Math.ceil(percentile / 10) * 10
-			return segment
-		}
+	const getValidatorRankTotal = () =>
+		pluginEnabled('staking_api')
+			? activeValidatorRanks.length
+			: countValidatorRanks()
+
+	const isValidatorHighPerformance = (validator: string) => {
+		const rank = getValidatorRank(validator)
+		return Boolean(rank && rank / getValidatorRankTotal() <= 0.5)
 	}
 
 	const getValidatorActivityTier = (validator: string) =>
-		pluginEnabled('staking_api')
-			? getActivityTier(
-					getValidatorRank(validator),
-					activeValidatorRanks.length,
-				)
-			: getActivityTier(getValidatorRankBus(validator), countValidatorRanks())
+		getActivityTier(getValidatorRank(validator), getValidatorRankTotal())
 
 	// Reset validator state data on network change
 	useEffectIgnoreInitial(() => {
@@ -395,7 +368,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 				formatWithPrefs,
 				getValidatorTotalStake,
 				getValidatorRank,
-				getValidatorRankSegment,
+				isValidatorHighPerformance,
 				getValidatorActivityTier,
 			}}
 		>

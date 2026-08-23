@@ -14,8 +14,8 @@ import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { Select } from '../ListItem/Buttons/Select'
+import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
-import { ActivityTierValue } from './ActivityTierValue'
 import { RetainmentMetric } from './RetainmentStats'
 import type { RetainmentStatsData } from './useRetainmentStatsData'
 import { useValidatorSummaryData } from './ValidatorSummary'
@@ -71,17 +71,13 @@ export const ValidatorBar = ({
 	const { selectable } = useList()
 	const { address, prefs, validatorStatus: status } = validator
 	const {
-		activityColor,
-		activityLabel,
 		rateLabel,
 		selfStakeLabel,
-		showActivityTooltip,
 		statusLabel: summaryStatusLabel,
 		totalStake,
 		validatorStatus,
 	} = useValidatorSummaryData({
 		address,
-		activityTier,
 		rate,
 		selfStake,
 		selfStakeMax,
@@ -166,13 +162,13 @@ export const ValidatorBar = ({
 					)}
 				</ListItem.Metric>
 				<ListItem.Metric
-					color={activityColor}
 					label={t('performance')}
 					valueProps={{ style: { overflow: 'hidden' } }}
 				>
-					<ActivityTierValue
-						label={activityLabel}
-						showTooltip={showActivityTooltip}
+					<ActivityTier
+						address={address}
+						activityTier={activityTier}
+						detailed
 					/>
 				</ListItem.Metric>
 				<ListItem.Metric label={t('selfStake')}>

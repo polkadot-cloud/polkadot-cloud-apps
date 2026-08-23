@@ -12,8 +12,7 @@ import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
-import { ActivityTierValue } from './ActivityTierValue'
-import { getActivityTierColor } from './activity'
+import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 
 interface ValidatorSummaryProps {
 	address: string
@@ -33,7 +32,6 @@ interface ValidatorSummaryProps {
 
 export const useValidatorSummaryData = ({
 	address,
-	activityTier: activityTierOverride,
 	rate,
 	selfStake,
 	selfStakeMax,
@@ -44,8 +42,7 @@ export const useValidatorSummaryData = ({
 	const { t, i18n } = useTranslation('app')
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { getValidatorActivityTier, getValidatorTotalStake } =
-		useValidatorEntries()
+	const { getValidatorTotalStake } = useValidatorEntries()
 	const { units } = getStakingChainData(network)
 
 	const validatorStatus = syncing ? 'waiting' : status
@@ -67,13 +64,6 @@ export const useValidatorSummaryData = ({
 						.toFormat()
 				: undefined
 
-	const activityTier =
-		activityTierOverride === undefined
-			? getValidatorActivityTier(address)
-			: (activityTierOverride ?? undefined)
-	const activityLabel = activityTier ? t(activityTier) : '—'
-	const activityColor = getActivityTierColor(activityTier)
-	const showActivityTooltip = activityTier === 'belowBaseline'
 	const rateLabel =
 		typeof rate === 'number' && Number.isFinite(rate)
 			? `${new BigNumber(rate).decimalPlaces(2).toString()}%`
@@ -85,12 +75,9 @@ export const useValidatorSummaryData = ({
 			: '—'
 
 	return {
-		activityColor,
-		activityLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
-		showActivityTooltip,
 		statusLabel,
 		totalStake,
 		validatorStatus,
@@ -100,6 +87,8 @@ export const useValidatorSummaryData = ({
 export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	const { t } = useTranslation('app')
 	const {
+		activityTier,
+		address,
 		ariaLabel,
 		isRatePreloading = false,
 		isStatusValuePreloading = false,
@@ -109,12 +98,9 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		unit,
 	} = props
 	const {
-		activityColor,
-		activityLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
-		showActivityTooltip,
 		statusLabel,
 		totalStake,
 		validatorStatus,
@@ -154,14 +140,10 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
 			</ListItem.Metric>
 			<ListItem.Metric
-				color={activityColor}
 				label={t('performance')}
 				valueProps={{ style: { overflow: 'hidden' } }}
 			>
-				<ActivityTierValue
-					label={activityLabel}
-					showTooltip={showActivityTooltip}
-				/>
+				<ActivityTier address={address} activityTier={activityTier} detailed />
 			</ListItem.Metric>
 			<ListItem.Metric label={t('selfStake')}>
 				<span>{selfStakeLabel}</span>

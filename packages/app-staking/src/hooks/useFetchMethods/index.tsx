@@ -25,7 +25,7 @@ export const useFetchMethods = () => {
 	const { network } = useNetwork()
 	const { applyFilter } = useValidatorFilters()
 	const { favoritesList } = useFavoriteValidators()
-	const { getValidators, getValidatorRankSegment } = useValidators()
+	const { getValidators, isValidatorHighPerformance } = useValidators()
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const stakingApiCandidatesEnabled =
 		stakingApiEnabled && StakingApiRetainmentSupportedNetworks.includes(network)
@@ -67,7 +67,7 @@ export const useFetchMethods = () => {
 			['active'],
 			['blocked_nominations', 'missing_identity'],
 			validators,
-		).filter(({ address }: Validator) => getValidatorRankSegment(address) <= 50)
+		).filter(({ address }: Validator) => isValidatorHighPerformance(address))
 
 		return shuffle([
 			...shuffle(waiting).slice(0, 2),
@@ -123,8 +123,8 @@ export const useFetchMethods = () => {
 		const active: Validator[] = candidates(['active'])
 
 		return {
-			highPerformance: active.filter(
-				({ address }) => getValidatorRankSegment(address) <= 50,
+			highPerformance: active.filter(({ address }) =>
+				isValidatorHighPerformance(address),
 			),
 			activeValidators: active,
 			randomValidators: candidates(null),
