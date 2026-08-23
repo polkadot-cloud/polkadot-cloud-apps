@@ -4,6 +4,8 @@
 import type { Sync } from '@w3ux/types'
 import type { AnyJson, IdentityOf, Validator, ValidatorStatus } from 'types'
 
+export type ValidatorActivityTier = 'belowBaseline' | 'good' | 'notRated'
+
 export interface ValidatorsContextInterface {
 	fetchValidatorPrefs: (a: ValidatorAddresses) => Promise<Validator[] | null>
 	injectValidatorListData: (entries: Validator[]) => ValidatorListEntry[]
@@ -17,6 +19,9 @@ export interface ValidatorsContextInterface {
 	getValidatorTotalStake: (address: string) => bigint
 	getValidatorRank: (address: string) => number | undefined
 	getValidatorRankSegment: (address: string) => number
+	getValidatorActivityTier: (
+		address: string,
+	) => ValidatorActivityTier | undefined
 }
 
 export interface AverageEraValidatorReward {

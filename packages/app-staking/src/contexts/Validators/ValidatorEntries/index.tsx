@@ -38,7 +38,11 @@ import type {
 	Validators,
 	ValidatorsContextInterface,
 } from '../types'
-import { getLocalEraValidators, setLocalEraValidators } from '../Utils'
+import {
+	getActivityTier,
+	getLocalEraValidators,
+	setLocalEraValidators,
+} from '../Utils'
 import {
 	defaultAverageEraValidatorReward,
 	defaultValidatorsData,
@@ -327,6 +331,14 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}
 
+	const getValidatorActivityTier = (validator: string) =>
+		pluginEnabled('staking_api')
+			? getActivityTier(
+					getValidatorRank(validator),
+					activeValidatorRanks.length,
+				)
+			: getActivityTier(getValidatorRankBus(validator), countValidatorRanks())
+
 	// Reset validator state data on network change
 	useEffectIgnoreInitial(() => {
 		setValidators({
@@ -384,6 +396,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 				getValidatorTotalStake,
 				getValidatorRank,
 				getValidatorRankSegment,
+				getValidatorActivityTier,
 			}}
 		>
 			{children}

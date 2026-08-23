@@ -9,8 +9,8 @@ import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
+import { ActivityTier } from 'library/ListItem/Labels/ActivityTier'
 import { APY } from 'library/ListItem/Labels/APY'
-import { Quartile } from 'library/ListItem/Labels/Quartile'
 import type { Validator } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
@@ -79,7 +79,7 @@ const Basic = ({
 				<div>
 					<LabelRow inline>
 						<APY rate={rateAfterCommission} />
-						<Quartile address={address} />
+						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
 					<EraStatus address={address} status={validatorStatus} noMargin />
