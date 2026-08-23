@@ -30,7 +30,7 @@ export const Inner = ({
 	const xArea = vbWidth - 2 * xPadding
 	const yArea = vbHeight - yPaddingTop - yPaddingBottom
 	const gridStrokeWidth = stretch ? 1 : 4
-	const valueStrokeWidth = stretch ? 3.5 : 5
+	const valueStrokeWidth = stretch ? 2 : 5
 	const xSegment = xArea / totalSegments
 	let xCursor = xPadding
 
