@@ -3,7 +3,10 @@
 
 import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
-import type { ValidatorListEntry } from 'contexts/Validators/types'
+import type {
+	ValidatorActivityTier,
+	ValidatorListEntry,
+} from 'contexts/Validators/types'
 import { HistoricalEraPoints } from 'library/List/EraPointsGraph/HistoricalEraPoints'
 import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
@@ -11,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { Select } from '../ListItem/Buttons/Select'
+import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
 import { RetainmentMetric } from './RetainmentStats'
 import type { RetainmentStatsData } from './useRetainmentStatsData'
@@ -18,6 +22,7 @@ import { useValidatorSummaryData } from './ValidatorSummary'
 
 interface ValidatorBarProps {
 	actions: ReactNode
+	activityTier?: ValidatorActivityTier | null
 	displayFor: DisplayFor
 	eraPoints: ValidatorEraPoints[]
 	eraPointsSyncing?: boolean
@@ -28,7 +33,6 @@ interface ValidatorBarProps {
 	isRetainmentPreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
-	rankSegment?: number
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	selfStakeMax: boolean
@@ -42,6 +46,7 @@ interface ValidatorBarProps {
 
 export const ValidatorBar = ({
 	actions,
+	activityTier,
 	displayFor,
 	eraPoints,
 	eraPointsSyncing,
@@ -52,7 +57,6 @@ export const ValidatorBar = ({
 	isRetainmentPreloading,
 	isStatusValuePreloading = false,
 	rate,
-	rankSegment,
 	retainmentStats,
 	selfStake,
 	selfStakeMax,
@@ -67,7 +71,6 @@ export const ValidatorBar = ({
 	const { selectable } = useList()
 	const { address, prefs, validatorStatus: status } = validator
 	const {
-		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
 		statusLabel: summaryStatusLabel,
@@ -76,7 +79,6 @@ export const ValidatorBar = ({
 	} = useValidatorSummaryData({
 		address,
 		rate,
-		rankSegment,
 		selfStake,
 		selfStakeMax,
 		status,
@@ -159,8 +161,15 @@ export const ValidatorBar = ({
 						rateLabel
 					)}
 				</ListItem.Metric>
-				<ListItem.Metric label={t('performance')}>
-					{quartileLabel}
+				<ListItem.Metric
+					label={t('performance')}
+					valueProps={{ style: { overflow: 'hidden' } }}
+				>
+					<ActivityTier
+						address={address}
+						activityTier={activityTier}
+						detailed
+					/>
 				</ListItem.Metric>
 				<ListItem.Metric label={t('selfStake')}>
 					<span>{selfStakeLabel}</span>

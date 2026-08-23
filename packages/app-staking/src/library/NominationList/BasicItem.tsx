@@ -4,7 +4,7 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
-import { Quartile } from 'library/ListItem/Labels/Quartile'
+import { ActivityTier } from 'library/ListItem/Labels/ActivityTier'
 import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { CopyAddress } from '../ListItem/Buttons/CopyAddress'
@@ -59,7 +59,7 @@ const Basic = ({
 				</div>
 				<div>
 					<LabelRow inline>
-						<Quartile address={address} />
+						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
 					<NominationStatus

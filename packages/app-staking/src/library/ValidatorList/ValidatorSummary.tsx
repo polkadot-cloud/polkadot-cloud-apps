@@ -4,6 +4,7 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import type { ValidatorActivityTier } from 'contexts/Validators/types'
 import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
@@ -11,14 +12,15 @@ import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
+import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 
 interface ValidatorSummaryProps {
 	address: string
+	activityTier?: ValidatorActivityTier | null
 	ariaLabel?: string
 	isRatePreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
-	rankSegment?: number
 	selfStake?: BigNumber
 	selfStakeMax: boolean
 	status: ValidatorStatus
@@ -31,7 +33,6 @@ interface ValidatorSummaryProps {
 export const useValidatorSummaryData = ({
 	address,
 	rate,
-	rankSegment,
 	selfStake,
 	selfStakeMax,
 	status,
@@ -41,8 +42,7 @@ export const useValidatorSummaryData = ({
 	const { t, i18n } = useTranslation('app')
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { getValidatorRankSegment, getValidatorTotalStake } =
-		useValidatorEntries()
+	const { getValidatorTotalStake } = useValidatorEntries()
 	const { units } = getStakingChainData(network)
 
 	const validatorStatus = syncing ? 'waiting' : status
@@ -64,10 +64,6 @@ export const useValidatorSummaryData = ({
 						.toFormat()
 				: undefined
 
-	const quartile = rankSegment ?? getValidatorRankSegment(address)
-	const quartileLabel = ![100, undefined].includes(quartile)
-		? `${t('top')} ${quartile}%`
-		: '—'
 	const rateLabel =
 		typeof rate === 'number' && Number.isFinite(rate)
 			? `${new BigNumber(rate).decimalPlaces(2).toString()}%`
@@ -79,7 +75,6 @@ export const useValidatorSummaryData = ({
 			: '—'
 
 	return {
-		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
@@ -92,6 +87,8 @@ export const useValidatorSummaryData = ({
 export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	const { t } = useTranslation('app')
 	const {
+		activityTier,
+		address,
 		ariaLabel,
 		isRatePreloading = false,
 		isStatusValuePreloading = false,
@@ -101,7 +98,6 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		unit,
 	} = props
 	const {
-		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
@@ -143,8 +139,11 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 			<ListItem.Metric aria-busy={isRatePreloading} label="APY">
 				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
 			</ListItem.Metric>
-			<ListItem.Metric label={t('performance')}>
-				{quartileLabel}
+			<ListItem.Metric
+				label={t('performance')}
+				valueProps={{ style: { overflow: 'hidden' } }}
+			>
+				<ActivityTier address={address} activityTier={activityTier} detailed />
 			</ListItem.Metric>
 			<ListItem.Metric label={t('selfStake')}>
 				<span>{selfStakeLabel}</span>

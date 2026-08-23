@@ -4,6 +4,7 @@
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import type { ListFormat } from 'contexts/List/types'
+import { getActivityTier } from 'contexts/Validators/Utils'
 import { useNetwork } from 'hooks/useNetwork'
 import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
@@ -50,11 +51,6 @@ const getIdentityDisplay = (validator: ValidatorListItem): ReactNode => {
 	) : null
 }
 
-const getRankSegment = (validator: ValidatorListItem, totalActive: number) =>
-	validator.activityRank && totalActive > 0
-		? Math.min(100, Math.ceil((validator.activityRank / totalActive) * 10) * 10)
-		: undefined
-
 export const Item = ({
 	eraPoints,
 	format,
@@ -90,7 +86,10 @@ export const Item = ({
 	const totalStake = validator.totalStake
 		? planckToUnitBn(new BigNumber(validator.totalStake), units)
 		: undefined
-	const rankSegment = getRankSegment(validator, totalActive)
+	const activityTier =
+		validator.activityRank === null
+			? ('notRated' as const)
+			: (getActivityTier(validator.activityRank, totalActive) ?? null)
 	const validatorStatus = validator.active
 		? ('active' as const)
 		: ('waiting' as const)
@@ -112,6 +111,7 @@ export const Item = ({
 						showShareLink={showShareLink}
 					/>
 				}
+				activityTier={activityTier}
 				displayFor="default"
 				eraPoints={eraPoints}
 				eraPointsSyncing={false}
@@ -120,7 +120,6 @@ export const Item = ({
 				isRatePreloading={isRateLoading}
 				isRetainmentPreloading={false}
 				rate={rateAfterCommission}
-				rankSegment={rankSegment}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
@@ -168,9 +167,9 @@ export const Item = ({
 			summary={
 				<ValidatorSummary
 					address={address}
+					activityTier={activityTier}
 					isRatePreloading={isRateLoading}
 					rate={rateAfterCommission}
-					rankSegment={rankSegment}
 					selfStake={selfStake}
 					selfStakeMax={selfStakeMax}
 					status={validatorStatus}
