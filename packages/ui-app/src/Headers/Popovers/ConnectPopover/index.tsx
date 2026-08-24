@@ -12,7 +12,6 @@ import { ConnectItem } from 'ui-core/popover'
 import { Proxies } from './Proxies'
 import { ReadOnly } from './ReadOnly'
 import type { SetOpenProp } from './types'
-import { mobileCheck } from './Utils'
 import { Wallets } from './Wallets'
 
 export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
@@ -23,12 +22,6 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 	const [selectedSection, setSelectedConnectItem] = useState<string>('wallets')
 
 	const popoverRef = useRef<HTMLDivElement>(null)
-
-	// Whether the app is running on mobile
-	const isMobile = mobileCheck()
-
-	// Whether the app is running in a SubWallet Mobile
-	const inSubWallet = !!window.injectedWeb3?.['subwallet-js'] && isMobile
 
 	// NOTE: Deprecated support for these wallets/extensions
 	const deprecated = ['snap', 'polkagate', 'fearless', 'enkrypt']
@@ -41,11 +34,8 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 		}))
 		.filter(({ id }) => !deprecated.some((d) => id.includes(d)))
 
-	// Determine which web extensions to display. Only display Subwallet Mobile if in one of those
-	// environments.
-	const web = inSubWallet
-		? extensionsAsArray.filter((a) => a.id === 'subwallet-js')
-		: extensionsAsArray.filter((a) => a.category === 'web-extension')
+	// Determine which web extensions to display.
+	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')
 
 	const installed = web.filter((a) => a.id in extensionsStatus)
 
