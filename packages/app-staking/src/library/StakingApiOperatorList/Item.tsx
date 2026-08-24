@@ -122,7 +122,9 @@ export const Item = ({ format, operator }: ItemProps) => {
 		{
 			key: 'retainmentRate',
 			color:
-				retainmentRate === undefined ? undefined : getRateColor(retainmentRate),
+				retainmentRate === undefined
+					? 'var(--text-tertiary)'
+					: getRateColor(retainmentRate),
 			label: t('retainmentRate'),
 			value: retainmentRateLabel,
 		},
