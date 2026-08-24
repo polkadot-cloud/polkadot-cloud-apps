@@ -15,6 +15,15 @@ export const Wrapper = styled.span`
   position: relative;
   transition: background 0.15s ease;
   cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.45;
+
+    .icon {
+      transform: none;
+    }
+  }
   
   .iconContainer {
     flex: 0 0 auto;
@@ -56,13 +65,13 @@ export const Wrapper = styled.span`
     }
   }
 
-  &:hover {
+  &:not(.disabled):hover {
     .icon {
       transform: scale(1.05);
     }
   }
 
-  &:active {
+  &:not(.disabled):active {
     .icon {
       transform: scale(0.92);
     }
@@ -93,7 +102,7 @@ export const Wrapper = styled.span`
     }
   }
 
-  &.inactive:hover {
+  &.inactive:not(.disabled):hover {
     background: var(--highlight-alt);
   }
 
@@ -101,7 +110,7 @@ export const Wrapper = styled.span`
      &.active {
       background: var(--highlight);
     }
-    &.inactive:hover {
+    &.inactive:not(.disabled):hover {
       background: var(--highlight);
     }
   }

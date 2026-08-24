@@ -29,7 +29,6 @@
 		"packages/ui-styles": {},
 		"packages/ui-tips": {},
 		"packages/utils": {},
-		"packages/validator-assets": {},
 		"packages/vite-shared": {},
 		"packages/workers": {}
 	}

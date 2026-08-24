@@ -69,6 +69,7 @@ export interface PrimaryProps {
 	pageKey?: string
 	name: string
 	active: boolean
+	disabled?: boolean
 	to: string | (() => void)
 	faIcon: IconProp
 	bullet?: BulletType

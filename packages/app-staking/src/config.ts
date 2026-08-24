@@ -6,9 +6,9 @@ import {
 	faCoins,
 	faHome,
 	faMagnifyingGlass,
-	faTableList,
 	faUserGear,
 	faUsers,
+	faUsersGear,
 } from '@fortawesome/free-solid-svg-icons'
 import { Nominate } from 'pages/Nominate'
 import { Operators } from 'pages/Operators'
@@ -104,7 +104,7 @@ export const PagesConfig: PagesConfigItems = [
 		uri: `${import.meta.env.BASE_URL}operators`,
 		hash: '/operators',
 		Entry: Operators,
-		faIcon: faTableList,
+		faIcon: faUsersGear,
 		advanced: true,
 	},
 	{

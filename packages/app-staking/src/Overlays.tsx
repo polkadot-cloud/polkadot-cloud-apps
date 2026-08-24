@@ -50,6 +50,7 @@ const canvas = lazyOverlayComponents({
 	CreatePool: () => import('canvas/CreatePool'),
 	ManageNominations: () => import('canvas/ManageNominations'),
 	NominatorSetup: () => import('canvas/NominatorSetup'),
+	OperatorValidators: () => import('canvas/OperatorValidators'),
 	Pool: () => import('canvas/Pool'),
 	PoolMembers: () => import('canvas/PoolMembers'),
 	ValidatorMetrics: () => import('canvas/ValidatorMetrics'),

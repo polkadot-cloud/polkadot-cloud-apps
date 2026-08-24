@@ -1,12 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faServer, faUsersGear } from '@fortawesome/free-solid-svg-icons'
 import { ValidatorsDappName } from 'consts'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
+import { SideMenu } from 'library/SideMenu'
 import { Tooltip } from 'library/Tooltip'
+import { Operators } from 'pages/Operators'
 import { ValidatorsStandalone } from 'pages/Validators/Standalone'
 import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
@@ -36,7 +38,17 @@ const ValidatorsPage: PageItem = {
 	uri: import.meta.env.BASE_URL,
 	hash: '/',
 	Entry: ValidatorsStandalone,
-	faIcon: faMagnifyingGlass,
+	faIcon: faServer,
+	advanced: false,
+}
+
+const OperatorsPage: PageItem = {
+	category: 0,
+	key: 'operators',
+	uri: `${import.meta.env.BASE_URL}operators`,
+	hash: '/operators',
+	Entry: Operators,
+	faIcon: faUsersGear,
 	advanced: false,
 }
 
@@ -66,6 +78,7 @@ const RouterInner = () => {
 					<Overlays />
 					<Menu />
 					<Tooltip />
+					<SideMenu enableAdvancedMenu={false} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
 							<Headers />
@@ -76,6 +89,15 @@ const RouterInner = () => {
 										element={
 											<PageWithTitle
 												page={ValidatorsPage}
+												appTitle={ValidatorsDappName}
+											/>
+										}
+									/>
+									<Route
+										path="/operators"
+										element={
+											<PageWithTitle
+												page={OperatorsPage}
 												appTitle={ValidatorsDappName}
 											/>
 										}
