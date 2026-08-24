@@ -3,7 +3,11 @@
 
 import { useUi } from 'hooks/useUi'
 import { Sync } from 'library/Sync'
-import { type MenuPopoverFeatureFlags, SettingsMenu } from 'ui-app/Headers'
+import {
+	type MenuPopoverFeatureFlags,
+	SettingsMenu,
+	SideMenuToggle,
+} from 'ui-app/Headers'
 import { Header } from 'ui-core/base'
 
 const menuPopoverFeatures = {
@@ -22,7 +26,9 @@ export const Headers = () => {
 
 	return (
 		<Header minimized={sideMenuMinimised}>
-			<section />
+			<section>
+				<SideMenuToggle />
+			</section>
 			<section>
 				<Sync />
 				<SettingsMenu menuPopoverFeatures={menuPopoverFeatures} />

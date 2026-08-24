@@ -8,6 +8,10 @@ const ValidatorMetrics = lazyNamed(
 	() => import('canvas/ValidatorMetrics'),
 	'ValidatorMetrics',
 )
+const OperatorValidators = lazyNamed(
+	() => import('canvas/OperatorValidators'),
+	'OperatorValidators',
+)
 const DiscordSupport = lazyNamed(
 	() => import('ui-modals/DiscordSupport'),
 	'DiscordSupport',
@@ -29,7 +33,7 @@ export const Overlays = () => (
 	<Overlay
 		fallback={ErrorFallbackModal}
 		externalOverlayStatus="closed"
-		canvas={{ ValidatorMetrics }}
+		canvas={{ OperatorValidators, ValidatorMetrics }}
 		modals={{ DiscordSupport, MailSupport, SelectCurrency, SelectLanguage }}
 	/>
 )

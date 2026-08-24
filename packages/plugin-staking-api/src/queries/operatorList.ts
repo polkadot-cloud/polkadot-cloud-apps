@@ -33,7 +33,6 @@ const QUERY = gql`
         validatorCount
         activeValidatorCount
         combinedSelfStake
-        retainmentRank
         retainment {
           retainmentRate
         }
@@ -43,8 +42,6 @@ const QUERY = gql`
       total
       totalPages
       hasNextPage
-      activityEra
-      retainmentEra
     }
   }
 `
@@ -57,8 +54,6 @@ const DEFAULT: OperatorListData = {
 		total: 0,
 		totalPages: 0,
 		hasNextPage: false,
-		activityEra: null,
-		retainmentEra: null,
 	},
 }
 

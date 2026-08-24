@@ -118,8 +118,6 @@ export interface OperatorListResult {
 	total: number
 	totalPages: number
 	hasNextPage: boolean
-	activityEra: number | null
-	retainmentEra: number | null
 }
 
 export interface OperatorListItem {
@@ -131,7 +129,6 @@ export interface OperatorListItem {
 	validatorCount: number
 	activeValidatorCount: number
 	combinedSelfStake: string
-	retainmentRank: number | null
 	retainment: OperatorRetainmentPeriod | null
 }
 

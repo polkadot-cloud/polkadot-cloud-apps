@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
+import { clampRate } from 'utils'
 
 export const List = () => {
 	const { t, i18n } = useTranslation('app')
@@ -17,12 +18,10 @@ export const List = () => {
 	const { data, loading } = useOperatorStats({ network })
 	const { activeOperators, operatorValidatorCoverage, totalOperators } =
 		data.operatorStats
-	const activePercentage = totalOperators
-		? (activeOperators / totalOperators) * 100
-		: 0
-	const coverage = Number.isFinite(operatorValidatorCoverage)
-		? Math.min(100, Math.max(0, operatorValidatorCoverage))
-		: 0
+	const activePercentage = clampRate(
+		totalOperators ? (activeOperators / totalOperators) * 100 : 0,
+	)
+	const coverage = clampRate(operatorValidatorCoverage)
 	const formatPercentage = (value: number) =>
 		`${value.toLocaleString(i18n.resolvedLanguage, {
 			maximumFractionDigits: 2,
