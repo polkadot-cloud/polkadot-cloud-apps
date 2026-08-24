@@ -26,7 +26,6 @@
 	"packages/ui-styles": "1.5.0",
 	"packages/ui-tips": "1.4.0",
 	"packages/utils": "1.5.0",
-	"packages/validator-assets": "0.2.0",
 	"packages/vite-shared": "0.2.0",
 	"packages/workers": "0.2.0"
 }
