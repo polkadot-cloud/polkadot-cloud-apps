@@ -88,6 +88,47 @@ export interface ValidatorListItem {
 	retainment: ValidatorRetainmentPeriod | null
 }
 
+export type OperatorListOrder = 'RETAINMENT_HIGH' | 'RETAINMENT_LOW'
+
+export interface OperatorListVariables extends Record<string, unknown> {
+	network: string
+	page?: number
+	pageSize?: number
+	order?: OperatorListOrder
+	filters?: OperatorListFilters
+}
+
+export interface OperatorListFilters {
+	search?: string
+}
+
+export interface OperatorListData {
+	operatorList: OperatorListResult
+}
+
+export interface OperatorListResult {
+	operators: OperatorListItem[]
+	page: number
+	pageSize: number
+	total: number
+	totalPages: number
+	hasNextPage: boolean
+}
+
+export interface OperatorListItem {
+	identity: {
+		address: string
+		display: string | null
+	}
+	validatorCount: number
+	combinedSelfStake: string
+	retainment: OperatorRetainmentPeriod | null
+}
+
+export interface OperatorRetainmentPeriod {
+	retainmentRate: number | null
+}
+
 export type ValidatorCandidateStrategy =
 	| 'ACTIVE'
 	| 'HIGH_RETAINER'
