@@ -8,6 +8,7 @@ import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
+import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
@@ -33,6 +34,7 @@ export const Main = ({
 	const navigate = useNavigate()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
+	const { pluginEnabled } = usePlugins()
 	const { pathname } = useLocation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
@@ -155,6 +157,9 @@ export const Main = ({
 												}}
 												active={
 													hash === pathname || (index === 0 && pageChanged)
+												}
+												disabled={
+													key === 'operators' && !pluginEnabled('staking_api')
 												}
 												faIcon={faIcon}
 												bullet={bullet}
