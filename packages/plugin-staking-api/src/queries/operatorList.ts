@@ -29,6 +29,7 @@ const QUERY = gql`
           address
           display
         }
+        validators
         validatorCount
         combinedSelfStake
         retainment {

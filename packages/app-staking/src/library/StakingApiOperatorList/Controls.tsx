@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { OperatorListOrder } from 'plugin-staking-api/types'
-import type { ChangeEvent } from 'react'
+import type { SubmitEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonSecondary, ButtonSubmit } from 'ui-buttons'
@@ -49,7 +49,7 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 		}
 	}
 
-	const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
+	const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		apply()
 	}

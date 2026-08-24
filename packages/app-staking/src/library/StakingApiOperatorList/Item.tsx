@@ -17,6 +17,8 @@ import {
 	getRateColor,
 	planckToUnitBn,
 } from 'utils'
+import { RowActionsMenu } from './RowActionsMenu'
+import { ValidatorsButton } from './ValidatorsButton'
 
 interface ItemProps {
 	format: ListFormat
@@ -64,10 +66,13 @@ export const Item = ({ format, operator }: ItemProps) => {
 	const identityNode = (
 		<Identity address={identity.address} display={identity.display || null} />
 	)
-	const actions = (
+	const cardActions = (
 		<ListItem.Actions>
 			<ListItem.Action>
 				<CopyAddress address={identity.address} />
+			</ListItem.Action>
+			<ListItem.Action wide>
+				<ValidatorsButton operator={operator} />
 			</ListItem.Action>
 		</ListItem.Actions>
 	)
@@ -124,7 +129,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 				>
 					{metricNodes}
 				</ListItem.RowMetrics>
-				{actions}
+				<RowActionsMenu operator={operator} />
 			</ListItem.Row>
 		)
 	}
@@ -134,7 +139,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					<ListItem.Identity>{identityNode}</ListItem.Identity>
-					{actions}
+					{cardActions}
 				</DetailedCard.Header>
 				<ListItem.Summary aria-label={t('operatorSummary')}>
 					{metricNodes}

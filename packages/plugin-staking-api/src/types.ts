@@ -120,6 +120,7 @@ export interface OperatorListItem {
 		address: string
 		display: string | null
 	}
+	validators: string[]
 	validatorCount: number
 	combinedSelfStake: string
 	retainment: OperatorRetainmentPeriod | null
