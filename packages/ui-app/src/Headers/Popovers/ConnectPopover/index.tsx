@@ -12,7 +12,6 @@ import { ConnectItem } from 'ui-core/popover'
 import { Proxies } from './Proxies'
 import { ReadOnly } from './ReadOnly'
 import type { SetOpenProp } from './types'
-import { mobileCheck } from './Utils'
 import { Wallets } from './Wallets'
 
 export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
@@ -24,17 +23,8 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 
 	const popoverRef = useRef<HTMLDivElement>(null)
 
-	// Whether the app is running on mobile
-	const isMobile = mobileCheck()
-
-	// Whether the app is running in Nova Wallet
-	const inNova = !!window?.walletExtension?.isNovaWallet || false
-
-	// Whether the app is running in a SubWallet Mobile
-	const inSubWallet = !!window.injectedWeb3?.['subwallet-js'] && isMobile
-
 	// NOTE: Deprecated support for these wallets/extensions
-	const deprecated = ['snap', 'polkagate', 'fearless']
+	const deprecated = ['snap', 'polkagate', 'fearless', 'enkrypt']
 
 	// Format supported extensions as array
 	const extensionsAsArray = Object.entries(extensions)
@@ -44,23 +34,10 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 		}))
 		.filter(({ id }) => !deprecated.some((d) => id.includes(d)))
 
-	// Determine which web extensions to display. Only display Subwallet Mobile or Nova if in one of
-	// those environments. In Nova Wallet's case, fetch `nova-wallet` metadata and overwrite
-	// `polkadot-js` with it. Otherwise, keep all `web-extension` category items
-	const web = inSubWallet
-		? extensionsAsArray.filter((a) => a.id === 'subwallet-js')
-		: inNova
-			? extensionsAsArray
-					.filter((a) => a.id === 'nova-wallet')
-					.map((a) => ({ ...a, id: 'polkadot-js' }))
-			: // Otherwise, keep all extensions except `polkadot-js`.
-				extensionsAsArray.filter((a) => a.category === 'web-extension')
+	// Determine which web extensions to display.
+	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')
 
 	const installed = web.filter((a) => a.id in extensionsStatus)
-	// NOTE: Moving `enkrypt` to last item
-	installed.sort((a, b) =>
-		a.id === 'enkrypt' ? 1 : b.id === 'enkrypt' ? -1 : 0,
-	)
 
 	const installedIds = new Set(installed.map((a) => a.id))
 	const other = web.filter((a) => !installedIds.has(a.id))

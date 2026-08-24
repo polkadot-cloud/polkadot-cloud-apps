@@ -5,9 +5,6 @@ import type { ExtensionInjected } from '@w3ux/types'
 
 declare global {
 	interface Window {
-		walletExtension?: {
-			isNovaWallet?: boolean
-		}
 		injectedWeb3?: Record<string, ExtensionInjected>
 		opera?: boolean
 	}

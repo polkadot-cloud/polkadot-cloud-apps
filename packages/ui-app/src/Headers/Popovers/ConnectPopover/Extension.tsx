@@ -32,12 +32,7 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 	const canConnect = extensionCanConnect(id)
 	const connected = extensionsStatus[id] === 'connected'
 
-	// Get the correct icon id for the extension.
-	const iconId =
-		window?.walletExtension?.isNovaWallet && id === 'polkadot-js'
-			? 'nova-wallet'
-			: id
-	const Icon = ExtensionIcons[iconId]
+	const Icon = ExtensionIcons[id]
 	const disabled = !isInstalled
 
 	// Handle connect and disconnect from extension.
