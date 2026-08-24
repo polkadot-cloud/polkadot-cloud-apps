@@ -19,6 +19,7 @@ export const Primary = ({
 	pageKey,
 	name,
 	active,
+	disabled = false,
 	to,
 	bullet,
 	minimised,
@@ -39,7 +40,10 @@ export const Primary = ({
 		<Wrapper
 			className={`${active ? `active` : `inactive`}${
 				minimised ? ` minimised` : ``
-			}${bullet ? ` ${bullet}` : ``}${advanced ? ` advanced` : ``}`}
+			}${bullet ? ` ${bullet}` : ``}${advanced ? ` advanced` : ``}${
+				disabled ? ` disabled` : ``
+			}`}
+			aria-disabled={disabled}
 		>
 			<span className="iconContainer">
 				<FontAwesomeIcon
@@ -64,6 +68,10 @@ export const Primary = ({
 	)
 
 	const onNavigate = () => {
+		if (disabled) {
+			return
+		}
+
 		if (pageKey) {
 			onPageNavigationEvent(network, pageKey)
 		}
@@ -79,7 +87,7 @@ export const Primary = ({
 	}
 
 	const InnerNoTooltip = (
-		<button type="button" onClick={onNavigate}>
+		<button type="button" onClick={onNavigate} disabled={disabled}>
 			{Inner}
 		</button>
 	)
@@ -89,7 +97,7 @@ export const Primary = ({
 			text={t(name)}
 			side="right"
 			container={themeElementRef.current || undefined}
-			onTriggerClick={onNavigate}
+			onTriggerClick={disabled ? undefined : onNavigate}
 			delayDuration={0}
 			fadeIn
 			inverted

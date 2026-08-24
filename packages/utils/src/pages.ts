@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { validatorListSupported } from '@w3ux/validator-assets'
+import { StakingApiRetainmentSupportedNetworks } from 'consts/plugins'
 import type {
 	NetworkId,
 	PageCategory,
@@ -20,7 +20,8 @@ export const getPagesConfig = (
 		isBonding: boolean
 	},
 ) => {
-	const operatorsSupported = validatorListSupported(network)
+	const operatorsSupported =
+		StakingApiRetainmentSupportedNetworks.includes(network)
 
 	// Filter out operators page if not supported on network
 	let filteredPagesConfig = !operatorsSupported
