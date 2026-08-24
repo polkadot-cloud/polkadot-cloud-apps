@@ -19,7 +19,7 @@ export const Operators = ({ page }: PageProps) => {
 		<>
 			<Page.Title title={t(key)} />
 			{pluginEnabled('staking_api') && (
-				<Suspense fallback={<PagePreloader showStats={false} />}>
+				<Suspense fallback={<PagePreloader showStats />}>
 					<List />
 				</Suspense>
 			)}

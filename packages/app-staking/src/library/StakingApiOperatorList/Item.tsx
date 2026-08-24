@@ -18,6 +18,7 @@ import {
 	planckToUnitBn,
 } from 'utils'
 import { RowActionsMenu } from './RowActionsMenu'
+import { CardSummary } from './styles'
 import { ValidatorsButton } from './ValidatorsButton'
 
 interface ItemProps {
@@ -44,7 +45,12 @@ export const Item = ({ format, operator }: ItemProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { network } = useNetwork()
 	const { unit, units } = getStakingChainData(network)
-	const { identity, validatorCount } = operator
+	const { activeValidatorCount, identity, validatorCount } = operator
+	const active = activeValidatorCount > 0
+	const activeValidatorRatio = `${activeValidatorCount.toLocaleString(i18n.resolvedLanguage)}/${validatorCount.toLocaleString(i18n.resolvedLanguage)}`
+	const activityValue = active
+		? `${activeValidatorRatio} ${t('active')}`
+		: t('inactive')
 	const combinedSelfStake = planckToUnitBn(
 		new BigNumber(operator.combinedSelfStake),
 		units,
@@ -78,36 +84,52 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const metrics: Array<{
 		color?: string
-		label: string
+		key: string
+		label: ReactNode
 		title?: string
 		value: ReactNode
 	}> = [
 		{
-			label: t('validators'),
+			key: 'validatorCount',
+			label: t('validatorCount'),
 			value: validatorCount.toLocaleString(i18n.resolvedLanguage),
 		},
 		{
+			color: active ? undefined : 'var(--text-tertiary)',
+			key: 'activity',
+			label: (
+				<>
+					<ListItem.StatusDot active={active} aria-hidden="true" />
+					<span>{t(active ? 'active' : 'waiting')}</span>
+				</>
+			),
+			value: <span>{activityValue}</span>,
+		},
+		{
+			key: 'combinedSelfStake',
 			label: t('combinedSelfStake'),
 			title: `${combinedSelfStake.toFormat()} ${unit}`,
 			value: <StakeValue unit={unit} value={combinedSelfStake} />,
 		},
 		{
-			color:
-				retainmentRate === undefined ? undefined : getRateColor(retainmentRate),
-			label: t('retainmentRate'),
-			value: retainmentRateLabel,
-		},
-		{
+			key: 'averageSelfStake',
 			label: t('averageSelfStake'),
 			title: averageSelfStake
 				? `${averageSelfStake.toFormat()} ${unit}`
 				: undefined,
 			value: <StakeValue unit={unit} value={averageSelfStake} />,
 		},
+		{
+			key: 'retainmentRate',
+			color:
+				retainmentRate === undefined ? undefined : getRateColor(retainmentRate),
+			label: t('retainmentRate'),
+			value: retainmentRateLabel,
+		},
 	]
-	const metricNodes = metrics.map(({ color, label, title, value }) => (
+	const metricNodes = metrics.map(({ color, key, label, title, value }) => (
 		<ListItem.Metric
-			key={label}
+			key={key}
 			color={color}
 			label={label}
 			valueProps={{ title }}
@@ -124,7 +146,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 				</ListItem.RowIdentity>
 				<ListItem.RowMetrics
 					style={{
-						gridTemplateColumns: 'repeat(4, minmax(7rem, 1fr))',
+						gridTemplateColumns: 'repeat(5, minmax(7rem, 1fr))',
 					}}
 				>
 					{metricNodes}
@@ -141,9 +163,9 @@ export const Item = ({ format, operator }: ItemProps) => {
 					<ListItem.Identity>{identityNode}</ListItem.Identity>
 					{cardActions}
 				</DetailedCard.Header>
-				<ListItem.Summary aria-label={t('operatorSummary')}>
+				<CardSummary aria-label={t('operatorSummary')}>
 					{metricNodes}
-				</ListItem.Summary>
+				</CardSummary>
 			</DetailedCard.Top>
 		</DetailedCard.Root>
 	)

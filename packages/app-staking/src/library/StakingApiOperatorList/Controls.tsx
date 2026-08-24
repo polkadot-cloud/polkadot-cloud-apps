@@ -38,6 +38,15 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 	const options: Array<{ key: OperatorListOrder; label: string }> = [
 		{ key: 'RETAINMENT_HIGH', label: t('highRetainment') },
 		{ key: 'RETAINMENT_LOW', label: t('lowRetainment') },
+		{ key: 'VALIDATOR_COUNT', label: t('validatorCount') },
+		{
+			key: 'AVERAGE_SELF_STAKE_HIGH',
+			label: t('averageSelfStakeHigh'),
+		},
+		{
+			key: 'AVERAGE_SELF_STAKE_LOW',
+			label: t('averageSelfStakeLow'),
+		},
 	]
 	const nextConfig = { ...draft, search: draft.search.trim() }
 	const hasChanges =
@@ -73,11 +82,7 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 			<ConfigRow>
 				<OrderField disabled={disabled}>
 					<legend>{t('order')}</legend>
-					<OrderTabs
-						$columns={options.length}
-						role="tablist"
-						aria-label={t('order')}
-					>
+					<OrderTabs role="tablist" aria-label={t('order')}>
 						{options.map(({ key, label }) => (
 							<OrderTab
 								key={key}

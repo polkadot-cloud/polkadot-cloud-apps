@@ -88,7 +88,12 @@ export interface ValidatorListItem {
 	retainment: ValidatorRetainmentPeriod | null
 }
 
-export type OperatorListOrder = 'RETAINMENT_HIGH' | 'RETAINMENT_LOW'
+export type OperatorListOrder =
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
+	| 'VALIDATOR_COUNT'
+	| 'AVERAGE_SELF_STAKE_HIGH'
+	| 'AVERAGE_SELF_STAKE_LOW'
 
 export interface OperatorListVariables extends Record<string, unknown> {
 	network: string
@@ -113,6 +118,8 @@ export interface OperatorListResult {
 	total: number
 	totalPages: number
 	hasNextPage: boolean
+	activityEra: number | null
+	retainmentEra: number | null
 }
 
 export interface OperatorListItem {
@@ -122,12 +129,28 @@ export interface OperatorListItem {
 	}
 	validators: string[]
 	validatorCount: number
+	activeValidatorCount: number
 	combinedSelfStake: string
+	retainmentRank: number | null
 	retainment: OperatorRetainmentPeriod | null
 }
 
 export interface OperatorRetainmentPeriod {
 	retainmentRate: number | null
+}
+
+export interface OperatorStatsVariables extends Record<string, unknown> {
+	network: string
+}
+
+export interface OperatorStatsData {
+	operatorStats: OperatorStatsResult
+}
+
+export interface OperatorStatsResult {
+	totalOperators: number
+	activeOperators: number
+	operatorValidatorCoverage: number
 }
 
 export type ValidatorCandidateStrategy =
