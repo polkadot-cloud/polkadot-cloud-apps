@@ -34,6 +34,7 @@ const QUERY = gql`
         activeValidatorCount
         combinedSelfStake
         retainment {
+          fromTimestamp
           retainmentRate
         }
       }

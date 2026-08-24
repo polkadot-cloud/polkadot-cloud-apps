@@ -34,6 +34,10 @@ export const OrderTab = styled(SharedOrderTab)`
 export const CardSummary = styled(ListItem.Summary)`
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
+  time {
+    text-transform: none;
+  }
+
   > div:last-child {
     border-block-end: 0;
     border-inline-start: 0;

@@ -133,6 +133,7 @@ export interface OperatorListItem {
 }
 
 export interface OperatorRetainmentPeriod {
+	fromTimestamp: number
 	retainmentRate: number | null
 }
 

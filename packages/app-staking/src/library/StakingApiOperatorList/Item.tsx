@@ -69,6 +69,16 @@ export const Item = ({ format, operator }: ItemProps) => {
 			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
 					maximumFractionDigits: 1,
 				})}%`
+	const retainmentMonthDate = operator.retainment
+		? new Date(operator.retainment.fromTimestamp * 1000)
+		: undefined
+	const retainmentMonth = retainmentMonthDate
+		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
+				month: 'long',
+				year: 'numeric',
+				timeZone: 'UTC',
+			}).format(retainmentMonthDate)
+		: undefined
 	const identityNode = (
 		<Identity address={identity.address} display={identity.display || null} />
 	)
@@ -125,7 +135,16 @@ export const Item = ({ format, operator }: ItemProps) => {
 				retainmentRate === undefined
 					? 'var(--text-tertiary)'
 					: getRateColor(retainmentRate),
-			label: t('retainmentRate'),
+			label: (
+				<>
+					{t('retainmentRate')}
+					{format === 'col' && retainmentMonthDate && retainmentMonth ? (
+						<ListItem.Month dateTime={retainmentMonthDate.toISOString()}>
+							/ {retainmentMonth}
+						</ListItem.Month>
+					) : null}
+				</>
+			),
 			value: retainmentRateLabel,
 		},
 	]
