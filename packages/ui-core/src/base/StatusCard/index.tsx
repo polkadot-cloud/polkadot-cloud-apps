@@ -20,11 +20,13 @@ const STATUS_ICONS = {
 type StatusCardStatus = keyof typeof STATUS_ICONS
 
 type StatusCardProps = Omit<ComponentPropsWithoutRef<'div'>, 'title'> & {
+	action?: ReactNode
 	status: StatusCardStatus
 	title?: ReactNode
 }
 
 export const StatusCard = ({
+	action,
 	children,
 	className,
 	status,
@@ -44,5 +46,6 @@ export const StatusCard = ({
 			{title && <strong>{title}</strong>}
 			<span>{children}</span>
 		</div>
+		{action && <div className={classes.action}>{action}</div>}
 	</div>
 )

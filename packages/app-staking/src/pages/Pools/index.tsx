@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { usePoolStats } from 'hooks/useStats'
+import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
 import { PageWarnings } from 'library/PageWarnings'
 import { Stats } from 'library/Stats'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +18,7 @@ export const Pools = () => {
 		<>
 			<Page.Title title={t('pool', { ns: 'app' })}></Page.Title>
 			<PageWarnings />
+			<NominationRetainmentWarning bondFor="pool" />
 			<Stat.Row>
 				<Stats items={[activePools, minimumToJoinPool, minimumToCreatePool]} />
 			</Stat.Row>
