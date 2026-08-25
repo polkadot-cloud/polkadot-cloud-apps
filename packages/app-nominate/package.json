@@ -15,9 +15,9 @@
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^7.3.1",
 		"@fortawesome/react-fontawesome": "^3.5.0",
-		"@polkadot-cloud/connect": "^1.0.9",
-		"@polkadot-cloud/connect-ledger": "^1.1.0",
-		"@polkadot-cloud/connect-proxies": "^0.3.0",
+		"@polkadot-cloud/connect": "^1.1.0",
+		"@polkadot-cloud/connect-ledger": "^1.2.0",
+		"@polkadot-cloud/connect-proxies": "^0.4.0",
 		"@w3ux/factories": "^2.2.2",
 		"@w3ux/react-odometer": "2.4.5",
 		"app-staking": "workspace:*",
