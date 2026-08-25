@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
-import { useActiveAccount } from '@polkadot-cloud/connect'
+import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { RetainmentThresholds } from 'consts/retainment'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
@@ -60,6 +60,7 @@ export const NominationRetainmentWarning = ({
 	const { openCanvas } = useOverlay().canvas
 	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
+	const { isReadOnlyAccount } = useImportedAccounts()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
 
@@ -85,7 +86,10 @@ export const NominationRetainmentWarning = ({
 
 	// Only display warnings when retainment data is available.
 	const canDisplay =
-		retainmentStatsEnabled && Boolean(activeAddress) && (!forPool || poolOwner)
+		!isReadOnlyAccount(activeAddress) &&
+		retainmentStatsEnabled &&
+		Boolean(activeAddress) &&
+		(!forPool || poolOwner)
 
 	// Load retainment details for the nominated validators.
 	const validatorDetails = useValidatorDetails(
