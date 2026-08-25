@@ -8,7 +8,6 @@ import { useStaking } from 'hooks/useStaking'
 import { useNominatorStats } from 'hooks/useStats'
 import { useSyncing } from 'hooks/useSyncing'
 import { BondManager } from 'library/BondManager'
-import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
 import { Nominations } from 'library/Nominations'
 import { Empty } from 'library/Nominations/Empty'
 import { Stats } from 'library/Stats'
@@ -34,7 +33,6 @@ export const Active = () => {
 
 	return (
 		<>
-			<NominationRetainmentWarning bondFor="nominator" />
 			<Stat.Row>
 				<Stats
 					items={[activeNominators, minimumNominatorBond, minimumActiveStake]}

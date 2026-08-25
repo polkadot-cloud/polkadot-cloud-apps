@@ -12,6 +12,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
+import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
 import {
 	fetchPoolEraRewards,
 	fetchPoolRewards,
@@ -182,6 +183,7 @@ export const Rewards = () => {
 					preloaderTabs={1}
 				/>
 			</Page.Title>
+			<NominationRetainmentWarning />
 			{activeTab === 0 && (
 				<Overview
 					{...pageProps}

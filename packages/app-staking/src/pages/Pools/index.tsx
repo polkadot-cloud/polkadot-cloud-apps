@@ -18,7 +18,7 @@ export const Pools = () => {
 		<>
 			<Page.Title title={t('pool', { ns: 'app' })}></Page.Title>
 			<PageWarnings />
-			<NominationRetainmentWarning bondFor="pool" />
+			<NominationRetainmentWarning />
 			<Stat.Row>
 				<Stats items={[activePools, minimumToJoinPool, minimumToCreatePool]} />
 			</Stat.Row>
