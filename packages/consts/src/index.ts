@@ -26,7 +26,7 @@ export const PlatformGitHubURL =
 	'https://github.com/polkadot-cloud/polkadot-cloud-apps'
 export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
 export const AssetHubPolkadotSubscanURL = 'https://assethub-polkadot.subscan.io'
-export const ManualSigners = ['ledger', 'vault', 'wallet_connect']
+export const ManualSigners = ['ledger', 'vault']
 
 // RPC
 export const PolkadotCloudRpcStatemintUrl = 'wss://rpc.polkadot.cloud/statemint'

@@ -5,12 +5,11 @@ import { faGlasses } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { setActiveProxy } from '@polkadot-cloud/connect-proxies'
-import LedgerSVG from '@w3ux/extension-assets/LedgerSquare.svg?react'
-import PolkadotVaultSVG from '@w3ux/extension-assets/PolkadotVault.svg?react'
-import { ExtensionIcons } from '@w3ux/extension-assets/util'
-import WalletConnectSVG from '@w3ux/extension-assets/WalletConnect.svg?react'
 import { Polkicon } from '@w3ux/react-polkicon'
 import { ellipsisFn, planckToUnit } from '@w3ux/utils'
+import { getExtensionIcon } from 'assets'
+import LedgerSVG from 'assets/extensions/LedgerSquare.svg?react'
+import PolkadotVaultSVG from 'assets/extensions/PolkadotVault.svg?react'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useActiveProxy } from 'hooks/useActiveProxy'
@@ -51,9 +50,7 @@ export const AccountButton = ({
 			? LedgerSVG
 			: meta?.source === 'vault'
 				? PolkadotVaultSVG
-				: meta?.source === 'wallet_connect'
-					? WalletConnectSVG
-					: ExtensionIcons[meta?.source || ''] || undefined
+				: getExtensionIcon(meta?.source || '') || undefined
 
 	// Determine if this account is active (active account or proxy)
 	const isActiveAccount =

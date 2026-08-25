@@ -1,10 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import LedgerSVG from '@w3ux/extension-assets/LedgerSquare.svg?react'
-import PolkadotVaultSVG from '@w3ux/extension-assets/PolkadotVault.svg?react'
-import { ExtensionIcons } from '@w3ux/extension-assets/util'
-import WalletConnectSVG from '@w3ux/extension-assets/WalletConnect.svg?react'
+import { getExtensionIcon } from 'assets'
+import LedgerSVG from 'assets/extensions/LedgerSquare.svg?react'
+import PolkadotVaultSVG from 'assets/extensions/PolkadotVault.svg?react'
 
 export const getAccountSourceIcon = (source?: string) => {
 	const SelectedIcon = source
@@ -12,9 +11,7 @@ export const getAccountSourceIcon = (source?: string) => {
 			? LedgerSVG
 			: source === 'vault'
 				? PolkadotVaultSVG
-				: source === 'wallet_connect'
-					? WalletConnectSVG
-					: ExtensionIcons[source] || undefined
+				: getExtensionIcon(source) || undefined
 		: undefined
 
 	return SelectedIcon

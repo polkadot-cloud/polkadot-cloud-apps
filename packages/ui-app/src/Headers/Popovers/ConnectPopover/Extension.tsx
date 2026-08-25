@@ -8,8 +8,8 @@ import {
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
-import { ExtensionIcons } from '@w3ux/extension-assets/util'
 import { localStorageOrDefault } from '@w3ux/utils'
+import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTranslation } from 'react-i18next'
@@ -32,7 +32,7 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 	const canConnect = extensionCanConnect(id)
 	const connected = extensionsStatus[id] === 'connected'
 
-	const Icon = ExtensionIcons[id]
+	const Icon = getExtensionIcon(id)
 	const disabled = !isInstalled
 
 	// Handle connect and disconnect from extension.
@@ -73,9 +73,7 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 
 	return (
 		<ConnectItem.Item last={last}>
-			<div>
-				<ConnectItem.Logo Svg={Icon} />
-			</div>
+			<div>{Icon && <ConnectItem.Logo Svg={Icon} />}</div>
 			<div>
 				<div>
 					<h3 className={`${connected ? ` connected` : ``}`}>{title}</h3>

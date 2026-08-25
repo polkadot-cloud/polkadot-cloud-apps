@@ -3,8 +3,8 @@
 
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 import { useVaultAccounts } from '@polkadot-cloud/connect-vault'
-import PolkadotVaultSVG from '@w3ux/extension-assets/PolkadotVault.svg?react'
 import { Polkicon } from '@w3ux/react-polkicon'
+import PolkadotVaultSVG from 'assets/extensions/PolkadotVault.svg?react'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import type { CSSProperties } from 'react'

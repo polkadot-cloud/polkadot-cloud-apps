@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import LedgerSquareSVG from '@w3ux/extension-assets/LedgerSquare.svg?react'
-import PolkadotVaultSVG from '@w3ux/extension-assets/PolkadotVault.svg?react'
+import LedgerSquareSVG from 'assets/extensions/LedgerSquare.svg?react'
+import PolkadotVaultSVG from 'assets/extensions/PolkadotVault.svg?react'
 import { useTranslation } from 'react-i18next'
 import { useOverlay } from 'ui-overlay'
 import { Extension } from './Extension'

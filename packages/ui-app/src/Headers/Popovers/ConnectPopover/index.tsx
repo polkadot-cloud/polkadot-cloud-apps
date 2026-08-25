@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useExtensions } from '@polkadot-cloud/connect'
-import extensions from '@w3ux/extension-assets'
 import { useOutsideAlerter } from '@w3ux/hooks'
+import extensions from 'consts/extensions'
 import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,16 +23,11 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 
 	const popoverRef = useRef<HTMLDivElement>(null)
 
-	// NOTE: Deprecated support for these wallets/extensions
-	const deprecated = ['snap', 'polkagate', 'fearless', 'enkrypt']
-
 	// Format supported extensions as array
-	const extensionsAsArray = Object.entries(extensions)
-		.map(([key, value]) => ({
-			id: key,
-			...value,
-		}))
-		.filter(({ id }) => !deprecated.some((d) => id.includes(d)))
+	const extensionsAsArray = Object.entries(extensions).map(([id, value]) => ({
+		id,
+		...value,
+	}))
 
 	// Determine which web extensions to display.
 	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')
