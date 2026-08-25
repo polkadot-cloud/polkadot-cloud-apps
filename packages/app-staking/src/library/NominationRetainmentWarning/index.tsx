@@ -16,8 +16,6 @@ import { Page, StatusCard } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import classes from './index.module.scss'
 
-const PREVIEW_DANGER_COUNT = import.meta.env.MODE === 'development' ? 1 : 0
-
 export const RetainmentThresholdDanger = ({
 	count,
 	onFix,
@@ -98,11 +96,6 @@ export const NominationRetainmentWarning = ({
 		validatorDetails.retainmentByAddress,
 	).filter(({ rate }) => rate < RetainmentThresholds.medium).length
 
-	// Fall back to the development preview when needed.
-	const displayedDangerCount =
-		dangerCount ||
-		(canDisplay && nominations.length > 0 ? PREVIEW_DANGER_COUNT : 0)
-
 	// Open the nomination manager for the resolved staking type.
 	const handleFix = () => {
 		openCanvas({
@@ -119,17 +112,14 @@ export const NominationRetainmentWarning = ({
 		})
 	}
 
-	if (!canDisplay || displayedDangerCount === 0) {
+	if (!canDisplay || dangerCount === 0) {
 		return null
 	}
 
 	return (
 		<Page.Row yMargin>
 			<Page.RowSection standalone>
-				<RetainmentThresholdDanger
-					count={displayedDangerCount}
-					onFix={handleFix}
-				/>
+				<RetainmentThresholdDanger count={dangerCount} onFix={handleFix} />
 			</Page.RowSection>
 		</Page.Row>
 	)
