@@ -9,7 +9,6 @@ import { useBalances } from 'hooks/useBalances'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { getValidatorsWithRetainment } from 'library/GenerateNominations/utils'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondFor } from 'types'
 import { ButtonPrimary } from 'ui-buttons'
@@ -56,36 +55,55 @@ export const NominationRetainmentWarning = ({
 }: {
 	bondFor?: BondFor
 }) => {
-	const { activeAddress } = useActiveAccount()
 	const { getNominations } = useBalances()
-	const { formatWithPrefs } = useValidators()
-	const { activePool, activePoolNominations, isOwner } = useActivePool()
 	const { openCanvas } = useOverlay().canvas
+	const { formatWithPrefs } = useValidators()
+	const { activeAddress } = useActiveAccount()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
-	const forPool = bondFor === 'pool' || (bondFor === undefined && isOwner())
-	const effectiveBondFor = forPool ? 'pool' : 'nominator'
+	const { activePool, activePoolNominations, isOwner } = useActivePool()
+
+	// Check whether the active account owns the pool.
+	const poolOwner = isOwner()
+
+	// Resolve whether to manage pool or nominator nominations.
+	const effectiveBondFor: BondFor =
+		bondFor ?? (poolOwner ? 'pool' : 'nominator')
+
+	// Check whether pool nominations are being managed.
+	const forPool = effectiveBondFor === 'pool'
+
+	// Get the nominations for the resolved staking type.
 	const nominations = formatWithPrefs(
 		forPool
 			? (activePoolNominations?.targets ?? [])
 			: getNominations(activeAddress),
 	)
+
+	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
-	const canDisplay = Boolean(activeAddress) && (!forPool || isOwner())
+
+	// Only display warnings when retainment data is available.
+	const canDisplay =
+		retainmentStatsEnabled && Boolean(activeAddress) && (!forPool || poolOwner)
+
+	// Load retainment details for the nominated validators.
 	const validatorDetails = useValidatorDetails(
 		validatorAddresses,
-		retainmentStatsEnabled && canDisplay && nominations.length > 0,
+		canDisplay && nominations.length > 0,
 	)
-	const dangerCount = useMemo(
-		() =>
-			getValidatorsWithRetainment(
-				nominations,
-				validatorDetails.retainmentByAddress,
-			).filter(({ rate }) => rate < RetainmentThresholds.medium).length,
-		[nominations, validatorDetails.retainmentByAddress],
-	)
-	const previewCount =
-		canDisplay && nominations.length > 0 ? PREVIEW_DANGER_COUNT : 0
-	const displayedDangerCount = dangerCount || previewCount
+
+	// Count nominees below the retainment threshold.
+	const dangerCount = getValidatorsWithRetainment(
+		nominations,
+		validatorDetails.retainmentByAddress,
+	).filter(({ rate }) => rate < RetainmentThresholds.medium).length
+
+	// Fall back to the development preview when needed.
+	const displayedDangerCount =
+		dangerCount ||
+		(canDisplay && nominations.length > 0 ? PREVIEW_DANGER_COUNT : 0)
+
+	// Open the nomination manager for the resolved staking type.
 	const handleFix = () => {
 		openCanvas({
 			key: 'ManageNominations',
