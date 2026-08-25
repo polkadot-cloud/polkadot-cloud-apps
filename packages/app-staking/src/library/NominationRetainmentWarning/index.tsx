@@ -62,14 +62,15 @@ export const NominationRetainmentWarning = ({
 	const { activeAddress } = useActiveAccount()
 	const { isReadOnlyAccount } = useImportedAccounts()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
-	const { activePool, activePoolNominations, isOwner } = useActivePool()
+	const { activePool, activePoolNominations, isNominator, isOwner } =
+		useActivePool()
 
-	// Check whether the active account owns the pool.
-	const poolOwner = isOwner()
+	// Check whether the active account can manage the pool's nominations.
+	const canManagePoolNominations = isOwner() || isNominator()
 
 	// Resolve whether to manage pool or nominator nominations.
 	const effectiveBondFor: BondFor =
-		bondFor ?? (poolOwner ? 'pool' : 'nominator')
+		bondFor ?? (canManagePoolNominations ? 'pool' : 'nominator')
 
 	// Check whether pool nominations are being managed.
 	const forPool = effectiveBondFor === 'pool'
@@ -89,7 +90,7 @@ export const NominationRetainmentWarning = ({
 		!isReadOnlyAccount(activeAddress) &&
 		retainmentStatsEnabled &&
 		Boolean(activeAddress) &&
-		(!forPool || poolOwner)
+		(!forPool || canManagePoolNominations)
 
 	// Load retainment details for the nominated validators.
 	const validatorDetails = useValidatorDetails(
