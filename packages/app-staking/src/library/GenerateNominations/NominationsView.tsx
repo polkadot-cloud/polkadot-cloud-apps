@@ -37,11 +37,6 @@ export const NominationsView = ({
 }: NominationsViewProps) => {
 	// Resolve shared application state before deriving view conditions.
 	const { t } = useTranslation()
-	const { activeAddress } = useActiveAccount()
-	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
-	const { isReady } = useApi()
-	const { active: healthCheckActive, retainmentStatsEnabled } =
-		useNominationHealth()
 	const {
 		fetching,
 		height,
@@ -52,11 +47,22 @@ export const NominationsView = ({
 		setMethod,
 		setNominations,
 	} = useManageNominations()
+	const { isReady } = useApi()
+	const { active: healthCheckActive, retainmentStatsEnabled } =
+		useNominationHealth()
+	const { activeAddress } = useActiveAccount()
+	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
 	// Derive layout and visibility once for use across both presentation modes.
 	const listReady = isReady && method !== null
+
+	// Use rows when retainment stats are enabled.
 	const listFormat = retainmentStatsEnabled ? 'row' : 'col'
+
+	// Show method selection until a method is chosen.
 	const showMethodSelection = !isReadOnlyAccount(activeAddress) && !method
+
+	// Show standalone controls when nominations can be managed.
 	const showStandaloneControls =
 		Boolean(activeAddress) &&
 		canManageNominations &&

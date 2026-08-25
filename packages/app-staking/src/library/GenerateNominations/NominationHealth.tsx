@@ -3,6 +3,7 @@
 
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import { RetainmentThresholdDanger } from 'library/NominationRetainmentWarning'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
@@ -130,13 +131,7 @@ export const NominationHealth = ({
 					})}
 				</StatusCard>
 			)}
-			{dangerCount > 0 && (
-				<StatusCard status="danger" role="status">
-					{t('retainmentThresholdDanger', {
-						count: dangerCount,
-					})}
-				</StatusCard>
-			)}
+			<RetainmentThresholdDanger count={dangerCount} />
 		</NominationHealthWrapper>
 	)
 }

@@ -55,6 +55,11 @@
 	justify-content: center;
 }
 
+.unframedIcon {
+	border: 0;
+	font-size: 1.6rem;
+}
+
 .copy {
 	color: var(--status-card-text);
 	display: flex;
@@ -78,4 +83,9 @@
 	> span {
 		font-size: 1.1rem;
 	}
+}
+
+.action {
+	flex: 0 0 auto;
+	margin-left: auto;
 }

@@ -1,0 +1,8 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.fixButton {
+	border-color: color-mix(in srgb, var(--status-danger) 95%, black);
+	border-radius: var(--btn-sm-radius);
+	font-size: 1.1rem;
+}
