@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { RetainmentThresholds } from 'consts/retainment'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
@@ -40,6 +41,8 @@ export const RetainmentThresholdDanger = ({
 					/>
 				) : undefined
 			}
+			icon={faCircleExclamation}
+			iconFrame={false}
 			status="danger"
 			role="status"
 		>
