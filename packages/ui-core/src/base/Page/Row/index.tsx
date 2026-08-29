@@ -12,7 +12,8 @@ import classes from './index.module.scss'
  */
 export const Row = ({ children, style, yMargin }: RowProps) => {
 	const buttonClasses = classNames(classes.row, 'pagePadding', {
-		[classes.yMargin]: yMargin,
+		[classes.yMargin]: yMargin === true,
+		[classes.compactYMargin]: yMargin === 'compact',
 	})
 
 	return (

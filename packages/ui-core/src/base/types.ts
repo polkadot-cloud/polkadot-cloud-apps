@@ -4,7 +4,7 @@
 import type { ComponentBase } from 'types'
 
 export type RowProps = ComponentBase & {
-	yMargin?: boolean
+	yMargin?: boolean | 'compact'
 	xMargin?: boolean
 }
 

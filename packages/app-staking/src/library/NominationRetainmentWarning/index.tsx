@@ -125,7 +125,7 @@ export const NominationRetainmentWarning = ({
 	}
 
 	return (
-		<Page.Row yMargin>
+		<Page.Row yMargin="compact">
 			<Page.RowSection standalone>
 				<RetainmentThresholdDanger count={dangerCount} onFix={handleFix} />
 			</Page.RowSection>
