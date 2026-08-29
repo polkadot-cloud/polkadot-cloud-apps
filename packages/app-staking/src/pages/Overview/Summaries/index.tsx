@@ -56,7 +56,7 @@ export const Summaries = ({ height, isValidator }: SummariesProps) => {
 
 	sections.push([statusSectionConfig, <Status isValidator={isValidator} />])
 
-	// Halving link as section if available
+// Add the Halving section when available
 	if (showHalving) {
 		sections.push([
 			{
