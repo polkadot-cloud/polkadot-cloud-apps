@@ -8,6 +8,10 @@ export type RowProps = ComponentBase & {
 	xMargin?: boolean
 }
 
+export type PageRowProps = ComponentBase & {
+	yMargin?: boolean | 'compact'
+}
+
 export type TooltipAreaProps = ComponentBase & {
 	text: string
 	pointer?: boolean
