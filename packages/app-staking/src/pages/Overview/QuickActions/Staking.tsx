@@ -8,7 +8,12 @@ import type { BondFor } from 'types'
 import { QuickAction } from 'ui-buttons'
 import type { ButtonQuickActionProps } from 'ui-buttons/types'
 
-export const Staking = ({ bondFor }: { bondFor: BondFor[] }) => {
+interface StakingProps {
+	bondFor: BondFor[]
+	isValidator: boolean
+}
+
+export const Staking = ({ bondFor, isValidator }: StakingProps) => {
 	const { isDepositor } = useActivePool()
 	const {
 		baseQuickActions,
@@ -19,43 +24,54 @@ export const Staking = ({ bondFor }: { bondFor: BondFor[] }) => {
 
 	const actions: ButtonQuickActionProps[] = []
 
-	actions.push(baseQuickActions.send)
-
-	if (bondFor.includes('pool')) {
+	if (isValidator) {
+		// Email and Discord are always available in the quick actions footer.
 		actions.push(
-			baseQuickActions.withdrawPoolRewards,
-			baseQuickActions.compoundPoolRewards,
+			baseQuickActions.send,
+			getBondQuickAction('nominator'),
+			getUnbondQuickAction('nominator'),
+			baseQuickActions.updatePayee,
 		)
-	}
+	} else {
+		actions.push(baseQuickActions.send)
 
-	if (bondFor.includes('nominator')) {
-		actions.push(baseQuickActions.claimNominatorPayouts)
-	}
+		if (bondFor.includes('pool')) {
+			actions.push(
+				baseQuickActions.withdrawPoolRewards,
+				baseQuickActions.compoundPoolRewards,
+			)
+		}
 
-	const manageNominationsQuickAction = getManageNominationsQuickAction(bondFor)
-	if (manageNominationsQuickAction) {
-		actions.push(manageNominationsQuickAction)
-	}
+		if (bondFor.includes('nominator')) {
+			actions.push(baseQuickActions.claimNominatorPayouts)
+		}
 
-	// Do not include bond/unbond actions for dual stakers
-	if (bondFor.length === 1) {
-		actions.push(
-			getBondQuickAction(bondFor[0]!),
-			getUnbondQuickAction(bondFor[0]!),
-		)
-	}
+		const manageNominationsQuickAction =
+			getManageNominationsQuickAction(bondFor)
+		if (manageNominationsQuickAction) {
+			actions.push(manageNominationsQuickAction)
+		}
 
-	if (bondFor.includes('nominator')) {
-		actions.push(baseQuickActions.updatePayee)
-	}
+		// Do not include bond/unbond actions for dual stakers
+		if (bondFor.length === 1) {
+			actions.push(
+				getBondQuickAction(bondFor[0]!),
+				getUnbondQuickAction(bondFor[0]!),
+			)
+		}
 
-	if (bondFor.length === 1 && bondFor[0] === 'nominator') {
-		actions.push(baseQuickActions.nominatorUnstake)
-	}
+		if (bondFor.includes('nominator')) {
+			actions.push(baseQuickActions.updatePayee)
+		}
 
-	if (bondFor.length === 1 && bondFor[0] === 'pool') {
-		if (!isDepositor()) {
-			actions.push(baseQuickActions.leavePool)
+		if (bondFor.length === 1 && bondFor[0] === 'nominator') {
+			actions.push(baseQuickActions.nominatorUnstake)
+		}
+
+		if (bondFor.length === 1 && bondFor[0] === 'pool') {
+			if (!isDepositor()) {
+				actions.push(baseQuickActions.leavePool)
+			}
 		}
 	}
 

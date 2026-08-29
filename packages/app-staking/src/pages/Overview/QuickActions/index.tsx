@@ -7,6 +7,7 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useActivePool } from 'hooks/useActivePool'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { Preloader } from 'library/StatusPreloader/Preloader'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
@@ -24,9 +25,11 @@ export const QuickActions = ({ height }: { height: number }) => {
 	const { accountSynced } = useSyncing()
 	const { openModal } = useOverlay().modal
 	const { activeAddress } = useActiveAccount()
+	const { isLoading: validatorStatusLoading, isValidator } =
+		useValidatorStatus()
 
 	const isStaking = inPool || isBonding
-	const syncing = !accountSynced(activeAddress)
+	const syncing = !accountSynced(activeAddress) || validatorStatusLoading
 
 	let actionGroup: 'disconnected' | 'notStaking' | 'staking' = 'staking'
 	if (!activeAddress) {
@@ -52,6 +55,7 @@ export const QuickActions = ({ height }: { height: number }) => {
 					{actionGroup === 'notStaking' && <NotStaking />}
 					{actionGroup === 'staking' && (
 						<Staking
+							isValidator={isValidator}
 							bondFor={[
 								...(inPool ? (['pool'] as const) : []),
 								...(isBonding ? (['nominator'] as const) : []),
