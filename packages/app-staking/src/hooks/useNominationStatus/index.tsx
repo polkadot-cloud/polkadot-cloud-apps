@@ -9,6 +9,7 @@ import { useBalances } from 'hooks/useBalances'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { useTranslation } from 'react-i18next'
 import type { BondFor, MaybeAddress, NominationStatus } from 'types'
 import { getPoolNominationStatusCode, groupNomineesByStatus } from 'utils'
@@ -18,6 +19,7 @@ export const useNominationStatus = () => {
 	const { isNominator } = useStaking()
 	const { pluginEnabled } = usePlugins()
 	const { getNominations } = useBalances()
+	const { isValidator } = useValidatorStatus()
 	const { syncing } = useSyncing(['era-stakers'])
 	const { activePoolNominations } = useActivePool()
 	const { bondedPools, poolsNominations } = useBondedPools()
@@ -60,7 +62,9 @@ export const useNominationStatus = () => {
 
 		const isSyncing = stakingApiEnabled ? status === undefined : syncing
 
-		if (!isNominator || isSyncing) {
+		if (type === 'nominator' && isValidator) {
+			message = t('youAreValidator', { ns: 'app' })
+		} else if (!isNominator || isSyncing) {
 			message = t('notNominating', { ns: 'pages' })
 		} else if (!nominees.length) {
 			message = t('noNominationsSet', { ns: 'pages' })

@@ -38,8 +38,10 @@ export const Summaries = ({ height }: { height: number }) => {
 		React.FC,
 	][] = []
 
+	// Warnings only show after syncing
 	const showWarning = warningMessages.length && !syncing
 
+	// Warnings show as additional section
 	const statusSectionConfig = showWarning
 		? {
 				label: t('status', { ns: 'app' }),
@@ -49,6 +51,7 @@ export const Summaries = ({ height }: { height: number }) => {
 
 	sections.push([statusSectionConfig, Status])
 
+	// Halving link as section if available
 	if (showHalving) {
 		sections.push([
 			{
