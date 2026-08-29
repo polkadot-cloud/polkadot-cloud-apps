@@ -4,8 +4,12 @@
 import type { ComponentBase } from 'types'
 
 export type RowProps = ComponentBase & {
-	yMargin?: boolean | 'compact'
+	yMargin?: boolean
 	xMargin?: boolean
+}
+
+export type PageRowProps = ComponentBase & {
+	yMargin?: boolean | 'compact'
 }
 
 export type TooltipAreaProps = ComponentBase & {
