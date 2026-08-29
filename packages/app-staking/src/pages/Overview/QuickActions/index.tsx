@@ -17,7 +17,17 @@ import { Disconnected } from './Disconnected'
 import { NotStaking } from './NotStaking'
 import { Staking } from './Staking'
 
-export const QuickActions = ({ height }: { height: number }) => {
+interface QuickActionsProps {
+	height: number
+	isValidator: boolean
+	validatorStatusLoading: boolean
+}
+
+export const QuickActions = ({
+	height,
+	isValidator,
+	validatorStatusLoading,
+}: QuickActionsProps) => {
 	const { t } = useTranslation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
@@ -25,8 +35,8 @@ export const QuickActions = ({ height }: { height: number }) => {
 	const { openModal } = useOverlay().modal
 	const { activeAddress } = useActiveAccount()
 
-	const isStaking = inPool || isBonding
-	const syncing = !accountSynced(activeAddress)
+	const isStaking = inPool || isBonding || isValidator
+	const syncing = !accountSynced(activeAddress) || validatorStatusLoading
 
 	let actionGroup: 'disconnected' | 'notStaking' | 'staking' = 'staking'
 	if (!activeAddress) {
@@ -52,6 +62,7 @@ export const QuickActions = ({ height }: { height: number }) => {
 					{actionGroup === 'notStaking' && <NotStaking />}
 					{actionGroup === 'staking' && (
 						<Staking
+							isValidator={isValidator}
 							bondFor={[
 								...(inPool ? (['pool'] as const) : []),
 								...(isBonding ? (['nominator'] as const) : []),

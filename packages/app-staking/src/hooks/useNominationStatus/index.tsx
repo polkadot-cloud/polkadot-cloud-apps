@@ -38,7 +38,11 @@ export const useNominationStatus = () => {
 	}
 
 	// Gets the status of the provided account's nominations, and whether they are earning rewards
-	const getNominationStatus = (who: MaybeAddress, type: BondFor) => {
+	const getNominationStatus = (
+		who: MaybeAddress,
+		type: BondFor,
+		isValidator = false,
+	) => {
 		// Get the sets nominees from the provided account's targets and categorise
 		// them in a single pass (active / inactive / waiting).
 		const nominees = Object.entries(getNominationSetStatus(who, type))
@@ -60,7 +64,9 @@ export const useNominationStatus = () => {
 
 		const isSyncing = stakingApiEnabled ? status === undefined : syncing
 
-		if (!isNominator || isSyncing) {
+		if (type === 'nominator' && isValidator) {
+			message = t('youAreValidator', { ns: 'app' })
+		} else if (!isNominator || isSyncing) {
 			message = t('notNominating', { ns: 'pages' })
 		} else if (!nominees.length) {
 			message = t('noNominationsSet', { ns: 'pages' })

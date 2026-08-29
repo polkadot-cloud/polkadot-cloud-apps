@@ -9,7 +9,7 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSyncing } from 'hooks/useSyncing'
 import { useWarnings } from 'hooks/useWarnings'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { ButtonSecondary } from 'ui-buttons'
@@ -17,7 +17,12 @@ import { Halving } from './Sections/Halving'
 import { Status } from './Sections/Status'
 import { SectionNav, SectionsArea } from './Wrappers'
 
-export const Summaries = ({ height }: { height: number }) => {
+interface SummariesProps {
+	height: number
+	isValidator: boolean
+}
+
+export const Summaries = ({ height, isValidator }: SummariesProps) => {
 	const { t } = useTranslation()
 	const { network } = useNetwork()
 	const { accountSynced } = useSyncing()
@@ -35,11 +40,13 @@ export const Summaries = ({ height }: { height: number }) => {
 	// Sections to render
 	const sections: [
 		{ label: string; faIcon?: IconDefinition; format?: 'warning' | 'danger' },
-		React.FC,
+		ReactNode,
 	][] = []
 
+	// Warnings only show after syncing
 	const showWarning = warningMessages.length && !syncing
 
+	// Indicate warnings on the existing Status section
 	const statusSectionConfig = showWarning
 		? {
 				label: t('status', { ns: 'app' }),
@@ -47,14 +54,15 @@ export const Summaries = ({ height }: { height: number }) => {
 			}
 		: { label: t('status', { ns: 'app' }) }
 
-	sections.push([statusSectionConfig, Status])
+	sections.push([statusSectionConfig, <Status isValidator={isValidator} />])
 
+	// Add the Halving section when available
 	if (showHalving) {
 		sections.push([
 			{
 				label: t('nextHalving', { ns: 'app' }),
 			},
-			Halving,
+			<Halving />,
 		])
 	}
 
@@ -78,9 +86,9 @@ export const Summaries = ({ height }: { height: number }) => {
 				$activeSection={activeSection}
 				$totalSections={sections.length}
 			>
-				{sections.map(([{ label }, Component]) => (
+				{sections.map(([{ label }, content]) => (
 					<div className="section" key={label}>
-						<Component />
+						{content}
 					</div>
 				))}
 			</SectionsArea>
