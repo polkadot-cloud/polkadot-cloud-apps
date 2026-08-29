@@ -24,7 +24,7 @@ import { useOverlay } from 'ui-overlay'
 import { Tips } from 'ui-tips'
 import { SectionWrapper, Subheading } from '../Wrappers'
 
-export const Status = () => {
+export const Status = ({ isValidator }: { isValidator: boolean }) => {
 	const { t } = useTranslation()
 	const { network } = useNetwork()
 	const { isBonding } = useStaking()
@@ -41,7 +41,11 @@ export const Status = () => {
 
 	const syncing = !accountSynced(activeAddress)
 	const poolWarningTips = getPoolWarningTips()
-	const nominationStatus = getNominationStatus(activeAddress, 'nominator')
+	const nominationStatus = getNominationStatus(
+		activeAddress,
+		'nominator',
+		isValidator,
+	)
 	const notStaking = activeAddress && !isBonding && !inPool
 
 	// Memoize the tips items to avoid recalculation

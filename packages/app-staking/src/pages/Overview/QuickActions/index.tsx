@@ -7,7 +7,6 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useActivePool } from 'hooks/useActivePool'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { Preloader } from 'library/StatusPreloader/Preloader'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
@@ -18,15 +17,23 @@ import { Disconnected } from './Disconnected'
 import { NotStaking } from './NotStaking'
 import { Staking } from './Staking'
 
-export const QuickActions = ({ height }: { height: number }) => {
+interface QuickActionsProps {
+	height: number
+	isValidator: boolean
+	validatorStatusLoading: boolean
+}
+
+export const QuickActions = ({
+	height,
+	isValidator,
+	validatorStatusLoading,
+}: QuickActionsProps) => {
 	const { t } = useTranslation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
 	const { accountSynced } = useSyncing()
 	const { openModal } = useOverlay().modal
 	const { activeAddress } = useActiveAccount()
-	const { isLoading: validatorStatusLoading, isValidator } =
-		useValidatorStatus()
 
 	const isStaking = inPool || isBonding || isValidator
 	const syncing = !accountSynced(activeAddress) || validatorStatusLoading

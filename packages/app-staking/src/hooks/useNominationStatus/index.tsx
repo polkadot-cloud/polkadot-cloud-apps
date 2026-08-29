@@ -9,7 +9,6 @@ import { useBalances } from 'hooks/useBalances'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { useTranslation } from 'react-i18next'
 import type { BondFor, MaybeAddress, NominationStatus } from 'types'
 import { getPoolNominationStatusCode, groupNomineesByStatus } from 'utils'
@@ -19,7 +18,6 @@ export const useNominationStatus = () => {
 	const { isNominator } = useStaking()
 	const { pluginEnabled } = usePlugins()
 	const { getNominations } = useBalances()
-	const { isValidator } = useValidatorStatus()
 	const { syncing } = useSyncing(['era-stakers'])
 	const { activePoolNominations } = useActivePool()
 	const { bondedPools, poolsNominations } = useBondedPools()
@@ -40,7 +38,11 @@ export const useNominationStatus = () => {
 	}
 
 	// Gets the status of the provided account's nominations, and whether they are earning rewards
-	const getNominationStatus = (who: MaybeAddress, type: BondFor) => {
+	const getNominationStatus = (
+		who: MaybeAddress,
+		type: BondFor,
+		isValidator = false,
+	) => {
 		// Get the sets nominees from the provided account's targets and categorise
 		// them in a single pass (active / inactive / waiting).
 		const nominees = Object.entries(getNominationSetStatus(who, type))
