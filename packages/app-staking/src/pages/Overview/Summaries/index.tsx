@@ -46,7 +46,7 @@ export const Summaries = ({ height, isValidator }: SummariesProps) => {
 	// Warnings only show after syncing
 	const showWarning = warningMessages.length && !syncing
 
-// Indicate warnings on the existing Status section
+	// Indicate warnings on the existing Status section
 	const statusSectionConfig = showWarning
 		? {
 				label: t('status', { ns: 'app' }),
@@ -56,7 +56,7 @@ export const Summaries = ({ height, isValidator }: SummariesProps) => {
 
 	sections.push([statusSectionConfig, <Status isValidator={isValidator} />])
 
-// Add the Halving section when available
+	// Add the Halving section when available
 	if (showHalving) {
 		sections.push([
 			{
