@@ -28,7 +28,7 @@ export const QuickActions = ({ height }: { height: number }) => {
 	const { isLoading: validatorStatusLoading, isValidator } =
 		useValidatorStatus()
 
-	const isStaking = inPool || isBonding
+	const isStaking = inPool || isBonding || isValidator
 	const syncing = !accountSynced(activeAddress) || validatorStatusLoading
 
 	let actionGroup: 'disconnected' | 'notStaking' | 'staking' = 'staking'
