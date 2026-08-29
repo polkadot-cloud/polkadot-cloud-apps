@@ -8,6 +8,7 @@ import { Editor } from 'library/ManageNominations/Editor'
 import { useTranslation } from 'react-i18next'
 import { HeadFullWidth, Title } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
+import { Optimise } from './Optimise'
 import { Settings } from './Settings'
 
 export const Inner = () => {
@@ -32,7 +33,9 @@ export const Inner = () => {
 			</HeadFullWidth>
 			<Editor
 				bondFor={isPool ? 'pool' : 'nominator'}
+				controlHeaderAction={<Optimise />}
 				displayFor="canvas"
+				generateButtonLabel="generate"
 				poolId={activePool?.id}
 				callbackSubmit={closeCanvas}
 				callbackInBlock={(nominationAddresses) => {

@@ -178,6 +178,17 @@ export interface OptimalValidatorBatchData {
 	fetchOptimalValidatorBatch: ValidatorCandidate[]
 }
 
+export interface TrustedWaitingValidatorsVariables
+	extends Record<string, unknown> {
+	network: string
+	addresses: string[]
+	count: number
+}
+
+export interface TrustedWaitingValidatorsData {
+	fetchTrustedWaitingValidators: ValidatorCandidate[]
+}
+
 export interface AllRewardsData {
 	allRewards: NominatorReward[]
 }

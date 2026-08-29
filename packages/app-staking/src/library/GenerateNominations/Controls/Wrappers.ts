@@ -17,7 +17,10 @@ const BaseMenuWrapper = styled.div`
     align-items: center;
     position: relative;
 
-    > button {
+    > .generationActions {
+      align-items: center;
+      display: flex;
+      gap: 1rem;
       margin-right: 2.25rem;
     }
 

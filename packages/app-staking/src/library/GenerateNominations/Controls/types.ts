@@ -23,6 +23,8 @@ export interface MenuControlsProps {
 	setters: AnyFunction[]
 	allowRevert: boolean
 	action?: ReactNode
+	controlHeaderAction?: ReactNode
 	disabled?: boolean
+	generateButtonLabel?: 'generate' | 'regenerate'
 	optimalSelectionOnly?: boolean
 }

@@ -13,7 +13,9 @@ export const MenuControls = ({
 	setters,
 	allowRevert,
 	action,
+	controlHeaderAction,
 	disabled = false,
+	generateButtonLabel,
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
@@ -27,6 +29,8 @@ export const MenuControls = ({
 		setFetching,
 		defaultNominations,
 	} = useManageNominations()
+	const showGenerateLabel =
+		generateButtonLabel === 'generate' || optimalSelectionOnly
 
 	return (
 		<div className="menuControlsInner">
@@ -38,29 +42,32 @@ export const MenuControls = ({
 				/>
 			)}
 			{method && (
-				<ConfirmAction
-					align="start"
-					controlKey="regenerate_nominations"
-					disabled={disabled}
-					onConfirm={() => {
-						setMethod('Optimal Selection')
-						setNominations([])
-						setFetching(true)
-					}}
-					text={t('regenerateNominationSelection', { ns: 'modals' })}
-				>
-					<ButtonMenu
-						asLabel
-						className={disabled ? 'generateDisabled' : undefined}
+				<div className="generationActions">
+					<ConfirmAction
+						align="start"
+						controlKey="regenerate_nominations"
 						disabled={disabled}
-						iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
-						text={
-							optimalSelectionOnly
-								? t('generate', { ns: 'app' })
-								: t('reGenerate', { ns: 'app' })
-						}
-					/>
-				</ConfirmAction>
+						onConfirm={() => {
+							setMethod('Optimal Selection')
+							setNominations([])
+							setFetching(true)
+						}}
+						text={t('regenerateNominationSelection', { ns: 'modals' })}
+					>
+						<ButtonMenu
+							asLabel
+							className={disabled ? 'generateDisabled' : undefined}
+							disabled={disabled}
+							iconLeft={showGenerateLabel ? faWandMagicSparkles : undefined}
+							text={
+								showGenerateLabel
+									? t('generate', { ns: 'app' })
+									: t('reGenerate', { ns: 'app' })
+							}
+						/>
+					</ConfirmAction>
+					{controlHeaderAction}
+				</div>
 			)}
 			{(allowRevert || action) && (
 				<div className="actions">

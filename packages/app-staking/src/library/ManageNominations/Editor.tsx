@@ -14,6 +14,7 @@ import {
 	StandaloneMenuWrapper,
 } from 'library/GenerateNominations/Controls/Wrappers'
 import type { ConnectStatus } from 'library/GenerateNominations/types'
+import type { ReactNode } from 'react'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection, Validator } from 'types'
@@ -24,8 +25,10 @@ interface EditorProps {
 	bondFor: 'nominator' | 'pool'
 	displayFor: DisplayFor
 	canSubmit?: boolean
+	controlHeaderAction?: ReactNode
 	dappName?: string
 	eligibilityLoading?: boolean
+	generateButtonLabel?: 'generate' | 'regenerate'
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	optimalSelectionOnly?: boolean
 	standaloneCards?: boolean
@@ -48,8 +51,10 @@ export const Editor = ({
 	bondFor,
 	displayFor,
 	canSubmit = true,
+	controlHeaderAction,
 	dappName,
 	eligibilityLoading = false,
+	generateButtonLabel,
 	ineligibleStatus,
 	optimalSelectionOnly = false,
 	standaloneCards = false,
@@ -148,7 +153,9 @@ export const Editor = ({
 			<MenuControls
 				allowRevert={Boolean(method)}
 				action={menuAction}
+				controlHeaderAction={controlHeaderAction}
 				disabled={!canSubmit || eligibilityLoading}
+				generateButtonLabel={generateButtonLabel}
 				optimalSelectionOnly={optimalSelectionOnly}
 				setters={nominationSetters}
 			/>
