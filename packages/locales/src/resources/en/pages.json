@@ -189,7 +189,7 @@
 		"stakingApiDisabled": "Staking API Disabled",
 		"start": "Start",
 		"startNominating": "Start Nominating",
-		"status": "Nominator Status",
+		"status": "Status",
 		"stop": "Stop",
 		"stopNominating": "To continue with pool closure, stop nominating.",
 		"summary": "Summary",

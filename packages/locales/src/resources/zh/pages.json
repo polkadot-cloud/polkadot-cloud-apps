@@ -189,7 +189,7 @@
 		"stakingApiDisabled": "Staking API己断开",
 		"start": "开始",
 		"startNominating": "开始提名",
-		"status": "提名人状态",
+		"status": "状态",
 		"stop": "停止",
 		"stopNominating": "如需继续销毁池，请先停止提名",
 		"summary": "总结",

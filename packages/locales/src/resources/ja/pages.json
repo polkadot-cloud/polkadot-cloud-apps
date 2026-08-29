@@ -189,7 +189,7 @@
 		"stakingApiDisabled": "Staking APIは無効です",
 		"start": "開始",
 		"startNominating": "ノミネートを開始",
-		"status": "ノミネーターのステータス",
+		"status": "ステータス",
 		"stop": "停止",
 		"stopNominating": "プールの閉鎖を続行するには、ノミネートを停止してください。",
 		"summary": "概要",
