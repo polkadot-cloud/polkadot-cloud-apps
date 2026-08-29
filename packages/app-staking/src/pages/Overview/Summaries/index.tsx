@@ -46,7 +46,7 @@ export const Summaries = ({ height, isValidator }: SummariesProps) => {
 	// Warnings only show after syncing
 	const showWarning = warningMessages.length && !syncing
 
-	// Warnings show as additional section
+// Indicate warnings on the existing Status section
 	const statusSectionConfig = showWarning
 		? {
 				label: t('status', { ns: 'app' }),
