@@ -90,8 +90,6 @@ export class KusamaService
 					await query.poolMembersMulti(this.apiHub, addresses),
 				poolMetadataMulti: async (poolIds) =>
 					await query.poolMetadataMulti(this.apiHub, poolIds),
-				stakingLedgerActive: async (address) =>
-					await query.stakingLedgerActive(this.apiHub, address),
 				identityOfMulti: async (addresses) =>
 					await this.identityManager.identityOfMulti(addresses),
 				superOfMulti: async (addresses) =>
