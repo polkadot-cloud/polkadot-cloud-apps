@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChainId, RpcEndpoints } from 'types'
-// import { PolkchadotCloudRpcStatemintUrl } from '.'
+import { PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
 
