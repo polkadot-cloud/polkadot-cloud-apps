@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChainId, RpcEndpoints } from 'types'
-// import { PolkchadotCloudRpcStatemintUrl } from '.'
+import { PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
 
@@ -61,7 +61,7 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		Rotko: 'wss://people-paseo.rotko.net',
 	},
 	statemint: {
-		// ...(isProduction ? { 'Polkadot Cloud': PolkadotCloudRpcStatemintUrl } : {}),
+		...(isProduction ? { 'Polkadot Cloud': PolkadotCloudRpcStatemintUrl } : {}),
 		DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
 		// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
 		// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
