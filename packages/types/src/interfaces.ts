@@ -94,6 +94,7 @@ export interface ServiceInterface {
 			addresses: string[],
 		) => Promise<(PalletNominationPoolsPoolMember | undefined)[]>
 		poolMetadataMulti: (ids: number[]) => Promise<HexString[]>
+		stakingLedgerActive: (address: string) => Promise<bigint | undefined>
 		superOfMulti: (addresses: string[]) => Promise<SuperOf[]>
 		validatorEntries: () => Promise<[string, PalletStakingValidatorPrefs][]>
 		validatorExists: (address: string) => Promise<boolean>

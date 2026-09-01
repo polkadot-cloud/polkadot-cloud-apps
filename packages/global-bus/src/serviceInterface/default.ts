@@ -36,6 +36,7 @@ export const defaultServiceInterface: ServiceInterface = {
 		nominatorsMulti: async () => [],
 		poolMembersMulti: async () => [],
 		poolMetadataMulti: async () => [],
+		stakingLedgerActive: async () => undefined,
 		superOfMulti: async () => [],
 		validatorEntries: async () => [],
 		validatorExists: async () => false,

@@ -15,6 +15,7 @@ import { identityOfMulti } from './identityOfMulti'
 import { nominatorsMulti } from './nominatorsMulti'
 import { poolMembersMulti } from './poolMembersMulti'
 import { poolMetadataMulti } from './poolMetadataMulti'
+import { stakingLedgerActive } from './stakingLedger'
 import { superOfMulti } from './superOfMulti'
 import { validatorEntries } from './validatorEntries'
 import { validatorExists } from './validatorExists'
@@ -35,6 +36,7 @@ export const query = {
 	nominatorsMulti,
 	poolMembersMulti,
 	poolMetadataMulti,
+	stakingLedgerActive,
 	superOfMulti,
 	validatorEntries,
 	validatorExists,
