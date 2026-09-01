@@ -331,6 +331,10 @@ export interface ValidatorRetainmentResult {
 	months: ValidatorRetainmentPeriod[]
 }
 
+export interface ValidatorRetainmentData {
+	validatorRetainment: ValidatorRetainmentResult | null
+}
+
 export interface ValidatorRetainmentPeriod {
 	fromTimestamp: number
 	netInflow: string

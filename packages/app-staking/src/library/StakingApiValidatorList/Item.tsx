@@ -10,6 +10,7 @@ import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
+import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
@@ -24,6 +25,7 @@ import type {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
+import { useOverlay } from 'ui-overlay'
 import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
 interface ItemProps {
@@ -64,6 +66,7 @@ export const Item = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const { openModal } = useOverlay().modal
 	const hardCapSelfStake = useHardCapSelfStake()
 	const { unit, units } = getStakingChainData(network)
 	const { address, prefs } = validator
@@ -82,6 +85,12 @@ export const Item = ({
 		units,
 	})
 	const validatorDisplay = getIdentityDisplay(validator)
+	const retainmentValidatorDisplay = [
+		validator.identity?.superDisplay || validator.identity?.display,
+		validator.identity?.superValue,
+	]
+		.filter(Boolean)
+		.join(' / ')
 	const identity = <Identity address={address} display={validatorDisplay} />
 	const totalStake = validator.totalStake
 		? planckToUnitBn(new BigNumber(validator.totalStake), units)
@@ -98,6 +107,20 @@ export const Item = ({
 		prefs,
 		validatorStatus,
 	}
+	const retainmentHistoryDisabled = validator.retainment === null
+	const openRetainmentHistory = () =>
+		openModal({
+			key: 'RetainmentHistory',
+			size: 'sm',
+			options: {
+				latestPeriod: validator.retainment,
+				selfStakeMax,
+				unit,
+				units,
+				validator: address,
+				validatorDisplay: retainmentValidatorDisplay || address,
+			},
+		})
 
 	if (format === 'row') {
 		return (
@@ -106,6 +129,8 @@ export const Item = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
+						onRetainmentHistory={openRetainmentHistory}
+						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showFavorite={toggleFavorites}
 						showMetrics
 						showShareLink={showShareLink}
@@ -149,6 +174,12 @@ export const Item = ({
 			)}
 			<ListItem.Action wide>
 				<Metrics address={address} display={validatorDisplay} />
+			</ListItem.Action>
+			<ListItem.Action wide>
+				<RetainmentHistory
+					disabled={retainmentHistoryDisabled}
+					onClick={openRetainmentHistory}
+				/>
 			</ListItem.Action>
 		</ListItem.Actions>
 	)

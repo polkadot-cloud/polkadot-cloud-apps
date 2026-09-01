@@ -5,6 +5,7 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'
 import {
 	faChartLine,
 	faChevronDown,
+	faClockRotateLeft,
 	faCopy,
 	faHeart,
 	faLink,
@@ -27,6 +28,8 @@ interface RowActionsMenuProps {
 	address: string
 	display: ReactNode | null
 	onRemove?: () => void
+	onRetainmentHistory?: () => void
+	retainmentHistoryDisabled?: boolean
 	showFavorite: boolean
 	showMetrics: boolean
 	showShareLink?: boolean
@@ -36,6 +39,8 @@ export const RowActionsMenu = ({
 	address,
 	display,
 	onRemove,
+	onRetainmentHistory,
+	retainmentHistoryDisabled = false,
 	showFavorite,
 	showMetrics,
 	showShareLink = true,
@@ -118,6 +123,15 @@ export const RowActionsMenu = ({
 					'sm',
 				)
 			},
+		})
+	}
+
+	if (onRetainmentHistory) {
+		menuItems.push({
+			disabled: retainmentHistoryDisabled,
+			icon: <FontAwesomeIcon icon={faClockRotateLeft} transform="shrink-3" />,
+			title: t('retainmentHistory'),
+			cb: onRetainmentHistory,
 		})
 	}
 

@@ -8,6 +8,7 @@ import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
+import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { useNominationStatusData } from 'library/ListItem/Labels/NominationStatus'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
@@ -18,6 +19,7 @@ import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
+import { useOverlay } from 'ui-overlay'
 import { getRateAfterCommission } from 'utils'
 import type { ItemProps } from './types'
 
@@ -37,6 +39,7 @@ export const DetailedItem = ({
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { validatorIdentities, validatorSupers } = useValidators()
+	const { openModal } = useOverlay().modal
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
@@ -58,10 +61,33 @@ export const DetailedItem = ({
 	})
 	const outline = displayFor === 'canvas'
 	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
-	const validatorDisplay = getIdentityDisplay(
+	const validatorIdentity = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
-	).node
+	)
+	const validatorDisplay = validatorIdentity.node
+	const retainmentValidatorDisplay = validatorIdentity.data
+		? [validatorIdentity.data.display, validatorIdentity.data.super]
+				.filter(Boolean)
+				.join(' / ')
+		: address
+	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
+	const retainmentHistoryDisabled =
+		isPreloading || retainmentPeriods.length === 0
+	const showRetainmentHistory =
+		displayFor !== 'canvas' && displayFor !== 'modal'
+	const openRetainmentHistory = () =>
+		openModal({
+			key: 'RetainmentHistory',
+			size: 'sm',
+			options: {
+				periods: retainmentPeriods,
+				selfStakeMax,
+				unit,
+				units,
+				validatorDisplay: retainmentValidatorDisplay,
+			},
+		})
 
 	if (format === 'row') {
 		return (
@@ -70,6 +96,10 @@ export const DetailedItem = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
+						onRetainmentHistory={
+							showRetainmentHistory ? openRetainmentHistory : undefined
+						}
+						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showFavorite={toggleFavorites === true}
 						showMetrics={displayFor !== 'canvas'}
 					/>
@@ -107,6 +137,14 @@ export const DetailedItem = ({
 						address={address}
 						display={validatorDisplay}
 						outline={outline}
+					/>
+				</ListItem.Action>
+			)}
+			{showRetainmentHistory && (
+				<ListItem.Action wide>
+					<RetainmentHistory
+						disabled={retainmentHistoryDisabled}
+						onClick={openRetainmentHistory}
 					/>
 				</ListItem.Action>
 			)}

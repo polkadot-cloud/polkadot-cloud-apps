@@ -9,8 +9,10 @@ import type {
 } from './useRetainmentStatsData'
 
 interface RetainmentStatsProps {
+	className?: string
 	data: RetainmentStatsData
 	isPreloading?: boolean
+	showLabel?: boolean
 	unit: string
 }
 
@@ -58,8 +60,10 @@ export const RetainmentMetric = ({
 }
 
 export const RetainmentStats = ({
+	className,
 	data,
 	isPreloading = false,
+	showLabel = true,
 	unit,
 }: RetainmentStatsProps) => {
 	const {
@@ -73,14 +77,19 @@ export const RetainmentStats = ({
 	} = data
 
 	return (
-		<ListItem.Retainment aria-busy={isPreloading} aria-label={statsLabel}>
+		<ListItem.Retainment
+			aria-busy={isPreloading}
+			aria-label={statsLabel}
+			className={className}
+		>
 			<ListItem.SectionHeader>
-				<strong>{retainmentLabel}</strong>
+				{showLabel && <strong>{retainmentLabel}</strong>}
 				{isPreloading ? (
 					<ListItem.DetailLoader height="0.85rem" width="7rem" />
 				) : month ? (
 					<ListItem.Month dateTime={month.date.toISOString()}>
-						/ {month.label}
+						{showLabel && '/ '}
+						{month.label}
 					</ListItem.Month>
 				) : null}
 			</ListItem.SectionHeader>
