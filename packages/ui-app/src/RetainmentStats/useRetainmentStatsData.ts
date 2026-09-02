@@ -62,7 +62,18 @@ interface UseRetainmentStatsDataProps {
 const formatRate = (rate: number, locale?: string) =>
 	`${rate.toLocaleString(locale, { maximumFractionDigits: 1 })}%`
 
+const getCompoundRateColor = (rate: number) =>
+	rate > 0 ? 'var(--status-success)' : 'var(--status-danger)'
+
+const getRateTrendIcon = (rate: number) =>
+	rate >= 75 ? faArrowTrendUp : rate < 25 ? faArrowTrendDown : undefined
+
+const getCompoundRateTrendIcon = (rate: number) =>
+	rate > 0 ? faArrowTrendUp : faArrowTrendDown
+
 const getRateStat = ({
+	getColor = getRateColor,
+	getTrendIcon = getRateTrendIcon,
 	label,
 	locale,
 	maximumLabel,
@@ -70,6 +81,8 @@ const getRateStat = ({
 	rate,
 	showTrend = true,
 }: {
+	getColor?: (rate: number) => string
+	getTrendIcon?: (rate: number) => IconDefinition | undefined
 	label: string
 	locale?: string
 	maximumLabel: string
@@ -85,18 +98,12 @@ const getRateStat = ({
 			? '—'
 			: formatRate(value, locale)
 	const icon =
-		showTrend && value !== undefined
-			? value >= 75
-				? faArrowTrendUp
-				: value < 25
-					? faArrowTrendDown
-					: undefined
-			: undefined
+		showTrend && value !== undefined ? getTrendIcon(value) : undefined
 
 	return {
 		ariaLabel: label,
 		ariaValueText: max ? maximumLabel : valueText,
-		color: value === undefined ? 'var(--text-tertiary)' : getRateColor(value),
+		color: value === undefined ? 'var(--text-tertiary)' : getColor(value),
 		icon,
 		isMax: max,
 		label,
@@ -207,6 +214,8 @@ export const useRetainmentStatsData = ({
 
 	return {
 		compoundRate: getRateStat({
+			getColor: getCompoundRateColor,
+			getTrendIcon: getCompoundRateTrendIcon,
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
