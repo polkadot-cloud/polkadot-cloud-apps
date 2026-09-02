@@ -10,12 +10,12 @@ import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
+import { Loader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import classes from './index.module.scss'
 
 interface RetainmentPeriodProps {
-	isPreloading?: boolean
-	period?: ValidatorRetainmentPeriod
+	period: ValidatorRetainmentPeriod
 	selfStakeMax: boolean
 	unit: string
 	units: number
@@ -42,7 +42,6 @@ const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 }
 
 const RetainmentPeriod = ({
-	isPreloading = false,
 	period,
 	selfStakeMax,
 	unit,
@@ -60,7 +59,6 @@ const RetainmentPeriod = ({
 			<RetainmentStats
 				className={classes.stats}
 				data={data}
-				isPreloading={isPreloading}
 				showLabel={false}
 				unit={unit}
 			/>
@@ -68,11 +66,17 @@ const RetainmentPeriod = ({
 	)
 }
 
+const HistoryPreloader = () => (
+	<div className={classes.preloader} aria-hidden="true">
+		<Loader className={classes.preloaderTitle} />
+		<Loader className={classes.preloaderBody} />
+	</div>
+)
+
 export const RetainmentHistory = () => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const {
-		latestPeriod,
 		periods: suppliedPeriods,
 		selfStakeMax,
 		unit,
@@ -80,7 +84,6 @@ export const RetainmentHistory = () => {
 		validator,
 		validatorDisplay,
 	} = useOverlay().modal.config.options as {
-		latestPeriod?: ValidatorRetainmentPeriod | null
 		periods?: ValidatorRetainmentPeriod[]
 		selfStakeMax: boolean
 		unit: string
@@ -106,13 +109,7 @@ export const RetainmentHistory = () => {
 				</h2>
 				<div className={classes.history}>
 					{loading ? (
-						<RetainmentPeriod
-							isPreloading
-							period={latestPeriod ?? undefined}
-							selfStakeMax={selfStakeMax}
-							unit={unit}
-							units={units}
-						/>
+						<HistoryPreloader />
 					) : (
 						<>
 							{historyPeriods.map((period, index) => (

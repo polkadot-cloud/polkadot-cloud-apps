@@ -21,6 +21,23 @@
 	padding-bottom: 1rem;
 }
 
+.preloader {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 0.8rem 0.9rem 0.95rem;
+}
+
+.preloaderTitle {
+	height: 1.5rem;
+	width: 30%;
+}
+
+.preloaderBody {
+	height: 2.25rem;
+	width: 60%;
+}
+
 .period {
 	container: retainment-period / inline-size;
 }
