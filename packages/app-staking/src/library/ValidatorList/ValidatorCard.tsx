@@ -7,8 +7,10 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
-import { RetainmentStats } from './RetainmentStats'
-import type { RetainmentStatsData } from './useRetainmentStatsData'
+import {
+	RetainmentStats,
+	type RetainmentStatsData,
+} from 'ui-app/RetainmentStats'
 
 interface ValidatorCardProps {
 	actions: ReactNode

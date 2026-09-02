@@ -56,7 +56,7 @@
 
 	&[data-current] {
 		.timelineMarker {
-			animation: timeline-pulse 2s ease-out infinite;
+			animation: retainment-timeline-pulse 2s ease-out infinite;
 		}
 	}
 }
@@ -199,7 +199,7 @@
 	}
 }
 
-@keyframes timeline-pulse {
+@keyframes retainment-timeline-pulse {
 	0% {
 		box-shadow: 0 0 0 0
 			color-mix(in srgb, var(--period-status-color) 45%, transparent);

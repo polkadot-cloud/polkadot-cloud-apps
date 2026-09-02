@@ -13,11 +13,13 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { ListItem } from 'ui-app/ListItem'
+import {
+	RetainmentMetric,
+	type RetainmentStatsData,
+} from 'ui-app/RetainmentStats'
 import { Select } from '../ListItem/Buttons/Select'
 import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
-import { RetainmentMetric } from './RetainmentStats'
-import type { RetainmentStatsData } from './useRetainmentStatsData'
 import { useValidatorSummaryData } from './ValidatorSummary'
 
 interface ValidatorBarProps {

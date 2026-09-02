@@ -1,12 +1,19 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { ListItem } from 'ui-app/ListItem'
+import { ListItem } from '../ListItem'
 import { RetainmentStatValue } from './RetainmentStatValue'
 import type {
 	RetainmentStatData,
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
+
+export type {
+	RetainmentPeriodData,
+	RetainmentStatData,
+	RetainmentStatsData,
+} from './useRetainmentStatsData'
+export { useRetainmentStatsData } from './useRetainmentStatsData'
 
 interface RetainmentStatsProps {
 	className?: string

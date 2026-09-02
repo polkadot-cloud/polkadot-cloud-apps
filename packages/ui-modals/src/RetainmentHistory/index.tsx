@@ -1,18 +1,28 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { Polkicon } from '@w3ux/react-polkicon'
+import { ellipsisFn } from '@w3ux/utils'
 import { useNetwork } from 'hooks/useNetwork'
-import { Identity } from 'library/ListItem/Labels/Identity'
-import { RetainmentStats } from 'library/ValidatorList/RetainmentStats'
-import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
+import { RetainmentStats, useRetainmentStatsData } from 'ui-app/RetainmentStats'
+import { Identity as IdentityWrapper } from 'ui-core/list'
 import { useOverlay } from 'ui-overlay'
 import { getRetainmentStatus } from 'utils'
 import classes from './index.module.scss'
+
+export interface RetainmentHistoryOptions {
+	periods?: ValidatorRetainmentPeriod[]
+	selfStakeMax: boolean
+	unit: string
+	units: number
+	validator?: string
+	validatorDisplay: ReactNode
+}
 
 interface RetainmentPeriodProps {
 	current?: boolean
@@ -48,6 +58,33 @@ const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
 	Number.isFinite(period.retainmentRate)
 		? getRetainmentStatus(period.retainmentRate)
 		: undefined
+
+const ValidatorIdentity = ({
+	address,
+	display,
+}: {
+	address: string
+	display: ReactNode
+}) => {
+	const polkiconSize = '2.75rem'
+
+	return (
+		<IdentityWrapper large>
+			<div
+				style={{
+					border: '0.1rem solid transparent',
+					maxWidth: polkiconSize,
+					minWidth: polkiconSize,
+				}}
+			>
+				<Polkicon address={address} fontSize={polkiconSize} />
+			</div>
+			<div>
+				<h4>{display ?? ellipsisFn(address, 6)}</h4>
+			</div>
+		</IdentityWrapper>
+	)
+}
 
 const RetainmentPeriod = ({
 	current = false,
@@ -95,14 +132,7 @@ export const RetainmentHistory = () => {
 		units,
 		validator,
 		validatorDisplay,
-	} = useOverlay().modal.config.options as {
-		periods?: ValidatorRetainmentPeriod[]
-		selfStakeMax: boolean
-		unit: string
-		units: number
-		validator?: string
-		validatorDisplay: ReactNode
-	}
+	} = useOverlay().modal.config.options as RetainmentHistoryOptions
 	const queryEnabled = suppliedPeriods === undefined && validator !== undefined
 	const { data, loading } = useValidatorRetainment(
 		{ network, validator: validator ?? '' },
@@ -116,10 +146,9 @@ export const RetainmentHistory = () => {
 			<ModalTitle title={t('retainmentHistory')} />
 			<div className={classes.content}>
 				<div className={classes.validator}>
-					<Identity
+					<ValidatorIdentity
 						address={validator ?? ''}
 						display={validatorDisplay}
-						size="large"
 					/>
 				</div>
 				<ol className={classes.timeline} aria-busy={loading}>

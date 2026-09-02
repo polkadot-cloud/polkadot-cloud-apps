@@ -14,7 +14,6 @@ import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
-import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
@@ -25,6 +24,7 @@ import type {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
+import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
 import { useOverlay } from 'ui-overlay'
 import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
@@ -107,7 +107,6 @@ export const Item = ({
 			key: 'RetainmentHistory',
 			size: 'sm',
 			options: {
-				latestPeriod: validator.retainment,
 				selfStakeMax,
 				unit,
 				units,

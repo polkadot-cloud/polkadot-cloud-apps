@@ -21,7 +21,7 @@ const MailSupport = lazyNamed(
 	'MailSupport',
 )
 const RetainmentHistory = lazyNamed(
-	() => import('modals/RetainmentHistory'),
+	() => import('ui-modals/RetainmentHistory'),
 	'RetainmentHistory',
 )
 const SelectCurrency = lazyNamed(
