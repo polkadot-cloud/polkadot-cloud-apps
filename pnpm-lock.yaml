@@ -1303,6 +1303,9 @@ importers:
       locales:
         specifier: workspace:*
         version: link:../locales
+      plugin-staking-api:
+        specifier: workspace:*
+        version: link:../plugin-staking-api
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -1327,6 +1330,9 @@ importers:
       ui-overlay:
         specifier: workspace:*
         version: link:../ui-overlay
+      utils:
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@w3ux/types':
         specifier: ^2.4.2

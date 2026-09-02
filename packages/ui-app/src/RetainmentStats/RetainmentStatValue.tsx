@@ -4,13 +4,15 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { RetainmentStatData } from './useRetainmentStatsData'
 
+interface RetainmentStatValueProps {
+	stat: RetainmentStatData
+	unit?: string
+}
+
 export const RetainmentStatValue = ({
 	stat,
 	unit,
-}: {
-	stat: RetainmentStatData
-	unit?: string
-}) => (
+}: RetainmentStatValueProps) => (
 	<>
 		{stat.icon && <FontAwesomeIcon icon={stat.icon} aria-hidden="true" />}
 		<span>

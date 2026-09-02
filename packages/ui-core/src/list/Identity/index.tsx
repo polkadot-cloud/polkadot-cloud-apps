@@ -1,11 +1,19 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import classNames from 'classnames'
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
-export const Identity = ({ children, style }: ComponentBase) => (
-	<div className={classes.identity} style={style}>
+export const Identity = ({
+	children,
+	large = false,
+	style,
+}: ComponentBase & { large?: boolean }) => (
+	<div
+		className={classNames(classes.identity, { [classes.large]: large })}
+		style={style}
+	>
 		{children}
 	</div>
 )

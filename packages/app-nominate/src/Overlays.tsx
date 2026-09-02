@@ -19,6 +19,7 @@ const modals = lazyOverlayComponents({
 	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
 	ImportAccounts: () => import('ui-modals/ImportAccounts'),
 	MailSupport: () => import('ui-modals/MailSupport'),
+	RetainmentHistory: () => import('ui-modals/RetainmentHistory'),
 	SelectCurrency: () => import('ui-modals/SelectCurrency'),
 	SelectLanguage: () => import('ui-modals/SelectLanguage'),
 })

@@ -8,7 +8,6 @@ import {
 	faArrowTrendUp,
 } from '@fortawesome/free-solid-svg-icons'
 import BigNumber from 'bignumber.js'
-import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
 import {
 	clampRate,
@@ -17,6 +16,14 @@ import {
 	getRetainmentStatus,
 	planckToUnitBn,
 } from 'utils'
+
+export interface RetainmentPeriodData {
+	compoundRate: number
+	fromTimestamp: number
+	netInflow: string
+	retainmentRate: number | null
+	selfStakeChange: string
+}
 
 export interface RetainmentStatData {
 	ariaLabel: string
@@ -46,7 +53,7 @@ export interface RetainmentStatsData {
 
 interface UseRetainmentStatsDataProps {
 	highlightWarnings?: boolean
-	period?: ValidatorRetainmentPeriod
+	period?: RetainmentPeriodData
 	selfStakeMax: boolean
 	unit: string
 	units: number

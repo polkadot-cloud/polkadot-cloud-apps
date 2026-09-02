@@ -40,6 +40,7 @@ export interface BlockedProps {
 export interface IdentityProps {
 	address: string
 	display?: ReactNode
+	size?: 'default' | 'large'
 }
 
 export interface PoolIdentityProps {

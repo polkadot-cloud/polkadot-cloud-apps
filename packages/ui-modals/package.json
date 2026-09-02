@@ -31,6 +31,7 @@
 		"consts": "workspace:*",
 		"hooks": "workspace:*",
 		"locales": "workspace:*",
+		"plugin-staking-api": "workspace:*",
 		"react": "^19.2.8",
 		"react-i18next": "^17.0.12",
 		"styled-components": "^6.5.3",
@@ -38,7 +39,8 @@
 		"ui-app": "workspace:*",
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
-		"ui-overlay": "workspace:*"
+		"ui-overlay": "workspace:*",
+		"utils": "workspace:*"
 	},
 	"devDependencies": {
 		"@w3ux/types": "^2.4.2",

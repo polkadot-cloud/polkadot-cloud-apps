@@ -19,6 +19,7 @@ export interface MenuItem {
 	title: string
 	cb: () => void
 	disabled?: boolean
+	separatorBefore?: boolean
 }
 
 export type MenuMouseEvent =

@@ -46,6 +46,17 @@
 	&:disabled:hover {
 		opacity: 0.4;
 	}
+
+	&.groupEnd {
+		border-bottom: 0;
+	}
+}
+
+.separator {
+	border: 0;
+	border-top: 1px solid var(--gray-600);
+	margin: 0.3rem 0;
+	width: 100%;
 }
 
 .title {

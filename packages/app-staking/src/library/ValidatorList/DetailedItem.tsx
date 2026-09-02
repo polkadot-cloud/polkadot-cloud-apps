@@ -9,9 +9,12 @@ import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
+import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import type { Validator } from 'types'
 import { ListItem } from 'ui-app/ListItem'
+import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
+import { useOverlay } from 'ui-overlay'
 import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
@@ -19,7 +22,6 @@ import { Identity } from '../ListItem/Labels/Identity'
 import { DetailedItemPreloader } from './DetailedItemPreloader'
 import { RowActionsMenu } from './RowActionsMenu'
 import type { ItemProps } from './types'
-import { useRetainmentStatsData } from './useRetainmentStatsData'
 import { useValidatorSelfStake } from './useValidatorSelfStake'
 import { ValidatorBar } from './ValidatorBar'
 import { ValidatorCard } from './ValidatorCard'
@@ -41,6 +43,7 @@ export const DetailedItem = ({
 	const { network } = useNetwork()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
+	const { openModal } = useOverlay().modal
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
@@ -60,10 +63,27 @@ export const DetailedItem = ({
 		(item) => (item as Validator).address === validator.address,
 	)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
-	const validatorDisplay = getIdentityDisplay(
+	const validatorIdentity = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
-	).node
+	)
+	const validatorDisplay = validatorIdentity.node
+	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
+	const showRetainmentHistory =
+		displayFor !== 'canvas' && displayFor !== 'modal'
+	const openRetainmentHistory = () =>
+		openModal({
+			key: 'RetainmentHistory',
+			size: 'sm',
+			options: {
+				periods: retainmentPeriods,
+				selfStakeMax,
+				unit,
+				units,
+				validator: address,
+				validatorDisplay,
+			},
+		})
 
 	const cardActions = (
 		<ListItem.Actions>
@@ -89,9 +109,18 @@ export const DetailedItem = ({
 					/>
 				</ListItem.Action>
 			)}
+
 			{displayFor === 'default' && (
 				<ListItem.Action wide>
 					<Metrics address={address} display={validatorDisplay} />
+				</ListItem.Action>
+			)}
+			{showRetainmentHistory && (
+				<ListItem.Action wide>
+					<RetainmentHistory
+						disabled={retainmentPeriods.length === 0}
+						onClick={openRetainmentHistory}
+					/>
 				</ListItem.Action>
 			)}
 		</ListItem.Actions>
@@ -104,6 +133,10 @@ export const DetailedItem = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
+						onRetainmentHistory={
+							showRetainmentHistory ? openRetainmentHistory : undefined
+						}
+						retainmentHistoryDisabled={retainmentPeriods.length === 0}
 						showShareLink={showShareLink}
 						onRemove={
 							typeof onRemove === 'function'

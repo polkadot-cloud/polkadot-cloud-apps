@@ -19,7 +19,7 @@ interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
 	selected?: boolean
-	statusAccent?: 'warning' | 'danger'
+	statusAccent?: 'success' | 'warning' | 'danger'
 }
 
 const ItemShell = ({

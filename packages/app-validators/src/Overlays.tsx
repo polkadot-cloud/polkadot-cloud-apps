@@ -20,6 +20,10 @@ const MailSupport = lazyNamed(
 	() => import('ui-modals/MailSupport'),
 	'MailSupport',
 )
+const RetainmentHistory = lazyNamed(
+	() => import('ui-modals/RetainmentHistory'),
+	'RetainmentHistory',
+)
 const SelectCurrency = lazyNamed(
 	() => import('ui-modals/SelectCurrency'),
 	'SelectCurrency',
@@ -34,6 +38,12 @@ export const Overlays = () => (
 		fallback={ErrorFallbackModal}
 		externalOverlayStatus="closed"
 		canvas={{ OperatorValidators, ValidatorMetrics }}
-		modals={{ DiscordSupport, MailSupport, SelectCurrency, SelectLanguage }}
+		modals={{
+			DiscordSupport,
+			MailSupport,
+			RetainmentHistory,
+			SelectCurrency,
+			SelectLanguage,
+		}}
 	/>
 )
