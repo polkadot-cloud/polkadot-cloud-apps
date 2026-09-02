@@ -126,8 +126,10 @@ export const RowActionsMenu = ({
 		})
 	}
 
+	const detailItems: MenuItem[] = []
+
 	if (onRetainmentHistory) {
-		menuItems.push({
+		detailItems.push({
 			disabled: retainmentHistoryDisabled,
 			icon: <FontAwesomeIcon icon={faClockRotateLeft} transform="shrink-3" />,
 			title: t('retainmentHistory'),
@@ -136,7 +138,7 @@ export const RowActionsMenu = ({
 	}
 
 	if (showMetrics) {
-		menuItems.push({
+		detailItems.push({
 			icon: <FontAwesomeIcon icon={faChartLine} transform="shrink-3" />,
 			title: t('metrics'),
 			cb: () =>
@@ -150,6 +152,13 @@ export const RowActionsMenu = ({
 				}),
 		})
 	}
+
+	menuItems.push(
+		...detailItems.map((item, index) => ({
+			...item,
+			separatorBefore: index === 0,
+		})),
+	)
 
 	const toggleMenu = (event: ReactMouseEvent<HTMLButtonElement>) => {
 		if (!open) {
