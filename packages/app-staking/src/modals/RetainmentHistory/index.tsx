@@ -9,9 +9,11 @@ import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStats
 import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import { useTranslation } from 'react-i18next'
+import { DetailedCard } from 'ui-app/ListItem'
 import { ModalTitle } from 'ui-app/ModalTitle'
 import { Loader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
+import { getRetainmentStatus } from 'utils'
 import classes from './index.module.scss'
 
 interface RetainmentPeriodProps {
@@ -53,16 +55,26 @@ const RetainmentPeriod = ({
 		unit,
 		units,
 	})
+	const statusAccent =
+		typeof period.retainmentRate === 'number' &&
+		Number.isFinite(period.retainmentRate)
+			? getRetainmentStatus(period.retainmentRate)
+			: undefined
 
 	return (
-		<div className={classes.period}>
+		<DetailedCard.Root
+			className={classes.period}
+			displayFor="modal"
+			statusAccent={statusAccent}
+			style={{ marginBlock: 0 }}
+		>
 			<RetainmentStats
 				className={classes.stats}
 				data={data}
 				showLabel={false}
 				unit={unit}
 			/>
-		</div>
+		</DetailedCard.Root>
 	)
 }
 

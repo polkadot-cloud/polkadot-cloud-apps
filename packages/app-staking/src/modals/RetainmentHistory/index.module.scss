@@ -39,36 +39,11 @@
 }
 
 .period {
-	container: retainment-period / inline-size;
+	--status-accent-width: 2px;
 }
 
-.stats {
-	background: var(--gray-300);
-	border-radius: 0.5rem;
-	min-height: 0;
-	padding: 0.8rem 0.9rem 0.95rem;
-
-	> header {
-		margin-bottom: 1rem;
-
-		> time {
-			font-size: 1.1rem;
-			padding: 0;
-		}
-	}
-
-	> div {
-		min-height: 3.5rem;
-
-		> div {
-			gap: 0.4rem;
-			padding-inline: 0.75rem;
-
-			> span {
-				font-size: 0.85rem;
-			}
-		}
-	}
+.stats > header > time {
+	font-size: 1.1rem;
 }
 
 .arrow {
@@ -87,23 +62,4 @@
 	font-size: 1.2rem;
 	margin-top: 1.25rem;
 	text-align: center;
-}
-
-@container retainment-period (max-width: 31rem) {
-	.stats > div {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-
-		> div {
-			min-height: 3.6rem;
-			padding: 0.55rem 0.65rem;
-
-			&:nth-child(odd) {
-				border-inline-start: 0;
-			}
-
-			&:nth-child(n + 3) {
-				border-block-start: 1px solid var(--gray-500);
-			}
-		}
-	}
 }
