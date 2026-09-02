@@ -66,11 +66,6 @@ export const DetailedItem = ({
 		validatorSupers[address],
 	)
 	const validatorDisplay = validatorIdentity.node
-	const retainmentValidatorDisplay = validatorIdentity.data
-		? [validatorIdentity.data.display, validatorIdentity.data.super]
-				.filter(Boolean)
-				.join(' / ')
-		: address
 	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
 	const retainmentHistoryDisabled =
 		isPreloading || retainmentPeriods.length === 0
@@ -85,7 +80,8 @@ export const DetailedItem = ({
 				selfStakeMax,
 				unit,
 				units,
-				validatorDisplay: retainmentValidatorDisplay,
+				validator: address,
+				validatorDisplay,
 			},
 		})
 

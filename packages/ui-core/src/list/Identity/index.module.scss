@@ -44,4 +44,13 @@
 			}
 		}
 	}
+
+	&.large > div:last-child > h4 {
+		font-size: 1.35rem;
+
+		> span {
+			font-size: 1rem;
+			top: -0.25rem;
+		}
+	}
 }

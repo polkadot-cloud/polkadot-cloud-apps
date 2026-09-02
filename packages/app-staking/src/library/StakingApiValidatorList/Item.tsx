@@ -85,12 +85,6 @@ export const Item = ({
 		units,
 	})
 	const validatorDisplay = getIdentityDisplay(validator)
-	const retainmentValidatorDisplay = [
-		validator.identity?.superDisplay || validator.identity?.display,
-		validator.identity?.superValue,
-	]
-		.filter(Boolean)
-		.join(' / ')
 	const identity = <Identity address={address} display={validatorDisplay} />
 	const totalStake = validator.totalStake
 		? planckToUnitBn(new BigNumber(validator.totalStake), units)
@@ -118,7 +112,7 @@ export const Item = ({
 				unit,
 				units,
 				validator: address,
-				validatorDisplay: retainmentValidatorDisplay || address,
+				validatorDisplay,
 			},
 		})
 

@@ -4,10 +4,12 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNetwork } from 'hooks/useNetwork'
+import { Identity } from 'library/ListItem/Labels/Identity'
 import { RetainmentStats } from 'library/ValidatorList/RetainmentStats'
 import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DetailedCard } from 'ui-app/ListItem'
 import { ModalTitle } from 'ui-app/ModalTitle'
@@ -101,7 +103,7 @@ export const RetainmentHistory = () => {
 		unit: string
 		units: number
 		validator?: string
-		validatorDisplay: string
+		validatorDisplay: ReactNode
 	}
 	const queryEnabled = suppliedPeriods === undefined && validator !== undefined
 	const { data, loading } = useValidatorRetainment(
@@ -116,9 +118,13 @@ export const RetainmentHistory = () => {
 		<>
 			<ModalTitle title={t('retainmentHistory')} />
 			<div className={classes.content}>
-				<h2 className={classes.validator} title={validatorDisplay}>
-					{validatorDisplay}
-				</h2>
+				<div className={classes.validator}>
+					<Identity
+						address={validator ?? ''}
+						display={validatorDisplay}
+						size="large"
+					/>
+				</div>
 				<div className={classes.history}>
 					{loading ? (
 						<HistoryPreloader />

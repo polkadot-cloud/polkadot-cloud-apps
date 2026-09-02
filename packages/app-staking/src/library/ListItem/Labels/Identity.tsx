@@ -11,6 +11,7 @@ import type { IdentityProps } from '../types'
 export const Identity = ({
 	address,
 	display: displayOverride,
+	size = 'default',
 }: IdentityProps) => {
 	const { validatorIdentities, validatorSupers, validatorsFetched } =
 		useValidators()
@@ -22,10 +23,11 @@ export const Identity = ({
 				).node
 			: displayOverride
 	const identityFetched = displayOverride !== undefined || validatorsFetched
-	const polkiconSize = '2.2rem'
+	const large = size === 'large'
+	const polkiconSize = large ? '2.75rem' : '2.2rem'
 
 	return (
-		<Wrapper>
+		<Wrapper large={large}>
 			<div
 				style={{
 					minWidth: polkiconSize,
