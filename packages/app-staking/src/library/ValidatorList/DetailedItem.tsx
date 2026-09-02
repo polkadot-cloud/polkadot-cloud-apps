@@ -110,9 +110,11 @@ export const DetailedItem = ({
 				</ListItem.Action>
 			)}
 
-			<ListItem.Action wide>
-				<Metrics address={address} display={validatorDisplay} />
-			</ListItem.Action>
+			{displayFor === 'default' && (
+				<ListItem.Action wide>
+					<Metrics address={address} display={validatorDisplay} />
+				</ListItem.Action>
+			)}
 			{showRetainmentHistory && (
 				<ListItem.Action wide>
 					<RetainmentHistory
