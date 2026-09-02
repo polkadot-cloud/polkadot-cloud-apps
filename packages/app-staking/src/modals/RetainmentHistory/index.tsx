@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNetwork } from 'hooks/useNetwork'
 import { RetainmentStats } from 'library/ValidatorList/RetainmentStats'
@@ -134,7 +134,7 @@ export const RetainmentHistory = () => {
 									/>
 									{index < historyPeriods.length - 1 && (
 										<div className={classes.arrow} aria-hidden="true">
-											<FontAwesomeIcon icon={faArrowDown} />
+											<FontAwesomeIcon icon={faChevronDown} />
 										</div>
 									)}
 								</div>
