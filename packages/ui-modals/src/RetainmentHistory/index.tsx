@@ -40,17 +40,13 @@ const hasRetainmentStats = (period: ValidatorRetainmentPeriod) =>
 	Number(period.selfStakeChange) !== 0
 
 const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
-	const visiblePeriods = periods.slice(0, 6)
-	let historyEnd = visiblePeriods.length
+	let historyEnd = periods.length
 
-	while (
-		historyEnd > 0 &&
-		!hasRetainmentStats(visiblePeriods[historyEnd - 1])
-	) {
+	while (historyEnd > 0 && !hasRetainmentStats(periods[historyEnd - 1])) {
 		historyEnd -= 1
 	}
 
-	return visiblePeriods.slice(0, historyEnd)
+	return periods.slice(0, historyEnd)
 }
 
 const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
