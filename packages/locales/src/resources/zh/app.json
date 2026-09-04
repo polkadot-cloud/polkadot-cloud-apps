@@ -372,6 +372,7 @@
 		"resetLedgerAccounts": "重设Ledger帐户",
 		"resources": "信息",
 		"retainment": "留存",
+		"retainmentDataUnavailable": "无留存数据",
 		"retainmentHistory": "留存历史",
 		"retainmentRate": "留存率",
 		"retainmentStats": "留存统计",

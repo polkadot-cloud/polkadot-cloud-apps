@@ -52,6 +52,23 @@ const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 	return periods.slice(0, historyEnd)
 }
 
+const getMonthIndex = (date: Date) =>
+	date.getUTCFullYear() * 12 + date.getUTCMonth()
+
+const getMissingMonthDates = (
+	newerPeriod: ValidatorRetainmentPeriod,
+	olderPeriod: ValidatorRetainmentPeriod,
+) => {
+	const newerMonth = getMonthIndex(new Date(newerPeriod.fromTimestamp * 1000))
+	const olderMonth = getMonthIndex(new Date(olderPeriod.fromTimestamp * 1000))
+	const missingMonthCount = Math.max(0, newerMonth - olderMonth - 1)
+
+	return Array.from({ length: missingMonthCount }, (_, index) => {
+		const monthIndex = newerMonth - index - 1
+		return new Date(Date.UTC(Math.floor(monthIndex / 12), monthIndex % 12, 1))
+	})
+}
+
 const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
 	typeof period.retainmentRate === 'number' &&
 	Number.isFinite(period.retainmentRate)
@@ -121,6 +138,25 @@ const RetainmentPeriod = ({
 	)
 }
 
+const RetainmentGap = ({ date }: { date: Date }) => {
+	const { t, i18n } = useTranslation('app')
+	const monthLabel = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
+		month: 'long',
+		year: 'numeric',
+		timeZone: 'UTC',
+	}).format(date)
+
+	return (
+		<li className={classes.timelineGap}>
+			<span className={classes.timelineMarker} aria-hidden="true" data-gap />
+			<div className={classes.gapLabel}>
+				<time dateTime={date.toISOString()}>{monthLabel}</time>
+				<span>{t('retainmentDataUnavailable')}</span>
+			</div>
+		</li>
+	)
+}
+
 export const RetainmentHistory = () => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
@@ -160,16 +196,29 @@ export const RetainmentHistory = () => {
 						/>
 					) : (
 						<>
-							{historyPeriods.map((period, index) => (
-								<RetainmentPeriod
-									current={index === 0}
-									key={period.fromTimestamp}
-									period={period}
-									selfStakeMax={selfStakeMax}
-									unit={unit}
-									units={units}
-								/>
-							))}
+							{historyPeriods.flatMap((period, index) => {
+								const olderPeriod = historyPeriods[index + 1]
+								const missingMonths = olderPeriod
+									? getMissingMonthDates(period, olderPeriod)
+									: []
+
+								return [
+									<RetainmentPeriod
+										current={index === 0}
+										key={`period-${period.fromTimestamp}`}
+										period={period}
+										selfStakeMax={selfStakeMax}
+										unit={unit}
+										units={units}
+									/>,
+									...missingMonths.map((date) => (
+										<RetainmentGap
+											date={date}
+											key={`gap-${date.toISOString()}`}
+										/>
+									)),
+								]
+							})}
 							<li className={classes.timelineEnd}>
 								<span className={classes.endMarker} aria-hidden="true" />
 								<span className={classes.historyEnd}>{t('endOfHistory')}</span>

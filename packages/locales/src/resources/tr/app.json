@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Ledger Hesaplarını Sıfırla",
 		"resources": "Kaynaklar",
 		"retainment": "Elde tutma",
+		"retainmentDataUnavailable": "Elde tutma verisi yok",
 		"retainmentHistory": "Elde tutma geçmişi",
 		"retainmentRate": "Elde tutma oranı",
 		"retainmentStats": "Elde tutma istatistikleri",

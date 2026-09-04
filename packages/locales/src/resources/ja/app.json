@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Ledgerアカウントをリセット",
 		"resources": "リソース",
 		"retainment": "維持",
+		"retainmentDataUnavailable": "維持データなし",
 		"retainmentHistory": "維持履歴",
 		"retainmentRate": "維持率",
 		"retainmentStats": "維持統計",

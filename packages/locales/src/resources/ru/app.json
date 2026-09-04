@@ -382,6 +382,7 @@
 		"resetLedgerAccounts": "Сбросить аккаунты Ledger",
 		"resources": "Ресурсы",
 		"retainment": "Удержание",
+		"retainmentDataUnavailable": "Нет данных об удержании",
 		"retainmentHistory": "История удержания",
 		"retainmentRate": "Коэффициент удержания",
 		"retainmentStats": "Статистика удержания",

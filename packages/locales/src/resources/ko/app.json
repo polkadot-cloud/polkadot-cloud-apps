@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Ledger 계정 초기화",
 		"resources": "리소스",
 		"retainment": "유지",
+		"retainmentDataUnavailable": "유지 데이터 없음",
 		"retainmentHistory": "유지 이력",
 		"retainmentRate": "유지율",
 		"retainmentStats": "유지 통계",

@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Ledger-Konten zurücksetzen",
 		"resources": "Ressourcen",
 		"retainment": "Bindung",
+		"retainmentDataUnavailable": "Keine Bindungsdaten",
 		"retainmentHistory": "Bindungsverlauf",
 		"retainmentRate": "Bindungsrate",
 		"retainmentStats": "Bindungsstatistiken",

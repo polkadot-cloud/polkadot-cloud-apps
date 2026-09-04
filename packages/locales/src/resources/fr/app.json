@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Réinitialiser les comptes Ledger",
 		"resources": "Ressources",
 		"retainment": "Rétention",
+		"retainmentDataUnavailable": "Aucune donnée de rétention",
 		"retainmentHistory": "Historique de rétention",
 		"retainmentRate": "Taux de rétention",
 		"retainmentStats": "Statistiques de rétention",

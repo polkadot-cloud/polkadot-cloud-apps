@@ -376,6 +376,7 @@
 		"resetLedgerAccounts": "Restablecer cuentas Ledger",
 		"resources": "Recursos",
 		"retainment": "Retención",
+		"retainmentDataUnavailable": "Sin datos de retención",
 		"retainmentHistory": "Historial de retención",
 		"retainmentRate": "Tasa de retención",
 		"retainmentStats": "Estadísticas de retención",

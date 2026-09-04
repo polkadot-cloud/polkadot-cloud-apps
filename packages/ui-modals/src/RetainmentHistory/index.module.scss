@@ -13,6 +13,7 @@
 }
 
 .timeline {
+	--timeline-item-gap: 1.35rem;
 	--timeline-offset: 2.75rem;
 
 	list-style: none;
@@ -39,7 +40,7 @@
 .timelineItem {
 	--period-status-color: var(--gray-700);
 
-	padding-bottom: 1.35rem;
+	padding-bottom: var(--timeline-item-gap);
 	position: relative;
 
 	&[data-status='success'] {
@@ -76,6 +77,40 @@
 	background: var(--period-status-color);
 	top: 1.25rem;
 	z-index: 2;
+
+	&[data-gap] {
+		background: var(--gray-700);
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}
+
+.timelineGap {
+	align-items: center;
+	display: flex;
+	min-height: 2.4rem;
+	position: relative;
+}
+
+.timelineGap + .timelineItem {
+	margin-block-start: var(--timeline-item-gap);
+}
+
+.gapLabel {
+	align-items: baseline;
+	color: var(--text-tertiary);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.9rem;
+	gap: 0.3rem 0.65rem;
+	line-height: 1.35;
+	padding-inline-start: 1rem;
+
+	> time {
+		color: var(--gray-800);
+		font-family: var(--font-family-semibold);
+		font-size: 1rem;
+	}
 }
 
 .period {
