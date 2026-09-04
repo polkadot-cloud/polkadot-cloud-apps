@@ -149,7 +149,11 @@ export const DetailedItem = ({
 				}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
+				onRetainmentHistory={
+					showRetainmentHistory ? openRetainmentHistory : undefined
+				}
 				rate={rateAfterCommission}
+				retainmentHistoryDisabled={retainmentPeriods.length === 0}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}

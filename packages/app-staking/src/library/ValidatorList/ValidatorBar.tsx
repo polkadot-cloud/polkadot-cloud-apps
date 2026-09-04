@@ -1,6 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type {
@@ -34,7 +36,9 @@ interface ValidatorBarProps {
 	isRatePreloading?: boolean
 	isRetainmentPreloading?: boolean
 	isStatusValuePreloading?: boolean
+	onRetainmentHistory?: () => void
 	rate?: number
+	retainmentHistoryDisabled?: boolean
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	selfStakeMax: boolean
@@ -58,7 +62,9 @@ export const ValidatorBar = ({
 	isRatePreloading,
 	isRetainmentPreloading,
 	isStatusValuePreloading = false,
+	onRetainmentHistory,
 	rate,
+	retainmentHistoryDisabled = false,
 	retainmentStats,
 	selfStake,
 	selfStakeMax,
@@ -88,8 +94,13 @@ export const ValidatorBar = ({
 		statusValue,
 		unit,
 	})
-	const { compoundRate, netOutflow, retainmentRate, selfStakeChange } =
-		retainmentStats
+	const {
+		compoundRate,
+		netOutflow,
+		retainmentLabel,
+		retainmentRate,
+		selfStakeChange,
+	} = retainmentStats
 	const eraPointsPreloading = isEraPointsPreloading ?? isPreloading
 	const ratePreloading = isRatePreloading ?? isPreloading
 	const retainmentPreloading = isRetainmentPreloading ?? isPreloading
@@ -97,9 +108,31 @@ export const ValidatorBar = ({
 	return (
 		<ListItem.Row
 			displayFor={displayFor}
+			rowVariant="validator"
 			selected={selected}
 			statusAccent={retainmentStats.statusAccent}
 		>
+			<ListItem.RowHeader data-section="identity">
+				{t('identity')}
+			</ListItem.RowHeader>
+			<ListItem.RowHeader data-section="performance">
+				{t('performance')}
+			</ListItem.RowHeader>
+			<ListItem.RowHeader data-section="retainment">
+				<span>{retainmentLabel}</span>
+				{onRetainmentHistory && (
+					<ListItem.RowHeaderAction
+						aria-label={t('retainmentHistory')}
+						aria-haspopup="dialog"
+						disabled={retainmentHistoryDisabled}
+						onClick={onRetainmentHistory}
+						title={t('retainmentHistory')}
+						type="button"
+					>
+						<FontAwesomeIcon aria-hidden="true" icon={faClockRotateLeft} />
+					</ListItem.RowHeaderAction>
+				)}
+			</ListItem.RowHeader>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>
@@ -108,6 +141,9 @@ export const ValidatorBar = ({
 						<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
 					)}
 				</ListItem.Identity>
+			</ListItem.RowIdentity>
+
+			<ListItem.RowPerformance>
 				<ListItem.Graph
 					layout="row"
 					aria-label={t('validatorActivity')}
@@ -129,72 +165,76 @@ export const ValidatorBar = ({
 						/>
 					)}
 				</ListItem.Graph>
-			</ListItem.RowIdentity>
+				<ListItem.RowPerformanceMetrics>
+					<ListItem.Metric
+						label={
+							<>
+								<ListItem.StatusDot
+									active={statusActive ?? validatorStatus === 'active'}
+									aria-hidden="true"
+								/>
+								<span>{summaryStatusLabel}</span>
+							</>
+						}
+						valueProps={{
+							'aria-busy': isStatusValuePreloading,
+							title: totalStake ? `${totalStake} ${unit}` : undefined,
+						}}
+					>
+						{isStatusValuePreloading ? (
+							<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+						) : (
+							<>
+								<span>{totalStake ?? '—'}</span>
+								{totalStake && <small>{unit}</small>}
+							</>
+						)}
+					</ListItem.Metric>
+					<ListItem.Metric aria-busy={ratePreloading} label="APY">
+						{ratePreloading ? (
+							<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
+						) : (
+							rateLabel
+						)}
+					</ListItem.Metric>
+					<ListItem.Metric
+						label={t('performance')}
+						valueProps={{ style: { overflow: 'hidden' } }}
+					>
+						<ActivityTier
+							address={address}
+							activityTier={activityTier}
+							detailed
+						/>
+					</ListItem.Metric>
+					<ListItem.Metric label={t('selfStake')}>
+						<span>{selfStakeLabel}</span>
+						{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
+					</ListItem.Metric>
+				</ListItem.RowPerformanceMetrics>
+			</ListItem.RowPerformance>
 
-			<ListItem.RowMetrics>
-				<ListItem.Metric
-					label={
-						<>
-							<ListItem.StatusDot
-								active={statusActive ?? validatorStatus === 'active'}
-								aria-hidden="true"
-							/>
-							<span>{summaryStatusLabel}</span>
-						</>
-					}
-					valueProps={{
-						'aria-busy': isStatusValuePreloading,
-						title: totalStake ? `${totalStake} ${unit}` : undefined,
-					}}
-				>
-					{isStatusValuePreloading ? (
-						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-					) : (
-						<>
-							<span>{totalStake ?? '—'}</span>
-							{totalStake && <small>{unit}</small>}
-						</>
-					)}
-				</ListItem.Metric>
-				<ListItem.Metric aria-busy={ratePreloading} label="APY">
-					{ratePreloading ? (
-						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-					) : (
-						rateLabel
-					)}
-				</ListItem.Metric>
-				<ListItem.Metric
-					label={t('performance')}
-					valueProps={{ style: { overflow: 'hidden' } }}
-				>
-					<ActivityTier
-						address={address}
-						activityTier={activityTier}
-						detailed
-					/>
-				</ListItem.Metric>
-				<ListItem.Metric label={t('selfStake')}>
-					<span>{selfStakeLabel}</span>
-					{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
-				</ListItem.Metric>
-				{[retainmentRate, compoundRate].map((stat) => (
-					<RetainmentMetric
-						compact
-						key={stat.label}
-						isPreloading={retainmentPreloading}
-						stat={stat}
-					/>
-				))}
-				{[selfStakeChange, netOutflow].map((stat) => (
-					<RetainmentMetric
-						compact
-						key={stat.label}
-						isPreloading={retainmentPreloading}
-						stat={stat}
-						unit={unit}
-					/>
-				))}
-			</ListItem.RowMetrics>
+			<ListItem.RowRetainment aria-label={retainmentLabel} role="group">
+				<ListItem.RowRetainmentMetrics>
+					{[retainmentRate, compoundRate].map((stat) => (
+						<RetainmentMetric
+							compact
+							key={stat.label}
+							isPreloading={retainmentPreloading}
+							stat={stat}
+						/>
+					))}
+					{[selfStakeChange, netOutflow].map((stat) => (
+						<RetainmentMetric
+							compact
+							key={stat.label}
+							isPreloading={retainmentPreloading}
+							stat={stat}
+							unit={unit}
+						/>
+					))}
+				</ListItem.RowRetainmentMetrics>
+			</ListItem.RowRetainment>
 
 			{actions}
 		</ListItem.Row>

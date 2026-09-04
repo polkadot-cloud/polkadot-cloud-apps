@@ -104,7 +104,11 @@ export const DetailedItem = ({
 				eraPoints={eraPoints}
 				isPreloading={isPreloading}
 				isStatusValuePreloading={backingStakePreloading}
+				onRetainmentHistory={
+					showRetainmentHistory ? openRetainmentHistory : undefined
+				}
 				rate={rateAfterCommission}
+				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
