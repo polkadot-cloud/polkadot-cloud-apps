@@ -192,7 +192,7 @@ export const ValidatorBar = ({
 						)}
 					</ListItem.Metric>
 					<ListItem.Metric
-						label={t('performance')}
+						label={t('health')}
 						valueProps={{ style: { overflow: 'hidden' } }}
 					>
 						<ActivityTier
