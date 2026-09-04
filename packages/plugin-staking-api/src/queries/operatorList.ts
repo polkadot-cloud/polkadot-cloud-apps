@@ -8,8 +8,10 @@ import type {
 	QueryReturn,
 } from '../types'
 import { useApiQuery } from './generic'
+import { THREE_MONTH_OPERATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY = gql`
+  ${THREE_MONTH_OPERATOR_RETAINMENT}
   query OperatorList(
     $network: String!
     $page: Int
@@ -35,7 +37,7 @@ const QUERY = gql`
         combinedSelfStake
         retainment {
           fromTimestamp
-          retainmentRate
+          ...ThreeMonthOperatorRetainment
         }
       }
       page

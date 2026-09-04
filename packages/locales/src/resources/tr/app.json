@@ -250,6 +250,7 @@
 		"millionUnit": "M",
 		"minimumBond": "En az {{minBondUnit}} {{unit}} bağlama gereklidir",
 		"missingIdentity": "Kimlik Eksik",
+		"monthRetainment": "{{count}} Aylık Elde Tutma",
 		"moreThanBalance": "Bağlama miktarı serbest bakiyenizden fazla.",
 		"netOutflow": "Net çıkış",
 		"network": "Ağ",

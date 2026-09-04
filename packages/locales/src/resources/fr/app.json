@@ -250,6 +250,7 @@
 		"millionUnit": "M",
 		"minimumBond": "Un engagement minimum de {{minBondUnit}} {{unit}} est requis",
 		"missingIdentity": "Identité manquante",
+		"monthRetainment": "Rétention sur {{count}} mois",
 		"moreThanBalance": "Le montant à engager est supérieur à votre solde disponible.",
 		"netOutflow": "Flux sortant net",
 		"network": "Réseau",

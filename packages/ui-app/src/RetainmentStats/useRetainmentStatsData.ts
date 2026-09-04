@@ -18,11 +18,12 @@ import {
 } from 'utils'
 
 export interface RetainmentPeriodData {
-	compoundRate: number
 	fromTimestamp: number
-	netInflow: string
-	retainmentRate: number | null
-	selfStakeChange: string
+	threeMonthCompoundRate: number | null
+	threeMonthNetInflow: string
+	threeMonthPeriodCount: number
+	threeMonthRetainmentRate: number | null
+	threeMonthSelfStakeChange: string
 }
 
 export interface RetainmentStatData {
@@ -177,10 +178,16 @@ export const useRetainmentStatsData = ({
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
-		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
+		? planckToUnitBn(
+				new BigNumber(period.threeMonthSelfStakeChange),
+				units,
+			).toNumber()
 		: undefined
 	const netInflow = period
-		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
+		? planckToUnitBn(
+				new BigNumber(period.threeMonthNetInflow),
+				units,
+			).toNumber()
 		: undefined
 	const netOutflow =
 		netInflow === undefined ? undefined : Math.min(netInflow, 0)
@@ -200,7 +207,7 @@ export const useRetainmentStatsData = ({
 		label: t('retainmentRate'),
 		locale,
 		maximumLabel,
-		rate: period?.retainmentRate,
+		rate: period?.threeMonthRetainmentRate,
 		showTrend: false,
 	})
 	const retainmentStatus =
@@ -219,8 +226,8 @@ export const useRetainmentStatsData = ({
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
-			max: displaySelfStakeMax,
-			rate: period?.compoundRate,
+			max: displaySelfStakeMax && period?.threeMonthCompoundRate !== null,
+			rate: period?.threeMonthCompoundRate,
 		}),
 		month,
 		netOutflow: getSignedAmountStat({
@@ -230,7 +237,9 @@ export const useRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: t('retainment'),
+		retainmentLabel: period
+			? t('monthRetainment', { count: period.threeMonthPeriodCount })
+			: t('retainment'),
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),

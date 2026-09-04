@@ -34,10 +34,10 @@ interface RetainmentPeriodProps {
 }
 
 const hasRetainmentStats = (period: ValidatorRetainmentPeriod) =>
-	period.retainmentRate !== null ||
-	period.compoundRate !== 0 ||
-	Number(period.netInflow) !== 0 ||
-	Number(period.selfStakeChange) !== 0
+	period.threeMonthRetainmentRate !== null ||
+	period.threeMonthCompoundRate !== null ||
+	Number(period.threeMonthNetInflow) !== 0 ||
+	Number(period.threeMonthSelfStakeChange) !== 0
 
 const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 	let historyEnd = periods.length
@@ -50,9 +50,9 @@ const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 }
 
 const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
-	typeof period.retainmentRate === 'number' &&
-	Number.isFinite(period.retainmentRate)
-		? getRetainmentStatus(period.retainmentRate)
+	typeof period.threeMonthRetainmentRate === 'number' &&
+	Number.isFinite(period.threeMonthRetainmentRate)
+		? getRetainmentStatus(period.threeMonthRetainmentRate)
 		: undefined
 
 const ValidatorIdentity = ({

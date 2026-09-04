@@ -3,11 +3,13 @@
 
 import type { DocumentNode } from '@apollo/client'
 import { gql } from '@apollo/client'
+import { print } from 'graphql'
 import type {
-	ValidatorCandidate,
+	RandomValidatorCandidate,
 	ValidatorCandidateBatchVariables,
 } from '../types'
 import { fetchQuery } from './generic'
+import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY_CACHE = new Map<number, DocumentNode>()
 
@@ -35,10 +37,15 @@ const getQuery = (batchSize: number) => {
 				commission
 				blocked
 			}
+			retainment {
+				fromTimestamp
+				...ThreeMonthValidatorRetainment
+			}
 		}`,
 	).join('\n')
 
 	const query = gql(`
+		${print(THREE_MONTH_VALIDATOR_RETAINMENT)}
 		query ValidatorCandidateBatch(
 			$network: String!
 			$active: Boolean = true
@@ -64,7 +71,9 @@ export const fetchValidatorCandidateBatch = async ({
 	const strategyVariables = Object.fromEntries(
 		strategies.map((strategy, index) => [`strategy${index}`, strategy]),
 	)
-	const data = await fetchQuery<Record<string, ValidatorCandidate | null>>(
+	const data = await fetchQuery<
+		Record<string, RandomValidatorCandidate | null>
+	>(
 		getQuery(strategies.length),
 		{ ...variables, ...strategyVariables },
 		{},

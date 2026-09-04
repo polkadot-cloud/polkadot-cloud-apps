@@ -8,8 +8,10 @@ import type {
 	ValidatorListVariables,
 } from '../types'
 import { useApiQuery } from './generic'
+import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY = gql`
+  ${THREE_MONTH_VALIDATOR_RETAINMENT}
   query ValidatorList(
     $network: String!
     $page: Int
@@ -41,10 +43,7 @@ const QUERY = gql`
         activityRank
         retainment {
           fromTimestamp
-          netInflow
-          retainmentRate
-          selfStakeChange
-          compoundRate
+          ...ThreeMonthValidatorRetainment
         }
       }
       page

@@ -250,6 +250,7 @@
 		"millionUnit": "M",
 		"minimumBond": "Mindestens {{minBondUnit}} {{unit}} Staking erforderlich",
 		"missingIdentity": "Identität fehlt",
+		"monthRetainment": "{{count}}-Monats-Bindung",
 		"moreThanBalance": "Der Stakegebührenbetrag ist größer als dein verfügbares Guthaben.",
 		"netOutflow": "Nettoabfluss",
 		"network": "Netzwerk",

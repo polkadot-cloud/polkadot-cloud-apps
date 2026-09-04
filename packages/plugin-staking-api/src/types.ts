@@ -134,7 +134,9 @@ export interface OperatorListItem {
 
 export interface OperatorRetainmentPeriod {
 	fromTimestamp: number
-	retainmentRate: number | null
+	threeMonthNetInflow: string
+	threeMonthPeriodCount: number
+	threeMonthRetainmentRate: number | null
 }
 
 export interface OperatorStatsVariables extends Record<string, unknown> {
@@ -157,6 +159,11 @@ export type ValidatorCandidateStrategy =
 	| 'HIGH_COMPOUNDER'
 
 export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
+
+export type RandomValidatorCandidate = Pick<
+	ValidatorListItem,
+	'address' | 'prefs' | 'retainment'
+>
 
 export interface ValidatorCandidateBatchVariables
 	extends Record<string, unknown> {
@@ -337,10 +344,11 @@ export interface ValidatorRetainmentData {
 
 export interface ValidatorRetainmentPeriod {
 	fromTimestamp: number
-	netInflow: string
-	retainmentRate: number | null
-	selfStakeChange: string
-	compoundRate: number
+	threeMonthCompoundRate: number | null
+	threeMonthNetInflow: string
+	threeMonthPeriodCount: number
+	threeMonthRetainmentRate: number | null
+	threeMonthSelfStakeChange: string
 }
 
 export interface ValidatorDetailsBatchData

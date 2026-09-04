@@ -250,6 +250,7 @@
 		"millionUnit": "M",
 		"minimumBond": "Se requiere un vínculo mínimo de {{minBondUnit}} {{unit}}",
 		"missingIdentity": "Identidad faltante",
+		"monthRetainment": "Retención de {{count}} meses",
 		"moreThanBalance": "El monto vinculado supera tu saldo libre.",
 		"netOutflow": "Salida neta",
 		"network": "Red",

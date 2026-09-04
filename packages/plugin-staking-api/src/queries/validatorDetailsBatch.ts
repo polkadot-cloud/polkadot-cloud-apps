@@ -4,8 +4,10 @@
 import { gql } from '@apollo/client'
 import type { ValidatorDetailsBatchData } from '../types'
 import { fetchQuery } from './generic'
+import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY = gql`
+  ${THREE_MONTH_VALIDATOR_RETAINMENT}
   query ValidatorDetailsBatch(
     $network: String!
     $validators: [String!]!
@@ -18,10 +20,7 @@ const QUERY = gql`
       result {
         months {
           fromTimestamp
-          netInflow
-          retainmentRate
-          selfStakeChange
-          compoundRate
+          ...ThreeMonthValidatorRetainment
         }
       }
     }

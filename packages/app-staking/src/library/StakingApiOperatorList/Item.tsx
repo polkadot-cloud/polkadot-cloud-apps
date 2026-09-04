@@ -57,7 +57,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const averageSelfStake =
 		validatorCount > 0 ? combinedSelfStake.dividedBy(validatorCount) : undefined
-	const suppliedRetainmentRate = operator.retainment?.retainmentRate
+	const suppliedRetainmentRate = operator.retainment?.threeMonthRetainmentRate
 	const retainmentRate =
 		typeof suppliedRetainmentRate === 'number' &&
 		Number.isFinite(suppliedRetainmentRate)
