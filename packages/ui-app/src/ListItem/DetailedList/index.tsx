@@ -191,40 +191,31 @@ const ListItemDetailLoader = ({
 export type ListItemFormat = 'row' | 'col'
 
 interface ListItemFormatToggleProps {
-	hideOnCompact?: boolean
 	onChange: (format: ListItemFormat) => void
 	value: ListItemFormat
 }
 
 const ListItemFormatToggle = ({
-	hideOnCompact,
 	onChange,
 	value,
-}: ListItemFormatToggleProps) => {
-	return (
-		<div
-			className={classNames(
-				classes.formatToggle,
-				hideOnCompact && classes.hideOnCompact,
-			)}
+}: ListItemFormatToggleProps) => (
+	<div className={classes.formatToggle}>
+		<button
+			type="button"
+			onClick={() => onChange('row')}
+			aria-pressed={value === 'row'}
 		>
-			<button
-				type="button"
-				onClick={() => onChange('row')}
-				aria-pressed={value === 'row'}
-			>
-				<FontAwesomeIcon icon={faBars} />
-			</button>
-			<button
-				type="button"
-				onClick={() => onChange('col')}
-				aria-pressed={value === 'col'}
-			>
-				<FontAwesomeIcon icon={faGripVertical} />
-			</button>
-		</div>
-	)
-}
+			<FontAwesomeIcon icon={faBars} />
+		</button>
+		<button
+			type="button"
+			onClick={() => onChange('col')}
+			aria-pressed={value === 'col'}
+		>
+			<FontAwesomeIcon icon={faGripVertical} />
+		</button>
+	</div>
+)
 
 export const DetailedCard = {
 	Header: withClassName('div', classes.cardHeader),
@@ -248,13 +239,9 @@ export const ListItem = {
 	RetainmentGrid: withClassName('div', classes.retainmentGrid),
 	Row: ListItemRow,
 	RowHeader: withClassName('span', classes.barHeader),
-	RowHeaderAction: withClassName('button', classes.barHeaderAction),
 	RowIdentity: withClassName('div', classes.barIdentity),
-	RowMetrics: withClassName('div', classes.barStats),
+	RowMetricGroup: withClassName('div', classes.barMetricGroup),
 	RowPerformance: withClassName('section', classes.barPerformance),
-	RowPerformanceMetrics: withClassName('div', classes.barPerformanceMetrics),
-	RowRetainment: withClassName('section', classes.barRetainment),
-	RowRetainmentMetrics: withClassName('div', classes.barRetainmentMetrics),
 	SectionHeader: withClassName('header', classes.sectionHeader),
 	Skeleton: ListItemSkeleton,
 	StatusDot: ListItemStatusDot,

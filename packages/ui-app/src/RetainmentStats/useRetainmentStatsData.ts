@@ -34,13 +34,12 @@ export interface MonthlyRetainmentPeriodData {
 	selfStakeChange: string
 }
 
-interface FormattedRetainmentPeriodData {
+type FormattedRetainmentPeriodData = Omit<
+	MonthlyRetainmentPeriodData,
+	'compoundRate'
+> & {
 	compoundRate: number | null
-	fromTimestamp: number
-	netInflow: string
 	periodCount?: number
-	retainmentRate: number | null
-	selfStakeChange: string
 }
 
 export interface RetainmentStatData {
@@ -271,16 +270,14 @@ export const useRetainmentStatsData = ({
 }: RetainmentStatsDataProps<RetainmentPeriodData>): RetainmentStatsData =>
 	useFormattedRetainmentStatsData({
 		...props,
-		period: period
-			? {
-					compoundRate: period.threeMonthCompoundRate,
-					fromTimestamp: period.fromTimestamp,
-					netInflow: period.threeMonthNetInflow,
-					periodCount: period.threeMonthPeriodCount,
-					retainmentRate: period.threeMonthRetainmentRate,
-					selfStakeChange: period.threeMonthSelfStakeChange,
-				}
-			: undefined,
+		period: period && {
+			compoundRate: period.threeMonthCompoundRate,
+			fromTimestamp: period.fromTimestamp,
+			netInflow: period.threeMonthNetInflow,
+			periodCount: period.threeMonthPeriodCount,
+			retainmentRate: period.threeMonthRetainmentRate,
+			selfStakeChange: period.threeMonthSelfStakeChange,
+		},
 	})
 
 export const useMonthlyRetainmentStatsData = ({

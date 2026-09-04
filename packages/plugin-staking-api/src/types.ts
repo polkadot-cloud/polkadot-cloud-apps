@@ -132,12 +132,14 @@ export interface OperatorListItem {
 	retainment: OperatorRetainmentPeriod | null
 }
 
-export interface OperatorRetainmentPeriod {
+export interface ThreeMonthRetainmentPeriod {
 	fromTimestamp: number
 	threeMonthNetInflow: string
 	threeMonthPeriodCount: number
 	threeMonthRetainmentRate: number | null
 }
+
+export type OperatorRetainmentPeriod = ThreeMonthRetainmentPeriod
 
 export interface OperatorStatsVariables extends Record<string, unknown> {
 	network: string
@@ -160,10 +162,8 @@ export type ValidatorCandidateStrategy =
 
 export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
 
-export type RandomValidatorCandidate = Pick<
-	ValidatorListItem,
-	'address' | 'prefs' | 'retainment'
->
+export type RandomValidatorCandidate = ValidatorCandidate &
+	Pick<ValidatorListItem, 'retainment'>
 
 export interface ValidatorCandidateBatchVariables
 	extends Record<string, unknown> {
@@ -342,12 +342,9 @@ export interface ValidatorRetainmentData {
 	validatorRetainment: ValidatorRetainmentResult | null
 }
 
-export interface ThreeMonthValidatorRetainmentPeriod {
-	fromTimestamp: number
+export interface ThreeMonthValidatorRetainmentPeriod
+	extends ThreeMonthRetainmentPeriod {
 	threeMonthCompoundRate: number | null
-	threeMonthNetInflow: string
-	threeMonthPeriodCount: number
-	threeMonthRetainmentRate: number | null
 	threeMonthSelfStakeChange: string
 }
 

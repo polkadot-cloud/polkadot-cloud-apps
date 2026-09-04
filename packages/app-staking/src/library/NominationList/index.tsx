@@ -233,11 +233,12 @@ export const NominationListInner = ({
 				<ListFormatHeader>
 					<div />
 					<div>
-						<ListItem.FormatToggle
-							hideOnCompact={retainmentStatsEnabled}
-							onChange={setListFormat}
-							value={listFormat}
-						/>
+						{!(retainmentStatsEnabled && forceCardLayout) && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</ListFormatHeader>
 				<MotionContainer>

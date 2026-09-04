@@ -13,6 +13,18 @@ export const THREE_MONTH_VALIDATOR_RETAINMENT = gql`
   }
 `
 
+export const VALIDATOR_RETAINMENT_PERIOD = gql`
+  ${THREE_MONTH_VALIDATOR_RETAINMENT}
+  fragment ValidatorRetainmentPeriodFields on ValidatorRetainmentPeriod {
+    fromTimestamp
+    netInflow
+    retainmentRate
+    selfStakeChange
+    compoundRate
+    ...ThreeMonthValidatorRetainment
+  }
+`
+
 export const THREE_MONTH_OPERATOR_RETAINMENT = gql`
   fragment ThreeMonthOperatorRetainment on OperatorRetainmentPeriod {
     threeMonthNetInflow

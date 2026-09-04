@@ -12,6 +12,20 @@ import { fetchQuery } from './generic'
 import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY_CACHE = new Map<number, DocumentNode>()
+const CANDIDATE_FRAGMENT = gql`
+  ${THREE_MONTH_VALIDATOR_RETAINMENT}
+  fragment RandomValidatorCandidateFields on ValidatorListItem {
+    address
+    prefs {
+      commission
+      blocked
+    }
+    retainment {
+      fromTimestamp
+      ...ThreeMonthValidatorRetainment
+    }
+  }
+`
 
 const getQuery = (batchSize: number) => {
 	const cached = QUERY_CACHE.get(batchSize)
@@ -32,20 +46,12 @@ const getQuery = (batchSize: number) => {
 			active: $active
 			excludeAddresses: $excludeAddresses
 		) {
-			address
-			prefs {
-				commission
-				blocked
-			}
-			retainment {
-				fromTimestamp
-				...ThreeMonthValidatorRetainment
-			}
+			...RandomValidatorCandidateFields
 		}`,
 	).join('\n')
 
 	const query = gql(`
-		${print(THREE_MONTH_VALIDATOR_RETAINMENT)}
+		${print(CANDIDATE_FRAGMENT)}
 		query ValidatorCandidateBatch(
 			$network: String!
 			$active: Boolean = true

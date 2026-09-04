@@ -165,13 +165,9 @@ export const Item = ({ format, operator }: ItemProps) => {
 				<ListItem.RowIdentity>
 					<ListItem.Identity>{identityNode}</ListItem.Identity>
 				</ListItem.RowIdentity>
-				<ListItem.RowMetrics
-					style={{
-						gridTemplateColumns: 'repeat(5, minmax(7rem, 1fr))',
-					}}
-				>
+				<ListItem.RowMetricGroup data-section="operator">
 					{metricNodes}
-				</ListItem.RowMetrics>
+				</ListItem.RowMetricGroup>
 				<RowActionsMenu operator={operator} />
 			</ListItem.Row>
 		)

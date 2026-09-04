@@ -254,9 +254,7 @@
 // Shared metric typography
 .summaryGrid > div,
 .retainmentGrid > div,
-.barStats > div,
-.barPerformanceMetrics > div,
-.barRetainmentMetrics > div {
+.barMetricGroup > div {
 	min-width: 0;
 
 	> span {
@@ -280,9 +278,7 @@
 }
 
 .summaryGrid > div,
-.barStats > div,
-.barPerformanceMetrics > div,
-.barRetainmentMetrics > div {
+.barMetricGroup > div {
 	> strong {
 		color: var(--gray-1000);
 		font-family: var(--font-family-mono);
@@ -563,23 +559,7 @@
 	}
 }
 
-.barStats {
-	align-items: stretch;
-	display: grid;
-	grid-template-columns:
-		minmax(4.75rem, 1fr)
-		minmax(4.25rem, 0.8fr)
-		minmax(5.75rem, 1fr)
-		minmax(5.25rem, 1fr)
-		repeat(2, minmax(8.5rem, 1.15fr))
-		minmax(7.5rem, 1.35fr)
-		minmax(4.75rem, 1fr);
-	min-width: 0;
-}
-
-.barStats > div,
-.barPerformanceMetrics > div,
-.barRetainmentMetrics > div {
+.barMetricGroup > div {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -643,41 +623,39 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-}
 
-.barHeaderAction {
-	align-items: center;
-	color: var(--gray-800);
-	display: inline-flex;
-	flex: 0 0 auto;
-	font-size: 0.82rem;
-	height: 1.5rem;
-	justify-content: center;
-	line-height: 1;
-	margin-inline-start: 0.2rem;
-	opacity: 0.75;
-	transition:
-		color var(--transition-duration),
-		opacity var(--transition-duration);
+	> button {
+		align-items: center;
+		color: var(--gray-800);
+		display: inline-flex;
+		flex: 0 0 auto;
+		font-size: 1rem;
+		height: 1.5rem;
+		justify-content: center;
+		margin-inline-start: 0.2rem;
+		opacity: 0.75;
+		transition:
+			color var(--transition-duration),
+			opacity var(--transition-duration);
+		width: 1.5rem;
 
-	&:hover:not(:disabled) {
-		color: var(--gray-1000);
-		opacity: 1;
+		&:hover:not(:disabled) {
+			color: var(--gray-1000);
+			opacity: 1;
+		}
+
+		&:disabled {
+			cursor: default;
+			opacity: var(--opacity-disabled);
+		}
 	}
-
-	&:disabled {
-		cursor: default;
-		opacity: var(--opacity-disabled);
-	}
-
-	width: 1.5rem;
 }
 
 .barLayout[data-row-variant='validator'] {
 	align-items: stretch;
 	grid-template:
 		'identity-title performance-title retainment-title actions' auto
-		'identity performance retainment actions' minmax(4.2rem, auto) / minmax(
+		'identity performance retainment actions' minmax(3.8rem, auto) / minmax(
 			10.5rem,
 			0.9fr
 		) minmax(26.75rem, 3.1fr) minmax(29.25rem, 2.75fr) auto;
@@ -703,7 +681,7 @@
 		grid-area: performance;
 	}
 
-	> .barRetainment {
+	> .barMetricGroup[data-section='retainment'] {
 		grid-area: retainment;
 	}
 
@@ -717,7 +695,7 @@
 	align-items: stretch;
 	display: grid;
 	gap: 1rem;
-	grid-template-columns: minmax(7.25rem, 0.85fr) minmax(18.25rem, 2.15fr);
+	grid-template-columns: minmax(6.5rem, 0.75fr) minmax(19rem, 2.25fr);
 	min-width: 0;
 
 	> .barGraph {
@@ -729,31 +707,30 @@
 	}
 }
 
-.barPerformanceMetrics {
-	display: grid;
-	grid-template-columns:
-		minmax(0, 1fr)
-		minmax(0, 0.8fr)
-		minmax(0, 1.1fr)
-		minmax(0, 1fr);
-	min-width: 0;
-}
-
-.barRetainment {
+.barMetricGroup {
 	align-items: stretch;
-	display: flex;
-	min-width: 0;
-}
-
-.barRetainmentMetrics {
 	display: grid;
-	grid-template-columns:
-		minmax(0, 1.1fr)
-		minmax(0, 1.1fr)
-		minmax(0, 1.35fr)
-		minmax(0, 1.15fr);
-	flex: 1;
 	min-width: 0;
+
+	&[data-section='performance'] {
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(0, 0.8fr)
+			minmax(0, 1.1fr)
+			minmax(0, 1fr);
+	}
+
+	&[data-section='retainment'] {
+		grid-template-columns:
+			minmax(0, 1.1fr)
+			minmax(0, 1.1fr)
+			minmax(0, 1.35fr)
+			minmax(0, 1.15fr);
+	}
+
+	&[data-section='operator'] {
+		grid-template-columns: repeat(5, minmax(7rem, 1fr));
+	}
 }
 
 // List format toggle
@@ -883,7 +860,7 @@
 		row-gap: 0.8rem;
 	}
 
-	.barStats {
+	.barMetricGroup[data-section='operator'] {
 		grid-column: 1 / -1;
 		grid-row: 2;
 	}
@@ -891,9 +868,9 @@
 	.barLayout[data-row-variant='validator'] {
 		grid-template:
 			'identity-title performance-title actions' auto
-			'identity performance actions' minmax(4.2rem, auto)
+			'identity performance actions' minmax(3.8rem, auto)
 			'retainment-title retainment-title retainment-title' auto
-			'retainment retainment retainment' minmax(4.2rem, auto) / minmax(
+			'retainment retainment retainment' minmax(3.8rem, auto) / minmax(
 				10.5rem,
 				0.8fr
 			) minmax(26.75rem, 3.1fr) auto;
@@ -907,7 +884,7 @@
 }
 
 @container list-item-bar (max-width: 46rem) {
-	.barStats {
+	.barMetricGroup[data-section='operator'] {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 
 		> div:nth-child(5) {
@@ -923,11 +900,11 @@
 	.barLayout[data-row-variant='validator'] {
 		grid-template:
 			'identity-title actions' auto
-			'identity actions' minmax(4.2rem, auto)
+			'identity actions' minmax(3.8rem, auto)
 			'performance-title performance-title' auto
-			'performance performance' minmax(4.2rem, auto)
+			'performance performance' minmax(3.8rem, auto)
 			'retainment-title retainment-title' auto
-			'retainment retainment' minmax(4.2rem, auto) / minmax(0, 1fr) auto;
+			'retainment retainment' minmax(3.8rem, auto) / minmax(0, 1fr) auto;
 
 		> .barHeader[data-section='performance'] {
 			border-block-start: 1px solid var(--gray-500);
@@ -938,7 +915,7 @@
 }
 
 @container list-item-bar (max-width: 38rem) {
-	.barLayout {
+	.barLayout:not([data-row-variant='validator']) {
 		grid-template-columns: minmax(0, 1fr);
 
 		> .actions {
@@ -946,22 +923,15 @@
 			grid-row: 2;
 			justify-content: flex-start;
 		}
-	}
 
-	.barStats {
-		grid-row: 3;
-	}
-
-	.barLayout[data-row-variant='validator'] {
-		> .actions {
-			grid-area: actions;
-			justify-content: flex-end;
+		> .barMetricGroup[data-section='operator'] {
+			grid-row: 3;
 		}
 	}
 }
 
 @container list-item-bar (max-width: 29rem) {
-	.barStats {
+	.barMetricGroup[data-section='operator'] {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 
 		> div:nth-child(odd) {
@@ -977,7 +947,7 @@
 	.barLayout[data-row-variant='validator'] {
 		grid-template:
 			'identity-title' auto
-			'identity' minmax(4.2rem, auto)
+			'identity' minmax(3.8rem, auto)
 			'performance-title' auto
 			'performance' auto
 			'retainment-title' auto
@@ -998,8 +968,7 @@
 		}
 	}
 
-	.barPerformanceMetrics,
-	.barRetainmentMetrics {
+	.barMetricGroup {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 
 		> div:nth-child(odd) {
@@ -1010,11 +979,5 @@
 			border-block-start: 1px solid var(--gray-500);
 			padding-block-start: 0.7rem;
 		}
-	}
-}
-
-@media (width <= 1249px) {
-	.formatToggle.hideOnCompact {
-		display: none;
 	}
 }

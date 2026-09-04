@@ -1,8 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type BigNumber from 'bignumber.js'
 import { useList } from 'contexts/List'
 import type {
@@ -19,6 +17,7 @@ import {
 	RetainmentMetric,
 	type RetainmentStatsData,
 } from 'ui-app/RetainmentStats'
+import { RetainmentHistory } from '../ListItem/Buttons/RetainmentHistory'
 import { Select } from '../ListItem/Buttons/Select'
 import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
@@ -121,16 +120,11 @@ export const ValidatorBar = ({
 			<ListItem.RowHeader data-section="retainment">
 				<span>{retainmentLabel}</span>
 				{onRetainmentHistory && (
-					<ListItem.RowHeaderAction
-						aria-label={t('retainmentHistory')}
-						aria-haspopup="dialog"
+					<RetainmentHistory
 						disabled={retainmentHistoryDisabled}
+						iconOnly
 						onClick={onRetainmentHistory}
-						title={t('retainmentHistory')}
-						type="button"
-					>
-						<FontAwesomeIcon aria-hidden="true" icon={faClockRotateLeft} />
-					</ListItem.RowHeaderAction>
+					/>
 				)}
 			</ListItem.RowHeader>
 			<ListItem.RowIdentity>
@@ -165,7 +159,7 @@ export const ValidatorBar = ({
 						/>
 					)}
 				</ListItem.Graph>
-				<ListItem.RowPerformanceMetrics>
+				<ListItem.RowMetricGroup data-section="performance">
 					<ListItem.Metric
 						label={
 							<>
@@ -211,30 +205,32 @@ export const ValidatorBar = ({
 						<span>{selfStakeLabel}</span>
 						{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 					</ListItem.Metric>
-				</ListItem.RowPerformanceMetrics>
+				</ListItem.RowMetricGroup>
 			</ListItem.RowPerformance>
 
-			<ListItem.RowRetainment aria-label={retainmentLabel} role="group">
-				<ListItem.RowRetainmentMetrics>
-					{[retainmentRate, compoundRate].map((stat) => (
-						<RetainmentMetric
-							compact
-							key={stat.label}
-							isPreloading={retainmentPreloading}
-							stat={stat}
-						/>
-					))}
-					{[selfStakeChange, netOutflow].map((stat) => (
-						<RetainmentMetric
-							compact
-							key={stat.label}
-							isPreloading={retainmentPreloading}
-							stat={stat}
-							unit={unit}
-						/>
-					))}
-				</ListItem.RowRetainmentMetrics>
-			</ListItem.RowRetainment>
+			<ListItem.RowMetricGroup
+				aria-label={retainmentLabel}
+				data-section="retainment"
+				role="group"
+			>
+				{[retainmentRate, compoundRate].map((stat) => (
+					<RetainmentMetric
+						compact
+						key={stat.label}
+						isPreloading={retainmentPreloading}
+						stat={stat}
+					/>
+				))}
+				{[selfStakeChange, netOutflow].map((stat) => (
+					<RetainmentMetric
+						compact
+						key={stat.label}
+						isPreloading={retainmentPreloading}
+						stat={stat}
+						unit={unit}
+					/>
+				))}
+			</ListItem.RowMetricGroup>
 
 			{actions}
 		</ListItem.Row>
