@@ -9,11 +9,15 @@ import type {
 } from './useRetainmentStatsData'
 
 export type {
+	MonthlyRetainmentPeriodData,
 	RetainmentPeriodData,
 	RetainmentStatData,
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
-export { useRetainmentStatsData } from './useRetainmentStatsData'
+export {
+	useMonthlyRetainmentStatsData,
+	useRetainmentStatsData,
+} from './useRetainmentStatsData'
 
 interface RetainmentStatsProps {
 	className?: string

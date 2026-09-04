@@ -26,6 +26,23 @@ export interface RetainmentPeriodData {
 	threeMonthSelfStakeChange: string
 }
 
+export interface MonthlyRetainmentPeriodData {
+	compoundRate: number
+	fromTimestamp: number
+	netInflow: string
+	retainmentRate: number | null
+	selfStakeChange: string
+}
+
+interface FormattedRetainmentPeriodData {
+	compoundRate: number | null
+	fromTimestamp: number
+	netInflow: string
+	periodCount?: number
+	retainmentRate: number | null
+	selfStakeChange: string
+}
+
 export interface RetainmentStatData {
 	ariaLabel: string
 	ariaValueText?: string
@@ -52,9 +69,9 @@ export interface RetainmentStatsData {
 	statsLabel: string
 }
 
-interface UseRetainmentStatsDataProps {
+interface RetainmentStatsDataProps<T> {
 	highlightWarnings?: boolean
-	period?: RetainmentPeriodData
+	period?: T
 	selfStakeMax: boolean
 	unit: string
 	units: number
@@ -167,27 +184,21 @@ const getSignedAmountStat = ({
 	}
 }
 
-export const useRetainmentStatsData = ({
+const useFormattedRetainmentStatsData = ({
 	highlightWarnings = false,
 	period,
 	selfStakeMax,
 	unit,
 	units,
-}: UseRetainmentStatsDataProps): RetainmentStatsData => {
+}: RetainmentStatsDataProps<FormattedRetainmentPeriodData>): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
-		? planckToUnitBn(
-				new BigNumber(period.threeMonthSelfStakeChange),
-				units,
-			).toNumber()
+		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
 		: undefined
 	const netInflow = period
-		? planckToUnitBn(
-				new BigNumber(period.threeMonthNetInflow),
-				units,
-			).toNumber()
+		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
 		: undefined
 	const netOutflow =
 		netInflow === undefined ? undefined : Math.min(netInflow, 0)
@@ -207,7 +218,7 @@ export const useRetainmentStatsData = ({
 		label: t('retainmentRate'),
 		locale,
 		maximumLabel,
-		rate: period?.threeMonthRetainmentRate,
+		rate: period?.retainmentRate,
 		showTrend: false,
 	})
 	const retainmentStatus =
@@ -226,8 +237,8 @@ export const useRetainmentStatsData = ({
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
-			max: displaySelfStakeMax && period?.threeMonthCompoundRate !== null,
-			rate: period?.threeMonthCompoundRate,
+			max: displaySelfStakeMax && period?.compoundRate !== null,
+			rate: period?.compoundRate,
 		}),
 		month,
 		netOutflow: getSignedAmountStat({
@@ -237,8 +248,8 @@ export const useRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: period
-			? t('monthRetainment', { count: period.threeMonthPeriodCount })
+		retainmentLabel: period?.periodCount
+			? t('monthRetainment', { count: period.periodCount })
 			: t('retainment'),
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
@@ -253,3 +264,27 @@ export const useRetainmentStatsData = ({
 		statsLabel: t('retainmentStats'),
 	}
 }
+
+export const useRetainmentStatsData = ({
+	period,
+	...props
+}: RetainmentStatsDataProps<RetainmentPeriodData>): RetainmentStatsData =>
+	useFormattedRetainmentStatsData({
+		...props,
+		period: period
+			? {
+					compoundRate: period.threeMonthCompoundRate,
+					fromTimestamp: period.fromTimestamp,
+					netInflow: period.threeMonthNetInflow,
+					periodCount: period.threeMonthPeriodCount,
+					retainmentRate: period.threeMonthRetainmentRate,
+					selfStakeChange: period.threeMonthSelfStakeChange,
+				}
+			: undefined,
+	})
+
+export const useMonthlyRetainmentStatsData = ({
+	period,
+	...props
+}: RetainmentStatsDataProps<MonthlyRetainmentPeriodData>): RetainmentStatsData =>
+	useFormattedRetainmentStatsData({ ...props, period })

@@ -9,7 +9,10 @@ import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
-import { RetainmentStats, useRetainmentStatsData } from 'ui-app/RetainmentStats'
+import {
+	RetainmentStats,
+	useMonthlyRetainmentStatsData,
+} from 'ui-app/RetainmentStats'
 import { Identity as IdentityWrapper } from 'ui-core/list'
 import { useOverlay } from 'ui-overlay'
 import { getRetainmentStatus } from 'utils'
@@ -34,10 +37,10 @@ interface RetainmentPeriodProps {
 }
 
 const hasRetainmentStats = (period: ValidatorRetainmentPeriod) =>
-	period.threeMonthRetainmentRate !== null ||
-	period.threeMonthCompoundRate !== null ||
-	Number(period.threeMonthNetInflow) !== 0 ||
-	Number(period.threeMonthSelfStakeChange) !== 0
+	period.retainmentRate !== null ||
+	period.compoundRate !== 0 ||
+	Number(period.netInflow) !== 0 ||
+	Number(period.selfStakeChange) !== 0
 
 const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 	let historyEnd = periods.length
@@ -50,9 +53,9 @@ const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
 }
 
 const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
-	typeof period.threeMonthRetainmentRate === 'number' &&
-	Number.isFinite(period.threeMonthRetainmentRate)
-		? getRetainmentStatus(period.threeMonthRetainmentRate)
+	typeof period.retainmentRate === 'number' &&
+	Number.isFinite(period.retainmentRate)
+		? getRetainmentStatus(period.retainmentRate)
 		: undefined
 
 const ValidatorIdentity = ({
@@ -90,7 +93,7 @@ const RetainmentPeriod = ({
 	unit,
 	units,
 }: RetainmentPeriodProps) => {
-	const data = useRetainmentStatsData({
+	const data = useMonthlyRetainmentStatsData({
 		period,
 		selfStakeMax,
 		unit,

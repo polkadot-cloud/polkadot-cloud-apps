@@ -85,7 +85,7 @@ export interface ValidatorListItem {
 	selfStake: string | null
 	totalStake: string | null
 	activityRank: number | null
-	retainment: ValidatorRetainmentPeriod | null
+	retainment: ThreeMonthValidatorRetainmentPeriod | null
 }
 
 export type OperatorListOrder =
@@ -342,13 +342,21 @@ export interface ValidatorRetainmentData {
 	validatorRetainment: ValidatorRetainmentResult | null
 }
 
-export interface ValidatorRetainmentPeriod {
+export interface ThreeMonthValidatorRetainmentPeriod {
 	fromTimestamp: number
 	threeMonthCompoundRate: number | null
 	threeMonthNetInflow: string
 	threeMonthPeriodCount: number
 	threeMonthRetainmentRate: number | null
 	threeMonthSelfStakeChange: string
+}
+
+export interface ValidatorRetainmentPeriod
+	extends ThreeMonthValidatorRetainmentPeriod {
+	compoundRate: number
+	netInflow: string
+	retainmentRate: number | null
+	selfStakeChange: string
 }
 
 export interface ValidatorDetailsBatchData

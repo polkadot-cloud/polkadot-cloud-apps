@@ -12,6 +12,10 @@ const QUERY = gql`
     validatorRetainment(network: $network, validator: $validator) {
       months {
         fromTimestamp
+        netInflow
+        retainmentRate
+        selfStakeChange
+        compoundRate
         ...ThreeMonthValidatorRetainment
       }
     }

@@ -20,6 +20,10 @@ const QUERY = gql`
       result {
         months {
           fromTimestamp
+          netInflow
+          retainmentRate
+          selfStakeChange
+          compoundRate
           ...ThreeMonthValidatorRetainment
         }
       }
