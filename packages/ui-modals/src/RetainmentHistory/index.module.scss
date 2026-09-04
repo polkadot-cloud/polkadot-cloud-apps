@@ -115,8 +115,7 @@
 
 .period {
 	background: color-mix(in srgb, var(--gray-300) 60%, var(--bg-body));
-	border: 1px solid
-		color-mix(in srgb, var(--period-status-color) 18%, var(--gray-500));
+	border: 1px solid var(--gray-500);
 	border-radius: 0.85rem;
 	box-shadow: 0 7px 18px -17px rgb(0 0 0 / 65%);
 	container: retainment-period / inline-size;
@@ -147,7 +146,11 @@
 			padding-inline: 0.85rem;
 
 			> span {
-				font-size: 0.78rem;
+				font-size: 0.82rem;
+			}
+
+			> strong > span {
+				font-size: clamp(1.15rem, 3.2cqi, 1.3rem);
 			}
 		}
 	}
