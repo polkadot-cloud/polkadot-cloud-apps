@@ -716,8 +716,8 @@
 		grid-template-columns:
 			minmax(0, 1fr)
 			minmax(0, 0.8fr)
-			minmax(0, 1.1fr)
-			minmax(0, 1fr);
+			minmax(0, 0.89fr)
+			minmax(0, 1.15fr);
 	}
 
 	&[data-section='retainment'] {
