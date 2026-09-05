@@ -1,0 +1,70 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.graph {
+	min-width: 0;
+
+	&.graph > div {
+		background: transparent;
+		border: 0;
+		height: 100%;
+		max-width: none;
+
+		> div:last-child {
+			box-sizing: border-box;
+			height: 100%;
+		}
+	}
+
+	&.graph svg {
+		display: block;
+		height: 100%;
+		shape-rendering: geometricprecision;
+		width: 100%;
+	}
+}
+
+.cardGraph {
+	flex: 1;
+	min-height: 0;
+	width: 100%;
+
+	&.graph > div {
+		border-radius: 0.45rem;
+		overflow: hidden;
+
+		> div:last-child {
+			padding: 0.45rem 0.5rem;
+		}
+	}
+
+	&.graph svg line[stroke-width='1'] {
+		stroke: color-mix(in srgb, var(--gray-700) 22%, transparent);
+	}
+}
+
+.barGraph {
+	background: color-mix(in srgb, var(--gray-400) 48%, transparent);
+	border-radius: 0.3rem;
+	flex: 0 1 clamp(8.4rem, 10.8cqi, 12rem);
+	height: 3.6rem;
+	margin-inline-end: 0.5rem;
+	overflow: hidden;
+
+	&.graph > div {
+		border-radius: inherit;
+		width: 100%;
+
+		> div:last-child {
+			padding: 0.2rem 0.25rem;
+		}
+	}
+
+	&.graph svg line[stroke-width='1'] {
+		stroke: color-mix(in srgb, var(--gray-700) 18%, transparent);
+	}
+
+	&.graph svg line[stroke-width='2'] {
+		stroke-width: 1.5;
+	}
+}
