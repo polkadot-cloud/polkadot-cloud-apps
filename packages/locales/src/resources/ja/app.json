@@ -252,6 +252,7 @@
 		"millionUnit": "M",
 		"minimumBond": "最小ボンド額{{minBondUnit}} {{unit}}が必要です",
 		"missingIdentity": "アイデンティティがありません",
+		"monthRetainment": "{{count}}か月の維持",
 		"moreThanBalance": "ボンド額が利用可能残高を超えています。",
 		"netOutflow": "純流出",
 		"network": "ネットワーク",

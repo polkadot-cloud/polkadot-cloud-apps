@@ -255,6 +255,7 @@
 		"millionUnit": "M",
 		"minimumBond": "Требуется минимальная сумма блокировки {{minBondUnit}} {{unit}}",
 		"missingIdentity": "Отсутствует идентификация",
+		"monthRetainment": "Удержание за {{count}} мес.",
 		"moreThanBalance": "Сумма блокировки превышает ваш доступный баланс.",
 		"netOutflow": "Чистый отток",
 		"network": "Сеть",

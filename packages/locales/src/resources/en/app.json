@@ -252,6 +252,7 @@
 		"millionUnit": "M",
 		"minimumBond": "A minimum bond of {{minBondUnit}} {{unit}} is required",
 		"missingIdentity": "Missing Identity",
+		"monthRetainment": "{{count}} Month Retainment",
 		"moreThanBalance": "Bond amount is more than your free balance.",
 		"netOutflow": "Net outflow",
 		"network": "Network",

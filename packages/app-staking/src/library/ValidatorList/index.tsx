@@ -173,13 +173,13 @@ export const ValidatorListInner = ({
 							)}
 						</div>
 						<div>
-							{allowListFormat && (
-								<ListItem.FormatToggle
-									hideOnCompact={retainmentStatsEnabled}
-									onChange={setListFormat}
-									value={listFormat}
-								/>
-							)}
+							{allowListFormat &&
+								!(retainmentStatsEnabled && forceCardLayout) && (
+									<ListItem.FormatToggle
+										onChange={setListFormat}
+										value={listFormat}
+									/>
+								)}
 						</div>
 					</FilterHeaderWrapper>
 				)}

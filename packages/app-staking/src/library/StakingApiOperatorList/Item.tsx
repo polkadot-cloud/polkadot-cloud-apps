@@ -57,7 +57,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const averageSelfStake =
 		validatorCount > 0 ? combinedSelfStake.dividedBy(validatorCount) : undefined
-	const suppliedRetainmentRate = operator.retainment.oneMonth?.retainmentRate
+	const suppliedRetainmentRate = operator.retainment.threeMonths?.retainmentRate
 	const retainmentRate =
 		typeof suppliedRetainmentRate === 'number' &&
 		Number.isFinite(suppliedRetainmentRate)
@@ -69,8 +69,8 @@ export const Item = ({ format, operator }: ItemProps) => {
 			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
 					maximumFractionDigits: 1,
 				})}%`
-	const retainmentMonthDate = operator.retainment.oneMonth
-		? new Date(operator.retainment.oneMonth.fromTimestamp * 1000)
+	const retainmentMonthDate = operator.retainment.threeMonths
+		? new Date(operator.retainment.threeMonths.fromTimestamp * 1000)
 		: undefined
 	const retainmentMonth = retainmentMonthDate
 		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
@@ -165,13 +165,9 @@ export const Item = ({ format, operator }: ItemProps) => {
 				<ListItem.RowIdentity>
 					<ListItem.Identity>{identityNode}</ListItem.Identity>
 				</ListItem.RowIdentity>
-				<ListItem.RowMetrics
-					style={{
-						gridTemplateColumns: 'repeat(5, minmax(7rem, 1fr))',
-					}}
-				>
+				<ListItem.RowMetricGroup data-section="operator">
 					{metricNodes}
-				</ListItem.RowMetrics>
+				</ListItem.RowMetricGroup>
 				<RowActionsMenu operator={operator} />
 			</ListItem.Row>
 		)

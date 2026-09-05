@@ -9,11 +9,15 @@ import type {
 } from './useRetainmentStatsData'
 
 export type {
+	MonthlyRetainmentPeriodData,
 	RetainmentPeriodData,
 	RetainmentStatData,
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
-export { useRetainmentStatsData } from './useRetainmentStatsData'
+export {
+	useMonthlyRetainmentStatsData,
+	useRetainmentStatsData,
+} from './useRetainmentStatsData'
 
 interface RetainmentStatsProps {
 	className?: string
@@ -91,14 +95,14 @@ export const RetainmentStats = ({
 		>
 			<ListItem.SectionHeader>
 				{showLabel && <strong>{retainmentLabel}</strong>}
-				{isPreloading ? (
-					<ListItem.DetailLoader height="0.85rem" width="7rem" />
-				) : month ? (
-					<ListItem.Month dateTime={month.date.toISOString()}>
-						{showLabel && '/ '}
-						{month.label}
-					</ListItem.Month>
-				) : null}
+				{!showLabel &&
+					(isPreloading ? (
+						<ListItem.DetailLoader height="0.85rem" width="7rem" />
+					) : month ? (
+						<ListItem.Month dateTime={month.date.toISOString()}>
+							{month.label}
+						</ListItem.Month>
+					) : null)}
 			</ListItem.SectionHeader>
 			<ListItem.RetainmentGrid>
 				{[retainmentRate, compoundRate].map((stat) => (

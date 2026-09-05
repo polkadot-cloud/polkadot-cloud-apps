@@ -52,7 +52,7 @@
 	}
 }
 
-@container list-item-bar (max-width: 84rem) {
+@container list-item-bar (max-width: 78rem) {
 	.barLayout:not([data-row-variant='validator']) {
 		grid-template-columns: minmax(0, 1fr) auto;
 		row-gap: 0.8rem;

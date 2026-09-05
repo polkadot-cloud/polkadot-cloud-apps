@@ -10,8 +10,8 @@ export const getValidatorsWithRetainment = (
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>,
 ) =>
 	validators.flatMap((validator) => {
-		const rate = retainmentByAddress.get(validator.address)?.retainment.oneMonth
-			?.retainmentRate
+		const rate = retainmentByAddress.get(validator.address)?.retainment
+			.threeMonths?.retainmentRate
 		return typeof rate === 'number' && Number.isFinite(rate)
 			? [{ rate: clampRate(rate), validator }]
 			: []

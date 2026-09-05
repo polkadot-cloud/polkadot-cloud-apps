@@ -1,30 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-.barStats,
 .barMetricGroup {
 	align-items: stretch;
 	display: grid;
 	min-width: 0;
-}
 
-.barStats {
-	grid-template-columns:
-		minmax(4.75rem, 1fr)
-		minmax(4.25rem, 0.8fr)
-		minmax(5.75rem, 1fr)
-		minmax(5.25rem, 1fr)
-		repeat(2, minmax(8.5rem, 1.15fr))
-		minmax(7.5rem, 1.35fr)
-		minmax(4.75rem, 1fr);
-
-	> div:nth-child(5),
-	> div:nth-child(6) {
-		padding-inline: 0.5rem;
+	&[data-section='operator'] {
+		grid-template-columns: repeat(5, minmax(7rem, 1fr));
 	}
-}
 
-.barMetricGroup {
 	&[data-section='performance'] {
 		grid-template-columns:
 			minmax(0, 1fr)
@@ -42,7 +27,6 @@
 	}
 }
 
-.barStats > div,
 .barMetricGroup > div {
 	padding-inline: clamp(0.5rem, 1.1cqi, 0.85rem);
 
@@ -77,15 +61,15 @@
 	}
 }
 
-@container list-item-bar (max-width: 84rem) {
-	.barStats {
+@container list-item-bar (max-width: 78rem) {
+	.barMetricGroup[data-section='operator'] {
 		grid-column: 1 / -1;
 		grid-row: 2;
 	}
 }
 
 @container list-item-bar (max-width: 46rem) {
-	.barStats {
+	.barMetricGroup[data-section='operator'] {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 
 		> div:nth-child(5) {
@@ -100,13 +84,12 @@
 }
 
 @container list-item-bar (max-width: 38rem) {
-	.barStats {
+	.barMetricGroup[data-section='operator'] {
 		grid-row: 3;
 	}
 }
 
 @container list-item-bar (max-width: 29rem) {
-	.barStats,
 	.barMetricGroup[data-section] {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 

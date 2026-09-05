@@ -3,13 +3,26 @@
 
 import type { DocumentNode } from '@apollo/client'
 import { gql } from '@apollo/client'
+import { print } from 'graphql'
 import type {
-	ValidatorCandidate,
+	RandomValidatorCandidate,
 	ValidatorCandidateBatchVariables,
 } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { fetchQuery } from './generic'
 
 const QUERY_CACHE = new Map<number, DocumentNode>()
+const CANDIDATE_FRAGMENT = gql`
+  ${VALIDATOR_RETAINMENT_FIELDS}
+  fragment RandomValidatorCandidateFields on ValidatorListItem {
+    address
+    prefs {
+      commission
+      blocked
+    }
+    retainment { ...ValidatorRetainmentFields }
+  }
+`
 
 const getQuery = (batchSize: number) => {
 	const cached = QUERY_CACHE.get(batchSize)
@@ -30,15 +43,12 @@ const getQuery = (batchSize: number) => {
 			active: $active
 			excludeAddresses: $excludeAddresses
 		) {
-			address
-			prefs {
-				commission
-				blocked
-			}
+			...RandomValidatorCandidateFields
 		}`,
 	).join('\n')
 
 	const query = gql(`
+		${print(CANDIDATE_FRAGMENT)}
 		query ValidatorCandidateBatch(
 			$network: String!
 			$active: Boolean = true
@@ -64,7 +74,9 @@ export const fetchValidatorCandidateBatch = async ({
 	const strategyVariables = Object.fromEntries(
 		strategies.map((strategy, index) => [`strategy${index}`, strategy]),
 	)
-	const data = await fetchQuery<Record<string, ValidatorCandidate | null>>(
+	const data = await fetchQuery<
+		Record<string, RandomValidatorCandidate | null>
+	>(
 		getQuery(strategies.length),
 		{ ...variables, ...strategyVariables },
 		{},

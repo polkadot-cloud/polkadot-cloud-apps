@@ -191,22 +191,15 @@ const ListItemDetailLoader = ({
 export type ListItemFormat = 'row' | 'col'
 
 interface ListItemFormatToggleProps {
-	hideOnCompact?: boolean
 	onChange: (format: ListItemFormat) => void
 	value: ListItemFormat
 }
 
 const ListItemFormatToggle = ({
-	hideOnCompact,
 	onChange,
 	value,
 }: ListItemFormatToggleProps) => (
-	<div
-		className={classNames(
-			classes.formatToggle,
-			hideOnCompact && classes.hideOnCompact,
-		)}
-	>
+	<div className={classes.formatToggle}>
 		<button
 			type="button"
 			onClick={() => onChange('row')}
@@ -248,7 +241,6 @@ export const ListItem = {
 	RowHeader: withClassName('span', classes.barHeader),
 	RowIdentity: withClassName('div', classes.barIdentity),
 	RowMetricGroup: withClassName('div', classes.barMetricGroup),
-	RowMetrics: withClassName('div', classes.barStats),
 	RowPerformance: withClassName('section', classes.barPerformance),
 	SectionHeader: withClassName('header', classes.sectionHeader),
 	Skeleton: ListItemSkeleton,

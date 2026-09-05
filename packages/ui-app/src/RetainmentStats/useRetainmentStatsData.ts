@@ -18,12 +18,17 @@ import {
 } from 'utils'
 
 export interface RetainmentPeriodData {
+	includedMonthCount?: number
 	compoundRate: number | null
 	fromTimestamp: number
 	netInflow: string
 	retainmentRate: number | null
 	selfStakeChange: string
 }
+
+export type MonthlyRetainmentPeriodData = RetainmentPeriodData
+
+type FormattedRetainmentPeriodData = RetainmentPeriodData
 
 export interface RetainmentStatData {
 	ariaLabel: string
@@ -51,9 +56,9 @@ export interface RetainmentStatsData {
 	statsLabel: string
 }
 
-interface UseRetainmentStatsDataProps {
+interface RetainmentStatsDataProps<T> {
 	highlightWarnings?: boolean
-	period?: RetainmentPeriodData
+	period?: T
 	selfStakeMax: boolean
 	unit: string
 	units: number
@@ -166,13 +171,13 @@ const getSignedAmountStat = ({
 	}
 }
 
-export const useRetainmentStatsData = ({
+const useFormattedRetainmentStatsData = ({
 	highlightWarnings = false,
 	period,
 	selfStakeMax,
 	unit,
 	units,
-}: UseRetainmentStatsDataProps): RetainmentStatsData => {
+}: RetainmentStatsDataProps<FormattedRetainmentPeriodData>): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
@@ -219,7 +224,7 @@ export const useRetainmentStatsData = ({
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
-			max: displaySelfStakeMax,
+			max: displaySelfStakeMax && period?.compoundRate !== null,
 			rate: period?.compoundRate,
 		}),
 		month,
@@ -230,7 +235,9 @@ export const useRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: t('retainment'),
+		retainmentLabel: period?.includedMonthCount
+			? t('monthRetainment', { count: period.includedMonthCount })
+			: t('retainment'),
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),
@@ -244,3 +251,21 @@ export const useRetainmentStatsData = ({
 		statsLabel: t('retainmentStats'),
 	}
 }
+
+export const useRetainmentStatsData = ({
+	period,
+	...props
+}: RetainmentStatsDataProps<RetainmentPeriodData>): RetainmentStatsData =>
+	useFormattedRetainmentStatsData({
+		...props,
+		period,
+	})
+
+export const useMonthlyRetainmentStatsData = ({
+	period,
+	...props
+}: RetainmentStatsDataProps<MonthlyRetainmentPeriodData>): RetainmentStatsData =>
+	useFormattedRetainmentStatsData({
+		...props,
+		period: period && { ...period, includedMonthCount: undefined },
+	})

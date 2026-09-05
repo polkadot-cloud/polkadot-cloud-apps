@@ -249,6 +249,7 @@
 		"millionUnit": "百万",
 		"minimumBond": "最低质押为 {{minBondUnit}} {{unit}}",
 		"missingIdentity": "无ID",
+		"monthRetainment": "{{count}} 个月留存",
 		"moreThanBalance": "质押金额超过余额",
 		"netOutflow": "净流出",
 		"network": "网络",

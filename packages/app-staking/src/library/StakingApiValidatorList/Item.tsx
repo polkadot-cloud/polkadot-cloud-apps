@@ -10,7 +10,10 @@ import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
-import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
@@ -25,7 +28,6 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
-import { useOverlay } from 'ui-overlay'
 import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
 interface ItemProps {
@@ -66,7 +68,6 @@ export const Item = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { openModal } = useOverlay().modal
 	const hardCapSelfStake = useHardCapSelfStake()
 	const { unit, units } = getStakingChainData(network)
 	const { address, prefs } = validator
@@ -79,7 +80,7 @@ export const Item = ({
 	const selfStakeMax = isMaxSelfStake(selfStakePlanck, hardCapSelfStake)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs.commission)
 	const retainmentStats = useRetainmentStatsData({
-		period: validator.retainment.oneMonth ?? undefined,
+		period: validator.retainment.threeMonths ?? undefined,
 		selfStakeMax,
 		unit,
 		units,
@@ -102,18 +103,13 @@ export const Item = ({
 		validatorStatus,
 	}
 	const retainmentHistoryDisabled = validator.retainment.oneMonth === null
-	const openRetainmentHistory = () =>
-		openModal({
-			key: 'RetainmentHistory',
-			size: 'sm',
-			options: {
-				selfStakeMax,
-				unit,
-				units,
-				validator: address,
-				validatorDisplay,
-			},
-		})
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
 
 	if (format === 'row') {
 		return (

@@ -9,7 +9,10 @@ import type { ValidatorRetainmentWindow } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
-import { RetainmentStats, useRetainmentStatsData } from 'ui-app/RetainmentStats'
+import {
+	RetainmentStats,
+	useMonthlyRetainmentStatsData,
+} from 'ui-app/RetainmentStats'
 import { Identity as IdentityWrapper } from 'ui-core/list'
 import { useOverlay } from 'ui-overlay'
 import { getRetainmentStatus } from 'utils'
@@ -107,7 +110,7 @@ const RetainmentPeriod = ({
 	unit,
 	units,
 }: RetainmentPeriodProps) => {
-	const data = useRetainmentStatsData({
+	const data = useMonthlyRetainmentStatsData({
 		period,
 		selfStakeMax,
 		unit,

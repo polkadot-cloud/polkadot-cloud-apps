@@ -252,6 +252,7 @@
 		"millionUnit": "M",
 		"minimumBond": "최소 {{minBondUnit}} {{unit}}의 본드가 필요합니다",
 		"missingIdentity": "신원 정보 없음",
+		"monthRetainment": "{{count}}개월 유지",
 		"moreThanBalance": "본드 금액이 사용 가능한 잔액보다 많습니다.",
 		"netOutflow": "순유출",
 		"network": "네트워크",

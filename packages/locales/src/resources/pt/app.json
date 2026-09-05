@@ -252,6 +252,7 @@
 		"millionUnit": "M",
 		"minimumBond": "É necessário um vínculo mínimo de {{minBondUnit}} {{unit}}",
 		"missingIdentity": "Identidade Ausente",
+		"monthRetainment": "Retenção de {{count}} meses",
 		"moreThanBalance": "O valor do vínculo é maior do que seu saldo livre.",
 		"netOutflow": "Saída líquida",
 		"network": "Rede",

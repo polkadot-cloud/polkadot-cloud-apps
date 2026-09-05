@@ -176,11 +176,12 @@ export const StakingApiValidatorListInner = ({
 						</ResultSummary>
 					</div>
 					<div>
-						<ListItem.FormatToggle
-							hideOnCompact
-							onChange={setListFormat}
-							value={listFormat}
-						/>
+						{!forceCardLayout && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</FilterHeaderWrapper>
 				{!loading && !error && result.validators.length > 0 && (

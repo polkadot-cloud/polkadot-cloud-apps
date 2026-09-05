@@ -3,7 +3,6 @@
 
 .summaryGrid > div,
 .retainmentGrid > div,
-.barStats > div,
 .barMetricGroup > div {
 	min-width: 0;
 
@@ -28,7 +27,6 @@
 }
 
 .summaryGrid > div,
-.barStats > div,
 .barMetricGroup > div {
 	display: flex;
 	flex-direction: column;
