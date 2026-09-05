@@ -15,29 +15,23 @@ export const useValidators = () => {
 	const { accounts } = useImportedAccounts()
 	const { activeAddress } = useActiveAccount()
 	const validatorStatus = useSingletonStore(validatorStatusStore)
+	const currentStatus =
+		isReady &&
+		validatorStatus?.network === network &&
+		validatorStatus.serviceApi === serviceApi
+			? validatorStatus
+			: undefined
 
 	const isValidator = useCallback(
 		(address: MaybeAddress) =>
-			Boolean(
-				address &&
-					isReady &&
-					validatorStatus?.network === network &&
-					validatorStatus.serviceApi === serviceApi &&
-					validatorStatus.validators.has(address),
-			),
-		[isReady, network, serviceApi, validatorStatus],
+			Boolean(address && currentStatus?.validators.has(address)),
+		[currentStatus],
 	)
 
 	const isLoading = useCallback(
 		(address: MaybeAddress) =>
-			Boolean(
-				address &&
-					(!isReady ||
-						validatorStatus?.network !== network ||
-						validatorStatus.serviceApi !== serviceApi ||
-						!validatorStatus.checkedAddresses.has(address)),
-			),
-		[isReady, network, serviceApi, validatorStatus],
+			Boolean(address && !currentStatus?.checkedAddresses.has(address)),
+		[currentStatus],
 	)
 
 	useEffect(() => {

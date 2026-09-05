@@ -6,7 +6,6 @@ import { useBalances } from 'hooks/useBalances'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidators } from 'hooks/useValidators'
 import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
@@ -27,7 +26,6 @@ export const Overview = () => {
 	const { activeAddress } = useActiveAccount()
 	const { syncing, accountSynced } = useSyncing()
 	const { isReadOnlyAccount } = useImportedAccounts()
-	const { isLoading, isValidator } = useValidators()
 
 	const { controllerUnmigrated } = getStakingLedger(activeAddress)
 
@@ -51,11 +49,7 @@ export const Overview = () => {
 					<Summaries height={STATUS_HEIGHT} />
 				</Page.RowSection>
 				<Page.RowSection secondary hLast vLast>
-					<QuickActions
-						height={STATUS_HEIGHT}
-						isValidator={isValidator(activeAddress)}
-						validatorStatusLoading={isLoading(activeAddress)}
-					/>
+					<QuickActions height={STATUS_HEIGHT} />
 				</Page.RowSection>
 			</Page.Row>
 			<Page.Row>
