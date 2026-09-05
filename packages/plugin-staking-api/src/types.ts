@@ -85,7 +85,7 @@ export interface ValidatorListItem {
 	selfStake: string | null
 	totalStake: string | null
 	activityRank: number | null
-	retainment: ValidatorRetainmentPeriod | null
+	retainment: ValidatorRetainment
 }
 
 export type OperatorListOrder =
@@ -129,12 +129,7 @@ export interface OperatorListItem {
 	validatorCount: number
 	activeValidatorCount: number
 	combinedSelfStake: string
-	retainment: OperatorRetainmentPeriod | null
-}
-
-export interface OperatorRetainmentPeriod {
-	fromTimestamp: number
-	retainmentRate: number | null
+	retainment: OperatorRetainment
 }
 
 export interface OperatorStatsVariables extends Record<string, unknown> {
@@ -328,20 +323,44 @@ export interface ValidatorRetainmentBatch {
 }
 
 export interface ValidatorRetainmentResult {
-	months: ValidatorRetainmentPeriod[]
+	months: ValidatorRetainmentWindow[]
+	retainment: ValidatorRetainment
 }
 
 export interface ValidatorRetainmentData {
 	validatorRetainment: ValidatorRetainmentResult | null
 }
 
-export interface ValidatorRetainmentPeriod {
-	fromTimestamp: number
-	netInflow: string
-	retainmentRate: number | null
-	selfStakeChange: string
-	compoundRate: number
+export interface RetainmentWindows<Window> {
+	oneMonth: Window | null
+	threeMonths: Window | null
 }
+
+export interface GraphRetainmentWindow {
+	month: number
+	year: number
+	windowMonths: number
+	includedMonthCount: number
+	fromEra: number
+	toEra: number
+	fromTimestamp: number
+	toTimestamp: number
+	graphRewards: string
+	netInflow: string
+	retained: string
+	retainmentRate: number | null
+}
+
+export interface ValidatorRetainmentWindow extends GraphRetainmentWindow {
+	validatorRewards: string
+	selfStakeChange: string
+	compounded: string
+	compoundRate: number | null
+}
+
+export type OperatorRetainmentWindow = GraphRetainmentWindow
+export type ValidatorRetainment = RetainmentWindows<ValidatorRetainmentWindow>
+export type OperatorRetainment = RetainmentWindows<OperatorRetainmentWindow>
 
 export interface ValidatorDetailsBatchData
 	extends ValidatorAvgRewardRateBatchData,
