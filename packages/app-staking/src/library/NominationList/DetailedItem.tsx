@@ -55,7 +55,7 @@ export const DetailedItem = ({
 		status: nominationStatus,
 	})
 	const retainmentStats = useRetainmentStatsData({
-		period: retainment?.months[0],
+		period: retainment?.retainment.threeMonths ?? undefined,
 		selfStakeMax,
 		unit,
 		units,

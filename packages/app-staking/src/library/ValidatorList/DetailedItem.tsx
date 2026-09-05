@@ -50,7 +50,7 @@ export const DetailedItem = ({
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const retainmentStats = useRetainmentStatsData({
 		highlightWarnings: highlightRetainmentWarnings,
-		period: retainment?.months[0],
+		period: retainment?.retainment.threeMonths ?? undefined,
 		selfStakeMax,
 		unit,
 		units,

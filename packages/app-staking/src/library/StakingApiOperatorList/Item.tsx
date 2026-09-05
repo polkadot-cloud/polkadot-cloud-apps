@@ -57,7 +57,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const averageSelfStake =
 		validatorCount > 0 ? combinedSelfStake.dividedBy(validatorCount) : undefined
-	const suppliedRetainmentRate = operator.retainment?.threeMonthRetainmentRate
+	const suppliedRetainmentRate = operator.retainment.threeMonths?.retainmentRate
 	const retainmentRate =
 		typeof suppliedRetainmentRate === 'number' &&
 		Number.isFinite(suppliedRetainmentRate)
@@ -69,8 +69,8 @@ export const Item = ({ format, operator }: ItemProps) => {
 			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
 					maximumFractionDigits: 1,
 				})}%`
-	const retainmentMonthDate = operator.retainment
-		? new Date(operator.retainment.fromTimestamp * 1000)
+	const retainmentMonthDate = operator.retainment.threeMonths
+		? new Date(operator.retainment.threeMonths.fromTimestamp * 1000)
 		: undefined
 	const retainmentMonth = retainmentMonthDate
 		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {

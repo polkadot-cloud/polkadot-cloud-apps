@@ -7,11 +7,11 @@ import type {
 	ValidatorListData,
 	ValidatorListVariables,
 } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
-import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY = gql`
-  ${THREE_MONTH_VALIDATOR_RETAINMENT}
+  ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorList(
     $network: String!
     $page: Int
@@ -41,10 +41,7 @@ const QUERY = gql`
         selfStake
         totalStake
         activityRank
-        retainment {
-          fromTimestamp
-          ...ThreeMonthValidatorRetainment
-        }
+        retainment { ...ValidatorRetainmentFields }
       }
       page
       pageSize

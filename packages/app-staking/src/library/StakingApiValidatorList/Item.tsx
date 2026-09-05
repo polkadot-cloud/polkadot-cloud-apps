@@ -80,7 +80,7 @@ export const Item = ({
 	const selfStakeMax = isMaxSelfStake(selfStakePlanck, hardCapSelfStake)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs.commission)
 	const retainmentStats = useRetainmentStatsData({
-		period: validator.retainment ?? undefined,
+		period: validator.retainment.threeMonths ?? undefined,
 		selfStakeMax,
 		unit,
 		units,
@@ -102,7 +102,7 @@ export const Item = ({
 		prefs,
 		validatorStatus,
 	}
-	const retainmentHistoryDisabled = validator.retainment === null
+	const retainmentHistoryDisabled = validator.retainment.oneMonth === null
 	const openRetainmentHistory = useOpenRetainmentHistory({
 		selfStakeMax,
 		unit,

@@ -8,22 +8,19 @@ import type {
 	RandomValidatorCandidate,
 	ValidatorCandidateBatchVariables,
 } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { fetchQuery } from './generic'
-import { THREE_MONTH_VALIDATOR_RETAINMENT } from './retainmentFragments'
 
 const QUERY_CACHE = new Map<number, DocumentNode>()
 const CANDIDATE_FRAGMENT = gql`
-  ${THREE_MONTH_VALIDATOR_RETAINMENT}
+  ${VALIDATOR_RETAINMENT_FIELDS}
   fragment RandomValidatorCandidateFields on ValidatorListItem {
     address
     prefs {
       commission
       blocked
     }
-    retainment {
-      fromTimestamp
-      ...ThreeMonthValidatorRetainment
-    }
+    retainment { ...ValidatorRetainmentFields }
   }
 `
 

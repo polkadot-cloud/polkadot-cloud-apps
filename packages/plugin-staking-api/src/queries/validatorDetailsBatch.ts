@@ -3,11 +3,11 @@
 
 import { gql } from '@apollo/client'
 import type { ValidatorDetailsBatchData } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { fetchQuery } from './generic'
-import { VALIDATOR_RETAINMENT_PERIOD } from './retainmentFragments'
 
 const QUERY = gql`
-  ${VALIDATOR_RETAINMENT_PERIOD}
+  ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorDetailsBatch(
     $network: String!
     $validators: [String!]!
@@ -18,9 +18,8 @@ const QUERY = gql`
     validatorRetainmentBatch(network: $network, validators: $validators) {
       validator
       result {
-        months {
-          ...ValidatorRetainmentPeriodFields
-        }
+        months { ...ValidatorRetainmentWindowFields }
+        retainment { ...ValidatorRetainmentFields }
       }
     }
     validatorAvgRewardRateBatch(

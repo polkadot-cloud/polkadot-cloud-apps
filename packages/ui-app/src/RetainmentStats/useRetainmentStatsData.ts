@@ -18,29 +18,17 @@ import {
 } from 'utils'
 
 export interface RetainmentPeriodData {
-	fromTimestamp: number
-	threeMonthCompoundRate: number | null
-	threeMonthNetInflow: string
-	threeMonthPeriodCount: number
-	threeMonthRetainmentRate: number | null
-	threeMonthSelfStakeChange: string
-}
-
-export interface MonthlyRetainmentPeriodData {
-	compoundRate: number
+	includedMonthCount?: number
+	compoundRate: number | null
 	fromTimestamp: number
 	netInflow: string
 	retainmentRate: number | null
 	selfStakeChange: string
 }
 
-type FormattedRetainmentPeriodData = Omit<
-	MonthlyRetainmentPeriodData,
-	'compoundRate'
-> & {
-	compoundRate: number | null
-	periodCount?: number
-}
+export type MonthlyRetainmentPeriodData = RetainmentPeriodData
+
+type FormattedRetainmentPeriodData = RetainmentPeriodData
 
 export interface RetainmentStatData {
 	ariaLabel: string
@@ -247,8 +235,8 @@ const useFormattedRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: period?.periodCount
-			? t('monthRetainment', { count: period.periodCount })
+		retainmentLabel: period?.includedMonthCount
+			? t('monthRetainment', { count: period.includedMonthCount })
 			: t('retainment'),
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
@@ -270,18 +258,14 @@ export const useRetainmentStatsData = ({
 }: RetainmentStatsDataProps<RetainmentPeriodData>): RetainmentStatsData =>
 	useFormattedRetainmentStatsData({
 		...props,
-		period: period && {
-			compoundRate: period.threeMonthCompoundRate,
-			fromTimestamp: period.fromTimestamp,
-			netInflow: period.threeMonthNetInflow,
-			periodCount: period.threeMonthPeriodCount,
-			retainmentRate: period.threeMonthRetainmentRate,
-			selfStakeChange: period.threeMonthSelfStakeChange,
-		},
+		period,
 	})
 
 export const useMonthlyRetainmentStatsData = ({
 	period,
 	...props
 }: RetainmentStatsDataProps<MonthlyRetainmentPeriodData>): RetainmentStatsData =>
-	useFormattedRetainmentStatsData({ ...props, period })
+	useFormattedRetainmentStatsData({
+		...props,
+		period: period && { ...period, includedMonthCount: undefined },
+	})
