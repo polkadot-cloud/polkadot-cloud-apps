@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.7.0...plugin-staking-api-v1.8.0) (2026-09-05)
+
+
+### Features
+
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* Remove RPC health check ([#3750](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3750)) ([128e3da](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/128e3dacd2738f659ab8e600bb0da216136398e5))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.6.0...plugin-staking-api-v1.7.0) (2026-08-09)
 
 

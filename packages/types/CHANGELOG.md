@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.6.0...types-v1.7.0) (2026-09-05)
+
+
+### Features
+
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.5.0...types-v1.6.0) (2026-08-09)
 
 
