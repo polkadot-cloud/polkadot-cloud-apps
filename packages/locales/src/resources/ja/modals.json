@@ -327,6 +327,7 @@
 		"updatePoolCommission": "プールのコミッション設定を更新します。",
 		"updateWhoClaimRewards": "あなたに代わって誰が報酬を受け取れるかを更新します。",
 		"updated": "更新済み",
+		"validating": "バリデーション中",
 		"validatorMetrics": "バリデータ指標",
 		"viewPoolSubtitle": "プールのパフォーマンスやその他の指標を表示します。",
 		"viewPoolTitle": "プール指標を表示",

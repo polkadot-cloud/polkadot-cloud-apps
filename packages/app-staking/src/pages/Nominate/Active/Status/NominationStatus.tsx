@@ -3,7 +3,6 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useNominationStatus } from 'hooks/useNominationStatus'
-import { useValidatorStatus } from 'hooks/useValidatorStatus'
 import { Stat } from 'library/Stat'
 import { useTranslation } from 'react-i18next'
 
@@ -11,13 +10,8 @@ export const NominationStatus = () => {
 	const { t } = useTranslation('pages')
 	const { activeAddress } = useActiveAccount()
 	const { getNominationStatus } = useNominationStatus()
-	const { isValidator } = useValidatorStatus()
 
-	const nominationStatus = getNominationStatus(
-		activeAddress,
-		'nominator',
-		isValidator,
-	)
+	const nominationStatus = getNominationStatus(activeAddress, 'nominator')
 
 	return (
 		<Stat

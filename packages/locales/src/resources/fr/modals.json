@@ -327,6 +327,7 @@
 		"updatePoolCommission": "Mettre à jour les paramètres de commission du pool.",
 		"updateWhoClaimRewards": "Mettre à jour qui peut réclamer les récompenses en votre nom.",
 		"updated": "Mis à jour",
+		"validating": "Validation active",
 		"validatorMetrics": "Métriques du validateur",
 		"viewPoolSubtitle": "Consultez la performance du pool et d'autres métriques.",
 		"viewPoolTitle": "Voir les métriques du pool",

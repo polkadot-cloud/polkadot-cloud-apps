@@ -337,6 +337,7 @@
 		"updatePoolCommission": "Обновить настройки комиссии пула.",
 		"updateWhoClaimRewards": "Обновить, кто может получать вознаграждения от вашего имени.",
 		"updated": "Обновлено",
+		"validating": "Валидация",
 		"validatorMetrics": "Метрики валидатора",
 		"viewPoolSubtitle": "Просмотр производительности пула и других метрик.",
 		"viewPoolTitle": "Просмотр метрик пула",
