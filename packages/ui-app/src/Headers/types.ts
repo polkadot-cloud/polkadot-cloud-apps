@@ -9,7 +9,6 @@ export interface MenuPopoverFeatureFlags {
 	helpPrompts?: boolean
 	share?: boolean
 	plugins?: boolean
-	docs?: boolean
 	syncAccounts?: boolean
 	sendModal?: boolean
 }
