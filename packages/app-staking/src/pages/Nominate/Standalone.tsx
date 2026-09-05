@@ -17,11 +17,8 @@ import { StandaloneStatus } from './Wrappers'
 
 export const NominateStandalone = () => {
 	const { t } = useTranslation('app')
-	const {
-		accountSynced,
-		activePoolSynced,
-		syncing: stakingLedgersSyncing,
-	} = useSyncing(['staking-ledgers'])
+	const { accountSynced, activePoolSynced } = useSyncing()
+	const { syncing: stakingLedgersSyncing } = useSyncing(['staking-ledgers'])
 	const { getNominations } = useBalances()
 	const { activeAddress } = useActiveAccount()
 	const { isBonding, isNominator } = useStaking()
