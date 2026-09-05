@@ -33,7 +33,7 @@ export const syncValidatorStatus = async (
 	}
 
 	// Share both pending and completed queries across all useValidators consumers.
-	const request: ValidatorStatus = {
+	let request: ValidatorStatus = {
 		network,
 		serviceApi,
 		accountsKey,
@@ -41,24 +41,27 @@ export const syncValidatorStatus = async (
 		checkedAddresses: new Set(),
 	}
 	validatorStatusStore.setSnapshot(request)
-	const results = await Promise.allSettled(
-		uniqueAddresses.map(async (address) =>
-			serviceApi.query.validatorExists(address),
-		),
-	)
+	await Promise.all(
+		uniqueAddresses.map(async (address) => {
+			let isValidator = false
+			try {
+				isValidator = await serviceApi.query.validatorExists(address)
+			} catch {
+				// Failed lookups finish loading without identifying a validator.
+			}
 
-	// Discard results if the network, API connection or imported accounts changed.
-	if (validatorStatusStore.getSnapshot() !== request) {
-		return
-	}
-	validatorStatusStore.setSnapshot({
-		...request,
-		checkedAddresses: new Set(uniqueAddresses),
-		validators: new Set(
-			uniqueAddresses.filter((_, index) => {
-				const result = results[index]
-				return result.status === 'fulfilled' && result.value
-			}),
-		),
-	})
+			// Only this batch's latest snapshot may receive its remaining results.
+			if (validatorStatusStore.getSnapshot() !== request) {
+				return
+			}
+			request = {
+				...request,
+				checkedAddresses: new Set(request.checkedAddresses).add(address),
+				validators: isValidator
+					? new Set(request.validators).add(address)
+					: request.validators,
+			}
+			validatorStatusStore.setSnapshot(request)
+		}),
+	)
 }
