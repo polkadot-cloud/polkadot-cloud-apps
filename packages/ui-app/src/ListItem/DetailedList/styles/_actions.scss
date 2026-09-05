@@ -1,0 +1,102 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.actions {
+	align-items: center;
+	display: flex;
+	flex: 0 0 auto;
+	gap: 0.35rem;
+	height: auto !important;
+	overflow: visible;
+
+	> div {
+		flex: 0 0 2.25rem;
+		height: 2.25rem;
+		position: relative;
+		width: 2.25rem;
+	}
+}
+
+.actions.actions > div button,
+.actions.actions > div > span,
+.menuTrigger {
+	align-items: center;
+	background: transparent !important;
+	border: 1px solid var(--gray-500);
+	border-radius: 0.55rem !important;
+	color: var(--gray-800);
+	display: flex;
+	height: 2.25rem !important;
+	justify-content: center;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 2.25rem !important;
+
+	&:focus-visible {
+		border-color: var(--gray-900);
+		outline: 2px solid color-mix(in srgb, var(--gray-1000) 18%, transparent);
+		outline-offset: 1px;
+	}
+
+	&:hover {
+		background: var(--gray-300) !important;
+		opacity: 1;
+	}
+}
+
+.actions.actions > div {
+	div {
+		margin: 0;
+	}
+
+	button > span {
+		justify-content: center;
+		width: 100% !important;
+	}
+
+	svg {
+		color: var(--gray-800) !important;
+		height: 1.2rem !important;
+		width: 1.2rem !important;
+	}
+}
+
+.actions.actions > .metricsAction {
+	flex: 0 0 auto;
+	width: auto;
+
+	button {
+		font-family: var(--font-family-semibold);
+		font-size: 0.95rem;
+		letter-spacing: normal;
+		padding: 0 0.85rem !important;
+		width: auto !important;
+	}
+}
+
+.menuTrigger {
+	flex: 0 0 2.25rem;
+	position: relative;
+
+	&[aria-expanded='true'] {
+		background: var(--gray-300) !important;
+		opacity: 1;
+
+		> svg {
+			transform: rotate(180deg);
+		}
+	}
+
+	> svg {
+		color: var(--gray-800) !important;
+		font-size: 0.85rem;
+		transition: transform var(--transition-duration) ease;
+	}
+}
+
+@container list-item-card (max-width: 31rem) {
+	.actions {
+		flex-basis: 100%;
+		justify-content: flex-end;
+	}
+}

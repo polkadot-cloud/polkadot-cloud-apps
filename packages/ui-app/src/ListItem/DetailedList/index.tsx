@@ -18,6 +18,7 @@ import { DetailedListSkeleton } from './Skeleton'
 interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
+	rowVariant?: 'validator'
 	selected?: boolean
 	statusAccent?: 'success' | 'warning' | 'danger'
 }
@@ -27,6 +28,7 @@ const ItemShell = ({
 	className,
 	displayFor,
 	layout,
+	rowVariant,
 	selected,
 	statusAccent,
 	...props
@@ -47,7 +49,9 @@ const ItemShell = ({
 			data-status-accent={statusAccent}
 		>
 			{layout === 'row' ? (
-				<div className={classes.barLayout}>{children}</div>
+				<div className={classes.barLayout} data-row-variant={rowVariant}>
+					{children}
+				</div>
 			) : (
 				children
 			)}
@@ -196,31 +200,29 @@ const ListItemFormatToggle = ({
 	hideOnCompact,
 	onChange,
 	value,
-}: ListItemFormatToggleProps) => {
-	return (
-		<div
-			className={classNames(
-				classes.formatToggle,
-				hideOnCompact && classes.hideOnCompact,
-			)}
+}: ListItemFormatToggleProps) => (
+	<div
+		className={classNames(
+			classes.formatToggle,
+			hideOnCompact && classes.hideOnCompact,
+		)}
+	>
+		<button
+			type="button"
+			onClick={() => onChange('row')}
+			aria-pressed={value === 'row'}
 		>
-			<button
-				type="button"
-				onClick={() => onChange('row')}
-				aria-pressed={value === 'row'}
-			>
-				<FontAwesomeIcon icon={faBars} />
-			</button>
-			<button
-				type="button"
-				onClick={() => onChange('col')}
-				aria-pressed={value === 'col'}
-			>
-				<FontAwesomeIcon icon={faGripVertical} />
-			</button>
-		</div>
-	)
-}
+			<FontAwesomeIcon icon={faBars} />
+		</button>
+		<button
+			type="button"
+			onClick={() => onChange('col')}
+			aria-pressed={value === 'col'}
+		>
+			<FontAwesomeIcon icon={faGripVertical} />
+		</button>
+	</div>
+)
 
 export const DetailedCard = {
 	Header: withClassName('div', classes.cardHeader),
@@ -243,8 +245,11 @@ export const ListItem = {
 	Retainment: withClassName('section', classes.retainment),
 	RetainmentGrid: withClassName('div', classes.retainmentGrid),
 	Row: ListItemRow,
+	RowHeader: withClassName('span', classes.barHeader),
 	RowIdentity: withClassName('div', classes.barIdentity),
+	RowMetricGroup: withClassName('div', classes.barMetricGroup),
 	RowMetrics: withClassName('div', classes.barStats),
+	RowPerformance: withClassName('section', classes.barPerformance),
 	SectionHeader: withClassName('header', classes.sectionHeader),
 	Skeleton: ListItemSkeleton,
 	StatusDot: ListItemStatusDot,

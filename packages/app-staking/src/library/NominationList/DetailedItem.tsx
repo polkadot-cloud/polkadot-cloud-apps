@@ -84,6 +84,9 @@ export const DetailedItem = ({
 				validatorDisplay,
 			},
 		})
+	const onRetainmentHistory = showRetainmentHistory
+		? openRetainmentHistory
+		: undefined
 
 	if (format === 'row') {
 		return (
@@ -92,9 +95,7 @@ export const DetailedItem = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
-						onRetainmentHistory={
-							showRetainmentHistory ? openRetainmentHistory : undefined
-						}
+						onRetainmentHistory={onRetainmentHistory}
 						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showFavorite={toggleFavorites === true}
 						showMetrics={displayFor !== 'canvas'}
@@ -104,7 +105,9 @@ export const DetailedItem = ({
 				eraPoints={eraPoints}
 				isPreloading={isPreloading}
 				isStatusValuePreloading={backingStakePreloading}
+				onRetainmentHistory={onRetainmentHistory}
 				rate={rateAfterCommission}
+				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}

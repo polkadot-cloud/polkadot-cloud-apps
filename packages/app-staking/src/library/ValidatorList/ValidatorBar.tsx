@@ -17,10 +17,10 @@ import {
 	RetainmentMetric,
 	type RetainmentStatsData,
 } from 'ui-app/RetainmentStats'
+import { RetainmentHistory } from '../ListItem/Buttons/RetainmentHistory'
 import { Select } from '../ListItem/Buttons/Select'
-import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
-import { useValidatorSummaryData } from './ValidatorSummary'
+import { ValidatorSummaryMetrics } from './ValidatorSummary'
 
 interface ValidatorBarProps {
 	actions: ReactNode
@@ -34,7 +34,9 @@ interface ValidatorBarProps {
 	isRatePreloading?: boolean
 	isRetainmentPreloading?: boolean
 	isStatusValuePreloading?: boolean
+	onRetainmentHistory?: () => void
 	rate?: number
+	retainmentHistoryDisabled?: boolean
 	retainmentStats: RetainmentStatsData
 	selfStake?: BigNumber
 	selfStakeMax: boolean
@@ -58,7 +60,9 @@ export const ValidatorBar = ({
 	isRatePreloading,
 	isRetainmentPreloading,
 	isStatusValuePreloading = false,
+	onRetainmentHistory,
 	rate,
+	retainmentHistoryDisabled = false,
 	retainmentStats,
 	selfStake,
 	selfStakeMax,
@@ -72,24 +76,14 @@ export const ValidatorBar = ({
 	const { t } = useTranslation('app')
 	const { selectable } = useList()
 	const { address, prefs, validatorStatus: status } = validator
+
 	const {
-		rateLabel,
-		selfStakeLabel,
-		statusLabel: summaryStatusLabel,
-		totalStake,
-		validatorStatus,
-	} = useValidatorSummaryData({
-		address,
-		rate,
-		selfStake,
-		selfStakeMax,
-		status,
-		statusLabel,
-		statusValue,
-		unit,
-	})
-	const { compoundRate, netOutflow, retainmentRate, selfStakeChange } =
-		retainmentStats
+		compoundRate,
+		netOutflow,
+		retainmentLabel,
+		retainmentRate,
+		selfStakeChange,
+	} = retainmentStats
 	const eraPointsPreloading = isEraPointsPreloading ?? isPreloading
 	const ratePreloading = isRatePreloading ?? isPreloading
 	const retainmentPreloading = isRetainmentPreloading ?? isPreloading
@@ -97,9 +91,26 @@ export const ValidatorBar = ({
 	return (
 		<ListItem.Row
 			displayFor={displayFor}
+			rowVariant="validator"
 			selected={selected}
 			statusAccent={retainmentStats.statusAccent}
 		>
+			<ListItem.RowHeader data-section="identity">
+				{t('identity')}
+			</ListItem.RowHeader>
+			<ListItem.RowHeader data-section="performance">
+				{t('performance')}
+			</ListItem.RowHeader>
+			<ListItem.RowHeader data-section="retainment">
+				<span>{retainmentLabel}</span>
+				{onRetainmentHistory && (
+					<RetainmentHistory
+						disabled={retainmentHistoryDisabled}
+						iconOnly
+						onClick={onRetainmentHistory}
+					/>
+				)}
+			</ListItem.RowHeader>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>
@@ -108,6 +119,9 @@ export const ValidatorBar = ({
 						<ListItem.Blocked>{t('blocked')}</ListItem.Blocked>
 					)}
 				</ListItem.Identity>
+			</ListItem.RowIdentity>
+
+			<ListItem.RowPerformance>
 				<ListItem.Graph
 					layout="row"
 					aria-label={t('validatorActivity')}
@@ -129,54 +143,30 @@ export const ValidatorBar = ({
 						/>
 					)}
 				</ListItem.Graph>
-			</ListItem.RowIdentity>
-
-			<ListItem.RowMetrics>
-				<ListItem.Metric
-					label={
-						<>
-							<ListItem.StatusDot
-								active={statusActive ?? validatorStatus === 'active'}
-								aria-hidden="true"
-							/>
-							<span>{summaryStatusLabel}</span>
-						</>
-					}
-					valueProps={{
-						'aria-busy': isStatusValuePreloading,
-						title: totalStake ? `${totalStake} ${unit}` : undefined,
-					}}
-				>
-					{isStatusValuePreloading ? (
-						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-					) : (
-						<>
-							<span>{totalStake ?? '—'}</span>
-							{totalStake && <small>{unit}</small>}
-						</>
-					)}
-				</ListItem.Metric>
-				<ListItem.Metric aria-busy={ratePreloading} label="APY">
-					{ratePreloading ? (
-						<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-					) : (
-						rateLabel
-					)}
-				</ListItem.Metric>
-				<ListItem.Metric
-					label={t('health')}
-					valueProps={{ style: { overflow: 'hidden' } }}
-				>
-					<ActivityTier
-						address={address}
+				<ListItem.RowMetricGroup data-section="performance">
+					<ValidatorSummaryMetrics
 						activityTier={activityTier}
-						detailed
+						address={address}
+						compact
+						isRatePreloading={ratePreloading}
+						isStatusValuePreloading={isStatusValuePreloading}
+						rate={rate}
+						selfStake={selfStake}
+						selfStakeMax={selfStakeMax}
+						status={status}
+						statusActive={statusActive}
+						statusLabel={statusLabel}
+						statusValue={statusValue}
+						unit={unit}
 					/>
-				</ListItem.Metric>
-				<ListItem.Metric label={t('selfStake')}>
-					<span>{selfStakeLabel}</span>
-					{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
-				</ListItem.Metric>
+				</ListItem.RowMetricGroup>
+			</ListItem.RowPerformance>
+
+			<ListItem.RowMetricGroup
+				aria-label={retainmentLabel}
+				data-section="retainment"
+				role="group"
+			>
 				{[retainmentRate, compoundRate].map((stat) => (
 					<RetainmentMetric
 						compact
@@ -194,7 +184,7 @@ export const ValidatorBar = ({
 						unit={unit}
 					/>
 				))}
-			</ListItem.RowMetrics>
+			</ListItem.RowMetricGroup>
 
 			{actions}
 		</ListItem.Row>

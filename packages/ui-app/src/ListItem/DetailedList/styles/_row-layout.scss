@@ -1,0 +1,128 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.barLayout {
+	align-items: center;
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: minmax(28rem, 1.75fr) minmax(49.25rem, 5fr) auto;
+	min-width: 0;
+	padding: 0.75rem 1rem;
+	width: 100%;
+}
+
+.barLayout[data-row-variant='validator'] {
+	align-items: stretch;
+	grid-template:
+		'identity-title performance-title retainment-title actions' auto
+		'identity performance retainment actions' minmax(3.8rem, auto) / minmax(
+			10.5rem,
+			0.9fr
+		)
+		minmax(26.75rem, 3.1fr) minmax(29.25rem, 2.75fr) auto;
+	row-gap: 0.6rem;
+
+	> .barHeader[data-section='identity'] {
+		grid-area: identity-title;
+	}
+
+	> .barHeader[data-section='performance'] {
+		grid-area: performance-title;
+	}
+
+	> .barHeader[data-section='retainment'] {
+		grid-area: retainment-title;
+	}
+
+	> .barIdentity {
+		grid-area: identity;
+	}
+
+	> .barPerformance {
+		grid-area: performance;
+	}
+
+	> .barMetricGroup[data-section='retainment'] {
+		grid-area: retainment;
+	}
+
+	> .actions {
+		align-self: center;
+		grid-area: actions;
+	}
+}
+
+@container list-item-bar (max-width: 84rem) {
+	.barLayout:not([data-row-variant='validator']) {
+		grid-template-columns: minmax(0, 1fr) auto;
+		row-gap: 0.8rem;
+	}
+}
+
+@container list-item-bar (max-width: 78rem) {
+	.barLayout[data-row-variant='validator'] {
+		grid-template:
+			'identity-title performance-title actions' auto
+			'identity performance actions' minmax(3.8rem, auto)
+			'retainment-title retainment-title retainment-title' auto
+			'retainment retainment retainment' minmax(3.8rem, auto) / minmax(
+				10.5rem,
+				0.8fr
+			)
+			minmax(26.75rem, 3.1fr) auto;
+
+		> .barHeader[data-section='retainment'] {
+			border-block-start: 1px solid var(--gray-500);
+			margin-block-start: 0.25rem;
+			padding-block-end: 0;
+		}
+	}
+}
+
+@container list-item-bar (max-width: 46rem) {
+	.barLayout[data-row-variant='validator'] {
+		grid-template:
+			'identity-title actions' auto
+			'identity actions' minmax(3.8rem, auto)
+			'performance-title performance-title' auto
+			'performance performance' minmax(3.8rem, auto)
+			'retainment-title retainment-title' auto
+			'retainment retainment' minmax(3.8rem, auto) / minmax(0, 1fr) auto;
+
+		> .barHeader[data-section='performance'] {
+			border-block-start: 1px solid var(--gray-500);
+			margin-block-start: 0.25rem;
+			padding-block-end: 0;
+		}
+	}
+}
+
+@container list-item-bar (max-width: 38rem) {
+	.barLayout:not([data-row-variant='validator']) {
+		grid-template-columns: minmax(0, 1fr);
+
+		> .actions {
+			grid-column: 1;
+			grid-row: 2;
+			justify-content: flex-start;
+		}
+	}
+}
+
+@container list-item-bar (max-width: 29rem) {
+	.barLayout[data-row-variant='validator'] {
+		grid-template:
+			'identity-title' auto
+			'identity' minmax(3.8rem, auto)
+			'performance-title' auto
+			'performance' auto
+			'retainment-title' auto
+			'retainment' auto
+			'actions' auto /
+			minmax(0, 1fr);
+
+		> .actions {
+			justify-content: flex-start;
+		}
+	}
+}

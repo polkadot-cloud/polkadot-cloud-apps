@@ -1,0 +1,77 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.item {
+	width: calc(100% - 1.8rem);
+
+	> .surface {
+		align-items: stretch;
+		background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
+		border: 0;
+		border-radius: 0.5rem;
+		position: relative;
+		transition: border var(--transition-duration) ease;
+		width: 100%;
+
+		:global(.dark) & {
+			background: var(--gray-200);
+			border-color: var(--gray-200);
+		}
+
+		&.card {
+			background: var(--gray-200);
+			border: 1.25px solid var(--gray-200);
+			box-shadow: none;
+		}
+
+		&.selected {
+			border-color: var(--gray-1000);
+		}
+
+		&[data-status-accent]::before {
+			border-radius: 0.5rem 0 0 0.5rem;
+			content: '';
+			inset: 0 auto 0 0;
+			pointer-events: none;
+			position: absolute;
+			width: var(--status-accent-width, 3px);
+			z-index: 1;
+		}
+
+		&[data-status-accent='success']::before {
+			background: var(--status-success);
+		}
+
+		&[data-status-accent='warning']::before {
+			background: var(--status-warning);
+		}
+
+		&[data-status-accent='danger']::before {
+			background: var(--status-danger);
+		}
+	}
+
+	&.card {
+		container: list-item-card / inline-size;
+		margin: 0.9rem;
+
+		> .surface {
+			box-shadow: 0 5px 8px -7px rgb(0 0 0 / 45%);
+			display: flex;
+			flex-flow: column nowrap;
+			overflow: hidden;
+		}
+	}
+
+	&.bar {
+		container: list-item-bar / inline-size;
+		margin: 0.45rem 0.9rem;
+
+		> .surface {
+			box-shadow: 0 4px 8px -7px rgb(0 0 0 / 45%);
+			display: grid;
+			min-height: 5.5rem;
+			overflow: visible;
+		}
+	}
+}

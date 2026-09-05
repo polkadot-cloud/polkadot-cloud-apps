@@ -1,0 +1,27 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.formatToggle {
+	align-items: center;
+	display: flex;
+
+	button {
+		color: var(--gray-900);
+		font-size: 1.1rem;
+		margin: 0 0.5rem 0 0.75rem;
+		opacity: 0.6;
+		transition: all var(--transition-duration);
+
+		&[aria-pressed='true'],
+		&:hover {
+			color: var(--gray-1000);
+			opacity: 1;
+		}
+	}
+}
+
+@media (width <= 1199px) {
+	.formatToggle.hideOnCompact {
+		display: none;
+	}
+}

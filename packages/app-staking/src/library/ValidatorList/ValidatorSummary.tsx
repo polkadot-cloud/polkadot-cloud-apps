@@ -86,10 +86,22 @@ export const useValidatorSummaryData = ({
 
 export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	const { t } = useTranslation('app')
+
+	return (
+		<ListItem.Summary aria-label={props.ariaLabel ?? t('validatorSummary')}>
+			<ValidatorSummaryMetrics {...props} />
+		</ListItem.Summary>
+	)
+}
+
+export const ValidatorSummaryMetrics = ({
+	compact = false,
+	...props
+}: ValidatorSummaryProps & { compact?: boolean }) => {
+	const { t } = useTranslation('app')
 	const {
 		activityTier,
 		address,
-		ariaLabel,
 		isRatePreloading = false,
 		isStatusValuePreloading = false,
 		selfStake,
@@ -106,8 +118,15 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		validatorStatus,
 	} = useValidatorSummaryData(props)
 
+	const loader = (
+		<ListItem.DetailLoader
+			height={compact ? '1.2rem' : undefined}
+			width={compact ? '4.5rem' : undefined}
+		/>
+	)
+
 	return (
-		<ListItem.Summary aria-label={ariaLabel ?? t('validatorSummary')}>
+		<>
 			<ListItem.Metric
 				label={
 					<>
@@ -120,15 +139,16 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				}
 				valueProps={{
 					'aria-busy': isStatusValuePreloading,
-					title: statusValue
-						? `${statusValue.toFormat()} ${unit}`
-						: totalStake
-							? `${totalStake} ${unit}`
-							: undefined,
+					title:
+						!compact && statusValue
+							? `${statusValue.toFormat()} ${unit}`
+							: totalStake
+								? `${totalStake} ${unit}`
+								: undefined,
 				}}
 			>
 				{isStatusValuePreloading ? (
-					<ListItem.DetailLoader />
+					loader
 				) : (
 					<>
 						<span>{totalStake ?? '—'}</span>
@@ -137,7 +157,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				)}
 			</ListItem.Metric>
 			<ListItem.Metric aria-busy={isRatePreloading} label="APY">
-				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
+				{isRatePreloading ? loader : rateLabel}
 			</ListItem.Metric>
 			<ListItem.Metric
 				label={t('health')}
@@ -149,6 +169,6 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				<span>{selfStakeLabel}</span>
 				{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 			</ListItem.Metric>
-		</ListItem.Summary>
+		</>
 	)
 }
