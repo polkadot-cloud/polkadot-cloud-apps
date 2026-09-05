@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-staking-v2.4.0...app-staking-v2.5.0) (2026-09-05)
+
+
+### Features
+
+* Add nominator retainment warning ([#3775](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3775)) ([66bb362](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/66bb362e5fc40a3c495671e11ecebe4a78eeaa27))
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* **refactor:** Remove legacy extensions  ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
+* **refactor:** Unify warning ui ([#3778](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3778)) ([8c233e7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8c233e77bcae19c4819c6d502f8926c29160712e))
+* **refactor:** Validator performance indicator revision ([#3764](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3764)) ([426c43d](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/426c43df6f2cf93dba2122121cab356fca7427d8))
+* **ux:** Add Canvas card design, use with `ManageNominations` ([#3757](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3757)) ([8e7afdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8e7afdd3feacabb9d70f5e2cf90c761a9da9f17d))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+* **ux:** Basic validator UI in Overview ([#3777](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3777)) ([5e6f838](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5e6f838e8a6f7554f76ea221cd35e254f3742f19))
+* **ux:** Confirm re-generate optimal selection ([#3762](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3762)) ([593ff3c](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/593ff3ce60295b6989582c6881646c8bb753bb8a))
+* **ux:** Manage nomination submission to head, with summary popover ([#3758](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3758)) ([db5b1c0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db5b1c01fdb4ad867363d6dfb381769b4714e93f))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+* **ux:** Refine validator health labels and retainment history ([#3790](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3790)) ([572b2b4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/572b2b4212522330d295b5d0f7b383fc62a9bd38))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+* **ux:** Revise validator bar design w. top header ([#3791](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3791)) ([0ee1b2a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ee1b2ae87735722f96640aebfa444af44ba616c))
+* **ux:** Strip UI for warnings, add waiting only warning ([#3761](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3761)) ([7c19c78](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c19c78bda656fa3ceba3a5cf839593f57eee3c4))
+* Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
+
 ## [2.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-staking-v2.3.0...app-staking-v2.4.0) (2026-08-09)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.1.0...tests-v1.2.0) (2026-09-05)
+
+
+### Features
+
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
+
 ## [1.1.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.0.0...tests-v1.1.0) (2026-08-09)
 
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.7.0...ui-core-v1.8.0) (2026-09-05)
+
+
+### Features
+
+* Add nominator retainment warning ([#3775](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3775)) ([66bb362](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/66bb362e5fc40a3c495671e11ecebe4a78eeaa27))
+* **refactor:** Unify warning ui ([#3778](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3778)) ([8c233e7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8c233e77bcae19c4819c6d502f8926c29160712e))
+* **refactor:** Validator performance indicator revision ([#3764](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3764)) ([426c43d](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/426c43df6f2cf93dba2122121cab356fca7427d8))
+* **ux:** Add Canvas card design, use with `ManageNominations` ([#3757](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3757)) ([8e7afdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8e7afdd3feacabb9d70f5e2cf90c761a9da9f17d))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+* **ux:** Manage nomination submission to head, with summary popover ([#3758](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3758)) ([db5b1c0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db5b1c01fdb4ad867363d6dfb381769b4714e93f))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+
+
+### Bug Fixes
+
+* flex styling ([691fe30](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/691fe309e4a02a12957489ddec98a501559590d1))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.6.0...ui-core-v1.7.0) (2026-08-09)
 
 

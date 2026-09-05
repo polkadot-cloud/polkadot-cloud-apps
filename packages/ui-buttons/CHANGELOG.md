@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-buttons-v1.6.0...ui-buttons-v1.7.0) (2026-09-05)
+
+
+### Features
+
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+* **ux:** Manage nomination submission to head, with summary popover ([#3758](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3758)) ([db5b1c0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db5b1c01fdb4ad867363d6dfb381769b4714e93f))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-buttons-v1.5.0...ui-buttons-v1.6.0) (2026-08-09)
 
 
