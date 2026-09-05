@@ -8,6 +8,8 @@ import CloudIconSVG from 'assets/icons/cloud.svg?react'
 import BigNumber from 'bignumber.js'
 import {
 	PlatformDisclaimerURL,
+	PlatformDocsURL,
+	PlatformGitHubURL,
 	PlatformName,
 	PlatformPrivacyURL,
 	PlatformURL,
@@ -21,8 +23,8 @@ import classes from './index.module.scss'
 import { Status } from './Status'
 import { TokenPrice } from './TokenPrice'
 
-export const MainFooter = () => {
-	const { t } = useTranslation('app')
+export const MainFooter = ({ showDocs = true }: { showDocs?: boolean }) => {
+	const { t, i18n } = useTranslation('app')
 	const { plugins } = usePlugins()
 
 	const [blockNumber, setBlockNumber] = useState<number>()
@@ -39,17 +41,18 @@ export const MainFooter = () => {
 	return (
 		<Page.Footer>
 			<div className={`${classes.wrapper} pagePadding containerWidth`}>
-				<div className={classes.brand}>
+				<a
+					className={classes.brand}
+					href={PlatformURL}
+					target="_blank"
+					rel="noreferrer"
+					aria-label={PlatformName}
+				>
 					<CloudIconSVG className={classes.icon} />
 					<span className={classes.cloudLabel}>Cloud</span>
-				</div>
+				</a>
 				<div className={classes.summary}>
 					<section>
-						<p>
-							<a href={PlatformURL} target="_blank" rel="noreferrer">
-								{PlatformName}
-							</a>
-						</p>
 						<Status />
 						<p>
 							<a href={PlatformPrivacyURL} target="_blank" rel="noreferrer">
@@ -61,6 +64,22 @@ export const MainFooter = () => {
 								{t('disclaimer')}
 							</a>
 						</p>
+						<p>
+							<a href={PlatformGitHubURL} target="_blank" rel="noreferrer">
+								GitHub
+							</a>
+						</p>
+						{showDocs && (
+							<p>
+								<a
+									href={`${PlatformDocsURL}/${i18n.language}`}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{t('docs')}
+								</a>
+							</p>
+						)}
 					</section>
 					<section>
 						<div className={classes.hideSmall}>

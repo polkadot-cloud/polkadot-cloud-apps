@@ -47,7 +47,6 @@ export const Router = () => (
 							helpPrompts: false,
 							share: false,
 							plugins: false,
-							docs: false,
 							syncAccounts: false,
 							sendModal: false,
 						}}
@@ -64,7 +63,7 @@ export const Router = () => (
 							<Route path="*" element={<Navigate to="/send" replace />} />
 						</Routes>
 					</ErrorBoundary>
-					<MainFooter />
+					<MainFooter showDocs={false} />
 				</HelmetProvider>
 			</Page.Main>
 		</Page.Body>

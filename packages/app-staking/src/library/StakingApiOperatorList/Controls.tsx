@@ -22,7 +22,7 @@ export interface OperatorListConfig {
 }
 
 export const DEFAULT_OPERATOR_LIST_CONFIG: OperatorListConfig = {
-	order: 'RETAINMENT_HIGH',
+	order: 'RETAINMENT_1M_HIGH',
 	search: '',
 }
 
@@ -36,8 +36,8 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 	const { t } = useTranslation('app')
 	const [draft, setDraft] = useState(config)
 	const options: Array<{ key: OperatorListOrder; label: string }> = [
-		{ key: 'RETAINMENT_HIGH', label: t('highRetainment') },
-		{ key: 'RETAINMENT_LOW', label: t('lowRetainment') },
+		{ key: 'RETAINMENT_1M_HIGH', label: t('highRetainment') },
+		{ key: 'RETAINMENT_1M_LOW', label: t('lowRetainment') },
 		{ key: 'VALIDATOR_COUNT', label: t('validatorCount') },
 		{
 			key: 'AVERAGE_SELF_STAKE_HIGH',

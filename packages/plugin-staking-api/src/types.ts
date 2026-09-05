@@ -41,8 +41,8 @@ export interface IdentityCache {
 
 export type ValidatorListOrder =
 	| 'ACTIVITY'
-	| 'RETAINMENT_HIGH'
-	| 'RETAINMENT_LOW'
+	| 'RETAINMENT_1M_HIGH'
+	| 'RETAINMENT_1M_LOW'
 
 export interface ValidatorListFilters {
 	excludeBlocked?: boolean
@@ -89,8 +89,8 @@ export interface ValidatorListItem {
 }
 
 export type OperatorListOrder =
-	| 'RETAINMENT_HIGH'
-	| 'RETAINMENT_LOW'
+	| 'RETAINMENT_1M_HIGH'
+	| 'RETAINMENT_1M_LOW'
 	| 'VALIDATOR_COUNT'
 	| 'AVERAGE_SELF_STAKE_HIGH'
 	| 'AVERAGE_SELF_STAKE_LOW'

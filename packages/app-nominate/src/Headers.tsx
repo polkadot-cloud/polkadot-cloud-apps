@@ -14,7 +14,6 @@ const menuPopoverFeatures = {
 	helpPrompts: false,
 	share: false,
 	plugins: false,
-	docs: false,
 	syncAccounts: false,
 	sendModal: false,
 } satisfies MenuPopoverFeatureFlags
