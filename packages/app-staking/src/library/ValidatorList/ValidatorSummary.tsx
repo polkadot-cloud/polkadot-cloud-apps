@@ -140,7 +140,7 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
 			</ListItem.Metric>
 			<ListItem.Metric
-				label={t('performance')}
+				label={t('health')}
 				valueProps={{ style: { overflow: 'hidden' } }}
 			>
 				<ActivityTier address={address} activityTier={activityTier} detailed />

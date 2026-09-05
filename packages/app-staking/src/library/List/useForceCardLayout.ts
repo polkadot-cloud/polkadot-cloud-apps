@@ -3,4 +3,4 @@
 
 import { useMediaQuery } from 'usehooks-ts'
 
-export const useForceCardLayout = () => useMediaQuery('(max-width: 1199px)')
+export const useForceCardLayout = () => useMediaQuery('(max-width: 1249px)')
