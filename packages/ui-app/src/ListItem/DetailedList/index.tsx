@@ -200,31 +200,29 @@ const ListItemFormatToggle = ({
 	hideOnCompact,
 	onChange,
 	value,
-}: ListItemFormatToggleProps) => {
-	return (
-		<div
-			className={classNames(
-				classes.formatToggle,
-				hideOnCompact && classes.hideOnCompact,
-			)}
+}: ListItemFormatToggleProps) => (
+	<div
+		className={classNames(
+			classes.formatToggle,
+			hideOnCompact && classes.hideOnCompact,
+		)}
+	>
+		<button
+			type="button"
+			onClick={() => onChange('row')}
+			aria-pressed={value === 'row'}
 		>
-			<button
-				type="button"
-				onClick={() => onChange('row')}
-				aria-pressed={value === 'row'}
-			>
-				<FontAwesomeIcon icon={faBars} />
-			</button>
-			<button
-				type="button"
-				onClick={() => onChange('col')}
-				aria-pressed={value === 'col'}
-			>
-				<FontAwesomeIcon icon={faGripVertical} />
-			</button>
-		</div>
-	)
-}
+			<FontAwesomeIcon icon={faBars} />
+		</button>
+		<button
+			type="button"
+			onClick={() => onChange('col')}
+			aria-pressed={value === 'col'}
+		>
+			<FontAwesomeIcon icon={faGripVertical} />
+		</button>
+	</div>
+)
 
 export const DetailedCard = {
 	Header: withClassName('div', classes.cardHeader),

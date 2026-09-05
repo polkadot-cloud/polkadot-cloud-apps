@@ -69,6 +69,7 @@ export const DetailedItem = ({
 	)
 	const validatorDisplay = validatorIdentity.node
 	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
+	const retainmentHistoryDisabled = retainmentPeriods.length === 0
 	const showRetainmentHistory =
 		displayFor !== 'canvas' && displayFor !== 'modal'
 	const openRetainmentHistory = () =>
@@ -84,6 +85,9 @@ export const DetailedItem = ({
 				validatorDisplay,
 			},
 		})
+	const onRetainmentHistory = showRetainmentHistory
+		? openRetainmentHistory
+		: undefined
 
 	const cardActions = (
 		<ListItem.Actions>
@@ -118,7 +122,7 @@ export const DetailedItem = ({
 			{showRetainmentHistory && (
 				<ListItem.Action wide>
 					<RetainmentHistory
-						disabled={retainmentPeriods.length === 0}
+						disabled={retainmentHistoryDisabled}
 						onClick={openRetainmentHistory}
 					/>
 				</ListItem.Action>
@@ -133,10 +137,8 @@ export const DetailedItem = ({
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
-						onRetainmentHistory={
-							showRetainmentHistory ? openRetainmentHistory : undefined
-						}
-						retainmentHistoryDisabled={retainmentPeriods.length === 0}
+						onRetainmentHistory={onRetainmentHistory}
+						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showShareLink={showShareLink}
 						onRemove={
 							typeof onRemove === 'function'
@@ -149,11 +151,9 @@ export const DetailedItem = ({
 				}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
-				onRetainmentHistory={
-					showRetainmentHistory ? openRetainmentHistory : undefined
-				}
+				onRetainmentHistory={onRetainmentHistory}
 				rate={rateAfterCommission}
-				retainmentHistoryDisabled={retainmentPeriods.length === 0}
+				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}

@@ -1,9 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-.barStats {
+.barStats,
+.barMetricGroup {
 	align-items: stretch;
 	display: grid;
+	min-width: 0;
+}
+
+.barStats {
 	grid-template-columns:
 		minmax(4.75rem, 1fr)
 		minmax(4.25rem, 0.8fr)
@@ -12,7 +17,6 @@
 		repeat(2, minmax(8.5rem, 1.15fr))
 		minmax(7.5rem, 1.35fr)
 		minmax(4.75rem, 1fr);
-	min-width: 0;
 
 	> div:nth-child(5),
 	> div:nth-child(6) {
@@ -21,10 +25,6 @@
 }
 
 .barMetricGroup {
-	align-items: stretch;
-	display: grid;
-	min-width: 0;
-
 	&[data-section='performance'] {
 		grid-template-columns:
 			minmax(0, 1fr)

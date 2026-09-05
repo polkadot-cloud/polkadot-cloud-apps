@@ -19,9 +19,8 @@ import {
 } from 'ui-app/RetainmentStats'
 import { RetainmentHistory } from '../ListItem/Buttons/RetainmentHistory'
 import { Select } from '../ListItem/Buttons/Select'
-import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 import { Identity } from '../ListItem/Labels/Identity'
-import { useValidatorSummaryData } from './ValidatorSummary'
+import { ValidatorSummaryMetrics } from './ValidatorSummary'
 
 interface ValidatorBarProps {
 	actions: ReactNode
@@ -77,22 +76,7 @@ export const ValidatorBar = ({
 	const { t } = useTranslation('app')
 	const { selectable } = useList()
 	const { address, prefs, validatorStatus: status } = validator
-	const {
-		rateLabel,
-		selfStakeLabel,
-		statusLabel: summaryStatusLabel,
-		totalStake,
-		validatorStatus,
-	} = useValidatorSummaryData({
-		address,
-		rate,
-		selfStake,
-		selfStakeMax,
-		status,
-		statusLabel,
-		statusValue,
-		unit,
-	})
+
 	const {
 		compoundRate,
 		netOutflow,
@@ -160,51 +144,21 @@ export const ValidatorBar = ({
 					)}
 				</ListItem.Graph>
 				<ListItem.RowMetricGroup data-section="performance">
-					<ListItem.Metric
-						label={
-							<>
-								<ListItem.StatusDot
-									active={statusActive ?? validatorStatus === 'active'}
-									aria-hidden="true"
-								/>
-								<span>{summaryStatusLabel}</span>
-							</>
-						}
-						valueProps={{
-							'aria-busy': isStatusValuePreloading,
-							title: totalStake ? `${totalStake} ${unit}` : undefined,
-						}}
-					>
-						{isStatusValuePreloading ? (
-							<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-						) : (
-							<>
-								<span>{totalStake ?? '—'}</span>
-								{totalStake && <small>{unit}</small>}
-							</>
-						)}
-					</ListItem.Metric>
-					<ListItem.Metric aria-busy={ratePreloading} label="APY">
-						{ratePreloading ? (
-							<ListItem.DetailLoader height="1.2rem" width="4.5rem" />
-						) : (
-							rateLabel
-						)}
-					</ListItem.Metric>
-					<ListItem.Metric
-						label={t('health')}
-						valueProps={{ style: { overflow: 'hidden' } }}
-					>
-						<ActivityTier
-							address={address}
-							activityTier={activityTier}
-							detailed
-						/>
-					</ListItem.Metric>
-					<ListItem.Metric label={t('selfStake')}>
-						<span>{selfStakeLabel}</span>
-						{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
-					</ListItem.Metric>
+					<ValidatorSummaryMetrics
+						activityTier={activityTier}
+						address={address}
+						compact
+						isRatePreloading={ratePreloading}
+						isStatusValuePreloading={isStatusValuePreloading}
+						rate={rate}
+						selfStake={selfStake}
+						selfStakeMax={selfStakeMax}
+						status={status}
+						statusActive={statusActive}
+						statusLabel={statusLabel}
+						statusValue={statusValue}
+						unit={unit}
+					/>
 				</ListItem.RowMetricGroup>
 			</ListItem.RowPerformance>
 

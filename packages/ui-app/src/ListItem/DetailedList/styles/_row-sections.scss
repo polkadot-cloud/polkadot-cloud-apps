@@ -42,6 +42,11 @@
 			opacity: 1;
 		}
 
+		&:focus-visible {
+			outline: 2px solid var(--gray-900);
+			outline-offset: -2px;
+		}
+
 		&:disabled {
 			cursor: default;
 			opacity: var(--opacity-disabled);
