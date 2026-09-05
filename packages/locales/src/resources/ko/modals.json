@@ -327,6 +327,7 @@
 		"updatePoolCommission": "풀 수수료 설정을 업데이트합니다.",
 		"updateWhoClaimRewards": "귀하를 대신하여 보상을 청구할 수 있는 사람을 업데이트합니다.",
 		"updated": "업데이트됨",
+		"validating": "검증 중",
 		"validatorMetrics": "검증자 지표",
 		"viewPoolSubtitle": "풀 성능 및 기타 지표를 봅니다.",
 		"viewPoolTitle": "풀 지표 보기",
