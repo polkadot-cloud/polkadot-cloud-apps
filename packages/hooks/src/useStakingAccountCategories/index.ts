@@ -4,6 +4,7 @@
 import { useImportedAccounts } from '@polkadot-cloud/connect'
 import { type Proxy, useProxies } from '@polkadot-cloud/connect-proxies'
 import { useBalances } from '../useBalances'
+import { useValidators } from '../useValidators'
 
 export interface AccountCategoryItem {
 	address: string
@@ -27,9 +28,11 @@ const hasAccount = (
 
 export const useStakingAccountCategories = (): AccountListCategory[] => {
 	const { getDelegates } = useProxies()
+	const { isValidator } = useValidators()
 	const { accounts } = useImportedAccounts()
 	const { getStakingLedger, getPoolMembership } = useBalances()
 
+	const validating: AccountCategoryItem[] = []
 	const nominating: AccountCategoryItem[] = []
 	const inPool: AccountCategoryItem[] = []
 	const nominatingAndPool: AccountCategoryItem[] = []
@@ -39,6 +42,13 @@ export const useStakingAccountCategories = (): AccountListCategory[] => {
 		const { ledger } = getStakingLedger(address)
 		const { membership } = getPoolMembership(address)
 		const delegates = getDelegates(address)
+
+		if (isValidator(address)) {
+			if (!hasAccount(validating, address, source)) {
+				validating.push({ address, source, delegates })
+			}
+			continue
+		}
 
 		const isNominating = !!ledger && !hasAccount(nominating, address, source)
 		const isInPool = !!membership && !hasAccount(inPool, address, source)
@@ -73,6 +83,7 @@ export const useStakingAccountCategories = (): AccountListCategory[] => {
 	}
 
 	return [
+		{ key: 'validating', labelKey: 'validating', items: validating },
 		{
 			key: 'nominating_and_pool',
 			labelKey: 'nominatingAndInPool',

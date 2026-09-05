@@ -4,12 +4,12 @@
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { NominateDappName } from 'consts'
 import { ManageNominationsProvider } from 'contexts/ManageNominations'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorStatus } from 'hooks/useValidatorStatus'
+import { useValidators } from 'hooks/useValidators'
 import { Editor } from 'library/ManageNominations/Editor'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
@@ -17,35 +17,41 @@ import { StandaloneStatus } from './Wrappers'
 
 export const NominateStandalone = () => {
 	const { t } = useTranslation('app')
-	const { activeAddress } = useActiveAccount()
-	const { accountsInitialised } = useImportedAccounts()
+	const {
+		accountSynced,
+		activePoolSynced,
+		syncing: stakingLedgersSyncing,
+	} = useSyncing(['staking-ledgers'])
 	const { getNominations } = useBalances()
+	const { activeAddress } = useActiveAccount()
 	const { isBonding, isNominator } = useStaking()
-	const { isLoading: validatorStatusLoading, isValidator } =
-		useValidatorStatus()
-	const { accountSynced, activePoolSynced } = useSyncing()
-	const { syncing: stakingLedgersSyncing } = useSyncing(['staking-ledgers'])
-	const { formatWithPrefs } = useValidators()
+	const { formatWithPrefs } = useValidatorEntries()
+	const { isLoading, isValidator } = useValidators()
+	const { accountsInitialised } = useImportedAccounts()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
+
 	const isPool = Boolean(activePool) && isOwner()
 	const nominated = formatWithPrefs(
 		isPool
 			? (activePoolNominations?.targets ?? [])
 			: getNominations(activeAddress),
 	)
+
 	const nominationsKey = nominated.map(({ address }) => address).join(':')
 	const bondFor = isPool ? 'pool' : 'nominator'
 	const poolId = isPool ? activePool?.id : undefined
 	const poolName = isPool ? activePool?.metadata : undefined
 	const activelyNominating = !isPool && isNominator
 	const canManageNominations =
-		Boolean(activeAddress) && (isPool || (isBonding && !isValidator))
+		Boolean(activeAddress) &&
+		(isPool || (isBonding && !isValidator(activeAddress)))
+
 	const eligibilityLoading = Boolean(
 		activeAddress &&
 			(!accountSynced(activeAddress) ||
 				!activePoolSynced(activeAddress) ||
 				stakingLedgersSyncing ||
-				validatorStatusLoading),
+				isLoading(activeAddress)),
 	)
 	const accountStatus = !accountsInitialised
 		? t('syncingAccounts')
@@ -89,7 +95,9 @@ export const NominateStandalone = () => {
 						dappName={NominateDappName}
 						displayFor="default"
 						eligibilityLoading={eligibilityLoading}
-						ineligibleStatus={isValidator ? 'validator' : 'notStaking'}
+						ineligibleStatus={
+							isValidator(activeAddress) ? 'validator' : 'notStaking'
+						}
 						optimalSelectionOnly
 						poolId={poolId}
 						standaloneCards

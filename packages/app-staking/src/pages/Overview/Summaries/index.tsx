@@ -19,10 +19,9 @@ import { SectionNav, SectionsArea } from './Wrappers'
 
 interface SummariesProps {
 	height: number
-	isValidator: boolean
 }
 
-export const Summaries = ({ height, isValidator }: SummariesProps) => {
+export const Summaries = ({ height }: SummariesProps) => {
 	const { t } = useTranslation()
 	const { network } = useNetwork()
 	const { accountSynced } = useSyncing()
@@ -54,7 +53,7 @@ export const Summaries = ({ height, isValidator }: SummariesProps) => {
 			}
 		: { label: t('status', { ns: 'app' }) }
 
-	sections.push([statusSectionConfig, <Status isValidator={isValidator} />])
+	sections.push([statusSectionConfig, <Status />])
 
 	// Add the Halving section when available
 	if (showHalving) {
