@@ -7,9 +7,11 @@ import type {
 	OperatorListVariables,
 	QueryReturn,
 } from '../types'
+import { OPERATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
 const QUERY = gql`
+  ${OPERATOR_RETAINMENT_FIELDS}
   query OperatorList(
     $network: String!
     $page: Int
@@ -33,10 +35,7 @@ const QUERY = gql`
         validatorCount
         activeValidatorCount
         combinedSelfStake
-        retainment {
-          fromTimestamp
-          retainmentRate
-        }
+        retainment { ...OperatorRetainmentFields }
       }
       page
       pageSize

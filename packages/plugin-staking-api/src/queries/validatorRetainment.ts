@@ -3,18 +3,15 @@
 
 import { gql } from '@apollo/client'
 import type { QueryReturn, ValidatorRetainmentData } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
 const QUERY = gql`
+  ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorRetainment($network: String!, $validator: String!) {
     validatorRetainment(network: $network, validator: $validator) {
-      months {
-        fromTimestamp
-        netInflow
-        retainmentRate
-        selfStakeChange
-        compoundRate
-      }
+      months { ...ValidatorRetainmentWindowFields }
+      retainment { ...ValidatorRetainmentFields }
     }
   }
 `

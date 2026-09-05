@@ -18,7 +18,7 @@ import {
 } from 'utils'
 
 export interface RetainmentPeriodData {
-	compoundRate: number
+	compoundRate: number | null
 	fromTimestamp: number
 	netInflow: string
 	retainmentRate: number | null

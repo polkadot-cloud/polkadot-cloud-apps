@@ -5,7 +5,7 @@ import { Polkicon } from '@w3ux/react-polkicon'
 import { ellipsisFn } from '@w3ux/utils'
 import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorRetainment } from 'plugin-staking-api'
-import type { ValidatorRetainmentPeriod } from 'plugin-staking-api/types'
+import type { ValidatorRetainmentWindow } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
@@ -16,7 +16,7 @@ import { getRetainmentStatus } from 'utils'
 import classes from './index.module.scss'
 
 export interface RetainmentHistoryOptions {
-	periods?: ValidatorRetainmentPeriod[]
+	periods?: ValidatorRetainmentWindow[]
 	selfStakeMax: boolean
 	unit: string
 	units: number
@@ -27,19 +27,19 @@ export interface RetainmentHistoryOptions {
 interface RetainmentPeriodProps {
 	current?: boolean
 	isPreloading?: boolean
-	period?: ValidatorRetainmentPeriod
+	period?: ValidatorRetainmentWindow
 	selfStakeMax: boolean
 	unit: string
 	units: number
 }
 
-const hasRetainmentStats = (period: ValidatorRetainmentPeriod) =>
+const hasRetainmentStats = (period: ValidatorRetainmentWindow) =>
 	period.retainmentRate !== null ||
-	period.compoundRate !== 0 ||
+	(typeof period.compoundRate === 'number' && period.compoundRate !== 0) ||
 	Number(period.netInflow) !== 0 ||
 	Number(period.selfStakeChange) !== 0
 
-const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentPeriod[]) => {
+const trimTrailingEmptyPeriods = (periods: ValidatorRetainmentWindow[]) => {
 	let historyEnd = periods.length
 
 	while (historyEnd > 0 && !hasRetainmentStats(periods[historyEnd - 1])) {
@@ -53,8 +53,8 @@ const getMonthIndex = (date: Date) =>
 	date.getUTCFullYear() * 12 + date.getUTCMonth()
 
 const getMissingMonthDates = (
-	newerPeriod: ValidatorRetainmentPeriod,
-	olderPeriod: ValidatorRetainmentPeriod,
+	newerPeriod: ValidatorRetainmentWindow,
+	olderPeriod: ValidatorRetainmentWindow,
 ) => {
 	const newerMonth = getMonthIndex(new Date(newerPeriod.fromTimestamp * 1000))
 	const olderMonth = getMonthIndex(new Date(olderPeriod.fromTimestamp * 1000))
@@ -66,7 +66,7 @@ const getMissingMonthDates = (
 	})
 }
 
-const getPeriodStatus = (period: ValidatorRetainmentPeriod) =>
+const getPeriodStatus = (period: ValidatorRetainmentWindow) =>
 	typeof period.retainmentRate === 'number' &&
 	Number.isFinite(period.retainmentRate)
 		? getRetainmentStatus(period.retainmentRate)
