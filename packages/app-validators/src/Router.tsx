@@ -105,7 +105,7 @@ const RouterInner = () => {
 									<Route path="*" element={<Navigate to="/" replace />} />
 								</Routes>
 							</ErrorBoundary>
-							<MainFooter />
+							<MainFooter showDocs={false} />
 						</HelmetProvider>
 					</Page.Main>
 				</Page.Body>

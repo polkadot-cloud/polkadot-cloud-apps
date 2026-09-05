@@ -8,6 +8,7 @@ import CloudIconSVG from 'assets/icons/cloud.svg?react'
 import BigNumber from 'bignumber.js'
 import {
 	PlatformDisclaimerURL,
+	PlatformDocsURL,
 	PlatformGitHubURL,
 	PlatformName,
 	PlatformPrivacyURL,
@@ -22,8 +23,8 @@ import classes from './index.module.scss'
 import { Status } from './Status'
 import { TokenPrice } from './TokenPrice'
 
-export const MainFooter = () => {
-	const { t } = useTranslation('app')
+export const MainFooter = ({ showDocs = true }: { showDocs?: boolean }) => {
+	const { t, i18n } = useTranslation('app')
 	const { plugins } = usePlugins()
 
 	const [blockNumber, setBlockNumber] = useState<number>()
@@ -68,6 +69,17 @@ export const MainFooter = () => {
 								GitHub
 							</a>
 						</p>
+						{showDocs && (
+							<p>
+								<a
+									href={`${PlatformDocsURL}/${i18n.language}`}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{t('docs')}
+								</a>
+							</p>
+						)}
 					</section>
 					<section>
 						<div className={classes.hideSmall}>

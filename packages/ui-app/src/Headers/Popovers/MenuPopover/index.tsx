@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
-	faBookOpen,
 	faCloud,
 	faCog,
 	faDollarSign,
@@ -23,7 +22,7 @@ import { useOutsideAlerter } from '@w3ux/hooks'
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import DiscordSVG from 'assets/brands/discord.svg?react'
 import EnvelopeSVG from 'assets/icons/envelope.svg?react'
-import { PlatformDocsURL, PlatformName, PlatformURL } from 'consts'
+import { PlatformName, PlatformURL } from 'consts'
 import { getRelayChainData } from 'consts/util/chains'
 import { useBalances } from 'hooks/useBalances'
 import { useCurrency } from 'hooks/useCurrency'
@@ -53,7 +52,6 @@ export const MenuPopover = ({
 		helpPrompts: showHelpPrompts = true,
 		share: showShare = true,
 		plugins: showPlugins = true,
-		docs: showDocs = true,
 		syncAccounts: showSyncAccounts = true,
 	} = {},
 }: {
@@ -266,17 +264,6 @@ export const MenuPopover = ({
 					</div>
 				</button>
 			</MenuItem>
-			{showDocs && (
-				<DefaultButton
-					text={t('docs', { ns: 'app' })}
-					iconLeft={faBookOpen}
-					iconRight={faExternalLinkAlt}
-					onClick={() => {
-						setOpen(false)
-						window.open(`${PlatformDocsURL}/${i18n.language}`, '_blank')
-					}}
-				/>
-			)}
 			<DefaultButton
 				text={PlatformName}
 				iconLeft={faCloud}
