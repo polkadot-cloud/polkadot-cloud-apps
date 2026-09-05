@@ -94,11 +94,11 @@ export const Controls = ({
 	const defaultOrderOptions = [
 		{ key: 'ACTIVITY', label: t('activity') },
 		{
-			key: 'RETAINMENT_HIGH',
+			key: 'RETAINMENT_1M_HIGH',
 			label: t('highRetainment'),
 		},
 		{
-			key: 'RETAINMENT_LOW',
+			key: 'RETAINMENT_1M_LOW',
 			label: t('lowRetainment'),
 		},
 	]
