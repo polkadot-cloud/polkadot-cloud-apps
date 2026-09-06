@@ -8,6 +8,7 @@ import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import { useOperatorList } from 'plugin-staking-api'
+import type { OperatorListVariables } from 'plugin-staking-api/types'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
@@ -32,10 +33,12 @@ const StakingApiOperatorListInner = () => {
 	)
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
-	const variables = useMemo(
+	const variables = useMemo<OperatorListVariables>(
 		() => ({
 			network,
 			order: config.order,
+			orderWindow: 'ONE_MONTH',
+			retainmentWindows: ['ONE_MONTH'],
 			page,
 			pageSize: PAGE_SIZE,
 			filters: { search: config.search || undefined },

@@ -58,7 +58,8 @@ export interface ValidatorListVariables extends Record<string, unknown> {
 	page?: number
 	pageSize?: number
 	order?: ValidatorListOrder
-	retainmentWindow?: RetainmentRankWindow | null
+	orderWindow?: RetainmentRankWindow | null
+	retainmentWindows?: RetainmentRankWindow[] | null
 	filters?: ValidatorListFilters
 }
 
@@ -103,7 +104,8 @@ export interface OperatorListVariables extends Record<string, unknown> {
 	page?: number
 	pageSize?: number
 	order?: OperatorListOrder
-	retainmentWindow?: RetainmentRankWindow | null
+	orderWindow?: RetainmentRankWindow | null
+	retainmentWindows?: RetainmentRankWindow[] | null
 	filters?: OperatorListFilters
 }
 
