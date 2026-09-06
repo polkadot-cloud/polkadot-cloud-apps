@@ -70,9 +70,7 @@
 		grid-template-columns: minmax(0, 1fr) auto;
 		row-gap: 0.8rem;
 	}
-}
 
-@container list-item-bar (max-width: 78rem) {
 	.barLayout[data-row-variant] {
 		grid-template:
 			'identity-title performance-title actions' auto

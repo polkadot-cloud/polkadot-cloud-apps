@@ -11,13 +11,12 @@ import type {
 
 export { RetainmentWindowToggle } from './RetainmentWindowToggle'
 export type {
-	MonthlyRetainmentPeriodData,
 	RetainmentPeriodData,
 	RetainmentStatData,
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
 export {
-	useMonthlyRetainmentStatsData,
+	useRetainmentRateData,
 	useRetainmentStatsData,
 } from './useRetainmentStatsData'
 export {

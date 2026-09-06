@@ -110,7 +110,9 @@ export const Item = ({
 		prefs,
 		validatorStatus,
 	}
-	const retainmentHistoryDisabled = validator.retainment.oneMonth === null
+	const retainmentHistoryDisabled =
+		validator.retainment.oneMonth === null &&
+		validator.retainment.threeMonths === null
 	const openRetainmentHistory = useOpenRetainmentHistory({
 		selfStakeMax,
 		unit,

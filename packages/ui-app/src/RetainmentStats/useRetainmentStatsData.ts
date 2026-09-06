@@ -26,10 +26,6 @@ export interface RetainmentPeriodData {
 	selfStakeChange: string
 }
 
-export type MonthlyRetainmentPeriodData = RetainmentPeriodData
-
-type FormattedRetainmentPeriodData = RetainmentPeriodData
-
 export interface RetainmentStatData {
 	ariaLabel: string
 	ariaValueText?: string
@@ -56,9 +52,9 @@ export interface RetainmentStatsData {
 	statsLabel: string
 }
 
-interface RetainmentStatsDataProps<T> {
+interface RetainmentStatsDataProps {
 	highlightWarnings?: boolean
-	period?: T
+	period?: RetainmentPeriodData
 	selfStakeMax: boolean
 	unit: string
 	units: number
@@ -171,14 +167,34 @@ const getSignedAmountStat = ({
 	}
 }
 
-const useFormattedRetainmentStatsData = ({
+export const useRetainmentRateData = (
+	period?: Pick<RetainmentPeriodData, 'includedMonthCount' | 'retainmentRate'>,
+) => {
+	const { t, i18n } = useTranslation('app')
+
+	return {
+		retainmentLabel: period?.includedMonthCount
+			? t('monthRetainment', { count: period.includedMonthCount })
+			: t('retainment'),
+		retainmentRate: getRateStat({
+			label: t('retainmentRate'),
+			locale: i18n.resolvedLanguage,
+			maximumLabel: t('maximum'),
+			rate: period?.retainmentRate,
+			showTrend: false,
+		}),
+	}
+}
+
+export const useRetainmentStatsData = ({
 	highlightWarnings = false,
 	period,
 	selfStakeMax,
 	unit,
 	units,
-}: RetainmentStatsDataProps<FormattedRetainmentPeriodData>): RetainmentStatsData => {
+}: RetainmentStatsDataProps): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
+	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
@@ -201,13 +217,6 @@ const useFormattedRetainmentStatsData = ({
 			}
 		: undefined
 	const maximumLabel = t('maximum')
-	const retainmentRate = getRateStat({
-		label: t('retainmentRate'),
-		locale,
-		maximumLabel,
-		rate: period?.retainmentRate,
-		showTrend: false,
-	})
 	const retainmentStatus =
 		highlightWarnings && retainmentRate.value !== undefined
 			? getRetainmentStatus(retainmentRate.value)
@@ -235,9 +244,7 @@ const useFormattedRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: period?.includedMonthCount
-			? t('monthRetainment', { count: period.includedMonthCount })
-			: t('retainment'),
+		retainmentLabel,
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),
@@ -251,21 +258,3 @@ const useFormattedRetainmentStatsData = ({
 		statsLabel: t('retainmentStats'),
 	}
 }
-
-export const useRetainmentStatsData = ({
-	period,
-	...props
-}: RetainmentStatsDataProps<RetainmentPeriodData>): RetainmentStatsData =>
-	useFormattedRetainmentStatsData({
-		...props,
-		period,
-	})
-
-export const useMonthlyRetainmentStatsData = ({
-	period,
-	...props
-}: RetainmentStatsDataProps<MonthlyRetainmentPeriodData>): RetainmentStatsData =>
-	useFormattedRetainmentStatsData({
-		...props,
-		period: period && { ...period, includedMonthCount: undefined },
-	})

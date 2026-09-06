@@ -162,9 +162,6 @@ export type ValidatorCandidateStrategy =
 
 export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
 
-export type RandomValidatorCandidate = ValidatorCandidate &
-	Pick<ValidatorListItem, 'retainment'>
-
 export interface ValidatorCandidateBatchVariables
 	extends Record<string, unknown> {
 	network: string

@@ -13,14 +13,10 @@ import { useTranslation } from 'react-i18next'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import {
 	RetainmentWindowToggle,
+	useRetainmentRateData,
 	useRetainmentWindow,
 } from 'ui-app/RetainmentStats'
-import {
-	clampRate,
-	formatCompactNumber,
-	getRateColor,
-	planckToUnitBn,
-} from 'utils'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 import { RowActionsMenu } from './RowActionsMenu'
 import { CardSummary, OperatorMetric } from './styles'
 import { ValidatorsButton } from './ValidatorsButton'
@@ -66,31 +62,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 		window: retainmentWindow,
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(operator.retainment)
-	const retainmentLabel = period?.includedMonthCount
-		? t('monthRetainment', { count: period.includedMonthCount })
-		: t('retainment')
-	const suppliedRetainmentRate = period?.retainmentRate
-	const retainmentRate =
-		typeof suppliedRetainmentRate === 'number' &&
-		Number.isFinite(suppliedRetainmentRate)
-			? clampRate(suppliedRetainmentRate)
-			: undefined
-	const retainmentRateLabel =
-		retainmentRate === undefined
-			? '—'
-			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
-					maximumFractionDigits: 1,
-				})}%`
-	const retainmentMonthDate = period
-		? new Date(period.fromTimestamp * 1000)
-		: undefined
-	const retainmentMonth = retainmentMonthDate
-		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-				month: 'long',
-				year: 'numeric',
-				timeZone: 'UTC',
-			}).format(retainmentMonthDate)
-		: undefined
+	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
 	const retainmentWindowToggle = (
 		<RetainmentWindowToggle
 			alignEnd
@@ -165,28 +137,15 @@ export const Item = ({ format, operator }: ItemProps) => {
 	const retainmentMetric = (
 		<OperatorMetric
 			data-metric="retainmentRate"
-			color={
-				retainmentRate === undefined
-					? 'var(--text-tertiary)'
-					: getRateColor(retainmentRate)
-			}
+			color={retainmentRate.color}
 			label={
 				<>
-					{t('retainmentRate')}
-					{format === 'col' && (
-						<>
-							{retainmentMonthDate && retainmentMonth && (
-								<ListItem.Month dateTime={retainmentMonthDate.toISOString()}>
-									/ {retainmentMonth}
-								</ListItem.Month>
-							)}
-							{retainmentWindowToggle}
-						</>
-					)}
+					{format === 'col' ? retainmentLabel : retainmentRate.label}
+					{format === 'col' && retainmentWindowToggle}
 				</>
 			}
 		>
-			{retainmentRateLabel}
+			{retainmentRate.valueText}
 		</OperatorMetric>
 	)
 
