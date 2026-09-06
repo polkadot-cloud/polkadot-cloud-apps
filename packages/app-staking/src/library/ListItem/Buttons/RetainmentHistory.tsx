@@ -5,11 +5,19 @@ import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import { HeaderButton } from 'ui-core/list'
+import type { RetainmentHistoryOptions } from 'ui-modals/RetainmentHistory'
+import { useOverlay } from 'ui-overlay'
 
 interface RetainmentHistoryProps {
 	disabled: boolean
 	iconOnly?: boolean
 	onClick: () => void
+}
+
+export const useOpenRetainmentHistory = (options: RetainmentHistoryOptions) => {
+	const { openModal } = useOverlay().modal
+
+	return () => openModal({ key: 'RetainmentHistory', options, size: 'sm' })
 }
 
 export const RetainmentHistory = ({

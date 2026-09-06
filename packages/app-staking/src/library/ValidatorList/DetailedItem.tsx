@@ -9,12 +9,17 @@ import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
-import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import type { Validator } from 'types'
 import { ListItem } from 'ui-app/ListItem'
-import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
-import { useOverlay } from 'ui-overlay'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
 import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
@@ -43,17 +48,40 @@ export const DetailedItem = ({
 	const { network } = useNetwork()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
-	const { openModal } = useOverlay().modal
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(retainment?.retainment)
 	const retainmentStats = useRetainmentStatsData({
 		highlightWarnings: highlightRetainmentWarnings,
-		period: retainment?.months[0],
+		period,
 		selfStakeMax,
 		unit,
 		units,
 	})
+	const validatorIdentity = getIdentityDisplay(
+		validatorIdentities[address],
+		validatorSupers[address],
+	)
+	const validatorDisplay = validatorIdentity.node
+	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
+	const showRetainmentHistory =
+		displayFor !== 'canvas' && displayFor !== 'modal'
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		periods: retainmentPeriods,
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
+	const onRetainmentHistory = showRetainmentHistory
+		? openRetainmentHistory
+		: undefined
 
 	if (isPreloading) {
 		return <DetailedItemPreloader format={format} />
@@ -63,31 +91,6 @@ export const DetailedItem = ({
 		(item) => (item as Validator).address === validator.address,
 	)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
-	const validatorIdentity = getIdentityDisplay(
-		validatorIdentities[address],
-		validatorSupers[address],
-	)
-	const validatorDisplay = validatorIdentity.node
-	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
-	const retainmentHistoryDisabled = retainmentPeriods.length === 0
-	const showRetainmentHistory =
-		displayFor !== 'canvas' && displayFor !== 'modal'
-	const openRetainmentHistory = () =>
-		openModal({
-			key: 'RetainmentHistory',
-			size: 'sm',
-			options: {
-				periods: retainmentPeriods,
-				selfStakeMax,
-				unit,
-				units,
-				validator: address,
-				validatorDisplay,
-			},
-		})
-	const onRetainmentHistory = showRetainmentHistory
-		? openRetainmentHistory
-		: undefined
 
 	const cardActions = (
 		<ListItem.Actions>
@@ -122,7 +125,7 @@ export const DetailedItem = ({
 			{showRetainmentHistory && (
 				<ListItem.Action wide>
 					<RetainmentHistory
-						disabled={retainmentHistoryDisabled}
+						disabled={retainmentPeriods.length === 0}
 						onClick={openRetainmentHistory}
 					/>
 				</ListItem.Action>
@@ -138,7 +141,7 @@ export const DetailedItem = ({
 						address={address}
 						display={validatorDisplay}
 						onRetainmentHistory={onRetainmentHistory}
-						retainmentHistoryDisabled={retainmentHistoryDisabled}
+						retainmentHistoryDisabled={retainmentPeriods.length === 0}
 						showShareLink={showShareLink}
 						onRemove={
 							typeof onRemove === 'function'
@@ -153,8 +156,10 @@ export const DetailedItem = ({
 				eraPoints={eraPoints}
 				onRetainmentHistory={onRetainmentHistory}
 				rate={rateAfterCommission}
-				retainmentHistoryDisabled={retainmentHistoryDisabled}
+				retainmentHistoryDisabled={retainmentPeriods.length === 0}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				selected={isSelected}
@@ -174,6 +179,8 @@ export const DetailedItem = ({
 			headerStart={selectable ? <Select item={validator} /> : undefined}
 			identity={<Identity address={address} />}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			selected={isSelected}
 			summary={
 				<ValidatorSummary

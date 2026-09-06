@@ -37,8 +37,8 @@ const StakingApiOperatorListInner = () => {
 		() => ({
 			network,
 			order: config.order,
-			orderWindow: 'ONE_MONTH',
-			retainmentWindows: ['ONE_MONTH'],
+			orderWindow: 'THREE_MONTHS',
+			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			page,
 			pageSize: PAGE_SIZE,
 			filters: { search: config.search || undefined },
@@ -75,11 +75,12 @@ const StakingApiOperatorListInner = () => {
 						</ResultSummary>
 					</div>
 					<div>
-						<ListItem.FormatToggle
-							hideOnCompact
-							onChange={setListFormat}
-							value={listFormat}
-						/>
+						{!forceCardLayout && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</FilterHeaderWrapper>
 				{!loading && !error && result.operators.length > 0 && (

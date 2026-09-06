@@ -18,6 +18,7 @@ import {
 } from 'utils'
 
 export interface RetainmentPeriodData {
+	includedMonthCount?: number
 	compoundRate: number | null
 	fromTimestamp: number
 	netInflow: string
@@ -51,7 +52,7 @@ export interface RetainmentStatsData {
 	statsLabel: string
 }
 
-interface UseRetainmentStatsDataProps {
+interface RetainmentStatsDataProps {
 	highlightWarnings?: boolean
 	period?: RetainmentPeriodData
 	selfStakeMax: boolean
@@ -166,14 +167,34 @@ const getSignedAmountStat = ({
 	}
 }
 
+export const useRetainmentRateData = (
+	period?: Pick<RetainmentPeriodData, 'includedMonthCount' | 'retainmentRate'>,
+) => {
+	const { t, i18n } = useTranslation('app')
+
+	return {
+		retainmentLabel: period?.includedMonthCount
+			? t('monthRetainment', { count: period.includedMonthCount })
+			: t('retainment'),
+		retainmentRate: getRateStat({
+			label: t('retainmentRate'),
+			locale: i18n.resolvedLanguage,
+			maximumLabel: t('maximum'),
+			rate: period?.retainmentRate,
+			showTrend: false,
+		}),
+	}
+}
+
 export const useRetainmentStatsData = ({
 	highlightWarnings = false,
 	period,
 	selfStakeMax,
 	unit,
 	units,
-}: UseRetainmentStatsDataProps): RetainmentStatsData => {
+}: RetainmentStatsDataProps): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
+	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
@@ -196,13 +217,6 @@ export const useRetainmentStatsData = ({
 			}
 		: undefined
 	const maximumLabel = t('maximum')
-	const retainmentRate = getRateStat({
-		label: t('retainmentRate'),
-		locale,
-		maximumLabel,
-		rate: period?.retainmentRate,
-		showTrend: false,
-	})
 	const retainmentStatus =
 		highlightWarnings && retainmentRate.value !== undefined
 			? getRetainmentStatus(retainmentRate.value)
@@ -219,7 +233,7 @@ export const useRetainmentStatsData = ({
 			label: t('compoundRate'),
 			locale,
 			maximumLabel,
-			max: displaySelfStakeMax,
+			max: displaySelfStakeMax && period?.compoundRate !== null,
 			rate: period?.compoundRate,
 		}),
 		month,
@@ -230,7 +244,7 @@ export const useRetainmentStatsData = ({
 			unit,
 			value: netOutflow,
 		}),
-		retainmentLabel: t('retainment'),
+		retainmentLabel,
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({
 			label: t('selfStakeChange'),

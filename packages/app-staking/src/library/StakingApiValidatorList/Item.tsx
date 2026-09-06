@@ -10,7 +10,10 @@ import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
-import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
@@ -24,8 +27,10 @@ import type {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
-import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
-import { useOverlay } from 'ui-overlay'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
 import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
 interface ItemProps {
@@ -66,7 +71,6 @@ export const Item = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { openModal } = useOverlay().modal
 	const hardCapSelfStake = useHardCapSelfStake()
 	const { unit, units } = getStakingChainData(network)
 	const { address, prefs } = validator
@@ -78,8 +82,13 @@ export const Item = ({
 		: undefined
 	const selfStakeMax = isMaxSelfStake(selfStakePlanck, hardCapSelfStake)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs.commission)
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(validator.retainment)
 	const retainmentStats = useRetainmentStatsData({
-		period: validator.retainment.oneMonth ?? undefined,
+		period,
 		selfStakeMax,
 		unit,
 		units,
@@ -101,19 +110,16 @@ export const Item = ({
 		prefs,
 		validatorStatus,
 	}
-	const retainmentHistoryDisabled = validator.retainment.oneMonth === null
-	const openRetainmentHistory = () =>
-		openModal({
-			key: 'RetainmentHistory',
-			size: 'sm',
-			options: {
-				selfStakeMax,
-				unit,
-				units,
-				validator: address,
-				validatorDisplay,
-			},
-		})
+	const retainmentHistoryDisabled =
+		validator.retainment.oneMonth === null &&
+		validator.retainment.threeMonths === null
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
 
 	if (format === 'row') {
 		return (
@@ -141,6 +147,8 @@ export const Item = ({
 				rate={rateAfterCommission}
 				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				statusActive={validator.active}
@@ -190,6 +198,8 @@ export const Item = ({
 			identity={identity}
 			isActivityPreloading={isEraPointsLoading}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			summary={
 				<ValidatorSummary
 					address={address}

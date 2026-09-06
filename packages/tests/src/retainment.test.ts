@@ -7,11 +7,15 @@ import type {
 	ValidatorRetainmentResult,
 	ValidatorRetainmentWindow,
 } from '../../plugin-staking-api/src/types'
-import { useRetainmentStatsData } from '../../ui-app/src/RetainmentStats/useRetainmentStatsData'
+import {
+	useRetainmentRateData,
+	useRetainmentStatsData,
+} from '../../ui-app/src/RetainmentStats/useRetainmentStatsData'
 
 vi.mock('../../ui-app/node_modules/react-i18next/dist/es/index.js', () => ({
 	useTranslation: () => ({
-		t: (key: string) => key,
+		t: (key: string, options?: { count: number }) =>
+			options ? `${key}:${options.count}` : key,
 		i18n: { resolvedLanguage: 'en' },
 	}),
 }))
@@ -46,7 +50,7 @@ const result = (
 	retainment: { oneMonth, threeMonths },
 })
 
-test('nomination scoring uses the latest month and never substitutes rolling or missing rates', () => {
+test('nomination scoring uses rolling windows and never substitutes monthly or missing rates', () => {
 	const results = new Map<string, ValidatorRetainmentResult | null>([
 		[
 			'complete',
@@ -63,7 +67,7 @@ test('nomination scoring uses the latest month and never substitutes rolling or 
 			'zeroRewards',
 			result(window({ graphRewards: '0', retainmentRate: null })),
 		],
-		['zeroRate', result(window({ retainmentRate: 0 }))],
+		['zeroRate', result(null, window({ retainmentRate: 0, windowMonths: 3 }))],
 	])
 	const validators = [...results.keys(), 'missing'].map((address) => ({
 		address,
@@ -74,8 +78,8 @@ test('nomination scoring uses the latest month and never substitutes rolling or 
 			({ validator, rate }) => [validator.address, rate],
 		),
 	).toEqual([
-		['complete', 75],
-		['monthly', 25],
+		['complete', 10],
+		['rolling', 100],
 		['zeroRate', 0],
 	])
 })
@@ -95,6 +99,7 @@ test('monthly stats preserve unavailable rates, real zero rates and timestamps i
 	expect(stats.month?.label).toBe('August 2026')
 	expect(stats.netOutflow.prefix).toBe('−')
 	expect(period.netInflow).toBe('-900719925474099312345')
+	expect(period.includedMonthCount).toBe(1)
 	const zero = useRetainmentStatsData({
 		period: window({ compoundRate: 0, retainmentRate: 0 }),
 		selfStakeMax: false,
@@ -103,4 +108,58 @@ test('monthly stats preserve unavailable rates, real zero rates and timestamps i
 	})
 	expect(zero.compoundRate.value).toBe(0)
 	expect(zero.retainmentRate.valueText).toBe('0%')
+})
+
+test('rolling stats use the included month count and preserve unavailable compound rates at max self stake', () => {
+	const stats = useRetainmentStatsData({
+		period: window({
+			windowMonths: 3,
+			includedMonthCount: 2,
+			retainmentRate: 40,
+		}),
+		selfStakeMax: true,
+		unit: 'DOT',
+		units: 10,
+	})
+	expect(stats.retainmentRate.value).toBe(40)
+	expect(stats.retainmentLabel).toBe('monthRetainment:2')
+	expect(stats.compoundRate.value).toBeUndefined()
+	expect(stats.compoundRate.valueText).toBe('—')
+})
+
+test.each([
+	{ rate: null, value: undefined, text: '—' },
+	{ rate: Number.NaN, value: undefined, text: '—' },
+	{ rate: Number.POSITIVE_INFINITY, value: undefined, text: '—' },
+	{ rate: 0, value: 0, text: '0%' },
+	{ rate: -10, value: 0, text: '0%' },
+	{ rate: 150, value: 100, text: '100%' },
+	{ rate: 42.25, value: 42.25, text: '42.3%' },
+])(
+	'operator and validator rate formatting agree for $rate',
+	({ rate, value, text }) => {
+		const period = window({ includedMonthCount: 2, retainmentRate: rate })
+		const operator = useRetainmentRateData(period)
+		const validator = useRetainmentStatsData({
+			period,
+			selfStakeMax: false,
+			unit: 'DOT',
+			units: 10,
+		})
+
+		expect(operator.retainmentRate.value).toBe(value)
+		expect(operator.retainmentRate.valueText).toBe(text)
+		expect(operator.retainmentLabel).toBe('monthRetainment:2')
+		expect(operator.retainmentRate).toEqual(validator.retainmentRate)
+		expect(operator.retainmentLabel).toBe(validator.retainmentLabel)
+	},
+)
+
+test('missing retainment windows display unavailable rates without a month count', () => {
+	const { retainmentLabel, retainmentRate } = useRetainmentRateData()
+
+	expect(retainmentLabel).toBe('retainment')
+	expect(retainmentRate.value).toBeUndefined()
+	expect(retainmentRate.valueText).toBe('—')
+	expect(retainmentRate.color).toBe('var(--text-tertiary)')
 })

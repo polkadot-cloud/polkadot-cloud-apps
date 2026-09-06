@@ -66,8 +66,8 @@ export const StakingApiValidatorListInner = ({
 			page,
 			pageSize: PAGE_SIZE,
 			order: config.order as ValidatorListOrder,
-			orderWindow: 'ONE_MONTH',
-			retainmentWindows: ['ONE_MONTH'],
+			orderWindow: 'THREE_MONTHS',
+			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			filters: {
 				...config.filters,
 				search: config.search || undefined,
@@ -179,11 +179,12 @@ export const StakingApiValidatorListInner = ({
 						</ResultSummary>
 					</div>
 					<div>
-						<ListItem.FormatToggle
-							hideOnCompact
-							onChange={setListFormat}
-							value={listFormat}
-						/>
+						{!forceCardLayout && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</FilterHeaderWrapper>
 				{!loading && !error && result.validators.length > 0 && (

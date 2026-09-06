@@ -31,6 +31,14 @@ export const OrderTab = styled(SharedOrderTab)`
   white-space: nowrap;
 `
 
+export const OperatorMetric = styled(ListItem.Metric)`
+  &[data-metric='retainmentRate'] > span {
+    flex-wrap: wrap;
+    overflow: visible;
+    white-space: normal;
+  }
+`
+
 export const CardSummary = styled(ListItem.Summary)`
   grid-template-columns: repeat(4, minmax(0, 1fr));
 

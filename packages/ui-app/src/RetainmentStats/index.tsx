@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { ReactNode } from 'react'
 import { ListItem } from '../ListItem'
 import { RetainmentStatValue } from './RetainmentStatValue'
 import type {
@@ -8,12 +9,20 @@ import type {
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
 
+export { RetainmentWindowToggle } from './RetainmentWindowToggle'
 export type {
 	RetainmentPeriodData,
 	RetainmentStatData,
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
-export { useRetainmentStatsData } from './useRetainmentStatsData'
+export {
+	useRetainmentRateData,
+	useRetainmentStatsData,
+} from './useRetainmentStatsData'
+export {
+	type RetainmentWindow,
+	useRetainmentWindow,
+} from './useRetainmentWindow'
 
 interface RetainmentStatsProps {
 	className?: string
@@ -21,6 +30,7 @@ interface RetainmentStatsProps {
 	isPreloading?: boolean
 	showLabel?: boolean
 	unit: string
+	windowToggle?: ReactNode
 }
 
 export const RetainmentMetric = ({
@@ -72,6 +82,7 @@ export const RetainmentStats = ({
 	isPreloading = false,
 	showLabel = true,
 	unit,
+	windowToggle,
 }: RetainmentStatsProps) => {
 	const {
 		compoundRate,
@@ -91,14 +102,15 @@ export const RetainmentStats = ({
 		>
 			<ListItem.SectionHeader>
 				{showLabel && <strong>{retainmentLabel}</strong>}
-				{isPreloading ? (
-					<ListItem.DetailLoader height="0.85rem" width="7rem" />
-				) : month ? (
-					<ListItem.Month dateTime={month.date.toISOString()}>
-						{showLabel && '/ '}
-						{month.label}
-					</ListItem.Month>
-				) : null}
+				{windowToggle}
+				{!showLabel &&
+					(isPreloading ? (
+						<ListItem.DetailLoader height="0.85rem" width="7rem" />
+					) : month ? (
+						<ListItem.Month dateTime={month.date.toISOString()}>
+							{month.label}
+						</ListItem.Month>
+					) : null)}
 			</ListItem.SectionHeader>
 			<ListItem.RetainmentGrid>
 				{[retainmentRate, compoundRate].map((stat) => (

@@ -12,13 +12,13 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import {
-	clampRate,
-	formatCompactNumber,
-	getRateColor,
-	planckToUnitBn,
-} from 'utils'
+	RetainmentWindowToggle,
+	useRetainmentRateData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 import { RowActionsMenu } from './RowActionsMenu'
-import { CardSummary } from './styles'
+import { CardSummary, OperatorMetric } from './styles'
 import { ValidatorsButton } from './ValidatorsButton'
 
 interface ItemProps {
@@ -57,28 +57,19 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const averageSelfStake =
 		validatorCount > 0 ? combinedSelfStake.dividedBy(validatorCount) : undefined
-	const suppliedRetainmentRate = operator.retainment.oneMonth?.retainmentRate
-	const retainmentRate =
-		typeof suppliedRetainmentRate === 'number' &&
-		Number.isFinite(suppliedRetainmentRate)
-			? clampRate(suppliedRetainmentRate)
-			: undefined
-	const retainmentRateLabel =
-		retainmentRate === undefined
-			? '—'
-			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
-					maximumFractionDigits: 1,
-				})}%`
-	const retainmentMonthDate = operator.retainment.oneMonth
-		? new Date(operator.retainment.oneMonth.fromTimestamp * 1000)
-		: undefined
-	const retainmentMonth = retainmentMonthDate
-		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-				month: 'long',
-				year: 'numeric',
-				timeZone: 'UTC',
-			}).format(retainmentMonthDate)
-		: undefined
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(operator.retainment)
+	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
+	const retainmentWindowToggle = (
+		<RetainmentWindowToggle
+			alignEnd
+			onChange={setRetainmentWindow}
+			value={retainmentWindow}
+		/>
+	)
 	const identityNode = (
 		<Identity address={identity.address} display={identity.display || null} />
 	)
@@ -129,49 +120,57 @@ export const Item = ({ format, operator }: ItemProps) => {
 				: undefined,
 			value: <StakeValue unit={unit} value={averageSelfStake} />,
 		},
-		{
-			key: 'retainmentRate',
-			color:
-				retainmentRate === undefined
-					? 'var(--text-tertiary)'
-					: getRateColor(retainmentRate),
-			label: (
-				<>
-					{t('retainmentRate')}
-					{format === 'col' && retainmentMonthDate && retainmentMonth ? (
-						<ListItem.Month dateTime={retainmentMonthDate.toISOString()}>
-							/ {retainmentMonth}
-						</ListItem.Month>
-					) : null}
-				</>
-			),
-			value: retainmentRateLabel,
-		},
 	]
-	const metricNodes = metrics.map(({ color, key, label, title, value }) => (
-		<ListItem.Metric
-			key={key}
-			color={color}
-			label={label}
-			valueProps={{ title }}
+	const validatorMetricNodes = metrics.map(
+		({ color, key, label, title, value }) => (
+			<OperatorMetric
+				data-metric={key}
+				key={key}
+				color={color}
+				label={label}
+				valueProps={{ title }}
+			>
+				{value}
+			</OperatorMetric>
+		),
+	)
+	const retainmentMetric = (
+		<OperatorMetric
+			data-metric="retainmentRate"
+			color={retainmentRate.color}
+			label={
+				<>
+					{format === 'col' ? retainmentLabel : retainmentRate.label}
+					{format === 'col' && retainmentWindowToggle}
+				</>
+			}
 		>
-			{value}
-		</ListItem.Metric>
-	))
+			{retainmentRate.valueText}
+		</OperatorMetric>
+	)
 
 	if (format === 'row') {
 		return (
-			<ListItem.Row displayFor="default">
+			<ListItem.Row displayFor="default" rowVariant="operator">
+				<ListItem.RowHeader data-section="identity">
+					{t('identity')}
+				</ListItem.RowHeader>
+				<ListItem.RowHeader data-section="validators">
+					{t('validators')}
+				</ListItem.RowHeader>
+				<ListItem.RowHeader data-section="retainment">
+					<span>{retainmentLabel}</span>
+					{retainmentWindowToggle}
+				</ListItem.RowHeader>
 				<ListItem.RowIdentity>
 					<ListItem.Identity>{identityNode}</ListItem.Identity>
 				</ListItem.RowIdentity>
-				<ListItem.RowMetrics
-					style={{
-						gridTemplateColumns: 'repeat(5, minmax(7rem, 1fr))',
-					}}
-				>
-					{metricNodes}
-				</ListItem.RowMetrics>
+				<ListItem.RowMetricGroup data-section="validators">
+					{validatorMetricNodes}
+				</ListItem.RowMetricGroup>
+				<ListItem.RowMetricGroup data-section="retainment">
+					{retainmentMetric}
+				</ListItem.RowMetricGroup>
 				<RowActionsMenu operator={operator} />
 			</ListItem.Row>
 		)
@@ -185,7 +184,8 @@ export const Item = ({ format, operator }: ItemProps) => {
 					{cardActions}
 				</DetailedCard.Header>
 				<CardSummary aria-label={t('operatorSummary')}>
-					{metricNodes}
+					{validatorMetricNodes}
+					{retainmentMetric}
 				</CardSummary>
 			</DetailedCard.Top>
 		</DetailedCard.Root>

@@ -8,7 +8,10 @@ import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
-import { RetainmentHistory } from 'library/ListItem/Buttons/RetainmentHistory'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { useNominationStatusData } from 'library/ListItem/Labels/NominationStatus'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
@@ -18,8 +21,10 @@ import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
-import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
-import { useOverlay } from 'ui-overlay'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
 import { getRateAfterCommission } from 'utils'
 import type { ItemProps } from './types'
 
@@ -39,7 +44,6 @@ export const DetailedItem = ({
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { validatorIdentities, validatorSupers } = useValidators()
-	const { openModal } = useOverlay().modal
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
@@ -53,8 +57,13 @@ export const DetailedItem = ({
 		nominator,
 		status: nominationStatus,
 	})
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(retainment?.retainment)
 	const retainmentStats = useRetainmentStatsData({
-		period: retainment?.months[0],
+		period,
 		selfStakeMax,
 		unit,
 		units,
@@ -71,19 +80,14 @@ export const DetailedItem = ({
 		isPreloading || retainmentPeriods.length === 0
 	const showRetainmentHistory =
 		displayFor !== 'canvas' && displayFor !== 'modal'
-	const openRetainmentHistory = () =>
-		openModal({
-			key: 'RetainmentHistory',
-			size: 'sm',
-			options: {
-				periods: retainmentPeriods,
-				selfStakeMax,
-				unit,
-				units,
-				validator: address,
-				validatorDisplay,
-			},
-		})
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		periods: retainmentPeriods,
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
 	const onRetainmentHistory = showRetainmentHistory
 		? openRetainmentHistory
 		: undefined
@@ -109,6 +113,8 @@ export const DetailedItem = ({
 				rate={rateAfterCommission}
 				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				statusActive={nominationStatus === 'active'}
@@ -161,6 +167,8 @@ export const DetailedItem = ({
 			isActivityPreloading={isPreloading}
 			isRetainmentPreloading={isPreloading}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			summary={
 				<ValidatorSummary
 					address={address}

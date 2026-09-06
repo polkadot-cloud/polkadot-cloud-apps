@@ -9,10 +9,11 @@
 	display: flex;
 	font-family: var(--font-family-bold);
 	font-size: 0.9rem;
+	gap: 0.25rem;
 	line-height: 1;
 	min-height: 2rem;
 	overflow: hidden;
-	padding-block-end: 0.55rem;
+	padding-block-end: 0.35rem;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 

@@ -11,22 +11,24 @@
 	width: 100%;
 }
 
-.barLayout[data-row-variant='validator'] {
+.barLayout[data-row-variant] {
 	align-items: stretch;
 	grid-template:
-		'identity-title performance-title retainment-title actions' auto
+		'identity-title performance-title retainment-title retainment-title' auto
 		'identity performance retainment actions' minmax(3.8rem, auto) / minmax(
 			10.5rem,
 			0.9fr
 		)
 		minmax(26.75rem, 3.1fr) minmax(29.25rem, 2.75fr) auto;
+	padding-block: 0.45rem;
 	row-gap: 0.6rem;
 
 	> .barHeader[data-section='identity'] {
 		grid-area: identity-title;
 	}
 
-	> .barHeader[data-section='performance'] {
+	> .barHeader[data-section='performance'],
+	> .barHeader[data-section='validators'] {
 		grid-area: performance-title;
 	}
 
@@ -38,7 +40,8 @@
 		grid-area: identity;
 	}
 
-	> .barPerformance {
+	> .barPerformance,
+	> .barMetricGroup[data-section='validators'] {
 		grid-area: performance;
 	}
 
@@ -52,15 +55,23 @@
 	}
 }
 
-@container list-item-bar (max-width: 84rem) {
-	.barLayout:not([data-row-variant='validator']) {
-		grid-template-columns: minmax(0, 1fr) auto;
-		row-gap: 0.8rem;
+.barLayout[data-row-variant='operator'] {
+	grid-template-columns:
+		minmax(14rem, 1.5fr)
+		minmax(33rem, 3.5fr) minmax(10rem, 1fr) auto;
+
+	> .barMetricGroup[data-section='retainment'] {
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 
 @container list-item-bar (max-width: 78rem) {
-	.barLayout[data-row-variant='validator'] {
+	.barLayout:not([data-row-variant]) {
+		grid-template-columns: minmax(0, 1fr) auto;
+		row-gap: 0.8rem;
+	}
+
+	.barLayout[data-row-variant] {
 		grid-template:
 			'identity-title performance-title actions' auto
 			'identity performance actions' minmax(3.8rem, auto)
@@ -80,7 +91,7 @@
 }
 
 @container list-item-bar (max-width: 46rem) {
-	.barLayout[data-row-variant='validator'] {
+	.barLayout[data-row-variant] {
 		grid-template:
 			'identity-title actions' auto
 			'identity actions' minmax(3.8rem, auto)
@@ -89,7 +100,8 @@
 			'retainment-title retainment-title' auto
 			'retainment retainment' minmax(3.8rem, auto) / minmax(0, 1fr) auto;
 
-		> .barHeader[data-section='performance'] {
+		> .barHeader[data-section='performance'],
+		> .barHeader[data-section='validators'] {
 			border-block-start: 1px solid var(--gray-500);
 			margin-block-start: 0.25rem;
 			padding-block-end: 0;
@@ -98,7 +110,7 @@
 }
 
 @container list-item-bar (max-width: 38rem) {
-	.barLayout:not([data-row-variant='validator']) {
+	.barLayout:not([data-row-variant]) {
 		grid-template-columns: minmax(0, 1fr);
 
 		> .actions {
@@ -110,7 +122,7 @@
 }
 
 @container list-item-bar (max-width: 29rem) {
-	.barLayout[data-row-variant='validator'] {
+	.barLayout[data-row-variant] {
 		grid-template:
 			'identity-title' auto
 			'identity' minmax(3.8rem, auto)
