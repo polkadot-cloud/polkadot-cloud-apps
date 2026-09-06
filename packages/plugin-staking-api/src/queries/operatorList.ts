@@ -17,6 +17,7 @@ const QUERY = gql`
     $page: Int
     $pageSize: Int
     $order: OperatorListOrder
+    $retainmentWindow: RetainmentRankWindow
     $filters: OperatorListFilters
   ) {
     operatorList(
@@ -24,6 +25,7 @@ const QUERY = gql`
       page: $page
       pageSize: $pageSize
       order: $order
+      retainmentWindow: $retainmentWindow
       filters: $filters
     ) {
       operators {
@@ -35,6 +37,8 @@ const QUERY = gql`
         validatorCount
         activeValidatorCount
         combinedSelfStake
+        retainRank1m
+        retainRank3m
         retainment { ...OperatorRetainmentFields }
       }
       page
