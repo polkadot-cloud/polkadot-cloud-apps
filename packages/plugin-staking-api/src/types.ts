@@ -154,6 +154,7 @@ export interface OperatorStatsResult {
 
 export type ValidatorCandidateStrategy =
 	| 'ACTIVE'
+	| 'CLOUD'
 	| 'HIGH_RETAINER'
 	| 'HIGH_COMPOUNDER'
 
