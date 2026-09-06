@@ -3,6 +3,7 @@
 
 import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
+import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
@@ -133,6 +134,10 @@ export const useNominationControls = ({
 	const maxNominationsReached = nominations.length >= MaxNominations
 	const addDisabled = !canManageNominations || maxNominationsReached
 	const candidateDisabled = addDisabled || candidateFetching
+	const allKnownValidatorsNominated = PolkadotKnownValidators.every(
+		(knownAddress) =>
+			nominations.some(({ address }) => address === knownAddress),
+	)
 	const availableNominations =
 		retainmentStatsEnabled || !canManageNominations
 			? null
@@ -163,7 +168,7 @@ export const useNominationControls = ({
 			title: t('cloudValidator', { ns: 'app' }),
 			onClick: () => addCandidateByStrategy('CLOUD'),
 			icon: faPlus,
-			isDisabled: () => candidateDisabled,
+			isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
 		})
 	}
 
