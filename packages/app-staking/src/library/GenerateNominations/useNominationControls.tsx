@@ -3,6 +3,7 @@
 
 import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
+import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
@@ -133,6 +134,10 @@ export const useNominationControls = ({
 	const maxNominationsReached = nominations.length >= MaxNominations
 	const addDisabled = !canManageNominations || maxNominationsReached
 	const candidateDisabled = addDisabled || candidateFetching
+	const allKnownValidatorsNominated = PolkadotKnownValidators.every(
+		(knownAddress) =>
+			nominations.some(({ address }) => address === knownAddress),
+	)
 	const availableNominations =
 		retainmentStatsEnabled || !canManageNominations
 			? null
@@ -158,15 +163,14 @@ export const useNominationControls = ({
 		})
 	}
 
-	filterHandlers.push({
-		title: t('highPerformanceValidator', { ns: 'app' }),
-		onClick: () => addNominationByType('High Performance Validator'),
-		icon: faPlus,
-		isDisabled: () =>
-			candidateDisabled ||
-			(!retainmentStatsEnabled &&
-				!availableNominations?.highPerformance.length),
-	})
+	if (retainmentStatsEnabled) {
+		filterHandlers.push({
+			title: t('cloudValidator', { ns: 'app' }),
+			onClick: () => addCandidateByStrategy('CLOUD'),
+			icon: faPlus,
+			isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
+		})
+	}
 
 	if (retainmentStatsEnabled) {
 		filterHandlers.push(
@@ -201,6 +205,16 @@ export const useNominationControls = ({
 			},
 		)
 	}
+
+	filterHandlers.push({
+		title: t('highActivity', { ns: 'app' }),
+		onClick: () => addNominationByType('High Performance Validator'),
+		icon: faPlus,
+		isDisabled: () =>
+			candidateDisabled ||
+			(!retainmentStatsEnabled &&
+				!availableNominations?.highPerformance.length),
+	})
 
 	if (stakingApiEnabled) {
 		filterHandlers.push({

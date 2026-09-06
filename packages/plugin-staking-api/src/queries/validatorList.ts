@@ -17,6 +17,7 @@ const QUERY = gql`
     $page: Int
     $pageSize: Int
     $order: ValidatorListOrder
+    $retainmentWindow: RetainmentRankWindow
     $filters: ValidatorListFilters
   ) {
     validatorList(
@@ -24,6 +25,7 @@ const QUERY = gql`
       page: $page
       pageSize: $pageSize
       order: $order
+      retainmentWindow: $retainmentWindow
       filters: $filters
     ) {
       validators {

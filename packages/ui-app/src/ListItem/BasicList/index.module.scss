@@ -34,8 +34,12 @@
 	width: 100%;
 
 	&.canvas {
-		background: var(--gray-200);
+		background: var(--gray-300);
 		border-color: var(--gray-400);
+
+		:global(.dark) & {
+			background: var(--gray-200);
+		}
 	}
 
 	&.selected {

@@ -39,10 +39,12 @@ export interface IdentityCache {
 	superValue: string | null
 }
 
+export type RetainmentRankWindow = 'ONE_MONTH' | 'THREE_MONTHS'
+
 export type ValidatorListOrder =
 	| 'ACTIVITY'
-	| 'RETAINMENT_1M_HIGH'
-	| 'RETAINMENT_1M_LOW'
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
 
 export interface ValidatorListFilters {
 	excludeBlocked?: boolean
@@ -56,6 +58,7 @@ export interface ValidatorListVariables extends Record<string, unknown> {
 	page?: number
 	pageSize?: number
 	order?: ValidatorListOrder
+	retainmentWindow?: RetainmentRankWindow | null
 	filters?: ValidatorListFilters
 }
 
@@ -89,8 +92,8 @@ export interface ValidatorListItem {
 }
 
 export type OperatorListOrder =
-	| 'RETAINMENT_1M_HIGH'
-	| 'RETAINMENT_1M_LOW'
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
 	| 'VALIDATOR_COUNT'
 	| 'AVERAGE_SELF_STAKE_HIGH'
 	| 'AVERAGE_SELF_STAKE_LOW'
@@ -100,6 +103,7 @@ export interface OperatorListVariables extends Record<string, unknown> {
 	page?: number
 	pageSize?: number
 	order?: OperatorListOrder
+	retainmentWindow?: RetainmentRankWindow | null
 	filters?: OperatorListFilters
 }
 
@@ -129,6 +133,8 @@ export interface OperatorListItem {
 	validatorCount: number
 	activeValidatorCount: number
 	combinedSelfStake: string
+	retainRank1m: number | null
+	retainRank3m: number | null
 	retainment: OperatorRetainment
 }
 
@@ -148,6 +154,7 @@ export interface OperatorStatsResult {
 
 export type ValidatorCandidateStrategy =
 	| 'ACTIVE'
+	| 'CLOUD'
 	| 'HIGH_RETAINER'
 	| 'HIGH_COMPOUNDER'
 
