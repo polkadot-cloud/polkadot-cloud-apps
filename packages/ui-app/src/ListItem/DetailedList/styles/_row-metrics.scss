@@ -6,8 +6,8 @@
 	display: grid;
 	min-width: 0;
 
-	&[data-section='operator'] {
-		grid-template-columns: repeat(5, minmax(7rem, 1fr));
+	&[data-section='validators'] {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
 	}
 
 	&[data-section='performance'] {
@@ -58,34 +58,6 @@
 			flex: 0 0 auto;
 			font-size: 0.85rem;
 		}
-	}
-}
-
-@container list-item-bar (max-width: 78rem) {
-	.barMetricGroup[data-section='operator'] {
-		grid-column: 1 / -1;
-		grid-row: 2;
-	}
-}
-
-@container list-item-bar (max-width: 46rem) {
-	.barMetricGroup[data-section='operator'] {
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-
-		> div:nth-child(5) {
-			border-inline-start: 0;
-		}
-
-		> div:nth-child(n + 5) {
-			border-block-start: 1px solid var(--gray-500);
-			padding-block-start: 0.7rem;
-		}
-	}
-}
-
-@container list-item-bar (max-width: 38rem) {
-	.barMetricGroup[data-section='operator'] {
-		grid-row: 3;
 	}
 }
 

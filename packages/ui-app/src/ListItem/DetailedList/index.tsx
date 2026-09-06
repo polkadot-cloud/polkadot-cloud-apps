@@ -18,7 +18,7 @@ import { DetailedListSkeleton } from './Skeleton'
 interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
-	rowVariant?: 'validator'
+	rowVariant?: 'validator' | 'operator'
 	selected?: boolean
 	statusAccent?: 'success' | 'warning' | 'danger'
 }
