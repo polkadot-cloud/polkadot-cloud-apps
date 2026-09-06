@@ -16,6 +16,7 @@ import {
 import type {
 	ValidatorEraPoints,
 	ValidatorListOrder,
+	ValidatorListVariables,
 } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -59,12 +60,13 @@ export const StakingApiValidatorListInner = ({
 	const [isRateLoading, setIsRateLoading] = useState(false)
 	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
 
-	const variables = useMemo(
+	const variables = useMemo<ValidatorListVariables>(
 		() => ({
 			network,
 			page,
 			pageSize: PAGE_SIZE,
 			order: config.order as ValidatorListOrder,
+			retainmentWindow: 'THREE_MONTHS',
 			filters: {
 				...config.filters,
 				search: config.search || undefined,
