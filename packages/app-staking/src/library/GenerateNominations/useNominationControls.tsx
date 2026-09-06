@@ -167,16 +167,6 @@ export const useNominationControls = ({
 		})
 	}
 
-	filterHandlers.push({
-		title: t('highActivity', { ns: 'app' }),
-		onClick: () => addNominationByType('High Performance Validator'),
-		icon: faPlus,
-		isDisabled: () =>
-			candidateDisabled ||
-			(!retainmentStatsEnabled &&
-				!availableNominations?.highPerformance.length),
-	})
-
 	if (retainmentStatsEnabled) {
 		filterHandlers.push(
 			{
@@ -210,6 +200,16 @@ export const useNominationControls = ({
 			},
 		)
 	}
+
+	filterHandlers.push({
+		title: t('highActivity', { ns: 'app' }),
+		onClick: () => addNominationByType('High Performance Validator'),
+		icon: faPlus,
+		isDisabled: () =>
+			candidateDisabled ||
+			(!retainmentStatsEnabled &&
+				!availableNominations?.highPerformance.length),
+	})
 
 	if (stakingApiEnabled) {
 		filterHandlers.push({
