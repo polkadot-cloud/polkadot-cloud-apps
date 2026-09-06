@@ -158,6 +158,15 @@ export const useNominationControls = ({
 		})
 	}
 
+	if (retainmentStatsEnabled) {
+		filterHandlers.push({
+			title: t('cloudValidator', { ns: 'app' }),
+			onClick: () => addCandidateByStrategy('CLOUD'),
+			icon: faPlus,
+			isDisabled: () => candidateDisabled,
+		})
+	}
+
 	filterHandlers.push({
 		title: t('highPerformanceValidator', { ns: 'app' }),
 		onClick: () => addNominationByType('High Performance Validator'),
