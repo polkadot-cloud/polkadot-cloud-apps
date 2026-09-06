@@ -16,7 +16,10 @@ import {
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import type { Validator } from 'types'
 import { ListItem } from 'ui-app/ListItem'
-import { useRetainmentStatsData } from 'ui-app/RetainmentStats'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
 import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
@@ -48,9 +51,14 @@ export const DetailedItem = ({
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(retainment?.retainment)
 	const retainmentStats = useRetainmentStatsData({
 		highlightWarnings: highlightRetainmentWarnings,
-		period: retainment?.retainment.threeMonths ?? undefined,
+		period,
 		selfStakeMax,
 		unit,
 		units,
@@ -150,6 +158,8 @@ export const DetailedItem = ({
 				rate={rateAfterCommission}
 				retainmentHistoryDisabled={retainmentPeriods.length === 0}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				selected={isSelected}
@@ -169,6 +179,8 @@ export const DetailedItem = ({
 			headerStart={selectable ? <Select item={validator} /> : undefined}
 			identity={<Identity address={address} />}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			selected={isSelected}
 			summary={
 				<ValidatorSummary

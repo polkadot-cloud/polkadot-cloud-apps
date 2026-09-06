@@ -10,6 +10,8 @@ import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import {
 	RetainmentStats,
 	type RetainmentStatsData,
+	type RetainmentWindow,
+	RetainmentWindowToggle,
 } from 'ui-app/RetainmentStats'
 
 interface ValidatorCardProps {
@@ -23,7 +25,9 @@ interface ValidatorCardProps {
 	identity: ReactNode
 	isActivityPreloading?: boolean
 	isRetainmentPreloading?: boolean
+	onRetainmentWindowChange: (window: RetainmentWindow) => void
 	retainmentStats: RetainmentStatsData
+	retainmentWindow: RetainmentWindow
 	selected?: boolean
 	summary: ReactNode
 	unit: string
@@ -40,7 +44,9 @@ export const ValidatorCard = ({
 	identity,
 	isActivityPreloading = false,
 	isRetainmentPreloading = false,
+	onRetainmentWindowChange,
 	retainmentStats,
+	retainmentWindow,
 	selected = false,
 	summary,
 	unit,
@@ -92,6 +98,14 @@ export const ValidatorCard = ({
 				data={retainmentStats}
 				isPreloading={isRetainmentPreloading}
 				unit={unit}
+				windowToggle={
+					<RetainmentWindowToggle
+						alignEnd
+						disabled={isRetainmentPreloading}
+						onChange={onRetainmentWindowChange}
+						value={retainmentWindow}
+					/>
+				}
 			/>
 		</DetailedCard.Root>
 	)

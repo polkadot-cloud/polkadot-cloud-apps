@@ -14,7 +14,7 @@
 .barLayout[data-row-variant='validator'] {
 	align-items: stretch;
 	grid-template:
-		'identity-title performance-title retainment-title actions' auto
+		'identity-title performance-title retainment-title retainment-title' auto
 		'identity performance retainment actions' minmax(3.8rem, auto) / minmax(
 			10.5rem,
 			0.9fr

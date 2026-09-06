@@ -12,13 +12,17 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import {
+	RetainmentWindowToggle,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
+import {
 	clampRate,
 	formatCompactNumber,
 	getRateColor,
 	planckToUnitBn,
 } from 'utils'
 import { RowActionsMenu } from './RowActionsMenu'
-import { CardSummary } from './styles'
+import { CardSummary, OperatorMetric } from './styles'
 import { ValidatorsButton } from './ValidatorsButton'
 
 interface ItemProps {
@@ -57,7 +61,12 @@ export const Item = ({ format, operator }: ItemProps) => {
 	)
 	const averageSelfStake =
 		validatorCount > 0 ? combinedSelfStake.dividedBy(validatorCount) : undefined
-	const suppliedRetainmentRate = operator.retainment.threeMonths?.retainmentRate
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(operator.retainment)
+	const suppliedRetainmentRate = period?.retainmentRate
 	const retainmentRate =
 		typeof suppliedRetainmentRate === 'number' &&
 		Number.isFinite(suppliedRetainmentRate)
@@ -69,8 +78,8 @@ export const Item = ({ format, operator }: ItemProps) => {
 			: `${retainmentRate.toLocaleString(i18n.resolvedLanguage, {
 					maximumFractionDigits: 1,
 				})}%`
-	const retainmentMonthDate = operator.retainment.threeMonths
-		? new Date(operator.retainment.threeMonths.fromTimestamp * 1000)
+	const retainmentMonthDate = period
+		? new Date(period.fromTimestamp * 1000)
 		: undefined
 	const retainmentMonth = retainmentMonthDate
 		? new Intl.DateTimeFormat(i18n.resolvedLanguage, {
@@ -143,20 +152,26 @@ export const Item = ({ format, operator }: ItemProps) => {
 							/ {retainmentMonth}
 						</ListItem.Month>
 					) : null}
+					<RetainmentWindowToggle
+						alignEnd={format === 'col'}
+						onChange={setRetainmentWindow}
+						value={retainmentWindow}
+					/>
 				</>
 			),
 			value: retainmentRateLabel,
 		},
 	]
 	const metricNodes = metrics.map(({ color, key, label, title, value }) => (
-		<ListItem.Metric
+		<OperatorMetric
+			data-metric={key}
 			key={key}
 			color={color}
 			label={label}
 			valueProps={{ title }}
 		>
 			{value}
-		</ListItem.Metric>
+		</OperatorMetric>
 	))
 
 	if (format === 'row') {

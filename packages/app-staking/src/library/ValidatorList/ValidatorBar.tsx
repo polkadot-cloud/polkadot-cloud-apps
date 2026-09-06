@@ -16,6 +16,8 @@ import { ListItem } from 'ui-app/ListItem'
 import {
 	RetainmentMetric,
 	type RetainmentStatsData,
+	type RetainmentWindow,
+	RetainmentWindowToggle,
 } from 'ui-app/RetainmentStats'
 import { RetainmentHistory } from '../ListItem/Buttons/RetainmentHistory'
 import { Select } from '../ListItem/Buttons/Select'
@@ -35,9 +37,11 @@ interface ValidatorBarProps {
 	isRetainmentPreloading?: boolean
 	isStatusValuePreloading?: boolean
 	onRetainmentHistory?: () => void
+	onRetainmentWindowChange: (window: RetainmentWindow) => void
 	rate?: number
 	retainmentHistoryDisabled?: boolean
 	retainmentStats: RetainmentStatsData
+	retainmentWindow: RetainmentWindow
 	selfStake?: BigNumber
 	selfStakeMax: boolean
 	selected?: boolean
@@ -61,9 +65,11 @@ export const ValidatorBar = ({
 	isRetainmentPreloading,
 	isStatusValuePreloading = false,
 	onRetainmentHistory,
+	onRetainmentWindowChange,
 	rate,
 	retainmentHistoryDisabled = false,
 	retainmentStats,
+	retainmentWindow,
 	selfStake,
 	selfStakeMax,
 	selected = false,
@@ -110,6 +116,12 @@ export const ValidatorBar = ({
 						onClick={onRetainmentHistory}
 					/>
 				)}
+				<RetainmentWindowToggle
+					alignEnd
+					disabled={retainmentPreloading}
+					onChange={onRetainmentWindowChange}
+					value={retainmentWindow}
+				/>
 			</ListItem.RowHeader>
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
