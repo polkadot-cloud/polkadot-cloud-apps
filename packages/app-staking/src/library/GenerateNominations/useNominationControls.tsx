@@ -168,7 +168,7 @@ export const useNominationControls = ({
 	}
 
 	filterHandlers.push({
-		title: t('highPerformanceValidator', { ns: 'app' }),
+		title: t('highActivity', { ns: 'app' }),
 		onClick: () => addNominationByType('High Performance Validator'),
 		icon: faPlus,
 		isDisabled: () =>
