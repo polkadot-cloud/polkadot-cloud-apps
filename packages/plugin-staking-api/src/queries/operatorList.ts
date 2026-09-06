@@ -17,7 +17,8 @@ const QUERY = gql`
     $page: Int
     $pageSize: Int
     $order: OperatorListOrder
-    $retainmentWindow: RetainmentRankWindow
+    $orderWindow: RetainmentRankWindow
+    $retainmentWindows: [RetainmentRankWindow!]
     $filters: OperatorListFilters
   ) {
     operatorList(
@@ -25,7 +26,8 @@ const QUERY = gql`
       page: $page
       pageSize: $pageSize
       order: $order
-      retainmentWindow: $retainmentWindow
+      orderWindow: $orderWindow
+      retainmentWindows: $retainmentWindows
       filters: $filters
     ) {
       operators {

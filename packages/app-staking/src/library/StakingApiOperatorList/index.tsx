@@ -37,7 +37,8 @@ const StakingApiOperatorListInner = () => {
 		() => ({
 			network,
 			order: config.order,
-			retainmentWindow: 'THREE_MONTHS',
+			orderWindow: 'THREE_MONTHS',
+			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			page,
 			pageSize: PAGE_SIZE,
 			filters: { search: config.search || undefined },

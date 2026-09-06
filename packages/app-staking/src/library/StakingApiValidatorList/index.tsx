@@ -66,7 +66,8 @@ export const StakingApiValidatorListInner = ({
 			page,
 			pageSize: PAGE_SIZE,
 			order: config.order as ValidatorListOrder,
-			retainmentWindow: 'THREE_MONTHS',
+			orderWindow: 'THREE_MONTHS',
+			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			filters: {
 				...config.filters,
 				search: config.search || undefined,
