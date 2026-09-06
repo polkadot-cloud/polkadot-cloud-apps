@@ -386,6 +386,8 @@
 		"retainmentThresholdDanger_other": "推薦リストにリテンション基準の50%を下回るバリデーターが{{count}}件あります。",
 		"retainmentThresholdWarning_one": "推薦リストに推奨リテンション基準の{{threshold}}%を下回るバリデーターが{{count}}件あります。",
 		"retainmentThresholdWarning_other": "推薦リストに推奨リテンション基準の{{threshold}}%を下回るバリデーターが{{count}}件あります。",
+		"retainmentWindowOneMonth": "最新の報告月の維持統計です。",
+		"retainmentWindowThreeMonths": "直近3か月の報告期間内で、データがある月の維持統計を合算します。",
 		"revertedToActiveSelection": "ノミネーションがアクティブな選択に戻されました。",
 		"rewardHistory": "報酬履歴",
 		"rewards": "報酬",

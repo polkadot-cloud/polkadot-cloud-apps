@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
+import { useTheme } from 'hooks/useTheme'
 import { useTranslation } from 'react-i18next'
+import { Tooltip } from 'ui-core/base'
 import classes from './index.module.scss'
 import type { RetainmentWindow } from './useRetainmentWindow'
 
@@ -20,6 +22,7 @@ export const RetainmentWindowToggle = ({
 	value,
 }: RetainmentWindowToggleProps) => {
 	const { t } = useTranslation('app')
+	const { themeElementRef } = useTheme()
 
 	return (
 		// biome-ignore lint/a11y/useSemanticElements: The control is also rendered inside inline metric labels and row headers.
@@ -33,17 +36,26 @@ export const RetainmentWindowToggle = ({
 				const label = t('monthRetainment', { count: months })
 
 				return (
-					<button
-						aria-label={label}
-						aria-pressed={value === window}
-						disabled={disabled}
+					<Tooltip
+						container={themeElementRef.current || undefined}
 						key={window}
-						onClick={() => onChange(window)}
-						title={label}
-						type="button"
+						side="top"
+						text={t(
+							window === 'oneMonth'
+								? 'retainmentWindowOneMonth'
+								: 'retainmentWindowThreeMonths',
+						)}
 					>
-						{months}m
-					</button>
+						<button
+							aria-label={label}
+							aria-pressed={value === window}
+							disabled={disabled}
+							onClick={() => onChange(window)}
+							type="button"
+						>
+							{months}m
+						</button>
+					</Tooltip>
 				)
 			})}
 		</span>

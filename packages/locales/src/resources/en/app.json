@@ -386,6 +386,8 @@
 		"retainmentThresholdDanger_other": "You have {{count}} validators below the 50% retainment threshold.",
 		"retainmentThresholdWarning_one": "You have {{count}} validator below the recommended {{threshold}}% retainment threshold.",
 		"retainmentThresholdWarning_other": "You have {{count}} validators below the recommended {{threshold}}% retainment threshold.",
+		"retainmentWindowOneMonth": "Retainment stats for the latest reported month.",
+		"retainmentWindowThreeMonths": "Combines retainment stats from available months in the latest three-month reporting window.",
 		"revertedToActiveSelection": "Nominations have been reverted to your active selection.",
 		"rewardHistory": "Reward History",
 		"rewards": "Rewards",

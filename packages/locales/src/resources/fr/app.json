@@ -386,6 +386,8 @@
 		"retainmentThresholdDanger_other": "Votre liste contient {{count}} validateurs sous le seuil de rétention de 50 %.",
 		"retainmentThresholdWarning_one": "Votre liste contient {{count}} validateur sous le seuil de rétention recommandé de {{threshold}} %.",
 		"retainmentThresholdWarning_other": "Votre liste contient {{count}} validateurs sous le seuil de rétention recommandé de {{threshold}} %.",
+		"retainmentWindowOneMonth": "Statistiques de rétention du dernier mois publié.",
+		"retainmentWindowThreeMonths": "Combine les statistiques de rétention des mois disposant de données dans la dernière période de référence de trois mois.",
 		"revertedToActiveSelection": "Les nominations ont été rétablies à votre sélection active.",
 		"rewardHistory": "Historique des récompenses",
 		"rewards": "Récompenses",

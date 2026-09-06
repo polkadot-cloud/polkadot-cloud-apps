@@ -386,6 +386,8 @@
 		"retainmentThresholdDanger_other": "Você tem {{count}} validadores abaixo do limite de retenção de 50%.",
 		"retainmentThresholdWarning_one": "Você tem {{count}} validador abaixo do limite de retenção recomendado de {{threshold}}%.",
 		"retainmentThresholdWarning_other": "Você tem {{count}} validadores abaixo do limite de retenção recomendado de {{threshold}}%.",
+		"retainmentWindowOneMonth": "Estatísticas de retenção do último mês reportado.",
+		"retainmentWindowThreeMonths": "Combina as estatísticas de retenção dos meses com dados disponíveis no período de reporte mais recente de três meses.",
 		"revertedToActiveSelection": "As nomeações foram revertidas para sua seleção ativa.",
 		"rewardHistory": "Histórico de Recompensas",
 		"rewards": "Recompensas",

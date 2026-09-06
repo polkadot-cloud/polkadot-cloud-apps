@@ -386,6 +386,8 @@
 		"retainmentThresholdDanger_other": "Aday listenizde %50 elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
 		"retainmentThresholdWarning_one": "Aday listenizde önerilen %{{threshold}} elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
 		"retainmentThresholdWarning_other": "Aday listenizde önerilen %{{threshold}} elde tutma eşiğinin altında {{count}} doğrulayıcı var.",
+		"retainmentWindowOneMonth": "En son raporlanan ayın elde tutma istatistikleri.",
+		"retainmentWindowThreeMonths": "Son üç aylık raporlama döneminde verisi bulunan ayların elde tutma istatistiklerini birleştirir.",
 		"revertedToActiveSelection": "Nominasyonlar aktif seçiminize geri alındı.",
 		"rewardHistory": "Ödül Geçmişi",
 		"rewards": "Ödüller",
