@@ -5,12 +5,12 @@ import { useSize } from '@w3ux/hooks'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useDataCapabilities } from 'data-gate/react'
 import { formatDistance, fromUnixTime, getUnixTime } from 'date-fns'
 import { useActivePool } from 'hooks/useActivePool'
 import { useCurrency } from 'hooks/useCurrency'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
@@ -33,7 +33,7 @@ export const Payouts = () => {
 	const { inPool } = useActivePool()
 	const { currency } = useCurrency()
 	const { isBonding } = useStaking()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 
 	const { units } = getStakingChainData(network)
@@ -88,7 +88,7 @@ export const Payouts = () => {
 				/>
 			</CardHeader>
 			<div className="inner" ref={graphInnerRef} style={{ minHeight }}>
-				{!pluginEnabled('staking_api') ? (
+				{!stakingApiEnabled ? (
 					<StatusLabel
 						status="active_service"
 						statusFor="staking_api"
@@ -111,7 +111,7 @@ export const Payouts = () => {
 						transition: 'opacity 0.5s',
 					}}
 				>
-					{staking && pluginEnabled('staking_api') ? (
+					{staking && stakingApiEnabled ? (
 						<ActiveGraph
 							nominating={isBonding}
 							inPool={inPool}

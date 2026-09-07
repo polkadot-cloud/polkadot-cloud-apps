@@ -3,9 +3,9 @@
 
 import { useSize } from '@w3ux/hooks'
 import { getStakingChainData } from 'consts/util'
+import { useDataCapabilities } from 'data-gate/react'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useUi } from 'hooks/useUi'
 import { StatusLabel } from 'library/StatusLabel'
 import { useRef } from 'react'
@@ -21,7 +21,7 @@ export const Performance = ({ bondedPool }: OverviewSectionProps) => {
 	const { t } = useTranslation()
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { units } = getStakingChainData(network)
 	// Ref to the graph container
 	const graphInnerRef = useRef<HTMLDivElement | null>(null)
@@ -37,7 +37,7 @@ export const Performance = ({ bondedPool }: OverviewSectionProps) => {
 				<h3>{t('rewardHistory', { ns: 'app' })}</h3>
 			</Subheading>
 			<GraphInner ref={graphInnerRef} width={width} height={height}>
-				{pluginEnabled('staking_api') && bondedPool ? (
+				{stakingApiEnabled && bondedPool ? (
 					<ActiveGraph
 						network={network}
 						stash={bondedPool.addresses.stash}

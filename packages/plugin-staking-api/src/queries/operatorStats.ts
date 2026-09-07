@@ -9,7 +9,7 @@ import type {
 } from '../types'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const OPERATOR_STATS_QUERY = gql`
   query OperatorStats($network: String!) {
     operatorStats(network: $network) {
       totalOperators
@@ -19,7 +19,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: OperatorStatsData = {
+export const OPERATOR_STATS_DEFAULT: OperatorStatsData = {
 	operatorStats: {
 		totalOperators: 0,
 		activeOperators: 0,
@@ -31,4 +31,9 @@ export const useOperatorStats = (
 	variables: OperatorStatsVariables,
 	options?: { skip?: boolean },
 ): QueryReturn<OperatorStatsData> =>
-	useApiQuery<OperatorStatsData>(QUERY, variables, DEFAULT, options)
+	useApiQuery<OperatorStatsData>(
+		OPERATOR_STATS_QUERY,
+		variables,
+		OPERATOR_STATS_DEFAULT,
+		options,
+	)

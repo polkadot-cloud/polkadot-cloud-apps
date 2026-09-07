@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { ListProvider, useList } from 'contexts/List'
+import { useOperatorList } from 'data-gate/react'
 import { useNetwork } from 'hooks/useNetwork'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
-import { useOperatorList } from 'plugin-staking-api'
 import type { OperatorListVariables } from 'plugin-staking-api/types'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'

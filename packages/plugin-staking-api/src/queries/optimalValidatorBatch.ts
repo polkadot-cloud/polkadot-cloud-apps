@@ -8,7 +8,7 @@ import type {
 } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const OPTIMAL_VALIDATOR_BATCH_QUERY = gql`
 	query FetchOptimalValidatorBatch(
 		$network: String!
 		$active: Boolean = true
@@ -35,6 +35,11 @@ const DEFAULT: OptimalValidatorBatchData = {
 export const fetchOptimalValidatorBatch = (
 	variables: OptimalValidatorBatchVariables,
 ) =>
-	fetchQuery<OptimalValidatorBatchData>(QUERY, variables, DEFAULT, {
-		fetchPolicy: 'no-cache',
-	})
+	fetchQuery<OptimalValidatorBatchData>(
+		OPTIMAL_VALIDATOR_BATCH_QUERY,
+		variables,
+		DEFAULT,
+		{
+			fetchPolicy: 'no-cache',
+		},
+	)

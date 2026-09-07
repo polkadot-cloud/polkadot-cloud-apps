@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { QueryReturn, UnclaimedRewardsData } from '../types'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const UNCLAIMED_REWARDS_QUERY = gql`
   query UnclaimedRewards($network: String!, $who: String!, $fromEra: Int!) {
     unclaimedRewards(network: $network, who: $who, fromEra: $fromEra) {
       total
@@ -22,7 +22,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: UnclaimedRewardsData = {
+export const UNCLAIMED_REWARDS_DEFAULT: UnclaimedRewardsData = {
 	unclaimedRewards: {
 		total: '0',
 		entries: [],
@@ -34,4 +34,8 @@ export const useUnclaimedRewards = (variables: {
 	who: string
 	fromEra: number
 }): QueryReturn<UnclaimedRewardsData> =>
-	useApiQuery<UnclaimedRewardsData>(QUERY, variables, DEFAULT)
+	useApiQuery<UnclaimedRewardsData>(
+		UNCLAIMED_REWARDS_QUERY,
+		variables,
+		UNCLAIMED_REWARDS_DEFAULT,
+	)

@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { EraTotalNominatorsData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const ERA_TOTAL_NOMINATORS_QUERY = gql`
   query EraTotalNominators($network: String!, $era: Int!) {
     eraTotalNominators(network: $network, era: $era) {
       totalNominators
@@ -20,4 +20,8 @@ const DEFAULT: EraTotalNominatorsData = {
 }
 
 export const fetchEraTotalNominators = (network: string, era: number) =>
-	fetchQuery<EraTotalNominatorsData>(QUERY, { network, era }, DEFAULT)
+	fetchQuery<EraTotalNominatorsData>(
+		ERA_TOTAL_NOMINATORS_QUERY,
+		{ network, era },
+		DEFAULT,
+	)

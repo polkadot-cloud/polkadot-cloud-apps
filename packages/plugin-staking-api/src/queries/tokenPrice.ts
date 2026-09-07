@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { TokenPriceData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const TOKEN_PRICE_QUERY = gql`
   query TokenPrice($ticker: String!) {
     tokenPrice(ticker: $ticker) {
       price
@@ -22,7 +22,7 @@ const DEFAULT: TokenPriceData = {
 }
 
 export const fetchTokenPrice = (ticker: string) =>
-	fetchQuery<TokenPriceData>(QUERY, { ticker }, DEFAULT)
+	fetchQuery<TokenPriceData>(TOKEN_PRICE_QUERY, { ticker }, DEFAULT)
 
 export const formatTokenPrice = (
 	maybePrice: number | null,

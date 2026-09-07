@@ -2,23 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { ListProvider, useList } from 'contexts/List'
-import { useErasPerDay } from 'hooks/useErasPerDay'
+import { useDataResource, useValidatorList } from 'data-gate/react'
+import {
+	validatorEraPoints,
+	validatorRewardRates,
+} from 'data-gate/resources/performance'
 import { useNetwork } from 'hooks/useNetwork'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
-import {
-	fetchValidatorAvgRewardRateBatch,
-	fetchValidatorEraPointsBatch,
-	useValidatorList,
-} from 'plugin-staking-api'
 import type {
-	ValidatorEraPoints,
 	ValidatorListOrder,
 	ValidatorListVariables,
 } from 'plugin-staking-api/types'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { ButtonSecondary } from 'ui-buttons'
@@ -43,21 +41,12 @@ export const StakingApiValidatorListInner = ({
 }: StakingApiValidatorListProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { erasPerDay } = useErasPerDay()
 	const { listFormat, setListFormat } = useList()
 	const [page, setPage] = useState(1)
 	const forceCardLayout = useForceCardLayout()
 	const [config, setConfig] = useState<ValidatorListConfig>(
 		DEFAULT_VALIDATOR_LIST_CONFIG,
 	)
-	const [eraPointsByAddress, setEraPointsByAddress] = useState<
-		Map<string, ValidatorEraPoints[]>
-	>(new Map())
-	const [rateByAddress, setRateByAddress] = useState<Map<string, number>>(
-		new Map(),
-	)
-	const [isEraPointsLoading, setIsEraPointsLoading] = useState(false)
-	const [isRateLoading, setIsRateLoading] = useState(false)
 	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
 
 	const variables = useMemo<ValidatorListVariables>(
@@ -83,73 +72,33 @@ export const StakingApiValidatorListInner = ({
 		() => result.validators.map(({ address }) => address),
 		[result.validators],
 	)
-	const detailsKey = useMemo(
-		() =>
-			JSON.stringify({
-				addresses,
-				activityEra: result.activityEra,
-				network,
-			}),
-		[addresses, result.activityEra, network],
-	)
-
-	// The page query resolves first. Only then do the two independent enrichment requests begin.
-	useEffect(() => {
-		setEraPointsByAddress(new Map())
-		setRateByAddress(new Map())
-
-		if (loading || addresses.length === 0 || historyFromEra === null) {
-			setIsEraPointsLoading(false)
-			setIsRateLoading(false)
-			return
-		}
-
-		let cancelled = false
-		setIsEraPointsLoading(true)
-		setIsRateLoading(true)
-
-		void fetchValidatorEraPointsBatch(
-			network,
+	const pointsResult = useDataResource(
+		validatorEraPoints(
 			addresses,
-			historyFromEra,
+			historyFromEra ?? 0,
 			ERA_POINTS_DEPTH,
-		).then(({ validatorEraPointsBatch }) => {
-			if (!cancelled) {
-				setEraPointsByAddress(
-					new Map(
-						validatorEraPointsBatch.map(({ validator, points }) => [
-							validator,
-							points,
-						]),
-					),
-				)
-				setIsEraPointsLoading(false)
-			}
-		})
-
-		void fetchValidatorAvgRewardRateBatch(
-			network,
+			!loading && historyFromEra !== null,
+		),
+	)
+	const ratesResult = useDataResource(
+		validatorRewardRates(
 			addresses,
-			historyFromEra,
-			erasPerDay,
-		).then(({ validatorAvgRewardRateBatch }) => {
-			if (!cancelled) {
-				setRateByAddress(
-					new Map(
-						validatorAvgRewardRateBatch.map(({ validator, rate }) => [
-							validator,
-							rate,
-						]),
-					),
-				)
-				setIsRateLoading(false)
-			}
-		})
-
-		return () => {
-			cancelled = true
-		}
-	}, [detailsKey, loading, erasPerDay])
+			!loading && historyFromEra !== null,
+			historyFromEra ?? undefined,
+		),
+	)
+	const eraPointsByAddress = new Map(
+		(pointsResult.data?.validatorEraPointsBatch ?? []).map(
+			({ validator, points }) => [validator, points],
+		),
+	)
+	const rateByAddress = new Map(
+		(ratesResult.data?.validatorAvgRewardRateBatch ?? []).map(
+			({ validator, rate }) => [validator, rate],
+		),
+	)
+	const isEraPointsLoading = pointsResult.loading
+	const isRateLoading = ratesResult.loading
 
 	const applyConfig = (nextConfig: ValidatorListConfig) => {
 		setConfig(nextConfig)

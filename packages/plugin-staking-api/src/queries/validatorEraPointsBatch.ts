@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { ValidatorEraPointsBatchData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_ERA_POINTS_BATCH_QUERY = gql`
   query ValidatorEraPointsBatch(
     $network: String!
     $validators: [String!]!
@@ -39,7 +39,7 @@ export const fetchValidatorEraPointsBatch = (
 	depth?: number,
 ) =>
 	fetchQuery<ValidatorEraPointsBatchData>(
-		QUERY,
+		VALIDATOR_ERA_POINTS_BATCH_QUERY,
 		{ network, validators, fromEra, depth },
 		DEFAULT,
 	)

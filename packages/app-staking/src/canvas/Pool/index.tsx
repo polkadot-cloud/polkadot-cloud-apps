@@ -4,11 +4,11 @@
 import { useEffectIgnoreInitial } from '@w3ux/hooks'
 import { getNetworkKnownPoolIds } from 'consts/util/pools'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
+import { useDataResource } from 'data-gate/react'
+import { poolCandidates as poolCandidateResource } from 'data-gate/resources/pools'
 import { poolRoleIdentities$ } from 'global-bus'
 import { useInvites } from 'hooks/useInvites'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
-import { fetchPoolCandidates } from 'plugin-staking-api'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool, RoleIdentities } from 'types'
@@ -28,15 +28,17 @@ export const Pool = () => {
 	} = useOverlay().canvas
 	const { network } = useNetwork()
 	const { inviteConfig } = useInvites()
-	const { pluginEnabled } = usePlugins()
 	const { poolsMetaData, bondedPools } = useBondedPools()
 
 	// Store latest pool candidates
-	const [poolCandidates, setPoolCandidates] = useState<number[]>([])
 
 	// Get the provided pool id and performance batch key from options, if available
 	const providedPool = options?.providedPool
 	const providedPoolId = providedPool?.id || null
+	const candidates = useDataResource(
+		poolCandidateResource(import.meta.env.PROD, !providedPoolId),
+	)
+	const poolCandidates = candidates.data?.poolCandidates ?? []
 
 	// Whether performance data is ready
 	const performanceDataReady = !!providedPoolId || poolCandidates.length > 0
@@ -49,23 +51,6 @@ export const Pool = () => {
 		RoleIdentities | undefined
 	>(undefined)
 
-	// Gets pool candidates for joining pool. If Staking API is disabled, fall back to subset of open
-	// pools
-	const getPoolCandidates = async () => {
-		if (pluginEnabled('staking_api')) {
-			const { poolCandidates } = await fetchPoolCandidates(
-				network,
-				import.meta.env.PROD,
-			)
-			return poolCandidates
-		} else {
-			return bondedPools
-				.filter(({ state }) => state === 'Open')
-				.map(({ id }) => Number(id))
-				.sort(() => Math.random() - 0.5)
-		}
-	}
-
 	const shuffledCandidates: BondedPool[] = useMemo(
 		() =>
 			poolCandidates
@@ -75,7 +60,7 @@ export const Pool = () => {
 					),
 				)
 				.filter((entry) => entry !== undefined),
-		[poolCandidates],
+		[candidates.data, bondedPools],
 	)
 
 	const initialSelectedPoolId = useMemo(
@@ -104,34 +89,20 @@ export const Pool = () => {
 	// pool otherwise. Re-fetches when the selected pool count is incremented
 	const bondedPool = useMemo(
 		() => bondedPools.find(({ id }) => Number(id) === Number(selectedPoolId)),
-		[selectedPoolId],
+		[selectedPoolId, bondedPools],
 	)
 
-	// Fetch pool candidates if provided pool is not available
 	useEffect(() => {
-		if (!providedPoolId) {
-			getPoolCandidates().then((candidates) => {
-				setPoolCandidates(candidates)
-				const knownPoolIds = getNetworkKnownPoolIds(network)
-
-				// If known pools exist, select one at random
-				const filteredCandidates = candidates.filter((id) =>
-					knownPoolIds.includes(id),
-				)
-				if (filteredCandidates.length > 0) {
-					setSelectedPoolId(
-						filteredCandidates[
-							(filteredCandidates.length * Math.random()) << 0
-						],
-					)
-					return
-				}
-
-				// Otherwise, select any candidate at random
-				setSelectedPoolId(candidates[(candidates.length * Math.random()) << 0])
-			})
-		}
-	}, [])
+		if (providedPoolId || !candidates.data) return
+		const known = getNetworkKnownPoolIds(network)
+		const preferred = candidates.data.poolCandidates.filter((id) =>
+			known.includes(id),
+		)
+		const choices = preferred.length
+			? preferred
+			: candidates.data.poolCandidates
+		setSelectedPoolId(choices[Math.floor(Math.random() * choices.length)] ?? 0)
+	}, [providedPoolId, network, candidates.data])
 
 	// Subscribe to pool role identities from global-bus
 	useEffectIgnoreInitial(() => {

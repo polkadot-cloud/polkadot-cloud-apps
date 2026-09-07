@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { QueryReturn, ValidatorEraPointsData } from '../types'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_ERA_POINTS_QUERY = gql`
   query ValidatorEraPoints(
     $network: String!
     $validator: String!
@@ -24,7 +24,7 @@ const QUERY = gql`
     }
   }
 `
-const DEFAULT: ValidatorEraPointsData = {
+export const VALIDATOR_ERA_POINTS_DEFAULT: ValidatorEraPointsData = {
 	validatorEraPoints: [],
 }
 
@@ -34,4 +34,8 @@ export const useValidatorEraPoints = (variables: {
 	fromEra: number
 	depth?: number
 }): QueryReturn<ValidatorEraPointsData> =>
-	useApiQuery<ValidatorEraPointsData>(QUERY, variables, DEFAULT)
+	useApiQuery<ValidatorEraPointsData>(
+		VALIDATOR_ERA_POINTS_QUERY,
+		variables,
+		VALIDATOR_ERA_POINTS_DEFAULT,
+	)

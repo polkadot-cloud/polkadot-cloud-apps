@@ -55,7 +55,8 @@
 		"ui-core": "workspace:*",
 		"ui-modals": "workspace:*",
 		"ui-overlay": "workspace:*",
-		"ui-styles": "workspace:*"
+		"ui-styles": "workspace:*",
+		"data-gate": "workspace:*"
 	},
 	"devDependencies": {
 		"@w3ux/types": "^2.4.2",

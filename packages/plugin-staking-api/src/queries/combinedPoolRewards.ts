@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { CombinedPoolRewardsData, QueryReturn } from '../types'
 import { fetchQuery, useApiQuery } from './generic'
 
-const QUERY = gql`
+export const COMBINED_POOL_REWARDS_QUERY = gql`
   query CombinedPoolRewards(
     $network: String!
     $who: String!
@@ -31,7 +31,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: CombinedPoolRewardsData = {
+export const COMBINED_POOL_REWARDS_DEFAULT: CombinedPoolRewardsData = {
 	combinedPoolRewards: {
 		entries: [],
 		nextCursor: null,
@@ -48,7 +48,12 @@ export const useCombinedPoolRewards = (
 	},
 	options?: { skip?: boolean },
 ): QueryReturn<CombinedPoolRewardsData> =>
-	useApiQuery<CombinedPoolRewardsData>(QUERY, variables, DEFAULT, options)
+	useApiQuery<CombinedPoolRewardsData>(
+		COMBINED_POOL_REWARDS_QUERY,
+		variables,
+		COMBINED_POOL_REWARDS_DEFAULT,
+		options,
+	)
 
 export const fetchCombinedPoolRewards = (
 	network: string,
@@ -57,7 +62,7 @@ export const fetchCombinedPoolRewards = (
 	after?: string,
 ) =>
 	fetchQuery<CombinedPoolRewardsData>(
-		QUERY,
+		COMBINED_POOL_REWARDS_QUERY,
 		{ network, who, first, after },
-		DEFAULT,
+		COMBINED_POOL_REWARDS_DEFAULT,
 	)

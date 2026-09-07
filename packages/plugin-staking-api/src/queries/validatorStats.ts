@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { ValidatorStats, ValidatorStatsData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_STATS_QUERY = gql`
   query ValidatorStats($network: String!) {
     averageRewardRate(chain: $network) {
       rate
@@ -27,9 +27,14 @@ const DEFAULT: ValidatorStats = {
 export const fetchValidatorStats = async (
 	network: string,
 ): Promise<ValidatorStatsData> => {
-	const result = await fetchQuery<ValidatorStats>(QUERY, { network }, DEFAULT, {
-		fetchPolicy: 'network-only',
-	})
+	const result = await fetchQuery<ValidatorStats>(
+		VALIDATOR_STATS_QUERY,
+		{ network },
+		DEFAULT,
+		{
+			fetchPolicy: 'network-only',
+		},
+	)
 
 	return {
 		validatorStats: {

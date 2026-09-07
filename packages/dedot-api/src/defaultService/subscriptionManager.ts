@@ -16,7 +16,6 @@ import type { DedotClient } from 'dedot'
 import {
 	activePoolIds$,
 	bonded$,
-	fetchAndSetPoolWarnings,
 	getSyncing,
 	removeStablecoinBalances,
 	removeSyncing,
@@ -255,7 +254,6 @@ export class SubscriptionManager<
 
 				// Fetch pool warnings for added addresses
 				if (addedAddresses.length > 0) {
-					fetchAndSetPoolWarnings(this.ids[0], addedAddresses)
 				}
 			})
 

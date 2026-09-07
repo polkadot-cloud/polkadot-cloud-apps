@@ -1,18 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { StakingApiRetainmentSupportedNetworks } from 'consts/plugins'
-import type {
-	NetworkId,
-	PageCategory,
-	PageCategoryItems,
-	PagesConfigItems,
-} from 'types'
+import type { PageCategory, PageCategoryItems, PagesConfigItems } from 'types'
 
 // Get pages config, and remove operators page if it is not supported
 export const getPagesConfig = (
 	pagesConfig: PagesConfigItems,
-	network: NetworkId,
+	operatorsSupported: boolean,
 	category: number | null,
 	advancedMode: boolean,
 	stakingState?: {
@@ -20,9 +14,6 @@ export const getPagesConfig = (
 		isBonding: boolean
 	},
 ) => {
-	const operatorsSupported =
-		StakingApiRetainmentSupportedNetworks.includes(network)
-
 	// Filter out operators page if not supported on network
 	let filteredPagesConfig = !operatorsSupported
 		? pagesConfig.filter((page) => page.key !== 'operators')

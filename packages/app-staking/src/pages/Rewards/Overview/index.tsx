@@ -12,11 +12,11 @@ import { planckToUnit } from '@w3ux/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useDataCapabilities, usePayeeNominatorRewards } from 'data-gate/react'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useRewardOverviewStats } from 'hooks/useStats'
 import { useTokenPrices } from 'hooks/useTokenPrices'
 import { AnnouncementsList } from 'library/Announcements/AnnouncementsList'
@@ -24,7 +24,6 @@ import { Balance } from 'library/Balance'
 import type { NominatorListItemData } from 'library/NominatorList/types'
 import { Stats } from 'library/Stats'
 import { formatFiatCurrency } from 'locales/util'
-import { usePayeeNominatorRewards } from 'plugin-staking-api'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
@@ -39,7 +38,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const { t } = useTranslation(['pages', 'app'])
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { activeAddress } = useActiveAccount()
 	const { price: tokenPrice } = useTokenPrices()
 	const { getAverageRewardRate } = useAverageRewardRate()
@@ -48,7 +47,6 @@ export const Overview = (props: PayoutHistoryProps) => {
 
 	const { unit, units } = getStakingChainData(network)
 	const Token = getChainIcons(network).token
-	const stakingApiEnabled = pluginEnabled('staking_api')
 
 	const { data: incomingProjectionData } = usePayeeNominatorRewards({
 		network,
@@ -144,7 +142,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 		<>
 			<Stat.Row>
 				<Stats items={[averageRewardRate, rewardCalculator]} />
-				{pluginEnabled('staking_api') && <RewardTrend />}
+				{stakingApiEnabled && <RewardTrend />}
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>

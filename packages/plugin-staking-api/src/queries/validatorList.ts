@@ -10,7 +10,7 @@ import type {
 import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_LIST_QUERY = gql`
   ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorList(
     $network: String!
@@ -58,7 +58,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: ValidatorListData = {
+export const VALIDATOR_LIST_DEFAULT: ValidatorListData = {
 	validatorList: {
 		validators: [],
 		page: 1,
@@ -75,4 +75,9 @@ export const useValidatorList = (
 	variables: ValidatorListVariables,
 	options?: { skip?: boolean },
 ): QueryReturn<ValidatorListData> =>
-	useApiQuery<ValidatorListData>(QUERY, variables, DEFAULT, options)
+	useApiQuery<ValidatorListData>(
+		VALIDATOR_LIST_QUERY,
+		variables,
+		VALIDATOR_LIST_DEFAULT,
+		options,
+	)

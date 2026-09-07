@@ -3,14 +3,14 @@
 
 import { MaxNominations } from 'consts'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useDataResource } from 'data-gate/react'
+import { searchValidators } from 'data-gate/resources/candidates'
 import { emitNotification } from 'global-bus'
-import { useNetwork } from 'hooks/useNetwork'
 import { SearchInput } from 'library/List/SearchInput'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { FooterWrapper, PromptListItem } from 'library/Prompt/Wrappers'
 import { StyledSlider } from 'library/StyledSlider'
-import { fetchSearchValidators } from 'plugin-staking-api'
-import { type FormEvent, useCallback, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonPrimary } from 'ui-buttons'
@@ -23,7 +23,6 @@ import type { PromptProps } from '../types'
 export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 	const { t } = useTranslation()
 	const { closePrompt } = usePrompt()
-	const { network } = useNetwork()
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Number of validators to show by default when no search term is entered
@@ -35,57 +34,20 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 	// Store the search input value
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
-	// Store search results from the staking API
-	const [searchResults, setSearchResults] = useState<Validator[]>([])
-
-	// Store loading state for search
-	const [isSearching, setIsSearching] = useState<boolean>(false)
-
-	// Store commission filter value (default 10%)
 	const [maxCommission, setMaxCommission] = useState<number>(10)
-
-	// Debounced search function
-	const debouncedSearch = useCallback(
-		async (term: string) => {
-			if (term.length === 0) {
-				setSearchResults([])
-				setIsSearching(false)
-				return
-			}
-
-			setIsSearching(true)
-			try {
-				const result = await fetchSearchValidators(network, term)
-				if (result.searchValidators.validators.length > 0) {
-					const transformedValidators: Validator[] =
-						result.searchValidators.validators.map((validator) => ({
-							address: validator.address,
-							prefs: {
-								commission: validator.commission,
-								blocked: validator.blocked,
-							},
-						}))
-					setSearchResults(transformedValidators)
-				} else {
-					setSearchResults([])
-				}
-			} catch {
-				setSearchResults([])
-			} finally {
-				setIsSearching(false)
-			}
-		},
-		[network],
-	)
-
-	// Debounce effect
+	const [debouncedTerm, setDebouncedTerm] = useState('')
+	const search = useDataResource(searchValidators(debouncedTerm))
+	const searchResults: Validator[] = (
+		search.data?.searchValidators.validators ?? []
+	).map(({ address, commission, blocked }) => ({
+		address,
+		prefs: { commission, blocked },
+	}))
+	const isSearching = search.loading || debouncedTerm !== searchTerm
 	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			debouncedSearch(searchTerm)
-		}, 300)
-
-		return () => clearTimeout(timeoutId)
-	}, [searchTerm, debouncedSearch])
+		const timeout = setTimeout(() => setDebouncedTerm(searchTerm), 300)
+		return () => clearTimeout(timeout)
+	}, [searchTerm])
 
 	const addToSelected = (item: Validator) => {
 		setSelected((prev) =>

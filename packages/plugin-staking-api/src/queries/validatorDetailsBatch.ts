@@ -6,7 +6,7 @@ import type { ValidatorDetailsBatchData } from '../types'
 import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_DETAILS_BATCH_QUERY = gql`
   ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorDetailsBatch(
     $network: String!
@@ -61,7 +61,7 @@ export const fetchValidatorDetailsBatch = (
 	eraPointsDepth?: number,
 ) =>
 	fetchQuery<ValidatorDetailsBatchData>(
-		QUERY,
+		VALIDATOR_DETAILS_BATCH_QUERY,
 		{
 			network,
 			validators,

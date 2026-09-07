@@ -41,7 +41,7 @@ export const Nominations = ({
 	const { getNominations } = useBalances()
 	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
-	const { syncing } = useSyncing(['era-stakers'])
+	const { syncing } = useSyncing(['staking-ledgers'])
 	const { isReadOnlyAccount } = useImportedAccounts()
 
 	// Determine if pool or nominator.

@@ -20,7 +20,7 @@ export const Stake = () => {
 	const { nominatorBalance } = useAccountBalances(activeAddress)
 	const { syncing, accountSynced } = useSyncing([
 		'initialization',
-		'era-stakers',
+		'staking-ledgers',
 	])
 
 	let isPreloading = true

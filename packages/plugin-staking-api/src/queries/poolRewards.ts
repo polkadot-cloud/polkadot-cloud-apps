@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { PoolRewardData, QueryReturn } from '../types'
 import { fetchQuery, useApiQuery } from './generic'
 
-const QUERY = gql`
+export const POOL_REWARDS_QUERY = gql`
   query PoolRewards(
     $network: String!
     $who: String!
@@ -28,7 +28,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: PoolRewardData = {
+export const POOL_REWARDS_DEFAULT: PoolRewardData = {
 	poolRewards: [],
 }
 
@@ -39,7 +39,11 @@ export const usePoolRewards = (variables: {
 	limit?: number
 	offset?: number
 }): QueryReturn<PoolRewardData> =>
-	useApiQuery<PoolRewardData>(QUERY, variables, DEFAULT)
+	useApiQuery<PoolRewardData>(
+		POOL_REWARDS_QUERY,
+		variables,
+		POOL_REWARDS_DEFAULT,
+	)
 
 export const fetchPoolRewards = (
 	network: string,
@@ -49,7 +53,7 @@ export const fetchPoolRewards = (
 	offset?: number,
 ) =>
 	fetchQuery<PoolRewardData>(
-		QUERY,
+		POOL_REWARDS_QUERY,
 		{ network, who, from, limit, offset },
-		DEFAULT,
+		POOL_REWARDS_DEFAULT,
 	)

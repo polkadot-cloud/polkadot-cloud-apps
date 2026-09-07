@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { PoolMembersData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const POOL_MEMBERS_QUERY = gql`
 	query PoolMembers($network: String!, $poolId: Int!, $limit: Int, $offset: Int) {
 		poolMembers(network: $network, poolId: $poolId, limit: $limit, offset: $offset) {
 			poolId
@@ -23,7 +23,7 @@ const QUERY = gql`
 	}
 `
 
-const DEFAULT: PoolMembersData = {
+export const POOL_MEMBERS_DEFAULT: PoolMembersData = {
 	poolMembers: {
 		poolId: 0,
 		totalMembers: 0,
@@ -38,7 +38,7 @@ export const fetchPoolMembers = (
 	offset?: number,
 ) =>
 	fetchQuery<PoolMembersData>(
-		QUERY,
+		POOL_MEMBERS_QUERY,
 		{ network, poolId, limit, offset },
-		DEFAULT,
+		POOL_MEMBERS_DEFAULT,
 	)

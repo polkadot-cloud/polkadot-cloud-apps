@@ -35,7 +35,8 @@ export const DetailedItem = ({
 	bondFor,
 	displayFor,
 	format,
-	nominationStatus = 'waiting',
+	nominationStatus,
+	nominationStatusLoading,
 	eraPoints,
 	rate,
 	retainment,
@@ -56,6 +57,7 @@ export const DetailedItem = ({
 		bondFor,
 		nominator,
 		status: nominationStatus,
+		statusLoading: nominationStatusLoading,
 	})
 	const {
 		period,

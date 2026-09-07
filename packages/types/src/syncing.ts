@@ -3,8 +3,6 @@
 
 export type SyncId =
 	| 'initialization'
-	| 'era-stakers'
-	| 'bonded-pools'
 	| 'active-pools'
 	| 'active-proxy'
 	| 'staking-ledgers'

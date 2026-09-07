@@ -1,16 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
-import type { Sync } from '@w3ux/types'
+import { createSafeContext } from '@w3ux/hooks'
 import { setStateWithRef, shuffle } from '@w3ux/utils'
+import { useDataResource } from 'data-gate/react'
+import { poolDirectory, poolNominations } from 'data-gate/resources/pools'
 import { hexToString } from 'dedot/utils'
-import { removeSyncing } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useCreatePoolAccounts } from 'hooks/useCreatePoolAccounts'
-import { useNetwork } from 'hooks/useNetwork'
 import type { ReactNode } from 'react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
 	AnyJson,
 	BondedPool,
@@ -25,13 +24,7 @@ export const [BondedPoolsContext, useBondedPools] =
 	createSafeContext<BondedPoolsContextState>()
 
 export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
-	const { network } = useNetwork()
-	const {
-		isReady,
-		activeEra,
-		serviceApi,
-		poolsConfig: { lastPoolId },
-	} = useApi()
+	const { activeEra, serviceApi } = useApi()
 	const createPoolAccounts = useCreatePoolAccounts()
 
 	// Store bonded pools. Used implicitly in callbacks, ref is also defined
@@ -39,7 +32,10 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 	const bondedPoolsRef = useRef(bondedPools)
 
 	// Track the sync status of `bondedPools`
-	const bondedPoolsSynced = useRef<Sync>('unsynced')
+	const directory = useDataResource(poolDirectory())
+	const nominations = useDataResource(
+		poolNominations(bondedPools.map(({ addresses }) => addresses.stash)),
+	)
 
 	// Store bonded pools metadata
 	const [poolsMetaData, setPoolsMetadata] = useState<Record<number, string>>({})
@@ -52,49 +48,30 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 	// Store pool list active tab. Defaults to `Active` tab
 	const [poolListActiveTab, setPoolListActiveTab] = useState<PoolTab>('Active')
 
-	// Fetch all bonded pool entries and their metadata
-	const fetchBondedPools = async () => {
-		if (bondedPoolsSynced.current !== 'unsynced') {
-			return
-		}
-		bondedPoolsSynced.current = 'syncing'
-
-		// Get and format bonded pool entries
-		const ids: number[] = []
-		const idsMulti: number[] = []
-		const bondedPoolEntries = await serviceApi.query.bondedPoolEntries()
-
-		const exposures = shuffle(
-			bondedPoolEntries.map(([id, pool]) => {
-				ids.push(id)
-				idsMulti.push(id)
-				return getPoolWithAddresses(id, pool)
-			}),
+	useEffect(() => {
+		const entries = directory.data?.entries ?? []
+		setStateWithRef(
+			shuffle(entries.map(([id, pool]) => getPoolWithAddresses(id, pool))),
+			setBondedPools,
+			bondedPoolsRef,
 		)
-
-		setStateWithRef(exposures, setBondedPools, bondedPoolsRef)
-
-		// Fetch pools metadata
-		const metadataQuery = await serviceApi.query.poolMetadataMulti(idsMulti)
 		setPoolsMetadata(
-			Object.fromEntries(metadataQuery.map((m, i) => [ids[i], hexToString(m)])),
+			Object.fromEntries(
+				(directory.data?.metadata ?? []).map((value, index) => [
+					entries[index][0],
+					hexToString(value),
+				]),
+			),
 		)
-
-		bondedPoolsSynced.current = 'synced'
-		removeSyncing('bonded-pools')
-	}
-
-	// Fetches pool nominations and updates state
-	const fetchPoolsNominations = async () => {
-		const ids: number[] = []
-		const stashes = bondedPools.map(({ addresses, id }) => {
-			ids.push(id)
-			return addresses.stash
-		})
-		const nominationsMulti = await serviceApi.query.nominatorsMulti(stashes)
-		const formatted = formatPoolsNominations(nominationsMulti, ids)
-		setPoolsNominations(formatted)
-	}
+	}, [directory.data])
+	useEffect(() => {
+		setPoolsNominations(
+			formatPoolsNominations(
+				nominations.data ?? [],
+				bondedPools.map(({ id }) => id),
+			),
+		)
+	}, [nominations.data])
 
 	// Format raw pool nominations data
 	const formatPoolsNominations = (
@@ -171,6 +148,7 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 				suppressed: false,
 			}
 		}
+		newPoolsNominations[id] = record
 		setPoolsNominations(newPoolsNominations)
 	}
 
@@ -230,28 +208,6 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 
 		setStateWithRef(newBondedPools, setBondedPools, bondedPoolsRef)
 	}
-
-	// Clear existing state for network refresh
-	useEffectIgnoreInitial(() => {
-		bondedPoolsSynced.current = 'unsynced'
-		setStateWithRef([], setBondedPools, bondedPoolsRef)
-		setPoolsMetadata({})
-		setPoolsNominations({})
-	}, [network])
-
-	// Initial setup for fetching bonded pools
-	useEffectIgnoreInitial(() => {
-		if (isReady && lastPoolId) {
-			fetchBondedPools()
-		}
-	}, [bondedPools, isReady, lastPoolId])
-
-	// Re-fetch bonded pools nominations when active era changes or when `bondedPools` update
-	useEffectIgnoreInitial(() => {
-		if (activeEra.index > 0 && bondedPools.length) {
-			fetchPoolsNominations()
-		}
-	}, [activeEra.index, bondedPools.length])
 
 	// Wrapped pool search filter that uses the provider's metadata. Memoised so consumers that depend
 	// on this function do not re-render when unrelated state in this provider changes

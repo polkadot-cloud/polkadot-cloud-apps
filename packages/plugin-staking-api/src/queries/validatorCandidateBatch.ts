@@ -11,7 +11,7 @@ import { fetchQuery } from './generic'
 
 const QUERY_CACHE = new Map<number, DocumentNode>()
 
-const getQuery = (batchSize: number) => {
+export const getValidatorCandidateQuery = (batchSize: number) => {
 	const cached = QUERY_CACHE.get(batchSize)
 	if (cached) {
 		return cached
@@ -65,7 +65,7 @@ export const fetchValidatorCandidateBatch = async ({
 		strategies.map((strategy, index) => [`strategy${index}`, strategy]),
 	)
 	const data = await fetchQuery<Record<string, ValidatorCandidate | null>>(
-		getQuery(strategies.length),
+		getValidatorCandidateQuery(strategies.length),
 		{ ...variables, ...strategyVariables },
 		{},
 		{ fetchPolicy: 'no-cache' },

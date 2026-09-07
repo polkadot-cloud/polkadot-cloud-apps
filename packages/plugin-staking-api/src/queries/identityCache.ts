@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { IdentityCacheData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const IDENTITY_CACHE_QUERY = gql`
   query IdentityCache($network: String!, $addresses: [String!]!) {
     identityCache(network: $network, addresses: $addresses) {
       address
@@ -32,7 +32,7 @@ export const fetchIdentityCache = async (
 	const results = await Promise.all(
 		batches.map((batch) =>
 			fetchQuery<IdentityCacheData>(
-				QUERY,
+				IDENTITY_CACHE_QUERY,
 				{ network, addresses: batch },
 				EMPTY,
 			),

@@ -8,7 +8,6 @@ import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
 import { Tooltip } from 'library/Tooltip'
 import { NominateStandalone } from 'pages/Nominate/Standalone'
-import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
@@ -60,37 +59,35 @@ const RouterInner = () => {
 
 	return (
 		<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
-			<ApolloProvider client={client}>
-				<NotificationPrompts />
-				<Page.Body id="portal-root">
-					<HelpTooltip />
-					<Overlays />
-					<Menu />
-					<Tooltip />
-					<Prompt />
-					<Page.Main ref={mainInterfaceRef}>
-						<HelmetProvider>
-							<Headers />
-							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
-								<Routes>
-									<Route
-										index
-										element={
-											<PageWithTitle
-												page={NominationManagerPage}
-												appTitle={NominateDappName}
-											/>
-										}
-									/>
-									<Route path="*" element={<Navigate to="/" replace />} />
-								</Routes>
-							</ErrorBoundary>
-							<MainFooter showDocs={false} />
-						</HelmetProvider>
-					</Page.Main>
-				</Page.Body>
-				<Offline />
-			</ApolloProvider>
+			<NotificationPrompts />
+			<Page.Body id="portal-root">
+				<HelpTooltip />
+				<Overlays />
+				<Menu />
+				<Tooltip />
+				<Prompt />
+				<Page.Main ref={mainInterfaceRef}>
+					<HelmetProvider>
+						<Headers />
+						<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+							<Routes>
+								<Route
+									index
+									element={
+										<PageWithTitle
+											page={NominationManagerPage}
+											appTitle={NominateDappName}
+										/>
+									}
+								/>
+								<Route path="*" element={<Navigate to="/" replace />} />
+							</Routes>
+						</ErrorBoundary>
+						<MainFooter showDocs={false} />
+					</HelmetProvider>
+				</Page.Main>
+			</Page.Body>
+			<Offline />
 		</ErrorBoundary>
 	)
 }

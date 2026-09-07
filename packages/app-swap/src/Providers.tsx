@@ -4,6 +4,7 @@
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
 import { SwapDappName } from 'consts'
+import { AppDataGate } from 'hooks/useDataGate'
 import { Tooltip } from 'radix-ui'
 import { HashRouter } from 'react-router-dom'
 import { OverlayProvider } from 'ui-overlay'
@@ -19,12 +20,14 @@ export const Providers = () => (
 		ss58={ss58}
 		adaptors={[LedgerAdaptor]}
 	>
-		<HashRouter basename="/">
-			<OverlayProvider>
-				<Tooltip.Provider>
-					<ThemedRouter />
-				</Tooltip.Provider>
-			</OverlayProvider>
-		</HashRouter>
+		<AppDataGate modules={['prices']}>
+			<HashRouter basename="/">
+				<OverlayProvider>
+					<Tooltip.Provider>
+						<ThemedRouter />
+					</Tooltip.Provider>
+				</OverlayProvider>
+			</HashRouter>
+		</AppDataGate>
 	</ConnectProvider>
 )

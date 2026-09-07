@@ -5,8 +5,11 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useDataCapabilities, useDataGate } from 'data-gate/react'
+import { emitNotification } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 
 interface UseNominationSyncProps {
@@ -18,10 +21,13 @@ export const useNominationSync = ({
 	fetchNominations,
 	updateNominations,
 }: UseNominationSyncProps) => {
+	const { t } = useTranslation('app')
 	const {
 		eraStakers: { stakers },
 	} = useEraStakers()
 	const { isReady } = useApi()
+	const gate = useDataGate()
+	const { candidates } = useDataCapabilities()
 	const {
 		defaultNominations,
 		fetching,
@@ -33,10 +39,7 @@ export const useNominationSync = ({
 		setNominations,
 	} = useManageNominations()
 	const { activeAddress } = useActiveAccount()
-	const { getValidators, validatorsFetched } = useValidators()
-
-	// Track whether a fetch is already in progress to avoid duplicate requests.
-	const fetchingRef = useRef(false)
+	const { validatorsFetched } = useValidators()
 
 	// Reset only when the account or initial nominations change, not during edits.
 	useEffect(() => {
@@ -49,29 +52,39 @@ export const useNominationSync = ({
 		}
 	}, [activeAddress, defaultNominations])
 
-	// Generate only after validator and era data are ready, with one request in flight.
+	const dataReady =
+		(candidates && method === 'Optimal Selection') ||
+		(isReady && validatorsFetched === 'synced' && stakers.length > 0)
+	const callbacks = useRef({ fetchNominations, updateNominations })
+	callbacks.current = { fetchNominations, updateNominations }
 	useEffect(() => {
-		const dataReady =
-			isReady &&
-			Boolean(getValidators()?.length) &&
-			Boolean(stakers.length) &&
-			validatorsFetched === 'synced'
-
-		if (!fetching || !method || !dataReady || fetchingRef.current) {
-			return
-		}
-
-		fetchingRef.current = true
-		const generateNominations = async () => {
+		if (!fetching || !method || !dataReady) return
+		let cancelled = false
+		const generate = async () => {
 			try {
-				updateNominations(await fetchNominations(method))
+				const result = await callbacks.current.fetchNominations(method)
+				if (!cancelled) callbacks.current.updateNominations(result)
+			} catch {
+				if (!cancelled)
+					emitNotification({
+						title: t('dataUnavailable', {
+							ns: 'app',
+							defaultValue: 'Unable to load data.',
+						}),
+						subtitle: t('tryAgain', {
+							ns: 'app',
+							defaultValue: 'Please try again.',
+						}),
+					})
 			} finally {
-				setFetching(false)
-				fetchingRef.current = false
+				if (!cancelled) setFetching(false)
 			}
 		}
-		generateNominations()
-	})
+		void generate()
+		return () => {
+			cancelled = true
+		}
+	}, [fetching, method, dataReady, activeAddress, gate])
 
 	// Release the temporary list height whenever the viewport changes.
 	useEffect(() => {

@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { AllRewardsData, QueryReturn } from '../types'
 import { fetchQuery, useApiQuery } from './generic'
 
-const QUERY = gql`
+export const REWARDS_QUERY = gql`
   query AllRewards(
     $network: String!
     $who: String!
@@ -30,7 +30,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: AllRewardsData = {
+export const REWARDS_DEFAULT: AllRewardsData = {
 	allRewards: [],
 }
 
@@ -41,7 +41,7 @@ export const useRewards = (variables: {
 	limit?: number
 	offset?: number
 }): QueryReturn<AllRewardsData> =>
-	useApiQuery<AllRewardsData>(QUERY, variables, DEFAULT)
+	useApiQuery<AllRewardsData>(REWARDS_QUERY, variables, REWARDS_DEFAULT)
 
 export const fetchRewards = (
 	network: string,
@@ -51,7 +51,7 @@ export const fetchRewards = (
 	offset?: number,
 ) =>
 	fetchQuery<AllRewardsData>(
-		QUERY,
+		REWARDS_QUERY,
 		{ network, who, fromEra, limit, offset },
-		DEFAULT,
+		REWARDS_DEFAULT,
 	)

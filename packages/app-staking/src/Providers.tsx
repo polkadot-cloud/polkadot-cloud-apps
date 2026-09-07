@@ -14,6 +14,7 @@ import { MigrateProvider } from 'contexts/Migrate'
 import { NominatorSetupsProvider } from 'contexts/NominatorSetups'
 import { BondedPoolsProvider } from 'contexts/Pools/BondedPools'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { AppDataGate } from 'hooks/useDataGate'
 import { useNetwork } from 'hooks/useNetwork'
 import { Tooltip } from 'radix-ui'
 import { OverlayProvider } from 'ui-overlay'
@@ -33,6 +34,19 @@ export const Providers = () => {
 					dappName: StakingDappName,
 					ss58,
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
+				},
+			],
+			[
+				AppDataGate,
+				{
+					modules: [
+						'staking',
+						'validators',
+						'pools',
+						'identities',
+						'prices',
+						'rewards',
+					],
 				},
 			],
 			EraStakersProvider,

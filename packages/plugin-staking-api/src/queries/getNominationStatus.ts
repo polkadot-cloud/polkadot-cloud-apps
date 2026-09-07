@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { GetNominationStatusData, StakerNominationStatus } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const GET_NOMINATION_STATUS_QUERY = gql`
   query GetNominationStatus($network: String!, $who: String!) {
     getNominationStatus(network: $network, who: $who)
   }
@@ -20,7 +20,7 @@ export const fetchGetNominationStatus = async (
 	who: string,
 ): Promise<StakerNominationStatus> => {
 	const data = await fetchQuery<GetNominationStatusData>(
-		QUERY,
+		GET_NOMINATION_STATUS_QUERY,
 		{ network, who },
 		DEFAULT_DATA,
 	)

@@ -13,7 +13,7 @@ export const useNominatorBondActions = (): UseNominatorBondActions => {
 	const { activeAddress } = useActiveAccount()
 	const { syncing, accountSynced } = useSyncing([
 		'initialization',
-		'era-stakers',
+		'staking-ledgers',
 	])
 	const { isReadOnlyAccount } = useImportedAccounts()
 

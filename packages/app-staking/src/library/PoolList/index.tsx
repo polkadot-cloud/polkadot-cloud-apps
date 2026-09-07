@@ -12,6 +12,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePoolFilters } from 'hooks/usePoolFilters'
 import { useSyncing } from 'hooks/useSyncing'
 import { useThemeValues } from 'hooks/useThemeValues'
+import { DataError } from 'library/DataError'
 import { Tabs } from 'library/Filter/Tabs'
 import {
 	FilterHeaderWrapper,
@@ -40,15 +41,19 @@ export const PoolList = ({
 	const { activeEra } = useApi()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { applyFilter } = usePoolFilters()
 	const { getThemeValue } = useThemeValues()
 	const { listFormat, setListFormat } = useList()
-	const { poolSearchFilter, poolsNominations } = useBondedPools()
+	const { poolSearchFilter } = useBondedPools()
 	const { getFilters, getSearchTerm, setSearchTerm } = useFilters()
 
 	const includes = getFilters('include', 'pools')
 	const excludes = getFilters('exclude', 'pools')
 	const searchTerm = getSearchTerm('pools')
+	const { applyFilter, statusData, statusLoading, statusError, refreshStatus } =
+		usePoolFilters(
+			pools ?? [],
+			!!includes?.includes('active') || !!excludes?.includes('active'),
+		)
 
 	// The current page of pool list.
 	const [page, setPage] = useState<number>(1)
@@ -120,13 +125,17 @@ export const PoolList = ({
 		}
 	}, [JSON.stringify(pools?.map((pool) => pool.id))])
 
-	// List ui changes / validator changes trigger re-render of list.
+	// Reapply filters when their own data arrives, including an empty successful result.
 	useEffect(() => {
-		// only filter when pool nominations have been synced.
-		if (!syncing && Object.keys(poolsNominations).length) {
-			handlePoolsFilterUpdate()
-		}
-	}, [syncing, includes, excludes, Object.keys(poolsNominations).length])
+		handlePoolsFilterUpdate()
+	}, [
+		includes,
+		excludes,
+		statusData,
+		poolsDefault,
+		searchTerm,
+		poolSearchFilter,
+	])
 
 	// Scroll to top of the window on every filter.
 	useEffect(() => {
@@ -140,6 +149,13 @@ export const PoolList = ({
 
 	return (
 		<ListWrapper>
+			{statusError && (
+				<DataError
+					retry={() => {
+						void refreshStatus()
+					}}
+				/>
+			)}
 			<List $flexBasisLarge={allowMoreCols ? '33.33%' : '50%'}>
 				{allowSearch && poolsDefault.length > 0 && (
 					<SearchInput
@@ -207,7 +223,9 @@ export const PoolList = ({
 					<Pagination page={page} total={totalPages} setter={setPage} />
 				)}
 				<MotionContainer>
-					{poolsToDisplay.length ? (
+					{statusLoading ? (
+						<ListStatusHeader>{t('syncingPoolList')}...</ListStatusHeader>
+					) : poolsToDisplay.length ? (
 						poolsToDisplay.map((pool) => (
 							<MotionItem
 								className={`item ${listFormat === 'row' ? 'row' : 'col'}`}

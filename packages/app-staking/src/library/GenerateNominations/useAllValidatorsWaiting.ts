@@ -2,15 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useEraStakers } from 'contexts/EraStakers'
-import { useSyncing } from 'hooks/useSyncing'
 import { useMemo } from 'react'
 import type { Validator } from 'types'
 
 export const useAllValidatorsWaiting = (nominations: Validator[]) => {
 	const {
 		eraStakers: { stakers },
+		syncing,
 	} = useEraStakers()
-	const { syncing } = useSyncing(['era-stakers'])
 
 	return useMemo(() => {
 		if (syncing || !stakers.length || !nominations.length) {

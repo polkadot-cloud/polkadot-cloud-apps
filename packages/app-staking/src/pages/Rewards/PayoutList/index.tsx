@@ -4,16 +4,17 @@
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { MaxPayoutDays } from 'consts'
 import { isPoolShareEnabled } from 'consts/util'
+import { useDataCapabilities, useDataGate } from 'data-gate/react'
+import {
+	combinedPoolRewards,
+	poolRewardHistory,
+	rewardHistory,
+} from 'data-gate/resources/rewards'
 import { getUnixTime, startOfToday, subDays } from 'date-fns'
 import { useActivePool } from 'hooks/useActivePool'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
-import {
-	fetchCombinedPoolRewards,
-	fetchPoolRewards,
-	fetchRewards,
-} from 'plugin-staking-api'
+import { DataError } from 'library/DataError'
 import type { RewardResults } from 'plugin-staking-api/types'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,14 +38,15 @@ interface PayoutPage {
 // on demand from the staking API and cached so that navigating between previously-loaded pages does
 // not re-fetch.
 export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
+	const gate = useDataGate()
 	const { t } = useTranslation('pages')
 	const { activeEra } = useApi()
 	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { activePool } = useActivePool()
 	const { activeAddress } = useActiveAccount()
 
-	const apiEnabled = pluginEnabled('staking_api')
+	const apiEnabled = stakingApiEnabled
 	const poolShareEnabled = isPoolShareEnabled(network, activePool?.id)
 
 	// Current page (1-indexed)
@@ -54,25 +56,28 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 	const [pages, setPages] = useState<Record<number, PayoutPage>>({})
 
 	// Whether the current page request is in flight
+	const [error, setError] = useState(false)
+	const [retry, setRetry] = useState(0)
 	const [loading, setLoading] = useState<boolean>(false)
 
 	// Reset cache + page state when the underlying source changes
 	useEffect(() => {
 		setPage(1)
 		setPages({})
-	}, [network, activeAddress, kind, apiEnabled, poolShareEnabled])
+	}, [gate, activeAddress, kind, apiEnabled, poolShareEnabled])
 
 	const fetchPage = useCallback(
 		async (targetPage: number): Promise<PayoutPage> => {
 			const offset = (targetPage - 1) * REWARD_ITEMS_PER_PAGE
 			let payouts: RewardResults
 			if (kind === 'nominator') {
-				const { allRewards } = await fetchRewards(
-					network,
-					activeAddress || '',
-					Math.max(activeEra.index - 1, 0),
-					REWARD_ITEMS_PER_PAGE,
-					offset,
+				const { allRewards } = await gate.request(
+					rewardHistory({
+						who: activeAddress || '',
+						fromEra: Math.max(activeEra.index - 1, 0),
+						limit: REWARD_ITEMS_PER_PAGE,
+						offset: offset,
+					}),
 				)
 				payouts = allRewards as RewardResults
 			} else {
@@ -81,11 +86,12 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 						targetPage > 1 ? pages[targetPage - 1]?.nextCursor : undefined
 					const {
 						combinedPoolRewards: { entries, hasNextPage, nextCursor },
-					} = await fetchCombinedPoolRewards(
-						network,
-						activeAddress || '',
-						REWARD_ITEMS_PER_PAGE,
-						after ?? undefined,
+					} = await gate.request(
+						combinedPoolRewards({
+							who: activeAddress || '',
+							first: REWARD_ITEMS_PER_PAGE,
+							after: after ?? undefined,
+						}),
 					)
 					payouts = entries as RewardResults
 					return {
@@ -96,12 +102,13 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 				}
 
 				const fromDate = subDays(startOfToday(), MaxPayoutDays)
-				const { poolRewards } = await fetchPoolRewards(
-					network,
-					activeAddress || '',
-					getUnixTime(fromDate),
-					REWARD_ITEMS_PER_PAGE,
-					offset,
+				const { poolRewards } = await gate.request(
+					poolRewardHistory({
+						who: activeAddress || '',
+						from: getUnixTime(fromDate),
+						limit: REWARD_ITEMS_PER_PAGE,
+						offset: offset,
+					}),
 				)
 				payouts = poolRewards as RewardResults
 			}
@@ -113,7 +120,7 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 					targetPage < MAX_REWARD_PAGES,
 			}
 		},
-		[network, activeAddress, activeEra.index, kind, pages, poolShareEnabled],
+		[gate, activeAddress, activeEra.index, kind, pages, poolShareEnabled],
 	)
 
 	// Fetch the current page on demand (cache miss)
@@ -126,12 +133,16 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 		}
 		let cancelled = false
 		setLoading(true)
+		setError(false)
 		fetchPage(page)
 			.then((data) => {
 				if (cancelled) {
 					return
 				}
 				setPages((prev) => ({ ...prev, [page]: data }))
+			})
+			.catch(() => {
+				if (!cancelled) setError(true)
 			})
 			.finally(() => {
 				if (!cancelled) {
@@ -141,7 +152,15 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 		return () => {
 			cancelled = true
 		}
-	}, [page, pages, apiEnabled, activeAddress, activeEra.index, fetchPage])
+	}, [
+		page,
+		pages,
+		apiEnabled,
+		activeAddress,
+		activeEra.index,
+		fetchPage,
+		retry,
+	])
 
 	const pageData = pages[page]
 	const payouts = pageData?.payouts ?? []
@@ -158,6 +177,7 @@ export const PaginatedPayouts = ({ kind }: PaginatedPayoutsProps) => {
 	return (
 		<Page.Row>
 			<CardWrapper>
+				{error && <DataError retry={() => setRetry((value) => value + 1)} />}
 				<Inner
 					title={title}
 					payouts={payouts}

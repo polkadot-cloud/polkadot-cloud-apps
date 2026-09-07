@@ -6,7 +6,7 @@ import type { QueryReturn, ValidatorRetainmentData } from '../types'
 import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_RETAINMENT_QUERY = gql`
   ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorRetainment($network: String!, $validator: String!) {
     validatorRetainment(network: $network, validator: $validator) {
@@ -16,7 +16,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: ValidatorRetainmentData = {
+export const VALIDATOR_RETAINMENT_DEFAULT: ValidatorRetainmentData = {
 	validatorRetainment: null,
 }
 
@@ -24,4 +24,9 @@ export const useValidatorRetainment = (
 	variables: { network: string; validator: string },
 	options?: { skip?: boolean },
 ): QueryReturn<ValidatorRetainmentData> =>
-	useApiQuery<ValidatorRetainmentData>(QUERY, variables, DEFAULT, options)
+	useApiQuery<ValidatorRetainmentData>(
+		VALIDATOR_RETAINMENT_QUERY,
+		variables,
+		VALIDATOR_RETAINMENT_DEFAULT,
+		options,
+	)

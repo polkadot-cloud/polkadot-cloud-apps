@@ -3,9 +3,9 @@
 
 import { planckToUnit } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
+import { useRewards } from 'data-gate/react'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useThemeValues } from 'hooks/useThemeValues'
-import { useRewards } from 'plugin-staking-api'
 import { useTranslation } from 'react-i18next'
 import type { NetworkId } from 'types'
 import { PayoutLine } from 'ui-graphs'

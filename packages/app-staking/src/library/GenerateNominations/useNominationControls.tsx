@@ -5,6 +5,7 @@ import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
 import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
+import { emitNotification } from 'global-bus'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNominationHealth } from 'hooks/useNominationHealth'
@@ -72,6 +73,17 @@ export const useNominationControls = ({
 
 		try {
 			updateNominations(await addNomination(nominations, type))
+		} catch {
+			emitNotification({
+				title: t('dataUnavailable', {
+					ns: 'app',
+					defaultValue: 'Unable to load data.',
+				}),
+				subtitle: t('tryAgain', {
+					ns: 'app',
+					defaultValue: 'Please try again.',
+				}),
+			})
 		} finally {
 			if (trackCandidateRequest) {
 				setCandidateFetching(false)
@@ -101,6 +113,17 @@ export const useNominationControls = ({
 			if (candidate && !alreadyNominated) {
 				updateNominations([...nominations, candidate])
 			}
+		} catch {
+			emitNotification({
+				title: t('dataUnavailable', {
+					ns: 'app',
+					defaultValue: 'Unable to load data.',
+				}),
+				subtitle: t('tryAgain', {
+					ns: 'app',
+					defaultValue: 'Please try again.',
+				}),
+			})
 		} finally {
 			setCandidateFetching(false)
 		}

@@ -2,69 +2,30 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { capitalizeFirstLetter } from '@w3ux/utils'
-import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useEffect, useState } from 'react'
+import { useNominationStatuses } from 'data-gate/react'
+import { aggregateNominationStatus } from 'data-gate/resources/nominations'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
-import { getPoolNominationStatusCode } from 'utils'
 
 export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { eraStakers, getNominationsStatusFromEraStakers } = useEraStakers()
-
-	const { addresses } = pool
-
-	// get pool targets from nominations meta batch
-	const nominations = poolsNominations[pool.id]
-	const targets = nominations?.targets || []
-
-	// store nomination status in state
-	const [nominationsStatus, setNominationsStatus] =
-		useState<Record<string, string>>()
-
-	// update pool nomination status as nominations metadata becomes available.
-	// we cannot add effect dependencies here as this needs to trigger
-	// as soon as the component displays. (upon tab change).
-	const handleNominationsStatus = () => {
-		setNominationsStatus(
-			getNominationsStatusFromEraStakers(addresses.stash, targets),
-		)
-	}
-
-	// recalculate nominations status as app syncs
-	useEffect(() => {
-		if (
-			targets.length &&
-			nominationsStatus === null &&
-			eraStakers.stakers.length
-		) {
-			handleNominationsStatus()
-		}
-	})
-
-	// metadata has changed, which means pool items may have been added.
-	// recalculate nominations status
-	useEffect(() => {
-		handleNominationsStatus()
-	}, [pool, eraStakers.stakers.length, Object.keys(poolsNominations).length])
-
-	// determine nominations status and display
-	const nominationStatus = getPoolNominationStatusCode(
-		nominationsStatus || null,
-	)
-
+	const targets = poolsNominations[pool.id]?.targets ?? []
+	const result = useNominationStatuses(pool.addresses.stash, targets)
+	const status = result.data ? aggregateNominationStatus(result.data) : null
 	return (
-		<BasicItem.PoolStatus status={nominationStatus}>
+		<BasicItem.PoolStatus status={status}>
 			<h4>
 				<span>
-					{nominationStatus === null || !eraStakers.stakers.length
+					{result.loading
 						? `${t('syncing')}...`
-						: targets.length
-							? capitalizeFirstLetter(t(`${nominationStatus}`) ?? '')
-							: t('notNominating')}
+						: result.error
+							? '—'
+							: targets.length
+								? capitalizeFirstLetter(t(status ?? 'waiting'))
+								: t('notNominating')}
 				</span>
 			</h4>
 		</BasicItem.PoolStatus>

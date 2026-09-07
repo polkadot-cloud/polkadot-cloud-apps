@@ -6,7 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useBondedPools } from 'contexts/Pools/BondedPools'
+import { useNominationStatuses } from 'data-gate/react'
+import { aggregateNominationStatus } from 'data-gate/resources/nominations'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useEffect, useState } from 'react'
@@ -22,12 +24,16 @@ export const Stats = ({
 }) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { isNominatorActive } = useEraStakers()
+	const { poolsNominations } = useBondedPools()
+	const statuses = useNominationStatuses(
+		bondedPool.addresses.stash,
+		poolsNominations[bondedPool.id]?.targets ?? [],
+	)
 	const { isReady, serviceApi } = useApi()
 
 	const Token = getChainIcons(network).token
 	const { unit, units } = getStakingChainData(network)
-	const isActive = isNominatorActive(bondedPool.addresses.stash)
+	const isActive = aggregateNominationStatus(statuses.data ?? {}) === 'active'
 
 	// Store the pool balance
 	const [poolBalance, setPoolBalance] = useState<BigNumber | null>(null)

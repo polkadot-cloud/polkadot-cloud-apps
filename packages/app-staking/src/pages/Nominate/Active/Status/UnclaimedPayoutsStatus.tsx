@@ -5,10 +5,10 @@ import { faCircleDown } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { minDecimalPlaces, planckToUnit } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
+import { useDataCapabilities } from 'data-gate/react'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePayouts } from 'hooks/usePayouts'
-import { usePlugins } from 'hooks/usePlugins'
 import { Stat } from 'library/Stat'
 import { useTranslation } from 'react-i18next'
 import { useOverlay } from 'ui-overlay'
@@ -21,7 +21,7 @@ export const UnclaimedPayoutsStatus = () => {
 	const {
 		unclaimedRewards: { total },
 	} = usePayouts()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { activeAddress } = useActiveAccount()
 	const { isReadOnlyAccount } = useImportedAccounts()
 	const { units } = getStakingChainData(network)
@@ -38,9 +38,7 @@ export const UnclaimedPayoutsStatus = () => {
 			}}
 			dimmed={total === '0'}
 			buttons={
-				total !== '0' &&
-				pluginEnabled('staking_api') &&
-				!isReadOnlyAccount(activeAddress)
+				total !== '0' && stakingApiEnabled && !isReadOnlyAccount(activeAddress)
 					? [
 							{
 								title: t('claim', { ns: 'modals' }),

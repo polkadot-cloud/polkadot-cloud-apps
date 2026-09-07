@@ -4,11 +4,10 @@
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { PageCategories, PagesConfig } from 'config'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useDataCapabilities } from 'data-gate/react'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
-import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
@@ -33,8 +32,8 @@ export const Main = ({
 	const { t } = useTranslation('app')
 	const navigate = useNavigate()
 	const { syncing } = useSyncing()
-	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
+	const { retainment: operatorsSupported } = useDataCapabilities()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { pathname } = useLocation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
@@ -55,7 +54,7 @@ export const Main = ({
 
 	const pages: PageItem[] = getPagesConfig(
 		PagesConfig,
-		network,
+		operatorsSupported,
 		activeCategory,
 		advancedMode,
 		{ inPool, isBonding },
@@ -158,9 +157,7 @@ export const Main = ({
 												active={
 													hash === pathname || (index === 0 && pageChanged)
 												}
-												disabled={
-													key === 'operators' && !pluginEnabled('staking_api')
-												}
+												disabled={key === 'operators' && !stakingApiEnabled}
 												faIcon={faIcon}
 												bullet={bullet}
 												minimised={menuMinimised}

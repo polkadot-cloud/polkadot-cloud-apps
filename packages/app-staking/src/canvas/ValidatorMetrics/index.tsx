@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js'
 import { ValidatorGeo } from 'canvas/ValidatorMetrics/ValidatorGeo'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
+import { useDataCapabilities } from 'data-gate/react'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -40,6 +41,7 @@ export const ValidatorMetrics = () => {
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { getActiveValidator } = useEraStakers()
 	const { unit, units } = getStakingChainData(network)
 
@@ -129,7 +131,7 @@ export const ValidatorMetrics = () => {
 					width={graphSizeEraPoints.width}
 					height={graphSizeEraPoints.height}
 				>
-					{pluginEnabled('staking_api') ? (
+					{stakingApiEnabled ? (
 						<ActiveGraphEraPoints
 							network={network}
 							validator={validator}
@@ -160,7 +162,7 @@ export const ValidatorMetrics = () => {
 					width={graphSizeRewards.width}
 					height={graphSizeRewards.height}
 				>
-					{pluginEnabled('staking_api') ? (
+					{stakingApiEnabled ? (
 						<ActiveGraphRewards
 							network={network}
 							validator={validator}

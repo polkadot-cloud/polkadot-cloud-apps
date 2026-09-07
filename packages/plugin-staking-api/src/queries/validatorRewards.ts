@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { QueryReturn, ValidatorRewardsData } from '../types'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_REWARDS_QUERY = gql`
   query ValidatorRewards(
     $network: String!
     $validator: String!
@@ -25,7 +25,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: ValidatorRewardsData = {
+export const VALIDATOR_REWARDS_DEFAULT: ValidatorRewardsData = {
 	validatorRewards: [],
 }
 
@@ -35,4 +35,8 @@ export const useValidatorRewards = (variables: {
 	fromEra: number
 	depth?: number
 }): QueryReturn<ValidatorRewardsData> =>
-	useApiQuery<ValidatorRewardsData>(QUERY, variables, DEFAULT)
+	useApiQuery<ValidatorRewardsData>(
+		VALIDATOR_REWARDS_QUERY,
+		variables,
+		VALIDATOR_REWARDS_DEFAULT,
+	)

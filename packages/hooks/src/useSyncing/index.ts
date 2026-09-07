@@ -12,17 +12,14 @@ export const useSyncing = (config: SyncConfig = '*') => {
 
 	// Retrieve the ids from the config provided
 	const ids = getIdsFromSyncConfig(config)
+	const idsKey = JSON.stringify(ids)
 
 	// Keep a record of active sync statuses
 	const [syncIds, setSyncIds] = useState<SyncId[]>(getSyncIds(ids))
 
 	// Helper to determine if active pools have synced
 	const getPoolStatusSynced = (): boolean => {
-		const POOL_SYNC_IDS: SyncId[] = [
-			'initialization',
-			'bonded-pools',
-			'active-pools',
-		]
+		const POOL_SYNC_IDS: SyncId[] = ['initialization', 'active-pools']
 		const activeSyncIds = syncIds.filter((syncId) =>
 			POOL_SYNC_IDS.includes(syncId),
 		)
@@ -67,7 +64,7 @@ export const useSyncing = (config: SyncConfig = '*') => {
 			setSyncIds(getSyncIds(ids)),
 		)
 		return () => subSyncStatus.unsubscribe()
-	}, [])
+	}, [idsKey])
 	return {
 		syncing: syncIds.length > 0,
 		accountSynced,

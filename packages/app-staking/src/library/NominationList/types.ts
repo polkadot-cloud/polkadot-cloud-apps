@@ -34,6 +34,7 @@ export interface ItemProps {
 	format: ListFormat
 	toggleFavorites?: boolean
 	nominationStatus?: NominationStatus
+	nominationStatusLoading?: boolean
 	eraPoints: ValidatorEraPoints[]
 	isPreloading?: boolean
 	rate?: number

@@ -1,11 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useOperatorStats } from 'data-gate/react'
 import { useNetwork } from 'hooks/useNetwork'
 import { StakingApiOperatorList } from 'library/StakingApiOperatorList'
 import { Stats } from 'library/Stats'
 import { type StatConfig, StatType } from 'library/Stats/types'
-import { useOperatorStats } from 'plugin-staking-api'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'

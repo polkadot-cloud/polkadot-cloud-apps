@@ -131,7 +131,7 @@ export const ValidatorListInner = ({
 	const { rates } = useValidatorRewardRateBatch(
 		listItems.map(({ address }) => address),
 		pageKey,
-		retainmentStatsEnabled ? 'none' : 'node',
+		retainmentStatsEnabled ? 'none' : 'auto',
 	)
 
 	const setControls = (nextConfig: ValidatorListConfig) => {

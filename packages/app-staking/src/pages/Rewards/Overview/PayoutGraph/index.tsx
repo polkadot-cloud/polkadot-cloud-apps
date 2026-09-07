@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useSize } from '@w3ux/hooks'
+import { useDataCapabilities } from 'data-gate/react'
 import { useActivePool } from 'hooks/useActivePool'
 import { useDateFormat } from 'hooks/useDateFormat'
-import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
@@ -30,7 +30,7 @@ export const AccountPayouts = ({
 	const { containerRefs } = useUi()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 
 	const payoutsFromDate = getPayoutsFromDate(payoutsList, dateFormat)
@@ -45,10 +45,10 @@ export const AccountPayouts = ({
 	const { width, height, minHeight } = formatSize(size, 280)
 
 	useEffect(() => {
-		if (!pluginEnabled('staking_api')) {
+		if (!stakingApiEnabled) {
 			setPayoutsList([])
 		}
-	}, [pluginEnabled('staking_api')])
+	}, [stakingApiEnabled])
 
 	return (
 		<>
@@ -68,7 +68,7 @@ export const AccountPayouts = ({
 				</h2>
 			</CardHeader>
 			<div ref={ref} className="inner" style={{ minHeight }}>
-				{!pluginEnabled('staking_api') ? (
+				{!stakingApiEnabled ? (
 					<StatusLabel
 						status="active_service"
 						statusFor="staking_api"
@@ -93,7 +93,7 @@ export const AccountPayouts = ({
 						transition: 'opacity 0.5s',
 					}}
 				>
-					{staking && pluginEnabled('staking_api') ? (
+					{staking && stakingApiEnabled ? (
 						<ActiveGraph
 							nominating={isBonding}
 							inPool={inPool}

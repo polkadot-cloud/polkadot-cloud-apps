@@ -68,6 +68,9 @@ importers:
 
   packages/app-nominate:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@fortawesome/free-solid-svg-icons':
         specifier: ^7.3.1
         version: 7.3.1
@@ -177,6 +180,9 @@ importers:
 
   packages/app-staking:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@fortawesome/fontawesome-svg-core':
         specifier: ^7.3.1
         version: 7.3.1
@@ -376,6 +382,9 @@ importers:
 
   packages/app-swap:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@fortawesome/fontawesome-svg-core':
         specifier: ^7.2.0
         version: 7.3.1
@@ -530,6 +539,9 @@ importers:
 
   packages/app-validators:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@fortawesome/free-solid-svg-icons':
         specifier: ^7.3.1
         version: 7.3.1
@@ -675,6 +687,31 @@ importers:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.4.0)(esbuild@0.28.2)(sass@1.103.1)(tsx@4.23.12)
 
+  packages/data-gate:
+    dependencies:
+      '@apollo/client':
+        specifier: ^4.2.12
+        version: 4.2.12(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
+      plugin-staking-api:
+        specifier: workspace:*
+        version: link:../plugin-staking-api
+      utils:
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
+      types:
+        specifier: workspace:*
+        version: link:../types
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@26.4.0)(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.2)(sass@1.103.1)(tsx@4.23.12))
+
   packages/dedot-api:
     dependencies:
       '@dedot/chaintypes':
@@ -760,6 +797,9 @@ importers:
 
   packages/hooks:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@polkadot-cloud/connect':
         specifier: ^1.1.0
         version: 1.1.0(dedot@1.3.0(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
@@ -1249,6 +1289,9 @@ importers:
 
   packages/ui-modals:
     dependencies:
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       '@fortawesome/fontawesome-svg-core':
         specifier: ^7.3.1
         version: 7.3.1

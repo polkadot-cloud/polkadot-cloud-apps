@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { ValidatorAvgRewardRateBatchData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const VALIDATOR_AVG_REWARD_RATE_BATCH_QUERY = gql`
   query ValidatorAvgRewardRateBatch(
     $chain: String!
     $validators: [String!]!
@@ -34,7 +34,7 @@ export const fetchValidatorAvgRewardRateBatch = (
 	depth?: number,
 ) =>
 	fetchQuery<ValidatorAvgRewardRateBatchData>(
-		QUERY,
+		VALIDATOR_AVG_REWARD_RATE_BATCH_QUERY,
 		{ chain, validators, fromEra, depth },
 		DEFAULT,
 	)

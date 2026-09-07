@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { SearchValidatorsData } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const SEARCH_VALIDATORS_QUERY = gql`
   query SearchValidators($network: String!, $searchTerm: String!) {
     searchValidators(network: $network, searchTerm: $searchTerm) {
       total
@@ -28,4 +28,8 @@ const DEFAULT: SearchValidatorsData = {
 }
 
 export const fetchSearchValidators = (network: string, searchTerm: string) =>
-	fetchQuery<SearchValidatorsData>(QUERY, { network, searchTerm }, DEFAULT)
+	fetchQuery<SearchValidatorsData>(
+		SEARCH_VALIDATORS_QUERY,
+		{ network, searchTerm },
+		DEFAULT,
+	)

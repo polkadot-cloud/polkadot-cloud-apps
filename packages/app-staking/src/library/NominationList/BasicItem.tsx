@@ -22,6 +22,7 @@ const Basic = ({
 	bondFor,
 	displayFor,
 	nominationStatus,
+	nominationStatusLoading,
 }: ItemProps) => {
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs } = validator
@@ -67,6 +68,7 @@ const Basic = ({
 						bondFor={bondFor}
 						nominator={nominator}
 						status={nominationStatus}
+						statusLoading={nominationStatusLoading}
 						noMargin
 					/>
 				</div>

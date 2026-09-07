@@ -3,8 +3,8 @@
 
 import { Polkicon } from '@w3ux/react-polkicon'
 import { ellipsisFn } from '@w3ux/utils'
+import { useValidatorRetainment } from 'data-gate/react'
 import { useNetwork } from 'hooks/useNetwork'
-import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentWindow } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'

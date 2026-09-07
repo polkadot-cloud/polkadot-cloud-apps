@@ -8,7 +8,7 @@ import type {
 } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const SANITIZE_NOMINEE_CANDIDATES_QUERY = gql`
   query SanitizeNomineeCandidates(
     $network: String!
     $candidates: [ValidatorInput!]!
@@ -28,7 +28,7 @@ export const fetchSanitizeNomineeCandidates = (
 	candidates: SanitizeNomineeCandidate[],
 ) =>
 	fetchQuery<SanitizeNomineeCandidatesData>(
-		QUERY,
+		SANITIZE_NOMINEE_CANDIDATES_QUERY,
 		{ network, candidates },
 		{ sanitizeNomineeCandidates: candidates },
 	)

@@ -40,7 +40,8 @@
 		"ui-buttons": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-overlay": "workspace:*",
-		"utils": "workspace:*"
+		"utils": "workspace:*",
+		"data-gate": "workspace:*"
 	},
 	"devDependencies": {
 		"@w3ux/types": "^2.4.2",

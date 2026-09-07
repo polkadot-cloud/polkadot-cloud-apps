@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { NominatorRewardTrendData, RewardTrend } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const NOMINATOR_REWARD_TREND_QUERY = gql`
   query NominatorRewardTrend($network: String!, $who: String!, $eras: Int!) {
     nominatorRewardTrend(network: $network, who: $who, eras: $eras) {
       reward
@@ -18,7 +18,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: RewardTrend = {
+export const NOMINATOR_REWARD_TREND_DEFAULT: RewardTrend = {
 	reward: '0',
 	previous: '0',
 	change: {
@@ -33,9 +33,9 @@ export const fetchNominatorRewardTrend = async (
 	eras: number,
 ): Promise<RewardTrend> => {
 	const data = await fetchQuery<NominatorRewardTrendData>(
-		QUERY,
+		NOMINATOR_REWARD_TREND_QUERY,
 		{ network, who, eras },
-		{ nominatorRewardTrend: DEFAULT },
+		{ nominatorRewardTrend: NOMINATOR_REWARD_TREND_DEFAULT },
 	)
-	return data.nominatorRewardTrend || DEFAULT
+	return data.nominatorRewardTrend || NOMINATOR_REWARD_TREND_DEFAULT
 }

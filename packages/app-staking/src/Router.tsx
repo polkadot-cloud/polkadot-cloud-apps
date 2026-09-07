@@ -7,6 +7,7 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useEffectIgnoreInitial } from '@w3ux/hooks'
 import { extractUrlValue } from '@w3ux/utils'
 import { PagesConfig } from 'config'
+import { useDataCapabilities } from 'data-gate/react'
 import { getUnixTime } from 'date-fns'
 import {
 	onConversionEvent,
@@ -17,7 +18,6 @@ import { useAccountFromUrl } from 'hooks/useAccountFromUrl'
 import { useAccountSwitchNavigation } from 'hooks/useAccountSwitchNavigation'
 import { useActivePool } from 'hooks/useActivePool'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { usePoolFromUrl } from 'hooks/usePoolFromUrl'
 import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
@@ -26,7 +26,6 @@ import { HelpTooltip } from 'library/HelpTooltip'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
-import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
@@ -52,9 +51,10 @@ import { getPagesConfig } from 'utils'
 const RouterInner = () => {
 	const navigate = useNavigate()
 	const { network } = useNetwork()
+	const { retainment: operatorsSupported } = useDataCapabilities()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { pathname, search } = useLocation()
 	const { activeAddress } = useActiveAccount()
 	const { setContainerRefs, advancedMode } = useUi()
@@ -115,46 +115,50 @@ const RouterInner = () => {
 
 	return (
 		<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
-			<ApolloProvider client={client}>
-				{pluginEnabled('staking_api') && activeAddress && (
-					<StakingApi who={activeAddress} network={network} />
-				)}
-				<NotificationPrompts />
-				<Page.Body id="portal-root">
-					<HelpTooltip />
-					<Overlays />
-					<Menu />
-					<Tooltip />
-					<Prompt />
-					<SideMenu enableAdvancedMenu={true} />
-					<Page.Main ref={mainInterfaceRef}>
-						<HelmetProvider>
-							<Headers NodesLeft={{ sync: Sync }} />
-							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
-								<Routes>
-									{getPagesConfig(PagesConfig, network, null, advancedMode, {
+			{stakingApiEnabled && activeAddress && (
+				<StakingApi who={activeAddress} network={network} />
+			)}
+			<NotificationPrompts />
+			<Page.Body id="portal-root">
+				<HelpTooltip />
+				<Overlays />
+				<Menu />
+				<Tooltip />
+				<Prompt />
+				<SideMenu enableAdvancedMenu={true} />
+				<Page.Main ref={mainInterfaceRef}>
+					<HelmetProvider>
+						<Headers NodesLeft={{ sync: Sync }} />
+						<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+							<Routes>
+								{getPagesConfig(
+									PagesConfig,
+									operatorsSupported,
+									null,
+									advancedMode,
+									{
 										inPool,
 										isBonding,
-									}).map((page) => (
-										<Route
-											key={`main_interface_page_${page.key}`}
-											path={page.hash}
-											element={<PageWithTitle page={page} />}
-										/>
-									))}
+									},
+								).map((page) => (
 									<Route
-										key="main_interface_navigate"
-										path="*"
-										element={<Navigate to="/overview" />}
+										key={`main_interface_page_${page.key}`}
+										path={page.hash}
+										element={<PageWithTitle page={page} />}
 									/>
-								</Routes>
-							</ErrorBoundary>
-							<MainFooter />
-						</HelmetProvider>
-					</Page.Main>
-				</Page.Body>
-				<Offline />
-			</ApolloProvider>
+								))}
+								<Route
+									key="main_interface_navigate"
+									path="*"
+									element={<Navigate to="/overview" />}
+								/>
+							</Routes>
+						</ErrorBoundary>
+						<MainFooter />
+					</HelmetProvider>
+				</Page.Main>
+			</Page.Body>
+			<Offline />
 		</ErrorBoundary>
 	)
 }

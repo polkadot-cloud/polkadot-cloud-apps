@@ -10,7 +10,7 @@ import type {
 import { OPERATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
-const QUERY = gql`
+export const OPERATOR_LIST_QUERY = gql`
   ${OPERATOR_RETAINMENT_FIELDS}
   query OperatorList(
     $network: String!
@@ -52,7 +52,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: OperatorListData = {
+export const OPERATOR_LIST_DEFAULT: OperatorListData = {
 	operatorList: {
 		operators: [],
 		page: 1,
@@ -67,4 +67,9 @@ export const useOperatorList = (
 	variables: OperatorListVariables,
 	options?: { skip?: boolean },
 ): QueryReturn<OperatorListData> =>
-	useApiQuery<OperatorListData>(QUERY, variables, DEFAULT, options)
+	useApiQuery<OperatorListData>(
+		OPERATOR_LIST_QUERY,
+		variables,
+		OPERATOR_LIST_DEFAULT,
+		options,
+	)

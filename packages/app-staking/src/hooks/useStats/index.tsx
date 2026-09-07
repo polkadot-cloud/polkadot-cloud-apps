@@ -7,6 +7,7 @@ import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
+import { useActiveNominatorCount } from 'data-gate/react'
 import { useApi } from 'hooks/useApi'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
@@ -199,7 +200,7 @@ export const useNominatorStats = (): StatPick<
 	const { unit, units } = getStakingChainData(network)
 	const { counterForNominators, minNominatorBond, minimumActiveStake } =
 		useStakingMetrics()
-	const { activeNominatorsCount } = useEraStakers()
+	const { data: activeNominatorsCount = 0 } = useActiveNominatorCount()
 	const minToEarnRewards = BigNumber.max(minNominatorBond, minimumActiveStake)
 
 	return {

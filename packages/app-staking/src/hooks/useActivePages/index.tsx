@@ -4,8 +4,8 @@
 import { localStorageOrDefault } from '@w3ux/utils'
 import { PageCategories, PagesConfig } from 'config'
 import { ActivePagesKey } from 'consts'
+import { useDataCapabilities } from 'data-gate/react'
 import { useActivePool } from 'hooks/useActivePool'
-import { useNetwork } from 'hooks/useNetwork'
 import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import type { NavSection } from 'types'
@@ -54,7 +54,7 @@ export const setActivePage = (category: NavSection, route: string): void => {
 
 // Get active page for a specific category
 export const useActivePageForCategory = () => {
-	const { network } = useNetwork()
+	const { retainment: operatorsSupported } = useDataCapabilities()
 	const { advancedMode } = useUi()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
@@ -67,7 +67,7 @@ export const useActivePageForCategory = () => {
 		if (categoryConfig) {
 			const pagesConfig = getPagesConfig(
 				PagesConfig,
-				network,
+				operatorsSupported,
 				categoryConfig.id,
 				advancedMode,
 				{

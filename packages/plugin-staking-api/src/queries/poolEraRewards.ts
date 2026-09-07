@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { PoolEraRewardsData, QueryReturn } from '../types'
 import { fetchQuery, useApiQuery } from './generic'
 
-const QUERY = gql`
+export const POOL_ERA_REWARDS_QUERY = gql`
   query PoolEraRewards($network: String!, $who: String!, $fromEra: Int!) {
     poolEraRewards(network: $network, who: $who, fromEra: $fromEra) {
       who
@@ -16,7 +16,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: PoolEraRewardsData = {
+export const POOL_ERA_REWARDS_DEFAULT: PoolEraRewardsData = {
 	poolEraRewards: [],
 }
 
@@ -31,12 +31,22 @@ export const usePoolEraRewards = ({
 	fromEra: number
 	skip?: boolean
 }): QueryReturn<PoolEraRewardsData> =>
-	useApiQuery<PoolEraRewardsData>(QUERY, { network, who, fromEra }, DEFAULT, {
-		skip,
-	})
+	useApiQuery<PoolEraRewardsData>(
+		POOL_ERA_REWARDS_QUERY,
+		{ network, who, fromEra },
+		POOL_ERA_REWARDS_DEFAULT,
+		{
+			skip,
+		},
+	)
 
 export const fetchPoolEraRewards = (
 	network: string,
 	who: string,
 	fromEra: number,
-) => fetchQuery<PoolEraRewardsData>(QUERY, { network, who, fromEra }, DEFAULT)
+) =>
+	fetchQuery<PoolEraRewardsData>(
+		POOL_ERA_REWARDS_QUERY,
+		{ network, who, fromEra },
+		POOL_ERA_REWARDS_DEFAULT,
+	)

@@ -8,7 +8,7 @@ import type {
 } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const GET_STAKER_WITH_NOMINEES_QUERY = gql`
   query GetStakerWithNominees($network: String!, $era: Int!, $who: String!, $addresses: [String!]!) {
   getNomineesStatus(network: $network, era: $era, who: $who, addresses: $addresses) {
     statuses {
@@ -20,6 +20,15 @@ const QUERY = gql`
     active
   }
 }
+`
+
+// Status-only consumers should not wait for the independent active-staker resolver.
+export const GET_NOMINEES_STATUS_QUERY = gql`
+ query GetNomineesStatus($network: String!, $era: Int!, $who: String!, $addresses: [String!]!) {
+ getNomineesStatus(network: $network, era: $era, who: $who, addresses: $addresses) {
+ statuses { address status }
+ }
+ }
 `
 
 const DEFAULT_DATA: GetActiveStakerWithNomineesData = {
@@ -34,7 +43,7 @@ export const fetchGetStakerWithNominees = async (
 	addresses: string[],
 ): Promise<ActiveStatusWithNominees> => {
 	const data = await fetchQuery<GetActiveStakerWithNomineesData>(
-		QUERY,
+		GET_STAKER_WITH_NOMINEES_QUERY,
 		{ network, era, who, addresses },
 		DEFAULT_DATA,
 	)

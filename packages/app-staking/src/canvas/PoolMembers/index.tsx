@@ -3,8 +3,6 @@
 
 import { Members } from 'canvas/PoolMembers/Members'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { usePoolMembers } from 'hooks/usePoolMembers'
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Head, Main, Title } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
@@ -12,17 +10,12 @@ import { CloseCanvas, useOverlay } from 'ui-overlay'
 export const PoolMembers = () => {
 	const { t } = useTranslation()
 	const { getBondedPool } = useBondedPools()
-	const { resetPoolMemberData } = usePoolMembers()
 	const {
 		config: { options },
 	} = useOverlay().canvas
 	const poolId: number = options?.poolId || 0
 
 	const bondedPool = getBondedPool(poolId)
-
-	useEffect(() => {
-		return () => resetPoolMemberData()
-	}, [resetPoolMemberData])
 
 	return (
 		<Main>

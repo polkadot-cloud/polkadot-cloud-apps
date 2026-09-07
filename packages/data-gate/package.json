@@ -1,0 +1,31 @@
+{
+	"name": "data-gate",
+	"version": "0.1.0",
+	"type": "module",
+	"license": "GPL-3.0-only",
+	"sideEffects": false,
+	"exports": {
+		".": "./src/index.ts",
+		"./react": "./src/react/index.ts",
+		"./resources/*": "./src/resources/*.ts"
+	},
+	"scripts": {
+		"check": "biome check . && tsc --noEmit",
+		"lint": "biome check --write .",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@apollo/client": "^4.2.12",
+		"plugin-staking-api": "workspace:*",
+		"utils": "workspace:*"
+	},
+	"peerDependencies": {
+		"react": "^19.2.8"
+	},
+	"devDependencies": {
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8",
+		"types": "workspace:*",
+		"vitest": "^4.1.11"
+	}
+}

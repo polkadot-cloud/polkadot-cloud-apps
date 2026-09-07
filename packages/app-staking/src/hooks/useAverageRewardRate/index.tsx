@@ -7,7 +7,6 @@ import { getStakingChainData } from 'consts/util'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useStakingMetrics } from 'hooks/useStakingMetrics'
 import type { UseAverageRewardRate } from './types'
 
@@ -15,7 +14,6 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 	const { totalIssuance, lastTotalStake } = useStakingMetrics()
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
-	const { pluginEnabled } = usePlugins()
 	const { averageEraValidatorReward, avgRewardRate } = useValidators()
 
 	const { units } = getStakingChainData(network)
@@ -87,7 +85,7 @@ export const useAverageRewardRate = (): UseAverageRewardRate => {
 	// Get average reward rate based on the current staking metrics. Prefer staking API when available,
 	// but gracefully fall back to chain-derived metrics if API returns zero/stale data.
 	const getAverageRewardRate = (compounded: boolean = false): number => {
-		if (pluginEnabled('staking_api')) {
+		if (avgRewardRate > 0) {
 			const normalizedRate = normalizeStakingApiRate(avgRewardRate)
 			if (normalizedRate > 0) {
 				return normalizedRate

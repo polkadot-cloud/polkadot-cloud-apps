@@ -4,10 +4,10 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useEraStakers } from 'contexts/EraStakers'
 import type { ValidatorActivityTier } from 'contexts/Validators/types'
 import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
@@ -40,7 +40,8 @@ export const useValidatorSummaryData = ({
 	statusValue,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
-	const { syncing } = useSyncing()
+	const { syncing: overviewSyncing, error } = useEraStakers()
+	const syncing = statusLabelOverride === undefined && overviewSyncing
 	const { network } = useNetwork()
 	const { getValidatorTotalStake } = useValidatorEntries()
 	const { units } = getStakingChainData(network)
@@ -48,17 +49,19 @@ export const useValidatorSummaryData = ({
 	const validatorStatus = syncing ? 'waiting' : status
 	const statusLabel =
 		statusLabelOverride ??
-		(syncing
-			? t('syncing')
-			: validatorStatus === 'waiting'
-				? capitalizeFirstLetter(t(validatorStatus) ?? '')
-				: t('listItemActive'))
+		(error
+			? '—'
+			: syncing
+				? t('syncing')
+				: validatorStatus === 'waiting'
+					? capitalizeFirstLetter(t(validatorStatus) ?? '')
+					: t('listItemActive'))
 	const totalStake =
 		statusValue !== undefined
 			? statusValue.isGreaterThan(0)
 				? formatCompactNumber(statusValue.toNumber(), i18n.resolvedLanguage)
 				: undefined
-			: !syncing && validatorStatus !== 'waiting'
+			: !syncing && !error && validatorStatus !== 'waiting'
 				? planckToUnitBn(new BigNumber(getValidatorTotalStake(address)), units)
 						.integerValue()
 						.toFormat()

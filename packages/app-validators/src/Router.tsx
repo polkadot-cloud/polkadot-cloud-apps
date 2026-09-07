@@ -10,7 +10,6 @@ import { SideMenu } from 'library/SideMenu'
 import { Tooltip } from 'library/Tooltip'
 import { Operators } from 'pages/Operators'
 import { ValidatorsStandalone } from 'pages/Validators/Standalone'
-import { ApolloProvider, client } from 'plugin-staking-api'
 import { useEffect, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
@@ -71,46 +70,44 @@ const RouterInner = () => {
 
 	return (
 		<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
-			<ApolloProvider client={client}>
-				<NotificationPrompts />
-				<Page.Body id="portal-root">
-					<HelpTooltip />
-					<Overlays />
-					<Menu />
-					<Tooltip />
-					<SideMenu enableAdvancedMenu={false} />
-					<Page.Main ref={mainInterfaceRef}>
-						<HelmetProvider>
-							<Headers />
-							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
-								<Routes>
-									<Route
-										index
-										element={
-											<PageWithTitle
-												page={ValidatorsPage}
-												appTitle={ValidatorsDappName}
-											/>
-										}
-									/>
-									<Route
-										path="/operators"
-										element={
-											<PageWithTitle
-												page={OperatorsPage}
-												appTitle={ValidatorsDappName}
-											/>
-										}
-									/>
-									<Route path="*" element={<Navigate to="/" replace />} />
-								</Routes>
-							</ErrorBoundary>
-							<MainFooter showDocs={false} />
-						</HelmetProvider>
-					</Page.Main>
-				</Page.Body>
-				<Offline />
-			</ApolloProvider>
+			<NotificationPrompts />
+			<Page.Body id="portal-root">
+				<HelpTooltip />
+				<Overlays />
+				<Menu />
+				<Tooltip />
+				<SideMenu enableAdvancedMenu={false} />
+				<Page.Main ref={mainInterfaceRef}>
+					<HelmetProvider>
+						<Headers />
+						<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+							<Routes>
+								<Route
+									index
+									element={
+										<PageWithTitle
+											page={ValidatorsPage}
+											appTitle={ValidatorsDappName}
+										/>
+									}
+								/>
+								<Route
+									path="/operators"
+									element={
+										<PageWithTitle
+											page={OperatorsPage}
+											appTitle={ValidatorsDappName}
+										/>
+									}
+								/>
+								<Route path="*" element={<Navigate to="/" replace />} />
+							</Routes>
+						</ErrorBoundary>
+						<MainFooter showDocs={false} />
+					</HelmetProvider>
+				</Page.Main>
+			</Page.Body>
+			<Offline />
 		</ErrorBoundary>
 	)
 }

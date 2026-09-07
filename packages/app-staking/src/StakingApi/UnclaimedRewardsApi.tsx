@@ -1,10 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
+import { useUnclaimedRewards } from 'data-gate/react'
 import { useApi } from 'hooks/useApi'
 import { defaultUnclaimedRewards, usePayouts } from 'hooks/usePayouts'
-import { useUnclaimedRewards } from 'plugin-staking-api'
 import { useEffect } from 'react'
 import type { Props } from './types'
 
@@ -17,17 +16,12 @@ export const UnclaimedRewardsApi = ({ who, network }: Props) => {
 		fromEra: Math.max(activeEra.index - 1, 0),
 	})
 
-	// Reset unclaimed rewards on network change
-	useEffectIgnoreInitial(() => {
-		setUnclaimedRewards(defaultUnclaimedRewards)
-	}, [network])
-
-	// Update unclaimed rewards on total change
 	useEffect(() => {
-		if (!loading && !error) {
-			setUnclaimedRewards(data.unclaimedRewards)
-		}
-	}, [data.unclaimedRewards.total])
+		setUnclaimedRewards(
+			!loading && !error ? data.unclaimedRewards : defaultUnclaimedRewards,
+		)
+		return () => setUnclaimedRewards(defaultUnclaimedRewards)
+	}, [network, who, loading, error, data.unclaimedRewards, setUnclaimedRewards])
 
 	return null
 }

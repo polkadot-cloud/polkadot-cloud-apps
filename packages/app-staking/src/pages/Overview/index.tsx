@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
+import { useDataCapabilities } from 'data-gate/react'
 import { useBalances } from 'hooks/useBalances'
-import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
@@ -21,7 +21,7 @@ import { Summaries } from './Summaries'
 export const Overview = () => {
 	const { t } = useTranslation('pages')
 	const { isBonding } = useStaking()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { getStakingLedger } = useBalances()
 	const { activeAddress } = useActiveAccount()
 	const { syncing, accountSynced } = useSyncing()
@@ -30,7 +30,7 @@ export const Overview = () => {
 	const { controllerUnmigrated } = getStakingLedger(activeAddress)
 
 	// Fiat values result in a slightly larger height for Balance & Payouts
-	const showFiat = pluginEnabled('staking_api')
+	const showFiat = stakingApiEnabled
 
 	const STATUS_HEIGHT = 220
 	const PAYOUTS_HEIGHT = showFiat ? 385 : 380

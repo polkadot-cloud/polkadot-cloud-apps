@@ -5,18 +5,17 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useDataResource } from 'data-gate/react'
+import {
+	nominatorRewardTrend,
+	poolRewardTrend,
+} from 'data-gate/resources/rewards'
 import { getPoolMembership } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useStaking } from 'hooks/useStaking'
 import { Ticker } from 'library/StatCards/Ticker'
-import {
-	fetchNominatorRewardTrend,
-	fetchPoolRewardTrend,
-} from 'plugin-staking-api'
-import type { RewardTrend as IRewardTrend } from 'plugin-staking-api/types'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export const RewardTrend = () => {
@@ -33,32 +32,15 @@ export const RewardTrend = () => {
 	// NOTE: 30 day duration in seconds
 	const duration = 2592000
 
-	// Store the reward trend result
-	const [rewardTrend, setRewardTrend] = useState<IRewardTrend | null>(null)
-
-	// Fetch the reward trend on account, network changes. Ensure the active era is greater than 0
-	const getRewardTrend = async () => {
-		if (activeAddress && activeEra.index > 0) {
-			const result = membership
-				? await fetchPoolRewardTrend(network, activeAddress, duration)
-				: await fetchNominatorRewardTrend(network, activeAddress, eras)
-
-			setRewardTrend(result)
-		}
-	}
-
-	useEffect(() => {
-		setRewardTrend(null)
-		if (isBonding || membership) {
-			getRewardTrend()
-		}
-	}, [
-		activeAddress,
-		network,
-		activeEra.index.toString(),
-		membership,
-		isBonding,
-	])
+	const who =
+		(isBonding || membership) && activeEra.index > 0 ? activeAddress || '' : ''
+	const nominator = useDataResource(
+		nominatorRewardTrend(membership ? '' : who, eras),
+	)
+	const pool = useDataResource(poolRewardTrend(membership ? who : '', duration))
+	const rewardTrend = membership
+		? pool.data?.poolRewardTrend
+		: nominator.data?.nominatorRewardTrend
 
 	// Format the reward trend data
 	let value = '0'

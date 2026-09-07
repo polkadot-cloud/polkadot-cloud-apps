@@ -103,7 +103,10 @@ export class BaseService<
 		this.stakingConsts = new StakingConsts(this.stakingApi)
 
 		// Set default sync status
-		setSyncingMulti(defaultSyncStatus)
+		setSyncingMulti([
+			...defaultSyncStatus,
+			...(this.features.nominationPools ? ['active-pools' as const] : []),
+		])
 
 		// Fetch chain specs and constants
 		await Promise.all([this.hubChainSpec.fetch(), this.stakingConsts.fetch()])

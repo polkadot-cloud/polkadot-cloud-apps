@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { PayeeNominatorRewardsData, QueryReturn } from '../types'
 import { fetchQuery, useApiQuery } from './generic'
 
-const QUERY = gql`
+export const PAYEE_NOMINATOR_REWARDS_QUERY = gql`
   query PayeeNominatorRewards(
     $network: String!
     $payee: String!
@@ -34,7 +34,7 @@ const QUERY = gql`
   }
 `
 
-const DEFAULT: PayeeNominatorRewardsData = {
+export const PAYEE_NOMINATOR_REWARDS_DEFAULT: PayeeNominatorRewardsData = {
 	payeeNominatorRewards: {
 		total: '0',
 		rewards: [],
@@ -56,9 +56,9 @@ export const usePayeeNominatorRewards = ({
 	skip?: boolean
 }): QueryReturn<PayeeNominatorRewardsData> =>
 	useApiQuery<PayeeNominatorRewardsData>(
-		QUERY,
+		PAYEE_NOMINATOR_REWARDS_QUERY,
 		{ network, payee, days, fromEra },
-		DEFAULT,
+		PAYEE_NOMINATOR_REWARDS_DEFAULT,
 		{ skip },
 	)
 
@@ -69,7 +69,7 @@ export const fetchPayeeNominatorRewards = (
 	fromEra?: number,
 ) =>
 	fetchQuery<PayeeNominatorRewardsData>(
-		QUERY,
+		PAYEE_NOMINATOR_REWARDS_QUERY,
 		{ network, payee, days, fromEra },
-		DEFAULT,
+		PAYEE_NOMINATOR_REWARDS_DEFAULT,
 	)

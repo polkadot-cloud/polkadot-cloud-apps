@@ -10,7 +10,7 @@ import type { UsePoolBondActions } from './types'
 export const usePoolBondActions = (): UsePoolBondActions => {
 	const { syncing } = useSyncing([
 		'initialization',
-		'era-stakers',
+		'staking-ledgers',
 		'active-pools',
 	])
 	const { activeAddress } = useActiveAccount()

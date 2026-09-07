@@ -8,17 +8,19 @@ import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { PoolSharesDays } from 'consts'
 import { getStakingChainData, isPoolShareEnabled } from 'consts/util'
+import { useDataCapabilities, useDataGate } from 'data-gate/react'
+import { combinedPoolRewards } from 'data-gate/resources/rewards'
 import { getUnixTime } from 'date-fns'
 import { useActivePool } from 'hooks/useActivePool'
 import { useCurrency } from 'hooks/useCurrency'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useSyncing } from 'hooks/useSyncing'
 import { useThemeValues } from 'hooks/useThemeValues'
 import { Balance } from 'library/Balance'
+import { DataError } from 'library/DataError'
 import { StatusLabel } from 'library/StatusLabel'
-import { fetchCombinedPoolRewards, isPoolShareReward } from 'plugin-staking-api'
+import { isPoolShareReward } from 'plugin-staking-api'
 import type { CombinedPoolReward } from 'plugin-staking-api/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,10 +35,11 @@ const POOL_SHARE_FETCH_LIMIT = 100
 const MAX_POOL_SHARE_FETCH_PAGES = 5
 
 export const PoolShares = () => {
+	const gate = useDataGate()
 	const { i18n, t } = useTranslation('pages')
 	const { network } = useNetwork()
 	const { currency } = useCurrency()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { activePool } = useActivePool()
 	const { getThemeValue } = useThemeValues()
 	const { activeAddress } = useActiveAccount()
@@ -45,6 +48,8 @@ export const PoolShares = () => {
 		'active-pools',
 	])
 	const { unit, units } = getStakingChainData(network)
+	const [error, setError] = useState(false)
+	const [retry, setRetry] = useState(0)
 	const [loading, setLoading] = useState<boolean>(false)
 	const [poolShareRewards, setPoolShareRewards] = useState<
 		CombinedPoolReward[]
@@ -65,7 +70,6 @@ export const PoolShares = () => {
 		[],
 	)
 
-	const stakingApiEnabled = pluginEnabled('staking_api')
 	const poolShareEnabled = isPoolShareEnabled(network, activePool?.id)
 	const Token = getChainIcons(network).token
 	const graphActive =
@@ -108,6 +112,7 @@ export const PoolShares = () => {
 		let cancelled = false
 		const fetchPoolShares = async () => {
 			setLoading(true)
+			setError(false)
 			setPoolShareRewards([])
 			setPoolClaimRewards([])
 			const shareRewards: CombinedPoolReward[] = []
@@ -115,13 +120,15 @@ export const PoolShares = () => {
 			let after: string | undefined
 
 			for (let page = 0; page < MAX_POOL_SHARE_FETCH_PAGES; page++) {
+				if (cancelled) return
 				const {
 					combinedPoolRewards: { entries, hasNextPage, nextCursor },
-				} = await fetchCombinedPoolRewards(
-					network,
-					activeAddress || '',
-					POOL_SHARE_FETCH_LIMIT,
-					after,
+				} = await gate.request(
+					combinedPoolRewards({
+						who: activeAddress || '',
+						first: POOL_SHARE_FETCH_LIMIT,
+						after: after,
+					}),
 				)
 
 				shareRewards.push(...entries.filter(isPoolShareReward))
@@ -146,12 +153,17 @@ export const PoolShares = () => {
 			}
 		}
 
-		fetchPoolShares()
+		fetchPoolShares().catch(() => {
+			if (!cancelled) {
+				setError(true)
+				setLoading(false)
+			}
+		})
 
 		return () => {
 			cancelled = true
 		}
-	}, [graphActive, network, activeAddress, fromTimestamp])
+	}, [graphActive, gate, activeAddress, fromTimestamp, retry])
 
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 	const barGraphHeight = '175px'
@@ -165,6 +177,7 @@ export const PoolShares = () => {
 	return (
 		<Page.Row>
 			<CardWrapper>
+				{error && <DataError retry={() => setRetry((value) => value + 1)} />}
 				<CardHeader margin>
 					<h3>{t('rewardTrend')}</h3>
 				</CardHeader>

@@ -71,7 +71,8 @@
 		"ui-tips": "workspace:*",
 		"usehooks-ts": "^3.0.2",
 		"utils": "workspace:*",
-		"workers": "workspace:*"
+		"workers": "workspace:*",
+		"data-gate": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*",

@@ -1,32 +1,39 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
+import { useDataResource } from 'data-gate/react'
+import { poolStatuses } from 'data-gate/resources/pools'
 import type { AnyFilter } from 'library/Filter/types'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, BondedPool } from 'types'
 import { getPoolNominationStatusCode } from 'utils'
 
-export const usePoolFilters = () => {
+export const usePoolFilters = (pools: BondedPool[], enabled: boolean) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { getNominationsStatusFromEraStakers } = useEraStakers()
+	const results = useDataResource(
+		poolStatuses(
+			pools.map((pool) => ({
+				who: pool.addresses.stash,
+				targets: poolsNominations[pool.id]?.targets ?? [],
+			})),
+			enabled,
+		),
+	)
 
 	/*
 	 * Include active pools.
 	 * Returns the updated filtered list.
 	 */
 	const includeActive = (list: AnyFilter) => {
-		if (!Object.keys(poolsNominations).length) {
-			return list
+		if (!results.data) {
+			return []
 		}
 
 		const filteredList = list.filter((p: BondedPool) => {
-			const nominations = poolsNominations[p.id]
-			const targets = nominations?.targets || []
 			const status = getPoolNominationStatusCode(
-				getNominationsStatusFromEraStakers(p.addresses.stash, targets),
+				results.data?.[p.addresses.stash] ?? null,
 			)
 			return status === 'active'
 		})
@@ -38,15 +45,13 @@ export const usePoolFilters = () => {
 	 * Returns the updated filtered list.
 	 */
 	const excludeActive = (list: AnyFilter) => {
-		if (!Object.keys(poolsNominations).length) {
-			return list
+		if (!results.data) {
+			return []
 		}
 
 		const filteredList = list.filter((p: BondedPool) => {
-			const nominations = poolsNominations[p.id]
-			const targets = nominations?.targets || []
 			const status = getPoolNominationStatusCode(
-				getNominationsStatusFromEraStakers(p.addresses.stash, targets),
+				results.data?.[p.addresses.stash] ?? null,
 			)
 			return status !== 'active'
 		})
@@ -145,6 +150,10 @@ export const usePoolFilters = () => {
 	}
 
 	return {
+		statusData: results.data,
+		statusLoading: results.loading,
+		statusError: results.error,
+		refreshStatus: results.refresh,
 		includesToLabels,
 		excludesToLabels,
 		applyFilter,

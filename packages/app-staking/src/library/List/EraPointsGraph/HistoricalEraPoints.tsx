@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
-import { useApi } from 'hooks/useApi'
 import { useTooltip } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
@@ -19,8 +17,6 @@ export const HistoricalEraPoints = ({
 	syncing: syncingOverride,
 }: EraPointsHistoricalProps) => {
 	const { t } = useTranslation('app')
-	const { isReady } = useApi()
-	const { validatorsFetched } = useValidators()
 	const { setTooltipTextAndOpen } = useTooltip()
 
 	const high = eraPoints.reduce<bigint>((max, { points }) => {
@@ -35,8 +31,7 @@ export const HistoricalEraPoints = ({
 		new BigNumber(high || 1),
 	)
 	const prefilledPoints = prefillEraPoints(Object.values(normalisedPoints))
-	const syncing =
-		syncingOverride ?? (!isReady || !eraPoints.length || !validatorsFetched)
+	const syncing = syncingOverride ?? false
 	const tooltipText = t('validatorActivity')
 
 	return (

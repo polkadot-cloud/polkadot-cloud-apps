@@ -4,9 +4,9 @@
 import BigNumber from 'bignumber.js'
 import { PerbillMultiplier } from 'consts'
 import { getStakingChainData } from 'consts/util'
+import { useDataCapabilities } from 'data-gate/react'
 import { useActivePool } from 'hooks/useActivePool'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { usePoolCommission } from 'hooks/usePoolCommission'
 import type { AnnouncementItem } from 'library/Announcements/types'
 import { Wrapper } from 'library/List'
@@ -21,7 +21,7 @@ export const PoolStats = () => {
 	const { t } = useTranslation('pages')
 	const { openCanvas } = useOverlay().canvas
 	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
+	const { stakingApi: stakingApiEnabled } = useDataCapabilities()
 	const { activePool } = useActivePool()
 	const { getCurrentCommission } = usePoolCommission()
 
@@ -66,7 +66,7 @@ export const PoolStats = () => {
 		{
 			label: t('poolMembers'),
 			value: `${memberCounter}`,
-			button: pluginEnabled('staking_api')
+			button: stakingApiEnabled
 				? {
 						text: t('browseMembers'),
 						onClick: () => {

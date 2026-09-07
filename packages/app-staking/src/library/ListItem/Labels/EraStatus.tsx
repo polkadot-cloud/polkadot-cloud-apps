@@ -4,9 +4,9 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useEraStakers } from 'contexts/EraStakers'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
 import { planckToUnitBn } from 'utils'
@@ -14,7 +14,7 @@ import type { EraStatusProps } from '../types'
 
 export const EraStatus = ({ address, noMargin, status }: EraStatusProps) => {
 	const { t } = useTranslation('app')
-	const { syncing } = useSyncing()
+	const { syncing, error } = useEraStakers()
 	const { network } = useNetwork()
 	const { getValidatorTotalStake } = useValidators()
 	const { unit, units } = getStakingChainData(network)
@@ -27,14 +27,16 @@ export const EraStatus = ({ address, noMargin, status }: EraStatusProps) => {
 			status={validatorStatus}
 			noMargin={noMargin}
 			label={
-				syncing
-					? t('syncing')
-					: validatorStatus === 'waiting'
-						? capitalizeFirstLetter(t(`${validatorStatus}`) ?? '')
-						: t('listItemActive')
+				error
+					? '—'
+					: syncing
+						? t('syncing')
+						: validatorStatus === 'waiting'
+							? capitalizeFirstLetter(t(`${validatorStatus}`) ?? '')
+							: t('listItemActive')
 			}
 			value={
-				!syncing && validatorStatus !== 'waiting'
+				!syncing && !error && validatorStatus !== 'waiting'
 					? `${planckToUnitBn(
 							new BigNumber(getValidatorTotalStake(address)),
 							units,

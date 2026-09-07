@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import type { PoolWarningsData, PoolWarningsResult } from '../types'
 import { fetchQuery } from './generic'
 
-const QUERY = gql`
+export const POOL_WARNINGS_QUERY = gql`
 	query PoolWarnings($network: String!, $addresses: [String!]!) {
 		poolWarnings(network: $network, addresses: $addresses) {
 			warnings {
@@ -29,7 +29,7 @@ export const fetchPoolWarnings = async (
 		return DEFAULT
 	}
 	const data = await fetchQuery<PoolWarningsData>(
-		QUERY,
+		POOL_WARNINGS_QUERY,
 		{ network, addresses },
 		{ poolWarnings: DEFAULT },
 	)
