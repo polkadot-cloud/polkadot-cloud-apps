@@ -4,7 +4,8 @@
 import BigNumber from 'bignumber.js'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { Graph } from 'ui-core/list'
@@ -21,20 +22,22 @@ export const HistoricalEraPoints = ({
 	const { t } = useTranslation('app')
 	const { isReady } = useApi()
 	const { validatorsFetched } = useValidators()
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
-	const high = eraPoints.reduce<bigint>((max, { points }) => {
-		const value = BigInt(points)
-		return value > max ? value : max
-	}, 0n)
+	const prefilledPoints = useMemo(() => {
+		const high = eraPoints.reduce<bigint>((max, { points }) => {
+			const value = BigInt(points)
+			return value > max ? value : max
+		}, 0n)
 
-	const normalisedPoints = normaliseEraPoints(
-		Object.fromEntries(
-			eraPoints.map(({ era, points }) => [era, new BigNumber(points)]),
-		),
-		new BigNumber(high || 1),
-	)
-	const prefilledPoints = prefillEraPoints(Object.values(normalisedPoints))
+		const normalisedPoints = normaliseEraPoints(
+			Object.fromEntries(
+				eraPoints.map(({ era, points }) => [era, new BigNumber(points)]),
+			),
+			new BigNumber(high || 1),
+		)
+		return prefillEraPoints(Object.values(normalisedPoints))
+	}, [eraPoints])
 	const syncing =
 		syncingOverride ?? (!isReady || !eraPoints.length || !validatorsFetched)
 	const tooltipText = t('validatorActivity')

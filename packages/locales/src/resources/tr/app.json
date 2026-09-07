@@ -235,8 +235,7 @@
 		"locked": "Kilitli",
 		"lockedPools": "Kilitli Havuzlar",
 		"lowRetainment": "Düşük Elde Tutma",
-		"lowRetainmentRemoval_one": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
-		"lowRetainmentRemoval_other": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
+		"lowRetainmentValidators": "Elde tutma oranı düşük doğrulayıcılar",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Validatörleri sıfırdan ekleyin.",
 		"manual_selection": "Manuel Seçim",
@@ -269,6 +268,7 @@
 		"noPayoutAddress": "Ödeme Adresi Yok",
 		"noValidators": "Validatör yok",
 		"noValidatorsMatch": "Bu kritere uyan validatör yok.",
+		"noValidatorsSelected": "Doğrulayıcı seçilmedi",
 		"nominate": "Nominasyon Yap",
 		"nominateActive": "Aktif",
 		"nominateInactive": "Pasif",
@@ -412,9 +412,11 @@
 		"stake": "Stake Et",
 		"stakingOptions": "Diğer Stake Seçenekleri",
 		"stakingStats": "Stake İstatistikleri",
+		"startWithCloudValidator": "Bir Cloud doğrulayıcısıyla başlayın",
 		"status": "Durum",
 		"submitTransaction": "İşlemi göndermeye hazır.",
 		"successfullyFetchedAddress": "Adres Başarıyla Alındı",
+		"sunsettingValidators": "Faaliyetini sonlandıracak doğrulayıcılar",
 		"support": "Destek",
 		"supportChannels": "Destek Kanalları",
 		"switchAccount": "Hesap Değiştir",
@@ -443,6 +445,7 @@
 		"top": "En İyi",
 		"totalNominations": "Toplam nominasyon",
 		"totalOperators": "Toplam operatör",
+		"totalValidatorsToRemove": "Kaldırılacak toplam",
 		"transactionCancelled": "İşlem iptal edildi",
 		"transactionCancelledTechnical": "Teknik bir sorun nedeniyle işlem iptal edildi",
 		"transactionInBlock": "İşlem blokta",
@@ -498,6 +501,8 @@
 		"wrongTransaction": "Yanlış işlem, lütfen tekrar imzalayın.",
 		"year": "yıl",
 		"youAreValidator": "Bir doğrulayıcısınız",
-		"yourPayouts": "Ödemeleriniz"
+		"yourPayouts": "Ödemeleriniz",
+		"zugValidatorWarning_one": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıyı aday listenizden kaldırın.",
+		"zugValidatorWarning_other": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıları aday listenizden kaldırın."
 	}
 }

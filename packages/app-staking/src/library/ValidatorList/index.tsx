@@ -11,6 +11,7 @@ import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	Controls,
@@ -201,7 +202,10 @@ export const ValidatorListInner = ({
 									displayFor={displayFor}
 									format={effectiveListFormat}
 									highlightRetainmentWarnings={highlightRetainmentWarnings}
-									eraPoints={eraPointsByAddress.get(validator.address) ?? []}
+									eraPoints={
+										eraPointsByAddress.get(validator.address) ??
+										EMPTY_ERA_POINTS
+									}
 									rate={
 										retainmentStatsEnabled
 											? rateByAddress.get(validator.address)

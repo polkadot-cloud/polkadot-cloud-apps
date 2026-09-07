@@ -163,17 +163,18 @@ export const useNominationControls = ({
 		})
 	}
 
-	if (retainmentStatsEnabled) {
-		filterHandlers.push({
-			title: t('cloudValidator', { ns: 'app' }),
-			onClick: () => addCandidateByStrategy('CLOUD'),
-			icon: faPlus,
-			isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
-		})
-	}
-
-	if (retainmentStatsEnabled) {
+	const cloudValidatorHandler: FilterHandler | undefined =
+		retainmentStatsEnabled
+			? {
+					title: t('cloudValidator', { ns: 'app' }),
+					onClick: () => addCandidateByStrategy('CLOUD'),
+					icon: faPlus,
+					isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
+				}
+			: undefined
+	if (cloudValidatorHandler) {
 		filterHandlers.push(
+			cloudValidatorHandler,
 			{
 				title: t('highRetainer', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
@@ -226,6 +227,7 @@ export const useNominationControls = ({
 	}
 
 	return {
+		cloudValidatorHandler,
 		fetchNominations,
 		filterHandlers,
 		selectHandler,

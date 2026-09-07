@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { PalletNominationPoolsClaimPermission } from 'dedot/chaintypes'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { Label } from 'ui-core/list'
@@ -21,7 +21,7 @@ export const ClaimPermission = ({
 	claimPermission: PalletNominationPoolsClaimPermission | undefined
 }) => {
 	const { t } = useTranslation('app')
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	let tooltipText = t('permissionlessClaimPermission')
 	switch (claimPermission) {

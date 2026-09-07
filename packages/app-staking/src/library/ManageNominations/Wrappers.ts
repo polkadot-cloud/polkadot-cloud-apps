@@ -40,3 +40,12 @@ export const NominationSummary = styled.div`
 export const SubmitTxContainer = styled.div`
   padding-bottom: 1rem;
 `
+
+export const FixIssuesFooter = styled.div`
+  padding: 0.5rem;
+
+  > div {
+    height: 3.5rem;
+    min-height: 0;
+  }
+`

@@ -1,9 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
+import type {
+	ValidatorRetainmentResult,
+	ValidatorWarnings,
+} from 'plugin-staking-api/types'
 import type { Validator } from 'types'
 import { clampRate } from 'utils'
+import { SunsettingWarnings } from './consts'
 
 export const getValidatorsWithRetainment = (
 	validators: Validator[],
@@ -16,3 +20,39 @@ export const getValidatorsWithRetainment = (
 			? [{ rate: clampRate(rate), validator }]
 			: []
 	})
+
+export const getSunsettingWarnings = (
+	validators: Validator[],
+	warnings: ValidatorWarnings,
+) =>
+	SunsettingWarnings.map(({ type, messageKey }) => ({
+		type,
+		messageKey,
+		validators: validators.filter(({ address }) =>
+			warnings[address]?.includes(type),
+		),
+	})).filter(({ validators }) => validators.length > 0)
+
+export const getValidatorsWithHealthIssues = (
+	validators: Validator[],
+	lowRetainmentValidators: Validator[],
+	warnings: ValidatorWarnings,
+) => {
+	const sunsettingWarnings = getSunsettingWarnings(validators, warnings)
+	const sunsettingAddresses = new Set(
+		sunsettingWarnings.flatMap(({ validators }) =>
+			validators.map(({ address }) => address),
+		),
+	)
+	const issueAddresses = new Set([
+		...sunsettingAddresses,
+		...lowRetainmentValidators.map(({ address }) => address),
+	])
+	return {
+		sunsettingCount: sunsettingAddresses.size,
+		sunsettingWarnings,
+		validatorsWithIssues: validators.filter(({ address }) =>
+			issueAddresses.has(address),
+		),
+	}
+}

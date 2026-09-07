@@ -498,6 +498,17 @@ export interface GetNominationStatusData {
 	getNominationStatus: StakerNominationStatus
 }
 
+export type ValidatorWarningType = 'ZUG_VALIDATOR'
+
+export type ValidatorWarnings = Record<string, ValidatorWarningType[]>
+
+export interface GetValidatorWarningsData {
+	getValidatorWarnings: {
+		candidate: string
+		warnings: ValidatorWarningType[]
+	}[]
+}
+
 export type PoolWarningType =
 	| 'DESTROYING'
 	| 'NO_CHANGE_RATE'

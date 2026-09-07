@@ -11,11 +11,12 @@ type Variables = Record<string, unknown>
 interface FetchQueryOptions {
 	context?: DefaultContext
 	fetchPolicy?: FetchPolicy
+	throwOnError?: boolean
 }
 
 /**
  * Generic GraphQL query fetcher. Swallows errors and returns `defaultData` when the request fails
- * or returns no data.
+ * or returns no data, unless the caller needs errors to propagate.
  */
 export const fetchQuery = async <T>(
 	query: DocumentNode,
@@ -30,8 +31,14 @@ export const fetchQuery = async <T>(
 			context: options?.context,
 			fetchPolicy: options?.fetchPolicy,
 		})
+		if (!result?.data && options?.throwOnError) {
+			throw new Error('Staking API returned no data')
+		}
 		return result?.data || defaultData
-	} catch {
+	} catch (error) {
+		if (options?.throwOnError) {
+			throw error
+		}
 		return defaultData
 	}
 }

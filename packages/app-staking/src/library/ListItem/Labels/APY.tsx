@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { Label } from 'ui-core/list'
 
 export const APY = ({ rate }: { rate?: number }) => {
 	const { t } = useTranslation()
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	if (!rate) {
 		return null

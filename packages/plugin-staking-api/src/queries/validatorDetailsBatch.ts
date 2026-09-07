@@ -59,6 +59,7 @@ export const fetchValidatorDetailsBatch = (
 	fromEra: number,
 	rewardRateDepth?: number,
 	eraPointsDepth?: number,
+	options?: { throwOnError?: boolean },
 ) =>
 	fetchQuery<ValidatorDetailsBatchData>(
 		QUERY,
@@ -70,4 +71,5 @@ export const fetchValidatorDetailsBatch = (
 			eraPointsDepth,
 		},
 		DEFAULT,
+		options,
 	)

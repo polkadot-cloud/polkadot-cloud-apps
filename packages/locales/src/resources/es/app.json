@@ -235,8 +235,7 @@
 		"locked": "Bloqueado",
 		"lockedPools": "Pools Bloqueados",
 		"lowRetainment": "Baja Retención",
-		"lowRetainmentRemoval_one": "Se eliminará {{count}} validador con baja retención.",
-		"lowRetainmentRemoval_other": "Se eliminarán {{count}} validadores con baja retención.",
+		"lowRetainmentValidators": "Validadores con baja retención",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Añade validadores desde cero.",
 		"manual_selection": "Selección manual",
@@ -269,6 +268,7 @@
 		"noPayoutAddress": "Sin dirección de pago.",
 		"noValidators": "Sin validadores",
 		"noValidatorsMatch": "Ningún validador coincide con este criterio.",
+		"noValidatorsSelected": "No hay validadores seleccionados",
 		"nominate": "Nominar",
 		"nominateActive": "Activo",
 		"nominateInactive": "Inactivo",
@@ -412,9 +412,11 @@
 		"stake": "Hacer Staking",
 		"stakingOptions": "Otras Opciones de Staking",
 		"stakingStats": "Estadísticas de Staking",
+		"startWithCloudValidator": "Empieza con un validador de Cloud",
 		"status": "Estado",
 		"submitTransaction": "Listo para enviar la Transacción.",
 		"successfullyFetchedAddress": "Dirección Obtenida Exitosamente",
+		"sunsettingValidators": "Validadores que cesarán su actividad",
 		"support": "Soporte",
 		"supportChannels": "Canales de Soporte",
 		"switchAccount": "Cambiar Cuenta",
@@ -443,6 +445,7 @@
 		"top": "Top",
 		"totalNominations": "Nominaciones totales",
 		"totalOperators": "Operadores totales",
+		"totalValidatorsToRemove": "Total a eliminar",
 		"transactionCancelled": "La transacción fue cancelada",
 		"transactionCancelledTechnical": "Transacción cancelada debido a problema técnico",
 		"transactionInBlock": "Transacción en bloque",
@@ -498,6 +501,9 @@
 		"wrongTransaction": "Transacción incorrecta, Por favor firma de nuevo.",
 		"year": "año",
 		"youAreValidator": "Eres un validador",
-		"yourPayouts": "Tus Pagos"
+		"yourPayouts": "Tus Pagos",
+		"zugValidatorWarning_many": "Tu lista de nominaciones incluye {{count}} validadores de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina estos validadores de tus nominaciones.",
+		"zugValidatorWarning_one": "Tu lista de nominaciones incluye {{count}} validador de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina este validador de tus nominaciones.",
+		"zugValidatorWarning_other": "Tu lista de nominaciones incluye {{count}} validadores de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina estos validadores de tus nominaciones."
 	}
 }

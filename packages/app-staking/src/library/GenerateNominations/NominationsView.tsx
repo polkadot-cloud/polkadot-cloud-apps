@@ -1,12 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { MaxNominations } from 'consts'
 import { ListProvider } from 'contexts/List'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useApi } from 'hooks/useApi'
+import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
@@ -19,6 +22,8 @@ import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
 import { useAllValidatorsWaiting } from './useAllValidatorsWaiting'
 import {
+	CloudStartButton,
+	EmptyNominations,
 	NominationEditorWrapper,
 	NominationsLoader,
 	StandaloneCards,
@@ -26,6 +31,7 @@ import {
 } from './Wrappers'
 
 export const NominationsView = ({
+	cloudValidatorHandler,
 	canManageNominations,
 	displayFor,
 	eligibilityLoading,
@@ -48,6 +54,7 @@ export const NominationsView = ({
 		setNominations,
 	} = useManageNominations()
 	const { isReady } = useApi()
+	const { network } = useNetwork()
 	const { active: healthCheckActive, retainmentStatsEnabled } =
 		useNominationHealth()
 	const { activeAddress } = useActiveAccount()
@@ -68,12 +75,19 @@ export const NominationsView = ({
 		canManageNominations &&
 		!eligibilityLoading &&
 		listReady
+	const showEmptyNominations =
+		nominations.length === 0 && canManageNominations && !eligibilityLoading
 
 	// Load validator metrics only when the settled nomination list can use them.
 	const validatorAddresses = nominations.map(({ address }) => address)
 	const validatorDetails = useValidatorDetails(
 		validatorAddresses,
 		retainmentStatsEnabled && listReady && !fetching,
+	)
+	const validatorWarnings = useValidatorWarnings(
+		network,
+		validatorAddresses,
+		healthCheckActive && listReady && !fetching,
 	)
 	const allValidatorsWaiting = useAllValidatorsWaiting(nominations)
 
@@ -110,10 +124,11 @@ export const NominationsView = ({
 	const nominationHealth = healthCheckActive ? (
 		<NominationHealth
 			allValidatorsWaiting={allValidatorsWaiting}
-			isLoading={validatorDetails.isLoading}
+			isLoading={validatorDetails.isLoading || validatorWarnings.isLoading}
 			retainmentByAddress={validatorDetails.retainmentByAddress}
 			standalone={standaloneCards}
 			validators={nominations}
+			warnings={validatorWarnings.warnings}
 		/>
 	) : null
 
@@ -132,6 +147,20 @@ export const NominationsView = ({
 		<div ref={heightRef}>
 			{fetching ? (
 				loading
+			) : showEmptyNominations && cloudValidatorHandler ? (
+				<>
+					{beforeList}
+					<EmptyNominations>
+						<h4>{t('noValidatorsSelected', { ns: 'app' })}</h4>
+						<CloudStartButton
+							lg
+							text={t('startWithCloudValidator', { ns: 'app' })}
+							iconLeft={faPlus}
+							disabled={cloudValidatorHandler.isDisabled()}
+							onClick={cloudValidatorHandler.onClick}
+						/>
+					</EmptyNominations>
+				</>
 			) : (
 				<ValidatorListInner
 					validators={nominations}

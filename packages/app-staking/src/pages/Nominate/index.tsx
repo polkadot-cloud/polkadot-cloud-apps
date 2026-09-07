@@ -3,7 +3,7 @@
 
 import { onTabVisitEvent } from 'event-tracking'
 import { usePlugins } from 'hooks/usePlugins'
-import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
+import { NominationWarnings } from 'library/NominationWarnings'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PageTabs } from 'ui-app/PageTabs'
@@ -53,7 +53,7 @@ export const Nominate = () => {
 					}
 				/>
 			</Page.Title>
-			<NominationRetainmentWarning />
+			<NominationWarnings />
 			{activeTab === 0 && <Active />}
 			{activeTab === 1 && <NominationGeo />}
 		</Wrapper>

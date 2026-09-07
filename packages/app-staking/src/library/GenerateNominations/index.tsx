@@ -16,17 +16,23 @@ export const GenerateNominations = ({
 	standaloneCards = false,
 }: GenerateNominationsProps) => {
 	// Keep nomination actions separate from synchronization and presentation.
-	const { fetchNominations, filterHandlers, selectHandler, updateNominations } =
-		useNominationControls({
-			allowFavorites: !standaloneCards,
-			canManageNominations,
-			setters,
-		})
+	const {
+		cloudValidatorHandler,
+		fetchNominations,
+		filterHandlers,
+		selectHandler,
+		updateNominations,
+	} = useNominationControls({
+		allowFavorites: !standaloneCards,
+		canManageNominations,
+		setters,
+	})
 
 	useNominationSync({ fetchNominations, updateNominations })
 
 	return (
 		<NominationsView
+			cloudValidatorHandler={cloudValidatorHandler}
 			canManageNominations={canManageNominations}
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}

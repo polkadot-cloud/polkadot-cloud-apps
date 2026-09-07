@@ -1,61 +1,33 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { RetainmentThresholds } from 'consts/retainment'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useSingletonStore } from 'hooks'
 import { useActivePool } from 'hooks/useActivePool'
+import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
+import { useErasPerDay } from 'hooks/useErasPerDay'
+import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
-import { getValidatorsWithRetainment } from 'library/GenerateNominations/utils'
-import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
-import { useTranslation } from 'react-i18next'
+import {
+	getSunsettingWarnings,
+	getValidatorsWithRetainment,
+} from 'library/GenerateNominations/utils'
+import { useEffect, useMemo } from 'react'
 import type { BondFor } from 'types'
-import { ButtonPrimary } from 'ui-buttons'
-import { Page, StatusCard } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
-import classes from './index.module.scss'
+import {
+	fetchNominationWarnings,
+	nominationWarningsStore,
+	warningRequestKey,
+} from './cache'
 
-export const RetainmentThresholdDanger = ({
-	count,
-	onFix,
-}: {
-	count: number
-	onFix?: () => void
-}) => {
-	const { t } = useTranslation('app')
-
-	if (count === 0) {
-		return null
-	}
-
-	return (
-		<StatusCard
-			action={
-				onFix ? (
-					<ButtonPrimary
-						className={classes.fixButton}
-						onClick={onFix}
-						text={t('fixIssues')}
-					/>
-				) : undefined
-			}
-			icon={faCircleExclamation}
-			iconFrame={false}
-			status="danger"
-			role="status"
-		>
-			{t('retainmentThresholdDanger', { count })}
-		</StatusCard>
-	)
-}
-
-export const NominationRetainmentWarning = ({
-	bondFor,
-}: {
-	bondFor?: BondFor
-}) => {
+export const useNominationWarnings = () => {
+	const { network } = useNetwork()
+	const { activeEra } = useApi()
+	const { erasPerDay } = useErasPerDay()
 	const { getNominations } = useBalances()
 	const { openCanvas } = useOverlay().canvas
 	const { formatWithPrefs } = useValidators()
@@ -69,8 +41,9 @@ export const NominationRetainmentWarning = ({
 	const canManagePoolNominations = isOwner() || isNominator()
 
 	// Resolve whether to manage pool or nominator nominations.
-	const effectiveBondFor: BondFor =
-		bondFor ?? (canManagePoolNominations ? 'pool' : 'nominator')
+	const effectiveBondFor: BondFor = canManagePoolNominations
+		? 'pool'
+		: 'nominator'
 
 	// Check whether pool nominations are being managed.
 	const forPool = effectiveBondFor === 'pool'
@@ -85,24 +58,42 @@ export const NominationRetainmentWarning = ({
 	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
 
-	// Only display warnings when retainment data is available.
+	// Read-only accounts should still see warnings about their Polkadot nominations.
 	const canDisplay =
-		!isReadOnlyAccount(activeAddress) &&
-		retainmentStatsEnabled &&
-		Boolean(activeAddress) &&
-		(!forPool || canManagePoolNominations)
+		network === 'polkadot' && retainmentStatsEnabled && Boolean(activeAddress)
+	const canFix = !isReadOnlyAccount(activeAddress)
 
-	// Load retainment details for the nominated validators.
-	const validatorDetails = useValidatorDetails(
-		validatorAddresses,
-		canDisplay && nominations.length > 0,
+	const addressesKey = JSON.stringify([...new Set(validatorAddresses)].sort())
+	const request = useMemo(
+		() => ({
+			network,
+			era: activeEra.index,
+			erasPerDay,
+			addresses: JSON.parse(addressesKey) as string[],
+		}),
+		[network, activeEra.index, erasPerDay, addressesKey],
 	)
+	const entries = useSingletonStore(nominationWarningsStore)
+	const result = entries[warningRequestKey(request)]
+	const enabled = canDisplay && validatorAddresses.length > 0
 
-	// Count nominees below the retainment threshold.
-	const dangerCount = getValidatorsWithRetainment(
+	useEffect(() => {
+		if (enabled) {
+			void fetchNominationWarnings(request)
+		}
+	}, [enabled, request])
+
+	const isLoading = enabled && (!result || result.status === 'loading')
+	const sunsettingWarnings = getSunsettingWarnings(
 		nominations,
-		validatorDetails.retainmentByAddress,
-	).filter(({ rate }) => rate < RetainmentThresholds.medium).length
+		result?.warnings ?? {},
+	)
+	const dangerCount = result?.retainmentByAddress
+		? getValidatorsWithRetainment(
+				nominations,
+				result.retainmentByAddress,
+			).filter(({ rate }) => rate < RetainmentThresholds.medium).length
+		: 0
 
 	// Open the nomination manager for the resolved staking type.
 	const handleFix = () => {
@@ -120,15 +111,12 @@ export const NominationRetainmentWarning = ({
 		})
 	}
 
-	if (!canDisplay || dangerCount === 0) {
-		return null
+	return {
+		canDisplay,
+		canFix,
+		dangerCount,
+		handleFix,
+		isLoading,
+		sunsettingWarnings,
 	}
-
-	return (
-		<Page.Row yMargin="compact">
-			<Page.RowSection standalone>
-				<RetainmentThresholdDanger count={dangerCount} onFix={handleFix} />
-			</Page.RowSection>
-		</Page.Row>
-	)
 }

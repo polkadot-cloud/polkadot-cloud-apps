@@ -5,10 +5,10 @@ import { useList } from 'contexts/List'
 import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import type { Validator } from 'types'
-import { ButtonMonoInvert, ButtonPrimaryInvert } from 'ui-buttons'
+import { ButtonMonoInvert } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import type { ListControlsProps } from './types'
-import { InlineControlsWrapper } from './Wrappers'
+import { InlineControlsWrapper, RemoveSelectedButton } from './Wrappers'
 
 export const ListControls = ({
 	selectHandler,
@@ -49,7 +49,11 @@ export const ListControls = ({
 						/>
 					}
 				>
-					<ButtonPrimaryInvert text={selectHandler.title} asLabel marginRight />
+					<RemoveSelectedButton
+						text={selectHandler.title}
+						asLabel
+						marginRight
+					/>
 				</Popover>
 			)}
 			{filterHandlers.map((handler) => (

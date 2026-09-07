@@ -4,6 +4,7 @@
 import { pageFromUri } from '@w3ux/utils'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useNominationWarnings } from 'hooks/useNominationWarnings'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { useLocation } from 'react-router-dom'
@@ -13,8 +14,9 @@ export const Sync = () => {
 	const { uids } = useTxMeta()
 	const { syncing } = useSyncing()
 	const { pathname } = useLocation()
-	const { getValidators } = useValidators()
 	const { bondedPools } = useBondedPools()
+	const { getValidators } = useValidators()
+	const { isLoading: warningsLoading } = useNominationWarnings()
 
 	// Keep syncing if on pools page and still fetching bonded pools or pool members
 	const onPoolsSyncing = () => {
@@ -39,6 +41,7 @@ export const Sync = () => {
 
 	const isSyncing =
 		syncing ||
+		warningsLoading ||
 		onPoolsSyncing() ||
 		onValidatorsSyncing() ||
 		uids.filter(({ submitted }) => submitted).length > 0

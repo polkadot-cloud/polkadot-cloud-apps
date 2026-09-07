@@ -6,7 +6,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { emitNotification } from 'global-bus'
 import { useFavoritePools } from 'hooks/useFavoritePools'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { HeaderButton } from 'ui-core/list'
@@ -14,7 +14,7 @@ import type { FavoriteProps } from '../types'
 
 export const FavoritePool = ({ address, outline }: FavoriteProps) => {
 	const { t } = useTranslation('app')
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 	const { favorites, addFavorite, removeFavorite } = useFavoritePools()
 
 	const isFavorite = favorites.includes(address)

@@ -14,6 +14,7 @@ import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
@@ -255,7 +256,10 @@ export const NominationListInner = ({
 									bondFor={bondFor}
 									displayFor={displayFor}
 									format={effectiveListFormat}
-									eraPoints={performanceByAddress.get(validator.address) || []}
+									eraPoints={
+										performanceByAddress.get(validator.address) ||
+										EMPTY_ERA_POINTS
+									}
 									isPreloading={detailsPreloading}
 									rate={
 										retainmentStatsEnabled

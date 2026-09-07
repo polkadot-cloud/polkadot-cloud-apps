@@ -235,8 +235,7 @@
 		"locked": "ロック済み",
 		"lockedPools": "ロック済みのプール",
 		"lowRetainment": "低リテンション",
-		"lowRetainmentRemoval_one": "{{count}}件の低リテンションバリデータが削除されます。",
-		"lowRetainmentRemoval_other": "{{count}}件の低リテンションバリデータが削除されます。",
+		"lowRetainmentValidators": "リテンション率の低いバリデーター",
 		"manual": "手動",
 		"manualSelectionSubtitle": "バリデータを一から追加します。",
 		"manual_selection": "手動選択",
@@ -269,6 +268,7 @@
 		"noPayoutAddress": "支払いアドレスがありません",
 		"noValidators": "バリデータがありません",
 		"noValidatorsMatch": "この条件に一致するバリデータはありません。",
+		"noValidatorsSelected": "バリデーターが選択されていません",
 		"nominate": "ノミネート",
 		"nominateActive": "アクティブ",
 		"nominateInactive": "非アクティブ",
@@ -412,9 +412,11 @@
 		"stake": "ステーク",
 		"stakingOptions": "その他のステーキングオプション",
 		"stakingStats": "ステーキング統計",
+		"startWithCloudValidator": "Cloudのバリデーターから始める",
 		"status": "ステータス",
 		"submitTransaction": "トランザクションを送信する準備ができました。",
 		"successfullyFetchedAddress": "アドレスを正常に取得しました",
+		"sunsettingValidators": "運用を終了するバリデーター",
 		"support": "サポート",
 		"supportChannels": "サポートチャネル",
 		"switchAccount": "アカウントを切り替え",
@@ -443,6 +445,7 @@
 		"top": "トップ",
 		"totalNominations": "ノミネーション合計",
 		"totalOperators": "オペレーター総数",
+		"totalValidatorsToRemove": "削除する合計",
 		"transactionCancelled": "トランザクションがキャンセルされました",
 		"transactionCancelledTechnical": "技術的な問題によりトランザクションがキャンセルされました",
 		"transactionInBlock": "トランザクションがブロックに記録されました",
@@ -498,6 +501,8 @@
 		"wrongTransaction": "誤ったトランザクションです。もう一度署名してください。",
 		"year": "年",
 		"youAreValidator": "あなたはバリデーターです",
-		"yourPayouts": "あなたの支払い"
+		"yourPayouts": "あなたの支払い",
+		"zugValidatorWarning_one": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。このバリデーターを推薦から削除してください。",
+		"zugValidatorWarning_other": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。該当するバリデーターを推薦から削除してください。"
 	}
 }

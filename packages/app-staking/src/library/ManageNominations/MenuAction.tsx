@@ -4,13 +4,13 @@
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
-import { Confirm } from 'library/Prompt/Confirm'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseSubmitExtrinsic } from 'tx-submit/types'
-import { ButtonSubmit } from 'ui-buttons'
+import { ButtonSubmit, ButtonSubmitWithFee } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import { Form } from './Form'
+import { FixIssuesFooter, NominationSummary } from './Wrappers'
 
 export const MenuAction = ({
 	isPool,
@@ -27,16 +27,18 @@ export const MenuAction = ({
 	const {
 		active: healthCheckActive,
 		hasDangerWarnings,
-		lowRetainmentValidators,
+		lowRetainmentCount,
+		sunsettingCount,
+		validatorsWithIssues,
 	} = useNominationHealth()
 	const [open, setOpen] = useState(false)
 	const needsFix = healthCheckActive && hasDangerWarnings
 
 	useEffect(() => setOpen(false), [needsFix, valid])
 
-	const removeLowRetainers = () => {
+	const removeValidatorsWithIssues = () => {
 		const addressesToRemove = new Set(
-			lowRetainmentValidators.map(({ address }) => address),
+			validatorsWithIssues.map(({ address }) => address),
 		)
 		setNominations((current) =>
 			current.filter(({ address }) => !addressesToRemove.has(address)),
@@ -50,18 +52,35 @@ export const MenuAction = ({
 				open={open}
 				onOpenChange={setOpen}
 				portalContainer={themeElementRef.current || undefined}
+				width="min(380px, calc(100vw - 2rem))"
 				side="bottom"
 				align="end"
 				sideOffset={8}
 				content={
-					<Confirm
-						text={t('lowRetainmentRemoval', {
-							count: lowRetainmentValidators.length,
-						})}
-						controlKey="fix_nomination_issues"
-						onClose={() => setOpen(false)}
-						onRevert={removeLowRetainers}
-					/>
+					<>
+						<NominationSummary>
+							<h3>{t('fixIssues')}</h3>
+							<div className="row">
+								<span>{t('lowRetainmentValidators')}</span>
+								<span>{lowRetainmentCount}</span>
+							</div>
+							<div className="row">
+								<span>{t('sunsettingValidators')}</span>
+								<span>{sunsettingCount}</span>
+							</div>
+							<div className="row total">
+								<span>{t('totalValidatorsToRemove')}:</span>
+								<span>{validatorsWithIssues.length}</span>
+							</div>
+						</NominationSummary>
+						<FixIssuesFooter>
+							<ButtonSubmitWithFee
+								pulse
+								submitText={t('confirm')}
+								onSubmit={removeValidatorsWithIssues}
+							/>
+						</FixIssuesFooter>
+					</>
 				}
 			>
 				<ButtonSubmit asLabel lg text={t('fixIssues')} />

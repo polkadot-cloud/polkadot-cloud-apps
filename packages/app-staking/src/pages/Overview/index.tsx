@@ -6,7 +6,7 @@ import { useBalances } from 'hooks/useBalances'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
+import { NominationWarnings } from 'library/NominationWarnings'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
@@ -38,7 +38,7 @@ export const Overview = () => {
 	return (
 		<>
 			<Page.Title title={t('overview')} />
-			<NominationRetainmentWarning />
+			<NominationWarnings />
 			{isBonding &&
 				!syncing &&
 				accountSynced(activeAddress) &&
