@@ -3,6 +3,7 @@
 
 import { SelectableWrapper } from 'library/List'
 import styled from 'styled-components'
+import { ButtonPrimaryInvert } from 'ui-buttons'
 import type { InlineControlsWrapperProps } from './types'
 
 const BaseMenuWrapper = styled.div`
@@ -94,4 +95,12 @@ export const InlineControlsWrapper = styled(
 )<InlineControlsWrapperProps>`
   margin-top: ${({ $standalone }) => ($standalone ? '1.25rem' : '0.25rem')};
   margin-bottom: ${({ $standalone }) => ($standalone ? '0' : '0.75rem')};
+`
+
+// Draw the outline inside the control so it matches the borderless filter height.
+export const RemoveSelectedButton = styled(ButtonPrimaryInvert)`
+  && {
+    border: 0;
+    box-shadow: inset 0 0 0 1px var(--accent-900);
+  }
 `
