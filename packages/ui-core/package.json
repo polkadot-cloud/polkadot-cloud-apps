@@ -39,6 +39,6 @@
 		"types": "workspace:*"
 	},
 	"peerDependencies": {
-		"dedot": "^1"
+		"dedot": "^1.4.0"
 	}
 }
