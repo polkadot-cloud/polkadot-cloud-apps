@@ -116,7 +116,7 @@ export const EmptyNominations = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.5rem;
   padding: 1.25rem 1.15rem 2rem;
   width: 100%;
 
