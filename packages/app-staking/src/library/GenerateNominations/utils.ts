@@ -21,18 +21,24 @@ export const getValidatorsWithRetainment = (
 			: []
 	})
 
-export const getValidatorsWithHealthIssues = (
+export const getSunsettingWarnings = (
 	validators: Validator[],
-	lowRetainmentValidators: Validator[],
 	warnings: ValidatorWarnings,
-) => {
-	const sunsettingWarnings = SunsettingWarnings.map(({ type, messageKey }) => ({
+) =>
+	SunsettingWarnings.map(({ type, messageKey }) => ({
 		type,
 		messageKey,
 		validators: validators.filter(({ address }) =>
 			warnings[address]?.includes(type),
 		),
 	})).filter(({ validators }) => validators.length > 0)
+
+export const getValidatorsWithHealthIssues = (
+	validators: Validator[],
+	lowRetainmentValidators: Validator[],
+	warnings: ValidatorWarnings,
+) => {
+	const sunsettingWarnings = getSunsettingWarnings(validators, warnings)
 	const sunsettingAddresses = new Set(
 		sunsettingWarnings.flatMap(({ validators }) =>
 			validators.map(({ address }) => address),

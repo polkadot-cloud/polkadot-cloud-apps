@@ -8,11 +8,10 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import {
-	getValidatorsWithHealthIssues,
+	getSunsettingWarnings,
 	getValidatorsWithRetainment,
 } from 'library/GenerateNominations/utils'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
@@ -76,7 +75,6 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 	const setWarningsLoading = useContext(SetNominationWarningsLoadingContext)
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
 	const { getNominations } = useBalances()
 	const { openCanvas } = useOverlay().canvas
 	const { formatWithPrefs } = useValidators()
@@ -109,15 +107,15 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 	// Display actionable warnings for the active account's Polkadot nominations.
 	const canDisplay =
 		network === 'polkadot' &&
+		retainmentStatsEnabled &&
 		!isReadOnlyAccount(activeAddress) &&
-		pluginEnabled('staking_api') &&
 		Boolean(activeAddress) &&
 		(!forPool || canManagePoolNominations)
 
 	// Load retainment details for the nominated validators.
 	const validatorDetails = useValidatorDetails(
 		validatorAddresses,
-		canDisplay && retainmentStatsEnabled && nominations.length > 0,
+		canDisplay && nominations.length > 0,
 	)
 	const { warnings, isLoading: warningsLoading } = useValidatorWarnings(
 		network,
@@ -131,11 +129,7 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 		return () => setWarningsLoading(false)
 	}, [isLoading, setWarningsLoading])
 
-	const { sunsettingWarnings } = getValidatorsWithHealthIssues(
-		nominations,
-		[],
-		warnings,
-	)
+	const sunsettingWarnings = getSunsettingWarnings(nominations, warnings)
 
 	// Count nominees below the retainment threshold.
 	const dangerCount = retainmentStatsEnabled
