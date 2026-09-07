@@ -4,7 +4,7 @@
 import BigNumber from 'bignumber.js'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { normaliseEraPoints, prefillEraPoints } from 'library/List/Utils'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
@@ -15,7 +15,7 @@ export const Rewards = ({ displayFor = 'default' }: RewardProps) => {
 	const { t } = useTranslation('app')
 	const { isReady } = useApi()
 	const { erasPerDay } = useErasPerDay()
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	// NOTE: Component currently not in use. Pool performance data is no longer being fetched.
 	const poolRewardPoints = {}

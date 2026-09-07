@@ -9,7 +9,7 @@ import {
 	getValidatorEraPoints,
 } from 'global-bus'
 import { useApi } from 'hooks/useApi'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
@@ -26,7 +26,7 @@ export const CurrentEraPoints = ({
 	const { t } = useTranslation()
 	const { isReady, activeEra } = useApi()
 	const { validatorsFetched } = useValidators()
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	// Get an era high value from era individuals data
 	const getEraHigh = (individual: [string, number][]) =>

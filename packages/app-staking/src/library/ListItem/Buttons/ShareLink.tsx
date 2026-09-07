@@ -5,7 +5,7 @@ import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { StakingProductionURL } from 'consts'
 import { emitNotification } from 'global-bus'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { HeaderButton } from 'ui-core/list'
@@ -19,7 +19,7 @@ export type ShareLinkProps = {
 
 export const ShareLink = ({ paramValue, paramKey }: ShareLinkProps) => {
 	const { t } = useTranslation('app')
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	const tooltipText = t('copyShareLink')
 
