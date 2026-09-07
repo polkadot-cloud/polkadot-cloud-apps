@@ -5,7 +5,6 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useStakeStats } from 'hooks/useStats'
 import { useSyncing } from 'hooks/useSyncing'
-import { NominationRetainmentWarning } from 'library/NominationRetainmentWarning'
 import { PageWarnings } from 'library/PageWarnings'
 import { Stats } from 'library/Stats'
 import { Active } from 'pages/Nominate/Active'
@@ -38,7 +37,6 @@ export const Stake = () => {
 		<>
 			<Page.Title title={t('stake')} />
 			<PageWarnings />
-			<NominationRetainmentWarning />
 			{!nominating && (
 				<Stat.Row>
 					<Stats items={[averageRewardRate, minimumToJoinPool, nextReward]} />

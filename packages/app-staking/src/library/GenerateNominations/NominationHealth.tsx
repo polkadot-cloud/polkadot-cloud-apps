@@ -3,7 +3,7 @@
 
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { RetainmentThresholdDanger } from 'library/NominationRetainmentWarning'
+import { RetainmentThresholdDanger } from 'library/NominationWarnings'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'

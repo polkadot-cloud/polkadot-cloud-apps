@@ -23,11 +23,13 @@ import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
+import { NominationWarnings } from 'library/NominationWarnings'
+import { NominationWarningsLoadingContext } from 'library/NominationWarnings/loading'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
 import { ApolloProvider, client } from 'plugin-staking-api'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
 import {
@@ -58,6 +60,7 @@ const RouterInner = () => {
 	const { pathname, search } = useLocation()
 	const { activeAddress } = useActiveAccount()
 	const { setContainerRefs, advancedMode } = useUi()
+	const [warningsLoading, setWarningsLoading] = useState(false)
 
 	// References to outer container
 	const mainInterfaceRef = useRef<HTMLDivElement>(null)
@@ -129,8 +132,13 @@ const RouterInner = () => {
 					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers NodesLeft={{ sync: Sync }} />
+							<NominationWarningsLoadingContext.Provider
+								value={warningsLoading}
+							>
+								<Headers NodesLeft={{ sync: Sync }} />
+							</NominationWarningsLoadingContext.Provider>
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+								<NominationWarnings onLoadingChange={setWarningsLoading} />
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {
 										inPool,
