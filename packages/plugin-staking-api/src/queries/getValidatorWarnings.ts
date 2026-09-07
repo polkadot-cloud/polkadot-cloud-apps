@@ -30,7 +30,7 @@ export const fetchGetValidatorWarnings = async (
 	return Object.fromEntries(
 		(data.getValidatorWarnings ?? []).map(({ candidate, warnings }) => [
 			candidate,
-			warnings,
+			warnings ?? [],
 		]),
 	)
 }
