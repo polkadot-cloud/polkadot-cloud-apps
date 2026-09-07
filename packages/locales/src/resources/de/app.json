@@ -237,6 +237,7 @@
 		"lowRetainment": "Niedrige Retention",
 		"lowRetainmentRemoval_one": "{{count}} Validator mit niedriger Retention wird entfernt.",
 		"lowRetainmentRemoval_other": "{{count}} Validatoren mit niedriger Retention werden entfernt.",
+		"lowRetainmentValidators": "Validatoren mit niedriger Retention",
 		"manual": "Manuell",
 		"manualSelectionSubtitle": "Validatoren von Grund auf hinzufügen.",
 		"manual_selection": "Manuelle Auswahl",
@@ -276,6 +277,8 @@
 		"nominationHealthCheck": "Nominierungs-Gesundheitscheck",
 		"nominationHealthCheckDisableWarning": "Das Deaktivieren der Zustandsprüfung wird nicht empfohlen. Potenziell schädliche oder minderwertige Validatoren werden dann in deinen Nominierungen nicht mehr gekennzeichnet oder herausgefiltert.",
 		"nominationHealthCheckNeedsAttention": "Einige deiner Nominierungen erfordern Aufmerksamkeit.",
+		"nominationHealthIssueRemoval_one": "{{count}} Validator mit Zustandsproblemen wird entfernt.",
+		"nominationHealthIssueRemoval_other": "{{count}} Validatoren mit Zustandsproblemen werden entfernt.",
 		"nominationManager": "Nominationsmanager",
 		"nominationSummary": "Nominierungsübersicht",
 		"nominationsAdded": "Hinzugefügt",
@@ -415,6 +418,7 @@
 		"status": "Status",
 		"submitTransaction": "Bereit, Transaktion zu senden.",
 		"successfullyFetchedAddress": "Adresse erfolgreich abgerufen",
+		"sunsettingValidators": "Validatoren vor Betriebseinstellung",
 		"support": "Unterstützung",
 		"supportChannels": "Hilfemöglichkeiten",
 		"switchAccount": "Konto wechseln",
@@ -443,6 +447,7 @@
 		"top": "Oben",
 		"totalNominations": "Nominierungen gesamt",
 		"totalOperators": "Betreiber insgesamt",
+		"totalValidatorsToRemove": "Insgesamt zu entfernen",
 		"transactionCancelled": "Transaktion wurde abgebrochen",
 		"transactionCancelledTechnical": "Transaktion aufgrund eines technischen Problems abgebrochen",
 		"transactionInBlock": "Transaktion im Block",
@@ -498,6 +503,8 @@
 		"wrongTransaction": "Falsche Transaktion, bitte signiere erneut.",
 		"year": "Jahr",
 		"youAreValidator": "Du bist ein Validator",
-		"yourPayouts": "Deine Auszahlungen"
+		"yourPayouts": "Deine Auszahlungen",
+		"zugValidatorWarning_one": "Deine Nominierungsliste enthält {{count}} Validator von Zug. Zug stellt den Validatorbetrieb am 31. März 2027 ein. Entferne diesen Validator aus deinen Nominierungen.",
+		"zugValidatorWarning_other": "Deine Nominierungsliste enthält {{count}} Validatoren von Zug. Zug stellt den Validatorbetrieb am 31. März 2027 ein. Entferne diese Validatoren aus deinen Nominierungen."
 	}
 }

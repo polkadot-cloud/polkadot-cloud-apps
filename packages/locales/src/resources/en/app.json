@@ -237,6 +237,7 @@
 		"lowRetainment": "Low Retainment",
 		"lowRetainmentRemoval_one": "{{count}} low-retainment validator will be removed.",
 		"lowRetainmentRemoval_other": "{{count}} low-retainment validators will be removed.",
+		"lowRetainmentValidators": "Low-retainment validators",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Add validators from scratch.",
 		"manual_selection": "Manual Selection",
@@ -276,6 +277,8 @@
 		"nominationHealthCheck": "Nomination Health Check",
 		"nominationHealthCheckDisableWarning": "Disabling health checks is not recommended. Potentially harmful or low-quality validators will no longer be flagged or filtered from your nominations.",
 		"nominationHealthCheckNeedsAttention": "Some of your nominations need attention.",
+		"nominationHealthIssueRemoval_one": "{{count}} validator with health issues will be removed.",
+		"nominationHealthIssueRemoval_other": "{{count}} validators with health issues will be removed.",
 		"nominationManager": "Nomination Manager",
 		"nominationSummary": "Nomination Summary",
 		"nominationsAdded": "Added",
@@ -415,6 +418,7 @@
 		"status": "Status",
 		"submitTransaction": "Ready to submit transaction.",
 		"successfullyFetchedAddress": "Successfully Fetched Address",
+		"sunsettingValidators": "Sunsetting validators",
 		"support": "Support",
 		"supportChannels": "Support Channels",
 		"switchAccount": "Switch Account",
@@ -443,6 +447,7 @@
 		"top": "Top",
 		"totalNominations": "Total Nominations",
 		"totalOperators": "Total operators",
+		"totalValidatorsToRemove": "Total to remove",
 		"transactionCancelled": "Transaction was cancelled",
 		"transactionCancelledTechnical": "Transaction cancelled due to technical issue",
 		"transactionInBlock": "Transaction in block",
@@ -498,6 +503,8 @@
 		"wrongTransaction": "Wrong transaction, please sign again.",
 		"year": "year",
 		"youAreValidator": "You are a validator",
-		"yourPayouts": "Your Payouts"
+		"yourPayouts": "Your Payouts",
+		"zugValidatorWarning_one": "Your nomination list includes {{count}} Zug validator. Zug is closing validator operations on March 31, 2027. Remove this validator from your nominations.",
+		"zugValidatorWarning_other": "Your nomination list includes {{count}} Zug validators. Zug is closing validator operations on March 31, 2027. Remove these validators from your nominations."
 	}
 }

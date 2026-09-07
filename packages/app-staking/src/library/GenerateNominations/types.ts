@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import type { ValidatorRetainmentResult } from 'plugin-staking-api/types'
+import type {
+	ValidatorRetainmentResult,
+	ValidatorWarnings,
+} from 'plugin-staking-api/types'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type {
 	AnyFunction,
@@ -60,6 +63,7 @@ export interface NominationHealthProps {
 	retainmentByAddress: ReadonlyMap<string, ValidatorRetainmentResult | null>
 	standalone?: boolean
 	validators: Validator[]
+	warnings: ValidatorWarnings
 }
 
 export interface RevertProps {

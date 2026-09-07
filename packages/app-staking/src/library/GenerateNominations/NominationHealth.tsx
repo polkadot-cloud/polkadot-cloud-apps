@@ -10,7 +10,10 @@ import type { Validator } from 'types'
 import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
 import type { NominationHealthProps } from './types'
-import { getValidatorsWithRetainment } from './utils'
+import {
+	getValidatorsWithHealthIssues,
+	getValidatorsWithRetainment,
+} from './utils'
 import { NominationHealthWrapper } from './Wrappers'
 
 export const NominationHealth = ({
@@ -19,6 +22,7 @@ export const NominationHealth = ({
 	retainmentByAddress,
 	standalone = false,
 	validators,
+	warnings,
 }: NominationHealthProps) => {
 	const { t, i18n } = useTranslation('app')
 	const validatorsWithRetainment = useMemo(
@@ -46,33 +50,54 @@ export const NominationHealth = ({
 				warningCount: warnings,
 			}
 		}, [validatorsWithRetainment])
+	const { sunsettingValidators, sunsettingWarnings, validatorsWithIssues } =
+		useMemo(
+			() =>
+				getValidatorsWithHealthIssues(
+					validators,
+					lowRetainmentValidators,
+					warnings,
+				),
+			[validators, lowRetainmentValidators, warnings],
+		)
 	const dangerCount = lowRetainmentValidators.length
-	const hasDangerWarnings = dangerCount > 0
-	const hasRetainmentWarnings = hasDangerWarnings || warningCount > 0
+	const sunsettingCount = sunsettingValidators.length
+	const hasDangerWarnings = validatorsWithIssues.length > 0
+	const hasWarnings = hasDangerWarnings || warningCount > 0
 
 	const { setNominationHealth } = useNominationHealth()
 	useEffect(() => {
 		setNominationHealth({
 			hasDangerWarnings,
 			isLoading,
-			lowRetainmentValidators,
+			lowRetainmentCount: dangerCount,
+			sunsettingCount,
+			validatorsWithIssues,
 		})
 		return () => {
 			setNominationHealth({
 				hasDangerWarnings: false,
 				isLoading: false,
-				lowRetainmentValidators: [],
+				lowRetainmentCount: 0,
+				sunsettingCount: 0,
+				validatorsWithIssues: [],
 			})
 		}
 	}, [
+		dangerCount,
 		hasDangerWarnings,
 		isLoading,
-		lowRetainmentValidators,
+		sunsettingCount,
+		validatorsWithIssues,
 		setNominationHealth,
 	])
 
 	// Keep displaying cached results while additional validator details load.
-	if (validatorsWithRetainment.length === 0 && !allValidatorsWaiting) {
+	if (
+		validatorsWithRetainment.length === 0 &&
+		!allValidatorsWaiting &&
+		!hasDangerWarnings
+	) {
 		return null
 	}
 
@@ -87,7 +112,7 @@ export const NominationHealth = ({
 
 	return (
 		<NominationHealthWrapper $standalone={standalone}>
-			{(hasRetainmentWarnings || allValidatorsWaiting) && (
+			{(hasWarnings || allValidatorsWaiting) && (
 				<div role="status">
 					<Separator
 						style={{
@@ -132,6 +157,11 @@ export const NominationHealth = ({
 				</StatusCard>
 			)}
 			<RetainmentThresholdDanger count={dangerCount} />
+			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
+				<StatusCard key={type} status="danger" role="status">
+					{t(messageKey, { count: validators.length })}
+				</StatusCard>
+			))}
 		</NominationHealthWrapper>
 	)
 }

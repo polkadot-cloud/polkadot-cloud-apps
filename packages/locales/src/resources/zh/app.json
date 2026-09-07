@@ -235,6 +235,7 @@
 		"lowRetainment": "低留存",
 		"lowRetainmentRemoval_one": "将移除 {{count}} 个低留存率验证者。",
 		"lowRetainmentRemoval_other": "将移除 {{count}} 个低留存率验证者。",
+		"lowRetainmentValidators": "留存率低的验证者",
 		"manual": "手动",
 		"manualSelectionSubtitle": "从头开始添加验证人",
 		"manual_selection": "手动选择",
@@ -273,6 +274,8 @@
 		"nominationHealthCheck": "提名健康检查",
 		"nominationHealthCheckDisableWarning": "不建议关闭健康检查。系统将不再标记或从您的提名中筛除潜在恶意或低质量的验证者。",
 		"nominationHealthCheckNeedsAttention": "部分提名需要处理。",
+		"nominationHealthIssueRemoval_one": "将移除 {{count}} 个存在健康问题的验证者。",
+		"nominationHealthIssueRemoval_other": "将移除 {{count}} 个存在健康问题的验证者。",
 		"nominationManager": "提名管理器",
 		"nominationSummary": "提名摘要",
 		"nominations": "提名",
@@ -411,6 +414,7 @@
 		"status": "状态",
 		"submitTransaction": "准备提交交易",
 		"successfullyFetchedAddress": "成功获取地址",
+		"sunsettingValidators": "即将停止运营的验证者",
 		"support": "支持",
 		"supportChannels": "支持渠道",
 		"switchAccount": "切换账户",
@@ -433,6 +437,7 @@
 		"top": "首",
 		"totalNominations": "提名总数",
 		"totalOperators": "验证人实体总数",
+		"totalValidatorsToRemove": "待移除总数",
 		"transactionCancelled": "交易已取消",
 		"transactionCancelledTechnical": "由于技术问题，交易已取消",
 		"transactionInBlock": "交易已入块",
@@ -488,6 +493,8 @@
 		"wrongTransaction": "错误交易，请重新签名",
 		"year": "年",
 		"youAreValidator": "您是验证者",
-		"yourPayouts": "您的收益"
+		"yourPayouts": "您的收益",
+		"zugValidatorWarning_one": "您的提名列表中包含 {{count}} 个 Zug 验证者。Zug 将于 2027 年 3 月 31 日停止验证者运营。请从提名中移除此验证者。",
+		"zugValidatorWarning_other": "您的提名列表中包含 {{count}} 个 Zug 验证者。Zug 将于 2027 年 3 月 31 日停止验证者运营。请从提名中移除这些验证者。"
 	}
 }

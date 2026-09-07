@@ -237,6 +237,7 @@
 		"lowRetainment": "Rétention faible",
 		"lowRetainmentRemoval_one": "{{count}} validateur à faible rétention sera supprimé.",
 		"lowRetainmentRemoval_other": "{{count}} validateurs à faible rétention seront supprimés.",
+		"lowRetainmentValidators": "Validateurs à faible rétention",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Ajoutez des validateurs à partir de zéro.",
 		"manual_selection": "Sélection manuelle",
@@ -276,6 +277,9 @@
 		"nominationHealthCheck": "Bilan de Santé des Nominations",
 		"nominationHealthCheckDisableWarning": "Il est déconseillé de désactiver le bilan de santé. Les validateurs potentiellement malveillants ou de faible qualité ne seront plus signalés ni filtrés de vos nominations.",
 		"nominationHealthCheckNeedsAttention": "Certaines de vos nominations nécessitent votre attention.",
+		"nominationHealthIssueRemoval_many": "{{count}} validateurs présentant des problèmes de santé seront supprimés.",
+		"nominationHealthIssueRemoval_one": "{{count}} validateur présentant des problèmes de santé sera supprimé.",
+		"nominationHealthIssueRemoval_other": "{{count}} validateurs présentant des problèmes de santé seront supprimés.",
 		"nominationManager": "Gestionnaire de nominations",
 		"nominationSummary": "Résumé de nomination",
 		"nominationsAdded": "Ajoutées",
@@ -415,6 +419,7 @@
 		"status": "Statut",
 		"submitTransaction": "Prêt à soumettre la transaction.",
 		"successfullyFetchedAddress": "Adresse récupérée avec succès",
+		"sunsettingValidators": "Validateurs en fin d’activité",
 		"support": "Assistance",
 		"supportChannels": "Canaux d'assistance",
 		"switchAccount": "Changer de compte",
@@ -443,6 +448,7 @@
 		"top": "Haut",
 		"totalNominations": "Total des nominations",
 		"totalOperators": "Nombre total d’opérateurs",
+		"totalValidatorsToRemove": "Total à supprimer",
 		"transactionCancelled": "La transaction a été annulée",
 		"transactionCancelledTechnical": "Transaction annulée en raison d'un problème technique",
 		"transactionInBlock": "Transaction dans le bloc",
@@ -498,6 +504,9 @@
 		"wrongTransaction": "Transaction incorrecte, veuillez signer à nouveau.",
 		"year": "année",
 		"youAreValidator": "Vous êtes un validateur",
-		"yourPayouts": "Vos paiements"
+		"yourPayouts": "Vos paiements",
+		"zugValidatorWarning_many": "Votre liste de nominations comprend {{count}} validateurs de Zug. Zug cessera ses activités de validation le 31 mars 2027. Retirez ces validateurs de vos nominations.",
+		"zugValidatorWarning_one": "Votre liste de nominations comprend {{count}} validateur de Zug. Zug cessera ses activités de validation le 31 mars 2027. Retirez ce validateur de vos nominations.",
+		"zugValidatorWarning_other": "Votre liste de nominations comprend {{count}} validateurs de Zug. Zug cessera ses activités de validation le 31 mars 2027. Retirez ces validateurs de vos nominations."
 	}
 }

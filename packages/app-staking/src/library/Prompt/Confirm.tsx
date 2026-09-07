@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useOutsideAlerter } from '@w3ux/hooks'
-import { useRef } from 'react'
+import { type ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PopoverTab } from 'ui-buttons'
 import { ConfirmText } from './Wrappers'
 
 export interface ConfirmProps {
-	text: string
+	text?: string
+	children?: ReactNode
 	controlKey: string
 	onRevert: () => void
 	onClose: () => void
@@ -16,6 +17,7 @@ export interface ConfirmProps {
 
 export const Confirm = ({
 	text,
+	children,
 	controlKey,
 	onRevert,
 	onClose,
@@ -29,7 +31,7 @@ export const Confirm = ({
 
 	return (
 		<div ref={popoverRef}>
-			<ConfirmText>{text}</ConfirmText>
+			{children ?? <ConfirmText>{text}</ConfirmText>}
 			<PopoverTab.Container position="bottom">
 				<PopoverTab.Button
 					status="danger"

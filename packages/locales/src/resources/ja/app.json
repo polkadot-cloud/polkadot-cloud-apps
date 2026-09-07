@@ -237,6 +237,7 @@
 		"lowRetainment": "低リテンション",
 		"lowRetainmentRemoval_one": "{{count}}件の低リテンションバリデータが削除されます。",
 		"lowRetainmentRemoval_other": "{{count}}件の低リテンションバリデータが削除されます。",
+		"lowRetainmentValidators": "リテンション率の低いバリデーター",
 		"manual": "手動",
 		"manualSelectionSubtitle": "バリデータを一から追加します。",
 		"manual_selection": "手動選択",
@@ -276,6 +277,8 @@
 		"nominationHealthCheck": "推薦ヘルスチェック",
 		"nominationHealthCheckDisableWarning": "ヘルスチェックを無効にすることは推奨されません。悪意がある可能性のあるバリデーターや品質の低いバリデーターが、推薦から警告または除外されなくなります。",
 		"nominationHealthCheckNeedsAttention": "一部の推薦には対応が必要です。",
+		"nominationHealthIssueRemoval_one": "ヘルスチェックで問題が見つかったバリデーター{{count}}件を削除します。",
+		"nominationHealthIssueRemoval_other": "ヘルスチェックで問題が見つかったバリデーター{{count}}件を削除します。",
 		"nominationManager": "ノミネーションマネージャー",
 		"nominationSummary": "ノミネーション概要",
 		"nominationsAdded": "追加済み",
@@ -415,6 +418,7 @@
 		"status": "ステータス",
 		"submitTransaction": "トランザクションを送信する準備ができました。",
 		"successfullyFetchedAddress": "アドレスを正常に取得しました",
+		"sunsettingValidators": "運用を終了するバリデーター",
 		"support": "サポート",
 		"supportChannels": "サポートチャネル",
 		"switchAccount": "アカウントを切り替え",
@@ -443,6 +447,7 @@
 		"top": "トップ",
 		"totalNominations": "ノミネーション合計",
 		"totalOperators": "オペレーター総数",
+		"totalValidatorsToRemove": "削除する合計",
 		"transactionCancelled": "トランザクションがキャンセルされました",
 		"transactionCancelledTechnical": "技術的な問題によりトランザクションがキャンセルされました",
 		"transactionInBlock": "トランザクションがブロックに記録されました",
@@ -498,6 +503,8 @@
 		"wrongTransaction": "誤ったトランザクションです。もう一度署名してください。",
 		"year": "年",
 		"youAreValidator": "あなたはバリデーターです",
-		"yourPayouts": "あなたの支払い"
+		"yourPayouts": "あなたの支払い",
+		"zugValidatorWarning_one": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。このバリデーターを推薦から削除してください。",
+		"zugValidatorWarning_other": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。該当するバリデーターを推薦から削除してください。"
 	}
 }

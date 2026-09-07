@@ -237,6 +237,7 @@
 		"lowRetainment": "Düşük Elde Tutma",
 		"lowRetainmentRemoval_one": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
 		"lowRetainmentRemoval_other": "Düşük elde tutma oranına sahip {{count}} doğrulayıcı kaldırılacak.",
+		"lowRetainmentValidators": "Elde tutma oranı düşük doğrulayıcılar",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Validatörleri sıfırdan ekleyin.",
 		"manual_selection": "Manuel Seçim",
@@ -276,6 +277,8 @@
 		"nominationHealthCheck": "Adaylık Sağlık Kontrolü",
 		"nominationHealthCheckDisableWarning": "Sağlık kontrolünün kapatılması önerilmez. Potansiyel olarak zararlı veya düşük kaliteli doğrulayıcılar artık adaylıklarınızda işaretlenmeyecek veya filtrelenmeyecektir.",
 		"nominationHealthCheckNeedsAttention": "Bazı adaylıklarınızla ilgilenmeniz gerekiyor.",
+		"nominationHealthIssueRemoval_one": "Sağlık sorunu olan {{count}} doğrulayıcı kaldırılacak.",
+		"nominationHealthIssueRemoval_other": "Sağlık sorunu olan {{count}} doğrulayıcı kaldırılacak.",
 		"nominationManager": "Adaylık Yöneticisi",
 		"nominationSummary": "Nominasyon Özeti",
 		"nominationsAdded": "Eklendi",
@@ -415,6 +418,7 @@
 		"status": "Durum",
 		"submitTransaction": "İşlemi göndermeye hazır.",
 		"successfullyFetchedAddress": "Adres Başarıyla Alındı",
+		"sunsettingValidators": "Faaliyetini sonlandıracak doğrulayıcılar",
 		"support": "Destek",
 		"supportChannels": "Destek Kanalları",
 		"switchAccount": "Hesap Değiştir",
@@ -443,6 +447,7 @@
 		"top": "En İyi",
 		"totalNominations": "Toplam nominasyon",
 		"totalOperators": "Toplam operatör",
+		"totalValidatorsToRemove": "Kaldırılacak toplam",
 		"transactionCancelled": "İşlem iptal edildi",
 		"transactionCancelledTechnical": "Teknik bir sorun nedeniyle işlem iptal edildi",
 		"transactionInBlock": "İşlem blokta",
@@ -498,6 +503,8 @@
 		"wrongTransaction": "Yanlış işlem, lütfen tekrar imzalayın.",
 		"year": "yıl",
 		"youAreValidator": "Bir doğrulayıcısınız",
-		"yourPayouts": "Ödemeleriniz"
+		"yourPayouts": "Ödemeleriniz",
+		"zugValidatorWarning_one": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıyı aday listenizden kaldırın.",
+		"zugValidatorWarning_other": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıları aday listenizden kaldırın."
 	}
 }
