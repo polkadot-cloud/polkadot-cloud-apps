@@ -4,6 +4,7 @@
 import { afterEach, expect, test, vi } from 'vitest'
 import { getValidatorsWithHealthIssues } from '../../app-staking/src/library/GenerateNominations/utils'
 import { fetchGetValidatorWarnings } from '../../plugin-staking-api/src/queries/getValidatorWarnings'
+import { fetchValidatorDetailsBatch } from '../../plugin-staking-api/src/queries/validatorDetailsBatch'
 
 const { query } = vi.hoisted(() => ({ query: vi.fn() }))
 
@@ -93,7 +94,43 @@ test('a successful response with no warnings returns an empty record', async () 
 	expect(await fetchGetValidatorWarnings('kusama', ['healthy'])).toEqual({})
 })
 
+test('missing warning arrays are normalized before health checks consume them', async () => {
+	query.mockResolvedValue({
+		data: {
+			getValidatorWarnings: [
+				{ candidate: 'missing' },
+				{ candidate: 'null', warnings: null },
+			],
+		},
+	})
+	expect(
+		await fetchGetValidatorWarnings('polkadot', ['missing', 'null']),
+	).toEqual({
+		missing: [],
+		null: [],
+	})
+})
+
 test('warning API failures follow the shared query fallback', async () => {
 	query.mockRejectedValue(new Error('API unavailable'))
 	expect(await fetchGetValidatorWarnings('polkadot', ['zug'])).toEqual({})
+})
+
+test('cached warning and retainment queries propagate failures for retry', async () => {
+	query.mockRejectedValue(new Error('API unavailable'))
+	await expect(
+		fetchGetValidatorWarnings('polkadot', ['zug'], { throwOnError: true }),
+	).rejects.toThrow('API unavailable')
+	await expect(
+		fetchValidatorDetailsBatch('polkadot', ['zug'], 99, 1, 30, {
+			throwOnError: true,
+		}),
+	).rejects.toThrow('API unavailable')
+})
+
+test('missing response data is not cached as a successful empty result', async () => {
+	query.mockResolvedValue({ data: null })
+	await expect(
+		fetchGetValidatorWarnings('polkadot', ['zug'], { throwOnError: true }),
+	).rejects.toThrow('Staking API returned no data')
 })

@@ -17,6 +17,7 @@ const QUERY = gql`
 export const fetchGetValidatorWarnings = async (
 	network: string,
 	candidates: string[],
+	options?: { throwOnError?: boolean },
 ): Promise<ValidatorWarnings> => {
 	if (candidates.length === 0) {
 		return {}
@@ -25,7 +26,7 @@ export const fetchGetValidatorWarnings = async (
 		QUERY,
 		{ network, candidates },
 		{ getValidatorWarnings: [] },
-		{ fetchPolicy: 'no-cache' },
+		{ fetchPolicy: 'no-cache', ...options },
 	)
 	return Object.fromEntries(
 		(data.getValidatorWarnings ?? []).map(({ candidate, warnings }) => [

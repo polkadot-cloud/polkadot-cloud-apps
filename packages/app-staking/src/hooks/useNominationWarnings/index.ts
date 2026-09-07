@@ -60,13 +60,10 @@ export const useNominationWarnings = () => {
 
 	// Read-only accounts should still see warnings about their Polkadot nominations.
 	const canDisplay =
-		network === 'polkadot' &&
-		retainmentStatsEnabled &&
-		Boolean(activeAddress) &&
-		(!forPool || canManagePoolNominations)
+		network === 'polkadot' && retainmentStatsEnabled && Boolean(activeAddress)
 	const canFix = !isReadOnlyAccount(activeAddress)
 
-	const addressesKey = JSON.stringify(validatorAddresses)
+	const addressesKey = JSON.stringify([...new Set(validatorAddresses)].sort())
 	const request = useMemo(
 		() => ({
 			network,

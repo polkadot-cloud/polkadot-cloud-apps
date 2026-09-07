@@ -79,6 +79,43 @@ test('empty results are cached and empty selections do not fetch', async () => {
 	expect(fetchWarnings).toHaveBeenCalledTimes(1)
 })
 
+test('late responses remain scoped after switching network and nomination selection', async () => {
+	const oldResponse = Promise.withResolvers<Record<string, string[]>>()
+	fetchWarnings.mockReturnValueOnce(oldResponse.promise)
+	const oldRequest = fetchNominationWarnings(request)
+	const nextRequest = {
+		...request,
+		network: 'kusama',
+		addresses: ['healthy'],
+	}
+	fetchWarnings.mockResolvedValueOnce({})
+	await fetchNominationWarnings(nextRequest)
+	const nextResult =
+		nominationWarningsStore.getSnapshot()[warningRequestKey(nextRequest)]
+	oldResponse.resolve({ zug: ['ZUG_VALIDATOR'] })
+	await oldRequest
+
+	expect(
+		nominationWarningsStore.getSnapshot()[warningRequestKey(nextRequest)],
+	).toBe(nextResult)
+	expect(nextResult?.warnings).toEqual({})
+})
+
+test('before era initialization only the warning query runs', async () => {
+	await fetchNominationWarnings({ ...request, era: 0 })
+	expect(fetchWarnings).toHaveBeenCalledTimes(1)
+	expect(fetchDetails).not.toHaveBeenCalled()
+	await fetchNominationWarnings(request)
+	expect(fetchDetails).toHaveBeenCalledWith(
+		'polkadot',
+		['healthy', 'zug'],
+		99,
+		1,
+		30,
+		{ throwOnError: true },
+	)
+})
+
 test('an unexpected failure clears loading and permits a later retry', async () => {
 	fetchWarnings.mockRejectedValueOnce(new Error('unavailable'))
 	await fetchNominationWarnings(request)

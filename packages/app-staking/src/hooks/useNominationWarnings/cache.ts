@@ -51,7 +51,7 @@ export const fetchNominationWarnings = async (request: WarningRequest) => {
 
 	try {
 		const [warnings, details] = await Promise.all([
-			fetchGetValidatorWarnings(network, addresses),
+			fetchGetValidatorWarnings(network, addresses, { throwOnError: true }),
 			era > 0
 				? fetchValidatorDetailsBatch(
 						network,
@@ -59,6 +59,7 @@ export const fetchNominationWarnings = async (request: WarningRequest) => {
 						era - 1,
 						erasPerDay,
 						30,
+						{ throwOnError: true },
 					)
 				: Promise.resolve({ validatorRetainmentBatch: [] }),
 		])
