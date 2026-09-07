@@ -187,8 +187,7 @@ export const ValidatorListInner = ({
 					<Pagination page={page} total={totalPages} setter={setPage} />
 				)}
 				{BeforeListNode}
-				{/* Replay the entrance for the whole selection, including retained validators. */}
-				<MotionContainer key={pageKey}>
+				<MotionContainer>
 					{listItems.length ? (
 						listItems.map((validator) => (
 							<MotionItem
