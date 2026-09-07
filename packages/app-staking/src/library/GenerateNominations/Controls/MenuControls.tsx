@@ -1,7 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
+import {
+	faCaretDown,
+	faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTranslation } from 'react-i18next'
@@ -55,14 +58,13 @@ export const MenuControls = ({
 				>
 					<ButtonMenu
 						asLabel
-						className={disabled ? 'generateDisabled' : undefined}
-						disabled={disabled}
-						iconLeft={optimalSelectionOnly ? faWandMagicSparkles : undefined}
-						text={
-							optimalSelectionOnly
-								? t('generate', { ns: 'app' })
-								: t('reGenerate', { ns: 'app' })
+						className={
+							disabled ? 'generateButton generateDisabled' : 'generateButton'
 						}
+						disabled={disabled}
+						iconLeft={faWandMagicSparkles}
+						iconRight={faCaretDown}
+						text={t('generate', { ns: 'app' })}
 					/>
 				</ConfirmAction>
 			)}

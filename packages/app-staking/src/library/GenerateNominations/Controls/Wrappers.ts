@@ -22,6 +22,10 @@ const BaseMenuWrapper = styled.div`
       margin-right: 2.25rem;
     }
 
+    .generateButton > svg[data-icon='caret-down'] {
+      transform: scale(0.9);
+    }
+
     .generateDisabled {
       background: transparent;
       opacity: var(--opacity-disabled);
