@@ -4,14 +4,13 @@
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
-import { Confirm } from 'library/Prompt/Confirm'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseSubmitExtrinsic } from 'tx-submit/types'
-import { ButtonSubmit } from 'ui-buttons'
+import { ButtonSubmit, ButtonSubmitWithFee } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import { Form } from './Form'
-import { NominationSummary } from './Wrappers'
+import { FixIssuesFooter, NominationSummary } from './Wrappers'
 
 export const MenuAction = ({
 	isPool,
@@ -58,11 +57,7 @@ export const MenuAction = ({
 				align="end"
 				sideOffset={8}
 				content={
-					<Confirm
-						controlKey="fix_nomination_issues"
-						onClose={() => setOpen(false)}
-						onRevert={removeValidatorsWithIssues}
-					>
+					<>
 						<NominationSummary>
 							<h3>{t('fixIssues')}</h3>
 							<div className="row">
@@ -73,12 +68,19 @@ export const MenuAction = ({
 								<span>{t('sunsettingValidators')}</span>
 								<span>{sunsettingCount}</span>
 							</div>
-							<div className="row total" style={{ borderBottom: 0 }}>
+							<div className="row total">
 								<span>{t('totalValidatorsToRemove')}:</span>
 								<span>{validatorsWithIssues.length}</span>
 							</div>
 						</NominationSummary>
-					</Confirm>
+						<FixIssuesFooter>
+							<ButtonSubmitWithFee
+								pulse
+								submitText={t('confirm')}
+								onSubmit={removeValidatorsWithIssues}
+							/>
+						</FixIssuesFooter>
+					</>
 				}
 			>
 				<ButtonSubmit asLabel lg text={t('fixIssues')} />
