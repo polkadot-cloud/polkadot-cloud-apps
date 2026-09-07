@@ -50,18 +50,16 @@ export const NominationHealth = ({
 				warningCount: warnings,
 			}
 		}, [validatorsWithRetainment])
-	const { sunsettingValidators, sunsettingWarnings, validatorsWithIssues } =
-		useMemo(
-			() =>
-				getValidatorsWithHealthIssues(
-					validators,
-					lowRetainmentValidators,
-					warnings,
-				),
-			[validators, lowRetainmentValidators, warnings],
-		)
+	const { sunsettingCount, sunsettingWarnings, validatorsWithIssues } = useMemo(
+		() =>
+			getValidatorsWithHealthIssues(
+				validators,
+				lowRetainmentValidators,
+				warnings,
+			),
+		[validators, lowRetainmentValidators, warnings],
+	)
 	const dangerCount = lowRetainmentValidators.length
-	const sunsettingCount = sunsettingValidators.length
 	const hasDangerWarnings = validatorsWithIssues.length > 0
 	const hasWarnings = hasDangerWarnings || warningCount > 0
 

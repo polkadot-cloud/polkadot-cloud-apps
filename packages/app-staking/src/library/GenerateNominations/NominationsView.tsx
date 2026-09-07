@@ -75,6 +75,8 @@ export const NominationsView = ({
 		canManageNominations &&
 		!eligibilityLoading &&
 		listReady
+	const showEmptyNominations =
+		nominations.length === 0 && canManageNominations && !eligibilityLoading
 
 	// Load validator metrics only when the settled nomination list can use them.
 	const validatorAddresses = nominations.map(({ address }) => address)
@@ -145,10 +147,7 @@ export const NominationsView = ({
 		<div ref={heightRef}>
 			{fetching ? (
 				loading
-			) : nominations.length === 0 &&
-				canManageNominations &&
-				!eligibilityLoading &&
-				cloudValidatorHandler ? (
+			) : showEmptyNominations && cloudValidatorHandler ? (
 				<>
 					{beforeList}
 					<EmptyNominations>

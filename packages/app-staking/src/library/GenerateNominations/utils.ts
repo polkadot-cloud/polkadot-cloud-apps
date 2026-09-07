@@ -38,16 +38,12 @@ export const getValidatorsWithHealthIssues = (
 			validators.map(({ address }) => address),
 		),
 	)
-	const sunsettingValidators = validators.filter(({ address }) =>
-		sunsettingAddresses.has(address),
-	)
-	const issueAddresses = new Set(
-		[...lowRetainmentValidators, ...sunsettingValidators].map(
-			({ address }) => address,
-		),
-	)
+	const issueAddresses = new Set([
+		...sunsettingAddresses,
+		...lowRetainmentValidators.map(({ address }) => address),
+	])
 	return {
-		sunsettingValidators,
+		sunsettingCount: sunsettingAddresses.size,
 		sunsettingWarnings,
 		validatorsWithIssues: validators.filter(({ address }) =>
 			issueAddresses.has(address),

@@ -173,11 +173,8 @@ export const useNominationControls = ({
 				}
 			: undefined
 	if (cloudValidatorHandler) {
-		filterHandlers.push(cloudValidatorHandler)
-	}
-
-	if (retainmentStatsEnabled) {
 		filterHandlers.push(
+			cloudValidatorHandler,
 			{
 				title: t('highRetainer', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
