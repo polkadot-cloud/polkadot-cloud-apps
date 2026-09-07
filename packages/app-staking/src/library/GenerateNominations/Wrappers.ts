@@ -136,6 +136,7 @@ export const CloudStartButton = styled(ButtonMonoInvert)`
     background: var(--gray-200);
     border: 1px solid var(--gray-500);
     border-radius: var(--btn-sm-radius);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 6%);
     color: var(--gray-900);
     font-size: var(--btn-lg-font-size);
     line-height: 1.4;
