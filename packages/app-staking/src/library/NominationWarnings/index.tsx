@@ -17,13 +17,14 @@ import {
 } from 'library/GenerateNominations/utils'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondFor } from 'types'
 import { ButtonPrimary } from 'ui-buttons'
 import { Page, StatusCard } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
 import classes from './index.module.scss'
+import { SetNominationWarningsLoadingContext } from './loading'
 
 const ValidatorWarning = ({
 	children,
@@ -71,13 +72,8 @@ export const RetainmentThresholdDanger = ({
 	) : null
 }
 
-export const NominationWarnings = ({
-	bondFor,
-	onLoadingChange,
-}: {
-	bondFor?: BondFor
-	onLoadingChange?: (isLoading: boolean) => void
-}) => {
+export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
+	const setWarningsLoading = useContext(SetNominationWarningsLoadingContext)
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
@@ -130,9 +126,9 @@ export const NominationWarnings = ({
 	const isLoading = validatorDetails.isLoading || warningsLoading
 
 	useEffect(() => {
-		onLoadingChange?.(isLoading)
-		return () => onLoadingChange?.(false)
-	}, [isLoading, onLoadingChange])
+		setWarningsLoading(isLoading)
+		return () => setWarningsLoading(false)
+	}, [isLoading, setWarningsLoading])
 
 	const { sunsettingWarnings } = getValidatorsWithHealthIssues(
 		nominations,
@@ -169,7 +165,7 @@ export const NominationWarnings = ({
 	}
 
 	return (
-		<Page.Container style={{ flex: '0 0 auto' }}>
+		<>
 			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
 				<Page.Row key={type} yMargin="compact">
 					<Page.RowSection standalone>
@@ -186,6 +182,6 @@ export const NominationWarnings = ({
 					</Page.RowSection>
 				</Page.Row>
 			)}
-		</Page.Container>
+		</>
 	)
 }

@@ -23,13 +23,12 @@ import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
-import { NominationWarnings } from 'library/NominationWarnings'
-import { NominationWarningsLoadingContext } from 'library/NominationWarnings/loading'
+import { NominationWarningsLoadingProvider } from 'library/NominationWarnings/loading'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
 import { ApolloProvider, client } from 'plugin-staking-api'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
 import {
@@ -60,7 +59,6 @@ const RouterInner = () => {
 	const { pathname, search } = useLocation()
 	const { activeAddress } = useActiveAccount()
 	const { setContainerRefs, advancedMode } = useUi()
-	const [warningsLoading, setWarningsLoading] = useState(false)
 
 	// References to outer container
 	const mainInterfaceRef = useRef<HTMLDivElement>(null)
@@ -132,32 +130,29 @@ const RouterInner = () => {
 					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<NominationWarningsLoadingContext.Provider
-								value={warningsLoading}
-							>
+							<NominationWarningsLoadingProvider>
 								<Headers NodesLeft={{ sync: Sync }} />
-							</NominationWarningsLoadingContext.Provider>
-							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
-								<NominationWarnings onLoadingChange={setWarningsLoading} />
-								<Routes>
-									{getPagesConfig(PagesConfig, network, null, advancedMode, {
-										inPool,
-										isBonding,
-									}).map((page) => (
+								<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+									<Routes>
+										{getPagesConfig(PagesConfig, network, null, advancedMode, {
+											inPool,
+											isBonding,
+										}).map((page) => (
+											<Route
+												key={`main_interface_page_${page.key}`}
+												path={page.hash}
+												element={<PageWithTitle page={page} />}
+											/>
+										))}
 										<Route
-											key={`main_interface_page_${page.key}`}
-											path={page.hash}
-											element={<PageWithTitle page={page} />}
+											key="main_interface_navigate"
+											path="*"
+											element={<Navigate to="/overview" />}
 										/>
-									))}
-									<Route
-										key="main_interface_navigate"
-										path="*"
-										element={<Navigate to="/overview" />}
-									/>
-								</Routes>
-							</ErrorBoundary>
-							<MainFooter />
+									</Routes>
+								</ErrorBoundary>
+								<MainFooter />
+							</NominationWarningsLoadingProvider>
 						</HelmetProvider>
 					</Page.Main>
 				</Page.Body>
