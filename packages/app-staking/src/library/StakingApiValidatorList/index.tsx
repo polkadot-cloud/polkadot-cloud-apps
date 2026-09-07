@@ -7,6 +7,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	fetchValidatorAvgRewardRateBatch,
@@ -217,7 +218,10 @@ export const StakingApiValidatorListInner = ({
 										validator={validator}
 										format={effectiveListFormat}
 										totalActive={result.totalActive}
-										eraPoints={eraPointsByAddress.get(validator.address) ?? []}
+										eraPoints={
+											eraPointsByAddress.get(validator.address) ??
+											EMPTY_ERA_POINTS
+										}
 										rate={rateByAddress.get(validator.address)}
 										isEraPointsLoading={isEraPointsLoading}
 										isRateLoading={isRateLoading}
