@@ -104,13 +104,13 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
 
-	// Display actionable warnings for the active account's Polkadot nominations.
+	// Read-only accounts should still see warnings about their Polkadot nominations.
 	const canDisplay =
 		network === 'polkadot' &&
 		retainmentStatsEnabled &&
-		!isReadOnlyAccount(activeAddress) &&
 		Boolean(activeAddress) &&
 		(!forPool || canManagePoolNominations)
+	const canFix = !isReadOnlyAccount(activeAddress)
 
 	// Load retainment details for the nominated validators.
 	const validatorDetails = useValidatorDetails(
@@ -164,7 +164,7 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
 				<Page.Row key={type} yMargin="compact">
 					<Page.RowSection standalone>
-						<ValidatorWarning onFix={handleFix}>
+						<ValidatorWarning onFix={canFix ? handleFix : undefined}>
 							{t(messageKey, { count: validators.length })}
 						</ValidatorWarning>
 					</Page.RowSection>
@@ -173,7 +173,10 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 			{dangerCount > 0 && (
 				<Page.Row yMargin="compact">
 					<Page.RowSection standalone>
-						<RetainmentThresholdDanger count={dangerCount} onFix={handleFix} />
+						<RetainmentThresholdDanger
+							count={dangerCount}
+							onFix={canFix ? handleFix : undefined}
+						/>
 					</Page.RowSection>
 				</Page.Row>
 			)}
