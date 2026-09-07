@@ -106,8 +106,9 @@ export const NominationWarnings = ({ bondFor }: { bondFor?: BondFor }) => {
 	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
 
-	// Display actionable warnings for the active account's nominations.
+	// Display actionable warnings for the active account's Polkadot nominations.
 	const canDisplay =
+		network === 'polkadot' &&
 		!isReadOnlyAccount(activeAddress) &&
 		pluginEnabled('staking_api') &&
 		Boolean(activeAddress) &&
