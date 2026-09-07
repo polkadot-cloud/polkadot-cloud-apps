@@ -23,7 +23,6 @@ import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
 import { useValidatorFromUrl } from 'hooks/useValidatorFromUrl'
 import { HelpTooltip } from 'library/HelpTooltip'
-import { NominationWarningsLoadingProvider } from 'library/NominationWarnings/loading'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { Tooltip } from 'library/Tooltip'
@@ -130,29 +129,27 @@ const RouterInner = () => {
 					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<NominationWarningsLoadingProvider>
-								<Headers NodesLeft={{ sync: Sync }} />
-								<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
-									<Routes>
-										{getPagesConfig(PagesConfig, network, null, advancedMode, {
-											inPool,
-											isBonding,
-										}).map((page) => (
-											<Route
-												key={`main_interface_page_${page.key}`}
-												path={page.hash}
-												element={<PageWithTitle page={page} />}
-											/>
-										))}
+							<Headers NodesLeft={{ sync: Sync }} />
+							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
+								<Routes>
+									{getPagesConfig(PagesConfig, network, null, advancedMode, {
+										inPool,
+										isBonding,
+									}).map((page) => (
 										<Route
-											key="main_interface_navigate"
-											path="*"
-											element={<Navigate to="/overview" />}
+											key={`main_interface_page_${page.key}`}
+											path={page.hash}
+											element={<PageWithTitle page={page} />}
 										/>
-									</Routes>
-								</ErrorBoundary>
-								<MainFooter />
-							</NominationWarningsLoadingProvider>
+									))}
+									<Route
+										key="main_interface_navigate"
+										path="*"
+										element={<Navigate to="/overview" />}
+									/>
+								</Routes>
+							</ErrorBoundary>
+							<MainFooter />
 						</HelmetProvider>
 					</Page.Main>
 				</Page.Body>
