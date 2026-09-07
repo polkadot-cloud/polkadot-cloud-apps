@@ -3,6 +3,7 @@
 
 import styled from 'styled-components'
 import { CardWrapper } from 'ui-app/Card'
+import { ButtonMonoInvert } from 'ui-buttons'
 import { Loader } from 'ui-core/base'
 import type { StandaloneStyleProps } from './types'
 
@@ -109,4 +110,54 @@ export const NominationHealthWrapper = styled.section<StandaloneStyleProps>`
   margin: ${({ $standalone }) =>
 		$standalone ? '0 0.9rem 1rem' : '1.5rem 0.9rem 1rem'};
   width: calc(100% - 1.8rem);
+`
+
+export const EmptyNominations = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.15rem 2rem;
+  width: 100%;
+
+  > h4 {
+    border-bottom: 1px solid var(--gray-500);
+    color: var(--text-tertiary);
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+    padding-bottom: 0.35rem;
+  }
+`
+
+export const CloudStartButton = styled(ButtonMonoInvert)`
+  && {
+    background: var(--gray-200);
+    border: 1px solid var(--gray-500);
+    border-radius: var(--btn-sm-radius);
+    color: var(--gray-900);
+    font-size: var(--btn-lg-font-size);
+    line-height: 1.4;
+    max-width: 100%;
+    padding: 0.85rem 1.15rem;
+    text-align: left;
+    white-space: normal;
+
+    &:hover:not(:disabled) {
+      border-color: var(--gray-600);
+      transform: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--gray-900);
+      outline-offset: 4px;
+    }
+
+    > svg {
+      flex-shrink: 0;
+      font-size: 0.95em;
+      margin: 0 0.65rem 0 0;
+    }
+  }
 `

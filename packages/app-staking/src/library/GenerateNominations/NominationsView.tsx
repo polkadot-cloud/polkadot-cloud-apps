@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { MaxNominations } from 'consts'
 import { ListProvider } from 'contexts/List'
@@ -21,6 +22,8 @@ import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
 import { useAllValidatorsWaiting } from './useAllValidatorsWaiting'
 import {
+	CloudStartButton,
+	EmptyNominations,
 	NominationEditorWrapper,
 	NominationsLoader,
 	StandaloneCards,
@@ -28,6 +31,7 @@ import {
 } from './Wrappers'
 
 export const NominationsView = ({
+	cloudValidatorHandler,
 	canManageNominations,
 	displayFor,
 	eligibilityLoading,
@@ -141,6 +145,23 @@ export const NominationsView = ({
 		<div ref={heightRef}>
 			{fetching ? (
 				loading
+			) : nominations.length === 0 &&
+				canManageNominations &&
+				!eligibilityLoading &&
+				cloudValidatorHandler ? (
+				<>
+					{beforeList}
+					<EmptyNominations>
+						<h4>{t('noValidatorsSelected', { ns: 'app' })}</h4>
+						<CloudStartButton
+							lg
+							text={t('startWithCloudValidator', { ns: 'app' })}
+							iconLeft={faPlus}
+							disabled={cloudValidatorHandler.isDisabled()}
+							onClick={cloudValidatorHandler.onClick}
+						/>
+					</EmptyNominations>
+				</>
 			) : (
 				<ValidatorListInner
 					validators={nominations}

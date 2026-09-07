@@ -26,6 +26,7 @@ export interface GenerateNominationsProps {
 }
 
 export interface NominationsViewProps {
+	cloudValidatorHandler?: FilterHandler
 	canManageNominations: boolean
 	displayFor: DisplayFor
 	eligibilityLoading: boolean
