@@ -124,6 +124,11 @@ export const NominationHealth = ({
 					</Separator>
 				</div>
 			)}
+			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
+				<StatusCard key={type} status="danger" role="status">
+					{t(messageKey, { count: validators.length })}
+				</StatusCard>
+			))}
 			{averageRetainment !== null && status !== null && (
 				<StatusCard
 					status={status}
@@ -155,11 +160,6 @@ export const NominationHealth = ({
 				</StatusCard>
 			)}
 			<RetainmentThresholdDanger count={dangerCount} />
-			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
-				<StatusCard key={type} status="danger" role="status">
-					{t(messageKey, { count: validators.length })}
-				</StatusCard>
-			))}
 		</NominationHealthWrapper>
 	)
 }
