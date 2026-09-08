@@ -21,45 +21,56 @@ test('overlapping health issues remove each selected validator once in selection
 	const both = validator('both')
 	const low = validator('low')
 	const sunsetting = validator('sunsetting')
+	const hetzner = validator('hetzner')
 	const healthy = validator('healthy')
 	const result = getValidatorsWithHealthIssues(
-		[sunsetting, healthy, both, low],
+		[sunsetting, healthy, both, low, hetzner],
 		[low, both, validator('removed')],
 		{
-			both: ['ZUG_VALIDATOR'],
+			both: ['ZUG_VALIDATOR', 'HETZNER'],
 			sunsetting: ['ZUG_VALIDATOR'],
-			removed: ['ZUG_VALIDATOR'],
+			hetzner: ['HETZNER'],
+			removed: ['ZUG_VALIDATOR', 'HETZNER'],
 		},
 	)
 
-	expect(result.sunsettingCount).toBe(2)
-	expect(result.sunsettingWarnings).toEqual([
+	expect(result.flaggedValidatorCount).toBe(3)
+	expect(result.validatorWarningGroups).toEqual([
 		{
 			type: 'ZUG_VALIDATOR',
 			messageKey: 'zugValidatorWarning',
 			validators: [sunsetting, both],
 		},
+		{
+			type: 'HETZNER',
+			messageKey: 'hetznerValidatorWarning',
+			validators: [both, hetzner],
+		},
 	])
-	expect(result.validatorsWithIssues).toEqual([sunsetting, both, low])
+	expect(result.validatorsWithIssues).toEqual([sunsetting, both, low, hetzner])
 })
 
-test('sunsetting warnings still apply when retainment data is unavailable', () => {
-	const zug = validator('zug')
-	expect(
-		getValidatorsWithHealthIssues([zug], [], { zug: ['ZUG_VALIDATOR'] })
-			.validatorsWithIssues,
-	).toEqual([zug])
-})
+test.each(['ZUG_VALIDATOR', 'HETZNER'] as const)(
+	'%s warnings still apply when retainment data is unavailable',
+	(type) => {
+		const flagged = validator('flagged')
+		const result = getValidatorsWithHealthIssues([flagged], [], {
+			flagged: [type],
+		})
+		expect(result.validatorsWithIssues).toEqual([flagged])
+		expect(result.flaggedValidatorCount).toBe(1)
+	},
+)
 
 test('clearing or replacing a selection discards warnings for removed validators', () => {
 	for (const validators of [[], [validator('healthy')]]) {
 		expect(
 			getValidatorsWithHealthIssues(validators, [], {
-				removed: ['ZUG_VALIDATOR'],
+				removed: ['ZUG_VALIDATOR', 'HETZNER'],
 			}),
 		).toEqual({
-			sunsettingCount: 0,
-			sunsettingWarnings: [],
+			flaggedValidatorCount: 0,
+			validatorWarningGroups: [],
 			validatorsWithIssues: [],
 		})
 	}
@@ -88,6 +99,26 @@ test('warning queries preserve supplied addresses and bypass the Apollo cache', 
 		}),
 	)
 })
+
+test.each(['polkadot', 'kusama'])(
+	'Hetzner warnings are preserved from the %s API response',
+	async (network) => {
+		query.mockResolvedValue({
+			data: {
+				getValidatorWarnings: [
+					{ candidate: 'hetzner', warnings: ['HETZNER'] },
+					{ candidate: 'both', warnings: ['ZUG_VALIDATOR', 'HETZNER'] },
+				],
+			},
+		})
+		expect(
+			await fetchGetValidatorWarnings(network, ['hetzner', 'both', 'healthy']),
+		).toEqual({
+			hetzner: ['HETZNER'],
+			both: ['ZUG_VALIDATOR', 'HETZNER'],
+		})
+	},
+)
 
 test('a successful response with no warnings returns an empty record', async () => {
 	query.mockResolvedValue({ data: { getValidatorWarnings: [] } })

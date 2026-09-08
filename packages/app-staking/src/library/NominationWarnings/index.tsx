@@ -57,16 +57,19 @@ export const RetainmentThresholdDanger = ({
 
 export const NominationWarnings = () => {
 	const { t } = useTranslation('app')
-	const { canDisplay, canFix, dangerCount, handleFix, sunsettingWarnings } =
+	const { canDisplay, canFix, dangerCount, handleFix, validatorWarningGroups } =
 		useNominationWarnings()
 
-	if (!canDisplay || (dangerCount === 0 && sunsettingWarnings.length === 0)) {
+	if (
+		!canDisplay ||
+		(dangerCount === 0 && validatorWarningGroups.length === 0)
+	) {
 		return null
 	}
 
 	return (
 		<>
-			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
+			{validatorWarningGroups.map(({ type, messageKey, validators }) => (
 				<Page.Row key={type} yMargin="compact">
 					<Page.RowSection standalone>
 						<ValidatorWarning onFix={canFix ? handleFix : undefined}>

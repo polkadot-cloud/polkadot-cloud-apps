@@ -7,7 +7,7 @@ import type {
 } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
 import { clampRate } from 'utils'
-import { SunsettingWarnings } from './consts'
+import { ValidatorWarningDefinitions } from './consts'
 
 export const getValidatorsWithRetainment = (
 	validators: Validator[],
@@ -21,11 +21,11 @@ export const getValidatorsWithRetainment = (
 			: []
 	})
 
-export const getSunsettingWarnings = (
+export const getValidatorWarningGroups = (
 	validators: Validator[],
 	warnings: ValidatorWarnings,
 ) =>
-	SunsettingWarnings.map(({ type, messageKey }) => ({
+	ValidatorWarningDefinitions.map(({ type, messageKey }) => ({
 		type,
 		messageKey,
 		validators: validators.filter(({ address }) =>
@@ -38,19 +38,19 @@ export const getValidatorsWithHealthIssues = (
 	lowRetainmentValidators: Validator[],
 	warnings: ValidatorWarnings,
 ) => {
-	const sunsettingWarnings = getSunsettingWarnings(validators, warnings)
-	const sunsettingAddresses = new Set(
-		sunsettingWarnings.flatMap(({ validators }) =>
+	const validatorWarningGroups = getValidatorWarningGroups(validators, warnings)
+	const flaggedAddresses = new Set(
+		validatorWarningGroups.flatMap(({ validators }) =>
 			validators.map(({ address }) => address),
 		),
 	)
 	const issueAddresses = new Set([
-		...sunsettingAddresses,
+		...flaggedAddresses,
 		...lowRetainmentValidators.map(({ address }) => address),
 	])
 	return {
-		sunsettingCount: sunsettingAddresses.size,
-		sunsettingWarnings,
+		flaggedValidatorCount: flaggedAddresses.size,
+		validatorWarningGroups,
 		validatorsWithIssues: validators.filter(({ address }) =>
 			issueAddresses.has(address),
 		),

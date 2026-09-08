@@ -498,7 +498,7 @@ export interface GetNominationStatusData {
 	getNominationStatus: StakerNominationStatus
 }
 
-export type ValidatorWarningType = 'ZUG_VALIDATOR'
+export type ValidatorWarningType = 'ZUG_VALIDATOR' | 'HETZNER'
 
 export type ValidatorWarnings = Record<string, ValidatorWarningType[]>
 

@@ -28,7 +28,7 @@ export const MenuAction = ({
 		active: healthCheckActive,
 		hasDangerWarnings,
 		lowRetainmentCount,
-		sunsettingCount,
+		flaggedValidatorCount,
 		validatorsWithIssues,
 	} = useNominationHealth()
 	const [open, setOpen] = useState(false)
@@ -65,8 +65,8 @@ export const MenuAction = ({
 								<span>{lowRetainmentCount}</span>
 							</div>
 							<div className="row">
-								<span>{t('sunsettingValidators')}</span>
-								<span>{sunsettingCount}</span>
+								<span>{t('validatorsWithWarnings')}</span>
+								<span>{flaggedValidatorCount}</span>
 							</div>
 							<div className="row total">
 								<span>{t('totalValidatorsToRemove')}:</span>

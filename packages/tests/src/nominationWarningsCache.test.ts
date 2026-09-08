@@ -24,6 +24,7 @@ const request = {
 	network: 'polkadot',
 	era: 100,
 	erasPerDay: 1,
+	retainmentStatsEnabled: true,
 	addresses: ['zug', 'healthy'],
 }
 
@@ -114,6 +115,36 @@ test('before era initialization only the warning query runs', async () => {
 		30,
 		{ throwOnError: true },
 	)
+})
+
+test('Hetzner warnings load on Kusama without unsupported retainment queries', async () => {
+	const kusamaRequest = {
+		...request,
+		network: 'kusama',
+		retainmentStatsEnabled: false,
+		addresses: ['hetzner', 'healthy'],
+	}
+	fetchWarnings.mockResolvedValue({ hetzner: ['HETZNER'] })
+	await fetchNominationWarnings(kusamaRequest)
+
+	expect(fetchWarnings).toHaveBeenCalledWith('kusama', ['healthy', 'hetzner'], {
+		throwOnError: true,
+	})
+	expect(fetchDetails).not.toHaveBeenCalled()
+	expect(
+		nominationWarningsStore.getSnapshot()[warningRequestKey(kusamaRequest)],
+	).toEqual({
+		status: 'ready',
+		warnings: { hetzner: ['HETZNER'] },
+		retainmentByAddress: new Map(),
+	})
+})
+
+test('enabling retainment does not reuse a warning-only cache entry', async () => {
+	await fetchNominationWarnings({ ...request, retainmentStatsEnabled: false })
+	expect(fetchDetails).not.toHaveBeenCalled()
+	await fetchNominationWarnings(request)
+	expect(fetchDetails).toHaveBeenCalledTimes(1)
 })
 
 test('an unexpected failure clears loading and permits a later retry', async () => {
