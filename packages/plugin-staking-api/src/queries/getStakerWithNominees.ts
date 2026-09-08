@@ -6,7 +6,7 @@ import type {
 	ActiveStatusWithNominees,
 	GetActiveStakerWithNomineesData,
 } from '../types'
-import { fetchQuery } from './generic'
+import { fetchQuery, useApiQuery } from './generic'
 
 const QUERY = gql`
   query GetStakerWithNominees($network: String!, $era: Int!, $who: String!, $addresses: [String!]!) {
@@ -14,6 +14,7 @@ const QUERY = gql`
     statuses {
       address
       status
+      activeBacking
     }
   }
   isActiveStaker(network: $network, address: $who) {
@@ -26,6 +27,17 @@ const DEFAULT_DATA: GetActiveStakerWithNomineesData = {
 	isActiveStaker: { active: false },
 	getNomineesStatus: { statuses: [] },
 }
+
+export const useStakerWithNominees = (
+	variables: { network: string; era: number; who: string; addresses: string[] },
+	options?: { skip?: boolean },
+) =>
+	useApiQuery<GetActiveStakerWithNomineesData>(
+		QUERY,
+		variables,
+		DEFAULT_DATA,
+		options,
+	)
 
 export const fetchGetStakerWithNominees = async (
 	network: string,

@@ -3,6 +3,7 @@
 
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { NominationList } from 'library/NominationList'
 import { useTranslation } from 'react-i18next'
 import { Subheading } from 'ui-core/canvas'
@@ -11,14 +12,15 @@ import { NominationsWrapper } from '../Wrappers'
 
 export const Nominations = ({ stash, poolId }: NominationsProps) => {
 	const { t } = useTranslation()
-	const { getValidators } = useValidators()
+	const { getValidators, formatWithPrefs } = useValidators()
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { poolsNominations } = useBondedPools()
 
 	// Extract validator entries from pool targets.
 	const targets = poolsNominations[poolId]?.targets || []
-	const filteredTargets = getValidators().filter(({ address }) =>
-		targets.includes(address),
-	)
+	const filteredTargets = retainmentStatsEnabled
+		? formatWithPrefs(targets)
+		: getValidators().filter(({ address }) => targets.includes(address))
 
 	return (
 		<NominationsWrapper>

@@ -16,7 +16,10 @@ import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
-import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
+import {
+	fetchValidatorDetailsBatch,
+	useStakerWithNominees,
+} from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -118,6 +121,23 @@ export const NominationListInner = ({
 		() => validators.map(({ address }) => address),
 		[validators],
 	)
+	// Request known nomination targets without waiting for validator entries or exposures.
+	const { data: nominationData, loading: nominationsPreloading } =
+		useStakerWithNominees(
+			{
+				network,
+				era: activeEra.index,
+				who: nominator ?? '',
+				addresses: initialValidators.map(({ address }) => address),
+			},
+			{
+				skip:
+					!retainmentStatsEnabled ||
+					activeEra.index === 0 ||
+					!nominator ||
+					initialValidators.length === 0,
+			},
+		)
 	const pageKey = useMemo(
 		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),
 		[addresses],
@@ -268,6 +288,10 @@ export const NominationListInner = ({
 									}
 									retainment={retainmentByAddress.get(validator.address)}
 									nominationStatus={nominationStatus.current[validator.address]}
+									apiNominee={nominationData.getNomineesStatus.statuses.find(
+										({ address }) => address === validator.address,
+									)}
+									isNominationPreloading={nominationsPreloading}
 								/>
 							</MotionItem>
 						))

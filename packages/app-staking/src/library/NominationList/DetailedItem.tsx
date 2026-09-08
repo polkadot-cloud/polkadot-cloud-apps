@@ -35,7 +35,8 @@ export const DetailedItem = ({
 	bondFor,
 	displayFor,
 	format,
-	nominationStatus = 'waiting',
+	apiNominee,
+	isNominationPreloading,
 	eraPoints,
 	rate,
 	retainment,
@@ -47,15 +48,21 @@ export const DetailedItem = ({
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const nominationStatus =
+		apiNominee?.status === 'active' || apiNominee?.status === 'inactive'
+			? apiNominee.status
+			: 'waiting'
 	const {
 		label: statusLabel,
-		stakedAmount: backingStake,
+		totalActiveBacking,
 		syncing: backingStakePreloading,
 	} = useNominationStatusData({
 		address,
 		bondFor,
 		nominator,
 		status: nominationStatus,
+		activeBacking: apiNominee?.activeBacking ?? '0',
+		isPreloading: isNominationPreloading,
 	})
 	const {
 		period,
@@ -119,7 +126,7 @@ export const DetailedItem = ({
 				selfStakeMax={selfStakeMax}
 				statusActive={nominationStatus === 'active'}
 				statusLabel={statusLabel}
-				statusValue={backingStake}
+				statusValue={totalActiveBacking}
 				unit={unit}
 				validator={validator}
 			/>
@@ -181,7 +188,7 @@ export const DetailedItem = ({
 					status={validatorStatus}
 					statusActive={nominationStatus === 'active'}
 					statusLabel={statusLabel}
-					statusValue={backingStake}
+					statusValue={totalActiveBacking}
 					unit={unit}
 				/>
 			}
