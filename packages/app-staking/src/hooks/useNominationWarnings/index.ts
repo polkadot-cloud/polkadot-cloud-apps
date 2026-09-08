@@ -10,7 +10,6 @@ import { useApi } from 'hooks/useApi'
 import { useBalances } from 'hooks/useBalances'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
-import { usePlugins } from 'hooks/usePlugins'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import {
 	getValidatorsWithRetainment,
@@ -27,7 +26,6 @@ import {
 
 export const useNominationWarnings = () => {
 	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
 	const { activeEra } = useApi()
 	const { erasPerDay } = useErasPerDay()
 	const { getNominations } = useBalances()
@@ -60,8 +58,8 @@ export const useNominationWarnings = () => {
 	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
 
-	// Read-only accounts should still see warnings about their nominations.
-	const canDisplay = pluginEnabled('staking_api') && Boolean(activeAddress)
+	// Read-only accounts should still see warnings on supported networks.
+	const canDisplay = retainmentStatsEnabled && Boolean(activeAddress)
 	const canFix = !isReadOnlyAccount(activeAddress)
 
 	const addressesKey = JSON.stringify([...new Set(validatorAddresses)].sort())

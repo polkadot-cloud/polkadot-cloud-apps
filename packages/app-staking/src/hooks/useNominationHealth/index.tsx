@@ -36,7 +36,7 @@ export const NominationHealthProvider = ({
 		<NominationHealthContext.Provider
 			value={{
 				...nominationHealth,
-				active: stakingApiEnabled && enabled,
+				active: retainmentStatsEnabled && enabled,
 				enabled,
 				retainmentStatsEnabled,
 				setEnabled,
