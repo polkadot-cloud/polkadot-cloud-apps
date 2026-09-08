@@ -65,7 +65,8 @@ export const NominationHealth = ({
 	)
 	const dangerCount = lowRetainmentValidators.length
 	const hasDangerWarnings = validatorsWithIssues.length > 0
-	const hasWarnings = hasDangerWarnings || warningCount > 0
+	const hasWarnings =
+		hasDangerWarnings || warningCount > 0 || validatorWarningGroups.length > 0
 
 	const { setNominationHealth } = useNominationHealth()
 	useEffect(() => {
@@ -98,7 +99,7 @@ export const NominationHealth = ({
 	if (
 		validatorsWithRetainment.length === 0 &&
 		!allValidatorsWaiting &&
-		!hasDangerWarnings
+		!hasWarnings
 	) {
 		return null
 	}
@@ -128,11 +129,13 @@ export const NominationHealth = ({
 					</Separator>
 				</div>
 			)}
-			{validatorWarningGroups.map(({ type, messageKey, validators }) => (
-				<StatusCard key={type} status="danger" role="status">
-					{t(messageKey, { count: validators.length })}
-				</StatusCard>
-			))}
+			{validatorWarningGroups.map(
+				({ type, messageKey, severity, validators }) => (
+					<StatusCard key={type} status={severity} role="status">
+						{t(messageKey, { count: validators.length })}
+					</StatusCard>
+				),
+			)}
 			{averageRetainment !== null && status !== null && (
 				<StatusCard
 					status={status}

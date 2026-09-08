@@ -4,10 +4,17 @@
 import type {
 	ValidatorRetainmentResult,
 	ValidatorWarnings,
+	ValidatorWarningType,
 } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
 import { clampRate } from 'utils'
 import { ValidatorWarningDefinitions } from './consts'
+
+export const getValidatorWarningSeverity = (
+	warnings: ValidatorWarningType[] = [],
+) =>
+	ValidatorWarningDefinitions.find(({ type }) => warnings.includes(type))
+		?.severity
 
 export const getValidatorsWithRetainment = (
 	validators: Validator[],
@@ -24,14 +31,18 @@ export const getValidatorsWithRetainment = (
 export const getValidatorWarningGroups = (
 	validators: Validator[],
 	warnings: ValidatorWarnings,
+	severity?: 'danger' | 'warning',
 ) =>
-	ValidatorWarningDefinitions.map(({ type, messageKey }) => ({
-		type,
-		messageKey,
-		validators: validators.filter(({ address }) =>
-			warnings[address]?.includes(type),
-		),
-	})).filter(({ validators }) => validators.length > 0)
+	ValidatorWarningDefinitions.filter(
+		(definition) => !severity || definition.severity === severity,
+	)
+		.map((definition) => ({
+			...definition,
+			validators: validators.filter(({ address }) =>
+				warnings[address]?.includes(definition.type),
+			),
+		}))
+		.filter(({ validators }) => validators.length > 0)
 
 export const getValidatorsWithHealthIssues = (
 	validators: Validator[],
@@ -40,9 +51,9 @@ export const getValidatorsWithHealthIssues = (
 ) => {
 	const validatorWarningGroups = getValidatorWarningGroups(validators, warnings)
 	const flaggedAddresses = new Set(
-		validatorWarningGroups.flatMap(({ validators }) =>
-			validators.map(({ address }) => address),
-		),
+		validatorWarningGroups
+			.filter(({ severity }) => severity === 'danger')
+			.flatMap(({ validators }) => validators.map(({ address }) => address)),
 	)
 	const issueAddresses = new Set([
 		...flaggedAddresses,

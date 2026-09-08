@@ -8,6 +8,8 @@ import type {
 	ValidatorAvgRewardRateBatch,
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
+	ValidatorWarnings,
+	ValidatorWarningType,
 } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import type { DisplayFor, Validator } from 'types'
@@ -33,6 +35,7 @@ export interface ValidatorListProps {
 	defaultConfig?: ValidatorListConfig
 	BeforeListNode?: ReactNode
 	validatorDetails?: ValidatorDetailsData
+	validatorWarnings?: ValidatorWarnings
 	onRemove?: (params: {
 		selected: Validator[]
 		resetSelection?: () => void
@@ -49,6 +52,7 @@ export interface ItemProps {
 	eraPoints: ValidatorEraPoints[]
 	rate?: number
 	retainment?: ValidatorRetainmentResult | null
+	warnings?: ValidatorWarningType[]
 	isPreloading?: boolean
 	onRemove?: (params: {
 		selected: Validator[]

@@ -5,6 +5,7 @@ import { getStakingChainData } from 'consts/util'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { getValidatorWarningSeverity } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
@@ -43,6 +44,7 @@ export const DetailedItem = ({
 	format,
 	highlightRetainmentWarnings,
 	retainment,
+	warnings,
 	isPreloading,
 }: ItemProps) => {
 	const { network } = useNetwork()
@@ -58,6 +60,7 @@ export const DetailedItem = ({
 	} = useRetainmentWindow(retainment?.retainment)
 	const retainmentStats = useRetainmentStatsData({
 		highlightWarnings: highlightRetainmentWarnings,
+		warningSeverity: getValidatorWarningSeverity(warnings),
 		period,
 		selfStakeMax,
 		unit,

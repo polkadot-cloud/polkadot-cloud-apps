@@ -2,10 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { expect, test, vi } from 'vitest'
-import { getValidatorsWithRetainment } from '../../app-staking/src/library/GenerateNominations/utils'
+import {
+	getValidatorsWithRetainment,
+	getValidatorWarningSeverity,
+} from '../../app-staking/src/library/GenerateNominations/utils'
 import type {
 	ValidatorRetainmentResult,
 	ValidatorRetainmentWindow,
+	ValidatorWarningType,
 } from '../../plugin-staking-api/src/types'
 import {
 	useRetainmentRateData,
@@ -163,3 +167,36 @@ test('missing retainment windows display unavailable rates without a month count
 	expect(retainmentRate.valueText).toBe('—')
 	expect(retainmentRate.color).toBe('var(--text-tertiary)')
 })
+
+test.each<
+	[
+		ValidatorWarningType[],
+		number | null,
+		boolean,
+		'warning' | 'danger' | undefined,
+	]
+>([
+	[['HETZNER'], null, true, 'warning'],
+	[['HETZNER'], 90, true, 'warning'],
+	[['HETZNER'], 60, true, 'warning'],
+	[['HETZNER'], 40, true, 'danger'],
+	[['ZUG_VALIDATOR'], 90, true, 'danger'],
+	[['HETZNER', 'ZUG_VALIDATOR'], 90, true, 'danger'],
+	[['HETZNER'], 40, false, undefined],
+	[[], 90, true, undefined],
+	[[], 60, true, 'warning'],
+	[[], 40, true, 'danger'],
+])(
+	'item strip combines %j and %s%% retainment with highlighting %s',
+	(warnings, rate, highlightWarnings, expected) => {
+		const stats = useRetainmentStatsData({
+			highlightWarnings,
+			warningSeverity: getValidatorWarningSeverity(warnings),
+			period: rate === null ? undefined : window({ retainmentRate: rate }),
+			selfStakeMax: false,
+			unit: 'DOT',
+			units: 10,
+		})
+		expect(stats.statusAccent).toBe(expected)
+	},
+)

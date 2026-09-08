@@ -54,6 +54,7 @@ export interface RetainmentStatsData {
 
 interface RetainmentStatsDataProps {
 	highlightWarnings?: boolean
+	warningSeverity?: 'warning' | 'danger'
 	period?: RetainmentPeriodData
 	selfStakeMax: boolean
 	unit: string
@@ -188,6 +189,7 @@ export const useRetainmentRateData = (
 
 export const useRetainmentStatsData = ({
 	highlightWarnings = false,
+	warningSeverity,
 	period,
 	selfStakeMax,
 	unit,
@@ -221,10 +223,13 @@ export const useRetainmentStatsData = ({
 		highlightWarnings && retainmentRate.value !== undefined
 			? getRetainmentStatus(retainmentRate.value)
 			: undefined
-	const statusAccent =
-		retainmentStatus === 'warning' || retainmentStatus === 'danger'
-			? retainmentStatus
-			: undefined
+	const statusAccent = !highlightWarnings
+		? undefined
+		: retainmentStatus === 'danger' || warningSeverity === 'danger'
+			? 'danger'
+			: retainmentStatus === 'warning' || warningSeverity === 'warning'
+				? 'warning'
+				: undefined
 
 	return {
 		compoundRate: getRateStat({

@@ -172,6 +172,7 @@ export const NominationsView = ({
 					BeforeListNode={beforeList}
 					onRemove={selectHandler.popover.callback}
 					validatorDetails={validatorDetails}
+					validatorWarnings={validatorWarnings.warnings}
 				/>
 			)}
 		</div>

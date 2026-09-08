@@ -93,6 +93,7 @@ export const useNominationWarnings = () => {
 	const validatorWarningGroups = getValidatorWarningGroups(
 		nominations,
 		result?.warnings ?? {},
+		'danger',
 	)
 	const dangerCount = result?.retainmentByAddress
 		? getValidatorsWithRetainment(
