@@ -16,7 +16,10 @@ import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
-import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
+import {
+	fetchValidatorDetailsBatch,
+	useStakerWithNominees,
+} from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -118,6 +121,29 @@ export const NominationListInner = ({
 		() => validators.map(({ address }) => address),
 		[validators],
 	)
+	const { data: nominationData, loading: nominationsPreloading } =
+		useStakerWithNominees(
+			{
+				network,
+				era: activeEra.index,
+				who: nominator ?? '',
+				addresses: initialValidators.map(({ address }) => address),
+			},
+			{
+				skip:
+					!retainmentStatsEnabled ||
+					activeEra.index === 0 ||
+					!nominator ||
+					initialValidators.length === 0,
+			},
+		)
+	const getApiNominationStatus = (address: string): NominationStatus => {
+		const status = nominationData.getNomineesStatus.statuses.find(
+			(nominee) => nominee.address === address,
+		)?.status
+		return status === 'active' || status === 'inactive' ? status : 'waiting'
+	}
+
 	const pageKey = useMemo(
 		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),
 		[addresses],
@@ -267,7 +293,21 @@ export const NominationListInner = ({
 											: rates[pageKey]?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
-									nominationStatus={nominationStatus.current[validator.address]}
+									nominationStatus={
+										retainmentStatsEnabled
+											? getApiNominationStatus(validator.address)
+											: nominationStatus.current[validator.address]
+									}
+									activeBacking={
+										retainmentStatsEnabled
+											? (nominationData.getNomineesStatus.statuses.find(
+													({ address }) => address === validator.address,
+												)?.activeBacking ?? '0')
+											: undefined
+									}
+									isNominationPreloading={
+										retainmentStatsEnabled && nominationsPreloading
+									}
 								/>
 							</MotionItem>
 						))

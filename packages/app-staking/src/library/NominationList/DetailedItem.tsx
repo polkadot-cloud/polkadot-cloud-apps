@@ -36,6 +36,8 @@ export const DetailedItem = ({
 	displayFor,
 	format,
 	nominationStatus = 'waiting',
+	activeBacking,
+	isNominationPreloading,
 	eraPoints,
 	rate,
 	retainment,
@@ -49,13 +51,15 @@ export const DetailedItem = ({
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const {
 		label: statusLabel,
-		stakedAmount: backingStake,
+		totalActiveBacking,
 		syncing: backingStakePreloading,
 	} = useNominationStatusData({
 		address,
 		bondFor,
 		nominator,
 		status: nominationStatus,
+		activeBacking,
+		isPreloading: isNominationPreloading,
 	})
 	const {
 		period,
@@ -119,7 +123,7 @@ export const DetailedItem = ({
 				selfStakeMax={selfStakeMax}
 				statusActive={nominationStatus === 'active'}
 				statusLabel={statusLabel}
-				statusValue={backingStake}
+				statusValue={totalActiveBacking}
 				unit={unit}
 				validator={validator}
 			/>
@@ -181,7 +185,7 @@ export const DetailedItem = ({
 					status={validatorStatus}
 					statusActive={nominationStatus === 'active'}
 					statusLabel={statusLabel}
-					statusValue={backingStake}
+					statusValue={totalActiveBacking}
 					unit={unit}
 				/>
 			}
