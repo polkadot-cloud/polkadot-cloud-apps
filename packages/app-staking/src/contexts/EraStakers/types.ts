@@ -3,6 +3,7 @@
 
 import type {
 	ActiveAccountOwnStake,
+	ErasStakersOverviewEntries,
 	MaybeAddress,
 	NominationStatus,
 	Staker,
@@ -10,6 +11,9 @@ import type {
 
 export interface EraStakersContextInterface {
 	eraStakers: EraStakers
+	validatorOverviews:
+		| ReadonlyMap<string, ErasStakersOverviewEntries[number][1]>
+		| undefined
 	activeValidators: number
 	activeNominatorsCount: number
 	getNominationsStatusFromEraStakers: (

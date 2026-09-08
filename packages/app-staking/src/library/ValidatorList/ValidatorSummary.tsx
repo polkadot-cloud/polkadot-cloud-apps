@@ -4,10 +4,9 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
+import { useEraStakers } from 'contexts/EraStakers'
 import type { ValidatorActivityTier } from 'contexts/Validators/types'
-import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { useTranslation } from 'react-i18next'
 import type { ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
@@ -36,16 +35,25 @@ export const useValidatorSummaryData = ({
 	selfStake,
 	selfStakeMax,
 	status,
+	statusActive,
 	statusLabel: statusLabelOverride,
 	statusValue,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
-	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { getValidatorTotalStake } = useValidatorEntries()
+	const { validatorOverviews } = useEraStakers()
 	const { units } = getStakingChainData(network)
 
-	const validatorStatus = syncing ? 'waiting' : status
+	// Explicit API summaries have their own status and loading state. Node summaries need only the
+	// overview, not validator entries, paged nominators, or account sync.
+	const hasStatusOverride = statusActive !== undefined
+	const syncing = !hasStatusOverride && validatorOverviews === undefined
+	const overview = validatorOverviews?.get(address)
+	const validatorStatus = hasStatusOverride
+		? status
+		: overview
+			? 'active'
+			: 'waiting'
 	const statusLabel =
 		statusLabelOverride ??
 		(syncing
@@ -58,8 +66,8 @@ export const useValidatorSummaryData = ({
 			? statusValue.isGreaterThan(0)
 				? formatCompactNumber(statusValue.toNumber(), i18n.resolvedLanguage)
 				: undefined
-			: !syncing && validatorStatus !== 'waiting'
-				? planckToUnitBn(new BigNumber(getValidatorTotalStake(address)), units)
+			: !hasStatusOverride && overview
+				? planckToUnitBn(new BigNumber(overview.total), units)
 						.integerValue()
 						.toFormat()
 				: undefined
