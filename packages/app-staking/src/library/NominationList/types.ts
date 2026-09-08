@@ -4,6 +4,7 @@
 import type { ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import type {
+	NomineeStatusEntry,
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
 } from 'plugin-staking-api/types'
@@ -34,7 +35,7 @@ export interface ItemProps {
 	format: ListFormat
 	toggleFavorites?: boolean
 	nominationStatus?: NominationStatus
-	activeBacking?: string
+	apiNominee?: NomineeStatusEntry
 	isNominationPreloading?: boolean
 	eraPoints: ValidatorEraPoints[]
 	isPreloading?: boolean

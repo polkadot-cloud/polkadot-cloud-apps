@@ -121,6 +121,7 @@ export const NominationListInner = ({
 		() => validators.map(({ address }) => address),
 		[validators],
 	)
+	// Request known nomination targets without waiting for validator entries or exposures.
 	const { data: nominationData, loading: nominationsPreloading } =
 		useStakerWithNominees(
 			{
@@ -137,13 +138,6 @@ export const NominationListInner = ({
 					initialValidators.length === 0,
 			},
 		)
-	const getApiNominationStatus = (address: string): NominationStatus => {
-		const status = nominationData.getNomineesStatus.statuses.find(
-			(nominee) => nominee.address === address,
-		)?.status
-		return status === 'active' || status === 'inactive' ? status : 'waiting'
-	}
-
 	const pageKey = useMemo(
 		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),
 		[addresses],
@@ -293,21 +287,11 @@ export const NominationListInner = ({
 											: rates[pageKey]?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
-									nominationStatus={
-										retainmentStatsEnabled
-											? getApiNominationStatus(validator.address)
-											: nominationStatus.current[validator.address]
-									}
-									activeBacking={
-										retainmentStatsEnabled
-											? (nominationData.getNomineesStatus.statuses.find(
-													({ address }) => address === validator.address,
-												)?.activeBacking ?? '0')
-											: undefined
-									}
-									isNominationPreloading={
-										retainmentStatsEnabled && nominationsPreloading
-									}
+									nominationStatus={nominationStatus.current[validator.address]}
+									apiNominee={nominationData.getNomineesStatus.statuses.find(
+										({ address }) => address === validator.address,
+									)}
+									isNominationPreloading={nominationsPreloading}
 								/>
 							</MotionItem>
 						))
