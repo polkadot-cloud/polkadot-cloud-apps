@@ -50,7 +50,11 @@ export const NominationHealth = ({
 				warningCount: warnings,
 			}
 		}, [validatorsWithRetainment])
-	const { sunsettingCount, sunsettingWarnings, validatorsWithIssues } = useMemo(
+	const {
+		flaggedValidatorCount,
+		validatorWarningGroups,
+		validatorsWithIssues,
+	} = useMemo(
 		() =>
 			getValidatorsWithHealthIssues(
 				validators,
@@ -69,7 +73,7 @@ export const NominationHealth = ({
 			hasDangerWarnings,
 			isLoading,
 			lowRetainmentCount: dangerCount,
-			sunsettingCount,
+			flaggedValidatorCount,
 			validatorsWithIssues,
 		})
 		return () => {
@@ -77,7 +81,7 @@ export const NominationHealth = ({
 				hasDangerWarnings: false,
 				isLoading: false,
 				lowRetainmentCount: 0,
-				sunsettingCount: 0,
+				flaggedValidatorCount: 0,
 				validatorsWithIssues: [],
 			})
 		}
@@ -85,7 +89,7 @@ export const NominationHealth = ({
 		dangerCount,
 		hasDangerWarnings,
 		isLoading,
-		sunsettingCount,
+		flaggedValidatorCount,
 		validatorsWithIssues,
 		setNominationHealth,
 	])
@@ -124,7 +128,7 @@ export const NominationHealth = ({
 					</Separator>
 				</div>
 			)}
-			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
+			{validatorWarningGroups.map(({ type, messageKey, validators }) => (
 				<StatusCard key={type} status="danger" role="status">
 					{t(messageKey, { count: validators.length })}
 				</StatusCard>

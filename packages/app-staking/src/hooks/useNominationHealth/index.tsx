@@ -27,7 +27,7 @@ export const NominationHealthProvider = ({
 			hasDangerWarnings: false,
 			isLoading: false,
 			lowRetainmentCount: 0,
-			sunsettingCount: 0,
+			flaggedValidatorCount: 0,
 			validatorsWithIssues: [],
 		})
 	const stakingApiEnabled = pluginEnabled('staking_api')
@@ -36,7 +36,7 @@ export const NominationHealthProvider = ({
 		<NominationHealthContext.Provider
 			value={{
 				...nominationHealth,
-				active: retainmentStatsEnabled && enabled,
+				active: stakingApiEnabled && enabled,
 				enabled,
 				retainmentStatsEnabled,
 				setEnabled,

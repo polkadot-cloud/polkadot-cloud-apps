@@ -13,9 +13,9 @@ import { MenuItem, MenuItemButton } from 'ui-core/popover'
 
 export const NominationHealthSetting = () => {
 	const { t } = useTranslation('app')
-	const { enabled, retainmentStatsEnabled, setEnabled } = useNominationHealth()
+	const { enabled, stakingApiEnabled, setEnabled } = useNominationHealth()
 
-	if (!retainmentStatsEnabled) {
+	if (!stakingApiEnabled) {
 		return null
 	}
 

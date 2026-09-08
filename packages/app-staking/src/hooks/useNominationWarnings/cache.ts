@@ -15,6 +15,7 @@ export interface WarningRequest {
 	network: string
 	era: number
 	erasPerDay: number
+	retainmentStatsEnabled: boolean
 	addresses: string[]
 }
 
@@ -32,12 +33,19 @@ export const warningRequestKey = ({
 	network,
 	era,
 	erasPerDay,
+	retainmentStatsEnabled,
 	addresses,
 }: WarningRequest) =>
-	JSON.stringify([network, era, erasPerDay, [...new Set(addresses)].sort()])
+	JSON.stringify([
+		network,
+		era,
+		erasPerDay,
+		retainmentStatsEnabled,
+		[...new Set(addresses)].sort(),
+	])
 
 export const fetchNominationWarnings = async (request: WarningRequest) => {
-	const { network, era, erasPerDay } = request
+	const { network, era, erasPerDay, retainmentStatsEnabled } = request
 	const addresses = [...new Set(request.addresses)].sort()
 	if (addresses.length === 0) {
 		return
@@ -52,7 +60,7 @@ export const fetchNominationWarnings = async (request: WarningRequest) => {
 	try {
 		const [warnings, details] = await Promise.all([
 			fetchGetValidatorWarnings(network, addresses, { throwOnError: true }),
-			era > 0
+			retainmentStatsEnabled && era > 0
 				? fetchValidatorDetailsBatch(
 						network,
 						addresses,

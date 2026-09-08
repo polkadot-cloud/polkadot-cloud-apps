@@ -8,7 +8,7 @@ export interface NominationHealthState {
 	hasDangerWarnings: boolean
 	isLoading: boolean
 	lowRetainmentCount: number
-	sunsettingCount: number
+	flaggedValidatorCount: number
 	validatorsWithIssues: Validator[]
 }
 
