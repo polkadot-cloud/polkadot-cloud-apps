@@ -495,7 +495,9 @@ export interface ActiveStatusWithNominees {
 export type StakerNominationStatus = 'active' | 'inactive' | 'waiting'
 
 export interface GetNominationStatusData {
-	getNominationStatus: StakerNominationStatus
+	getNominationStatus: {
+		status: StakerNominationStatus
+	}
 }
 
 export type ValidatorWarningType = 'ZUG_VALIDATOR' | 'HETZNER'

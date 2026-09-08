@@ -7,12 +7,14 @@ import { fetchQuery } from './generic'
 
 const QUERY = gql`
   query GetNominationStatus($network: String!, $who: String!) {
-    getNominationStatus(network: $network, who: $who)
+    getNominationStatus(network: $network, who: $who) {
+      status
+    }
   }
 `
 
 const DEFAULT_DATA: GetNominationStatusData = {
-	getNominationStatus: 'waiting',
+	getNominationStatus: { status: 'waiting' },
 }
 
 export const fetchGetNominationStatus = async (
@@ -24,5 +26,5 @@ export const fetchGetNominationStatus = async (
 		{ network, who },
 		DEFAULT_DATA,
 	)
-	return data.getNominationStatus
+	return data.getNominationStatus.status
 }
