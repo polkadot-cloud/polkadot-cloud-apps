@@ -8,8 +8,8 @@ import { isMaxSelfStake, planckToUnitBn } from 'utils'
 
 export const useValidatorSelfStake = (address: string, units: number) => {
 	const hardCapSelfStake = useHardCapSelfStake()
-	const { getActiveValidator } = useEraStakers()
-	const validatorOwnStake = getActiveValidator(address)?.own
+	const { validatorOverviews } = useEraStakers()
+	const validatorOwnStake = validatorOverviews?.get(address)?.own
 	const selfStakePlanck =
 		validatorOwnStake !== undefined
 			? new BigNumber(validatorOwnStake)

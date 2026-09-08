@@ -5,7 +5,7 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
 import { planckToUnit, setStateWithRef } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
-import { removeSyncing, setSyncing } from 'global-bus'
+import { getActiveEra, getNetwork, removeSyncing, setSyncing } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -42,6 +42,10 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	// Store eras stakers in state
 	const [eraStakers, setEraStakers] = useState<EraStakers>(defaultEraStakers)
 	const eraStakersRef = useRef(eraStakers)
+
+	// Validator totals are available before paged nominator exposures.
+	const [validatorOverviews, setValidatorOverviews] =
+		useState<EraStakersContextInterface['validatorOverviews']>()
 
 	// Store the total active nominators
 	const [activeNominatorsCount, setActiveNominatorsCount] = useState<number>(0)
@@ -108,7 +112,12 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			activeEra.index,
 		)
 		// Overview entries define the active validator set and are available before paged exposures.
-		setActiveValidators(overviews.length)
+		if (getNetwork() === network && getActiveEra().index === Number(era)) {
+			setActiveValidators(overviews.length)
+			setValidatorOverviews(
+				new Map(overviews.map(([[, address], entry]) => [address, entry])),
+			)
+		}
 
 		let exposures: Exposure[] = []
 		const localExposures = getLocalEraExposures(
@@ -301,11 +310,12 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	}, [activeAddress])
 
 	useEffectIgnoreInitial(() => {
+		setValidatorOverviews(undefined)
 		if (getApiStatus(network) === 'connecting') {
 			setActiveValidators(0)
 			setStateWithRef(defaultEraStakers, setEraStakers, eraStakersRef)
 		}
-	}, [getApiStatus(network)])
+	}, [network, activeEra.index, getApiStatus(network)])
 
 	// Handle syncing with eraStakers
 	useEffectIgnoreInitial(() => {
@@ -324,6 +334,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 			}
 		}
 	}, [
+		network,
 		isReady,
 		activeEra.index,
 		pluginEnabled('staking_api'),
@@ -334,6 +345,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		<EraStakersContext.Provider
 			value={{
 				eraStakers,
+				validatorOverviews,
 				activeValidators,
 				activeNominatorsCount,
 				getNominationsStatusFromEraStakers,
