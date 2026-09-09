@@ -58,7 +58,11 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	}, [])
 
 	// Validator activity and totals need only overview entries, never nominator pages.
-	const { data: overviews, isLoading: overviewsLoading } = useQuery({
+	const {
+		data: overviews,
+		isLoading: overviewsLoading,
+		error: overviewsError,
+	} = useQuery({
 		queryKey: ['validator-overviews', network, era],
 		queryFn: () => serviceApi.query.erasStakersOverviewEntries(era),
 		enabled: ready,
@@ -74,7 +78,11 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	)
 
 	// Load full exposures only when at least one consumer requests them.
-	const { data: exposures, isLoading: exposuresLoading } = useQuery({
+	const {
+		data: exposures,
+		isLoading: exposuresLoading,
+		status: exposuresStatus,
+	} = useQuery({
 		queryKey: ['era-exposures', network, era],
 		enabled: ready && !!overviews && exposureConsumers > 0,
 		staleTime: Infinity,
@@ -198,6 +206,8 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		<EraStakersContext.Provider
 			value={{
 				eraStakers,
+				// Exposure consumers also need to know if the prerequisite overview query failed.
+				exposuresStatus: overviewsError ? 'error' : exposuresStatus,
 				validatorOverviews,
 				activeValidators: overviews?.length ?? 0,
 				activeNominatorsCount,

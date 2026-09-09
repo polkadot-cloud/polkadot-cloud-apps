@@ -2,32 +2,47 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { capitalizeFirstLetter } from '@w3ux/utils'
+import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useNominationStatus } from 'data-gate'
 import { useTranslation } from 'react-i18next'
-import type { BondedPool } from 'types'
+import type { BondedPool, NominationStatus } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
+import { getPoolNominationStatusCode } from 'utils'
 
 export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { status, loading, error } = useNominationStatus(pool.addresses.stash)
 
-	// Get the list of targets this pool is nominating.
+	// A loaded pool without nominations has its own entry with an undefined value.
+	const nominationsLoaded = Object.hasOwn(poolsNominations, pool.id)
 	const targets = poolsNominations[pool.id]?.targets ?? []
+	const { exposuresStatus, getNominationsStatusFromEraStakers } = useEraStakers(
+		nominationsLoaded && targets.length > 0,
+	)
+
+	// All nominating rows share the era exposure query instead of fetching per stash.
+	let status: NominationStatus | null = null
+	let label: string
+	if (
+		!nominationsLoaded ||
+		(targets.length > 0 && exposuresStatus === 'pending')
+	) {
+		label = `${t('syncing')}...`
+	} else if (!targets.length) {
+		label = t('notNominating')
+	} else if (exposuresStatus === 'error') {
+		label = '—'
+	} else {
+		status = getPoolNominationStatusCode(
+			getNominationsStatusFromEraStakers(pool.addresses.stash, targets),
+		)
+		label = capitalizeFirstLetter(t(status))
+	}
 
 	return (
-		<BasicItem.PoolStatus status={status ?? null}>
+		<BasicItem.PoolStatus status={status}>
 			<h4>
-				<span>
-					{loading
-						? `${t('syncing')}...`
-						: error
-							? '—'
-							: targets.length && status
-								? capitalizeFirstLetter(t(status))
-								: t('notNominating')}
-				</span>
+				<span>{label}</span>
 			</h4>
 		</BasicItem.PoolStatus>
 	)
