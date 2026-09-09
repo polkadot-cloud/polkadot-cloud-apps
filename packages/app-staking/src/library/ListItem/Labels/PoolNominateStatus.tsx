@@ -12,6 +12,8 @@ export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
 	const { status, loading, error } = useNominationStatus(pool.addresses.stash)
+
+	// Get the list of targets this pool is nominating.
 	const targets = poolsNominations[pool.id]?.targets ?? []
 
 	return (
