@@ -184,6 +184,7 @@
 		"health": "Health",
 		"help": "Help",
 		"helpPrompts": "Help Prompts",
+		"hetznerValidatorWarningLabel": "Hetzner hosting",
 		"hetznerValidatorWarning_one": "Your nomination list includes {{count}} validator hosted by Hetzner, which bans crypto operations except on colocation services. Hosting may be suspended.",
 		"hetznerValidatorWarning_other": "Your nomination list includes {{count}} validators hosted by Hetzner, which bans crypto operations except on colocation services. Hosting may be suspended.",
 		"highActivity": "High Activity",
@@ -238,6 +239,7 @@
 		"lockedPools": "Locked Pools",
 		"lowRetainment": "Low Retainment",
 		"lowRetainmentValidators": "Low-retainment validators",
+		"lowThreeMonthRetainmentWarningLabel": "Low 3m retainment",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Add validators from scratch.",
 		"manual_selection": "Manual Selection",
@@ -504,6 +506,7 @@
 		"year": "year",
 		"youAreValidator": "You are a validator",
 		"yourPayouts": "Your Payouts",
+		"zugValidatorWarningLabel": "Zug validator",
 		"zugValidatorWarning_one": "Your nomination list includes {{count}} Zug validator. Zug is closing validator operations on March 31, 2027. Remove this validator from your nominations.",
 		"zugValidatorWarning_other": "Your nomination list includes {{count}} Zug validators. Zug is closing validator operations on March 31, 2027. Remove these validators from your nominations."
 	}

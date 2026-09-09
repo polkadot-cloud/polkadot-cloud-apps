@@ -7,8 +7,41 @@ import type {
 	ValidatorWarningType,
 } from 'plugin-staking-api/types'
 import type { Validator } from 'types'
-import { clampRate } from 'utils'
+import { clampRate, getRetainmentStatus } from 'utils'
 import { ValidatorWarningDefinitions } from './consts'
+
+export interface ValidatorItemWarning {
+	type: ValidatorWarningType | 'LOW_RETAINMENT'
+	labelKey: string
+	severity: 'danger' | 'warning'
+}
+
+// Match the health summary's three-month window, independently of the metric toggle.
+export const getValidatorItemWarnings = (
+	warnings: ValidatorWarningType[] = [],
+	retainment?: ValidatorRetainmentResult | null,
+): ValidatorItemWarning[] => {
+	const items: ValidatorItemWarning[] = ValidatorWarningDefinitions.filter(
+		({ type }) => warnings.includes(type),
+	).map(({ type, labelKey, severity }) => ({ type, labelKey, severity }))
+
+	const rate = retainment?.retainment.threeMonths?.retainmentRate
+
+	if (typeof rate === 'number' && Number.isFinite(rate)) {
+		const severity = getRetainmentStatus(clampRate(rate))
+		if (severity !== 'success') {
+			items.push({
+				type: 'LOW_RETAINMENT',
+				labelKey: 'lowThreeMonthRetainmentWarningLabel',
+				severity,
+			})
+		}
+	}
+
+	return items.sort((a, b) =>
+		a.severity === b.severity ? 0 : a.severity === 'danger' ? -1 : 1,
+	)
+}
 
 export const getValidatorWarningSeverity = (
 	warnings: ValidatorWarningType[] = [],

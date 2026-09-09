@@ -184,6 +184,7 @@
 		"health": "健全性",
 		"help": "ヘルプ",
 		"helpPrompts": "ヘルププロンプト",
+		"hetznerValidatorWarningLabel": "Hetzner ホスティング",
 		"hetznerValidatorWarning_one": "推薦リストにHetznerでホストされているバリデーターが{{count}}件含まれています。暗号資産関連の運用は禁止されており、サービス停止のリスクがあります。コロケーションは対象外です。",
 		"hetznerValidatorWarning_other": "推薦リストにHetznerでホストされているバリデーターが{{count}}件含まれています。暗号資産関連の運用は禁止されており、サービス停止のリスクがあります。コロケーションは対象外です。",
 		"highActivity": "高アクティビティ",
@@ -238,6 +239,7 @@
 		"lockedPools": "ロック済みのプール",
 		"lowRetainment": "低リテンション",
 		"lowRetainmentValidators": "リテンション率の低いバリデーター",
+		"lowThreeMonthRetainmentWarningLabel": "3か月の留保率が低い",
 		"manual": "手動",
 		"manualSelectionSubtitle": "バリデータを一から追加します。",
 		"manual_selection": "手動選択",
@@ -504,6 +506,7 @@
 		"year": "年",
 		"youAreValidator": "あなたはバリデーターです",
 		"yourPayouts": "あなたの支払い",
+		"zugValidatorWarningLabel": "Zug バリデーター",
 		"zugValidatorWarning_one": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。このバリデーターを推薦から削除してください。",
 		"zugValidatorWarning_other": "推薦リストにZugのバリデーターが{{count}}件含まれています。Zugは2027年3月31日にバリデーターの運用を終了します。該当するバリデーターを推薦から削除してください。"
 	}

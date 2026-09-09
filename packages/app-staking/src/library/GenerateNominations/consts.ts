@@ -7,16 +7,19 @@ import type { ValidatorWarningType } from 'plugin-staking-api/types'
 export const ValidatorWarningDefinitions: {
 	type: ValidatorWarningType
 	messageKey: string
+	labelKey: string
 	severity: 'danger' | 'warning'
 }[] = [
 	{
 		type: 'ZUG_VALIDATOR',
 		messageKey: 'zugValidatorWarning',
+		labelKey: 'zugValidatorWarningLabel',
 		severity: 'danger',
 	},
 	{
 		type: 'HETZNER',
 		messageKey: 'hetznerValidatorWarning',
+		labelKey: 'hetznerValidatorWarningLabel',
 		severity: 'warning',
 	},
 ]
