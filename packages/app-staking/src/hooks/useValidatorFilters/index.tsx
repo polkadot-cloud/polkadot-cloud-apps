@@ -8,9 +8,10 @@ import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Contro
 import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = () => {
+	const { validatorOverviews } = useEraStakers()
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
-	const { validatorOverviews } = useEraStakers()
+
 	const eraValidatorSet = useMemo(
 		() => new Set(validatorOverviews?.keys()),
 		[validatorOverviews],
