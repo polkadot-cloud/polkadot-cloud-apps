@@ -18,8 +18,6 @@ export const useNominationSync = ({
 	fetchNominations,
 	updateNominations,
 }: UseNominationSyncProps) => {
-	const { validatorOverviews } = useEraStakers()
-	const { isReady } = useApi()
 	const {
 		defaultNominations,
 		fetching,
@@ -30,7 +28,9 @@ export const useNominationSync = ({
 		setMethod,
 		setNominations,
 	} = useManageNominations()
+	const { isReady } = useApi()
 	const { activeAddress } = useActiveAccount()
+	const { validatorOverviews } = useEraStakers()
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Track whether a fetch is already in progress to avoid duplicate requests.
