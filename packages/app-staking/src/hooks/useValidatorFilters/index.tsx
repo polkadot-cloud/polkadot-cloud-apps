@@ -10,10 +10,10 @@ import { useCallback, useMemo } from 'react'
 export const useValidatorFilters = () => {
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
-	const { eraStakers } = useEraStakers()
+	const { validatorOverviews } = useEraStakers()
 	const eraValidatorSet = useMemo(
-		() => new Set(eraStakers.stakers.map(({ address }) => address)),
-		[eraStakers.stakers],
+		() => new Set(validatorOverviews?.keys()),
+		[validatorOverviews],
 	)
 	// Identity records contain an entry for every validator; super identities may legitimately be
 	// empty after a complete sync.

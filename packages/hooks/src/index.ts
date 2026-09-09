@@ -4,7 +4,6 @@
 export * from './useAccountBalances'
 export * from './useActivePool'
 export * from './useActiveProxy'
-export * from './useActiveStaker'
 export * from './useApi'
 export * from './useBalances'
 export * from './useBatchCall'

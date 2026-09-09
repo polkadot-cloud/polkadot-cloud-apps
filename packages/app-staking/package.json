@@ -37,6 +37,7 @@
 		"classnames": "^2.5.1",
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
+		"data-gate": "workspace:*",
 		"dedot": "^1.4.0",
 		"dedot-api": "workspace:*",
 		"event-tracking": "workspace:*",

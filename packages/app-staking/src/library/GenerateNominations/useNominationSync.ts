@@ -18,9 +18,7 @@ export const useNominationSync = ({
 	fetchNominations,
 	updateNominations,
 }: UseNominationSyncProps) => {
-	const {
-		eraStakers: { stakers },
-	} = useEraStakers()
+	const { validatorOverviews } = useEraStakers()
 	const { isReady } = useApi()
 	const {
 		defaultNominations,
@@ -54,7 +52,7 @@ export const useNominationSync = ({
 		const dataReady =
 			isReady &&
 			Boolean(getValidators()?.length) &&
-			Boolean(stakers.length) &&
+			!!validatorOverviews &&
 			validatorsFetched === 'synced'
 
 		if (!fetching || !method || !dataReady || fetchingRef.current) {

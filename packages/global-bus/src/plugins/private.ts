@@ -5,5 +5,6 @@ import { BehaviorSubject } from 'rxjs'
 import type { Plugin } from 'types'
 import { getAvailablePlugins } from './local'
 
-const { activePlugins } = getAvailablePlugins()
-export const _plugins = new BehaviorSubject<Plugin[]>(activePlugins)
+// Store preferences so switching networks can restore temporarily disabled plugins.
+const { allPlugins } = getAvailablePlugins()
+export const _plugins = new BehaviorSubject<Plugin[]>(allPlugins)

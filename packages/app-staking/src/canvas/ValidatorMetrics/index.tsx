@@ -40,7 +40,7 @@ export const ValidatorMetrics = () => {
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
-	const { getActiveValidator } = useEraStakers()
+	const { validatorOverviews } = useEraStakers()
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
@@ -48,7 +48,7 @@ export const ValidatorMetrics = () => {
 	const identity = options!.identity
 
 	// is the validator in the active era
-	const validatorInEra = getActiveValidator(validator)
+	const validatorInEra = validatorOverviews?.get(validator)
 
 	let validatorOwnStake = new BigNumber(0)
 	let otherStake = new BigNumber(0)

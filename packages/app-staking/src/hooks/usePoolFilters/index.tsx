@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, BondedPool } from 'types'
 import { getPoolNominationStatusCode } from 'utils'
 
-export const usePoolFilters = () => {
+export const usePoolFilters = (needsStatuses: boolean) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { getNominationsStatusFromEraStakers } = useEraStakers()
+	const { getNominationsStatusFromEraStakers } = useEraStakers(needsStatuses)
 
 	/*
 	 * Include active pools.

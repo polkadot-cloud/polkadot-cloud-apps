@@ -20,11 +20,21 @@ const DEFAULT_DATA: GetNominationStatusData = {
 export const fetchGetNominationStatus = async (
 	network: string,
 	who: string,
+	signal?: AbortSignal,
 ): Promise<StakerNominationStatus> => {
 	const data = await fetchQuery<GetNominationStatusData>(
 		QUERY,
 		{ network, who },
 		DEFAULT_DATA,
+		{
+			throwOnError: true,
+			fetchPolicy: 'network-only',
+			context: { fetchOptions: { signal } },
+		},
 	)
-	return data.getNominationStatus.status
+	const status = data.getNominationStatus?.status
+	if (status !== 'active' && status !== 'inactive' && status !== 'waiting') {
+		throw new Error('Staking API returned an invalid nomination status')
+	}
+	return status
 }

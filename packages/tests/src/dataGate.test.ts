@@ -1,0 +1,463 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { QueryClient, QueryObserver } from '@tanstack/react-query'
+import type { ErasStakersPagedEntries, ServiceInterface } from 'types'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
+import { nominationStatusOptions } from '../../data-gate/src/nominationStatus'
+import type { DataGateConfig } from '../../data-gate/src/provider'
+import { dataPointOptions } from '../../data-gate/src/query'
+import type { DataPointConfig } from '../../data-gate/src/types'
+import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
+import {
+	getAvailablePlugins,
+	getPlugins,
+	pluginEnabled,
+	plugins$,
+	setPlugins,
+} from '../../global-bus/src/plugins'
+import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
+
+const { apiQuery, storage } = vi.hoisted(() => {
+	const storage = new Map<string, string>()
+	vi.stubGlobal('localStorage', {
+		getItem: (key: string) => storage.get(key) ?? null,
+		setItem: (key: string, value: string) => {
+			storage.set(key, value)
+		},
+		removeItem: (key: string) => {
+			storage.delete(key)
+		},
+	})
+	return { apiQuery: vi.fn(), storage }
+})
+
+// Provide browser startup defaults while exercising the real network and plugin stores.
+vi.mock('../../global-bus/src/networkConfig/util', () => ({
+	getInitialNetwork: () => 'polkadot',
+	getInitialProviderType: () => 'ws',
+	getInitialAutoRpc: () => false,
+}))
+vi.mock('../../global-bus/src/index', async () => ({
+	...(await import('../../global-bus/src/networkConfig')),
+	...(await import('../../global-bus/src/plugins')),
+}))
+vi.mock('../../plugin-staking-api/src/Client', () => ({
+	client: { query: apiQuery },
+}))
+
+const clients: QueryClient[] = []
+const observers: { destroy: () => void }[] = []
+const createClient = () => {
+	const client = new QueryClient({ defaultOptions: { queries: { gcTime: 0 } } })
+	clients.push(client)
+	return client
+}
+const deferred = <T>() => {
+	let resolve!: (value: T) => void
+	const promise = new Promise<T>((done) => {
+		resolve = done
+	})
+	return { promise, resolve }
+}
+const apiResult = (status: string) => ({
+	data: { getNominationStatus: { status } },
+})
+const page = (who: string, index = 0): ErasStakersPagedEntries[number] => [
+	[100, 'validator', index],
+	{ pageTotal: 10n, others: [{ who, value: 10n }] },
+]
+const overview = { own: 0n, total: 10n, nominatorCount: 1, pageCount: 1 }
+const config = (api = false) => {
+	setPlugins(api ? ['staking_api'] : [])
+	const node = vi.mockObject(defaultServiceInterface)
+	node.query.nominatorsMulti.mockResolvedValue([
+		{ targets: ['validator'], submittedIn: 99, suppressed: false },
+	])
+	node.query.erasStakersOverview.mockResolvedValue(overview)
+	node.query.erasStakersPagedEntries.mockResolvedValue([page('stash')])
+	return { node, ready: true, era: 100 }
+}
+const expectNoNodeQueries = ({ query }: ServiceInterface) => {
+	const { accountBalance, ...queries } = query
+	for (const read of Object.values({ ...accountBalance, ...queries }))
+		expect(read).not.toHaveBeenCalled()
+}
+const observe = (
+	input: DataGateConfig,
+	who: string | null = 'stash',
+	client = createClient(),
+) => {
+	const observer = new QueryObserver(
+		client,
+		nominationStatusOptions(input, who),
+	)
+	observers.push(observer)
+	observer.subscribe(() => {})
+	return observer
+}
+
+beforeEach(() => {
+	storage.clear()
+	setNetwork('polkadot')
+	setPlugins([])
+	apiQuery.mockReset()
+})
+afterEach(() => {
+	for (const observer of observers.splice(0)) observer.destroy()
+	for (const client of clients.splice(0)) client.clear()
+})
+
+test('data points have independent caches for each data point and source', async () => {
+	setPlugins(['staking_api'])
+	const nodeQuery = vi.fn(async () => ({ total: 10 }))
+	const stakingApiQuery = vi.fn(async () => ({ total: 20 }))
+	const definition: DataPointConfig<{ total: number }> = {
+		queryKey: ['first-total'],
+		node: { queryFn: nodeQuery },
+		stakingApi: { queryFn: stakingApiQuery },
+	}
+	const client = createClient()
+	const first = dataPointOptions(definition)
+	const second = dataPointOptions({
+		...definition,
+		queryKey: ['second-total'],
+	})
+	expect((await client.fetchQuery(first)).total).toBe(20)
+	expect((await client.fetchQuery(second)).total).toBe(20)
+	expect(stakingApiQuery).toHaveBeenCalledTimes(2)
+	expect(nodeQuery).not.toHaveBeenCalled()
+
+	setPlugins([])
+	const nodeOptions = dataPointOptions(definition)
+	expect((await client.fetchQuery(nodeOptions)).total).toBe(10)
+	expect(nodeQuery).toHaveBeenCalledTimes(1)
+})
+
+test('an unready selected API waits without starting a ready node source', async () => {
+	setPlugins(['staking_api'])
+	const nodeQuery = vi.fn(async () => 10)
+	const stakingApiQuery = vi.fn(async () => 20)
+	const definition: DataPointConfig<number> = {
+		queryKey: ['deferred-total'],
+		node: { queryFn: nodeQuery },
+		stakingApi: { enabled: false, queryFn: stakingApiQuery },
+	}
+	const observer = new QueryObserver(
+		createClient(),
+		dataPointOptions(definition),
+	)
+	observers.push(observer)
+	observer.subscribe(() => {})
+	expect(observer.getCurrentResult()).toMatchObject({
+		status: 'pending',
+		fetchStatus: 'idle',
+	})
+	expect(nodeQuery).not.toHaveBeenCalled()
+	expect(stakingApiQuery).not.toHaveBeenCalled()
+
+	definition.stakingApi.enabled = true
+	observer.setOptions(dataPointOptions(definition))
+	await vi.waitFor(() => expect(observer.getCurrentResult().data).toBe(20))
+	expect(nodeQuery).not.toHaveBeenCalled()
+})
+
+test('API status resolves before node readiness or an era, without any node calls', async () => {
+	const input = config(true)
+	input.ready = false
+	input.era = 0
+	apiQuery.mockResolvedValue(apiResult('active'))
+	expect(
+		await createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).toBe('active')
+	expectNoNodeQueries(input.node)
+	expect(apiQuery.mock.calls[0][0]).toMatchObject({
+		variables: { network: 'polkadot', who: 'stash' },
+		fetchPolicy: 'network-only',
+	})
+})
+
+test.each(['active', 'inactive', 'waiting'])(
+	'preserves the API status %s',
+	async (status) => {
+		apiQuery.mockResolvedValue(apiResult(status))
+		expect(
+			await createClient().fetchQuery(
+				nominationStatusOptions(config(true), 'stash'),
+			),
+		).toBe(status)
+	},
+)
+
+test.each(['failure', 'empty', 'invalid'])(
+	'API %s is an error and never starts node fallback',
+	async (kind) => {
+		const input = config(true)
+		if (kind === 'failure') apiQuery.mockRejectedValue(new Error('offline'))
+		else
+			apiQuery.mockResolvedValue(
+				kind === 'empty' ? { data: undefined } : apiResult('unknown'),
+			)
+		await expect(
+			createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+		).rejects.toThrow()
+		expectNoNodeQueries(input.node)
+	},
+)
+
+test.each([
+	{ ready: false, era: 100 },
+	{ ready: true, era: 0 },
+])(
+	'node status remains pending until prerequisites are met: %j',
+	async (prerequisites) => {
+		const input = config()
+		Object.assign(input, prerequisites)
+		const observer = observe(input)
+		expect(observer.getCurrentResult()).toMatchObject({
+			status: 'pending',
+			fetchStatus: 'idle',
+			data: undefined,
+		})
+		expect(input.node.query.nominatorsMulti).not.toHaveBeenCalled()
+		input.ready = true
+		input.era = 100
+		observer.setOptions(nominationStatusOptions(input, 'stash'))
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('active'),
+		)
+		expect(apiQuery).not.toHaveBeenCalled()
+	},
+)
+
+test('missing accounts do not fetch from either source', () => {
+	for (const api of [true, false]) {
+		const input = config(api)
+		const observer = observe(input, null)
+		expect(observer.getCurrentResult().fetchStatus).toBe('idle')
+		expectNoNodeQueries(input.node)
+	}
+	expect(apiQuery).not.toHaveBeenCalled()
+})
+
+test('node status waits for complete pages, including backing on a later page', async () => {
+	const input = config()
+	const pending = deferred<ErasStakersPagedEntries>()
+	input.node.query.erasStakersOverview.mockResolvedValue({
+		...overview,
+		pageCount: 2,
+	})
+	input.node.query.erasStakersPagedEntries.mockReturnValue(pending.promise)
+	const observer = observe(input)
+	await vi.waitFor(() =>
+		expect(input.node.query.erasStakersPagedEntries).toHaveBeenCalledWith(
+			100,
+			'validator',
+		),
+	)
+	expect(observer.getCurrentResult()).toMatchObject({
+		status: 'pending',
+		data: undefined,
+	})
+	pending.resolve([page('someone-else'), page('stash', 1)])
+	await vi.waitFor(() =>
+		expect(observer.getCurrentResult().data).toBe('active'),
+	)
+	expect(apiQuery).not.toHaveBeenCalled()
+})
+
+test('queries only unique nomination targets and aggregates active before inactive before waiting', async () => {
+	const input = config()
+	input.node.query.nominatorsMulti.mockResolvedValue([
+		{
+			targets: ['waiting', 'inactive', 'active', 'active'],
+			submittedIn: 99,
+			suppressed: false,
+		},
+	])
+	input.node.query.erasStakersOverview.mockImplementation(async (_, target) =>
+		target === 'waiting' ? undefined : overview,
+	)
+	input.node.query.erasStakersPagedEntries.mockImplementation(
+		async (_, target) => [
+			page(target === 'active' ? 'stash' : 'another-stash'),
+		],
+	)
+	expect(
+		await createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).toBe('active')
+	expect(input.node.query.erasStakersOverview).toHaveBeenCalledTimes(3)
+	expect(input.node.query.erasStakersPagedEntries.mock.calls).toEqual([
+		[100, 'inactive'],
+		[100, 'active'],
+	])
+})
+
+test('inactive, waiting and empty nomination sets are valid node results', async () => {
+	const input = config()
+	input.node.query.erasStakersPagedEntries.mockResolvedValue([
+		page('another-stash'),
+	])
+	expect(
+		await createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).toBe('inactive')
+	input.node.query.erasStakersOverview.mockResolvedValue(undefined)
+	expect(
+		await createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).toBe('waiting')
+	input.node.query.nominatorsMulti.mockResolvedValue([undefined])
+	input.node.query.erasStakersOverview.mockClear()
+	expect(
+		await createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).toBe('waiting')
+	expect(input.node.query.erasStakersOverview).not.toHaveBeenCalled()
+})
+
+test('incomplete node data is an error instead of an inactive status', async () => {
+	const input = config()
+	input.node.query.erasStakersPagedEntries.mockResolvedValue([])
+	await expect(
+		createClient().fetchQuery(nominationStatusOptions(input, 'stash')),
+	).rejects.toThrow('Incomplete exposure pages')
+})
+
+test('concurrent consumers share requests and refresh bypasses the settled result', async () => {
+	const client = createClient()
+	const input = config(true)
+	const pending = deferred<ReturnType<typeof apiResult>>()
+	apiQuery.mockReturnValue(pending.promise)
+	const options = nominationStatusOptions(input, 'stash')
+	const first = client.fetchQuery(options)
+	const second = client.fetchQuery(options)
+	expect(apiQuery).toHaveBeenCalledTimes(1)
+	pending.resolve(apiResult('active'))
+	expect(await Promise.all([first, second])).toEqual(['active', 'active'])
+	const observer = observe(input, 'stash', client)
+	apiQuery.mockResolvedValue(apiResult('inactive'))
+	await observer.refetch()
+	expect(observer.getCurrentResult().data).toBe('inactive')
+	expect(apiQuery).toHaveBeenCalledTimes(2)
+})
+
+test.each([true, false])(
+	'cached status does not refetch because of its age (API enabled: %s)',
+	async (api) => {
+		const input = config(api)
+		const client = createClient()
+		const options = nominationStatusOptions(input, 'stash')
+		client.setQueryData(options.queryKey, 'active', { updatedAt: 1 })
+
+		const observer = observe(input, 'stash', client)
+		expect(observer.getCurrentResult().data).toBe('active')
+		expect(await client.fetchQuery(options)).toBe('active')
+		expectNoNodeQueries(input.node)
+		expect(apiQuery).not.toHaveBeenCalled()
+	},
+)
+
+test.each(['account', 'network', 'era', 'source'])(
+	'late results cannot overwrite a changed %s',
+	async (change) => {
+		const input = config(true)
+		const pending = deferred<ReturnType<typeof apiResult>>()
+		apiQuery
+			.mockReturnValueOnce(pending.promise)
+			.mockResolvedValue(apiResult('waiting'))
+		const observer = observe(input)
+		if (change === 'network') setNetwork('kusama')
+		if (change === 'era') input.era++
+		if (change === 'source') setPlugins([])
+		observer.setOptions(
+			nominationStatusOptions(
+				input,
+				change === 'account' ? 'new-stash' : 'stash',
+			),
+		)
+		expect(observer.getCurrentResult().data).toBeUndefined()
+		const expected = change === 'source' ? 'active' : 'waiting'
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe(expected),
+		)
+		pending.resolve(apiResult('inactive'))
+		await pending.promise
+		expect(observer.getCurrentResult().data).toBe(expected)
+	},
+)
+
+test('cancelling a node status prevents subsequent exposure requests', async () => {
+	const input = config()
+	const pending = deferred<typeof overview>()
+	input.node.query.erasStakersOverview.mockReturnValue(pending.promise)
+	const observer = observe(input)
+	await vi.waitFor(() =>
+		expect(input.node.query.erasStakersOverview).toHaveBeenCalled(),
+	)
+	observer.destroy()
+	pending.resolve(overview)
+	await pending.promise
+	await Promise.resolve()
+	expect(input.node.query.erasStakersPagedEntries).not.toHaveBeenCalled()
+})
+
+test('global plugin selection follows network restrictions without a mounted hook', () => {
+	setPlugins(['staking_api', 'polkawatch'])
+	expect(pluginEnabled('staking_api')).toBe(true)
+	setNetwork('paseo')
+	expect(pluginEnabled('staking_api')).toBe(false)
+	expect(getPlugins()).toEqual(['polkawatch'])
+	expect(getAvailablePlugins().activePlugins).toEqual(['polkawatch'])
+	expect(JSON.parse(storage.get('plugins')!)).toEqual([
+		'staking_api',
+		'polkawatch',
+	])
+	setNetwork('kusama')
+	expect(pluginEnabled('staking_api')).toBe(true)
+	setPlugins(['polkawatch'])
+	setNetwork('polkadot')
+	expect(pluginEnabled('staking_api')).toBe(false)
+})
+
+test('bus notifications switch the gate between sources and networks', async () => {
+	const input = config(true)
+	apiQuery.mockResolvedValue(apiResult('waiting'))
+	const observer = observe(input)
+	const subscription = plugins$.subscribe(() => {
+		observer.setOptions(nominationStatusOptions(input, 'stash'))
+	})
+	try {
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('waiting'),
+		)
+		setNetwork('paseo')
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('active'),
+		)
+		expect(apiQuery).toHaveBeenCalledTimes(1)
+		setNetwork('kusama')
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('waiting'),
+		)
+		expect(apiQuery.mock.lastCall?.[0].variables).toEqual({
+			network: 'kusama',
+			who: 'stash',
+		})
+		setPlugins([])
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('active'),
+		)
+	} finally {
+		subscription.unsubscribe()
+	}
+})
+
+test('a queued request retains the global source and network captured by its cache key', async () => {
+	const input = config(true)
+	const options = nominationStatusOptions(input, 'stash')
+	setNetwork('kusama')
+	setPlugins([])
+	apiQuery.mockResolvedValue(apiResult('active'))
+	expect(await createClient().fetchQuery(options)).toBe('active')
+	expect(apiQuery.mock.lastCall?.[0].variables.network).toBe('polkadot')
+	expect(getNetwork()).toBe('kusama')
+	expect(input.node.query.nominatorsMulti).not.toHaveBeenCalled()
+})

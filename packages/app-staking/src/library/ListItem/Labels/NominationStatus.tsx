@@ -33,7 +33,7 @@ export const useNominationStatusData = ({
 	const {
 		getActiveValidator,
 		eraStakers: { activeAccountOwnStake },
-	} = useEraStakers()
+	} = useEraStakers(activeBacking === undefined)
 	const { syncing: eraStakersSyncing } = useSyncing(['era-stakers'])
 
 	const { unit, units } = getStakingChainData(network)

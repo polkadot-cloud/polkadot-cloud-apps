@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { DataGate } from 'DataGate'
 import { ThemedRouter } from 'Themes'
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
@@ -35,6 +36,7 @@ export const Providers = () => {
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},
 			],
+			DataGate,
 			EraStakersProvider,
 			BondedPoolsProvider,
 			ValidatorsProvider,

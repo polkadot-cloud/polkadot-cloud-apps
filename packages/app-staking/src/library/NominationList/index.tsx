@@ -8,7 +8,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
-import { useNominationStatus } from 'hooks/useNominationStatus'
+import { useNominationSetStatus } from 'hooks/useNominationSetStatus'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
@@ -54,7 +54,7 @@ export const NominationListInner = ({
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
 	const { getNominationSetStatus, getPoolNominationStatus } =
-		useNominationStatus()
+		useNominationSetStatus()
 
 	// Determine the nominator of the list. Fallback to activeAddress if not provided
 	const nominator = initialNominator || activeAddress

@@ -5,8 +5,8 @@ import {
 	faExclamationTriangle,
 	faLock,
 } from '@fortawesome/free-solid-svg-icons'
+import { useNominationStatus } from 'data-gate'
 import { useActivePool } from 'hooks/useActivePool'
-import { useNominationStatus } from 'hooks/useNominationStatus'
 import { useSyncing } from 'hooks/useSyncing'
 import { Stat } from 'library/Stat'
 import { useTranslation } from 'react-i18next'
@@ -14,11 +14,10 @@ import { useTranslation } from 'react-i18next'
 export const PoolStatus = () => {
 	const { t } = useTranslation('pages')
 	const { syncing } = useSyncing(['active-pools'])
-	const { getNominationStatus } = useNominationStatus()
 	const { activePool, activePoolNominations } = useActivePool()
 
 	const poolStash = activePool?.addresses?.stash || ''
-	const { status } = getNominationStatus(poolStash, 'pool')
+	const { status, loading, error } = useNominationStatus(poolStash)
 	const poolState = activePool?.bondedPool?.state ?? null
 	const poolNominating = !!activePoolNominations?.targets?.length
 
@@ -44,13 +43,16 @@ export const PoolStatus = () => {
 				: ''
 
 	// Determine pool status - right side.
-	const poolStatusRight = syncing
-		? t('inactivePoolNotNominating')
-		: !poolNominating
-			? t('inactivePoolNotNominating')
-			: status === 'active'
-				? `${t('poolsNominatingAnd')} ${t('earningRewards')}`
-				: t('waitingForActiveNominations')
+	const poolStatusRight =
+		syncing || loading
+			? t('syncing')
+			: error
+				? '—'
+				: !poolNominating
+					? t('inactivePoolNotNominating')
+					: status === 'active'
+						? `${t('poolsNominatingAnd')} ${t('earningRewards')}`
+						: t('waitingForActiveNominations')
 
 	return (
 		<Stat

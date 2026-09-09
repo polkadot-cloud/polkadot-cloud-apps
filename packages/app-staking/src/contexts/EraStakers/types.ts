@@ -10,6 +10,7 @@ import type {
 } from 'types'
 
 export interface EraStakersContextInterface {
+	subscribeExposures: () => () => void
 	eraStakers: EraStakers
 	validatorOverviews:
 		| ReadonlyMap<string, ErasStakersOverviewEntries[number][1]>
@@ -20,7 +21,6 @@ export interface EraStakersContextInterface {
 		who: MaybeAddress,
 		targets: string[],
 	) => Record<string, NominationStatus>
-	isNominatorActive: (who: string) => boolean
 	getActiveValidator: (who: string) => Staker | undefined
 	prevEraReward: {
 		era: number

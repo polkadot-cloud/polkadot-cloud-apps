@@ -55,7 +55,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	const { activeEra } = useApi()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
-	const { eraStakers, getActiveValidator } = useEraStakers()
+	const { validatorOverviews } = useEraStakers()
 	const { erasPerDay, maxSupportedDays } = useErasPerDay()
 	const { isReady, serviceApi, getConsts, getApiStatus } = useApi()
 
@@ -212,9 +212,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		entries: Validator[],
 	): ValidatorListEntry[] => {
 		// Build an O(1) lookup of active validator addresses.
-		const activeAddresses = new Set(
-			eraStakers.stakers.map((staker) => staker.address),
-		)
+		const activeAddresses = new Set(validatorOverviews?.keys())
 
 		const injected: ValidatorListEntry[] =
 			entries.map((entry) => {
@@ -239,7 +237,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		if (!entry) {
 			return 0n
 		}
-		const inEra = getActiveValidator(entry.address)
+		const inEra = validatorOverviews?.get(entry.address)
 		if (!inEra) {
 			return 0n
 		}

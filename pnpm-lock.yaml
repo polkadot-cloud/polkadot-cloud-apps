@@ -344,6 +344,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -776,6 +779,25 @@ importers:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.5.0)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
+  packages/data-gate:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.102.8
+        version: 5.102.8(react@19.2.8)
+      global-bus:
+        specifier: workspace:*
+        version: link:../global-bus
+      plugin-staking-api:
+        specifier: workspace:*
+        version: link:../plugin-staking-api
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+    devDependencies:
+      types:
+        specifier: workspace:*
+        version: link:../types
+
   packages/dedot-api:
     dependencies:
       '@dedot/chaintypes':
@@ -1012,6 +1034,9 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.102.8
+        version: 5.102.8(react@19.2.8)
       types:
         specifier: workspace:*
         version: link:../types
