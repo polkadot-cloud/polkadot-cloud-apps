@@ -7,7 +7,7 @@ import type { MaybeAddress, NominationStatus } from 'types'
 import { useDataGate } from '../provider'
 import { dataPointOptions } from '../query'
 import type { DataGateState, DataPointSource } from '../types'
-import { fetchNodeStatus } from './node'
+import { fetchNode } from './node'
 
 // Node requests need an address, a connection and an active era.
 const nodeSource = (
@@ -15,9 +15,7 @@ const nodeSource = (
 	who: MaybeAddress,
 ): DataPointSource<NominationStatus> => ({
 	enabled: ready && era > 0,
-	queryFn: who
-		? ({ signal }) => fetchNodeStatus(node.query, era, who, signal)
-		: skipToken,
+	queryFn: who ? ({ signal }) => fetchNode(node, era, who, signal) : skipToken,
 })
 
 // The API can start as soon as an address is available.

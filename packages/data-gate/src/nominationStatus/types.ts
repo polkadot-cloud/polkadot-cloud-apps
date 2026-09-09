@@ -3,12 +3,8 @@
 
 import type { NominationStatus, ServiceInterface } from 'types'
 
-export type NodeStatusFetcher = (
-	// This flow only needs these three queries from the shared service API.
-	query: Pick<
-		ServiceInterface['query'],
-		'nominatorsMulti' | 'erasStakersOverview' | 'erasStakersPagedEntries'
-	>,
+export type NodeFetcher = (
+	node: ServiceInterface,
 	era: number,
 	who: string,
 	signal: AbortSignal,
