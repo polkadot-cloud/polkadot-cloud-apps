@@ -14,9 +14,11 @@ export const useNominationStatus = (who: MaybeAddress) => {
 	const { isNominator } = useStaking()
 	const { isValidator } = useValidators()
 	const { getNominations } = useBalances()
-	const result = useGatedNominationStatus(who)
-	const { status, loading, error } = result
 
+	// Get the nomination status from the data gate.
+	const result = useGatedNominationStatus(who)
+
+	const { status, loading, error } = result
 	let message: string
 	if (isValidator(who)) {
 		message = t('youAreValidator', { ns: 'app' })

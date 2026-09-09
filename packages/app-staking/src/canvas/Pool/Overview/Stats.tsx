@@ -22,8 +22,8 @@ export const Stats = ({
 }) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { status } = useNominationStatus(bondedPool.addresses.stash)
 	const { isReady, serviceApi } = useApi()
+	const { status } = useNominationStatus(bondedPool.addresses.stash)
 
 	const Token = getChainIcons(network).token
 	const { unit, units } = getStakingChainData(network)
