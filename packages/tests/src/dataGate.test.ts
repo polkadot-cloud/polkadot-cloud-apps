@@ -242,7 +242,7 @@ test('API status resolves before node readiness or an era, without any node call
 	expectNoNodeQueries(input.node)
 	expect(apiQuery.mock.calls[0][0]).toMatchObject({
 		variables: { network: 'polkadot', who: 'stash' },
-		fetchPolicy: 'network-only',
+		fetchPolicy: 'no-cache',
 	})
 })
 

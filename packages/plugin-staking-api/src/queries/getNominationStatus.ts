@@ -28,8 +28,10 @@ export const fetchGetNominationStatus = async (
 		DEFAULT_DATA,
 		{
 			throwOnError: true,
-			fetchPolicy: 'network-only',
-			context: { fetchOptions: { signal } },
+			// Data gate owns caching and deduplication. Independent query keys must keep separate HTTP
+			// requests so aborting one cannot cancel another.
+			fetchPolicy: 'no-cache',
+			context: { queryDeduplication: false, fetchOptions: { signal } },
 		},
 	)
 	const status = data.getNominationStatus?.status

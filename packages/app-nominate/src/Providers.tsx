@@ -10,6 +10,7 @@ import { getStakingChainData } from 'consts/util'
 import { EraStakersProvider } from 'contexts/EraStakers'
 import { FiltersProvider } from 'contexts/Filters'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { DataGateProvider } from 'data-gate'
 import { NominationHealthProvider } from 'hooks/useNominationHealth'
 import { Tooltip } from 'radix-ui'
 import { OverlayProvider } from 'ui-overlay'
@@ -33,6 +34,7 @@ export const Providers = () => {
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},
 			],
+			DataGateProvider,
 			EraStakersProvider,
 			ValidatorsProvider,
 			FiltersProvider,

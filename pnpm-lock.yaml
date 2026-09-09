@@ -199,6 +199,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       dedot-api:
         specifier: workspace:*
         version: link:../dedot-api
@@ -661,6 +664,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       dedot-api:
         specifier: workspace:*
         version: link:../dedot-api
