@@ -43,12 +43,14 @@ test('overlapping health issues remove each selected validator once in selection
 		{
 			type: 'ZUG_VALIDATOR',
 			messageKey: 'zugValidatorWarning',
+			labelKey: 'zugValidatorWarningLabel',
 			severity: 'danger',
 			validators: [sunsetting, both],
 		},
 		{
 			type: 'HETZNER',
 			messageKey: 'hetznerValidatorWarning',
+			labelKey: 'hetznerValidatorWarningLabel',
 			severity: 'warning',
 			validators: [both, hetzner],
 		},
@@ -85,6 +87,7 @@ test('page warnings include only red warnings, while the generator includes Hetz
 	expect(getValidatorWarningGroups(validators, warnings)).toContainEqual({
 		type: 'HETZNER',
 		messageKey: 'hetznerValidatorWarning',
+		labelKey: 'hetznerValidatorWarningLabel',
 		severity: 'warning',
 		validators: [validators[0]],
 	})

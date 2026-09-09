@@ -184,6 +184,7 @@
 		"health": "Salud",
 		"help": "Ayuda",
 		"helpPrompts": "Indicaciones de Ayuda",
+		"hetznerValidatorWarningLabel": "Alojamiento en Hetzner",
 		"hetznerValidatorWarning_many": "Tu lista de nominaciones incluye {{count}} validadores alojados en Hetzner, que prohíbe las operaciones con criptomonedas salvo en colocación. El alojamiento podría suspenderse.",
 		"hetznerValidatorWarning_one": "Tu lista de nominaciones incluye {{count}} validador alojado en Hetzner, que prohíbe las operaciones con criptomonedas salvo en colocación. El alojamiento podría suspenderse.",
 		"hetznerValidatorWarning_other": "Tu lista de nominaciones incluye {{count}} validadores alojados en Hetzner, que prohíbe las operaciones con criptomonedas salvo en colocación. El alojamiento podría suspenderse.",
@@ -239,6 +240,7 @@
 		"lockedPools": "Pools Bloqueados",
 		"lowRetainment": "Baja Retención",
 		"lowRetainmentValidators": "Validadores con baja retención",
+		"lowThreeMonthRetainmentWarningLabel": "Baja retención a 3 meses",
 		"manual": "Manual",
 		"manualSelectionSubtitle": "Añade validadores desde cero.",
 		"manual_selection": "Selección manual",
@@ -505,6 +507,7 @@
 		"year": "año",
 		"youAreValidator": "Eres un validador",
 		"yourPayouts": "Tus Pagos",
+		"zugValidatorWarningLabel": "Validador de Zug",
 		"zugValidatorWarning_many": "Tu lista de nominaciones incluye {{count}} validadores de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina estos validadores de tus nominaciones.",
 		"zugValidatorWarning_one": "Tu lista de nominaciones incluye {{count}} validador de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina este validador de tus nominaciones.",
 		"zugValidatorWarning_other": "Tu lista de nominaciones incluye {{count}} validadores de Zug. Zug dejará de operar sus validadores el 31 de marzo de 2027. Elimina estos validadores de tus nominaciones."

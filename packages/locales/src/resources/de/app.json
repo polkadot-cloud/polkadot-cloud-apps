@@ -184,6 +184,7 @@
 		"health": "Zustand",
 		"help": "Hilfe",
 		"helpPrompts": "Hilfetipps",
+		"hetznerValidatorWarningLabel": "Hetzner-Hosting",
 		"hetznerValidatorWarning_one": "Deine Nominierungsliste enthält {{count}} bei Hetzner gehosteten Validator. Dort sind Krypto-Anwendungen außer bei Colocation verboten. Es droht eine Sperrung.",
 		"hetznerValidatorWarning_other": "Deine Nominierungsliste enthält {{count}} bei Hetzner gehostete Validatoren. Dort sind Krypto-Anwendungen außer bei Colocation verboten. Es droht eine Sperrung.",
 		"highActivity": "Hohe Aktivität",
@@ -238,6 +239,7 @@
 		"lockedPools": "Gesperrte Pools",
 		"lowRetainment": "Niedrige Retention",
 		"lowRetainmentValidators": "Validatoren mit niedriger Retention",
+		"lowThreeMonthRetainmentWarningLabel": "Niedrige 3-Monats-Einbehaltung",
 		"manual": "Manuell",
 		"manualSelectionSubtitle": "Validatoren von Grund auf hinzufügen.",
 		"manual_selection": "Manuelle Auswahl",
@@ -504,6 +506,7 @@
 		"year": "Jahr",
 		"youAreValidator": "Du bist ein Validator",
 		"yourPayouts": "Deine Auszahlungen",
+		"zugValidatorWarningLabel": "Zug-Validator",
 		"zugValidatorWarning_one": "Deine Nominierungsliste enthält {{count}} Validator von Zug. Zug stellt den Validatorbetrieb am 31. März 2027 ein. Entferne diesen Validator aus deinen Nominierungen.",
 		"zugValidatorWarning_other": "Deine Nominierungsliste enthält {{count}} Validatoren von Zug. Zug stellt den Validatorbetrieb am 31. März 2027 ein. Entferne diese Validatoren aus deinen Nominierungen."
 	}

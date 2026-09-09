@@ -184,6 +184,7 @@
 		"health": "Sağlık",
 		"help": "Yardım",
 		"helpPrompts": "Yardım İpuçları",
+		"hetznerValidatorWarningLabel": "Hetzner barındırma",
 		"hetznerValidatorWarning_one": "Aday listenizde Hetzner üzerinde barındırılan {{count}} doğrulayıcı var. Kolokasyon dışında kripto para işlemleri yasak olduğundan hizmet askıya alınabilir.",
 		"hetznerValidatorWarning_other": "Aday listenizde Hetzner üzerinde barındırılan {{count}} doğrulayıcı var. Kolokasyon dışında kripto para işlemleri yasak olduğundan hizmet askıya alınabilir.",
 		"highActivity": "Yüksek Aktivite",
@@ -238,6 +239,7 @@
 		"lockedPools": "Kilitli Havuzlar",
 		"lowRetainment": "Düşük Elde Tutma",
 		"lowRetainmentValidators": "Elde tutma oranı düşük doğrulayıcılar",
+		"lowThreeMonthRetainmentWarningLabel": "Düşük 3 aylık elde tutma",
 		"manual": "Manuel",
 		"manualSelectionSubtitle": "Validatörleri sıfırdan ekleyin.",
 		"manual_selection": "Manuel Seçim",
@@ -504,6 +506,7 @@
 		"year": "yıl",
 		"youAreValidator": "Bir doğrulayıcısınız",
 		"yourPayouts": "Ödemeleriniz",
+		"zugValidatorWarningLabel": "Zug doğrulayıcısı",
 		"zugValidatorWarning_one": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıyı aday listenizden kaldırın.",
 		"zugValidatorWarning_other": "Aday listenizde {{count}} Zug doğrulayıcısı var. Zug, doğrulayıcı operasyonlarını 31 Mart 2027 tarihinde sonlandıracak. Bu doğrulayıcıları aday listenizden kaldırın."
 	}

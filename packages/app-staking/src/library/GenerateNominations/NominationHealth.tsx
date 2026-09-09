@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { RetainmentThresholdDanger } from 'library/NominationWarnings'
@@ -131,7 +132,13 @@ export const NominationHealth = ({
 			)}
 			{validatorWarningGroups.map(
 				({ type, messageKey, severity, validators }) => (
-					<StatusCard key={type} status={severity} role="status">
+					<StatusCard
+						key={type}
+						status={severity}
+						icon={severity === 'danger' ? faCircleExclamation : undefined}
+						iconFrame={severity !== 'danger'}
+						role="status"
+					>
 						{t(messageKey, { count: validators.length })}
 					</StatusCard>
 				),
@@ -139,6 +146,8 @@ export const NominationHealth = ({
 			{averageRetainment !== null && status !== null && (
 				<StatusCard
 					status={status}
+					icon={status === 'danger' ? faCircleExclamation : undefined}
+					iconFrame={status !== 'danger'}
 					title={
 						<>
 							{t('averageRetainmentScore')}:{' '}

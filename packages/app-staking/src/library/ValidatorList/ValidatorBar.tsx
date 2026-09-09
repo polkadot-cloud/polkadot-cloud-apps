@@ -50,6 +50,7 @@ interface ValidatorBarProps {
 	statusValue?: BigNumber
 	unit: string
 	validator: ValidatorListEntry
+	warnings?: ReactNode
 }
 
 export const ValidatorBar = ({
@@ -78,6 +79,7 @@ export const ValidatorBar = ({
 	statusValue,
 	unit,
 	validator,
+	warnings,
 }: ValidatorBarProps) => {
 	const { t } = useTranslation('app')
 	const { selectable } = useList()
@@ -195,6 +197,7 @@ export const ValidatorBar = ({
 			</ListItem.RowMetricGroup>
 
 			{actions}
+			{warnings}
 		</ListItem.Row>
 	)
 }
