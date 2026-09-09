@@ -23,6 +23,7 @@ export const PoolStatus = () => {
 	// Synced pools without nomination targets do not need a status request.
 	const { status, loading, error } = useNominationStatus(
 		!syncing && !poolNominating ? null : poolStash,
+		{ dependencies: [activePoolNominations] },
 	)
 
 	// Determine pool state icon.

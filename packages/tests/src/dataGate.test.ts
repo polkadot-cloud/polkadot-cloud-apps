@@ -1,10 +1,20 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { QueryClient, QueryObserver } from '@tanstack/react-query'
+import {
+	QueryClient,
+	QueryClientProvider,
+	QueryObserver,
+} from '@tanstack/react-query'
 import type { ErasStakersPagedEntries, ServiceInterface } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { nominationStatusOptions } from '../../data-gate/src/nominationStatus'
+import { createElement } from '../../app-staking/node_modules/react/index.js'
+import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import {
+	nominationStatusOptions,
+	useNominationStatus,
+} from '../../data-gate/src/nominationStatus'
+import { DataGateContext } from '../../data-gate/src/provider'
 import { dataPointOptions } from '../../data-gate/src/query'
 import { createDataGateStore } from '../../data-gate/src/state'
 import type { DataGateState, DataPointConfig } from '../../data-gate/src/types'
@@ -424,7 +434,7 @@ test.each([true, false])(
 	},
 )
 
-test.each(['account', 'network', 'era', 'source'])(
+test.each(['account', 'network', 'era', 'source', 'dependencies'])(
 	'late results cannot overwrite a changed %s',
 	async (change) => {
 		const input = config(true)
@@ -440,6 +450,7 @@ test.each(['account', 'network', 'era', 'source'])(
 			nominationStatusOptions(
 				input,
 				change === 'account' ? 'new-stash' : 'stash',
+				{ dependencies: change === 'dependencies' ? ['changed-nominees'] : [] },
 			),
 		)
 		expect(observer.getCurrentResult().data).toBeUndefined()
@@ -529,4 +540,99 @@ test('a queued request retains the global source and network captured by its cac
 	expect(apiQuery.mock.lastCall?.[0].variables.network).toBe('polkadot')
 	expect(getNetwork()).toBe('kusama')
 	expect(input.node.query.nominatorsMulti).not.toHaveBeenCalled()
+})
+
+test.each([true, false])(
+	'nomination dependencies refresh within an era and equal values share results (API: %s)',
+	async (api) => {
+		const input = config(api)
+		const client = createClient()
+		apiQuery.mockResolvedValue(apiResult('active'))
+		const options = (target: string) =>
+			nominationStatusOptions(input, 'stash', {
+				dependencies: [{ targets: [target], submittedIn: 100 }],
+			})
+		const observer = new QueryObserver(client, options('validator'))
+		observers.push(observer)
+		observer.subscribe(() => {})
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('active'),
+		)
+
+		// A recreated nominations object must not cause another request.
+		observer.setOptions(options('validator'))
+		expect(await client.fetchQuery(options('validator'))).toBe('active')
+		const read = api ? apiQuery : input.node.query.nominatorsMulti
+		expect(read).toHaveBeenCalledTimes(1)
+
+		apiQuery.mockResolvedValue(apiResult('waiting'))
+		input.node.query.nominatorsMulti.mockResolvedValue([
+			{ targets: ['new-validator'], submittedIn: 100, suppressed: false },
+		])
+		input.node.query.erasStakersOverview.mockResolvedValue(undefined)
+		observer.setOptions(options('new-validator'))
+		expect(observer.getCurrentResult().data).toBeUndefined()
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('waiting'),
+		)
+		expect(read).toHaveBeenCalledTimes(2)
+		if (api) expectNoNodeQueries(input.node)
+		else expect(apiQuery).not.toHaveBeenCalled()
+	},
+)
+
+test.each([true, false])(
+	'the hook exposes an explicit refetch (API: %s)',
+	async (api) => {
+		const input = config(api)
+		const client = createClient()
+		const options = nominationStatusOptions(input, 'stash')
+		client.setQueryData(options.queryKey, 'active')
+		let result!: ReturnType<typeof useNominationStatus>
+		const Consumer = () => {
+			result = useNominationStatus('stash')
+			return null
+		}
+		renderToStaticMarkup(
+			createElement(
+				DataGateContext.Provider,
+				{ value: input },
+				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+			),
+		)
+		expect(result.status).toBe('active')
+		apiQuery.mockResolvedValue(apiResult('waiting'))
+		input.node.query.nominatorsMulti.mockResolvedValue([undefined])
+		expect((await result.refetch()).data).toBe('waiting')
+		expect(client.getQueryData(options.queryKey)).toBe('waiting')
+		if (api) expectNoNodeQueries(input.node)
+		else expect(apiQuery).not.toHaveBeenCalled()
+	},
+)
+
+test('changing dependencies cancels an unfinished node query before it fetches pages', async () => {
+	const input = config()
+	const pending = deferred<typeof overview>()
+	input.node.query.erasStakersOverview.mockReturnValueOnce(pending.promise)
+	const observer = observe(input)
+	await vi.waitFor(() =>
+		expect(input.node.query.erasStakersOverview).toHaveBeenCalledTimes(1),
+	)
+	input.node.query.erasStakersOverview.mockResolvedValue(undefined)
+	input.node.query.nominatorsMulti.mockResolvedValue([
+		{ targets: ['new-validator'], submittedIn: 100, suppressed: false },
+	])
+	observer.setOptions(
+		nominationStatusOptions(input, 'stash', {
+			dependencies: ['new-validator'],
+		}),
+	)
+	await vi.waitFor(() =>
+		expect(observer.getCurrentResult().data).toBe('waiting'),
+	)
+	pending.resolve(overview)
+	await pending.promise
+	await Promise.resolve()
+	expect(input.node.query.erasStakersPagedEntries).not.toHaveBeenCalled()
+	expect(observer.getCurrentResult().data).toBe('waiting')
 })

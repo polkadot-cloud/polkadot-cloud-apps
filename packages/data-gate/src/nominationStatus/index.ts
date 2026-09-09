@@ -6,7 +6,7 @@ import { fetchGetNominationStatus } from 'plugin-staking-api'
 import type { MaybeAddress, NominationStatus } from 'types'
 import { useDataGate } from '../provider'
 import { dataPointOptions } from '../query'
-import type { DataGateState, DataPointSource } from '../types'
+import type { DataGateState, DataPointOptions, DataPointSource } from '../types'
 import { fetchNode } from './node'
 
 // Node requests need an address, a connection and an active era.
@@ -30,23 +30,28 @@ const stakingApiSource = (
 export const nominationStatusOptions = (
 	state: DataGateState,
 	who: MaybeAddress,
+	{ dependencies = [] }: DataPointOptions = {},
 ) =>
 	dataPointOptions({
-		key: ['nomination-status', state.era, who],
+		key: ['nomination-status', state.era, who, ...dependencies],
 		node: nodeSource(state, who),
 		stakingApi: stakingApiSource(who),
 	})
 
-export const useNominationStatus = (who: MaybeAddress) => {
+export const useNominationStatus = (
+	who: MaybeAddress,
+	queryOptions: DataPointOptions = {},
+) => {
 	// Use the provider's current bus state for this stash's query.
 	const state = useDataGate()
-	const options = nominationStatusOptions(state, who)
-	const { data, isPending, error } = useQuery(options)
+	const options = nominationStatusOptions(state, who, queryOptions)
+	const { data, isPending, error, refetch } = useQuery(options)
 
 	// Keep unresolved data distinct from the staking status 'waiting'.
 	return {
 		status: options.enabled ? data : undefined,
 		loading: !!who && (!options.enabled || isPending),
 		error,
+		refetch,
 	}
 }

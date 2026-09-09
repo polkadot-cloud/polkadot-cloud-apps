@@ -4,6 +4,11 @@
 import type { QueryKey, SkipToken } from '@tanstack/react-query'
 import type { NetworkId, ServiceInterface } from 'types'
 
+export interface DataPointOptions {
+	// Additional result dependencies share the query's caching and cancellation lifecycle.
+	dependencies?: QueryKey
+}
+
 // Shared context for data points to configure source queries and determine whether their
 // prerequisites are met.
 export interface DataGateState {

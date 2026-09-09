@@ -5,12 +5,24 @@ One source-neutral hook for a nominator or pool stash's overall nomination statu
 ```tsx
 import { useNominationStatus } from 'data-gate'
 
-const { status, loading, error } = useNominationStatus(stash)
+const { status, loading, error, refetch } = useNominationStatus(stash, {
+  dependencies: [nominations],
+})
 ```
 
 `status` is `active`, `inactive`, or `waiting` once resolved. It is `undefined`
 while loading, after an initial error, or without an address. `waiting` is a
 staking status, not a loading state.
+
+The optional `dependencies` array adds serializable values to the query key.
+Changed values select a fresh query; equal values share cached results even if
+objects are recreated. Include inputs such as subscribed nominations that can
+change within an era. The hook still works with just a stash address.
+
+Call `refetch()` to explicitly refresh the current query or retry an error once
+its address and source prerequisites are available. It returns TanStack Query's
+result promise. Dependency changes need no refetch effect: query keys handle
+request sharing, cancellation, and isolation from late results.
 
 The provider reads the service API, readiness, active era, network, and plugin
 selection from `global-bus` and subscribes to changes. No configuration props are
@@ -30,8 +42,8 @@ import { DataGateProvider } from 'data-gate'
   No global validator or nominator scan is required.
 
 TanStack Query handles shared requests, caching, and cancellation.
-Results are keyed by network, source, era, and address. Cached results have no
-age-based expiry, and requests do not poll or automatically retry.
+Results are keyed by network, source, era, address, and optional dependencies.
+Cached results have no age-based expiry, and requests do not poll or automatically retry.
 Mounting the provider alone fetches nothing.
 
 Each data point declares its options with `dataPointOptions` in `src/query.ts`.

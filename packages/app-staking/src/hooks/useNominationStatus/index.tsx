@@ -13,15 +13,23 @@ export const useNominationStatus = (who: MaybeAddress) => {
 	const { t } = useTranslation()
 	const { isNominator } = useStaking()
 	const { isValidator } = useValidators()
-	const { getNominations } = useBalances()
+	const { getNominations, getStakingLedger } = useBalances()
+	const { nominators } = getStakingLedger(who)
+	const validator = isValidator(who)
+	const notNominating = nominators !== undefined && !isNominator
 
-	// Get the nomination status from the data gate.
-	const result = useGatedNominationStatus(who)
+	// Wait for nomination data before treating an empty set as confirmed.
+	const result = useGatedNominationStatus(
+		validator || notNominating ? null : who,
+		{ dependencies: [nominators] },
+	)
 
 	const { status, loading, error } = result
 	let message: string
-	if (isValidator(who)) {
+	if (validator) {
 		message = t('youAreValidator', { ns: 'app' })
+	} else if (notNominating) {
+		message = t('notNominating', { ns: 'pages' })
 	} else if (loading) {
 		message = t('syncing', { ns: 'app' })
 	} else if (error) {
