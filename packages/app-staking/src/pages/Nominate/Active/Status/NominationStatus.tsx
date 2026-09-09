@@ -10,6 +10,7 @@ export const NominationStatus = () => {
 	const { t } = useTranslation('pages')
 	const { activeAddress } = useActiveAccount()
 
+	// Get the nomination status for the active account.
 	const nominationStatus = useNominationStatus(activeAddress)
 
 	return (
