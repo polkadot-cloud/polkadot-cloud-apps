@@ -23,36 +23,33 @@ export const PoolStatus = () => {
 
 	// Determine pool state icon.
 	let poolStateIcon
-	switch (poolState) {
-		case 'Blocked':
-			poolStateIcon = faLock
-			break
-		case 'Destroying':
-			poolStateIcon = faExclamationTriangle
-			break
-		default:
-			poolStateIcon = undefined
+	if (poolState === 'Blocked') {
+		poolStateIcon = faLock
+	} else if (poolState === 'Destroying') {
+		poolStateIcon = faExclamationTriangle
 	}
 
 	// Determine pool status - left side.
-	const poolStatusLeft =
-		poolState === 'Blocked'
-			? `${t('locked')} / `
-			: poolState === 'Destroying'
-				? `${t('destroying')} / `
-				: ''
+	let poolStatusLeft = ''
+	if (poolState === 'Blocked') {
+		poolStatusLeft = `${t('locked')} / `
+	} else if (poolState === 'Destroying') {
+		poolStatusLeft = `${t('destroying')} / `
+	}
 
 	// Determine pool status - right side.
-	const poolStatusRight =
-		syncing || loading
-			? t('syncing')
-			: error
-				? '—'
-				: !poolNominating
-					? t('inactivePoolNotNominating')
-					: status === 'active'
-						? `${t('poolsNominatingAnd')} ${t('earningRewards')}`
-						: t('waitingForActiveNominations')
+	let poolStatusRight: string
+	if (syncing || loading) {
+		poolStatusRight = t('syncing')
+	} else if (error) {
+		poolStatusRight = '—'
+	} else if (!poolNominating) {
+		poolStatusRight = t('inactivePoolNotNominating')
+	} else if (status === 'active') {
+		poolStatusRight = `${t('poolsNominatingAnd')} ${t('earningRewards')}`
+	} else {
+		poolStatusRight = t('waitingForActiveNominations')
+	}
 
 	return (
 		<Stat
