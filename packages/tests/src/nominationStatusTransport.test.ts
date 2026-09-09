@@ -43,34 +43,34 @@ afterAll(() => {
 test.each(['overlapping', 'replacement'])(
 	'%s status queries for the same stash keep separate cancellation signals',
 	async (mode) => {
-	const previous = new AbortController()
-	const current = new AbortController()
-	controllers.push(previous, current)
-	const first = fetchGetNominationStatus(
-		'polkadot',
-		'stash',
-		previous.signal,
-	).catch((error: unknown) => error)
-	if (mode === 'replacement') previous.abort()
-	const second = fetchGetNominationStatus(
-		'polkadot',
-		'stash',
-		current.signal,
-	).catch((error: unknown) => error)
+		const previous = new AbortController()
+		const current = new AbortController()
+		controllers.push(previous, current)
+		const first = fetchGetNominationStatus(
+			'polkadot',
+			'stash',
+			previous.signal,
+		).catch((error: unknown) => error)
+		if (mode === 'replacement') previous.abort()
+		const second = fetchGetNominationStatus(
+			'polkadot',
+			'stash',
+			current.signal,
+		).catch((error: unknown) => error)
 
-	try {
-		await vi.waitFor(() => expect(httpFetch).toHaveBeenCalledTimes(2))
-		previous.abort()
-		responses[1](
-			Response.json({ data: { getNominationStatus: { status: 'active' } } }),
-		)
-		expect(await first).toBeInstanceOf(Error)
-		expect(await second).toBe('active')
-		expect(current.signal.aborted).toBe(false)
-	} finally {
-		previous.abort()
-		current.abort()
-		await Promise.all([first, second])
-	}
+		try {
+			await vi.waitFor(() => expect(httpFetch).toHaveBeenCalledTimes(2))
+			previous.abort()
+			responses[1](
+				Response.json({ data: { getNominationStatus: { status: 'active' } } }),
+			)
+			expect(await first).toBeInstanceOf(Error)
+			expect(await second).toBe('active')
+			expect(current.signal.aborted).toBe(false)
+		} finally {
+			previous.abort()
+			current.abort()
+			await Promise.all([first, second])
+		}
 	},
 )
