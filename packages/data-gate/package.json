@@ -13,9 +13,12 @@
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.102.8",
+		"@w3ux/hooks": "^2.4.4",
 		"global-bus": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.8"
+		"react": "^19.2.8",
+		"rxjs": "^7.8.2",
+		"utils": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*"

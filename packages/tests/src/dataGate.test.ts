@@ -5,9 +5,11 @@ import { QueryClient, QueryObserver } from '@tanstack/react-query'
 import type { ErasStakersPagedEntries, ServiceInterface } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { nominationStatusOptions } from '../../data-gate/src/nominationStatus'
-import type { DataGateConfig } from '../../data-gate/src/provider'
 import { dataPointOptions } from '../../data-gate/src/query'
-import type { DataPointConfig } from '../../data-gate/src/types'
+import { createDataGateStore } from '../../data-gate/src/state'
+import type { DataGateState, DataPointConfig } from '../../data-gate/src/types'
+import { resetActiveEra, setActiveEra } from '../../global-bus/src/activeEra'
+import { resetApiStatus, setApiStatus } from '../../global-bus/src/apiStatus'
 import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
 import {
 	getAvailablePlugins,
@@ -16,6 +18,10 @@ import {
 	plugins$,
 	setPlugins,
 } from '../../global-bus/src/plugins'
+import {
+	resetServiceInterface,
+	setServiceInterface,
+} from '../../global-bus/src/serviceInterface'
 import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
 
 const { apiQuery, storage } = vi.hoisted(() => {
@@ -41,6 +47,9 @@ vi.mock('../../global-bus/src/networkConfig/util', () => ({
 vi.mock('../../global-bus/src/index', async () => ({
 	...(await import('../../global-bus/src/networkConfig')),
 	...(await import('../../global-bus/src/plugins')),
+	...(await import('../../global-bus/src/activeEra')),
+	...(await import('../../global-bus/src/apiStatus')),
+	...(await import('../../global-bus/src/serviceInterface')),
 }))
 vi.mock('../../plugin-staking-api/src/Client', () => ({
 	client: { query: apiQuery },
@@ -84,7 +93,7 @@ const expectNoNodeQueries = ({ query }: ServiceInterface) => {
 		expect(read).not.toHaveBeenCalled()
 }
 const observe = (
-	input: DataGateConfig,
+	input: DataGateState,
 	who: string | null = 'stash',
 	client = createClient(),
 ) => {
@@ -99,6 +108,9 @@ const observe = (
 
 beforeEach(() => {
 	storage.clear()
+	resetActiveEra()
+	resetApiStatus()
+	resetServiceInterface()
 	setNetwork('polkadot')
 	setPlugins([])
 	apiQuery.mockReset()
@@ -108,12 +120,69 @@ afterEach(() => {
 	for (const client of clients.splice(0)) client.clear()
 })
 
+test('provider state reads current bus values and follows all source changes', () => {
+	const input = config()
+	setServiceInterface(input.node)
+	setActiveEra({ index: 100, start: 0n })
+	setApiStatus('polkadot', 'ready')
+	const store = createDataGateStore()
+	expect(store.getSnapshot()).toEqual(input)
+	const listener = vi.fn()
+	const unsubscribe = store.subscribe(listener)
+	try {
+		setNetwork('kusama')
+		expect(store.getSnapshot().ready).toBe(false)
+		setApiStatus('kusama', 'ready')
+		expect(store.getSnapshot().ready).toBe(true)
+		setActiveEra({ index: 101, start: 0n })
+		expect(store.getSnapshot().era).toBe(101)
+		const replacement = vi.mockObject(defaultServiceInterface)
+		setServiceInterface(replacement)
+		expect(store.getSnapshot().node).toBe(replacement)
+
+		// Plugin changes must notify consumers even if node inputs stay the same.
+		const previous = store.getSnapshot()
+		listener.mockClear()
+		setPlugins(['staking_api'])
+		expect(listener).toHaveBeenCalled()
+		expect(store.getSnapshot()).not.toBe(previous)
+	} finally {
+		unsubscribe()
+	}
+	listener.mockClear()
+	setActiveEra({ index: 102, start: 0n })
+	expect(listener).not.toHaveBeenCalled()
+})
+
+test('bus readiness and era updates start a pending node query without app props', async () => {
+	const input = config()
+	setServiceInterface(input.node)
+	const store = createDataGateStore()
+	const observer = observe(store.getSnapshot())
+	const unsubscribe = store.subscribe(() => {
+		observer.setOptions(nominationStatusOptions(store.getSnapshot(), 'stash'))
+	})
+	try {
+		setApiStatus('polkadot', 'ready')
+		expect(observer.getCurrentResult().fetchStatus).toBe('idle')
+		expectNoNodeQueries(input.node)
+		setActiveEra({ index: 100, start: 0n })
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().data).toBe('active'),
+		)
+		expect(input.node.query.nominatorsMulti).toHaveBeenCalledTimes(1)
+		expect(apiQuery).not.toHaveBeenCalled()
+	} finally {
+		unsubscribe()
+	}
+})
+
 test('data points have independent caches for each data point and source', async () => {
 	setPlugins(['staking_api'])
 	const nodeQuery = vi.fn(async () => ({ total: 10 }))
 	const stakingApiQuery = vi.fn(async () => ({ total: 20 }))
 	const definition: DataPointConfig<{ total: number }> = {
-		queryKey: ['first-total'],
+		key: ['first-total'],
 		node: { queryFn: nodeQuery },
 		stakingApi: { queryFn: stakingApiQuery },
 	}
@@ -121,7 +190,7 @@ test('data points have independent caches for each data point and source', async
 	const first = dataPointOptions(definition)
 	const second = dataPointOptions({
 		...definition,
-		queryKey: ['second-total'],
+		key: ['second-total'],
 	})
 	expect((await client.fetchQuery(first)).total).toBe(20)
 	expect((await client.fetchQuery(second)).total).toBe(20)
@@ -139,7 +208,7 @@ test('an unready selected API waits without starting a ready node source', async
 	const nodeQuery = vi.fn(async () => 10)
 	const stakingApiQuery = vi.fn(async () => 20)
 	const definition: DataPointConfig<number> = {
-		queryKey: ['deferred-total'],
+		key: ['deferred-total'],
 		node: { queryFn: nodeQuery },
 		stakingApi: { enabled: false, queryFn: stakingApiQuery },
 	}

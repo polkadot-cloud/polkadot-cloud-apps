@@ -784,6 +784,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.102.8
         version: 5.102.8(react@19.2.8)
+      '@w3ux/hooks':
+        specifier: ^2.4.4
+        version: 2.4.4(react@19.2.8)
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -793,6 +796,12 @@ importers:
       react:
         specifier: ^19.2.8
         version: 19.2.8
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
+      utils:
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       types:
         specifier: workspace:*

@@ -12,20 +12,14 @@ const { status, loading, error } = useNominationStatus(stash)
 while loading, after an initial error, or without an address. `waiting` is a
 staking status, not a loading state.
 
-The gate reads the network and `pluginEnabled('staking_api')` from `global-bus`
-and subscribes to changes. Supply the shared Dedot service API (`ServiceInterface`)
-and its readiness and era from the app:
+The provider reads the service API, readiness, active era, network, and plugin
+selection from `global-bus` and subscribes to changes. No configuration props are
+needed:
 
 ```tsx
 import { DataGateProvider } from 'data-gate'
 
-<DataGateProvider
-  node={serviceApi}
-  ready={isReady}
-  era={activeEra.index}
->
-  {children}
-</DataGateProvider>
+<DataGateProvider>{children}</DataGateProvider>
 ```
 
 - **Staking API:** one request, without waiting for node readiness, validator
@@ -46,7 +40,7 @@ result type and a small configuration API:
 
 | Field | Purpose |
 | --- | --- |
-| `queryKey` | Data point name and inputs that distinguish its results. |
+| `key` | Data point name and inputs, before data gate adds network and source. |
 | `node.queryFn`, `stakingApi.queryFn` | Fetch with `{ network, signal }`, or use `skipToken` for missing input. |
 | Source `enabled` | Optional readiness condition; defaults to `true`. |
 
@@ -55,8 +49,11 @@ The data point's hook calls `useDataGate()` to receive service inputs and react
 to global source changes, then passes its options to TanStack's `useQuery`.
 Use-case settings stay in the data point's declaration.
 
-`src/nominationStatus/index.ts` is the first implementation. Its `types.ts`
-defines the node query contract; `node.ts` and `stakingApi.ts` provide the fetches.
+`src/nominationStatus/index.ts` is the first implementation. Its `nodeSource` and
+`stakingApiSource` helpers each return `DataPointSource<T>` and define the source's
+prerequisites and query function before combining them with the cache key.
+Its `types.ts` defines the node query contract; `node.ts` provides the node fetch,
+and the API fetch is imported directly from `plugin-staking-api`.
 
 Run `pnpm --filter data-gate check` and
 `pnpm --filter tests test -- src/dataGate.test.ts`.

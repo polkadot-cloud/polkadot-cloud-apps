@@ -2,51 +2,28 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { getNetwork, pluginEnabled, plugins$ } from 'global-bus'
-import {
-	createContext,
-	type ReactNode,
-	useContext,
-	useState,
-	useSyncExternalStore,
-} from 'react'
-import type { ServiceInterface } from 'types'
+import { createSafeContext } from '@w3ux/hooks'
+import { type ReactNode, useState, useSyncExternalStore } from 'react'
+import { createDataGateStore } from './state'
+import type { DataGateState } from './types'
 
-export interface DataGateConfig {
-	node: ServiceInterface
-	ready: boolean
-	era: number
-}
+export const [DataGateContext, useDataGate] = createSafeContext<DataGateState>()
 
-const DataGateContext = createContext<DataGateConfig | null>(null)
-
-const getSource = () => `${getNetwork()}:${pluginEnabled('staking_api')}`
-
-// Plugin notifications include network changes, so one subscription covers both.
-const subscribeSource = (onChange: () => void) => {
-	const subscription = plugins$.subscribe(onChange)
-	return () => subscription.unsubscribe()
-}
-
-export const DataGateProvider = ({
-	children,
-	...config
-}: DataGateConfig & { children: ReactNode }) => {
+export const DataGateProvider = ({ children }: { children: ReactNode }) => {
+	// Keep the query cache and bus-backed store stable across provider renders.
 	const [client] = useState(() => new QueryClient())
+	const [store] = useState(createDataGateStore)
+
+	// Subscribe here so all data-gate consumers share the same bus snapshot.
+	const state = useSyncExternalStore(
+		store.subscribe,
+		store.getSnapshot,
+		store.getSnapshot,
+	)
 
 	return (
-		<DataGateContext.Provider value={config}>
+		<DataGateContext.Provider value={state}>
 			<QueryClientProvider client={client}>{children}</QueryClientProvider>
 		</DataGateContext.Provider>
 	)
-}
-
-export const useDataGate = () => {
-	// Every data point updates when the global network or API preference changes.
-	useSyncExternalStore(subscribeSource, getSource, getSource)
-	const config = useContext(DataGateContext)
-	if (!config) {
-		throw new Error('Data gate hooks require a DataGateProvider')
-	}
-	return config
 }

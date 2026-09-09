@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { DataGate } from 'DataGate'
 import { ThemedRouter } from 'Themes'
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
@@ -15,6 +14,7 @@ import { MigrateProvider } from 'contexts/Migrate'
 import { NominatorSetupsProvider } from 'contexts/NominatorSetups'
 import { BondedPoolsProvider } from 'contexts/Pools/BondedPools'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { DataGateProvider } from 'data-gate'
 import { useNetwork } from 'hooks/useNetwork'
 import { Tooltip } from 'radix-ui'
 import { OverlayProvider } from 'ui-overlay'
@@ -36,7 +36,7 @@ export const Providers = () => {
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},
 			],
-			DataGate,
+			DataGateProvider,
 			EraStakersProvider,
 			BondedPoolsProvider,
 			ValidatorsProvider,

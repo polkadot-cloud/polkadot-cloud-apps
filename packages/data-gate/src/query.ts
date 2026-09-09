@@ -6,31 +6,32 @@ import { getNetwork, pluginEnabled } from 'global-bus'
 import type { DataPointConfig } from './types'
 
 export const dataPointOptions = <T>({
-	queryKey,
+	key,
 	node,
 	stakingApi,
 }: DataPointConfig<T>) => {
-	// Capture the network and selected source for the lifetime of this request.
+	// Capture the network for the lifetime of this request.
 	const network = getNetwork()
-	const stakingApiEnabled = pluginEnabled('staking_api')
-	const source = stakingApiEnabled ? stakingApi : node
+
+	// Select the source and its cache-key label together based on plugin availability.
+	const { source, sourceKey } = pluginEnabled('staking_api')
+		? { source: stakingApi, sourceKey: 'staking-api' }
+		: { source: node, sourceKey: 'node' }
+
+	// Determine the query function to use based on the selected source.
 	const queryFn = source.enabled === false ? skipToken : source.queryFn
 
+	// Every data point's key is scoped to its network and source.
+	const queryKey = [...key, network, sourceKey]
+
 	return queryOptions({
-		// Every data point's key is scoped to its network and source.
-		queryKey: [
-			...queryKey,
-			network,
-			stakingApiEnabled ? 'staking-api' : 'node',
-		],
+		queryKey,
 		queryFn:
 			queryFn === skipToken
 				? skipToken
 				: ({ signal }) => queryFn({ network, signal }),
 		enabled: queryFn !== skipToken,
-		// Reuse cached results without age-based refetches.
 		staleTime: Infinity,
-		// Surface failures from the selected source without retries or fallback.
 		retry: false,
 	})
 }

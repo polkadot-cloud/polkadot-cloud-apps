@@ -2,37 +2,47 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { skipToken, useQuery } from '@tanstack/react-query'
-import type { MaybeAddress } from 'types'
-import { type DataGateConfig, useDataGate } from '../provider'
+import { fetchGetNominationStatus } from 'plugin-staking-api'
+import type { MaybeAddress, NominationStatus } from 'types'
+import { useDataGate } from '../provider'
 import { dataPointOptions } from '../query'
+import type { DataGateState, DataPointSource } from '../types'
 import { fetchNodeStatus } from './node'
-import { fetchStakingApiStatus } from './stakingApi'
+
+// Node requests need an address, a connection and an active era.
+const nodeSource = (
+	{ node, ready, era }: DataGateState,
+	who: MaybeAddress,
+): DataPointSource<NominationStatus> => ({
+	enabled: ready && era > 0,
+	queryFn: who
+		? ({ signal }) => fetchNodeStatus(node.query, era, who, signal)
+		: skipToken,
+})
+
+// The API can start as soon as an address is available.
+const stakingApiSource = (
+	who: MaybeAddress,
+): DataPointSource<NominationStatus> => ({
+	queryFn: who
+		? ({ network, signal }) => fetchGetNominationStatus(network, who, signal)
+		: skipToken,
+})
 
 export const nominationStatusOptions = (
-	{ node, ready, era }: DataGateConfig,
+	state: DataGateState,
 	who: MaybeAddress,
 ) =>
 	dataPointOptions({
-		queryKey: ['nomination-status', era, who],
-		// Node requests need a connection and an active era.
-		node: {
-			enabled: ready && era > 0,
-			queryFn: who
-				? ({ signal }) => fetchNodeStatus(node.query, era, who, signal)
-				: skipToken,
-		},
-		// The API can start as soon as an address is available.
-		stakingApi: {
-			queryFn: who
-				? ({ network, signal }) => fetchStakingApiStatus(network, who, signal)
-				: skipToken,
-		},
+		key: ['nomination-status', state.era, who],
+		node: nodeSource(state, who),
+		stakingApi: stakingApiSource(who),
 	})
 
 export const useNominationStatus = (who: MaybeAddress) => {
-	// Apply the provider's configuration to this stash's query.
-	const config = useDataGate()
-	const options = nominationStatusOptions(config, who)
+	// Use the provider's current bus state for this stash's query.
+	const state = useDataGate()
+	const options = nominationStatusOptions(state, who)
 	const { data, isPending, error } = useQuery(options)
 
 	// Keep unresolved data distinct from the staking status 'waiting'.

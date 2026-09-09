@@ -2,4 +2,4 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export { useNominationStatus } from './nominationStatus'
-export { type DataGateConfig, DataGateProvider } from './provider'
+export { DataGateProvider } from './provider'
