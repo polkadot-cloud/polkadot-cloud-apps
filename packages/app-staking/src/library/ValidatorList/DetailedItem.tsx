@@ -62,16 +62,13 @@ export const DetailedItem = ({
 	const itemWarnings = highlightRetainmentWarnings
 		? getValidatorItemWarnings(warnings, retainment)
 		: []
-	const periodStats = useRetainmentStatsData({
+	const retainmentStats = useRetainmentStatsData({
 		period,
 		selfStakeMax,
+		statusAccent: itemWarnings[0]?.severity,
 		unit,
 		units,
 	})
-	const retainmentStats = {
-		...periodStats,
-		statusAccent: itemWarnings[0]?.severity,
-	}
 	const warningBadges = (
 		<ValidatorWarnings warnings={itemWarnings} format={format} />
 	)

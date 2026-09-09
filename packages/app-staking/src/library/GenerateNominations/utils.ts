@@ -23,7 +23,7 @@ export const getValidatorItemWarnings = (
 ): ValidatorItemWarning[] => {
 	const items: ValidatorItemWarning[] = ValidatorWarningDefinitions.filter(
 		({ type }) => warnings.includes(type),
-	).map(({ type, labelKey, severity }) => ({ type, labelKey, severity }))
+	)
 
 	const rate = retainment?.retainment.threeMonths?.retainmentRate
 
@@ -42,12 +42,6 @@ export const getValidatorItemWarnings = (
 		a.severity === b.severity ? 0 : a.severity === 'danger' ? -1 : 1,
 	)
 }
-
-export const getValidatorWarningSeverity = (
-	warnings: ValidatorWarningType[] = [],
-) =>
-	ValidatorWarningDefinitions.find(({ type }) => warnings.includes(type))
-		?.severity
 
 export const getValidatorsWithRetainment = (
 	validators: Validator[],

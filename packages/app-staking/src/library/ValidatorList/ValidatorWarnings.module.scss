@@ -12,10 +12,6 @@
 	min-width: 0;
 	padding: 0 0 0.2rem;
 
-	&[data-format='col'] {
-		margin: 0 1rem 0.75rem;
-	}
-
 	> li {
 		align-items: center;
 		background: var(--status-warning-bg);
@@ -39,10 +35,14 @@
 		}
 	}
 
-	&[data-format='col'] > li {
-		border-radius: 0.4rem;
-		font-size: 1.15rem;
-		padding: 0.45rem 0.8rem;
+	&[data-format='col'] {
+		margin: 0 1rem 0.75rem;
+
+		> li {
+			border-radius: 0.4rem;
+			font-size: 1.15rem;
+			padding: 0.45rem 0.8rem;
+		}
 	}
 }
 
