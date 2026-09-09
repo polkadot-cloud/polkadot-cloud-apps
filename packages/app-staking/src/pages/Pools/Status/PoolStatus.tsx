@@ -17,9 +17,13 @@ export const PoolStatus = () => {
 	const { activePool, activePoolNominations } = useActivePool()
 
 	const poolStash = activePool?.addresses?.stash || ''
-	const { status, loading, error } = useNominationStatus(poolStash)
 	const poolState = activePool?.bondedPool?.state ?? null
 	const poolNominating = !!activePoolNominations?.targets?.length
+
+	// Synced pools without nomination targets do not need a status request.
+	const { status, loading, error } = useNominationStatus(
+		!syncing && !poolNominating ? null : poolStash,
+	)
 
 	// Determine pool state icon.
 	let poolStateIcon
@@ -39,12 +43,14 @@ export const PoolStatus = () => {
 
 	// Determine pool status - right side.
 	let poolStatusRight: string
-	if (syncing || loading) {
+	if (syncing) {
+		poolStatusRight = t('syncing')
+	} else if (!poolNominating) {
+		poolStatusRight = t('inactivePoolNotNominating')
+	} else if (loading) {
 		poolStatusRight = t('syncing')
 	} else if (error) {
 		poolStatusRight = '—'
-	} else if (!poolNominating) {
-		poolStatusRight = t('inactivePoolNotNominating')
 	} else if (status === 'active') {
 		poolStatusRight = `${t('poolsNominatingAnd')} ${t('earningRewards')}`
 	} else {
