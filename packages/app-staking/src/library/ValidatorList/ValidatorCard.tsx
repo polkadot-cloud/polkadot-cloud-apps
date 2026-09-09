@@ -31,6 +31,7 @@ interface ValidatorCardProps {
 	selected?: boolean
 	summary: ReactNode
 	unit: string
+	warnings?: ReactNode
 }
 
 export const ValidatorCard = ({
@@ -50,6 +51,7 @@ export const ValidatorCard = ({
 	selected = false,
 	summary,
 	unit,
+	warnings,
 }: ValidatorCardProps) => {
 	const { t } = useTranslation('app')
 
@@ -107,6 +109,7 @@ export const ValidatorCard = ({
 					/>
 				}
 			/>
+			{warnings}
 		</DetailedCard.Root>
 	)
 }

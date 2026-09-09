@@ -2,10 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { expect, test, vi } from 'vitest'
-import { getValidatorsWithRetainment } from '../../app-staking/src/library/GenerateNominations/utils'
+import {
+	getValidatorItemWarnings,
+	getValidatorsWithRetainment,
+} from '../../app-staking/src/library/GenerateNominations/utils'
 import type {
 	ValidatorRetainmentResult,
 	ValidatorRetainmentWindow,
+	ValidatorWarningType,
 } from '../../plugin-staking-api/src/types'
 import {
 	useRetainmentRateData,
@@ -162,4 +166,106 @@ test('missing retainment windows display unavailable rates without a month count
 	expect(retainmentRate.value).toBeUndefined()
 	expect(retainmentRate.valueText).toBe('—')
 	expect(retainmentRate.color).toBe('var(--text-tertiary)')
+})
+
+test.each<
+	[
+		ValidatorWarningType[],
+		number | null,
+		boolean,
+		'warning' | 'danger' | undefined,
+	]
+>([
+	[['HETZNER'], null, true, 'warning'],
+	[['HETZNER'], 90, true, 'warning'],
+	[['HETZNER'], 60, true, 'warning'],
+	[['HETZNER'], 40, true, 'danger'],
+	[['ZUG_VALIDATOR'], 90, true, 'danger'],
+	[['HETZNER', 'ZUG_VALIDATOR'], 90, true, 'danger'],
+	[['HETZNER'], 40, false, undefined],
+	[[], 90, true, undefined],
+	[[], 60, true, 'warning'],
+	[[], 40, true, 'danger'],
+])(
+	'item strip uses %j and %s%% three-month retainment with highlighting %s',
+	(warnings, rate, highlightWarnings, expected) => {
+		const threeMonths = rate === null ? null : window({ retainmentRate: rate })
+		const itemWarnings = highlightWarnings
+			? getValidatorItemWarnings(warnings, result(null, threeMonths))
+			: []
+		const stats = useRetainmentStatsData({
+			statusAccent: itemWarnings[0]?.severity,
+			period: window({ retainmentRate: 100 }),
+			selfStakeMax: false,
+			unit: 'DOT',
+			units: 10,
+		})
+		expect(stats.statusAccent).toBe(expected)
+	},
+)
+
+test('item badges preserve overlapping issues in severity order using three-month retainment', () => {
+	const retainment = result(
+		window({ retainmentRate: 100 }),
+		window({ retainmentRate: 10 }),
+	)
+	expect(
+		getValidatorItemWarnings(['HETZNER', 'ZUG_VALIDATOR'], retainment),
+	).toMatchObject([
+		{
+			type: 'ZUG_VALIDATOR',
+			labelKey: 'zugValidatorWarningLabel',
+			severity: 'danger',
+		},
+		{
+			type: 'LOW_RETAINMENT',
+			labelKey: 'lowThreeMonthRetainmentWarningLabel',
+			severity: 'danger',
+		},
+		{
+			type: 'HETZNER',
+			labelKey: 'hetznerValidatorWarningLabel',
+			severity: 'warning',
+		},
+	])
+})
+
+test.each([
+	[0, 'danger'],
+	[49.9, 'danger'],
+	[50, 'warning'],
+	[69.9, 'warning'],
+	[70, undefined],
+	[100, undefined],
+	[null, undefined],
+	[Number.NaN, undefined],
+	[Number.POSITIVE_INFINITY, undefined],
+])(
+	'item retainment badges match the summary threshold for %s',
+	(rate, severity) => {
+		const warnings = getValidatorItemWarnings(
+			[],
+			result(window({ retainmentRate: 0 }), window({ retainmentRate: rate })),
+		)
+		expect(warnings.map((warning) => warning.severity)).toEqual(
+			severity ? [severity] : [],
+		)
+	},
+)
+
+test('missing three-month data never substitutes one-month retainment or hides API warnings', () => {
+	for (const retainment of [
+		undefined,
+		null,
+		result(window({ retainmentRate: 0 })),
+	]) {
+		expect(getValidatorItemWarnings([], retainment)).toEqual([])
+		expect(getValidatorItemWarnings(['HETZNER'], retainment)).toMatchObject([
+			{
+				type: 'HETZNER',
+				labelKey: 'hetznerValidatorWarningLabel',
+				severity: 'warning',
+			},
+		])
+	}
 })

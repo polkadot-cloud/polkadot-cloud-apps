@@ -51,6 +51,7 @@ export const ValidatorListInner = ({
 	defaultConfig,
 	BeforeListNode = null,
 	validatorDetails: suppliedValidatorDetails,
+	validatorWarnings,
 	onRemove,
 }: ValidatorListProps) => {
 	const { t } = useTranslation()
@@ -197,6 +198,7 @@ export const ValidatorListInner = ({
 							>
 								<Item
 									validator={validator}
+									warnings={validatorWarnings?.[validator.address]}
 									showShareLink={showShareLink}
 									toggleFavorites={toggleFavorites}
 									displayFor={displayFor}

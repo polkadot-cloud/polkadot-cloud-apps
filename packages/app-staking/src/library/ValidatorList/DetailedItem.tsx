@@ -5,6 +5,7 @@ import { getStakingChainData } from 'consts/util'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { getValidatorItemWarnings } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
@@ -31,6 +32,7 @@ import { useValidatorSelfStake } from './useValidatorSelfStake'
 import { ValidatorBar } from './ValidatorBar'
 import { ValidatorCard } from './ValidatorCard'
 import { ValidatorSummary } from './ValidatorSummary'
+import { ValidatorWarnings } from './ValidatorWarnings'
 
 export const DetailedItem = ({
 	validator,
@@ -43,6 +45,7 @@ export const DetailedItem = ({
 	format,
 	highlightRetainmentWarnings,
 	retainment,
+	warnings,
 	isPreloading,
 }: ItemProps) => {
 	const { network } = useNetwork()
@@ -56,13 +59,19 @@ export const DetailedItem = ({
 		window: retainmentWindow,
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(retainment?.retainment)
+	const itemWarnings = highlightRetainmentWarnings
+		? getValidatorItemWarnings(warnings, retainment)
+		: []
 	const retainmentStats = useRetainmentStatsData({
-		highlightWarnings: highlightRetainmentWarnings,
 		period,
 		selfStakeMax,
+		statusAccent: itemWarnings[0]?.severity,
 		unit,
 		units,
 	})
+	const warningBadges = (
+		<ValidatorWarnings warnings={itemWarnings} format={format} />
+	)
 	const validatorIdentity = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
@@ -165,6 +174,7 @@ export const DetailedItem = ({
 				selected={isSelected}
 				unit={unit}
 				validator={validator}
+				warnings={warningBadges}
 			/>
 		)
 	}
@@ -193,6 +203,7 @@ export const DetailedItem = ({
 				/>
 			}
 			unit={unit}
+			warnings={warningBadges}
 		/>
 	)
 }

@@ -3,8 +3,23 @@
 
 import type { ValidatorWarningType } from 'plugin-staking-api/types'
 
-// Add each sunsetting warning enum and its operator-specific message here.
-export const SunsettingWarnings: {
+// Map each validator warning code to its message, highest severity first.
+export const ValidatorWarningDefinitions: {
 	type: ValidatorWarningType
 	messageKey: string
-}[] = [{ type: 'ZUG_VALIDATOR', messageKey: 'zugValidatorWarning' }]
+	labelKey: string
+	severity: 'danger' | 'warning'
+}[] = [
+	{
+		type: 'ZUG_VALIDATOR',
+		messageKey: 'zugValidatorWarning',
+		labelKey: 'zugValidatorWarningLabel',
+		severity: 'danger',
+	},
+	{
+		type: 'HETZNER',
+		messageKey: 'hetznerValidatorWarning',
+		labelKey: 'hetznerValidatorWarningLabel',
+		severity: 'warning',
+	},
+]

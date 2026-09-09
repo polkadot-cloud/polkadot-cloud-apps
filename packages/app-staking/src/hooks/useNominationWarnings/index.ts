@@ -12,8 +12,8 @@ import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import {
-	getSunsettingWarnings,
 	getValidatorsWithRetainment,
+	getValidatorWarningGroups,
 } from 'library/GenerateNominations/utils'
 import { useEffect, useMemo } from 'react'
 import type { BondFor } from 'types'
@@ -58,9 +58,8 @@ export const useNominationWarnings = () => {
 	// Get the validator addresses needed for detail lookup.
 	const validatorAddresses = nominations.map(({ address }) => address)
 
-	// Read-only accounts should still see warnings about their Polkadot nominations.
-	const canDisplay =
-		network === 'polkadot' && retainmentStatsEnabled && Boolean(activeAddress)
+	// Read-only accounts should still see warnings on supported networks.
+	const canDisplay = retainmentStatsEnabled && Boolean(activeAddress)
 	const canFix = !isReadOnlyAccount(activeAddress)
 
 	const addressesKey = JSON.stringify([...new Set(validatorAddresses)].sort())
@@ -69,9 +68,16 @@ export const useNominationWarnings = () => {
 			network,
 			era: activeEra.index,
 			erasPerDay,
+			retainmentStatsEnabled,
 			addresses: JSON.parse(addressesKey) as string[],
 		}),
-		[network, activeEra.index, erasPerDay, addressesKey],
+		[
+			network,
+			activeEra.index,
+			erasPerDay,
+			retainmentStatsEnabled,
+			addressesKey,
+		],
 	)
 	const entries = useSingletonStore(nominationWarningsStore)
 	const result = entries[warningRequestKey(request)]
@@ -84,9 +90,10 @@ export const useNominationWarnings = () => {
 	}, [enabled, request])
 
 	const isLoading = enabled && (!result || result.status === 'loading')
-	const sunsettingWarnings = getSunsettingWarnings(
+	const validatorWarningGroups = getValidatorWarningGroups(
 		nominations,
 		result?.warnings ?? {},
+		'danger',
 	)
 	const dangerCount = result?.retainmentByAddress
 		? getValidatorsWithRetainment(
@@ -117,6 +124,6 @@ export const useNominationWarnings = () => {
 		dangerCount,
 		handleFix,
 		isLoading,
-		sunsettingWarnings,
+		validatorWarningGroups,
 	}
 }

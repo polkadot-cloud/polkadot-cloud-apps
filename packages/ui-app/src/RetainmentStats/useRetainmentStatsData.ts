@@ -13,7 +13,6 @@ import {
 	clampRate,
 	formatCompactNumber,
 	getRateColor,
-	getRetainmentStatus,
 	planckToUnitBn,
 } from 'utils'
 
@@ -53,9 +52,9 @@ export interface RetainmentStatsData {
 }
 
 interface RetainmentStatsDataProps {
-	highlightWarnings?: boolean
 	period?: RetainmentPeriodData
 	selfStakeMax: boolean
+	statusAccent?: RetainmentStatsData['statusAccent']
 	unit: string
 	units: number
 }
@@ -187,9 +186,9 @@ export const useRetainmentRateData = (
 }
 
 export const useRetainmentStatsData = ({
-	highlightWarnings = false,
 	period,
 	selfStakeMax,
+	statusAccent,
 	unit,
 	units,
 }: RetainmentStatsDataProps): RetainmentStatsData => {
@@ -217,14 +216,6 @@ export const useRetainmentStatsData = ({
 			}
 		: undefined
 	const maximumLabel = t('maximum')
-	const retainmentStatus =
-		highlightWarnings && retainmentRate.value !== undefined
-			? getRetainmentStatus(retainmentRate.value)
-			: undefined
-	const statusAccent =
-		retainmentStatus === 'warning' || retainmentStatus === 'danger'
-			? retainmentStatus
-			: undefined
 
 	return {
 		compoundRate: getRateStat({

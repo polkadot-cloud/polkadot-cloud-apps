@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { RetainmentThresholds } from 'consts/retainment'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { RetainmentThresholdDanger } from 'library/NominationWarnings'
@@ -50,7 +51,11 @@ export const NominationHealth = ({
 				warningCount: warnings,
 			}
 		}, [validatorsWithRetainment])
-	const { sunsettingCount, sunsettingWarnings, validatorsWithIssues } = useMemo(
+	const {
+		flaggedValidatorCount,
+		validatorWarningGroups,
+		validatorsWithIssues,
+	} = useMemo(
 		() =>
 			getValidatorsWithHealthIssues(
 				validators,
@@ -61,7 +66,8 @@ export const NominationHealth = ({
 	)
 	const dangerCount = lowRetainmentValidators.length
 	const hasDangerWarnings = validatorsWithIssues.length > 0
-	const hasWarnings = hasDangerWarnings || warningCount > 0
+	const hasWarnings =
+		hasDangerWarnings || warningCount > 0 || validatorWarningGroups.length > 0
 
 	const { setNominationHealth } = useNominationHealth()
 	useEffect(() => {
@@ -69,7 +75,7 @@ export const NominationHealth = ({
 			hasDangerWarnings,
 			isLoading,
 			lowRetainmentCount: dangerCount,
-			sunsettingCount,
+			flaggedValidatorCount,
 			validatorsWithIssues,
 		})
 		return () => {
@@ -77,7 +83,7 @@ export const NominationHealth = ({
 				hasDangerWarnings: false,
 				isLoading: false,
 				lowRetainmentCount: 0,
-				sunsettingCount: 0,
+				flaggedValidatorCount: 0,
 				validatorsWithIssues: [],
 			})
 		}
@@ -85,7 +91,7 @@ export const NominationHealth = ({
 		dangerCount,
 		hasDangerWarnings,
 		isLoading,
-		sunsettingCount,
+		flaggedValidatorCount,
 		validatorsWithIssues,
 		setNominationHealth,
 	])
@@ -94,7 +100,7 @@ export const NominationHealth = ({
 	if (
 		validatorsWithRetainment.length === 0 &&
 		!allValidatorsWaiting &&
-		!hasDangerWarnings
+		!hasWarnings
 	) {
 		return null
 	}
@@ -124,14 +130,24 @@ export const NominationHealth = ({
 					</Separator>
 				</div>
 			)}
-			{sunsettingWarnings.map(({ type, messageKey, validators }) => (
-				<StatusCard key={type} status="danger" role="status">
-					{t(messageKey, { count: validators.length })}
-				</StatusCard>
-			))}
+			{validatorWarningGroups.map(
+				({ type, messageKey, severity, validators }) => (
+					<StatusCard
+						key={type}
+						status={severity}
+						icon={severity === 'danger' ? faCircleExclamation : undefined}
+						iconFrame={severity !== 'danger'}
+						role="status"
+					>
+						{t(messageKey, { count: validators.length })}
+					</StatusCard>
+				),
+			)}
 			{averageRetainment !== null && status !== null && (
 				<StatusCard
 					status={status}
+					icon={status === 'danger' ? faCircleExclamation : undefined}
+					iconFrame={status !== 'danger'}
 					title={
 						<>
 							{t('averageRetainmentScore')}:{' '}

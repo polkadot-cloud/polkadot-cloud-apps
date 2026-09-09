@@ -478,27 +478,30 @@ export interface GetActiveStakerWithNomineesData {
 		active: boolean
 	}
 	getNomineesStatus: {
-		statuses: {
-			address: string
-			status: string
-		}[]
+		statuses: NomineeStatusEntry[]
 	}
 }
 export interface ActiveStatusWithNominees {
 	active: boolean
-	statuses: {
-		address: string
-		status: string
-	}[]
+	statuses: NomineeStatusEntry[]
+}
+
+export interface NomineeStatusEntry {
+	address: string
+	status: string
+	// The supplied nominator's active stake backing this validator, in planck.
+	activeBacking: string
 }
 
 export type StakerNominationStatus = 'active' | 'inactive' | 'waiting'
 
 export interface GetNominationStatusData {
-	getNominationStatus: StakerNominationStatus
+	getNominationStatus: {
+		status: StakerNominationStatus
+	}
 }
 
-export type ValidatorWarningType = 'ZUG_VALIDATOR'
+export type ValidatorWarningType = 'ZUG_VALIDATOR' | 'HETZNER'
 
 export type ValidatorWarnings = Record<string, ValidatorWarningType[]>
 

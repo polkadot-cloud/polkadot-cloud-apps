@@ -50,6 +50,7 @@ interface ValidatorBarProps {
 	statusValue?: BigNumber
 	unit: string
 	validator: ValidatorListEntry
+	warnings?: ReactNode
 }
 
 export const ValidatorBar = ({
@@ -78,6 +79,7 @@ export const ValidatorBar = ({
 	statusValue,
 	unit,
 	validator,
+	warnings,
 }: ValidatorBarProps) => {
 	const { t } = useTranslation('app')
 	const { selectable } = useList()
@@ -134,11 +136,7 @@ export const ValidatorBar = ({
 			</ListItem.RowIdentity>
 
 			<ListItem.RowPerformance>
-				<ListItem.Graph
-					layout="row"
-					aria-label={t('validatorActivity')}
-					title={t('validatorActivity')}
-				>
+				<ListItem.Graph layout="row" aria-label={t('validatorActivity')}>
 					{eraPointsPreloading ? (
 						<ListItem.DetailLoader
 							borderRadius="0.3rem"
@@ -199,6 +197,7 @@ export const ValidatorBar = ({
 			</ListItem.RowMetricGroup>
 
 			{actions}
+			{warnings}
 		</ListItem.Row>
 	)
 }
