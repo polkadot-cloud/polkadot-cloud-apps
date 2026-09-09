@@ -3,7 +3,7 @@
 
 import {
 	faCircleExclamation,
-	faCircleXmark,
+	faExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { ValidatorItemWarning } from 'library/GenerateNominations/utils'
@@ -30,9 +30,13 @@ export const ValidatorWarnings = ({
 		>
 			{warnings.map(({ type, labelKey, severity }) => (
 				<li key={type} data-severity={severity}>
-					<FontAwesomeIcon
-						icon={severity === 'danger' ? faCircleXmark : faCircleExclamation}
-					/>
+					{severity === 'danger' ? (
+						<FontAwesomeIcon icon={faCircleExclamation} />
+					) : (
+						<span className={classes.outlinedIcon} aria-hidden="true">
+							<FontAwesomeIcon icon={faExclamation} />
+						</span>
+					)}
 					{t(labelKey)}
 				</li>
 			))}

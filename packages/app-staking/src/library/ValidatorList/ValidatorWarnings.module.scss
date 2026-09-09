@@ -45,3 +45,17 @@
 		padding: 0.45rem 0.8rem;
 	}
 }
+
+.outlinedIcon {
+	align-items: center;
+	border: 0.12em solid currentcolor;
+	border-radius: 50%;
+	display: inline-flex;
+	flex: 0 0 1em;
+	height: 1em;
+	justify-content: center;
+
+	> svg {
+		font-size: 0.65em;
+	}
+}
