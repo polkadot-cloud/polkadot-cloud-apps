@@ -58,7 +58,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	}, [])
 
 	// Validator activity and totals need only overview entries, never nominator pages.
-	const { data: overviews, isPending: overviewsPending } = useQuery({
+	const { data: overviews, isLoading: overviewsLoading } = useQuery({
 		queryKey: ['validator-overviews', network, era],
 		queryFn: () => serviceApi.query.erasStakersOverviewEntries(era),
 		enabled: ready,
@@ -74,7 +74,7 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	)
 
 	// Load full exposures only when at least one consumer requests them.
-	const { data: exposures, isPending } = useQuery({
+	const { data: exposures, isLoading: exposuresLoading } = useQuery({
 		queryKey: ['era-exposures', network, era],
 		enabled: ready && !!overviews && exposureConsumers > 0,
 		staleTime: Infinity,
@@ -165,13 +165,13 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		},
 	})
 
-	// Lists need overviews; only explicit exposure consumers wait for the full scan.
+	// Sync only while initial data is fetching; exposures require explicit consumers.
 	useEffect(() => {
-		if (overviewsPending || (exposureConsumers > 0 && isPending)) {
+		if (overviewsLoading || (exposureConsumers > 0 && exposuresLoading)) {
 			setSyncing('era-stakers')
 		} else removeSyncing('era-stakers')
 		return () => removeSyncing('era-stakers')
-	}, [overviewsPending, exposureConsumers, isPending, network, era])
+	}, [overviewsLoading, exposureConsumers, exposuresLoading, network, era])
 
 	// Determine each nominee's status from its backing for the supplied stash.
 	const getNominationsStatusFromEraStakers = (
