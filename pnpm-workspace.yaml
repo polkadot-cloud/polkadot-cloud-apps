@@ -2,15 +2,11 @@ packages:
   - packages/*
 allowBuilds:
   '@parcel/watcher': true
+  bufferutil: true
   esbuild: true
+  keccak: true
   node-hid: true
+  sharp: true
+  unrs-resolver: true
   usb: true
-onlyBuiltDependencies:
-  - bufferutil
-  - esbuild
-  - keccak
-  - node-hid
-  - sharp
-  - utf-8-validate
-  - unrs-resolver
-  - usb
+  utf-8-validate: true
