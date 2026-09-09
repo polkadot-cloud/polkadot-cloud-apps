@@ -47,9 +47,7 @@ export const PoolList = ({
 
 	const includes = getFilters('include', 'pools')
 	const excludes = getFilters('exclude', 'pools')
-	const { applyFilter } = usePoolFilters(
-		[...(includes ?? []), ...(excludes ?? [])].includes('active'),
-	)
+	const { applyFilter } = usePoolFilters()
 	const searchTerm = getSearchTerm('pools')
 
 	// The current page of pool list.

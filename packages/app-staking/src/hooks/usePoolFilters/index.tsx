@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next'
 import type { AnyFunction, AnyJson, BondedPool } from 'types'
 import { getPoolNominationStatusCode } from 'utils'
 
-export const usePoolFilters = (needsStatuses: boolean) => {
+export const usePoolFilters = () => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { getNominationsStatusFromEraStakers } = useEraStakers(needsStatuses)
+	// `true` opts into loading full era exposures for pool activity filtering.
+	const { getNominationsStatusFromEraStakers } = useEraStakers(true)
 
 	/*
 	 * Include active pools.
