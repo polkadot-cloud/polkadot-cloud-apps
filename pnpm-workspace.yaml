@@ -10,3 +10,6 @@ allowBuilds:
   unrs-resolver: true
   usb: true
   utf-8-validate: true
+
+patchedDependencies:
+  '@dedot/api@1.4.0': patches/@dedot__api@1.4.0.patch
