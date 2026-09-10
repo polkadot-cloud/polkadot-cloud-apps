@@ -37,11 +37,14 @@ export type DataPointSource<T> = {
 } & (
 	| {
 			queryFn: ((context: DataSourceContext) => Promise<T>) | SkipToken
+			// Optional refresh cadence in milliseconds for snapshots that can change after fetching.
+			refreshInterval?: number
 			subscribe?: never
 	  }
 	| {
 			subscribe: Subscribe<T> | SkipToken
 			queryFn?: never
+			refreshInterval?: never
 	  }
 )
 

@@ -8,7 +8,7 @@ import type { QueryReturn } from '../types'
 
 type Variables = Record<string, unknown>
 
-interface FetchQueryOptions {
+export interface FetchQueryOptions {
 	context?: DefaultContext
 	fetchPolicy?: FetchPolicy
 	throwOnError?: boolean

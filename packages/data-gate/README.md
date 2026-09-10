@@ -50,7 +50,9 @@ import { DataGateProvider } from 'data-gate'
 
 TanStack Query handles shared requests, caching, and cancellation.
 Results are keyed by network, source, era, address, and optional dependencies.
-Fetch results have no age-based expiry, and requests do not poll or automatically retry.
+By default, fetch results have no age-based expiry, and requests do not poll or
+automatically retry. A fetch source can opt into periodic refresh with
+`refreshInterval` (milliseconds), which also sets its cache freshness duration.
 Mounting the provider alone fetches nothing.
 
 Each data point declares its options with `dataPointOptions` in `src/query.ts`.
@@ -63,6 +65,12 @@ result type and a small configuration API:
 | Source `queryFn` | Fetch with `{ network, signal }`, or use `skipToken` for missing input. |
 | Source `subscribe` | Subscribe with `{ network, signal, next, error }`; return an unsubscribe function or a promise of one. May also use `skipToken`. |
 | Source `enabled` | Optional readiness condition; defaults to `true`. |
+| Fetch source `refreshInterval` | Optional refresh/freshness interval in milliseconds; only applies when that source is selected. Subscriptions use live emissions instead. |
+
+Consumers import named hooks such as `useNomineeStatuses(stash, targets)` from
+`data-gate`. Source implementations and selection stay inside this package.
+Data-point modules can use the internal `useDataPoint(config)` helper to expose
+`{ data, loading, error, refetch }` while keeping query execution centralized.
 
 The helper adds network/source cache scoping and runs only the selected source.
 The data point's hook calls `useDataGate()` to receive service inputs and react
@@ -175,3 +183,52 @@ opt-in for data points whose underlying source emits live results.
 
 Run `pnpm --filter data-gate check` and
 `pnpm --filter tests test -- src/dataGate.test.ts`.
+
+
+## Era-stakers consumers
+
+Applications import these unified queries directly from `data-gate`:
+
+```tsx
+import {
+  useEraNominatorCount,
+  useNomineeStatuses,
+  useHasEraBacking,
+  useValidatorRewardRates,
+} from 'data-gate'
+
+const count = useEraNominatorCount()
+const nominees = useNomineeStatuses(stash, targets)
+const backing = useHasEraBacking(stash)
+const rates = useValidatorRewardRates(validators, erasPerDay)
+```
+
+- The count includes each stash once across the era's validators.
+- Nominee statuses include backing amounts for list sorting and both card layouts.
+- Era backing includes previous nominees after a stash changes its current targets.
+- Reward rates are calculated from the previous era in node mode, or fetched in a
+  batch in API mode.
+
+Each data point owns its transformations and API adapter in `src/eraNominatorCount`,
+`src/nomineeStatuses` or `src/hasEraBacking`. All three use the shared loader in
+`src/eraStakers`: node mode shares one exposure scan per network and era while the
+snapshot remains cached, including concurrent requests from different data points.
+The API adapters own validation, batching and status normalization;
+`plugin-staking-api` defines GraphQL queries and fetches their raw responses.
+Reward-rate queries live separately in `src/validatorRewardRates`. The legacy app provider also uses the shared node
+loader for its remaining consumers, so migrating a consumer does not duplicate
+the node exposure download. API-mode queries never acquire node exposures,
+including while loading or after an error. Network, source, era, stash and target
+changes select the appropriate cache entry automatically. Node exposures are shared
+in the in-memory query cache only; a page reload fetches them again when needed.
+No exposure data is read from or written to local storage.
+
+Era-stakers API results refresh every 60 seconds while mounted and become stale after 60
+seconds. The API reports currently indexed data without a completeness marker,
+so an initial zero or partial result must be able to update within the same era.
+The count requires the API's `eraActiveNominatorCount(network, era)` field to be
+deployed before the updated apps.
+
+Pool-list activity labels/filters still use the shared node exposure scan, and
+validator overview readers remain on the node. Those consumers need a separate
+migration before API mode can eliminate all era-stakers reads.

@@ -126,20 +126,45 @@ test('API loading and zero stake do not fall back to node exposures', () => {
 })
 
 test.each(['nominator', 'pool'] as const)(
-	'%s summaries retain node-backed amounts and loading without an API override',
+	'%s summaries display supplied node backing with loading',
 	(bondFor) => {
-		getActiveValidator.mockReturnValue({
-			others: [{ who: 'stash', value: '25000000000' }],
-		})
 		const result = useNominationStatusData({
 			address: 'validator',
 			nominator: 'stash',
 			bondFor,
 			status: 'active',
+			activeBacking: '25000000000',
+			isPreloading: true,
 		})
 		expect(result.totalActiveBacking.toFixed()).toBe('2.5')
 		expect(result.syncing).toBe(true)
 		expect(result.value).toBe('...')
-		expect(getActiveValidator).toHaveBeenCalledWith('validator')
+		expect(getActiveValidator).not.toHaveBeenCalled()
 	},
 )
+
+test('unavailable backing shows an unknown label rather than an inactive result', () => {
+	const result = useNominationStatusData({
+		address: 'validator',
+		nominator: 'stash',
+		bondFor: 'nominator',
+		status: 'waiting',
+		activeBacking: '0',
+		unavailable: true,
+	})
+	expect(result.label).toBe('—')
+	expect(result.value).toBeUndefined()
+})
+
+test('incoming reward labels do not look up exposure data', () => {
+	const result = useNominationStatusData({
+		address: 'stash',
+		nominator: 'stash',
+		bondFor: 'nominator',
+		status: 'active',
+		asIncoming: true,
+	})
+	expect(result.label).toBe('activelyNominating')
+	expect(result.syncing).toBe(false)
+	expect(getActiveValidator).not.toHaveBeenCalled()
+})

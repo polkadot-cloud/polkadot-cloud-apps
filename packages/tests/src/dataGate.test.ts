@@ -18,6 +18,7 @@ import { DataGateContext } from '../../data-gate/src/provider'
 import { dataPointOptions } from '../../data-gate/src/query'
 import { createDataGateStore } from '../../data-gate/src/state'
 import type { DataGateState, DataPointConfig } from '../../data-gate/src/types'
+import { useDataPoint } from '../../data-gate/src/useDataPoint'
 import { resetActiveEra, setActiveEra } from '../../global-bus/src/activeEra'
 import { resetApiStatus, setApiStatus } from '../../global-bus/src/apiStatus'
 import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
@@ -635,4 +636,54 @@ test('changing dependencies cancels an unfinished node query before it fetches p
 	await Promise.resolve()
 	expect(input.node.query.erasStakersPagedEntries).not.toHaveBeenCalled()
 	expect(observer.getCurrentResult().data).toBe('waiting')
+})
+
+test('refresh cadence follows only the selected fetch source', () => {
+	const definition: DataPointConfig<number> = {
+		key: ['refresh-test'],
+		node: { queryFn: async () => 1 },
+		stakingApi: { queryFn: async () => 2, refreshInterval: 60_000 },
+	}
+	config(false)
+	expect(dataPointOptions(definition).refetchInterval).toBe(false)
+	expect(dataPointOptions(definition).staleTime).toBe(Infinity)
+	config(true)
+	expect(dataPointOptions(definition).refetchInterval).toBe(60_000)
+	expect(dataPointOptions(definition).staleTime).toBe(60_000)
+})
+
+test('the public data-point hook masks disabled snapshots and exposes refetch without query internals', async () => {
+	const input = config(true)
+	const client = createClient()
+	const readNode = vi.fn(async () => 1)
+	const readApi = vi.fn(async () => 2)
+	const definition: DataPointConfig<number> = {
+		key: ['public-hook'],
+		node: { queryFn: readNode },
+		stakingApi: { queryFn: readApi },
+	}
+	const options = dataPointOptions(definition)
+	client.setQueryData(options.queryKey, 10)
+	let result!: ReturnType<typeof useDataPoint<number>>
+	const Consumer = () => {
+		result = useDataPoint(definition)
+		return null
+	}
+	const render = () =>
+		renderToStaticMarkup(
+			createElement(
+				DataGateContext.Provider,
+				{ value: input },
+				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+			),
+		)
+	render()
+	expect(result.data).toBe(10)
+	expect(result.loading).toBe(false)
+	expect((await result.refetch()).data).toBe(2)
+	expect(readNode).not.toHaveBeenCalled()
+	definition.stakingApi.enabled = false
+	render()
+	expect(result.data).toBeUndefined()
+	expect(result.loading).toBe(true)
 })

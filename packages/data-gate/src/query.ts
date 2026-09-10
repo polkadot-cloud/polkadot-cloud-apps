@@ -58,11 +58,12 @@ export const dataPointOptions = <T>({
 		queryFn,
 		enabled,
 		// Share a live stream without refetching when another consumer mounts. Once it stops, mark its
-		// snapshot stale so a new consumer reconnects. One-shot results stay fresh until explicitly
-		// invalidated or refetched.
+		// snapshot stale so a new consumer reconnects. Fetches stay fresh until explicitly refreshed,
+		// unless their source opts into a refresh cadence.
 		staleTime: isSubscription
 			? (query) => (hasSubscription(query) ? Infinity : 0)
-			: Infinity,
+			: (source.refreshInterval ?? Infinity),
+		refetchInterval: source.refreshInterval ?? false,
 		...(isSubscription && {
 			// Live updates come from the source; these events should not restart it.
 			refetchOnWindowFocus: false,

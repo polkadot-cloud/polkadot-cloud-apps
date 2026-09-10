@@ -455,9 +455,6 @@ importers:
       utils:
         specifier: workspace:*
         version: link:../utils
-      workers:
-        specifier: workspace:*
-        version: link:../workers
     devDependencies:
       types:
         specifier: workspace:*
@@ -793,6 +790,9 @@ importers:
       '@w3ux/hooks':
         specifier: ^2.4.4
         version: 2.4.4(react@19.2.8)
+      consts:
+        specifier: workspace:*
+        version: link:../consts
       global-bus:
         specifier: workspace:*
         version: link:../global-bus
@@ -1603,19 +1603,6 @@ importers:
       vite:
         specifier: ^8.0.0
         version: 8.2.2(@types/node@26.5.0)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
-
-  packages/workers:
-    dependencies:
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
-      bignumber.js:
-        specifier: ^11.1.5
-        version: 11.1.5
-    devDependencies:
-      types:
-        specifier: workspace:*
-        version: link:../types
 
 packages:
 
