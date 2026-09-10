@@ -3,4 +3,12 @@
 
 export { useNominationStatus } from './nominationStatus'
 export { DataGateProvider } from './provider'
-export type { DataPointOptions } from './types'
+export { dataPointOptions } from './query'
+export type {
+	DataPointConfig,
+	DataPointOptions,
+	DataPointSource,
+	DataSourceContext,
+	Subscribe,
+	SubscriptionContext,
+} from './types'

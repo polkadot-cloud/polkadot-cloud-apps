@@ -17,13 +17,33 @@ export interface DataGateState {
 	era: number
 }
 
-export interface DataPointSource<T> {
+export interface DataSourceContext {
+	network: NetworkId
+	signal: AbortSignal
+}
+
+export interface SubscriptionContext<T> extends DataSourceContext {
+	next: (value: T) => void
+	error: (reason: unknown) => void
+}
+
+export type Subscribe<T> = (
+	context: SubscriptionContext<T>,
+) => (() => void) | Promise<() => void>
+
+export type DataPointSource<T> = {
 	// Source prerequisites are optional; missing input can use skipToken.
 	enabled?: boolean
-	queryFn:
-		| ((context: { network: NetworkId; signal: AbortSignal }) => Promise<T>)
-		| SkipToken
-}
+} & (
+	| {
+			queryFn: ((context: DataSourceContext) => Promise<T>) | SkipToken
+			subscribe?: never
+	  }
+	| {
+			subscribe: Subscribe<T> | SkipToken
+			queryFn?: never
+	  }
+)
 
 export interface DataPointConfig<T> {
 	key: QueryKey
