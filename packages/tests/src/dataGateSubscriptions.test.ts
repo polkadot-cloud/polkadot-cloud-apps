@@ -288,6 +288,32 @@ test('refetch during initial loading shares the pending subscription', async () 
 	expect(f.cleanups[0]).not.toHaveBeenCalled()
 })
 
+test.each(['next', 'error'] as const)(
+	'callbacks fired by abort cannot change a stopped subscription (%s)',
+	async (callback) => {
+		const f = fixture()
+		f.config.node = {
+			subscribe: (context) => {
+				context.signal.addEventListener('abort', () => {
+					if (callback === 'next') context.next(100)
+					else context.error(new Error('aborted'))
+				})
+				return f.subscribe(context)
+			},
+		}
+		const observer = f.watch()
+		f.emissions[0].next(1)
+		await vi.waitFor(() => expect(observer.getCurrentResult().data).toBe(1))
+		observer.destroy()
+		expect(f.cleanups[0]).toHaveBeenCalledTimes(1)
+		expect(f.client.getQueryState(f.options().queryKey)).toMatchObject({
+			data: 1,
+			status: 'success',
+			error: null,
+		})
+	},
+)
+
 test('the API source can also subscribe while the node source fetches', async () => {
 	const f = fixture()
 	f.config.node = { queryFn: f.fetch }

@@ -15,9 +15,7 @@ export const useAllValidatorsWaiting = (nominations: Validator[]) => {
 			return false
 		}
 
-		const activeValidators = new Set(validatorOverviews.keys())
-
 		// All nominees are waiting when none are active in the current era.
-		return nominations.every(({ address }) => !activeValidators.has(address))
+		return nominations.every(({ address }) => !validatorOverviews.has(address))
 	}, [nominations, validatorOverviews])
 }

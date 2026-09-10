@@ -1,6 +1,12 @@
 # data-gate
 
-One source-neutral hook for a nominator or pool stash's overall nomination status:
+`data-gate` is a general-purpose data flow tool for exposing data from different
+sources through a consistent hook API. Data points define how each source fetches
+or subscribes to data; the shared infrastructure handles source selection,
+request sharing, caching, and cancellation.
+
+Nomination status is the first use case. `useNominationStatus` returns a nominator
+or pool stash's overall nomination status through one source-neutral hook:
 
 ```tsx
 import { useNominationStatus } from 'data-gate'

@@ -29,8 +29,9 @@ export const subscriptionQuery =
 		// useful after the initial query promise has resolved.
 		const lifetime = new Subscription(() => {
 			subscriptions.delete(query)
-			controller.abort()
+			// Close emissions before aborting: source abort handlers may call next/error.
 			values.complete()
+			controller.abort()
 		})
 
 		const stop = () => lifetime.unsubscribe()
@@ -44,7 +45,7 @@ export const subscriptionQuery =
 		})
 
 		subscriptions.set(query, lifetime)
-		
+
 		// Query cancellation covers the initial fetch; cache events below also cover unmounting after
 		// that fetch has completed.
 		lifetime.add(fromEvent(signal, 'abort').subscribe(stop))
@@ -53,7 +54,7 @@ export const subscriptionQuery =
 		lifetime.add(
 			cache.subscribe((event) => {
 				if (event.query !== query) return
-				
+
 				// Multiple consumers share the stream until the last observer leaves.
 				if (
 					event.type === 'removed' ||
