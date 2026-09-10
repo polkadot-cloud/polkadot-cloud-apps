@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { QueryStatus } from '@tanstack/react-query'
 import type {
 	ActiveAccountOwnStake,
 	ErasStakersOverviewEntries,
@@ -10,7 +11,9 @@ import type {
 } from 'types'
 
 export interface EraStakersContextInterface {
+	subscribeExposures: () => () => void
 	eraStakers: EraStakers
+	exposuresStatus: QueryStatus
 	validatorOverviews:
 		| ReadonlyMap<string, ErasStakersOverviewEntries[number][1]>
 		| undefined
@@ -20,7 +23,6 @@ export interface EraStakersContextInterface {
 		who: MaybeAddress,
 		targets: string[],
 	) => Record<string, NominationStatus>
-	isNominatorActive: (who: string) => boolean
 	getActiveValidator: (who: string) => Staker | undefined
 	prevEraReward: {
 		era: number

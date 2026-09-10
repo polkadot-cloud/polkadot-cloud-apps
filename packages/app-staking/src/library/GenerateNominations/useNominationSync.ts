@@ -19,10 +19,6 @@ export const useNominationSync = ({
 	updateNominations,
 }: UseNominationSyncProps) => {
 	const {
-		eraStakers: { stakers },
-	} = useEraStakers()
-	const { isReady } = useApi()
-	const {
 		defaultNominations,
 		fetching,
 		method,
@@ -32,7 +28,9 @@ export const useNominationSync = ({
 		setMethod,
 		setNominations,
 	} = useManageNominations()
+	const { isReady } = useApi()
 	const { activeAddress } = useActiveAccount()
+	const { validatorOverviews } = useEraStakers()
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Track whether a fetch is already in progress to avoid duplicate requests.
@@ -54,7 +52,7 @@ export const useNominationSync = ({
 		const dataReady =
 			isReady &&
 			Boolean(getValidators()?.length) &&
-			Boolean(stakers.length) &&
+			!!validatorOverviews &&
 			validatorsFetched === 'synced'
 
 		if (!fetching || !method || !dataReady || fetchingRef.current) {

@@ -19,12 +19,7 @@ import { fetchIdentityCache, fetchValidatorStats } from 'plugin-staking-api'
 import type { ActiveValidatorRank } from 'plugin-staking-api/types'
 import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
-import type {
-	IdentityOf,
-	SuperIdentity,
-	Validator,
-	ValidatorStatus,
-} from 'types'
+import type { IdentityOf, SuperIdentity, Validator } from 'types'
 import {
 	formatIdentities,
 	formatIdentitiesFromCache,
@@ -55,7 +50,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	const { activeEra } = useApi()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
-	const { eraStakers, getActiveValidator } = useEraStakers()
+	const { validatorOverviews } = useEraStakers()
 	const { erasPerDay, maxSupportedDays } = useErasPerDay()
 	const { isReady, serviceApi, getConsts, getApiStatus } = useApi()
 
@@ -210,28 +205,13 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	// Inject status into validator entries
 	const injectValidatorListData = (
 		entries: Validator[],
-	): ValidatorListEntry[] => {
-		// Build an O(1) lookup of active validator addresses.
-		const activeAddresses = new Set(
-			eraStakers.stakers.map((staker) => staker.address),
-		)
-
-		const injected: ValidatorListEntry[] =
-			entries.map((entry) => {
-				const inEra: boolean = activeAddresses.has(entry.address)
-
-				let validatorStatus: ValidatorStatus = 'waiting'
-				if (inEra) {
-					validatorStatus = 'active'
-				}
-				return {
-					...entry,
-					validatorStatus,
-				}
-			}) || []
-
-		return injected
-	}
+	): ValidatorListEntry[] =>
+		entries.map((entry) => ({
+			...entry,
+			validatorStatus: validatorOverviews?.has(entry.address)
+				? 'active'
+				: 'waiting',
+		}))
 
 	// Gets a validator's total stake, if any
 	const getValidatorTotalStake = (address: string): bigint => {
@@ -239,7 +219,7 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 		if (!entry) {
 			return 0n
 		}
-		const inEra = getActiveValidator(entry.address)
+		const inEra = validatorOverviews?.get(entry.address)
 		if (!inEra) {
 			return 0n
 		}

@@ -40,7 +40,6 @@ export const PoolList = ({
 	const { activeEra } = useApi()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { applyFilter } = usePoolFilters()
 	const { getThemeValue } = useThemeValues()
 	const { listFormat, setListFormat } = useList()
 	const { poolSearchFilter, poolsNominations } = useBondedPools()
@@ -48,6 +47,9 @@ export const PoolList = ({
 
 	const includes = getFilters('include', 'pools')
 	const excludes = getFilters('exclude', 'pools')
+	const { applyFilter } = usePoolFilters(
+		[...(includes ?? []), ...(excludes ?? [])].includes('active'),
+	)
 	const searchTerm = getSearchTerm('pools')
 
 	// The current page of pool list.

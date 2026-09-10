@@ -2,22 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useEraStakers } from 'contexts/EraStakers'
-import { useSyncing } from 'hooks/useSyncing'
 import { useMemo } from 'react'
 import type { Validator } from 'types'
 
 export const useAllValidatorsWaiting = (nominations: Validator[]) => {
-	const {
-		eraStakers: { stakers },
-	} = useEraStakers()
-	const { syncing } = useSyncing(['era-stakers'])
+	// Read validator overview activity.
+	const { validatorOverviews } = useEraStakers()
 
 	return useMemo(() => {
-		if (syncing || !stakers.length || !nominations.length) {
+		// Require overview data and at least one nomination before checking.
+		if (!validatorOverviews || !nominations.length) {
 			return false
 		}
 
-		const activeValidators = new Set(stakers.map(({ address }) => address))
-		return nominations.every(({ address }) => !activeValidators.has(address))
-	}, [nominations, stakers, syncing])
+		// All nominees are waiting when none are active in the current era.
+		return nominations.every(({ address }) => !validatorOverviews.has(address))
+	}, [nominations, validatorOverviews])
 }

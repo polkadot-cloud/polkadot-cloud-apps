@@ -14,7 +14,6 @@ export const allSyncIds: SyncId[] = [
 
 export const defaultSyncStatus: SyncId[] = [
 	'initialization',
-	'era-stakers',
 	'bonded-pools',
 	'active-pools',
 	'active-proxy',

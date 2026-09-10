@@ -7,6 +7,8 @@ import { _serviceInterface } from './private'
 
 export const serviceInterface$ = _serviceInterface.asObservable()
 
+export const getServiceInterface = () => _serviceInterface.getValue()
+
 export const resetServiceInterface = () => {
 	_serviceInterface.next(defaultServiceInterface)
 }

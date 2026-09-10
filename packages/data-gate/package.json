@@ -1,0 +1,26 @@
+{
+	"name": "data-gate",
+	"version": "0.1.0",
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"scripts": {
+		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
+		"check": "biome check .",
+		"lint": "biome check --write ."
+	},
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"dependencies": {
+		"@tanstack/react-query": "^5.102.8",
+		"@w3ux/hooks": "^2.4.4",
+		"global-bus": "workspace:*",
+		"plugin-staking-api": "workspace:*",
+		"react": "^19.2.8",
+		"rxjs": "^7.8.2",
+		"utils": "workspace:*"
+	},
+	"devDependencies": {
+		"types": "workspace:*"
+	}
+}

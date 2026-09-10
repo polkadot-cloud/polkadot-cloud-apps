@@ -22,12 +22,15 @@ export const Stats = ({
 }) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { isNominatorActive } = useEraStakers()
 	const { isReady, serviceApi } = useApi()
+	const { eraStakers } = useEraStakers(true)
 
 	const Token = getChainIcons(network).token
 	const { unit, units } = getStakingChainData(network)
-	const isActive = isNominatorActive(bondedPool.addresses.stash)
+	// Current-era backing can remain with a previous nominee after the pool changes targets.
+	const isActive = eraStakers.stakers.some(({ others }) =>
+		others.some(({ who }) => who === bondedPool.addresses.stash),
+	)
 
 	// Store the pool balance
 	const [poolBalance, setPoolBalance] = useState<BigNumber | null>(null)

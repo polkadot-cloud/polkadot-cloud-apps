@@ -14,6 +14,7 @@ import { MigrateProvider } from 'contexts/Migrate'
 import { NominatorSetupsProvider } from 'contexts/NominatorSetups'
 import { BondedPoolsProvider } from 'contexts/Pools/BondedPools'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { DataGateProvider } from 'data-gate'
 import { useNetwork } from 'hooks/useNetwork'
 import { Tooltip } from 'radix-ui'
 import { OverlayProvider } from 'ui-overlay'
@@ -35,6 +36,7 @@ export const Providers = () => {
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},
 			],
+			DataGateProvider,
 			EraStakersProvider,
 			BondedPoolsProvider,
 			ValidatorsProvider,

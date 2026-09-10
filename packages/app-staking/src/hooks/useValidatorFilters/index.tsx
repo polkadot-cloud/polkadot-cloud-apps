@@ -8,13 +8,10 @@ import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Contro
 import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = () => {
+	const { validatorOverviews } = useEraStakers()
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
-	const { eraStakers } = useEraStakers()
-	const eraValidatorSet = useMemo(
-		() => new Set(eraStakers.stakers.map(({ address }) => address)),
-		[eraStakers.stakers],
-	)
+
 	// Identity records contain an entry for every validator; super identities may legitimately be
 	// empty after a complete sync.
 	const identitiesReady = Object.keys(validatorIdentities).length > 0
@@ -24,18 +21,18 @@ export const useValidatorFilters = () => {
 	>(
 		() => ({
 			active: (list) =>
-				eraValidatorSet.size === 0
+				!validatorOverviews?.size
 					? list
 					: list.filter(({ address }: AnyFilter) =>
-							eraValidatorSet.has(address),
+							validatorOverviews.has(address),
 						),
 			blocked_nominations: (list) =>
 				list.filter(({ prefs }: AnyFilter) => !prefs?.blocked),
 			in_session: (list) =>
-				eraValidatorSet.size === 0
+				!validatorOverviews?.size
 					? list
 					: list.filter(
-							({ address }: AnyFilter) => !eraValidatorSet.has(address),
+							({ address }: AnyFilter) => !validatorOverviews.has(address),
 						),
 			missing_identity: (list) =>
 				!identitiesReady
@@ -45,7 +42,7 @@ export const useValidatorFilters = () => {
 								validatorIdentities[address] || validatorSupers[address],
 						),
 		}),
-		[eraValidatorSet, identitiesReady, validatorIdentities, validatorSupers],
+		[validatorOverviews, identitiesReady, validatorIdentities, validatorSupers],
 	)
 
 	const applyFilter = useCallback(

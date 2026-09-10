@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next'
 export const NominationStatus = () => {
 	const { t } = useTranslation('pages')
 	const { activeAddress } = useActiveAccount()
-	const { getNominationStatus } = useNominationStatus()
 
-	const nominationStatus = getNominationStatus(activeAddress, 'nominator')
+	// Get the nomination status for the active account.
+	const nominationStatus = useNominationStatus(activeAddress)
 
 	return (
 		<Stat

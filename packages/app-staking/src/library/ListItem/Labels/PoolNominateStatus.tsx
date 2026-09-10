@@ -4,68 +4,45 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { BondedPool } from 'types'
+import type { BondedPool, NominationStatus } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
 import { getPoolNominationStatusCode } from 'utils'
 
 export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	const { eraStakers, getNominationsStatusFromEraStakers } = useEraStakers()
 
-	const { addresses } = pool
-
-	// get pool targets from nominations meta batch
-	const nominations = poolsNominations[pool.id]
-	const targets = nominations?.targets || []
-
-	// store nomination status in state
-	const [nominationsStatus, setNominationsStatus] =
-		useState<Record<string, string>>()
-
-	// update pool nomination status as nominations metadata becomes available.
-	// we cannot add effect dependencies here as this needs to trigger
-	// as soon as the component displays. (upon tab change).
-	const handleNominationsStatus = () => {
-		setNominationsStatus(
-			getNominationsStatusFromEraStakers(addresses.stash, targets),
-		)
-	}
-
-	// recalculate nominations status as app syncs
-	useEffect(() => {
-		if (
-			targets.length &&
-			nominationsStatus === null &&
-			eraStakers.stakers.length
-		) {
-			handleNominationsStatus()
-		}
-	})
-
-	// metadata has changed, which means pool items may have been added.
-	// recalculate nominations status
-	useEffect(() => {
-		handleNominationsStatus()
-	}, [pool, eraStakers.stakers.length, Object.keys(poolsNominations).length])
-
-	// determine nominations status and display
-	const nominationStatus = getPoolNominationStatusCode(
-		nominationsStatus || null,
+	// A loaded pool without nominations has its own entry with an undefined value.
+	const nominationsLoaded = Object.hasOwn(poolsNominations, pool.id)
+	const targets = poolsNominations[pool.id]?.targets ?? []
+	const { exposuresStatus, getNominationsStatusFromEraStakers } = useEraStakers(
+		nominationsLoaded && targets.length > 0,
 	)
 
+	// All nominating rows share the era exposure query instead of fetching per stash.
+	let status: NominationStatus | null = null
+	let label: string
+	if (
+		!nominationsLoaded ||
+		(targets.length > 0 && exposuresStatus === 'pending')
+	) {
+		label = `${t('syncing')}...`
+	} else if (!targets.length) {
+		label = t('notNominating')
+	} else if (exposuresStatus === 'error') {
+		label = '—'
+	} else {
+		status = getPoolNominationStatusCode(
+			getNominationsStatusFromEraStakers(pool.addresses.stash, targets),
+		)
+		label = capitalizeFirstLetter(t(status))
+	}
+
 	return (
-		<BasicItem.PoolStatus status={nominationStatus}>
+		<BasicItem.PoolStatus status={status}>
 			<h4>
-				<span>
-					{nominationStatus === null || !eraStakers.stakers.length
-						? `${t('syncing')}...`
-						: targets.length
-							? capitalizeFirstLetter(t(`${nominationStatus}`) ?? '')
-							: t('notNominating')}
-				</span>
+				<span>{label}</span>
 			</h4>
 		</BasicItem.PoolStatus>
 	)

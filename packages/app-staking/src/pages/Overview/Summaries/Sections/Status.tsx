@@ -34,14 +34,13 @@ export const Status = () => {
 	const { warningMessages } = useWarnings()
 	const { activeAddress } = useActiveAccount()
 	const { items, getPoolWarningTips } = useTips()
-	const { getNominationStatus } = useNominationStatus()
 	const { inPool, activePool, membershipDisplay, label } =
 		useActiveAccountPool()
 	const { getAverageRewardRate, formatRateAsPercent } = useAverageRewardRate()
 
 	const syncing = !accountSynced(activeAddress)
 	const poolWarningTips = getPoolWarningTips()
-	const nominationStatus = getNominationStatus(activeAddress, 'nominator')
+	const nominationStatus = useNominationStatus(activeAddress)
 	const notStaking = activeAddress && !isBonding && !inPool
 
 	// Memoize the tips items to avoid recalculation

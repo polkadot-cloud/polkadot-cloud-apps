@@ -199,7 +199,7 @@ export const useNominatorStats = (): StatPick<
 	const { unit, units } = getStakingChainData(network)
 	const { counterForNominators, minNominatorBond, minimumActiveStake } =
 		useStakingMetrics()
-	const { activeNominatorsCount } = useEraStakers()
+	const { activeNominatorsCount } = useEraStakers(true)
 	const minToEarnRewards = BigNumber.max(minNominatorBond, minimumActiveStake)
 
 	return {

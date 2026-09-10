@@ -22,6 +22,7 @@
 		"app-staking": "workspace:*",
 		"buffer": "^6.0.3",
 		"consts": "workspace:*",
+		"data-gate": "workspace:*",
 		"dedot-api": "workspace:*",
 		"hooks": "workspace:*",
 		"locales": "workspace:*",
