@@ -8,13 +8,7 @@ import type {
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
 } from 'plugin-staking-api/types'
-import type {
-	BondFor,
-	DisplayFor,
-	MaybeAddress,
-	NominationStatus,
-	Validator,
-} from 'types'
+import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
 export interface NominationListProps {
 	validators: Validator[]
@@ -34,8 +28,8 @@ export interface ItemProps {
 	displayFor: DisplayFor
 	format: ListFormat
 	toggleFavorites?: boolean
-	nominationStatus?: NominationStatus
-	apiNominee?: NomineeStatusEntry
+	nominee?: NomineeStatusEntry
+	nominationError?: boolean
 	isNominationPreloading?: boolean
 	eraPoints: ValidatorEraPoints[]
 	isPreloading?: boolean

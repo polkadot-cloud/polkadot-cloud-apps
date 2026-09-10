@@ -4,10 +4,11 @@
 import { ListProvider, useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidatorRewardRates } from 'data-gate'
 import { useApi } from 'hooks/useApi'
+import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
@@ -57,6 +58,7 @@ export const ValidatorListInner = ({
 	const { t } = useTranslation()
 	const { syncing } = useSyncing()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const { erasPerDay } = useErasPerDay()
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
 	const { isReady, activeEra } = useApi()
@@ -105,13 +107,6 @@ export const ValidatorListInner = ({
 		[validators, pageStart, pageLength],
 	)
 
-	const pageKey = useMemo(() => {
-		const itemKeys = listItems
-			.map(({ address }, i) => `${i}${address}`)
-			.join(',')
-		return `${itemKeys}|${showControls ? JSON.stringify(config) : ''}`
-	}, [config, listItems, showControls])
-
 	const internalValidatorDetails = useValidatorDetails(
 		listItems.map(({ address }) => address),
 		retainmentStatsEnabled && suppliedValidatorDetails === undefined,
@@ -130,10 +125,10 @@ export const ValidatorListInner = ({
 	}
 
 	// Get validator reward rates
-	const { rates } = useValidatorRewardRateBatch(
+	const { data: rates } = useValidatorRewardRates(
 		listItems.map(({ address }) => address),
-		pageKey,
-		retainmentStatsEnabled ? 'none' : 'node',
+		erasPerDay,
+		!retainmentStatsEnabled,
 	)
 
 	const setControls = (nextConfig: ValidatorListConfig) => {
@@ -211,7 +206,7 @@ export const ValidatorListInner = ({
 									rate={
 										retainmentStatsEnabled
 											? rateByAddress.get(validator.address)
-											: rates[pageKey]?.[validator.address]
+											: rates?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
 									isPreloading={

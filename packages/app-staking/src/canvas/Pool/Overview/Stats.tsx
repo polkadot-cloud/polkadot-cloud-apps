@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useHasEraBacking } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useEffect, useState } from 'react'
@@ -23,14 +23,10 @@ export const Stats = ({
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
 	const { isReady, serviceApi } = useApi()
-	const { eraStakers } = useEraStakers(true)
+	const { data: isActive } = useHasEraBacking(bondedPool.addresses.stash)
 
 	const Token = getChainIcons(network).token
 	const { unit, units } = getStakingChainData(network)
-	// Current-era backing can remain with a previous nominee after the pool changes targets.
-	const isActive = eraStakers.stakers.some(({ others }) =>
-		others.some(({ who }) => who === bondedPool.addresses.stash),
-	)
 
 	// Store the pool balance
 	const [poolBalance, setPoolBalance] = useState<BigNumber | null>(null)

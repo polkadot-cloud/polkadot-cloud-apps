@@ -3,9 +3,7 @@
 
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
@@ -17,53 +15,25 @@ type NominationStatusDataProps = Pick<
 > & {
 	activeBacking?: string
 	isPreloading?: boolean
+	unavailable?: boolean
 }
 
 export const useNominationStatusData = ({
-	address,
-	nominator,
-	bondFor,
 	asIncoming = false,
 	status,
 	activeBacking,
 	isPreloading = false,
+	unavailable = false,
 }: NominationStatusDataProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { network } = useNetwork()
-	const {
-		getActiveValidator,
-		eraStakers: { activeAccountOwnStake },
-	} = useEraStakers(activeBacking === undefined)
-	const { syncing: eraStakersSyncing } = useSyncing(['era-stakers'])
-
 	const { unit, units } = getStakingChainData(network)
-
-	// Determine if the component should be in a syncing state based on the availability of
-	// activeBacking and preloading status
-	const syncing = activeBacking !== undefined ? isPreloading : eraStakersSyncing
-
-	let totalActiveBacking = new BigNumber(0)
-	if (activeBacking !== undefined) {
-		totalActiveBacking = planckToUnitBn(new BigNumber(activeBacking), units)
-	} else if (bondFor === 'nominator') {
-		if (status === 'active') {
-			const backing = getActiveValidator(address)?.others.find(
-				({ who }) => who === nominator,
-			)
-			totalActiveBacking = backing
-				? planckToUnitBn(new BigNumber(backing.value), units)
-				: new BigNumber(
-						activeAccountOwnStake?.find((own) => own.address === address)
-							?.value ?? 0,
-					)
-		}
-	} else {
-		const staker = getActiveValidator(address)
-		const exists = (staker?.others || []).find(({ who }) => who === nominator)
-		if (exists) {
-			totalActiveBacking = planckToUnitBn(new BigNumber(exists.value), units)
-		}
-	}
+	// Lists supply backing from their selected source; rendering a label never starts a data fetch.
+	const syncing = !asIncoming && isPreloading
+	const totalActiveBacking = planckToUnitBn(
+		new BigNumber(activeBacking ?? '0'),
+		units,
+	)
 
 	let statusTKey
 	if (status === 'active') {
@@ -79,15 +49,16 @@ export const useNominationStatusData = ({
 	}
 
 	return {
-		label: t(statusTKey),
+		label: unavailable ? '—' : syncing ? `${t('syncing')}...` : t(statusTKey),
 		totalActiveBacking,
 		syncing,
 		unit,
-		value: totalActiveBacking.isGreaterThan(0)
-			? syncing
-				? '...'
-				: `${formatCompactNumber(totalActiveBacking.toNumber(), i18n.resolvedLanguage)} ${unit}`
-			: undefined,
+		value:
+			!unavailable && totalActiveBacking.isGreaterThan(0)
+				? syncing
+					? '...'
+					: `${formatCompactNumber(totalActiveBacking.toNumber(), i18n.resolvedLanguage)} ${unit}`
+				: undefined,
 	}
 }
 
@@ -98,13 +69,23 @@ export const NominationStatus = ({
 	noMargin = false,
 	asIncoming = false,
 	status,
-}: NominationStatusProps) => {
+	activeBacking,
+	isPreloading,
+	unavailable,
+}: NominationStatusProps &
+	Pick<
+		NominationStatusDataProps,
+		'activeBacking' | 'isPreloading' | 'unavailable'
+	>) => {
 	const { label, value } = useNominationStatusData({
 		address,
 		asIncoming,
 		bondFor,
 		nominator,
 		status,
+		activeBacking,
+		isPreloading,
+		unavailable,
 	})
 
 	return (
