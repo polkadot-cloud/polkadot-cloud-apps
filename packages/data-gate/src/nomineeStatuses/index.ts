@@ -5,6 +5,8 @@ import type { MaybeAddress } from 'types'
 import { useEraStakersQuery } from '../eraStakers'
 import { fetchEraNomineeStatuses } from './stakingApi'
 
+// Each nominated validator's active, inactive or waiting status for the supplied stash in the
+// active era, together with the amount of that stash's stake backing the validator in planck.
 export const useNomineeStatuses = (who: MaybeAddress, targets: string[]) => {
 	const addresses = [...new Set(targets)].sort()
 	return useEraStakersQuery({

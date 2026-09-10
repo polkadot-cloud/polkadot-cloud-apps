@@ -38,6 +38,9 @@ export const nominationStatusOptions = (
 		stakingApi: stakingApiSource(who),
 	})
 
+// The overall nomination status of a nominator or pool stash across its current targets: active if
+// any target includes its stake, inactive if an elected target exists but none includes its stake,
+// or waiting if no targets are elected (including no nominations).
 export const useNominationStatus = (
 	who: MaybeAddress,
 	queryOptions: DataPointOptions = {},

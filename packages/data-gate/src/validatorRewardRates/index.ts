@@ -45,6 +45,8 @@ const nodeSource = (
 		fetchNode(node, prevEra, validators, erasPerDay, context),
 })
 
+// Each validator's annualized reward rate as a percentage of total backing stake, based on the
+// previous era's rewards and before validator commission.
 export const useValidatorRewardRates = (
 	addresses: string[],
 	erasPerDay: number,
