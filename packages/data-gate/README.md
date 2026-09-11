@@ -50,8 +50,10 @@ import { DataGateProvider } from 'data-gate'
 
 TanStack Query handles shared requests, caching, and cancellation.
 Results are keyed by network, source, era, address, and optional dependencies.
-By default, fetch results have no age-based expiry, and requests do not poll or
-automatically retry. A fetch source can opt into periodic refresh with
+By default, data-point fetch results remain fresh while cached, and requests do
+not poll or automatically retry. Inactive entries can still be garbage-collected
+by the query client; freshness does not mean permanent retention.
+A fetch source can opt into periodic refresh with
 `refreshInterval` (milliseconds), which also sets its cache freshness duration.
 Mounting the provider alone fetches nothing.
 
@@ -71,6 +73,10 @@ Consumers import named hooks such as `useNomineeStatuses(stash, targets)` from
 `data-gate`. Source implementations and selection stay inside this package.
 Data-point modules can use the internal `useDataPoint(config)` helper to expose
 `{ data, loading, error, refetch }` while keeping query execution centralized.
+The helper masks cached `data` while the selected source is disabled. `loading`
+describes an unresolved initial result or unmet prerequisites, not a background
+refresh; a failed refresh can expose both the previous data and an error. Named
+hooks additionally suppress loading for absent inputs or an explicit disabled flag.
 
 The helper adds network/source cache scoping and runs only the selected source.
 The data point's hook calls `useDataGate()` to receive service inputs and react
@@ -181,10 +187,6 @@ return one snapshot and unsubscribe.
 The existing nomination-status sources remain fetches; subscription support is
 opt-in for data points whose underlying source emits live results.
 
-Run `pnpm --filter data-gate check` and
-`pnpm --filter tests test -- src/dataGate.test.ts`.
-
-
 ## Era-stakers consumers
 
 Applications import these unified queries directly from `data-gate`:
@@ -203,32 +205,55 @@ const backing = useHasEraBacking(stash)
 const rates = useValidatorRewardRates(validators, erasPerDay)
 ```
 
-- The count includes each stash once across the era's validators.
-- Nominee statuses include backing amounts for list sorting and both card layouts.
-- Era backing includes previous nominees after a stash changes its current targets.
-- Reward rates are calculated from the previous era in node mode, or fetched in a
-  batch in API mode.
+All four hooks return `{ data, loading, error, refetch }`. An unresolved `data`
+value is `undefined`; a resolved `0`, `false`, or empty collection is valid data.
+
+| Hook | Resolved `data` |
+| --- | --- |
+| `useEraNominatorCount(enabled?)` | Number of unique nominator stashes across the active era's validators. |
+| `useNomineeStatuses(stash, targets)` | Entries with `address`, `status`, and `activeBacking` as a decimal string in planck. Target order and duplicates do not change the cache key. |
+| `useHasEraBacking(stash)` | Whether the stash has stake backing any validator in the active era, including nominees removed from its current targets. |
+| `useValidatorRewardRates(validators, erasPerDay, enabled?)` | Validator-address-to-reward-rate map. Node rates annualize the previous era's rewards before commission; API mode calls the batch average-rate endpoint with `fromEra = era - 1` and `depth = erasPerDay`. |
+
+The first three hooks require an active era (`era > 0`) in both source modes.
+Node mode also requires connection readiness. Stash queries need an address,
+and nominee queries need at least one target. Reward-rate queries require a
+nonempty validator set and `era - 1 >= 0`, plus readiness in node mode.
 
 Each data point owns its transformations and API adapter in `src/eraNominatorCount`,
-`src/nomineeStatuses` or `src/hasEraBacking`. All three use the shared loader in
-`src/eraStakers`: node mode shares one exposure scan per network and era while the
-snapshot remains cached, including concurrent requests from different data points.
+`src/nomineeStatuses` or `src/hasEraBacking`. All three use the source-selecting
+`useEraStakersQuery` helper in `src/eraStakers/index.ts`. Its API branch calls the
+data point's API adapter; it does not fetch raw exposures from the API.
+The separate `useNodeEraStakers` hook in `src/eraStakers/node.ts` is node-only:
+node mode shares one exposure scan per network and era while the snapshot remains
+cached, including concurrent requests from different data points.
 The node loader reads exposure pages with one era-wide storage prefix scan, then
 groups them by validator and checks page counts against the overview. It does not
 start a separate storage operation for every validator. Changing pool tabs while
 the scan is pending shares that request; completed tabs reuse the cached result.
 The API adapters own validation, batching and status normalization;
 `plugin-staking-api` defines GraphQL queries and fetches their raw responses.
-Reward-rate queries live separately in `src/validatorRewardRates`. The legacy app provider also uses the shared node
-loader for its remaining consumers, so migrating a consumer does not duplicate
-the node exposure download. API-mode queries never acquire node exposures,
-including while loading or after an error. Network, source, era, stash and target
-changes select the appropriate cache entry automatically. Node exposures are shared
+Reward-rate queries live separately in `src/validatorRewardRates` and do not load
+exposure pages. The legacy app provider also uses the shared node loader for its
+remaining consumers. The three source-selecting era-data hooks share that scan
+in node mode and never request it in API mode, including after an API error.
+Network, source, era, stash and target changes select the appropriate cache entry
+automatically. Node exposures are shared
 in the in-memory query cache only; a page reload fetches them again when needed.
 No exposure data is read from or written to local storage.
 
-Era-stakers API results refresh every 60 seconds while mounted and become stale after 60
-seconds. The API reports currently indexed data without a completeness marker,
+The shared raw node overview and exposure queries use query-client retry defaults,
+unlike the derived data-point queries, which set `retry: false`. Calling a derived
+hook's `refetch()` retries failed prerequisites and recomputes the result, but
+reuses successful fresh node snapshots; it does not force another full scan.
+HTTP adapters forward abort signals. Node adapters check cancellation between
+reads and after exposure scans; already-started RPC calls may still complete.
+
+The API branches of `useEraNominatorCount`, `useNomineeStatuses`, and
+`useHasEraBacking` refresh every 60 seconds while enabled, mounted, and in the
+foreground, and become stale after 60 seconds. `useNominationStatus` and
+`useValidatorRewardRates` do not configure periodic refresh.
+The API reports currently indexed data without a completeness marker,
 so an initial zero or partial result must be able to update within the same era.
 The count requires the API's `eraActiveNominatorCount(network, era)` field to be
 deployed before the updated apps.
@@ -236,3 +261,8 @@ deployed before the updated apps.
 Pool-list activity labels/filters still use the shared node exposure scan, and
 validator overview readers remain on the node. Those consumers need a separate
 migration before API mode can eliminate all era-stakers reads.
+
+## Validation
+
+Run `pnpm --filter data-gate check` and
+`pnpm --filter tests exec vitest run src/dataGate.test.ts src/dataGateSubscriptions.test.ts src/eraStakersData.test.ts src/eraStakersTransport.test.ts`.
