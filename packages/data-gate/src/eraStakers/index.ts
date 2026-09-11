@@ -28,9 +28,13 @@ export const useEraStakersQuery = <T>({
 	const result = useDataPoint({
 		key: ['era-stakers', era, ...key],
 		node: {
-			enabled:
-				enabled && ready && era > 0 && snapshot.exposuresStatus === 'success',
-			queryFn: async () => node(snapshot.exposures!),
+			enabled: enabled && ready && era > 0,
+			// Keep this query runnable after a prerequisite fails so public refetch retries it.
+			queryFn: async ({ signal }) => {
+				const exposures = await snapshot.fetchExposures()
+				signal.throwIfAborted()
+				return node(exposures)
+			},
 		},
 		stakingApi: {
 			enabled: enabled && era > 0,

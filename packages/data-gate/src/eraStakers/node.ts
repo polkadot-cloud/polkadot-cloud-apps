@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useQuery } from '@tanstack/react-query'
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNetwork } from 'global-bus'
 import type { Exposure } from 'types'
 import { useDataGate } from '../provider'
@@ -9,34 +9,33 @@ import { useDataGate } from '../provider'
 // Shared node snapshots for source adapters and the remaining legacy overview/pool consumers.
 // Calling with enabled=false observes no runnable node queries, including during API failures.
 export const useNodeEraStakers = (needsExposures = false, enabled = true) => {
+	const client = useQueryClient()
 	const { node: serviceApi, era, ready: connected } = useDataGate()
 	const network = getNetwork()
 	const ready = connected && era > 0
-	// Validator activity and totals need only overview entries, never nominator pages.
-	const {
-		data: overviews,
-		isLoading: overviewsLoading,
-		error: overviewsError,
-	} = useQuery({
+	const overviewOptions = queryOptions({
 		queryKey: ['validator-overviews', network, era],
 		queryFn: () => serviceApi.query.erasStakersOverviewEntries(era),
 		enabled: ready && enabled,
 		staleTime: Infinity,
 	})
+	// Validator activity and totals need only overview entries, never nominator pages.
+	const {
+		data: overviews,
+		isLoading: overviewsLoading,
+		error: overviewsError,
+	} = useQuery(overviewOptions)
 
 	// Share exposures in the query cache for this network/era; nothing is persisted across reloads.
-	const {
-		data: exposures,
-		isLoading: exposuresLoading,
-		status: exposuresStatus,
-		error: exposuresError,
-	} = useQuery({
+	const exposureOptions = queryOptions({
 		queryKey: ['era-exposures', network, era],
 		enabled: ready && enabled && !!overviews && needsExposures,
 		staleTime: Infinity,
 		queryFn: async ({ signal }): Promise<Exposure[]> => {
 			signal.throwIfAborted()
-			const entries = overviews ?? []
+			// Resolve prerequisites from the shared cache at execution time, including on retry.
+			const entries = await client.fetchQuery(overviewOptions)
+			signal.throwIfAborted()
 			const eraKey = String(era)
 
 			// Fetch every validator's exposure pages in parallel.
@@ -69,6 +68,12 @@ export const useNodeEraStakers = (needsExposures = false, enabled = true) => {
 			)
 		},
 	})
+	const {
+		data: exposures,
+		isLoading: exposuresLoading,
+		status: exposuresStatus,
+		error: exposuresError,
+	} = useQuery(exposureOptions)
 
 	return {
 		overviews,
@@ -77,5 +82,7 @@ export const useNodeEraStakers = (needsExposures = false, enabled = true) => {
 		exposuresLoading,
 		exposuresStatus: overviewsError ? ('error' as const) : exposuresStatus,
 		error: overviewsError ?? exposuresError,
+		// Successful era snapshots stay cached; failed or pending requests retry/share their I/O.
+		fetchExposures: () => client.fetchQuery(exposureOptions),
 	}
 }

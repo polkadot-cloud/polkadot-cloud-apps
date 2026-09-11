@@ -10,10 +10,13 @@ import type { ErasStakersPagedEntries, ServiceInterface } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { createElement } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import { useEraNominatorCount } from '../../data-gate/src/eraNominatorCount'
+import { useHasEraBacking } from '../../data-gate/src/hasEraBacking'
 import {
 	nominationStatusOptions,
 	useNominationStatus,
 } from '../../data-gate/src/nominationStatus'
+import { useNomineeStatuses } from '../../data-gate/src/nomineeStatuses'
 import { DataGateContext } from '../../data-gate/src/provider'
 import { dataPointOptions } from '../../data-gate/src/query'
 import { createDataGateStore } from '../../data-gate/src/state'
@@ -687,3 +690,93 @@ test('the public data-point hook masks disabled snapshots and exposes refetch wi
 	expect(result.data).toBeUndefined()
 	expect(result.loading).toBe(true)
 })
+
+const eraConsumers = [
+	{ name: 'count', read: () => useEraNominatorCount(), expected: 1 },
+	{ name: 'backing', read: () => useHasEraBacking('stash'), expected: true },
+	{
+		name: 'nominees',
+		read: () => useNomineeStatuses('stash', ['validator']),
+		expected: [{ address: 'validator', status: 'active', activeBacking: '10' }],
+	},
+]
+
+test.each(
+	eraConsumers.flatMap((consumer) =>
+		(['overviews', 'exposures'] as const).map((failure) => ({
+			...consumer,
+			failure,
+		})),
+	),
+)(
+	'$name public refetch retries failed node $failure',
+	async ({ read, expected, failure }) => {
+		const input = config()
+		const client = createClient()
+		client.setDefaultOptions({
+			// Each server render remounts the hooks; leave recovery to the public refetch below.
+			queries: { retry: false, retryOnMount: false, gcTime: Infinity },
+		})
+		input.node.query.erasStakersOverviewEntries.mockResolvedValue([
+			[[100, 'validator'], overview],
+		])
+		const failingRead =
+			failure === 'overviews'
+				? input.node.query.erasStakersOverviewEntries
+				: input.node.query.erasStakersPagedEntries
+		failingRead.mockRejectedValueOnce(new Error('offline'))
+		let result!: ReturnType<typeof read>
+		const Consumer = () => {
+			result = read()
+			return null
+		}
+		const render = () =>
+			renderToStaticMarkup(
+				createElement(
+					DataGateContext.Provider,
+					{ value: input },
+					createElement(
+						QueryClientProvider,
+						{ client },
+						createElement(Consumer),
+					),
+				),
+			)
+		render()
+		// Server rendering does not start queries. Run the observed snapshot to reproduce an
+		// initial transport failure, then recover exclusively through the exported hook.
+		const overviews = client.getQueryCache().find({
+			queryKey: ['validator-overviews', 'polkadot', 100],
+		})!
+		if (failure === 'overviews') {
+			await expect(overviews.fetch()).rejects.toThrow('offline')
+		} else {
+			await overviews.fetch()
+			render()
+			const exposures = client.getQueryCache().find({
+				queryKey: ['era-exposures', 'polkadot', 100],
+			})!
+			await expect(exposures.fetch()).rejects.toThrow('offline')
+		}
+		render()
+		expect(result.error?.message).toBe('offline')
+		expect(result.data).toBeUndefined()
+		expect(result.loading).toBe(false)
+		expect(failingRead).toHaveBeenCalledTimes(1)
+		const recovered = await result.refetch()
+		expect(recovered.data).toEqual(expected)
+		expect(recovered.error).toBeNull()
+		expect(failingRead).toHaveBeenCalledTimes(2)
+		expect(input.node.query.erasStakersOverviewEntries).toHaveBeenCalledTimes(
+			failure === 'overviews' ? 2 : 1,
+		)
+		expect(input.node.query.erasStakersPagedEntries).toHaveBeenCalledTimes(
+			failure === 'exposures' ? 2 : 1,
+		)
+		render()
+		expect(result.data).toEqual(expected)
+		expect(result.error).toBeNull()
+		expect(result.loading).toBe(false)
+		expect(apiQuery).not.toHaveBeenCalled()
+	},
+)

@@ -42,6 +42,7 @@ const {
 
 vi.mock('@tanstack/react-query', async (original) => ({
 	...(await original<typeof import('@tanstack/react-query')>()),
+	useQueryClient: () => state.client!,
 	// Capture real gate options and execute them through a real QueryClient below. This keeps the
 	// tests independent of a browser while exercising transports, source selection and cache keys.
 	useQuery: (options: (typeof queries)[number]) => {
@@ -275,10 +276,39 @@ test('independent data points share concurrent node scans and reuse the complete
 	expect(apiQuery).not.toHaveBeenCalled()
 })
 
+test('concurrent derived queries load one shared snapshot without preloading prerequisites', async () => {
+	state.api = false
+	const consumers = [
+		() => useEraNominatorCount(),
+		() => useHasEraBacking('stash'),
+		() => useNomineeStatuses('stash', ['old-target']),
+	]
+	const results = await Promise.all(
+		consumers.map((consume) => {
+			consume()
+			return fetchLatest()
+		}),
+	)
+	expect(results).toEqual([
+		2,
+		true,
+		[
+			{
+				address: 'old-target',
+				status: 'active',
+				activeBacking: '90071992547409930',
+			},
+		],
+	])
+	expect(overviewEntries).toHaveBeenCalledTimes(1)
+	expect(exposureReads).toHaveBeenCalledTimes(1)
+	expect(apiQuery).not.toHaveBeenCalled()
+})
+
 test('pending and failed node exposures stay unavailable and recover when the snapshot completes', async () => {
 	state.api = false
 	expect(useEraNominatorCount().loading).toBe(true)
-	expect(latest().enabled).toBe(false)
+	expect(latest().enabled).toBe(true)
 	useNodeEraStakers(true)
 	await state.client!.fetchQuery(queries.at(-2)!)
 	useNodeEraStakers(true)
