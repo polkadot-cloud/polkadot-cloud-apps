@@ -7,6 +7,7 @@ import type {
 	NomineeStatusEntry,
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
+	ValidatorWarningType,
 } from 'plugin-staking-api/types'
 import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
@@ -35,4 +36,5 @@ export interface ItemProps {
 	isPreloading?: boolean
 	rate?: number
 	retainment?: ValidatorRetainmentResult | null
+	warnings?: ValidatorWarningType[]
 }

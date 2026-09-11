@@ -9,6 +9,7 @@ import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { EMPTY_ERA_POINTS } from 'library/List/Utils'
@@ -81,6 +82,11 @@ export const NominationListInner = ({
 	const addresses = useMemo(
 		() => validators.map(({ address }) => address),
 		[validators],
+	)
+	const { warnings } = useValidatorWarnings(
+		network,
+		addresses,
+		retainmentStatsEnabled,
 	)
 	const pageKey = useMemo(
 		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),
@@ -213,6 +219,7 @@ export const NominationListInner = ({
 											: rates?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
+									warnings={warnings[validator.address]}
 									nominee={nomineesByAddress.get(validator.address)}
 									nominationError={!!nominationError}
 									isNominationPreloading={nominationsPreloading}
