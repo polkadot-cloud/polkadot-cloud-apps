@@ -50,13 +50,6 @@
 					"La vinculación de fondos es el proceso de 'bloquear' (o hacer staking) de {NETWORK_UNIT}. Los {NETWORK_UNIT} vinculados serán asignados automáticamente a uno o más de tus validadores nominados."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Período de Análisis de Descentralización",
-				[
-					"La descentralización de tu nominación se calcula analizando las recompensas pagadas en los últimos 30 días. Dependiendo de la red, esto se traducirá en un número de Eras.",
-					"30 días proporciona suficiente información para que la agregación sea significativa, y es también lo suficientemente corto para que los cambios en las nominaciones comiencen a impactar este análisis después de unos días."
-				]
-			],
 			"epoch": [
 				"Época",
 				[
@@ -75,15 +68,6 @@
 				"Puntos de Era",
 				[
 					"Los Puntos de Era son una medida del desempeño de un validador durante la era actual. Cuantos más Puntos de Era tenga un validador, más recompensas recibirá al final de la era."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Geolocalización de Cada Nominación",
-				[
-					"Cada validador nominado opera en un centro de datos que puede ser geolocalizado por su dirección IP.",
-					"La tabla muestra la última región, país y red donde cada validador nominado fue geolocalizado.",
-					"Cuando el validador ha sido localizado en más de una ubicación durante el período de análisis, se mostrará un signo ++.",
-					"El porcentaje mostrado es la proporción de recompensas pagadas por este validador en el período de análisis."
 				]
 			],
 			"halving": [
@@ -164,13 +148,6 @@
 				[
 					"Nominar es el proceso de seleccionar los validadores en los que deseas hacer staking con tus {NETWORK_UNIT}. Puedes elegir nominar hasta 16 validadores para cada una de tus cuentas.",
 					"Una vez que hayas nominado tus validadores seleccionados, se convierten en tus nominaciones."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Distribución de Pagos de Nominación",
-				[
-					"La descentralización de tu nominación.",
-					"Los siguientes gráficos muestran la distribución de recompensas agregadas por región, país y red IP del validador que pagó la recompensa."
 				]
 			],
 			"nominationPools": [
@@ -290,13 +267,6 @@
 					"Si tu cuenta ya tiene un saldo bloqueado que cubre el depósito existencial de tu cuenta, como el saldo bloqueado para nominar, entonces el Cloud Staking no bloqueará ningún saldo libre adicional."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Recompensas Por País y Red",
-				[
-					"Muestra el porcentaje estimado de recompensas que se generan desde diferentes países y redes IP.",
-					"Los análisis de descentralización de Polkawatch se calculan agregando recompensas según la Geolocalización IP del Validador. El período de muestra es los últimos 60 días."
-				]
-			],
 			"selfStake": [
 				"Stake Propio",
 				[
@@ -314,13 +284,6 @@
 				"Total de Nominadores",
 				[
 					"Cuentas que están haciendo staking en la red, independientemente de si están activas o inactivas en la sesión actual."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Total de Pagos Analizados",
-				[
-					"Las recompensas de {NETWORK_UNIT} agregadas pagadas por los validadores nominados en los últimos 30 días",
-					"Estos pagos se utilizaron para calcular la descentralización de tu nominación."
 				]
 			],
 			"validator": [

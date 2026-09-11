@@ -135,20 +135,6 @@ export interface GraphPayoutData {
 	poolShareRewards?: PoolReward[]
 }
 
-export interface GeoDonutProps {
-	title: string
-	series: {
-		labels: string[]
-		data: number[]
-	}
-	width?: string | number
-	maxHeight?: string | number
-	legendHeight?: number
-	maxLabelLen?: number
-	// Theme props
-	getThemeValue: (key: string) => string
-}
-
 export interface HalvingLineProps {
 	getThemeValue: (key: string) => string
 	label: string

@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { PluginsList } from 'consts/plugins'
 import { combineLatest, map } from 'rxjs'
 import type { Plugin } from 'types'
 import { networkConfig$ } from '../networkConfig'
@@ -15,8 +16,11 @@ export const plugins$ = combineLatest([_plugins, networkConfig$]).pipe(
 )
 
 export const setPlugins = (allPlugins: Plugin[]) => {
-	localStorage.setItem('plugins', JSON.stringify(allPlugins))
-	_plugins.next(allPlugins)
+	const supportedPlugins = allPlugins.filter((plugin) =>
+		PluginsList.includes(plugin),
+	)
+	localStorage.setItem('plugins', JSON.stringify(supportedPlugins))
+	_plugins.next(supportedPlugins)
 }
 
 export const pluginEnabled = (key: Plugin) => getPlugins().includes(key)

@@ -16,16 +16,16 @@ const isProd =
 // Apply network restrictions without changing the user's saved preferences.
 export const getActivePlugins = (allPlugins: Plugin[]) => {
 	const disabled = DisabledPluginsPerNetwork[getNetwork()] ?? []
-	return allPlugins.filter((plugin) => !disabled.includes(plugin))
+	return allPlugins.filter(
+		(plugin) => PluginsList.includes(plugin) && !disabled.includes(plugin),
+	)
 }
 
 // Get initial plugins from local storage
 export const getAvailablePlugins = () => {
-	const allPlugins = localStorageOrDefault(
-		'plugins',
-		PluginsList,
-		true,
-	) as Plugin[]
+	const allPlugins = (
+		localStorageOrDefault('plugins', PluginsList, true) as Plugin[]
+	).filter((plugin) => PluginsList.includes(plugin))
 	// In production, add compulsory plugins to `localPlugins` if they do not exist
 	if (isProd) {
 		CompulsoryPluginsProduction.forEach((plugin) => {

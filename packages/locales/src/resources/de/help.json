@@ -52,13 +52,6 @@
 					"Das Binden von Mitteln ist der Prozess des 'Sperrens' (oder Staking) von {NETWORK_UNIT}. Gebundene {NETWORK_UNIT} werden dann automatisch einem oder mehreren deiner nominierten Validatoren zugeordnet."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Analysezeitraum für Dezentralisierung",
-				[
-					"Die Dezentralisierung deiner Nominierung wird berechnet, indem die in den letzten 30 Tagen ausgezahlten Belohnungen analysiert werden. Je nach Netzwerk entspricht dies einer bestimmten Anzahl von Eras.",
-					"30 Tage bieten ausreichend Informationen, damit die Aggregation aussagekräftig ist, und sind gleichzeitig kurz genug, damit Änderungen in den Nominierungen nach wenigen Tagen Auswirkungen auf diese Analyse haben."
-				]
-			],
 			"epoch": [
 				"Epoch",
 				[
@@ -77,15 +70,6 @@
 				"Era-Punkte",
 				[
 					"Era-Punkte sind ein Maß dafür, wie gut ein Validator in der aktuellen Era abgeschnitten hat. Je mehr Era-Punkte ein Validator hat, desto mehr Belohnungen erhält er am Ende der Era."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Geolokalisierung jeder Nominierung",
-				[
-					"Jeder nominierte Validator läuft in einem bestimmten Rechenzentrum, das anhand seiner IP-Adresse geolokalisiert werden kann.",
-					"Die Tabelle zeigt die letzte Region, das Land und das Netzwerk an, wo jeder nominierte Validator geolokalisiert wurde.",
-					"Wenn der Validator während des Analysezeitraums an mehr als einem Ort lokalisiert wurde, wird ein ++ Zeichen angezeigt.",
-					"Der angezeigte Prozentsatz ist der Anteil der Belohnungen, die dieser Validator dir während des Analysezeitraums ausgezahlt hat."
 				]
 			],
 			"halving": [
@@ -168,13 +152,6 @@
 				[
 					"Nominieren ist der Prozess, Validatoren auszuwählen, an die du deine {NETWORK_UNIT} einsetzen möchtest. Du kannst bis zu 16 Validatoren für jedes deiner Konten nominieren.",
 					"Sobald du deine ausgewählten Validatoren nominiert hast, werden sie zu deinen Nominierungen."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Auszahlungsverteilung von Nominierungen",
-				[
-					"Die Dezentralisierung deiner Nominierung.",
-					"Die folgenden Diagramme zeigen die Verteilung der Belohnungen, aggregiert nach Region, Land und IP-Netzwerk des Validatoren, der die Belohnung ausgezahlt hat."
 				]
 			],
 			"nominationPools": [
@@ -296,13 +273,6 @@
 					"Falls dein Konto bereits ein gesperrtes Guthaben hat, das das Existenzialdeposit abdeckt, wie z. B. für das Nominieren gesperrtes Guthaben, wird das Staking-Dashboard kein zusätzliches freies Guthaben sperren."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Belohnungen nach Land und Netzwerk",
-				[
-					"Zeigt den geschätzten Prozentsatz der Belohnungen, die aus verschiedenen Ländern und IP-Netzwerken generiert werden.",
-					"Polkawatch-Dezentralisierungsanalysen werden berechnet, indem Belohnungen nach der IP-Geolokalisierung des Validators aggregiert werden. Der Stichprobenzeitraum ist die letzten 60 Tage."
-				]
-			],
 			"selfStake": [
 				"Eigenanteil",
 				[
@@ -320,13 +290,6 @@
 				"Gesamtzahl der Nominatoren",
 				[
 					"Konten, die im Netzwerk einsetzen, unabhängig davon, ob sie in der aktuellen Sitzung aktiv oder inaktiv sind."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Analysierte Gesamtauszahlungen",
-				[
-					"Die aggregierten {NETWORK_UNIT}-Belohnungen, die von nominierten Validatoren in den letzten 30 Tagen ausgezahlt wurden.",
-					"Diese Auszahlungen wurden verwendet, um die Dezentralisierung deiner Nominierung zu berechnen."
 				]
 			],
 			"validator": [
