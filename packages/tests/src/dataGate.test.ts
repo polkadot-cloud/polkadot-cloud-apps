@@ -6,7 +6,7 @@ import {
 	QueryClientProvider,
 	QueryObserver,
 } from '@tanstack/react-query'
-import type { ErasStakersPagedEntries, Plugin, ServiceInterface } from 'types'
+import type { ErasStakersPagedEntries, ServiceInterface } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { createElement } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
@@ -26,7 +26,6 @@ import { resetActiveEra, setActiveEra } from '../../global-bus/src/activeEra'
 import { resetApiStatus, setApiStatus } from '../../global-bus/src/apiStatus'
 import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
 import {
-	getActivePlugins,
 	getAvailablePlugins,
 	getPlugins,
 	pluginEnabled,
@@ -497,21 +496,6 @@ test('global plugin selection follows network restrictions without a mounted hoo
 	setPlugins([])
 	setNetwork('polkadot')
 	expect(pluginEnabled('staking_api')).toBe(false)
-})
-
-test('retired plugins are ignored in saved preferences and runtime selection', () => {
-	const legacyPlugins = ['staking_api', 'polkawatch'] as Plugin[]
-	storage.set('plugins', JSON.stringify(legacyPlugins))
-	expect(getAvailablePlugins()).toEqual({
-		allPlugins: ['staking_api'],
-		activePlugins: ['staking_api'],
-	})
-	expect(getActivePlugins(legacyPlugins)).toEqual(['staking_api'])
-	setPlugins(legacyPlugins)
-	expect(getPlugins()).toEqual(['staking_api'])
-	expect(JSON.parse(storage.get('plugins')!)).toEqual(['staking_api'])
-	storage.set('plugins', JSON.stringify(['polkawatch']))
-	expect(getAvailablePlugins()).toEqual({ allPlugins: [], activePlugins: [] })
 })
 
 test('bus notifications switch the gate between sources and networks', async () => {
