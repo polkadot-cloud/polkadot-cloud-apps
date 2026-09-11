@@ -4,6 +4,7 @@
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"scripts": {
+		"test": "node --test test/*.test.js",
 		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
 		"check": "biome check .",
 		"lint": "biome check --write ."

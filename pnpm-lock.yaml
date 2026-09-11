@@ -105,6 +105,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@dedot/api@1.4.0': 39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02
+
 importers:
 
   .:
@@ -5358,7 +5361,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.6
 
-  '@dedot/api@1.4.0':
+  '@dedot/api@1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)':
     dependencies:
       '@dedot/codecs': 1.4.0
       '@dedot/providers': 1.4.0
@@ -5383,7 +5386,7 @@ snapshots:
 
   '@dedot/cli@1.4.0(typescript@6.0.3)':
     dependencies:
-      '@dedot/api': 1.4.0
+      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
       '@dedot/codecs': 1.4.0
       '@dedot/codegen': 1.4.0(typescript@6.0.3)
       '@dedot/wasm': 0.1.0
@@ -5403,7 +5406,7 @@ snapshots:
 
   '@dedot/codegen@1.4.0(typescript@6.0.3)':
     dependencies:
-      '@dedot/api': 1.4.0
+      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
       '@dedot/codecs': 1.4.0
       '@dedot/contracts': 1.4.0(typescript@6.0.3)
       '@dedot/providers': 1.4.0
@@ -5421,7 +5424,7 @@ snapshots:
 
   '@dedot/contracts@1.4.0(typescript@6.0.3)':
     dependencies:
-      '@dedot/api': 1.4.0
+      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
       '@dedot/codecs': 1.4.0
       '@dedot/types': 1.4.0
       '@dedot/utils': 1.4.0
@@ -7230,7 +7233,7 @@ snapshots:
 
   dedot@1.4.0(typescript@6.0.3):
     dependencies:
-      '@dedot/api': 1.4.0
+      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
       '@dedot/cli': 1.4.0(typescript@6.0.3)
       '@dedot/codecs': 1.4.0
       '@dedot/contracts': 1.4.0(typescript@6.0.3)
