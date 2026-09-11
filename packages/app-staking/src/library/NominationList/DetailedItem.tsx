@@ -4,6 +4,7 @@
 import { getStakingChainData } from 'consts/util'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { getValidatorItemWarnings } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
@@ -48,6 +49,7 @@ export const DetailedItem = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const retainmentEnabled = useRetainmentStatsEnabled()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
 	const { unit, units } = getStakingChainData(network)
@@ -74,7 +76,9 @@ export const DetailedItem = ({
 		window: retainmentWindow,
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(retainment?.retainment)
-	const itemWarnings = getValidatorItemWarnings(warnings, retainment)
+	const itemWarnings = retainmentEnabled
+		? getValidatorItemWarnings(warnings, retainment)
+		: []
 	const retainmentStats = useRetainmentStatsData({
 		period,
 		selfStakeMax,
@@ -96,7 +100,7 @@ export const DetailedItem = ({
 	const retainmentHistoryDisabled =
 		isPreloading || retainmentPeriods.length === 0
 	const showRetainmentHistory =
-		displayFor !== 'canvas' && displayFor !== 'modal'
+		retainmentEnabled && displayFor !== 'canvas' && displayFor !== 'modal'
 	const openRetainmentHistory = useOpenRetainmentHistory({
 		periods: retainmentPeriods,
 		selfStakeMax,
@@ -112,6 +116,7 @@ export const DetailedItem = ({
 	if (format === 'row') {
 		return (
 			<ValidatorBar
+				showRetainment={retainmentEnabled}
 				actions={
 					<RowActionsMenu
 						address={address}
@@ -176,6 +181,7 @@ export const DetailedItem = ({
 
 	return (
 		<ValidatorCard
+			showRetainment={retainmentEnabled}
 			actions={cardActions}
 			address={address}
 			blocked={prefs?.blocked === true}

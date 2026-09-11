@@ -15,6 +15,7 @@ import {
 } from 'ui-app/RetainmentStats'
 
 interface ValidatorCardProps {
+	showRetainment?: boolean
 	actions: ReactNode
 	address: string
 	activitySyncing?: boolean
@@ -35,6 +36,7 @@ interface ValidatorCardProps {
 }
 
 export const ValidatorCard = ({
+	showRetainment = true,
 	actions,
 	address,
 	activitySyncing,
@@ -59,7 +61,7 @@ export const ValidatorCard = ({
 		<DetailedCard.Root
 			displayFor={displayFor}
 			selected={selected}
-			statusAccent={retainmentStats.statusAccent}
+			statusAccent={showRetainment ? retainmentStats.statusAccent : undefined}
 		>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
@@ -96,19 +98,21 @@ export const ValidatorCard = ({
 					</ListItem.Graph>
 				</ListItem.Activity>
 			</DetailedCard.Top>
-			<RetainmentStats
-				data={retainmentStats}
-				isPreloading={isRetainmentPreloading}
-				unit={unit}
-				windowToggle={
-					<RetainmentWindowToggle
-						alignEnd
-						disabled={isRetainmentPreloading}
-						onChange={onRetainmentWindowChange}
-						value={retainmentWindow}
-					/>
-				}
-			/>
+			{showRetainment && (
+				<RetainmentStats
+					data={retainmentStats}
+					isPreloading={isRetainmentPreloading}
+					unit={unit}
+					windowToggle={
+						<RetainmentWindowToggle
+							alignEnd
+							disabled={isRetainmentPreloading}
+							onChange={onRetainmentWindowChange}
+							value={retainmentWindow}
+						/>
+					}
+				/>
+			)}
 			{warnings}
 		</DetailedCard.Root>
 	)

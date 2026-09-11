@@ -4,6 +4,7 @@
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
 import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -41,6 +42,7 @@ export const useValidatorDetails = (
 	enabled: boolean,
 ): ValidatorDetailsData => {
 	const { network } = useNetwork()
+	const includeRetainment = useRetainmentStatsEnabled()
 	const { erasPerDay } = useErasPerDay()
 	const { activeEra } = useApi()
 
@@ -59,7 +61,7 @@ export const useValidatorDetails = (
 	const stableAddresses = useMemo(() => [...addresses], [addressesKey])
 
 	// Cache key for the current network, era, and reward-rate depth.
-	const scopeKey = `${network}:${era}:${erasPerDay}`
+	const scopeKey = `${network}:${era}:${erasPerDay}:${includeRetainment}`
 
 	// Cached details for the current scope.
 	const scopedDetails = detailsByScope[scopeKey]
@@ -90,6 +92,7 @@ export const useValidatorDetails = (
 			era - 1,
 			erasPerDay,
 			ERA_POINTS_DEPTH,
+			{ includeRetainment },
 		).then((data) => {
 			if (!active) {
 				return
@@ -112,7 +115,15 @@ export const useValidatorDetails = (
 		return () => {
 			active = false
 		}
-	}, [enabled, era, erasPerDay, network, pendingAddresses, scopeKey])
+	}, [
+		enabled,
+		era,
+		erasPerDay,
+		network,
+		pendingAddresses,
+		scopeKey,
+		includeRetainment,
+	])
 
 	// Validator details indexed by address for list consumption.
 	const detailsByAddress = useMemo(

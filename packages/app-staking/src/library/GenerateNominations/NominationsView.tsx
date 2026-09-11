@@ -9,6 +9,7 @@ import { useManageNominations } from 'contexts/ManageNominations'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
@@ -55,16 +56,16 @@ export const NominationsView = ({
 	} = useManageNominations()
 	const { isReady } = useApi()
 	const { network } = useNetwork()
-	const { active: healthCheckActive, retainmentStatsEnabled } =
-		useNominationHealth()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
+	const { active: healthCheckActive } = useNominationHealth()
 	const { activeAddress } = useActiveAccount()
 	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
 	// Derive layout and visibility once for use across both presentation modes.
 	const listReady = isReady && method !== null
 
-	// Use rows when retainment stats are enabled.
-	const listFormat = retainmentStatsEnabled ? 'row' : 'col'
+	// Use rows for enhanced validator details.
+	const listFormat = validatorDetailsEnabled ? 'row' : 'col'
 
 	// Show method selection until a method is chosen.
 	const showMethodSelection = !isReadOnlyAccount(activeAddress) && !method
@@ -82,7 +83,7 @@ export const NominationsView = ({
 	const validatorAddresses = nominations.map(({ address }) => address)
 	const validatorDetails = useValidatorDetails(
 		validatorAddresses,
-		retainmentStatsEnabled && listReady && !fetching,
+		validatorDetailsEnabled && listReady && !fetching,
 	)
 	const validatorWarnings = useValidatorWarnings(
 		network,

@@ -7,8 +7,8 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useValidatorRewardRates } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
-import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
@@ -57,7 +57,7 @@ export const ValidatorListInner = ({
 }: ValidatorListProps) => {
 	const { t } = useTranslation()
 	const { syncing } = useSyncing()
-	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { erasPerDay } = useErasPerDay()
 	const { setModalResize } = useOverlay().modal
 	const { injectValidatorListData } = useValidators()
@@ -91,7 +91,7 @@ export const ValidatorListInner = ({
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =
 		forceListFormat ??
-		(retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat)
+		(validatorDetailsEnabled && forceCardLayout ? 'col' : listFormat)
 
 	// Pagination
 	const pageLength: number = itemsPerPage || validators.length
@@ -109,7 +109,7 @@ export const ValidatorListInner = ({
 
 	const internalValidatorDetails = useValidatorDetails(
 		listItems.map(({ address }) => address),
-		retainmentStatsEnabled && suppliedValidatorDetails === undefined,
+		validatorDetailsEnabled && suppliedValidatorDetails === undefined,
 	)
 	const {
 		detailedAddresses,
@@ -128,7 +128,7 @@ export const ValidatorListInner = ({
 	const { data: rates } = useValidatorRewardRates(
 		listItems.map(({ address }) => address),
 		erasPerDay,
-		!retainmentStatsEnabled,
+		!validatorDetailsEnabled,
 	)
 
 	const setControls = (nextConfig: ValidatorListConfig) => {
@@ -139,13 +139,13 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [effectiveListFormat, validators, page, retainmentStatsEnabled])
+	}, [effectiveListFormat, validators, page, validatorDetailsEnabled])
 
 	return (
 		<ListWrapper>
 			<List
-				$flexBasisLarge={retainmentStatsEnabled ? '50%' : '33.33%'}
-				$twoColumnMinWidth={retainmentStatsEnabled ? 1350 : undefined}
+				$flexBasisLarge={validatorDetailsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={validatorDetailsEnabled ? 1350 : undefined}
 			>
 				{showControls && (
 					<Controls
@@ -171,7 +171,7 @@ export const ValidatorListInner = ({
 						</div>
 						<div>
 							{allowListFormat &&
-								!(retainmentStatsEnabled && forceCardLayout) && (
+								!(validatorDetailsEnabled && forceCardLayout) && (
 									<ListItem.FormatToggle
 										onChange={setListFormat}
 										value={listFormat}
@@ -204,13 +204,13 @@ export const ValidatorListInner = ({
 										EMPTY_ERA_POINTS
 									}
 									rate={
-										retainmentStatsEnabled
+										validatorDetailsEnabled
 											? rateByAddress.get(validator.address)
 											: rates?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
 									isPreloading={
-										retainmentStatsEnabled &&
+										validatorDetailsEnabled &&
 										activeEra.index > 0 &&
 										!detailedAddresses.has(validator.address)
 									}
