@@ -10,11 +10,13 @@ import {
 } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { usePoolFilters } from '../../app-staking/src/hooks/usePoolFilters'
+import { PoolList as ActualPoolList } from '../../app-staking/src/library/PoolList'
 import { PoolFavorites } from '../../app-staking/src/pages/PoolsList/Favorites'
 
 const { state, useEraStakers, removeFavorite } = vi.hoisted(() => ({
 	state: {
 		bondedPools: [] as BondedPool[],
+		bondedPoolsStatus: 'pending' as QueryStatus,
 		poolsNominations: {} as Record<number, Nominator | undefined>,
 		exposuresStatus: 'pending' as QueryStatus,
 		statuses: {} as Record<string, NominationStatus>,
@@ -26,7 +28,27 @@ const { state, useEraStakers, removeFavorite } = vi.hoisted(() => ({
 }))
 
 vi.mock('contexts/EraStakers', () => ({ useEraStakers }))
+vi.mock(
+	'hooks/usePoolFilters',
+	() => import('../../app-staking/src/hooks/usePoolFilters'),
+)
 vi.mock('contexts/Pools/BondedPools', () => ({ useBondedPools: () => state }))
+vi.mock('contexts/Filters', () => ({
+	useFilters: () => ({
+		getFilters: () => [],
+		getSearchTerm: () => '',
+		setSearchTerm: vi.fn(),
+	}),
+}))
+vi.mock('../../hooks/src/useApi', () => ({
+	useApi: () => ({ activeEra: { index: 100 } }),
+}))
+vi.mock('../../hooks/src/useNetwork', () => ({
+	useNetwork: () => ({ network: 'polkadot' }),
+}))
+vi.mock('hooks/useThemeValues', () => ({
+	useThemeValues: () => ({ getThemeValue: () => '' }),
+}))
 vi.mock('../../hooks/src/useFavoritePools', () => ({
 	useFavoritePools: () => ({ favorites: state.favorites, removeFavorite }),
 }))
@@ -35,14 +57,29 @@ vi.mock('../../hooks/src/useSyncing', () => ({
 }))
 vi.mock('contexts/List', () => ({
 	ListProvider: ({ children }: { children: ReactNode }) => children,
+	useList: () => ({ listFormat: 'row', setListFormat: vi.fn() }),
 }))
 vi.mock('library/PoolList', () => ({
 	PoolList: ({ pools }: { pools: BondedPool[] }) =>
 		createElement('div', { 'data-pools': pools.map(({ id }) => id).join(',') }),
 }))
 vi.mock('library/List', () => ({
+	FilterHeaderWrapper: ({ children }: { children: ReactNode }) => children,
+	List: ({ children }: { children: ReactNode }) => children,
+	Wrapper: ({ children }: { children: ReactNode }) => children,
 	ListStatusHeader: ({ children }: { children: ReactNode }) =>
 		createElement('div', null, children),
+}))
+vi.mock('library/Filter/Tabs', () => ({ Tabs: () => null }))
+vi.mock('library/List/MotionContainer', () => ({
+	MotionContainer: ({ children }: { children: ReactNode }) => children,
+	MotionItem: ({ children }: { children: ReactNode }) => children,
+}))
+vi.mock('library/List/Pagination', () => ({ Pagination: () => null }))
+vi.mock('library/List/SearchInput', () => ({ SearchInput: () => null }))
+vi.mock('library/Pool', () => ({
+	Pool: ({ pool }: { pool: BondedPool }) =>
+		createElement('div', null, `pool-${pool.id}`),
 }))
 vi.mock('../../ui-app/src/Card', () => ({
 	CardWrapper: ({ children }: { children: ReactNode }) => children,
@@ -84,6 +121,7 @@ beforeEach(() => {
 		pool(4),
 	]
 	state.poolsNominations = {}
+	state.bondedPoolsStatus = 'pending'
 	state.exposuresStatus = 'pending'
 	state.statuses = {
 		'stash-1': 'active',
@@ -193,4 +231,42 @@ test('favorites resolve late pool data without deleting saved addresses', () => 
 	)
 	expect(savedFavorites).toEqual(['stash-1'])
 	expect(removeFavorite).not.toHaveBeenCalled()
+})
+
+test('an expired global sync flag cannot turn an unfinished pool fetch into no matches', () => {
+	state.bondedPools = []
+	state.syncing = false
+	const render = () =>
+		renderToStaticMarkup(createElement(ActualPoolList, { pools: [] }))
+	expect(render()).toContain('syncingPoolList')
+	expect(render()).not.toContain('noMatch')
+	state.bondedPoolsStatus = 'success'
+	expect(render()).toContain('noMatch')
+	expect(render()).not.toContain('syncingPoolList')
+	state.bondedPoolsStatus = 'error'
+	expect(render()).toContain('errorUnknown')
+	expect(render()).not.toContain('noMatch')
+})
+
+test('available pool rows remain visible while metadata is still loading', () => {
+	state.syncing = false
+	state.bondedPoolsStatus = 'pending'
+	const html = renderToStaticMarkup(
+		createElement(ActualPoolList, { pools: [pool(1)] }),
+	)
+	expect(html).toContain('pool-1')
+	expect(html).not.toContain('noMatch')
+})
+
+test('favorites wait for the pool snapshot even after global syncing expires', () => {
+	state.bondedPools = []
+	state.syncing = false
+	const render = () => renderToStaticMarkup(createElement(PoolFavorites))
+	expect(render()).toContain('fetchingFavoritePools')
+	expect(render()).not.toContain('noFavorites')
+	state.bondedPoolsStatus = 'success'
+	expect(render()).toContain('noFavorites')
+	state.bondedPoolsStatus = 'error'
+	expect(render()).toContain('errorUnknown')
+	expect(render()).not.toContain('noFavorites')
 })

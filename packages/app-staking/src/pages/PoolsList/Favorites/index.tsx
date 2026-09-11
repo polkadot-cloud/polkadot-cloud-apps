@@ -4,7 +4,6 @@
 import { ListProvider } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useFavoritePools } from 'hooks/useFavoritePools'
-import { useSyncing } from 'hooks/useSyncing'
 import { ListStatusHeader } from 'library/List'
 import { PoolList } from 'library/PoolList'
 import { useMemo } from 'react'
@@ -15,8 +14,7 @@ import { Page } from 'ui-core/base'
 
 export const PoolFavorites = () => {
 	const { t } = useTranslation('pages')
-	const { bondedPools } = useBondedPools()
-	const { syncing } = useSyncing(['bonded-pools'])
+	const { bondedPools, bondedPoolsStatus } = useBondedPools()
 	const { favorites } = useFavoritePools()
 
 	// Resolve favorites whenever the shared pool snapshot changes. Missing data during
@@ -34,14 +32,18 @@ export const PoolFavorites = () => {
 	return (
 		<Page.Row>
 			<CardWrapper>
-				{!bondedPools.length && syncing ? (
+				{!favoritesList.length && bondedPoolsStatus === 'pending' ? (
 					<ListStatusHeader>{t('fetchingFavoritePools')}...</ListStatusHeader>
 				) : favoritesList.length > 0 ? (
 					<ListProvider>
 						<PoolList pools={favoritesList} allowMoreCols itemsPerPage={50} />
 					</ListProvider>
 				) : (
-					<ListStatusHeader>{t('noFavorites')}</ListStatusHeader>
+					<ListStatusHeader>
+						{bondedPoolsStatus === 'error'
+							? t('errorUnknown', { ns: 'app' })
+							: t('noFavorites')}
+					</ListStatusHeader>
 				)}
 			</CardWrapper>
 		</Page.Row>

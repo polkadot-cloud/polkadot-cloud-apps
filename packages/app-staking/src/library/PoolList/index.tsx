@@ -9,7 +9,6 @@ import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePoolFilters } from 'hooks/usePoolFilters'
-import { useSyncing } from 'hooks/useSyncing'
 import { useThemeValues } from 'hooks/useThemeValues'
 import { Tabs } from 'library/Filter/Tabs'
 import {
@@ -36,11 +35,10 @@ export const PoolList = ({
 }: PoolListProps) => {
 	const { t } = useTranslation('app')
 	const { activeEra } = useApi()
-	const { syncing } = useSyncing(['bonded-pools'])
 	const { network } = useNetwork()
 	const { getThemeValue } = useThemeValues()
 	const { listFormat, setListFormat } = useList()
-	const { poolSearchFilter } = useBondedPools()
+	const { poolSearchFilter, bondedPoolsStatus } = useBondedPools()
 	const { getFilters, getSearchTerm, setSearchTerm } = useFilters()
 
 	const includes = getFilters('include', 'pools')
@@ -66,7 +64,8 @@ export const PoolList = ({
 	const currentPage = Math.min(page, totalPages)
 	const pageStart = (currentPage - 1) * pageLength
 	const poolsToDisplay = listPools.slice(pageStart, pageStart + pageLength)
-	const loading = activityLoading || (!pools?.length && syncing)
+	const loading = activityLoading || bondedPoolsStatus === 'pending'
+	const error = activityError || bondedPoolsStatus === 'error'
 
 	const handleSearchChange = (e: FormEvent<HTMLInputElement>) => {
 		setPage(1)
@@ -161,8 +160,8 @@ export const PoolList = ({
 						))
 					) : (
 						<ListStatusHeader>
-							{activityError
-								? '—'
+							{error
+								? t('errorUnknown')
 								: loading
 									? `${t('syncingPoolList')}...`
 									: t('noMatch')}
