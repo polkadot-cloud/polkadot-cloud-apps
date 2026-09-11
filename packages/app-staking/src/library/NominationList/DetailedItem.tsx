@@ -4,6 +4,7 @@
 import { getStakingChainData } from 'consts/util'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { getValidatorItemWarnings } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
@@ -19,6 +20,7 @@ import { useValidatorSelfStake } from 'library/ValidatorList/useValidatorSelfSta
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
+import { ValidatorWarnings } from 'library/ValidatorList/ValidatorWarnings'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import {
@@ -41,6 +43,7 @@ export const DetailedItem = ({
 	eraPoints,
 	rate,
 	retainment,
+	warnings,
 	isPreloading = false,
 }: ItemProps) => {
 	const { t } = useTranslation('app')
@@ -71,12 +74,17 @@ export const DetailedItem = ({
 		window: retainmentWindow,
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(retainment?.retainment)
+	const itemWarnings = getValidatorItemWarnings(warnings, retainment)
 	const retainmentStats = useRetainmentStatsData({
 		period,
 		selfStakeMax,
+		statusAccent: itemWarnings[0]?.severity,
 		unit,
 		units,
 	})
+	const warningBadges = (
+		<ValidatorWarnings warnings={itemWarnings} format={format} />
+	)
 	const outline = displayFor === 'canvas'
 	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
 	const validatorIdentity = getIdentityDisplay(
@@ -131,6 +139,7 @@ export const DetailedItem = ({
 				statusValue={totalActiveBacking}
 				unit={unit}
 				validator={validator}
+				warnings={warningBadges}
 			/>
 		)
 	}
@@ -195,6 +204,7 @@ export const DetailedItem = ({
 				/>
 			}
 			unit={unit}
+			warnings={warningBadges}
 		/>
 	)
 }
