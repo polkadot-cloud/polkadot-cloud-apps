@@ -9,7 +9,6 @@ import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
-import { useFavoritePools } from 'hooks/useFavoritePools'
 import { useNetwork } from 'hooks/useNetwork'
 import { useSignerWarnings } from 'hooks/useSignerWarnings'
 import { Warning } from 'library/Form/Warning'
@@ -47,7 +46,6 @@ export const Forms = forwardRef(
 		const { getSignerWarnings } = useSignerWarnings()
 		const { removeFromBondedPools } = useBondedPools()
 		const { activeAddress, activeAccount } = useActiveAccount()
-		const { removeFavorite: removeFavoritePool } = useFavoritePools()
 
 		const { unit, units } = getStakingChainData(network)
 		const { bondFor, poolClosure } = options || {}
@@ -87,9 +85,8 @@ export const Forms = forwardRef(
 				closeModal()
 			},
 			callbackInBlock: () => {
-				// if pool is being closed, remove from static lists
+				// If the pool is being closed, remove it from the bonded pools list.
 				if (poolClosure) {
-					removeFavoritePool(activePool?.addresses?.stash ?? '')
 					removeFromBondedPools(activePool?.id ?? 0)
 				}
 			},

@@ -29,7 +29,6 @@ export type MetricsProps = Outline & {
 
 export type MoreProps = Outline & {
 	pool: BondedPool
-	setActiveTab: (t: number) => void
 	disabled: boolean
 	outline?: boolean
 }
