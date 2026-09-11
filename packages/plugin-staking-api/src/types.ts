@@ -32,6 +32,16 @@ export interface IdentityCacheData {
 	identityCache: IdentityCache[]
 }
 
+export interface ValidatorDiscovery {
+	address: string
+	countryCode: string | null
+	cloudProvider: string | null
+}
+
+export interface ValidatorDiscoveryData {
+	getValidatorDiscovery: ValidatorDiscovery[]
+}
+
 export interface IdentityCache {
 	address: string
 	display: string | null

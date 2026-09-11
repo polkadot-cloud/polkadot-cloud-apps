@@ -5,7 +5,6 @@ import { useSize } from '@w3ux/hooks'
 import { Polkicon } from '@w3ux/react-polkicon'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
-import { ValidatorGeo } from 'canvas/ValidatorMetrics/ValidatorGeo'
 import { getStakingChainData } from 'consts/util'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useApi } from 'hooks/useApi'
@@ -30,6 +29,7 @@ import { ActiveGraph as ActiveGraphEraPoints } from './EraPoints/ActiveGraph'
 import { InactiveGraph as InactiveGraphEraPoints } from './EraPoints/InactiveGraph'
 import { ActiveGraph as ActiveGraphRewards } from './Rewards/ActiveGraph'
 import { InactiveGraph as InactiveGraphRewards } from './Rewards/InactiveGraph'
+import { ValidatorDiscovery } from './ValidatorDiscovery'
 
 export const ValidatorMetrics = () => {
 	const { t } = useTranslation()
@@ -183,12 +183,12 @@ export const ValidatorMetrics = () => {
 						</>
 					)}
 				</GraphInner>
-				{pluginEnabled('polkawatch') && (
+				{pluginEnabled('staking_api') && (
 					<>
 						<Subheading style={{ marginTop: '1rem' }}>
-							<h3>{t('decentralization', { ns: 'app' })}</h3>
+							<h3>{t('operatorDetails', { ns: 'app' })}</h3>
 						</Subheading>
-						<ValidatorGeo address={validator} />
+						<ValidatorDiscovery network={network} address={validator} />
 					</>
 				)}
 			</div>
