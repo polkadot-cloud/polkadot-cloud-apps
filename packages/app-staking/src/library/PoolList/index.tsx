@@ -3,7 +3,6 @@
 
 import { faBars, faGripVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
 import { useFilters } from 'contexts/Filters'
 import { useList } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
@@ -24,9 +23,8 @@ import { Pagination } from 'library/List/Pagination'
 import { SearchInput } from 'library/List/SearchInput'
 import { Pool } from 'library/Pool'
 import type { FormEvent } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { BondedPool } from 'types'
 import type { PoolListProps } from './types'
 
 export const PoolList = ({
@@ -38,16 +36,17 @@ export const PoolList = ({
 }: PoolListProps) => {
 	const { t } = useTranslation('app')
 	const { activeEra } = useApi()
-	const { syncing } = useSyncing()
+	const { syncing } = useSyncing(['bonded-pools'])
 	const { network } = useNetwork()
 	const { getThemeValue } = useThemeValues()
 	const { listFormat, setListFormat } = useList()
-	const { poolSearchFilter, poolsNominations } = useBondedPools()
+	const { poolSearchFilter } = useBondedPools()
 	const { getFilters, getSearchTerm, setSearchTerm } = useFilters()
 
 	const includes = getFilters('include', 'pools')
 	const excludes = getFilters('exclude', 'pools')
-	const { applyFilter } = usePoolFilters(
+	const { applyFilter, activityLoading, activityError } = usePoolFilters(
+		pools ?? [],
 		[...(includes ?? []), ...(excludes ?? [])].includes('active'),
 	)
 	const searchTerm = getSearchTerm('pools')
@@ -55,95 +54,37 @@ export const PoolList = ({
 	// The current page of pool list.
 	const [page, setPage] = useState<number>(1)
 
-	// Default pool list items before filtering.
-	const [poolsDefault, setPoolsDefault] = useState<BondedPool[]>(pools || [])
+	// Derive each view from the shared pool and nomination snapshots. A tab change never
+	// copies or reloads the list, and data arriving after mount is reflected immediately.
+	const listPools = useMemo(() => {
+		const filtered = applyFilter(includes, excludes, pools ?? [])
+		return searchTerm ? poolSearchFilter(filtered, searchTerm) : filtered
+	}, [pools, includes, excludes, applyFilter, searchTerm, poolSearchFilter])
 
-	// Carry out filter of pool list.
-	const filterPoolList = () => {
-		let filteredPools = [...poolsDefault]
-		filteredPools = applyFilter(includes, excludes, filteredPools)
-		if (searchTerm) {
-			filteredPools = poolSearchFilter(filteredPools, searchTerm)
-		}
-		return filteredPools
-	}
-
-	// Manipulated pool list items after filtering.
-	const [listPools, setListPools] = useState<BondedPool[]>(() =>
-		filterPoolList(),
-	)
-
-	// Whether this the initial render.
-	const [synced, setSynced] = useState<boolean>(false)
-
-	// Handle Pagination.
-	const pageLength = itemsPerPage || listPools.length
-	const totalPages = Math.ceil(listPools.length / pageLength)
-	const pageEnd = page * pageLength - 1
-	const pageStart = pageEnd - (pageLength - 1)
-
-	// Get paged subset of list items.
-	const poolsToDisplay = listPools.slice(pageStart).slice(0, pageLength)
-
-	// Handle resetting of pool list when provided pools change.
-	const resetPoolList = () => {
-		setPoolsDefault(pools || [])
-		setListPools(pools || [])
-		setSynced(true)
-	}
-
-	// Handle filter / order update
-	const handlePoolsFilterUpdate = () => {
-		const filteredPools = filterPoolList()
-		setListPools(filteredPools)
-		setPage(1)
-	}
+	const pageLength = itemsPerPage || Math.max(1, listPools.length)
+	const totalPages = Math.max(1, Math.ceil(listPools.length / pageLength))
+	const currentPage = Math.min(page, totalPages)
+	const pageStart = (currentPage - 1) * pageLength
+	const poolsToDisplay = listPools.slice(pageStart, pageStart + pageLength)
+	const loading = activityLoading || (!pools?.length && syncing)
 
 	const handleSearchChange = (e: FormEvent<HTMLInputElement>) => {
-		const newValue = e.currentTarget.value
-
-		let filteredPools: BondedPool[] = [...poolsDefault]
-		// Apply filters first, then search, to avoid unnecessary search computations on pools that are
-		// already filtered out
-		filteredPools = applyFilter(includes, excludes, filteredPools)
-		filteredPools = poolSearchFilter(filteredPools, newValue)
-
 		setPage(1)
-		setListPools(filteredPools)
-		setSearchTerm('pools', newValue)
+		setSearchTerm('pools', e.currentTarget.value)
 	}
 
-	// Refetch list when pool list changes.
 	useEffect(() => {
-		const poolIds = pools?.map((pool) => pool.id)
-		const poolIdsDefault = poolsDefault?.map((pool) => pool.id)
-		if (JSON.stringify(poolIds) !== JSON.stringify(poolIdsDefault) && synced) {
-			resetPoolList()
-		}
-	}, [JSON.stringify(pools?.map((pool) => pool.id))])
+		setPage(1)
+	}, [network, activeEra.index, includes, excludes, searchTerm])
 
-	// List ui changes / validator changes trigger re-render of list.
-	useEffect(() => {
-		// only filter when pool nominations have been synced.
-		if (!syncing && Object.keys(poolsNominations).length) {
-			handlePoolsFilterUpdate()
-		}
-	}, [syncing, includes, excludes, Object.keys(poolsNominations).length])
-
-	// Scroll to top of the window on every filter.
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [includes, excludes])
 
-	// Reset list on network change or active era change.
-	useEffectIgnoreInitial(() => {
-		resetPoolList()
-	}, [network, activeEra.index.toString()])
-
 	return (
 		<ListWrapper>
 			<List $flexBasisLarge={allowMoreCols ? '33.33%' : '50%'}>
-				{allowSearch && poolsDefault.length > 0 && (
+				{allowSearch && !!pools?.length && (
 					<SearchInput
 						value={searchTerm ?? ''}
 						handleChange={handleSearchChange}
@@ -206,7 +147,7 @@ export const PoolList = ({
 				</FilterHeaderWrapper>
 
 				{itemsPerPage && poolsToDisplay.length > 0 && (
-					<Pagination page={page} total={totalPages} setter={setPage} />
+					<Pagination page={currentPage} total={totalPages} setter={setPage} />
 				)}
 				<MotionContainer>
 					{poolsToDisplay.length ? (
@@ -220,7 +161,11 @@ export const PoolList = ({
 						))
 					) : (
 						<ListStatusHeader>
-							{syncing ? `${t('syncingPoolList')}...` : t('noMatch')}
+							{activityError
+								? '—'
+								: loading
+									? `${t('syncingPoolList')}...`
+									: t('noMatch')}
 						</ListStatusHeader>
 					)}
 				</MotionContainer>

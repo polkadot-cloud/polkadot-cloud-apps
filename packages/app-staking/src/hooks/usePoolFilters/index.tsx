@@ -3,149 +3,88 @@
 
 import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import type { AnyFilter } from 'library/Filter/types'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AnyFunction, AnyJson, BondedPool } from 'types'
+import type { BondedPool } from 'types'
 import { getPoolNominationStatusCode } from 'utils'
 
-export const usePoolFilters = (needsExposures: boolean) => {
+export const usePoolFilters = (
+	pools: BondedPool[],
+	needsExposures: boolean,
+) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
-	// Only activity filters need the full era exposure scan.
-	const { getNominationsStatusFromEraStakers } = useEraStakers(needsExposures)
+	const hasNominatingPools = pools.some(
+		(pool) => (poolsNominations[pool.id]?.targets.length ?? 0) > 0,
+	)
+	// All activity filters and row labels use the same cached era snapshot.
+	const { exposuresStatus, getNominationsStatusFromEraStakers } = useEraStakers(
+		needsExposures && hasNominatingPools,
+	)
+	const activityLoading =
+		needsExposures &&
+		(pools.some((pool) => !Object.hasOwn(poolsNominations, pool.id)) ||
+			(hasNominatingPools && exposuresStatus === 'pending'))
+	const activityError =
+		needsExposures && hasNominatingPools && exposuresStatus === 'error'
 
-	/*
-	 * Include active pools.
-	 * Returns the updated filtered list.
-	 */
-	const includeActive = (list: AnyFilter) => {
-		if (!Object.keys(poolsNominations).length) {
-			return list
-		}
-
-		const filteredList = list.filter((p: BondedPool) => {
-			const nominations = poolsNominations[p.id]
-			const targets = nominations?.targets || []
-			const status = getPoolNominationStatusCode(
-				getNominationsStatusFromEraStakers(p.addresses.stash, targets),
+	const getActivity = useCallback(
+		(pool: BondedPool) => {
+			if (!Object.hasOwn(poolsNominations, pool.id)) return undefined
+			const targets = poolsNominations[pool.id]?.targets ?? []
+			if (!targets.length) return 'waiting'
+			if (exposuresStatus !== 'success') return undefined
+			return getPoolNominationStatusCode(
+				getNominationsStatusFromEraStakers(pool.addresses.stash, targets),
 			)
-			return status === 'active'
-		})
-		return filteredList
-	}
+		},
+		[poolsNominations, exposuresStatus, getNominationsStatusFromEraStakers],
+	)
 
-	/*
-	 * Dont include active pools.
-	 * Returns the updated filtered list.
-	 */
-	const excludeActive = (list: AnyFilter) => {
-		if (!Object.keys(poolsNominations).length) {
-			return list
-		}
-
-		const filteredList = list.filter((p: BondedPool) => {
-			const nominations = poolsNominations[p.id]
-			const targets = nominations?.targets || []
-			const status = getPoolNominationStatusCode(
-				getNominationsStatusFromEraStakers(p.addresses.stash, targets),
+	// Filtering is local to the view; it never starts a request or mutates shared pools.
+	const applyFilter = useCallback(
+		(
+			includes: string[] | null,
+			excludes: string[] | null,
+			list: BondedPool[],
+		) => {
+			const matches = (
+				pool: BondedPool,
+				filter: string,
+			): boolean | undefined => {
+				if (filter === 'active') {
+					const status = getActivity(pool)
+					return status === undefined ? undefined : status === 'active'
+				}
+				if (filter === 'locked') return pool.state.toLowerCase() === 'blocked'
+				if (filter === 'destroying')
+					return pool.state.toLowerCase() === 'destroying'
+				return undefined
+			}
+			const known = (filter: string) =>
+				['active', 'locked', 'destroying'].includes(filter)
+			const includeFilters = includes?.filter(known) ?? []
+			const excludeFilters = excludes?.filter(known) ?? []
+			if (!includeFilters.length && !excludeFilters.length) return list
+			// An unresolved activity result satisfies neither an include nor an exclude.
+			return list.filter(
+				(pool) =>
+					includeFilters.every((filter) => matches(pool, filter) === true) &&
+					excludeFilters.every((filter) => matches(pool, filter) === false),
 			)
-			return status !== 'active'
-		})
-		return filteredList
-	}
+		},
+		[getActivity],
+	)
 
-	/*
-	 * include locked pools.
-	 * Iterates through the supplied list and checks whether state is locked.
-	 * Returns the updated filtered list.
-	 */
-	const includeLocked = (list: AnyFilter) =>
-		list.filter((p: BondedPool) => p.state.toLowerCase() === 'blocked')
-
-	/*
-	 * include destroying pools.
-	 * Iterates through the supplied list and checks whether state is destroying.
-	 * Returns the updated filtered list.
-	 */
-	const includeDestroying = (list: AnyFilter) =>
-		list.filter((p: BondedPool) => p.state === 'Destroying')
-
-	/*
-	 * exclude locked pools.
-	 * Iterates through the supplied list and checks whether state is locked.
-	 * Returns the updated filtered list.
-	 */
-	const excludeLocked = (list: AnyFilter) =>
-		list.filter((p: BondedPool) => p.state !== 'Blocked')
-
-	/*
-	 * exclude destroying pools.
-	 * Iterates through the supplied list and checks whether state is destroying.
-	 * Returns the updated filtered list.
-	 */
-	const excludeDestroying = (list: AnyFilter) =>
-		list.filter((p: BondedPool) => p.state !== 'Destroying')
-
-	// includes to be listed in filter overlay.
-	const includesToLabels: Record<string, string> = {
-		active: t('activePools'),
-	}
-
-	// excludes to be listed in filter overlay.
+	const includesToLabels: Record<string, string> = { active: t('activePools') }
 	const excludesToLabels: Record<string, string> = {
 		locked: t('lockedPools'),
 		destroying: t('destroyingPools'),
 	}
 
-	// match include keys to their associated filter functions.
-	const includeToFunction: Record<string, AnyFunction> = {
-		active: includeActive,
-		locked: includeLocked,
-		destroying: includeDestroying,
-	}
-
-	// match exclude keys to their associated filter functions.
-	const excludeToFunction: Record<string, AnyFunction> = {
-		active: excludeActive,
-		locked: excludeLocked,
-		destroying: excludeDestroying,
-	}
-
-	// get filter functions from keys and type of filter.
-	const getFiltersFromKey = (key: string[], type: string) => {
-		const filters = type === 'include' ? includeToFunction : excludeToFunction
-		const fns = []
-		for (const k of key) {
-			if (filters[k]) {
-				fns.push(filters[k])
-			}
-		}
-		return fns
-	}
-
-	// applies filters based on the provided include and exclude keys.
-	const applyFilter = (
-		includes: string[] | null,
-		excludes: string[] | null,
-		list: AnyJson,
-	) => {
-		if (!excludes && !includes) {
-			return list
-		}
-		if (includes) {
-			for (const fn of getFiltersFromKey(includes, 'include')) {
-				list = fn(list)
-			}
-		}
-		if (excludes) {
-			for (const fn of getFiltersFromKey(excludes, 'exclude')) {
-				list = fn(list)
-			}
-		}
-		return list
-	}
-
 	return {
+		activityLoading,
+		activityError,
 		includesToLabels,
 		excludesToLabels,
 		applyFilter,

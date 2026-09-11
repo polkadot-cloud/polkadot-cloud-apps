@@ -51,6 +51,8 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		exposuresLoading,
 		exposuresStatus,
 	} = useNodeEraStakers(exposureConsumers > 0)
+	const loading =
+		overviewsLoading || (exposureConsumers > 0 && exposuresLoading)
 
 	// Index overview entries by validator address for quick lookups.
 	const validatorOverviews = useMemo(
@@ -76,38 +78,32 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 
 	// Sync only while initial data is fetching; exposures require explicit consumers.
 	useEffect(() => {
-		if (overviewsLoading || (exposureConsumers > 0 && exposuresLoading)) {
+		if (loading) {
 			setSyncing('era-stakers')
 		} else removeSyncing('era-stakers')
 		return () => removeSyncing('era-stakers')
-	}, [
-		overviewsLoading,
-		exposureConsumers,
-		exposuresLoading,
-		network,
-		overviews,
-	])
+	}, [loading, network])
 
 	// Determine each nominee's status from its backing for the supplied stash.
-	const getNominationsStatusFromEraStakers = (
-		who: MaybeAddress,
-		targets: string[],
-	): Record<string, NominationStatus> =>
-		Object.fromEntries(
-			targets.map((target) => {
-				const staker = eraStakers.stakers.find(
-					({ address }) => address === target,
-				)
-				return [
-					target,
-					!staker
-						? 'waiting'
-						: staker.others.some((other) => other.who === who)
-							? 'active'
-							: 'inactive',
-				]
-			}),
-		)
+	const getNominationsStatusFromEraStakers = useCallback(
+		(who: MaybeAddress, targets: string[]): Record<string, NominationStatus> =>
+			Object.fromEntries(
+				targets.map((target) => {
+					const staker = eraStakers.stakers.find(
+						({ address }) => address === target,
+					)
+					return [
+						target,
+						!staker
+							? 'waiting'
+							: staker.others.some((other) => other.who === who)
+								? 'active'
+								: 'inactive',
+					]
+				}),
+			),
+		[eraStakers.stakers],
+	)
 
 	return (
 		<EraStakersContext.Provider
