@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { QueryStatus } from '@tanstack/react-query'
 import type { Dispatch, SetStateAction } from 'react'
 import type { AnyJson, BondedPool, Nominator, PoolTab } from 'types'
 
@@ -13,6 +14,7 @@ export interface BondedPoolsContextState {
 	replacePoolRoles: (poolId: number, roleEdits: AnyJson) => void
 	poolSearchFilter: (pools: BondedPool[], searchTerm: string) => BondedPool[]
 	bondedPools: BondedPool[]
+	bondedPoolsStatus: QueryStatus
 	poolsMetaData: Record<number, string>
 	poolsNominations: Record<number, Nominator | undefined>
 	updatePoolNominations: (id: number, nominations: string[]) => void

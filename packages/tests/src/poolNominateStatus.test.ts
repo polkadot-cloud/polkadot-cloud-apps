@@ -15,6 +15,7 @@ const { state, useEraStakers, getStatuses, useNominationStatus } = vi.hoisted(
 	() => ({
 		state: {
 			poolsNominations: {} as Record<number, Nominator | undefined>,
+			api: false,
 			exposuresStatus: 'success' as QueryStatus,
 		},
 		useEraStakers: vi.fn(),
@@ -27,7 +28,10 @@ vi.mock('contexts/EraStakers', () => ({ useEraStakers }))
 vi.mock('contexts/Pools/BondedPools', () => ({
 	useBondedPools: () => state,
 }))
-vi.mock('data-gate', () => ({ useNominationStatus }))
+vi.mock('../../data-gate/src/index', () => ({ useNominationStatus }))
+vi.mock('../../hooks/src/usePlugins', () => ({
+	usePlugins: () => ({ pluginEnabled: () => state.api }),
+}))
 vi.mock('ui-app/ListItem', () => ({
 	BasicItem: {
 		PoolStatus: ({
@@ -60,6 +64,7 @@ const renderPool = (id = 1) =>
 beforeEach(() => {
 	vi.resetAllMocks()
 	state.poolsNominations = {}
+	state.api = false
 	state.exposuresStatus = 'success'
 	useEraStakers.mockImplementation(() => ({
 		exposuresStatus: state.exposuresStatus,
@@ -69,7 +74,7 @@ beforeEach(() => {
 	useNominationStatus.mockReturnValue({ status: 'active', loading: false })
 })
 
-test('a 50-row page reads shared exposures without per-stash data-gate queries', () => {
+test('node rows share exposures and disable per-stash data-gate requests', () => {
 	for (let id = 1; id <= 50; id++) {
 		state.poolsNominations[id] = nominations(['validator'])
 		expect(renderPool(id)).toContain('data-status="active"')
@@ -79,7 +84,9 @@ test('a 50-row page reads shared exposures without per-stash data-gate queries',
 	expect(useEraStakers.mock.calls.every(([needed]) => needed === true)).toBe(
 		true,
 	)
-	expect(useNominationStatus).not.toHaveBeenCalled()
+	expect(
+		useNominationStatus.mock.calls.every(([stash]) => stash === null),
+	).toBe(true)
 })
 
 test('unloaded nominations stay unresolved without requesting exposures', () => {
@@ -102,7 +109,9 @@ test.each([undefined, nominations([])])(
 		expect(markup).not.toContain('data-status=')
 		expect(useEraStakers).toHaveBeenCalledWith(false)
 		expect(getStatuses).not.toHaveBeenCalled()
-		expect(useNominationStatus).not.toHaveBeenCalled()
+		expect(
+			useNominationStatus.mock.calls.every(([stash]) => stash === null),
+		).toBe(true)
 	},
 )
 
@@ -125,4 +134,64 @@ test('completed exposures preserve waiting for an unelected target', () => {
 	expect(markup).toContain('data-status="waiting"')
 	expect(markup).toContain('Waiting')
 	expect(markup).not.toContain('syncing')
+})
+
+test.each(['active', 'inactive', 'waiting'] as const)(
+	'API rows use the pool stash status (%s) before node nominations arrive',
+	(status) => {
+		state.api = true
+		useNominationStatus.mockReturnValue({ status, loading: false, error: null })
+		const markup = renderPool(42)
+		expect(useNominationStatus).toHaveBeenCalledWith('stash-42', {
+			dependencies: [undefined],
+		})
+		expect(markup).toContain(`data-status="${status}"`)
+		expect(useEraStakers).toHaveBeenCalledWith(false)
+		expect(getStatuses).not.toHaveBeenCalled()
+	},
+)
+
+test.each([
+	[{ status: undefined, loading: true, error: null }, 'syncing...'],
+	[
+		{ status: 'active', loading: false, error: new Error('API unavailable') },
+		'—',
+	],
+])(
+	'API loading and errors remain distinct from staking status',
+	(result, label) => {
+		state.api = true
+		state.poolsNominations[1] = nominations(['validator'])
+		useNominationStatus.mockReturnValue(result)
+		const markup = renderPool()
+		expect(markup).toContain(label)
+		expect(markup).not.toContain('data-status=')
+		expect(useEraStakers).toHaveBeenCalledWith(false)
+		expect(getStatuses).not.toHaveBeenCalled()
+	},
+)
+
+test('confirmed empty API-mode pools skip the status request', () => {
+	state.api = true
+	state.poolsNominations[1] = undefined
+	expect(renderPool()).toContain('notNominating')
+	expect(useNominationStatus).toHaveBeenCalledWith(null, {
+		dependencies: [undefined],
+	})
+	expect(useEraStakers).toHaveBeenCalledWith(false)
+})
+
+test('API status keys follow pool nomination updates', () => {
+	state.api = true
+	state.poolsNominations[1] = nominations(['first'])
+	renderPool()
+	expect(useNominationStatus).toHaveBeenLastCalledWith('stash-1', {
+		dependencies: [state.poolsNominations[1]],
+	})
+	state.poolsNominations[1] = nominations(['second'])
+	renderPool()
+	expect(useNominationStatus).toHaveBeenLastCalledWith('stash-1', {
+		dependencies: [state.poolsNominations[1]],
+	})
+	expect(useEraStakers.mock.calls.every(([needed]) => !needed)).toBe(true)
 })

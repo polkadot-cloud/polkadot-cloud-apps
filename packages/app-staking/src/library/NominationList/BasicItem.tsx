@@ -21,7 +21,9 @@ const Basic = ({
 	toggleFavorites,
 	bondFor,
 	displayFor,
-	nominationStatus,
+	nominee,
+	isNominationPreloading,
+	nominationError,
 }: ItemProps) => {
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs } = validator
@@ -66,7 +68,14 @@ const Basic = ({
 						address={address}
 						bondFor={bondFor}
 						nominator={nominator}
-						status={nominationStatus}
+						status={
+							nominee?.status === 'active' || nominee?.status === 'inactive'
+								? nominee.status
+								: 'waiting'
+						}
+						activeBacking={nominee?.activeBacking ?? '0'}
+						isPreloading={isNominationPreloading}
+						unavailable={nominationError}
 						noMargin
 					/>
 				</div>

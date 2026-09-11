@@ -18,17 +18,11 @@ export interface EraStakersContextInterface {
 		| ReadonlyMap<string, ErasStakersOverviewEntries[number][1]>
 		| undefined
 	activeValidators: number
-	activeNominatorsCount: number
 	getNominationsStatusFromEraStakers: (
 		who: MaybeAddress,
 		targets: string[],
 	) => Record<string, NominationStatus>
 	getActiveValidator: (who: string) => Staker | undefined
-	prevEraReward: {
-		era: number
-		points: { total: number; individual: [string, number][] } | undefined
-		payout: bigint | undefined
-	}
 }
 
 export interface EraStakers {

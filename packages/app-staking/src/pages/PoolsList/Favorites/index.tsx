@@ -3,12 +3,10 @@
 
 import { ListProvider } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useApi } from 'hooks/useApi'
 import { useFavoritePools } from 'hooks/useFavoritePools'
-import { useSyncing } from 'hooks/useSyncing'
 import { ListStatusHeader } from 'library/List'
 import { PoolList } from 'library/PoolList'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
 import { CardWrapper } from 'ui-app/Card'
@@ -16,44 +14,36 @@ import { Page } from 'ui-core/base'
 
 export const PoolFavorites = () => {
 	const { t } = useTranslation('pages')
-	const { isReady } = useApi()
-	const { bondedPools } = useBondedPools()
-	const { syncing } = useSyncing(['active-pools'])
-	const { favorites, removeFavorite } = useFavoritePools()
+	const { bondedPools, bondedPoolsStatus } = useBondedPools()
+	const { favorites } = useFavoritePools()
 
-	// Store local favorite list and update when favorites list is mutated.
-	const [favoritesList, setFavoritesList] = useState<BondedPool[]>([])
-
-	useEffect(() => {
-		// map favorites to bonded pools
-		const newFavoritesList = favorites
-			.map((f) => {
-				const pool = bondedPools.find((b) => b.addresses.stash === f)
-				if (!pool) {
-					removeFavorite(f)
-				}
-				return pool
-			})
-			.filter((f): f is BondedPool => f !== undefined)
-
-		// filter not found bonded pools
-		setFavoritesList(newFavoritesList)
-	}, [favorites])
+	// Resolve favorites whenever the shared pool snapshot changes. Missing data during
+	// loading must never remove a saved favorite.
+	const favoritesList = useMemo(
+		() =>
+			favorites
+				.map((stash) =>
+					bondedPools.find((pool) => pool.addresses.stash === stash),
+				)
+				.filter((pool): pool is BondedPool => pool !== undefined),
+		[favorites, bondedPools],
+	)
 
 	return (
 		<Page.Row>
 			<CardWrapper>
-				{favoritesList === null || syncing ? (
+				{!favoritesList.length && bondedPoolsStatus === 'pending' ? (
 					<ListStatusHeader>{t('fetchingFavoritePools')}...</ListStatusHeader>
+				) : favoritesList.length > 0 ? (
+					<ListProvider>
+						<PoolList pools={favoritesList} allowMoreCols itemsPerPage={50} />
+					</ListProvider>
 				) : (
-					isReady &&
-					(favoritesList.length > 0 ? (
-						<ListProvider>
-							<PoolList pools={favoritesList} allowMoreCols itemsPerPage={50} />
-						</ListProvider>
-					) : (
-						<ListStatusHeader>{t('noFavorites')}</ListStatusHeader>
-					))
+					<ListStatusHeader>
+						{bondedPoolsStatus === 'error'
+							? t('errorUnknown', { ns: 'app' })
+							: t('noFavorites')}
+					</ListStatusHeader>
 				)}
 			</CardWrapper>
 		</Page.Row>

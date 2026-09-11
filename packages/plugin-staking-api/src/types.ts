@@ -227,6 +227,10 @@ export interface PoolEraRewardsData {
 	poolEraRewards: PoolReward[]
 }
 
+export interface EraActiveNominatorCountData {
+	eraActiveNominatorCount: number
+}
+
 export interface EraTotalNominatorsData {
 	eraTotalNominators: {
 		totalNominators: number
@@ -471,6 +475,14 @@ export interface SearchValidators {
 		display: string
 		superDisplay: string
 	}[]
+}
+
+export interface GetNomineesStatusData {
+	getNomineesStatus: { statuses: NomineeStatusEntry[] }
+}
+
+export interface GetNomineesInEraData {
+	getNomineesInEra: string[]
 }
 
 export interface GetActiveStakerWithNomineesData {

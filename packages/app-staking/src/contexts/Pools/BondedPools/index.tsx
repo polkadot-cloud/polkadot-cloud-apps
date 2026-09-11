@@ -1,16 +1,17 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { QueryStatus } from '@tanstack/react-query'
 import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
 import type { Sync } from '@w3ux/types'
 import { setStateWithRef, shuffle } from '@w3ux/utils'
 import { hexToString } from 'dedot/utils'
-import { removeSyncing } from 'global-bus'
+import { removeSyncing, setSyncing } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useCreatePoolAccounts } from 'hooks/useCreatePoolAccounts'
 import { useNetwork } from 'hooks/useNetwork'
 import type { ReactNode } from 'react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
 	AnyJson,
 	BondedPool,
@@ -41,6 +42,12 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 	// Track the sync status of `bondedPools`
 	const bondedPoolsSynced = useRef<Sync>('unsynced')
 
+	// List readiness tracks the actual snapshot request.
+	const [poolSnapshot, setPoolSnapshot] = useState<{
+		network: typeof network
+		status: QueryStatus
+	}>({ network, status: 'pending' })
+
 	// Store bonded pools metadata
 	const [poolsMetaData, setPoolsMetadata] = useState<Record<number, string>>({})
 
@@ -53,16 +60,19 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 	const [poolListActiveTab, setPoolListActiveTab] = useState<PoolTab>('Active')
 
 	// Fetch all bonded pool entries and their metadata
-	const fetchBondedPools = async () => {
+	const fetchBondedPools = async (signal: AbortSignal) => {
 		if (bondedPoolsSynced.current !== 'unsynced') {
 			return
 		}
 		bondedPoolsSynced.current = 'syncing'
+		setPoolSnapshot({ network, status: 'pending' })
+		setSyncing('bonded-pools')
 
 		// Get and format bonded pool entries
 		const ids: number[] = []
 		const idsMulti: number[] = []
 		const bondedPoolEntries = await serviceApi.query.bondedPoolEntries()
+		signal.throwIfAborted()
 
 		const exposures = shuffle(
 			bondedPoolEntries.map(([id, pool]) => {
@@ -76,11 +86,13 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 
 		// Fetch pools metadata
 		const metadataQuery = await serviceApi.query.poolMetadataMulti(idsMulti)
+		signal.throwIfAborted()
 		setPoolsMetadata(
 			Object.fromEntries(metadataQuery.map((m, i) => [ids[i], hexToString(m)])),
 		)
 
 		bondedPoolsSynced.current = 'synced'
+		setPoolSnapshot({ network, status: 'success' })
 		removeSyncing('bonded-pools')
 	}
 
@@ -234,17 +246,26 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 	// Clear existing state for network refresh
 	useEffectIgnoreInitial(() => {
 		bondedPoolsSynced.current = 'unsynced'
+		setPoolSnapshot({ network, status: 'pending' })
 		setStateWithRef([], setBondedPools, bondedPoolsRef)
 		setPoolsMetadata({})
 		setPoolsNominations({})
 	}, [network])
 
 	// Initial setup for fetching bonded pools
-	useEffectIgnoreInitial(() => {
-		if (isReady && lastPoolId) {
-			fetchBondedPools()
+	useEffect(() => {
+		if (!isReady || !lastPoolId) return
+		const controller = new AbortController()
+		void fetchBondedPools(controller.signal).catch(() => {
+			if (controller.signal.aborted) return
+			setPoolSnapshot({ network, status: 'error' })
+			removeSyncing('bonded-pools')
+		})
+		return () => {
+			controller.abort()
+			bondedPoolsSynced.current = 'unsynced'
 		}
-	}, [bondedPools, isReady, lastPoolId])
+	}, [network, isReady, lastPoolId, serviceApi])
 
 	// Re-fetch bonded pools nominations when active era changes or when `bondedPools` update
 	useEffectIgnoreInitial(() => {
@@ -272,6 +293,8 @@ export const BondedPoolsProvider = ({ children }: { children: ReactNode }) => {
 				replacePoolRoles,
 				poolSearchFilter: wrappedPoolSearchFilter,
 				bondedPools,
+				bondedPoolsStatus:
+					poolSnapshot.network === network ? poolSnapshot.status : 'pending',
 				poolsMetaData,
 				poolsNominations,
 				updatePoolNominations,

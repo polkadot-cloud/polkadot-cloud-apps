@@ -9,15 +9,6 @@ import { dataPointOptions } from '../query'
 import type { DataGateState, DataPointOptions, DataPointSource } from '../types'
 import { fetchNode } from './node'
 
-// Node requests need an address, a connection and an active era.
-const nodeSource = (
-	{ node, ready, era }: DataGateState,
-	who: MaybeAddress,
-): DataPointSource<NominationStatus> => ({
-	enabled: ready && era > 0,
-	queryFn: who ? ({ signal }) => fetchNode(node, era, who, signal) : skipToken,
-})
-
 // The API can start as soon as an address is available.
 const stakingApiSource = (
 	who: MaybeAddress,
@@ -25,6 +16,15 @@ const stakingApiSource = (
 	queryFn: who
 		? ({ network, signal }) => fetchGetNominationStatus(network, who, signal)
 		: skipToken,
+})
+
+// Node requests need an address, a connection and an active era.
+const nodeSource = (
+	{ node, ready, era }: DataGateState,
+	who: MaybeAddress,
+): DataPointSource<NominationStatus> => ({
+	enabled: ready && era > 0,
+	queryFn: who ? ({ signal }) => fetchNode(node, era, who, signal) : skipToken,
 })
 
 export const nominationStatusOptions = (
@@ -38,6 +38,9 @@ export const nominationStatusOptions = (
 		stakingApi: stakingApiSource(who),
 	})
 
+// The overall nomination status of a nominator or pool stash across its current targets: active if
+// any target includes its stake, inactive if an elected target exists but none includes its stake,
+// or waiting if no targets are elected (including no nominations).
 export const useNominationStatus = (
 	who: MaybeAddress,
 	queryOptions: DataPointOptions = {},

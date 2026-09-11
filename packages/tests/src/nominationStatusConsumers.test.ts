@@ -12,9 +12,9 @@ import { Stats } from '../../app-staking/src/canvas/Pool/Overview/Stats'
 import { useNominationStatus } from '../../app-staking/src/hooks/useNominationStatus'
 import { PoolStatus } from '../../app-staking/src/pages/Pools/Status/PoolStatus'
 
-const { gated, useEraStakers, state } = vi.hoisted(() => ({
+const { gated, eraBacking, state } = vi.hoisted(() => ({
 	gated: vi.fn(),
-	useEraStakers: vi.fn(),
+	eraBacking: vi.fn(),
 	state: {
 		nominators: undefined as StakingLedger['nominators'],
 		isNominator: false,
@@ -24,7 +24,10 @@ const { gated, useEraStakers, state } = vi.hoisted(() => ({
 	},
 }))
 
-vi.mock('../../data-gate/src/index', () => ({ useNominationStatus: gated }))
+vi.mock('../../data-gate/src/index', () => ({
+	useNominationStatus: gated,
+	useHasEraBacking: eraBacking,
+}))
 vi.mock('../../hooks/src/useBalances', () => ({
 	useBalances: () => ({
 		getNominations: () => state.nominators?.targets ?? [],
@@ -61,7 +64,6 @@ vi.mock('../../consts/src/util', () => ({
 vi.mock('../../assets/src/index', () => ({
 	getChainIcons: () => ({ token: () => null }),
 }))
-vi.mock('contexts/EraStakers', () => ({ useEraStakers }))
 vi.mock('library/Stat', () => ({ Stat: () => null }))
 vi.mock('../../ui-core/src/canvas/index.tsx', () => ({
 	Stat: ({ children }: { children: ReactNode }) =>
@@ -83,8 +85,10 @@ beforeEach(() => {
 	state.isValidator = false
 	state.syncing = false
 	state.stakers = []
-	useEraStakers.mockImplementation(() => ({
-		eraStakers: { stakers: state.stakers },
+	eraBacking.mockImplementation(() => ({
+		data: state.stakers.some(({ others }) =>
+			others.some(({ who }) => who === 'pool-stash'),
+		),
 	}))
 	gated.mockReturnValue({
 		status: undefined,
@@ -177,7 +181,7 @@ test('pool activity uses era backing even when the current nomination set has ch
 	expect(renderToStaticMarkup(createElement(Stats, props))).toContain(
 		'activelyNominating',
 	)
-	expect(useEraStakers).toHaveBeenCalledWith(true)
+	expect(eraBacking).toHaveBeenCalledWith('pool-stash')
 	expect(gated).not.toHaveBeenCalled()
 
 	state.stakers = []
