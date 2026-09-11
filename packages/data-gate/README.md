@@ -213,6 +213,10 @@ Each data point owns its transformations and API adapter in `src/eraNominatorCou
 `src/nomineeStatuses` or `src/hasEraBacking`. All three use the shared loader in
 `src/eraStakers`: node mode shares one exposure scan per network and era while the
 snapshot remains cached, including concurrent requests from different data points.
+The node loader reads exposure pages with one era-wide storage prefix scan, then
+groups them by validator and checks page counts against the overview. It does not
+start a separate storage operation for every validator. Changing pool tabs while
+the scan is pending shares that request; completed tabs reuse the cached result.
 The API adapters own validation, batching and status normalization;
 `plugin-staking-api` defines GraphQL queries and fetches their raw responses.
 Reward-rate queries live separately in `src/validatorRewardRates`. The legacy app provider also uses the shared node

@@ -3,7 +3,7 @@
 
 import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNetwork } from 'global-bus'
-import type { Exposure } from 'types'
+import type { ErasStakersPagedEntries, Exposure } from 'types'
 import { useDataGate } from '../provider'
 
 // Shared node snapshots for source adapters and the remaining legacy overview/pool consumers.
@@ -37,35 +37,40 @@ export const useNodeEraStakers = (needsExposures = false, enabled = true) => {
 			const entries = await client.fetchQuery(overviewOptions)
 			signal.throwIfAborted()
 			const eraKey = String(era)
+			if (!entries.length) return []
 
-			// Fetch every validator's exposure pages in parallel.
-			return Promise.all(
-				entries.map(async ([[, address], overview]) => {
-					const pages = await serviceApi.query.erasStakersPagedEntries(
-						era,
-						address,
-					)
-					signal.throwIfAborted()
+			// One era-wide scan avoids queuing hundreds of chainHead operations. Every pool tab and data
+			// point reuses this same complete snapshot from the query cache.
+			const allPages = await serviceApi.query.erasStakersPagedEntries(era)
+			signal.throwIfAborted()
+			const pagesByValidator = new Map<string, ErasStakersPagedEntries>()
+			for (const page of allPages) {
+				const address = page[0][1]
+				const pages = pagesByValidator.get(address) ?? []
+				pages.push(page)
+				pagesByValidator.set(address, pages)
+			}
 
-					// Incomplete pages must not be treated as missing nominator backing.
-					if (pages.length !== overview.pageCount) {
-						throw new Error(`Incomplete exposure pages for ${address}`)
-					}
-					return {
-						keys: [eraKey, address],
-						val: {
-							own: overview.own.toString(),
-							total: overview.total.toString(),
-							others: pages.flatMap(([, { others }]) =>
-								others.map(({ who, value }) => ({
-									who,
-									value: value.toString(),
-								})),
-							),
-						},
-					}
-				}),
-			)
+			return entries.map(([[, address], overview]) => {
+				const pages = pagesByValidator.get(address) ?? []
+				// Incomplete pages must not be treated as missing nominator backing.
+				if (pages.length !== overview.pageCount) {
+					throw new Error(`Incomplete exposure pages for ${address}`)
+				}
+				return {
+					keys: [eraKey, address],
+					val: {
+						own: overview.own.toString(),
+						total: overview.total.toString(),
+						others: pages.flatMap(([, { others }]) =>
+							others.map(({ who, value }) => ({
+								who,
+								value: value.toString(),
+							})),
+						),
+					},
+				}
+			})
 		},
 	})
 	const {

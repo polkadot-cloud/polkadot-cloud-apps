@@ -86,7 +86,7 @@ export interface ServiceInterface {
 		) => Promise<ErasStakersOverviewEntries>
 		erasStakersPagedEntries: (
 			era: number,
-			validator: string,
+			validator?: string,
 		) => Promise<ErasStakersPagedEntries>
 		identityOfMulti: (addresses: string[]) => Promise<IdentityOf[]>
 		nominatorsMulti: (addresses: string[]) => Promise<NominatorsMultiQuery>

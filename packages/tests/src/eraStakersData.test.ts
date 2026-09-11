@@ -1,7 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { type FetchQueryOptions, QueryClient } from '@tanstack/react-query'
+import {
+	type FetchQueryOptions,
+	QueryClient,
+	QueryObserver,
+} from '@tanstack/react-query'
+import type { ErasStakersOverviewEntries, ErasStakersPagedEntries } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { useEraNominatorCount } from '../../data-gate/src/eraNominatorCount'
 import { useNodeEraStakers } from '../../data-gate/src/eraStakers/node'
@@ -219,7 +224,7 @@ test('node mode shares legacy exposures and keeps backing for previous nominees'
 	})
 	useHasEraBacking('stash')
 	expect(await fetchLatest()).toBe(true)
-	expect(exposureReads).toHaveBeenCalledWith(100, 'old-target')
+	expect(exposureReads.mock.calls).toEqual([[100]])
 	expect(exposureReads).toHaveBeenCalledTimes(1)
 	expect(apiQuery).not.toHaveBeenCalled()
 })
@@ -274,6 +279,105 @@ test('independent data points share concurrent node scans and reuse the complete
 	expect(overviewEntries).toHaveBeenCalledTimes(1)
 	expect(exposureReads).toHaveBeenCalledTimes(1)
 	expect(apiQuery).not.toHaveBeenCalled()
+})
+
+test('a full validator set uses one era scan and groups every exposure page by validator', async () => {
+	const entries: ErasStakersOverviewEntries = Array.from(
+		{ length: 600 },
+		(_, i) => [
+			[100, `validator-${i}`],
+			{ own: 10n, total: 30n, nominatorCount: 2, pageCount: 2 },
+		],
+	)
+	const pages: ErasStakersPagedEntries = [1, 0].flatMap((pageIndex) =>
+		entries.map<ErasStakersPagedEntries[number]>(([[era, address]]) => [
+			[era, address, pageIndex],
+			{
+				pageTotal: 10n,
+				others: [{ who: `pool-${address}-${pageIndex}`, value: 10n }],
+			},
+		]),
+	)
+	entries.push([
+		[100, 'self-only'],
+		{ own: 10n, total: 10n, nominatorCount: 0, pageCount: 0 },
+	])
+	overviewEntries.mockResolvedValue(entries)
+	exposureReads.mockResolvedValue(pages)
+	await loadExposures()
+	const snapshot = useNodeEraStakers(true).exposures!
+	expect(snapshot).toHaveLength(601)
+	for (let i = 0; i < 600; i++) {
+		expect(snapshot[i]).toEqual({
+			keys: ['100', `validator-${i}`],
+			val: {
+				own: '10',
+				total: '30',
+				others: [1, 0].map((pageIndex) => ({
+					who: `pool-validator-${i}-${pageIndex}`,
+					value: '10',
+				})),
+			},
+		})
+	}
+	expect(snapshot[600].val.others).toEqual([])
+	expect(exposureReads.mock.calls).toEqual([[100]])
+})
+
+test('incomplete era scans are not cached as successful exposure snapshots', async () => {
+	exposureReads.mockResolvedValue([])
+	await expect(loadExposures()).rejects.toThrow('Incomplete exposure pages')
+	expect(useNodeEraStakers(true).exposuresStatus).toBe('error')
+	expect(useNodeEraStakers(true).exposures).toBeUndefined()
+})
+
+test('empty overview snapshots do not scan exposure storage', async () => {
+	overviewEntries.mockResolvedValue([])
+	await loadExposures()
+	expect(useNodeEraStakers(true).exposures).toEqual([])
+	expect(exposureReads).not.toHaveBeenCalled()
+})
+
+test('switching exposure demand while a scan is pending keeps one request and updates all observers', async () => {
+	useNodeEraStakers(false)
+	await state.client!.fetchQuery(queries.at(-2)!)
+	let finish!: (pages: ErasStakersPagedEntries) => void
+	const pages = await exposureReads()
+	exposureReads.mockClear()
+	exposureReads.mockImplementation(
+		() =>
+			new Promise<ErasStakersPagedEntries>((resolve) => {
+				finish = resolve
+			}),
+	)
+	useNodeEraStakers(false)
+	const provider = new QueryObserver(state.client!, latest())
+	const unsubscribeProvider = provider.subscribe(() => {})
+	const list = new QueryObserver(state.client!, latest())
+	const unsubscribeList = list.subscribe(() => {})
+	try {
+		useNodeEraStakers(true)
+		provider.setOptions(latest())
+		await vi.waitFor(() => expect(exposureReads).toHaveBeenCalledTimes(1))
+		useNodeEraStakers(false)
+		provider.setOptions(latest())
+		useNodeEraStakers(true)
+		provider.setOptions(latest())
+		finish(pages)
+		await vi.waitFor(() =>
+			expect(provider.getCurrentResult().status).toBe('success'),
+		)
+		expect(list.getCurrentResult().data).toBe(provider.getCurrentResult().data)
+		useNodeEraStakers(false)
+		provider.setOptions(latest())
+		useNodeEraStakers(true)
+		provider.setOptions(latest())
+		expect(provider.getCurrentResult().isFetching).toBe(false)
+		expect(exposureReads.mock.calls).toEqual([[100]])
+	} finally {
+		unsubscribeList()
+		unsubscribeProvider()
+	}
 })
 
 test('concurrent derived queries load one shared snapshot without preloading prerequisites', async () => {
