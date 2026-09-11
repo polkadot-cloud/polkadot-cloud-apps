@@ -50,13 +50,6 @@
 					"Engager des fonds est le processus consistant à « verrouiller » (ou staker) des {NETWORK_UNIT}. Les {NETWORK_UNIT} engagés seront ensuite automatiquement alloués à un ou plusieurs de vos validateurs nominés."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Période d'analyse de la décentralisation",
-				[
-					"La décentralisation de votre nomination est calculée en analysant les récompenses versées au cours des 30 derniers jours. Selon le réseau, cela se traduira par un certain nombre d'ères.",
-					"30 jours fournissent suffisamment d'informations pour que l'agrégation soit pertinente, tout en étant assez court pour que les changements de nominations commencent à influencer cette analyse après quelques jours."
-				]
-			],
 			"epoch": [
 				"Époque",
 				[
@@ -75,15 +68,6 @@
 				"Points d'ère",
 				[
 					"Les points d'ère sont une mesure de la performance d'un validateur au cours de l'ère en cours. Plus un validateur a de points d'ère, plus il recevra de récompenses à la fin de l'ère."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Géolocalisation de chaque nomination",
-				[
-					"Chaque validateur nominé fonctionne dans un centre de données donné qui peut être géolocalisé par son adresse IP.",
-					"Le tableau affiche la dernière région, le dernier pays et le dernier réseau où chaque validateur nominé a été géolocalisé.",
-					"Lorsque le validateur a été localisé à plus d'un emplacement durant la période d'analyse, un signe ++ s'affiche.",
-					"Le pourcentage affiché correspond à la proportion de récompenses qui vous ont été versées par ce validateur durant la période d'analyse."
 				]
 			],
 			"halving": [
@@ -166,13 +150,6 @@
 				[
 					"Nominer est le processus consistant à sélectionner les validateurs auxquels vous souhaitez staker vos {NETWORK_UNIT}. Vous pouvez choisir de nominer jusqu'à 16 validateurs pour chacun de vos comptes.",
 					"Une fois que vous avez nominé les validateurs sélectionnés, ils deviennent vos nominations."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Répartition des paiements de nomination",
-				[
-					"La décentralisation de votre nomination.",
-					"Les graphiques suivants affichent la répartition des récompenses agrégées par région, pays et réseau IP du validateur qui a versé la récompense."
 				]
 			],
 			"nominationPools": [
@@ -298,13 +275,6 @@
 					"Si votre compte dispose déjà d'un solde verrouillé qui couvre le dépôt existentiel de votre compte, comme un solde verrouillé pour la nomination, alors le staking dashboard ne verrouillera aucun solde disponible supplémentaire."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Récompenses par pays et réseau",
-				[
-					"Affiche le pourcentage estimé des récompenses générées depuis différents pays et réseaux IP.",
-					"Les analyses de décentralisation Polkawatch sont calculées en agrégeant les récompenses selon la géolocalisation IP du validateur. La période d'échantillonnage est celle des 60 derniers jours."
-				]
-			],
 			"selfStake": [
 				"Stake personnel",
 				[
@@ -322,13 +292,6 @@
 				"Total des nominateurs",
 				[
 					"Comptes qui font du staking sur le réseau, qu'ils soient actifs ou inactifs dans la session en cours."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Total des paiements analysés",
-				[
-					"Le total des récompenses en {NETWORK_UNIT} versées par les validateurs nominés au cours des 30 derniers jours.",
-					"Ces paiements ont été utilisés pour calculer la décentralisation de votre nomination."
 				]
 			],
 			"validator": [

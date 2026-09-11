@@ -484,19 +484,16 @@ test('cancelling a node status prevents subsequent exposure requests', async () 
 })
 
 test('global plugin selection follows network restrictions without a mounted hook', () => {
-	setPlugins(['staking_api', 'polkawatch'])
+	setPlugins(['staking_api'])
 	expect(pluginEnabled('staking_api')).toBe(true)
 	setNetwork('paseo')
 	expect(pluginEnabled('staking_api')).toBe(false)
-	expect(getPlugins()).toEqual(['polkawatch'])
-	expect(getAvailablePlugins().activePlugins).toEqual(['polkawatch'])
-	expect(JSON.parse(storage.get('plugins')!)).toEqual([
-		'staking_api',
-		'polkawatch',
-	])
+	expect(getPlugins()).toEqual([])
+	expect(getAvailablePlugins().activePlugins).toEqual([])
+	expect(JSON.parse(storage.get('plugins')!)).toEqual(['staking_api'])
 	setNetwork('kusama')
 	expect(pluginEnabled('staking_api')).toBe(true)
-	setPlugins(['polkawatch'])
+	setPlugins([])
 	setNetwork('polkadot')
 	expect(pluginEnabled('staking_api')).toBe(false)
 })

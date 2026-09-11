@@ -311,9 +311,6 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@polkawatch/ddp-client':
-        specifier: ^3.0.1
-        version: 3.0.5(debug@4.4.3(supports-color@10.2.2))
       '@tanstack/react-query':
         specifier: ^5.102.8
         version: 5.102.8(react@19.3.0)
@@ -768,9 +765,6 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@polkawatch/ddp-client':
-        specifier: ^3.0.1
-        version: 3.0.5(debug@4.4.3(supports-color@10.2.2))
       '@substrate/connect-known-chains':
         specifier: ^1.10.2
         version: 1.10.3
@@ -2400,9 +2394,6 @@ packages:
     resolution: {integrity: sha512-tOPdkMye3iuXnuFtdNg5+iSu7Cz9LRL8z5psMuZpUpThMYChGsS2pDFtNvXOKU8ohhO+frY9VdJ9VBg1WL9Iug==}
     engines: {node: '>=18'}
 
-  '@polkawatch/ddp-client@3.0.5':
-    resolution: {integrity: sha512-fwFo4R2AoavkM5mETVume/kcmY6CrmeguUyaP+VgwZqIekZMZQGUrqyItxinvkX52/Ycd2tqhHJvKmJaVS6hRA==}
-
   '@radix-ui/number@1.1.3':
     resolution: {integrity: sha512-Road2bidD0uu/1BGDOWNdPI06g0lIRy6IF9GZcIrDK2KGItfor8IQwQa+yM2ERgHM1MmHxaxpTzk0/Jp42lNfA==}
 
@@ -3468,9 +3459,6 @@ packages:
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-
-  axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
 
   axios@1.20.0:
     resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
@@ -5993,12 +5981,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@polkawatch/ddp-client@3.0.5(debug@4.4.3(supports-color@10.2.2))':
-    dependencies:
-      axios: 0.21.4(debug@4.4.3(supports-color@10.2.2))
-    transitivePeerDependencies:
-      - debug
-
   '@radix-ui/number@1.1.3': {}
 
   '@radix-ui/primitive@1.1.7': {}
@@ -7053,12 +7035,6 @@ snapshots:
   astral-regex@2.0.0: {}
 
   asynckit@0.4.0: {}
-
-  axios@0.21.4(debug@4.4.3(supports-color@10.2.2)):
-    dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
-    transitivePeerDependencies:
-      - debug
 
   axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:

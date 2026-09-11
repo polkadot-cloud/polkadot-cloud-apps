@@ -9,15 +9,3 @@ export const GraphWrapper = styled.div`
   padding: 1rem 2rem 1rem 0;
   width: 100%;
 `
-
-export const ValidatorGeoWrapper = styled.div`
-  position: relative;
-  padding: 1rem 2rem;
-  width: 50%;
-  flex-grow: 1;
-
-  @media (max-width: 600px) {
-    min-width: 100%;
-    min-height: 125px;
-  }
-`
