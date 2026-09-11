@@ -258,9 +258,11 @@ so an initial zero or partial result must be able to update within the same era.
 The count requires the API's `eraActiveNominatorCount(network, era)` field to be
 deployed before the updated apps.
 
-Pool-list activity labels/filters still use the shared node exposure scan, and
-validator overview readers remain on the node. Those consumers need a separate
-migration before API mode can eliminate all era-stakers reads.
+Pool-list status labels use `useNominationStatus` with the pool stash in API mode
+and share the node exposure snapshot in node mode. The Active pool filter still
+uses node exposures even in API mode, and validator overview readers remain on
+the node. Those consumers need a separate migration before API mode can eliminate
+all era-stakers reads.
 
 ## Validation
 

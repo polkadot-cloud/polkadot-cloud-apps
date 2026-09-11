@@ -4,40 +4,56 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
+import { useNominationStatus } from 'data-gate'
+import { usePlugins } from 'hooks/usePlugins'
 import { useTranslation } from 'react-i18next'
-import type { BondedPool, NominationStatus } from 'types'
+import type { BondedPool } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
 import { getPoolNominationStatusCode } from 'utils'
 
 export const PoolNominateStatus = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { poolsNominations } = useBondedPools()
+	const { pluginEnabled } = usePlugins()
+	const api = pluginEnabled('staking_api')
 
 	// A loaded pool without nominations has its own entry with an undefined value.
+	const nominations = poolsNominations[pool.id]
 	const nominationsLoaded = Object.hasOwn(poolsNominations, pool.id)
-	const targets = poolsNominations[pool.id]?.targets ?? []
+	const notNominating = nominationsLoaded && !nominations?.targets.length
+	const nominationStatus = useNominationStatus(
+		api && !notNominating ? pool.addresses.stash : null,
+		{ dependencies: [nominations] },
+	)
 	const { exposuresStatus, getNominationsStatusFromEraStakers } = useEraStakers(
-		nominationsLoaded && targets.length > 0,
+		!api && !!nominations?.targets.length,
 	)
 
-	// All nominating rows share the era exposure query instead of fetching per stash.
-	let status: NominationStatus | null = null
-	let label: string
-	if (
-		!nominationsLoaded ||
-		(targets.length > 0 && exposuresStatus === 'pending')
-	) {
-		label = `${t('syncing')}...`
-	} else if (!targets.length) {
-		label = t('notNominating')
-	} else if (exposuresStatus === 'error') {
-		label = '—'
-	} else {
-		status = getPoolNominationStatusCode(
-			getNominationsStatusFromEraStakers(pool.addresses.stash, targets),
-		)
-		label = capitalizeFirstLetter(t(status))
-	}
+	// API rows use the pool stash's aggregate status; node rows share one exposure snapshot.
+	const loading = api
+		? nominationStatus.loading
+		: !nominationsLoaded || exposuresStatus === 'pending'
+	const error = api
+		? nominationStatus.error
+		: nominationsLoaded && exposuresStatus === 'error'
+	const status =
+		notNominating || loading || error
+			? null
+			: api
+				? (nominationStatus.status ?? null)
+				: getPoolNominationStatusCode(
+						getNominationsStatusFromEraStakers(
+							pool.addresses.stash,
+							nominations?.targets ?? [],
+						),
+					)
+	const label = notNominating
+		? t('notNominating')
+		: error
+			? '—'
+			: status
+				? capitalizeFirstLetter(t(status))
+				: `${t('syncing')}...`
 
 	return (
 		<BasicItem.PoolStatus status={status}>
