@@ -5,6 +5,7 @@ import { getStakingChainData } from 'consts/util'
 import { useList } from 'contexts/List'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { getValidatorItemWarnings } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
@@ -49,6 +50,7 @@ export const DetailedItem = ({
 	isPreloading,
 }: ItemProps) => {
 	const { network } = useNetwork()
+	const retainmentEnabled = useRetainmentStatsEnabled()
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers } = useValidators()
 	const { address, prefs, validatorStatus } = validator
@@ -59,9 +61,10 @@ export const DetailedItem = ({
 		window: retainmentWindow,
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(retainment?.retainment)
-	const itemWarnings = highlightRetainmentWarnings
-		? getValidatorItemWarnings(warnings, retainment)
-		: []
+	const itemWarnings =
+		retainmentEnabled && highlightRetainmentWarnings
+			? getValidatorItemWarnings(warnings, retainment)
+			: []
 	const retainmentStats = useRetainmentStatsData({
 		period,
 		selfStakeMax,
@@ -79,7 +82,7 @@ export const DetailedItem = ({
 	const validatorDisplay = validatorIdentity.node
 	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
 	const showRetainmentHistory =
-		displayFor !== 'canvas' && displayFor !== 'modal'
+		retainmentEnabled && displayFor !== 'canvas' && displayFor !== 'modal'
 	const openRetainmentHistory = useOpenRetainmentHistory({
 		periods: retainmentPeriods,
 		selfStakeMax,
@@ -92,7 +95,8 @@ export const DetailedItem = ({
 		? openRetainmentHistory
 		: undefined
 
-	if (isPreloading) {
+	// Without retainment, keep the shorter layout and preload only the pending metrics.
+	if (isPreloading && retainmentEnabled) {
 		return <DetailedItemPreloader format={format} />
 	}
 
@@ -145,6 +149,7 @@ export const DetailedItem = ({
 	if (format === 'row') {
 		return (
 			<ValidatorBar
+				showRetainment={retainmentEnabled}
 				actions={
 					<RowActionsMenu
 						address={address}
@@ -163,6 +168,7 @@ export const DetailedItem = ({
 				}
 				displayFor={displayFor}
 				eraPoints={eraPoints}
+				isPreloading={isPreloading}
 				onRetainmentHistory={onRetainmentHistory}
 				rate={rateAfterCommission}
 				retainmentHistoryDisabled={retainmentPeriods.length === 0}
@@ -181,11 +187,13 @@ export const DetailedItem = ({
 
 	return (
 		<ValidatorCard
+			showRetainment={retainmentEnabled}
 			actions={cardActions}
 			address={address}
 			blocked={prefs?.blocked === true}
 			displayFor={displayFor}
 			eraPoints={eraPoints}
+			isActivityPreloading={isPreloading}
 			headerStart={selectable ? <Select item={validator} /> : undefined}
 			identity={<Identity address={address} />}
 			retainmentStats={retainmentStats}
@@ -195,6 +203,7 @@ export const DetailedItem = ({
 			summary={
 				<ValidatorSummary
 					address={address}
+					isRatePreloading={isPreloading}
 					rate={rateAfterCommission}
 					selfStake={selfStake}
 					selfStakeMax={selfStakeMax}

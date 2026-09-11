@@ -25,6 +25,7 @@ import { Identity } from '../ListItem/Labels/Identity'
 import { ValidatorSummaryMetrics } from './ValidatorSummary'
 
 interface ValidatorBarProps {
+	showRetainment?: boolean
 	actions: ReactNode
 	activityTier?: ValidatorActivityTier | null
 	displayFor: DisplayFor
@@ -54,6 +55,7 @@ interface ValidatorBarProps {
 }
 
 export const ValidatorBar = ({
+	showRetainment = true,
 	actions,
 	activityTier,
 	displayFor,
@@ -100,8 +102,9 @@ export const ValidatorBar = ({
 		<ListItem.Row
 			displayFor={displayFor}
 			rowVariant="validator"
+			showRetainment={showRetainment}
 			selected={selected}
-			statusAccent={retainmentStats.statusAccent}
+			statusAccent={showRetainment ? retainmentStats.statusAccent : undefined}
 		>
 			<ListItem.RowHeader data-section="identity">
 				{t('identity')}
@@ -109,22 +112,24 @@ export const ValidatorBar = ({
 			<ListItem.RowHeader data-section="performance">
 				{t('performance')}
 			</ListItem.RowHeader>
-			<ListItem.RowHeader data-section="retainment">
-				<span>{retainmentLabel}</span>
-				{onRetainmentHistory && (
-					<RetainmentHistory
-						disabled={retainmentHistoryDisabled}
-						iconOnly
-						onClick={onRetainmentHistory}
+			{showRetainment && (
+				<ListItem.RowHeader data-section="retainment">
+					<span>{retainmentLabel}</span>
+					{onRetainmentHistory && (
+						<RetainmentHistory
+							disabled={retainmentHistoryDisabled}
+							iconOnly
+							onClick={onRetainmentHistory}
+						/>
+					)}
+					<RetainmentWindowToggle
+						alignEnd
+						disabled={retainmentPreloading}
+						onChange={onRetainmentWindowChange}
+						value={retainmentWindow}
 					/>
-				)}
-				<RetainmentWindowToggle
-					alignEnd
-					disabled={retainmentPreloading}
-					onChange={onRetainmentWindowChange}
-					value={retainmentWindow}
-				/>
-			</ListItem.RowHeader>
+				</ListItem.RowHeader>
+			)}
 			<ListItem.RowIdentity>
 				{selectable && <Select item={validator} />}
 				<ListItem.Identity>
@@ -172,29 +177,31 @@ export const ValidatorBar = ({
 				</ListItem.RowMetricGroup>
 			</ListItem.RowPerformance>
 
-			<ListItem.RowMetricGroup
-				aria-label={retainmentLabel}
-				data-section="retainment"
-				role="group"
-			>
-				{[retainmentRate, compoundRate].map((stat) => (
-					<RetainmentMetric
-						compact
-						key={stat.label}
-						isPreloading={retainmentPreloading}
-						stat={stat}
-					/>
-				))}
-				{[selfStakeChange, netOutflow].map((stat) => (
-					<RetainmentMetric
-						compact
-						key={stat.label}
-						isPreloading={retainmentPreloading}
-						stat={stat}
-						unit={unit}
-					/>
-				))}
-			</ListItem.RowMetricGroup>
+			{showRetainment && (
+				<ListItem.RowMetricGroup
+					aria-label={retainmentLabel}
+					data-section="retainment"
+					role="group"
+				>
+					{[retainmentRate, compoundRate].map((stat) => (
+						<RetainmentMetric
+							compact
+							key={stat.label}
+							isPreloading={retainmentPreloading}
+							stat={stat}
+						/>
+					))}
+					{[selfStakeChange, netOutflow].map((stat) => (
+						<RetainmentMetric
+							compact
+							key={stat.label}
+							isPreloading={retainmentPreloading}
+							stat={stat}
+							unit={unit}
+						/>
+					))}
+				</ListItem.RowMetricGroup>
+			)}
 
 			{actions}
 			{warnings}

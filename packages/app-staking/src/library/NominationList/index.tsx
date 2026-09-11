@@ -9,6 +9,7 @@ import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
@@ -41,6 +42,7 @@ export const NominationListInner = ({
 	const { network } = useNetwork()
 	const { erasPerDay } = useErasPerDay()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { listFormat, setListFormat } = useList()
 	const { activeEra } = useApi()
 	const { activeAddress } = useActiveAccount()
@@ -72,7 +74,7 @@ export const NominationListInner = ({
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =
-		retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat
+		validatorDetailsEnabled && forceCardLayout ? 'col' : listFormat
 
 	// Store all API-backed detailed card data by request key.
 	const [detailsByKey, setDetailsByKey] = useState<
@@ -98,13 +100,14 @@ export const NominationListInner = ({
 				network,
 				era: activeEra.index,
 				rewardRateDepth: erasPerDay,
+				includeRetainment: retainmentStatsEnabled,
 				validators: addresses,
 			}),
-		[network, activeEra.index, erasPerDay, addresses],
+		[network, activeEra.index, erasPerDay, addresses, retainmentStatsEnabled],
 	)
 	const details = detailsByKey[detailsKey]
 	const detailsPreloading =
-		retainmentStatsEnabled && validators.length > 0 && details === undefined
+		validatorDetailsEnabled && validators.length > 0 && details === undefined
 	const performanceByAddress = useMemo(
 		() =>
 			new Map(
@@ -144,13 +147,13 @@ export const NominationListInner = ({
 	const { data: rates } = useValidatorRewardRates(
 		addresses,
 		erasPerDay,
-		!retainmentStatsEnabled,
+		!validatorDetailsEnabled,
 	)
 
 	// Fetch all data needed by supported detailed nomination cards in one GraphQL operation.
 	const getDetailedData = async (key: string) => {
 		if (
-			!retainmentStatsEnabled ||
+			!validatorDetailsEnabled ||
 			activeEra.index === 0 ||
 			addresses.length === 0 ||
 			detailsByKey[key] !== undefined
@@ -163,6 +166,7 @@ export const NominationListInner = ({
 			Math.max(activeEra.index - 1, 0),
 			erasPerDay,
 			30,
+			{ includeRetainment: retainmentStatsEnabled },
 		)
 		setDetailsByKey((current) => ({ ...current, [key]: results }))
 	}
@@ -170,23 +174,23 @@ export const NominationListInner = ({
 	// Fetch detailed card data when the visible validator set changes.
 	useEffect(() => {
 		getDetailedData(detailsKey)
-	}, [detailsKey, retainmentStatsEnabled])
+	}, [detailsKey, validatorDetailsEnabled])
 
 	// Handle modal resize on list format or content change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [effectiveListFormat, pageKey, retainmentStatsEnabled])
+	}, [effectiveListFormat, pageKey, validatorDetailsEnabled])
 
 	return (
 		<ListWrapper>
 			<List
-				$flexBasisLarge={retainmentStatsEnabled ? '50%' : '33.33%'}
-				$twoColumnMinWidth={retainmentStatsEnabled ? 1350 : undefined}
+				$flexBasisLarge={validatorDetailsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={validatorDetailsEnabled ? 1350 : undefined}
 			>
 				<ListFormatHeader>
 					<div />
 					<div>
-						{!(retainmentStatsEnabled && forceCardLayout) && (
+						{!(validatorDetailsEnabled && forceCardLayout) && (
 							<ListItem.FormatToggle
 								onChange={setListFormat}
 								value={listFormat}
@@ -214,7 +218,7 @@ export const NominationListInner = ({
 									}
 									isPreloading={detailsPreloading}
 									rate={
-										retainmentStatsEnabled
+										validatorDetailsEnabled
 											? rateByAddress.get(validator.address)
 											: rates?.[validator.address]
 									}

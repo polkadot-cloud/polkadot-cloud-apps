@@ -14,8 +14,9 @@ const QUERY = gql`
     $fromEra: Int!
     $rewardRateDepth: Int
     $eraPointsDepth: Int
+    $includeRetainment: Boolean!
   ) {
-    validatorRetainmentBatch(network: $network, validators: $validators) {
+    validatorRetainmentBatch(network: $network, validators: $validators) @include(if: $includeRetainment) {
       validator
       result {
         months { ...ValidatorRetainmentWindowFields }
@@ -53,15 +54,15 @@ const DEFAULT: ValidatorDetailsBatchData = {
 	validatorEraPointsBatch: [],
 }
 
-export const fetchValidatorDetailsBatch = (
+export const fetchValidatorDetailsBatch = async (
 	network: string,
 	validators: string[],
 	fromEra: number,
 	rewardRateDepth?: number,
 	eraPointsDepth?: number,
-	options?: { throwOnError?: boolean },
-) =>
-	fetchQuery<ValidatorDetailsBatchData>(
+	options?: { throwOnError?: boolean; includeRetainment?: boolean },
+) => {
+	const data = await fetchQuery<ValidatorDetailsBatchData>(
 		QUERY,
 		{
 			network,
@@ -69,7 +70,14 @@ export const fetchValidatorDetailsBatch = (
 			fromEra,
 			rewardRateDepth,
 			eraPointsDepth,
+			includeRetainment: options?.includeRetainment ?? true,
 		},
 		DEFAULT,
 		options,
 	)
+
+	return {
+		...data,
+		validatorRetainmentBatch: data.validatorRetainmentBatch ?? [],
+	}
+}

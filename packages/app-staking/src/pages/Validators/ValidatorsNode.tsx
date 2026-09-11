@@ -4,6 +4,7 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useValidatorStats } from 'hooks/useStats'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { Stats } from 'library/Stats'
 import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +21,7 @@ export const ValidatorsNode = ({
 }) => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { getValidators } = useValidators()
 	const validators = getValidators()
 	const { activeValidators, totalValidators, minValidatorBond } =
@@ -55,8 +57,8 @@ export const ValidatorsNode = ({
 										order: 'ACTIVITY',
 										search: '',
 									}}
-									allowListFormat={false}
-									forceListFormat="col"
+									allowListFormat={validatorDetailsEnabled}
+									forceListFormat={validatorDetailsEnabled ? undefined : 'col'}
 									itemsPerPage={50}
 									showShareLink={showShareLink}
 									toggleFavorites={toggleFavorites}
