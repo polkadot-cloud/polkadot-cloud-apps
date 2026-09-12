@@ -5,13 +5,15 @@ import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
 import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
+import { emitNotification } from 'global-bus'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { useFetchMethods } from 'hooks/useFetchMethods'
+import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useUi } from 'hooks/useUi'
 import { Confirm } from 'library/Prompt/Confirm'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
-import { type ComponentType, useState } from 'react'
+import { type ComponentType, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyFunction, Validator } from 'types'
 import { usePrompt } from 'ui-overlay'
@@ -51,6 +53,15 @@ export const useNominationControls = ({
 
 	// Track whether a candidate is being fetched asynchronously.
 	const [candidateFetching, setCandidateFetching] = useState(false)
+	const { network } = useNetwork()
+	const scope = JSON.stringify([network, stakingApiEnabled, nominations])
+	const scopeRef = useRef<string | null>(scope)
+	useEffect(() => {
+		scopeRef.current = scope
+		return () => {
+			scopeRef.current = null
+		}
+	}, [scope])
 
 	// Keep local and externally supplied nomination state in sync.
 	const updateNominations = (nextNominations: Validator[]) => {
@@ -59,19 +70,29 @@ export const useNominationControls = ({
 	}
 
 	const addNominationByType = async (type: AddNominationsType) => {
-		if (!canManageNominations || !method || candidateFetching) {
+		if (
+			!canManageNominations ||
+			!method ||
+			candidateFetching ||
+			nominations.length >= MaxNominations
+		) {
 			return
 		}
 
-		// Retainment-backed performance candidates require an asynchronous lookup.
-		const trackCandidateRequest =
-			type === 'High Performance Validator' && retainmentStatsEnabled
+		// All API candidate strategies are asynchronous.
+		const trackCandidateRequest = stakingApiEnabled
 		if (trackCandidateRequest) {
 			setCandidateFetching(true)
 		}
 
 		try {
-			updateNominations(await addNomination(nominations, type))
+			const next = await addNomination(nominations, type)
+			if (scopeRef.current === scope) updateNominations(next)
+		} catch {
+			emitNotification({
+				title: t('errorUnknown', { ns: 'app' }),
+				subtitle: t('tryAgain', { ns: 'app' }),
+			})
 		} finally {
 			if (trackCandidateRequest) {
 				setCandidateFetching(false)
@@ -98,9 +119,14 @@ export const useNominationControls = ({
 			const alreadyNominated = nominations.some(
 				({ address }) => address === candidate?.address,
 			)
-			if (candidate && !alreadyNominated) {
+			if (scopeRef.current === scope && candidate && !alreadyNominated) {
 				updateNominations([...nominations, candidate])
 			}
+		} catch {
+			emitNotification({
+				title: t('errorUnknown', { ns: 'app' }),
+				subtitle: t('tryAgain', { ns: 'app' }),
+			})
 		} finally {
 			setCandidateFetching(false)
 		}
@@ -139,7 +165,7 @@ export const useNominationControls = ({
 			nominations.some(({ address }) => address === knownAddress),
 	)
 	const availableNominations =
-		retainmentStatsEnabled || !canManageNominations
+		stakingApiEnabled || !canManageNominations
 			? null
 			: availableToNominate(nominations)
 
@@ -195,14 +221,18 @@ export const useNominationControls = ({
 				onClick: () => addNominationByType('Active Validator'),
 				icon: faPlus,
 				isDisabled: () =>
-					addDisabled || !availableNominations?.activeValidators.length,
+					candidateDisabled ||
+					(!stakingApiEnabled &&
+						!availableNominations?.activeValidators.length),
 			},
 			{
 				title: t('randomValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Random Validator'),
 				icon: faPlus,
 				isDisabled: () =>
-					addDisabled || !availableNominations?.randomValidators.length,
+					candidateDisabled ||
+					(!stakingApiEnabled &&
+						!availableNominations?.randomValidators.length),
 			},
 		)
 	}
@@ -213,8 +243,7 @@ export const useNominationControls = ({
 		icon: faPlus,
 		isDisabled: () =>
 			candidateDisabled ||
-			(!retainmentStatsEnabled &&
-				!availableNominations?.highPerformance.length),
+			(!stakingApiEnabled && !availableNominations?.highPerformance.length),
 	})
 
 	if (stakingApiEnabled) {
