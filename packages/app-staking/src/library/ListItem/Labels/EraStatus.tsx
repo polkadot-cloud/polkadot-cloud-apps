@@ -29,7 +29,7 @@ export const EraStatus = ({ overview, noMargin, status }: EraStatusProps) => {
 				syncing
 					? t('syncing')
 					: validatorStatus === 'waiting'
-						? capitalizeFirstLetter(t(`${validatorStatus}`) ?? '')
+						? capitalizeFirstLetter(t(validatorStatus) ?? '')
 						: t('listItemActive')
 			}
 			value={

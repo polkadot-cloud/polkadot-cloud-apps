@@ -51,8 +51,9 @@ export const NominationListInner = ({
 	const { activeEra } = useApi()
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
+	const targets = initialValidators.map(({ address }) => address)
 	const { data: overviews } = useValidatorOverviews(
-		initialValidators.map(({ address }) => address),
+		targets,
 		validatorDetailsEnabled,
 	)
 	const nominator = initialNominator || activeAddress
@@ -60,10 +61,7 @@ export const NominationListInner = ({
 		data: nominees,
 		loading: nominationsPreloading,
 		error: nominationError,
-	} = useNomineeStatuses(
-		nominator,
-		initialValidators.map(({ address }) => address),
-	)
+	} = useNomineeStatuses(nominator, targets)
 	const nomineesByAddress = useMemo(
 		() => new Map(nominees?.map((entry) => [entry.address, entry])),
 		[nominees],

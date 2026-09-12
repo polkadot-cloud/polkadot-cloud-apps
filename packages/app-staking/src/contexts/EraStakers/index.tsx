@@ -33,17 +33,17 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		return () => setExposureConsumers((count) => count - 1)
 	}, [])
 
+	const enabled = exposureConsumers > 0
 	const { exposures, exposuresLoading, exposuresStatus } = useNodeEraStakers(
-		exposureConsumers > 0,
-		exposureConsumers > 0,
+		enabled,
+		enabled,
 	)
-	const loading = exposureConsumers > 0 && exposuresLoading
+	const loading = enabled && exposuresLoading
 
 	// Sync only while initial data is fetching; exposures require explicit consumers.
 	useEffect(() => {
-		if (loading) {
-			setSyncing('era-stakers')
-		} else removeSyncing('era-stakers')
+		if (loading) setSyncing('era-stakers')
+		else removeSyncing('era-stakers')
 		return () => removeSyncing('era-stakers')
 	}, [loading, network])
 

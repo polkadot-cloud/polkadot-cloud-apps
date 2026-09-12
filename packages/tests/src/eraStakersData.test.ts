@@ -172,17 +172,14 @@ test.each(['polkadot', 'kusama'])(
 		const first = fetchLatest()
 		useValidatorOverviews(['validator'])
 		expect(await fetchLatest()).toEqual(await first)
-		expect(useValidatorOverviews(['validator']).data).toEqual([
-			[
-				[100, 'validator'],
-				{
-					own: 90071992547409930n,
-					total: 90071992547409931n,
-					nominatorCount: 1,
-					pageCount: 1,
-				},
-			],
-		])
+		expect(useValidatorOverviews(['validator']).data?.get('validator')).toEqual(
+			{
+				own: 90071992547409930n,
+				total: 90071992547409931n,
+				nominatorCount: 1,
+				pageCount: 1,
+			},
+		)
 		expect(apiQuery).toHaveBeenCalledTimes(1)
 		const request = apiQuery.mock.calls[0][0]
 		expect(request.variables).toEqual({
@@ -205,8 +202,8 @@ test('overview API errors do not fall back to node and a refresh can recover', a
 	expect(useValidatorOverviews(['validator']).error?.message).toBe('offline')
 	expect(useValidatorOverviews(['validator']).loading).toBe(false)
 	apiQuery.mockResolvedValueOnce({ data: { eraValidatorOverviews: [] } })
-	expect(await fetchLatest()).toEqual([])
-	expect(useValidatorOverviews(['validator']).data).toEqual([])
+	expect(await fetchLatest()).toEqual(new Map())
+	expect(useValidatorOverviews(['validator']).data).toEqual(new Map())
 	expect(overviewEntries).not.toHaveBeenCalled()
 	expect(exposureReads).not.toHaveBeenCalled()
 })
@@ -215,19 +212,19 @@ test('empty API overviews refresh as indexing progresses within the same era', a
 	apiQuery.mockResolvedValueOnce({ data: { eraValidatorOverviews: [] } })
 	useValidatorOverviews(['validator'])
 	const options = latest()
-	expect(await fetchLatest()).toEqual([])
+	expect(await fetchLatest()).toEqual(new Map())
 	apiQuery.mockResolvedValueOnce({
 		data: { eraValidatorOverviews: [apiOverview] },
 	})
 	await state.client!.invalidateQueries({ queryKey: options.queryKey })
-	expect(await fetchLatest()).toHaveLength(1)
+	expect(await fetchLatest()).toHaveProperty('size', 1)
 	expect(options.refetchInterval).toBe(60_000)
 })
 
 test('node overview readers and exposure consumers share one raw scan', async () => {
 	state.api = false
 	useValidatorOverviews(['validator'])
-	expect(await fetchLatest()).toHaveLength(1)
+	expect(await fetchLatest()).toHaveProperty('size', 1)
 	expect(exposureReads).not.toHaveBeenCalled()
 	await loadExposures()
 	expect(overviewEntries.mock.calls).toEqual([[100]])
@@ -259,7 +256,17 @@ test('switching overview source aborts the API request and ignores its late resu
 		finish({ data: { eraValidatorOverviews: [apiOverview] } })
 		await Promise.resolve()
 		expect(observer.getCurrentResult().data).toEqual(
-			await overviewEntries.mock.results[0].value,
+			new Map([
+				[
+					'old-target',
+					{
+						own: 0n,
+						total: 90071992547409931n,
+						nominatorCount: 2,
+						pageCount: 1,
+					},
+				],
+			]),
 		)
 		expect(overviewEntries.mock.calls).toEqual([[100]])
 		expect(exposureReads).not.toHaveBeenCalled()
@@ -279,7 +286,9 @@ test('overview caches separate networks, eras, and sources and mask disabled dat
 	state.era = 101
 	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
 	expect(latest().queryKey).not.toEqual(apiKey)
-	expect(await fetchLatest()).toMatchObject([[[101, 'validator'], {}]])
+	await fetchLatest()
+	expect(useValidatorOverviews(['validator']).data?.has('validator')).toBe(true)
+	expect(apiQuery.mock.lastCall![0].variables.era).toBe(101)
 	state.network = 'kusama'
 	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
 	await fetchLatest()
@@ -762,7 +771,7 @@ test('node reward rates share payout and points across the validator batch', asy
 })
 
 test('no API overview demand makes no transport request', async () => {
-	expect(useValidatorOverviews().data).toEqual([])
+	expect(useValidatorOverviews().data).toEqual(new Map())
 	expect(useValidatorOverviews().loading).toBe(false)
 	expect(latest().enabled).toBe(false)
 	expect(apiQuery).not.toHaveBeenCalled()
@@ -781,7 +790,7 @@ test('overview demand is canonical, bounded and isolated from other address sets
 	}))
 	useValidatorOverviews(addresses)
 	const key = latest().queryKey
-	expect(await fetchLatest()).toHaveLength(201)
+	expect(await fetchLatest()).toHaveProperty('size', 201)
 	expect(
 		apiQuery.mock.calls.map(([request]) => request.variables.addresses.length),
 	).toEqual([100, 100, 1])

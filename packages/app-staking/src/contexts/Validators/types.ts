@@ -4,9 +4,9 @@
 import type { Sync } from '@w3ux/types'
 import type {
 	AnyJson,
-	ErasStakersOverviewEntries,
 	IdentityOf,
 	Validator,
+	ValidatorOverview,
 	ValidatorPrefs,
 	ValidatorStatus,
 } from 'types'
@@ -35,8 +35,6 @@ export interface AverageEraValidatorReward {
 	days: number
 	reward: bigint
 }
-export type ValidatorOverview = ErasStakersOverviewEntries[number][1]
-
 export type ValidatorListEntry = Validator & {
 	// Undefined while loading; null when the completed query has no active overview.
 	overview?: ValidatorOverview | null

@@ -4,13 +4,10 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import type {
-	ValidatorActivityTier,
-	ValidatorOverview,
-} from 'contexts/Validators/types'
+import type { ValidatorActivityTier } from 'contexts/Validators/types'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTranslation } from 'react-i18next'
-import type { ValidatorStatus } from 'types'
+import type { ValidatorOverview, ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
 import { ActivityTier } from '../ListItem/Labels/ActivityTier'
@@ -46,8 +43,7 @@ export const useValidatorSummaryData = ({
 	const { network } = useNetwork()
 	const { units } = getStakingChainData(network)
 
-	// Explicit API summaries have their own status and loading state. Node summaries need only the
-	// overview, not validator entries, paged nominators, or account sync.
+	// API summaries supply their own status; other rows use the list overview.
 	const hasStatusOverride = statusActive !== undefined
 	const syncing = !hasStatusOverride && overview === undefined
 	const validatorStatus = hasStatusOverride

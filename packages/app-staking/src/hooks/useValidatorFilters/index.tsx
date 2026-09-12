@@ -9,12 +9,6 @@ import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = (addresses: string[] = []) => {
 	const { data: overviews } = useValidatorOverviews(addresses)
-	const validatorOverviews = useMemo(
-		() =>
-			overviews &&
-			new Map(overviews.map(([[, address], entry]) => [address, entry])),
-		[overviews],
-	)
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
 
@@ -27,19 +21,15 @@ export const useValidatorFilters = (addresses: string[] = []) => {
 	>(
 		() => ({
 			active: (list) =>
-				!validatorOverviews
+				!overviews
 					? list
-					: list.filter(({ address }: AnyFilter) =>
-							validatorOverviews.has(address),
-						),
+					: list.filter(({ address }: AnyFilter) => overviews.has(address)),
 			blocked_nominations: (list) =>
 				list.filter(({ prefs }: AnyFilter) => !prefs?.blocked),
 			in_session: (list) =>
-				!validatorOverviews
+				!overviews
 					? list
-					: list.filter(
-							({ address }: AnyFilter) => !validatorOverviews.has(address),
-						),
+					: list.filter(({ address }: AnyFilter) => !overviews.has(address)),
 			missing_identity: (list) =>
 				!identitiesReady
 					? list
@@ -48,7 +38,7 @@ export const useValidatorFilters = (addresses: string[] = []) => {
 								validatorIdentities[address] || validatorSupers[address],
 						),
 		}),
-		[validatorOverviews, identitiesReady, validatorIdentities, validatorSupers],
+		[overviews, identitiesReady, validatorIdentities, validatorSupers],
 	)
 
 	const applyFilter = useCallback(

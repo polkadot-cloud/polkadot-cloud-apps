@@ -93,11 +93,10 @@ export const useValidatorStats = (): StatPick<
 	const { network } = useNetwork()
 	const { unit, units } = getStakingChainData(network)
 	const {
-		data: activeValidatorCount,
-		loading: validatorsLoading,
-		error: validatorsError,
+		data: activeValidators = 0,
+		loading,
+		error,
 	} = useActiveValidatorCount()
-	const activeValidators = activeValidatorCount ?? 0
 	const {
 		validatorCount,
 		counterForValidators,
@@ -110,8 +109,8 @@ export const useValidatorStats = (): StatPick<
 			id: 'activeValidators',
 			type: StatType.PIE,
 			label: t('activeValidators'),
-			value: validatorsError ? '—' : activeValidators,
-			isPreloading: validatorsLoading,
+			value: error ? '—' : activeValidators,
+			isPreloading: loading,
 			total: validatorCount,
 			unit: '',
 			pieValue: percentageOf(activeValidators, validatorCount),

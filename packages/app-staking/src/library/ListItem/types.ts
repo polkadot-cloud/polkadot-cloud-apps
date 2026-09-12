@@ -1,13 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ValidatorOverview } from 'contexts/Validators/types'
 import type { ReactNode } from 'react'
 import type {
 	BondedPool,
 	BondFor,
 	MaybeAddress,
 	NominationStatus,
+	ValidatorOverview,
 	ValidatorPrefs,
 	ValidatorStatus,
 } from 'types'

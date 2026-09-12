@@ -33,7 +33,7 @@ const Basic = ({
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
 		useValidators([validator.address])
-	const { address, validatorStatus } = validator
+	const { address, validatorStatus, overview } = validator
 	const resolvedPrefs = getValidatorPrefs(address)
 	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 
@@ -85,11 +85,7 @@ const Basic = ({
 						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
-					<EraStatus
-						overview={validator.overview}
-						status={validatorStatus}
-						noMargin
-					/>
+					<EraStatus overview={overview} status={validatorStatus} noMargin />
 				</div>
 			</BasicItem.Row>
 		</BasicItem.Root>

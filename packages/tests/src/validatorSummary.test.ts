@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ErasStakersOverviewEntries, Validator } from 'types'
+import type { Validator, ValidatorOverview } from 'types'
 import { stringToBn } from 'utils'
 import { expect, test, vi } from 'vitest'
 import { injectValidatorListData } from '../../app-staking/src/library/ValidatorList/overview'
@@ -36,7 +36,7 @@ vi.mock(
 	}),
 )
 
-const overview: ErasStakersOverviewEntries[number][1] = {
+const overview: ValidatorOverview = {
 	own: 25000000000n,
 	total: 12345678901234567890n,
 	nominatorCount: 500,
@@ -133,9 +133,10 @@ test('a list snapshot preserves per-row loading, missing, and active states', ()
 	]
 	const loading = injectValidatorListData(validators, undefined)
 	expect(loading.map((entry) => entry.overview)).toEqual([undefined, undefined])
-	const completed = injectValidatorListData(validators, [
-		[[100, 'validator'], overview],
-	])
+	const completed = injectValidatorListData(
+		validators,
+		new Map([['validator', overview]]),
+	)
 	expect(completed.map((entry) => entry.overview)).toEqual([overview, null])
 	expect(completed.map((entry) => entry.validatorStatus)).toEqual([
 		'active',

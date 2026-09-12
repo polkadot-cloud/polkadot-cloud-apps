@@ -47,28 +47,12 @@ export const ValidatorMetrics = () => {
 	const { data: overviews } = useValidatorOverviews([validator])
 	const identity = options!.identity
 
-	// is the validator in the active era
-	const validatorInEra = overviews?.find(
-		([[, address]]) => address === validator,
-	)?.[1]
-
-	let validatorOwnStake = new BigNumber(0)
-	let otherStake = new BigNumber(0)
-	if (validatorInEra) {
-		const { own, total } = validatorInEra
-
-		// Set validator own stake
-		if (own) {
-			validatorOwnStake = new BigNumber(own)
-		}
-
-		// Calculate nominator stake as total minus own stake
-		// This ensures we get the correct total even if we're missing some nominator data
-		if (total) {
-			const totalStake = new BigNumber(total)
-			otherStake = BigNumber.max(0, totalStake.minus(validatorOwnStake))
-		}
-	}
+	const overview = overviews?.get(validator)
+	const validatorOwnStake = new BigNumber(overview?.own ?? 0n)
+	const otherStake = BigNumber.max(
+		0,
+		new BigNumber(overview?.total ?? 0n).minus(validatorOwnStake),
+	)
 
 	const GRAPH_HEIGHT = 250
 

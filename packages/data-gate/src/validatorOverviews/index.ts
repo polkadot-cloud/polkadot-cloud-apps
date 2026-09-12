@@ -4,13 +4,13 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { getNetwork, pluginEnabled } from 'global-bus'
 import { fetchEraValidatorOverviews } from 'plugin-staking-api'
-import type { ErasStakersOverviewEntries } from 'types'
+import type { ValidatorOverview, ValidatorOverviews } from 'types'
 import { requestOptions } from '../eraStakers/requestOptions'
 import { useDataGate } from '../provider'
 import { useDataPoint } from '../useDataPoint'
 import { nodeValidatorOverviewsOptions } from './node'
 
-const EMPTY_OVERVIEWS: ErasStakersOverviewEntries = []
+const EMPTY_OVERVIEWS: ValidatorOverviews = new Map()
 
 // Active validator membership and stake totals, without individual nominator exposure pages.
 export const useValidatorOverviews = (
@@ -22,7 +22,7 @@ export const useValidatorOverviews = (
 	const network = getNetwork()
 	const targets = [...new Set(addresses)].sort()
 	const noApiTargets = pluginEnabled('staking_api') && targets.length === 0
-	const result = useDataPoint<ErasStakersOverviewEntries>({
+	const result = useDataPoint<ValidatorOverviews>({
 		key: ['validator-overviews', era, targets],
 		node: {
 			enabled: enabled && ready && era > 0,
@@ -31,7 +31,9 @@ export const useValidatorOverviews = (
 					nodeValidatorOverviewsOptions(node, network, era),
 				)
 				signal.throwIfAborted()
-				return overviews
+				return new Map(
+					overviews.map(([[, address], overview]) => [address, overview]),
+				)
 			},
 		},
 		stakingApi: {
@@ -40,7 +42,7 @@ export const useValidatorOverviews = (
 			refreshInterval: 60_000,
 			queryFn: async ({ network, signal }) => {
 				// Bound each request and combine only the addresses mounted consumers need.
-				const entries: ErasStakersOverviewEntries = []
+				const entries = new Map<string, ValidatorOverview>()
 				for (let offset = 0; offset < targets.length; offset += 100) {
 					signal.throwIfAborted()
 					const batch = targets.slice(offset, offset + 100)
@@ -71,15 +73,12 @@ export const useValidatorOverviews = (
 								'Staking API returned invalid validator overviews',
 							)
 						}
-						entries.push([
-							[era, validator],
-							{
-								own: BigInt(own),
-								total: BigInt(total),
-								nominatorCount,
-								pageCount,
-							},
-						])
+						entries.set(validator, {
+							own: BigInt(own),
+							total: BigInt(total),
+							nominatorCount,
+							pageCount,
+						})
 					}
 				}
 				return entries
