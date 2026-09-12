@@ -359,6 +359,7 @@
 		"poolInviteSubtitle": "有人邀请您加入他们的提名矿池。查看以下详情，如有兴趣请加入.",
 		"poolInviteTitle": "您被邀请加入矿池",
 		"poolMembers": "提名池成员",
+		"poolNominationWarnings": "您的提名池提名的部分验证人需要关注。建议考虑切换到其他提名池。",
 		"poolNotFound": "未找到提名池",
 		"poolOwnerStatus": "提名池所有者 · 提名池ID {{poolId}}",
 		"poolOwnerStatusWithName": "提名池所有者 · 提名池ID {{poolId}} · {{poolName}}",

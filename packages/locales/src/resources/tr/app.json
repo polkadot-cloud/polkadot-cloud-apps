@@ -363,6 +363,7 @@
 		"poolInviteSubtitle": "Tokenlarınızı stake etmek ve kolektif bir stake grubunun parçası olarak ödül kazanmak için bu havuza katılın.",
 		"poolInviteTitle": "Bir Havuza Katılmaya Davet Edildiniz",
 		"poolMembers": "Havuz Üyeleri",
+		"poolNominationWarnings": "Havuzunuzun aday gösterdiği bazı doğrulayıcılara dikkat edilmesi gerekiyor. Başka bir havuza geçmeyi değerlendirin.",
 		"poolNotFound": "Havuz bulunamadı",
 		"poolOwnerStatus": "Havuz Sahibi · Havuz Kimliği {{poolId}}",
 		"poolOwnerStatusWithName": "Havuz Sahibi · Havuz Kimliği {{poolId}} · {{poolName}}",

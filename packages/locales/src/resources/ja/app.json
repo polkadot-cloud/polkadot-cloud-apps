@@ -363,6 +363,7 @@
 		"poolInviteSubtitle": "このプールに参加して、トークンをステーキングし、共同ステーキンググループの一員として報酬を獲得しましょう。",
 		"poolInviteTitle": "プールへの参加に招待されました",
 		"poolMembers": "プールメンバー",
+		"poolNominationWarnings": "プールが指名している一部のバリデーターに注意が必要です。別のプールへの切り替えをご検討ください。",
 		"poolNotFound": "プールが見つかりません",
 		"poolOwnerStatus": "プール所有者 · プールID {{poolId}}",
 		"poolOwnerStatusWithName": "プール所有者 · プールID {{poolId}} · {{poolName}}",

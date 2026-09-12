@@ -363,6 +363,7 @@
 		"poolInviteSubtitle": "Join this pool to stake your tokens and earn rewards as part of a collective staking group.",
 		"poolInviteTitle": "You've Been Invited to Join a Pool",
 		"poolMembers": "Pool Members",
+		"poolNominationWarnings": "Some validators nominated by your pool need attention. Consider switching to another pool.",
 		"poolNotFound": "Pool not found",
 		"poolOwnerStatus": "Pool Owner · Pool ID {{poolId}}",
 		"poolOwnerStatusWithName": "Pool Owner · Pool ID {{poolId}} · {{poolName}}",

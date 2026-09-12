@@ -72,7 +72,7 @@ export const BondManager = ({ bondFor, isPreloading }: BondManagerProps) => {
 				bondButtonsDisabled: poolBondDisabled,
 				bondDisabled: poolBondDisabled,
 				unbondDisabled: poolBondDisabled,
-				showUnstakeButton: canLeavePool,
+				showUnstakeButton: !isReadOnlyAccount(activeAddress) && canLeavePool,
 				unstakeDisabled: false,
 				unstakeModalKey: 'LeavePool',
 				unstakeIcon: faSignOut,

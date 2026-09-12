@@ -12,6 +12,7 @@ import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import {
+	getValidatorItemWarnings,
 	getValidatorsWithRetainment,
 	getValidatorWarningGroups,
 } from 'library/GenerateNominations/utils'
@@ -33,19 +34,19 @@ export const useNominationWarnings = () => {
 	const { activeAddress } = useActiveAccount()
 	const { isReadOnlyAccount } = useImportedAccounts()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
-	const { activePool, activePoolNominations, isNominator, isOwner } =
+	const { activePool, activePoolNominations, isMember, isNominator, isOwner } =
 		useActivePool()
 
 	// Check whether the active account can manage the pool's nominations.
 	const canManagePoolNominations = isOwner() || isNominator()
 
-	// Resolve whether to manage pool or nominator nominations.
-	const effectiveBondFor: BondFor = canManagePoolNominations
-		? 'pool'
-		: 'nominator'
+	// Use pool nominations for every member, including accounts without management roles.
+	const effectiveBondFor: BondFor =
+		isMember() || canManagePoolNominations ? 'pool' : 'nominator'
 
 	// Check whether pool nominations are being managed.
 	const forPool = effectiveBondFor === 'pool'
+	const isPoolMember = forPool && isMember() && !canManagePoolNominations
 
 	// Get the nominations for the resolved staking type.
 	const { formatWithPrefs } = useValidators(
@@ -63,8 +64,10 @@ export const useNominationWarnings = () => {
 	const validatorAddresses = nominations.map(({ address }) => address)
 
 	// Read-only accounts should still see warnings on supported networks.
-	const canDisplay = retainmentStatsEnabled && Boolean(activeAddress)
-	const canFix = !isReadOnlyAccount(activeAddress)
+	const canDisplay =
+		retainmentStatsEnabled && Boolean(activeAddress) && (!forPool || isMember())
+	const canFix =
+		!isReadOnlyAccount(activeAddress) && (!forPool || canManagePoolNominations)
 
 	const addressesKey = JSON.stringify([...new Set(validatorAddresses)].sort())
 	const request = useMemo(
@@ -105,9 +108,20 @@ export const useNominationWarnings = () => {
 				result.retainmentByAddress,
 			).filter(({ rate }) => rate < RetainmentThresholds.medium).length
 		: 0
+	// Match the item badges, including amber advisories, for the member notice.
+	const hasWarnings = nominations.some(
+		({ address }) =>
+			getValidatorItemWarnings(
+				result?.warnings?.[address],
+				result?.retainmentByAddress?.get(address),
+			).length > 0,
+	)
 
 	// Open the nomination manager for the resolved staking type.
 	const handleFix = () => {
+		if (!canFix) {
+			return
+		}
 		openCanvas({
 			key: 'ManageNominations',
 			options: {
@@ -127,7 +141,9 @@ export const useNominationWarnings = () => {
 		canFix,
 		dangerCount,
 		handleFix,
+		hasWarnings,
 		isLoading,
+		isPoolMember,
 		validatorWarningGroups,
 	}
 }

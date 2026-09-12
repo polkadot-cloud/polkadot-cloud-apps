@@ -363,6 +363,7 @@
 		"poolInviteSubtitle": "Tritt diesem Pool bei, um deine Token einzusetzen und Belohnungen als Teil einer kollektiven Staking-Gruppe zu verdienen.",
 		"poolInviteTitle": "du wurdest eingeladen, einem Pool beizutreten",
 		"poolMembers": "Pool-Mitglieder",
+		"poolNominationWarnings": "Einige von deinem Pool nominierte Validatoren benötigen Aufmerksamkeit. Ziehe einen Wechsel zu einem anderen Pool in Betracht.",
 		"poolNotFound": "Pool nicht gefunden",
 		"poolOwnerStatus": "Pool-Eigentümer · Pool-ID {{poolId}}",
 		"poolOwnerStatusWithName": "Pool-Eigentümer · Pool-ID {{poolId}} · {{poolName}}",

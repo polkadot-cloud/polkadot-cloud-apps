@@ -57,8 +57,36 @@ export const RetainmentThresholdDanger = ({
 
 export const NominationWarnings = () => {
 	const { t } = useTranslation('app')
-	const { canDisplay, canFix, dangerCount, handleFix, validatorWarningGroups } =
-		useNominationWarnings()
+	const {
+		canDisplay,
+		canFix,
+		dangerCount,
+		handleFix,
+		hasWarnings,
+		isPoolMember,
+		validatorWarningGroups,
+	} = useNominationWarnings()
+
+	if (canDisplay && isPoolMember) {
+		return hasWarnings ? (
+			<Page.Row yMargin="compact">
+				<Page.RowSection standalone>
+					<StatusCard
+						icon={faCircleExclamation}
+						iconFrame={false}
+						status={
+							dangerCount > 0 || validatorWarningGroups.length > 0
+								? 'danger'
+								: 'warning'
+						}
+						role="status"
+					>
+						{t('poolNominationWarnings')}
+					</StatusCard>
+				</Page.RowSection>
+			</Page.Row>
+		) : null
+	}
 
 	if (
 		!canDisplay ||
