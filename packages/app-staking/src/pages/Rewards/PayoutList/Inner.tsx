@@ -3,12 +3,10 @@
 
 import { faBars, faGripVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ellipsisFn } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { ListProvider, useList } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { formatDistance, fromUnixTime } from 'date-fns'
 import { useApi } from 'hooks/useApi'
 import { useDateFormat } from 'hooks/useDateFormat'
@@ -47,7 +45,6 @@ export const PayoutList = ({
 	const { isReady, activeEra } = useApi()
 	const { network } = useNetwork()
 	const { bondedPools } = useBondedPools()
-	const { getValidators } = useValidators()
 	const { getThemeValue } = useThemeValues()
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 	const {
@@ -96,8 +93,6 @@ export const PayoutList = ({
 			? `${t('syncing', { ns: 'app' })}...`
 			: `${t('noRecentPayouts')}.`
 		: null
-
-	const allValidators = getValidators()
 
 	return (
 		<ListWrapper>
@@ -158,7 +153,6 @@ export const PayoutList = ({
 									? 'claim'
 									: 'reward'
 
-							let batchIndex
 							let pool: BondedPool | undefined
 							let keyId: string
 							if (poolReward) {
@@ -167,14 +161,9 @@ export const PayoutList = ({
 									({ id }) => id === item.poolId,
 								)
 								pool = poolIndex >= 0 ? bondedPools[poolIndex] : undefined
-								batchIndex = Math.max(poolIndex, 0)
 								keyId = `pool_${item.source ?? 'claim'}_${item.poolId}_${item.timestamp}`
 							} else {
 								const item = p as NominatorReward
-								const validatorIndex = allValidators.findIndex(
-									(v) => v.address === item.validator,
-								)
-								batchIndex = Math.max(validatorIndex, 0)
 								keyId = `nom_${item.validator}_${item.era}_${item.timestamp}`
 							}
 
@@ -218,8 +207,7 @@ export const PayoutList = ({
 												<div>
 													<div>
 														{!poolReward ? (
-															<NominatorIdentity
-																batchIndex={batchIndex}
+															<Identity
 																address={(record as NominatorReward).validator}
 															/>
 														) : (
@@ -284,19 +272,6 @@ const EndBadge = ({ children }: { children: string }) => (
 		</ListEndBadge>
 	</motion.div>
 )
-
-export const NominatorIdentity = ({
-	batchIndex,
-	address,
-}: {
-	batchIndex: number
-	address: string
-}) =>
-	batchIndex > 0 ? (
-		<Identity address={address} />
-	) : (
-		<div>{ellipsisFn(address)}</div>
-	)
 
 export const PoolClaim = ({
 	pool,

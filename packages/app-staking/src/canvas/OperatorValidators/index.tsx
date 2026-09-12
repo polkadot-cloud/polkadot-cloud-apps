@@ -9,7 +9,6 @@ import { CloseCanvas, useOverlay } from 'ui-overlay'
 
 export const OperatorValidators = () => {
 	const { t } = useTranslation('app')
-	const { formatWithPrefs } = useValidators()
 	const {
 		config: { options },
 	} = useOverlay().canvas
@@ -20,6 +19,7 @@ export const OperatorValidators = () => {
 				(validator): validator is string => typeof validator === 'string',
 			)
 		: []
+	const { formatWithPrefs } = useValidators(validatorAddresses)
 	const validators = formatWithPrefs(validatorAddresses)
 	const operatorLabel = display || address
 

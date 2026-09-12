@@ -40,7 +40,6 @@ export const Nominations = ({
 	const { isBonding } = useStaking()
 	const { openHelpTooltip } = useHelp()
 	const { getNominations } = useBalances()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { syncing } = useSyncing(['era-stakers'])
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
@@ -49,6 +48,11 @@ export const Nominations = ({
 	// Determine if pool or nominator.
 	const isPool = bondFor === 'pool'
 
+	const { formatWithPrefs } = useValidators(
+		isPool
+			? (activePoolNominations?.targets ?? [])
+			: getNominations(activeAddress),
+	)
 	// Derive nominations from `bondFor` type.
 	const nominated =
 		bondFor === 'nominator'

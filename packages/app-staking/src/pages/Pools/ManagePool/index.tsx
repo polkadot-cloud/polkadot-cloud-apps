@@ -9,10 +9,12 @@ import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const ManagePool = () => {
-	const { formatWithPrefs } = useValidators()
 	const { isOwner, isNominator, activePoolNominations, activePool } =
 		useActivePool()
 
+	const { formatWithPrefs } = useValidators(
+		activePoolNominations?.targets ?? [],
+	)
 	const poolNominated = activePoolNominations
 		? formatWithPrefs(activePoolNominations.targets)
 		: []

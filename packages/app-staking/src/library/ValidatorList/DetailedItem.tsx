@@ -52,8 +52,11 @@ export const DetailedItem = ({
 	const { network } = useNetwork()
 	const retainmentEnabled = useRetainmentStatsEnabled()
 	const { selectable, selected } = useList()
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs, validatorStatus } = validator
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+	const { address, validatorStatus } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const { unit, units } = getStakingChainData(network)
 	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
 	const {
@@ -179,7 +182,7 @@ export const DetailedItem = ({
 				selfStakeMax={selfStakeMax}
 				selected={isSelected}
 				unit={unit}
-				validator={validator}
+				validator={{ ...validator, prefs }}
 				warnings={warningBadges}
 			/>
 		)

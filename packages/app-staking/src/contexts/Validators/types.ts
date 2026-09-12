@@ -2,12 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { Sync } from '@w3ux/types'
-import type { AnyJson, IdentityOf, Validator, ValidatorStatus } from 'types'
+import type {
+	AnyJson,
+	IdentityOf,
+	Validator,
+	ValidatorPrefs,
+	ValidatorStatus,
+} from 'types'
 
 export type ValidatorActivityTier = 'belowBaseline' | 'good' | 'notRated'
 
 export interface ValidatorsContextInterface {
-	fetchValidatorPrefs: (a: ValidatorAddresses) => Promise<Validator[] | null>
+	validatorsError: Error | null
+	retryValidators: () => void
+	getValidatorPrefs: (address: string) => ValidatorPrefs | null | undefined
 	injectValidatorListData: (entries: Validator[]) => ValidatorListEntry[]
 	getValidators: () => Validator[]
 	validatorIdentities: Record<string, IdentityOf>

@@ -38,7 +38,6 @@ export const Main = ({
 	const { pathname } = useLocation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { sideMenuMinimised, advancedMode } = useUi()
 	const { getNominations, getStakingLedger } = useBalances()
@@ -47,10 +46,11 @@ export const Main = ({
 	const { balances, nominatorBalance } = useAccountBalances(activeAddress)
 	const { totalUnlockChunks } = balances.nominator
 
+	const { formatWithPrefs } = useValidators(getNominations(activeAddress))
 	const menuMinimised = sideMenuMinimised && !advancedMode
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const fullCommissionNominees = nominated.filter(
-		(nominee) => nominee.prefs.commission === 100,
+		(nominee) => nominee.prefs?.commission === 100,
 	)
 
 	const pages: PageItem[] = getPagesConfig(
