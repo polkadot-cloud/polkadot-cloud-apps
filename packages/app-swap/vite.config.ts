@@ -11,7 +11,12 @@ import {
 	simpleAnalyticsPlugin,
 } from 'vite-shared'
 
-export default defineConfig({
+export default defineConfig(({ command, isPreview }) => ({
+	envDir: '../..',
+	envPrefix:
+		command === 'serve' && !isPreview
+			? ['VITE_', 'CLOUD_STAKING_API_AUTH_TOKEN']
+			: ['VITE_'],
 	plugins: [
 		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
@@ -45,4 +50,4 @@ export default defineConfig({
 	worker: {
 		format: 'es',
 	},
-})
+}))

@@ -18,6 +18,28 @@ available RPC providers and defaults in development.
 Production builds connect directly to the Cloud endpoints using the existing origin
 access rules; the development proxy and token are not needed for deployment.
 
+## Local staking API authentication
+
+Add `CLOUD_STAKING_API_AUTH_TOKEN=your_dev_bearer_token` to the repository root
+`.env` file, then start or restart your app with its `pnpm dev:*` command.
+Store the token without the `Bearer` prefix. This token is separate from
+`CLOUD_RPC_AUTH_TOKEN`.
+
+Apollo calls `https://api.staking.polkadot.cloud` directly and adds
+`Authorization: Bearer <token>` in development when the token is configured.
+The token is visible in your local browser's code and network requests. Vite
+exposes this setting only in the development server, excluding it from builds
+and preview. The RPC token and other private environment variables stay on the
+development server. Without an API token, Apollo sends no Authorization header.
+
+The planned production access rules allow HTTPS origins on `polkadot.cloud` and
+`*.polkadot.cloud`, valid bearer tokens, and the staking API droplet's source IP
+`138.68.147.67`. Enforcement is deferred until existing mobile clients can retain
+access. When enforcement is enabled, localhost CORS preflights must be allowed
+without authentication, and the subsequent API requests must supply a valid token.
+Origin checks restrict browser access; they do not authenticate non-browser
+clients, which can supply their own Origin header.
+
 ## Staking Dashboard
 
 - [**English:** Welcome to Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/en/developer-overview)

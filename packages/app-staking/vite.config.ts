@@ -14,7 +14,12 @@ import {
 
 // https://vitejs.dev/config/
 // - `BASE_URL`env variable is used in the codebase to refer to the supplied base.
-export default defineConfig({
+export default defineConfig(({ command, isPreview }) => ({
+	envDir: '../..',
+	envPrefix:
+		command === 'serve' && !isPreview
+			? ['VITE_', 'CLOUD_STAKING_API_AUTH_TOKEN']
+			: ['VITE_'],
 	plugins: [
 		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
@@ -48,4 +53,4 @@ export default defineConfig({
 	worker: {
 		format: 'es',
 	},
-})
+}))
