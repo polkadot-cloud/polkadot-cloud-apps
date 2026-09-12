@@ -36,20 +36,6 @@ export interface AverageEraValidatorReward {
 	days: number
 	reward: bigint
 }
-export interface Validators {
-	status: Sync
-	validators: Validator[]
-}
-
-export type ValidatorAddresses = {
-	address: string
-}[]
-
-export interface LocalValidatorEntriesData {
-	era: string
-	entries: Validator[]
-}
-
 export type ValidatorListEntry = Validator & {
 	validatorStatus: ValidatorStatus
 }
