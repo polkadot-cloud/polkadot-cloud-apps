@@ -4,7 +4,7 @@
 import { AutoRpcKey, rpcEndpointKey } from 'consts'
 import { NetworkList } from 'consts/networks'
 
-export const GlobalMigrationVersion = 1
+export const GlobalMigrationVersion = 2
 
 const GlobalMigrationVersionKey = 'migrationVersion'
 
@@ -18,8 +18,16 @@ const migrateRpcConfig = (): void => {
 	})
 }
 
+// Remove the obsolete persisted validator snapshots.
+const removeValidatorCache = (): void => {
+	Object.keys(NetworkList).forEach((network) => {
+		localStorage.removeItem(`${network}_validators`)
+	})
+}
+
 const migrations: Record<number, () => void> = {
 	1: migrateRpcConfig,
+	2: removeValidatorCache,
 }
 
 /**

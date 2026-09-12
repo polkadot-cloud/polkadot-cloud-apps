@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import {
 	eraRewardPoints$,
 	getEraRewardPoints,
@@ -28,7 +27,6 @@ export const CurrentEraPoints = ({
 }: CurrentEraPointsProps) => {
 	const { t } = useTranslation()
 	const { isReady, activeEra } = useApi()
-	const { validatorsFetched } = useValidators()
 	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	// Store era reward points for the current address
@@ -49,7 +47,7 @@ export const CurrentEraPoints = ({
 		)
 		return Array(7).fill(Object.values(normalisedPoints)[0])
 	}, [activeEra.index, eraPoints, eraHigh])
-	const syncing = !isReady || !validatorsFetched || eraHigh <= 1
+	const syncing = !isReady || eraHigh <= 1
 	const tooltipText = t('eraRewardPoints', {
 		ns: 'app',
 		points: eraPoints.toFormat(),

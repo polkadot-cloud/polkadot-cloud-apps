@@ -87,7 +87,10 @@ export const getDefaultService = async <T extends DefaultServiceNetworkId>(
 		[hubChainId]: 'connecting',
 	})
 
-	const apiHub = await DedotClient.new<Service[T][2]>(hubProvider)
+	const apiHub = await DedotClient.new<Service[T][2]>({
+		provider: hubProvider,
+		cacheMetadata: true,
+	})
 
 	setMultiApiStatus({
 		[network]: 'ready',

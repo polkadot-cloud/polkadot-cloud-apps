@@ -40,7 +40,6 @@ export const useQuickActions = () => {
 	const { unclaimedRewards } = usePayouts()
 	const { openCanvas } = useOverlay().canvas
 	const { activeAddress } = useActiveAccount()
-	const { formatWithPrefs } = useValidators()
 	const { getNominations, getPendingPoolRewards } = useBalances()
 	const {
 		activePool,
@@ -52,6 +51,10 @@ export const useQuickActions = () => {
 	const { hasEnoughToNominate } = useAccountBalances(activeAddress)
 	const { setNominatorSetup, generateOptimalSetup } = useNominatorSetups()
 
+	const { formatWithPrefs } = useValidators([
+		...getNominations(activeAddress),
+		...(activePoolNominations?.targets ?? []),
+	])
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 
 	const baseQuickActions: Record<string, ButtonQuickActionProps> = {

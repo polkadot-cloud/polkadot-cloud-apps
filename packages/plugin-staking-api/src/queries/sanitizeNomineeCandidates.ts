@@ -31,4 +31,5 @@ export const fetchSanitizeNomineeCandidates = (
 		QUERY,
 		{ network, candidates },
 		{ sanitizeNomineeCandidates: candidates },
+		{ throwOnError: true, fetchPolicy: 'no-cache' },
 	)

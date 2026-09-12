@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useMemo } from 'react'
 import { Graph } from 'ui-core/list'
@@ -17,7 +16,6 @@ export const HistoricalEraPoints = ({
 	syncing: syncingOverride,
 }: EraPointsHistoricalProps) => {
 	const { isReady } = useApi()
-	const { validatorsFetched } = useValidators()
 
 	const prefilledPoints = useMemo(() => {
 		const high = eraPoints.reduce<bigint>((max, { points }) => {
@@ -33,8 +31,7 @@ export const HistoricalEraPoints = ({
 		)
 		return prefillEraPoints(Object.values(normalisedPoints))
 	}, [eraPoints])
-	const syncing =
-		syncingOverride ?? (!isReady || !eraPoints.length || !validatorsFetched)
+	const syncing = syncingOverride ?? (!isReady || !eraPoints.length)
 
 	return (
 		<Graph

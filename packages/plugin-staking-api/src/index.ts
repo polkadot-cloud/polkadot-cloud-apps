@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client/react'
 
 export * from './Client'
 export * from './queries/activeValidatorRanks'
+export * from './queries/basicValidatorCandidates'
 export * from './queries/combinedPoolRewards'
 export * from './queries/eraActiveNominatorCount'
 export * from './queries/eraTotalNominators'
@@ -39,9 +40,9 @@ export * from './queries/validatorDetailsBatch'
 export * from './queries/validatorEraPoints'
 export * from './queries/validatorEraPointsBatch'
 export * from './queries/validatorList'
+export * from './queries/validatorRecords'
 export * from './queries/validatorRetainment'
 export * from './queries/validatorRewards'
 export * from './queries/validatorStats'
 export * from './util'
-
 export { ApolloProvider }

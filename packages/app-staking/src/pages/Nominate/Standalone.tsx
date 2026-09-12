@@ -22,12 +22,16 @@ export const NominateStandalone = () => {
 	const { getNominations } = useBalances()
 	const { activeAddress } = useActiveAccount()
 	const { isBonding, isNominator } = useStaking()
-	const { formatWithPrefs } = useValidatorEntries()
 	const { isLoading, isValidator } = useValidators()
 	const { accountsInitialised } = useImportedAccounts()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
 
 	const isPool = Boolean(activePool) && isOwner()
+	const { formatWithPrefs } = useValidatorEntries(
+		isPool
+			? (activePoolNominations?.targets ?? [])
+			: getNominations(activeAddress),
+	)
 	const nominated = formatWithPrefs(
 		isPool
 			? (activePoolNominations?.targets ?? [])

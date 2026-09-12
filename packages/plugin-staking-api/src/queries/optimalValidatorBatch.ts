@@ -37,4 +37,5 @@ export const fetchOptimalValidatorBatch = (
 ) =>
 	fetchQuery<OptimalValidatorBatchData>(QUERY, variables, DEFAULT, {
 		fetchPolicy: 'no-cache',
+		throwOnError: true,
 	})

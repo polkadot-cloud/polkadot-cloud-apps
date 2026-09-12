@@ -5,12 +5,13 @@ import { MaxNominations } from 'consts'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { emitNotification } from 'global-bus'
 import { useNetwork } from 'hooks/useNetwork'
+import { usePlugins } from 'hooks/usePlugins'
 import { SearchInput } from 'library/List/SearchInput'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { FooterWrapper, PromptListItem } from 'library/Prompt/Wrappers'
 import { StyledSlider } from 'library/StyledSlider'
 import { fetchSearchValidators } from 'plugin-staking-api'
-import { type FormEvent, useCallback, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonPrimary } from 'ui-buttons'
@@ -24,7 +25,16 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 	const { t } = useTranslation()
 	const { closePrompt } = usePrompt()
 	const { network } = useNetwork()
-	const { getValidators, validatorsFetched } = useValidators()
+	const { pluginEnabled } = usePlugins()
+	const api = pluginEnabled('staking_api')
+	const {
+		getValidators,
+		validatorsFetched,
+		validatorIdentities,
+		validatorSupers,
+		validatorsError,
+	} = useValidators([], !api)
+	const [searchError, setSearchError] = useState(false)
 
 	// Number of validators to show by default when no search term is entered
 	const defaultDisplayLimit = 50
@@ -44,48 +54,44 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 	// Store commission filter value (default 10%)
 	const [maxCommission, setMaxCommission] = useState<number>(10)
 
-	// Debounced search function
-	const debouncedSearch = useCallback(
-		async (term: string) => {
-			if (term.length === 0) {
-				setSearchResults([])
-				setIsSearching(false)
-				return
-			}
-
-			setIsSearching(true)
-			try {
-				const result = await fetchSearchValidators(network, term)
-				if (result.searchValidators.validators.length > 0) {
-					const transformedValidators: Validator[] =
-						result.searchValidators.validators.map((validator) => ({
-							address: validator.address,
-							prefs: {
-								commission: validator.commission,
-								blocked: validator.blocked,
-							},
-						}))
-					setSearchResults(transformedValidators)
-				} else {
-					setSearchResults([])
-				}
-			} catch {
-				setSearchResults([])
-			} finally {
-				setIsSearching(false)
-			}
-		},
-		[network],
-	)
-
-	// Debounce effect
+	// Cancel stale results on search, network, and source changes.
 	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			debouncedSearch(searchTerm)
+		if (!api) {
+			setIsSearching(false)
+			setSearchError(false)
+			return
+		}
+		const controller = new AbortController()
+		setIsSearching(true)
+		setSearchError(false)
+		setSearchResults([])
+		const timeout = setTimeout(async () => {
+			try {
+				const result = await fetchSearchValidators(network, searchTerm, {
+					maxCommission,
+					limit: defaultDisplayLimit,
+					signal: controller.signal,
+				})
+				if (!controller.signal.aborted)
+					setSearchResults(
+						result.searchValidators.validators.map(
+							({ address, commission, blocked }) => ({
+								address,
+								prefs: { commission, blocked },
+							}),
+						),
+					)
+			} catch {
+				if (!controller.signal.aborted) setSearchError(true)
+			} finally {
+				if (!controller.signal.aborted) setIsSearching(false)
+			}
 		}, 300)
-
-		return () => clearTimeout(timeoutId)
-	}, [searchTerm, debouncedSearch])
+		return () => {
+			controller.abort()
+			clearTimeout(timeout)
+		}
+	}, [api, network, searchTerm, maxCommission])
 
 	const addToSelected = (item: Validator) => {
 		setSelected((prev) =>
@@ -108,24 +114,26 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 		setSearchTerm(value)
 	}
 
-	// Filter search results by commission
-	const filteredSearchResults = searchResults.filter(
-		(validator) => (validator.prefs?.commission || 0) <= maxCommission,
-	)
-
-	const hasSearchTerm = searchTerm.length > 0
-	const validatorsSynced = validatorsFetched === 'synced'
-
-	// When no search term is entered, show a capped, commission-filtered slice of
-	// the full validator list (already loaded client-side via useValidators)
-	const defaultValidators = getValidators()
-		.filter((validator) => (validator.prefs?.commission || 0) <= maxCommission)
+	const hasSearchTerm = searchTerm.trim().length > 0
+	const validatorsSynced = api || validatorsFetched === 'synced'
+	const term = searchTerm.trim().toLowerCase()
+	const nodeResults = getValidators()
+		.filter(({ address, prefs }) => {
+			const display = validatorIdentities[address]?.info.display.value || ''
+			const parent =
+				validatorSupers[address]?.superOf?.identity?.info.display.value || ''
+			return (
+				prefs &&
+				prefs.commission <= maxCommission &&
+				(!term ||
+					`${address} ${display} ${parent}`.toLowerCase().includes(term))
+			)
+		})
 		.slice(0, defaultDisplayLimit)
-
-	// The validators to render in the list area
-	const displayValidators = hasSearchTerm
-		? filteredSearchResults
-		: defaultValidators
+	const displayValidators = api ? searchResults : nodeResults
+	const filteredSearchResults = displayValidators
+	const defaultValidators = displayValidators
+	const error = api ? searchError : !!validatorsError
 
 	return (
 		<>
@@ -178,7 +186,11 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 										? `${t('validatorSearch.searchResults', { ns: 'app' })} (${filteredSearchResults.length})`
 										: `${t('validators', { ns: 'app' })} (${defaultValidators.length})`}
 							</SearchList.SearchHeader>
-							{isSearching || (!hasSearchTerm && !validatorsSynced) ? (
+							{error ? (
+								<SearchList.Loading
+									message={t('errorUnknown', { ns: 'app' })}
+								/>
+							) : isSearching || !validatorsSynced ? (
 								<SearchList.Loading
 									message={`${t(hasSearchTerm ? 'validatorSearch.searching' : 'waiting', { ns: 'app' })}...`}
 								/>

@@ -33,7 +33,7 @@ export type MoreProps = Outline & {
 	outline?: boolean
 }
 export interface BlockedProps {
-	prefs: ValidatorPrefs
+	prefs: ValidatorPrefs | null
 }
 
 export interface IdentityProps {

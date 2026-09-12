@@ -23,11 +23,11 @@ export const Active = () => {
 	const { syncing } = useSyncing()
 	const { isBonding } = useStaking()
 	const { getNominations } = useBalances()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { activeNominators, minimumNominatorBond, minimumActiveStake } =
 		useNominatorStats()
 
+	const { formatWithPrefs } = useValidators(getNominations(activeAddress))
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const ROW_HEIGHT = 220
 

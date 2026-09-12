@@ -30,7 +30,6 @@ export const useNominationWarnings = () => {
 	const { erasPerDay } = useErasPerDay()
 	const { getNominations } = useBalances()
 	const { openCanvas } = useOverlay().canvas
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { isReadOnlyAccount } = useImportedAccounts()
 	const retainmentStatsEnabled = useRetainmentStatsEnabled()
@@ -49,6 +48,11 @@ export const useNominationWarnings = () => {
 	const forPool = effectiveBondFor === 'pool'
 
 	// Get the nominations for the resolved staking type.
+	const { formatWithPrefs } = useValidators(
+		forPool
+			? (activePoolNominations?.targets ?? [])
+			: getNominations(activeAddress),
+	)
 	const nominations = formatWithPrefs(
 		forPool
 			? (activePoolNominations?.targets ?? [])

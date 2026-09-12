@@ -6,6 +6,7 @@ import { getStakingChainData } from 'consts/util'
 import type { ListFormat } from 'contexts/List/types'
 import { getActivityTier } from 'contexts/Validators/Utils'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
@@ -71,6 +72,7 @@ export const Item = ({
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const showRetainment = useRetainmentStatsEnabled()
 	const hardCapSelfStake = useHardCapSelfStake()
 	const { unit, units } = getStakingChainData(network)
 	const { address, prefs } = validator
@@ -124,11 +126,14 @@ export const Item = ({
 	if (format === 'row') {
 		return (
 			<ValidatorBar
+				showRetainment={showRetainment}
 				actions={
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
-						onRetainmentHistory={openRetainmentHistory}
+						onRetainmentHistory={
+							showRetainment ? openRetainmentHistory : undefined
+						}
 						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showFavorite={toggleFavorites}
 						showMetrics
@@ -143,7 +148,7 @@ export const Item = ({
 				isEraPointsPreloading={isEraPointsLoading}
 				isRatePreloading={isRateLoading}
 				isRetainmentPreloading={false}
-				onRetainmentHistory={openRetainmentHistory}
+				onRetainmentHistory={showRetainment ? openRetainmentHistory : undefined}
 				rate={rateAfterCommission}
 				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
@@ -178,17 +183,20 @@ export const Item = ({
 			<ListItem.Action wide>
 				<Metrics address={address} display={validatorDisplay} />
 			</ListItem.Action>
-			<ListItem.Action wide>
-				<RetainmentHistory
-					disabled={retainmentHistoryDisabled}
-					onClick={openRetainmentHistory}
-				/>
-			</ListItem.Action>
+			{showRetainment && (
+				<ListItem.Action wide>
+					<RetainmentHistory
+						disabled={retainmentHistoryDisabled}
+						onClick={openRetainmentHistory}
+					/>
+				</ListItem.Action>
+			)}
 		</ListItem.Actions>
 	)
 
 	return (
 		<ValidatorCard
+			showRetainment={showRetainment}
 			actions={actions}
 			address={address}
 			activitySyncing={false}

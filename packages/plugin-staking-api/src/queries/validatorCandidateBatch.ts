@@ -68,7 +68,7 @@ export const fetchValidatorCandidateBatch = async ({
 		getQuery(strategies.length),
 		{ ...variables, ...strategyVariables },
 		{},
-		{ fetchPolicy: 'no-cache' },
+		{ fetchPolicy: 'no-cache', throwOnError: true },
 	)
 
 	return strategies.map((strategy, index) => ({

@@ -31,8 +31,11 @@ const Basic = ({
 	rate,
 }: ItemProps) => {
 	const { selectable, selected } = useList()
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs, validatorStatus } = validator
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+	const { address, validatorStatus } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 
 	const isSelected = !!selected.filter(
 		(item) => (item as Validator).address === validator.address,

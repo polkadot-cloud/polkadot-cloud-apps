@@ -16,4 +16,6 @@ export type {
 	Subscribe,
 	SubscriptionContext,
 } from './types'
+export { useValidatorRecords } from './validatorEntries'
+export { useValidatorPrefs } from './validatorPrefs'
 export { useValidatorRewardRates } from './validatorRewardRates'

@@ -10,6 +10,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorFilters } from 'hooks/useValidatorFilters'
 import type { AddNominationsType } from 'library/GenerateNominations/types'
 import {
+	fetchBasicValidatorCandidates,
 	fetchOptimalValidatorBatch,
 	fetchSanitizeNomineeCandidates,
 	fetchValidatorCandidateBatch,
@@ -25,7 +26,10 @@ export const useFetchMethods = () => {
 	const { network } = useNetwork()
 	const { applyFilter } = useValidatorFilters()
 	const { favoritesList } = useFavoriteValidators()
-	const { getValidators, isValidatorHighPerformance } = useValidators()
+	const { getValidators, isValidatorHighPerformance } = useValidators(
+		[],
+		!pluginEnabled('staking_api'),
+	)
 	const stakingApiEnabled = pluginEnabled('staking_api')
 	const stakingApiCandidatesEnabled =
 		stakingApiEnabled && StakingApiRetainmentSupportedNetworks.includes(network)
@@ -79,24 +83,18 @@ export const useFetchMethods = () => {
 		const { fetchOptimalValidatorBatch: candidates } =
 			await fetchOptimalValidatorBatch({ network })
 
-		return shuffle([...candidates]).slice(0, MAX_OPTIMAL_VALIDATORS)
+		const { sanitizeNomineeCandidates } = await fetchSanitizeNomineeCandidates(
+			network,
+			shuffle([...candidates]).slice(0, MAX_OPTIMAL_VALIDATORS),
+		)
+		return sanitizeNomineeCandidates
 	}
 
 	const fetchOptimal = async () => {
-		const nominations = stakingApiCandidatesEnabled
-			? await fetchStakingApiOptimal()
-			: fetchCurrentOptimal()
-
-		if (!stakingApiEnabled) {
-			return nominations
-		}
-
-		const { sanitizeNomineeCandidates } = await fetchSanitizeNomineeCandidates(
-			network,
-			nominations,
-		)
-
-		return sanitizeNomineeCandidates
+		if (!stakingApiEnabled) return fetchCurrentOptimal()
+		return stakingApiCandidatesEnabled
+			? fetchStakingApiOptimal()
+			: fetchBasicValidatorCandidates(network, 'OPTIMAL')
 	}
 
 	const fetchCandidate = async (
@@ -139,8 +137,25 @@ export const useFetchMethods = () => {
 		return candidate ? [...nominations, candidate] : nominations
 	}
 
+	const appendApiCandidate = async (
+		nominations: Validator[],
+		strategy: 'ACTIVE' | 'RANDOM' | 'HIGH_ACTIVITY',
+	) => {
+		const [candidate] = await fetchBasicValidatorCandidates(
+			network,
+			strategy,
+			nominations.map(({ address }) => address),
+		)
+		return candidate ? [...nominations, candidate] : nominations
+	}
+
 	const addActiveValidator = (nominations: Validator[]) =>
-		appendRandomCandidate(nominations, available(nominations).activeValidators)
+		stakingApiEnabled
+			? appendApiCandidate(nominations, 'ACTIVE')
+			: appendRandomCandidate(
+					nominations,
+					available(nominations).activeValidators,
+				)
 
 	const addHighPerformanceValidator = async (nominations: Validator[]) => {
 		if (stakingApiCandidatesEnabled) {
@@ -148,6 +163,8 @@ export const useFetchMethods = () => {
 			return validator ? [...nominations, validator] : nominations
 		}
 
+		if (stakingApiEnabled)
+			return appendApiCandidate(nominations, 'HIGH_ACTIVITY')
 		return appendRandomCandidate(
 			nominations,
 			available(nominations).highPerformance,
@@ -155,7 +172,12 @@ export const useFetchMethods = () => {
 	}
 
 	const addRandomValidator = (nominations: Validator[]) =>
-		appendRandomCandidate(nominations, available(nominations).randomValidators)
+		stakingApiEnabled
+			? appendApiCandidate(nominations, 'RANDOM')
+			: appendRandomCandidate(
+					nominations,
+					available(nominations).randomValidators,
+				)
 
 	return {
 		fetch,

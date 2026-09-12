@@ -4,6 +4,7 @@
 import { ListProvider, useList } from 'contexts/List'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
@@ -44,6 +45,7 @@ export const StakingApiValidatorListInner = ({
 }: StakingApiValidatorListProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const retainmentEnabled = useRetainmentStatsEnabled()
 	const { erasPerDay } = useErasPerDay()
 	const { listFormat, setListFormat } = useList()
 	const [page, setPage] = useState(1)
@@ -66,7 +68,9 @@ export const StakingApiValidatorListInner = ({
 			network,
 			page,
 			pageSize: PAGE_SIZE,
-			order: config.order as ValidatorListOrder,
+			order: retainmentEnabled
+				? (config.order as ValidatorListOrder)
+				: 'ACTIVITY',
 			orderWindow: 'THREE_MONTHS',
 			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			filters: {
@@ -74,7 +78,7 @@ export const StakingApiValidatorListInner = ({
 				search: config.search || undefined,
 			},
 		}),
-		[network, page, config],
+		[network, page, config, retainmentEnabled],
 	)
 	const { data, loading, error, refetch } = useValidatorList(variables)
 	const result = data.validatorList
@@ -164,7 +168,16 @@ export const StakingApiValidatorListInner = ({
 	return (
 		<ListWrapper>
 			<List $flexBasisLarge="50%" $twoColumnMinWidth={1350}>
-				<Controls config={config} disabled={loading} onApply={applyConfig} />
+				<Controls
+					config={config}
+					disabled={loading}
+					onApply={applyConfig}
+					orderOptions={
+						retainmentEnabled
+							? undefined
+							: [{ key: 'ACTIVITY', label: t('activity') }]
+					}
+				/>
 				<FilterHeaderWrapper>
 					<div>
 						<ResultSummary>
@@ -246,6 +259,11 @@ export const StakingApiValidatorList = (
 	props: StakingApiValidatorListProps,
 ) => (
 	<ListProvider initialListFormat="row">
-		<StakingApiValidatorListInner {...props} />
+		<NetworkValidatorList {...props} />
 	</ListProvider>
 )
+
+const NetworkValidatorList = (props: StakingApiValidatorListProps) => {
+	const { network } = useNetwork()
+	return <StakingApiValidatorListInner key={network} {...props} />
+}

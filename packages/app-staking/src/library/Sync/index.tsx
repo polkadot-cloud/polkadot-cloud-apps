@@ -3,7 +3,6 @@
 
 import { pageFromUri } from '@w3ux/utils'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNominationWarnings } from 'hooks/useNominationWarnings'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTxMeta } from 'hooks/useTxMeta'
@@ -15,7 +14,6 @@ export const Sync = () => {
 	const { syncing } = useSyncing()
 	const { pathname } = useLocation()
 	const { bondedPools } = useBondedPools()
-	const { getValidators } = useValidators()
 	const { isLoading: warningsLoading } = useNominationWarnings()
 
 	// Keep syncing if on pools page and still fetching bonded pools or pool members
@@ -28,22 +26,10 @@ export const Sync = () => {
 		return false
 	}
 
-	// Keep syncing if on validators page and still fetching
-	const onValidatorsSyncing = () => {
-		if (
-			pageFromUri(pathname, 'overview') === 'validators' &&
-			!getValidators().length
-		) {
-			return true
-		}
-		return false
-	}
-
 	const isSyncing =
 		syncing ||
 		warningsLoading ||
 		onPoolsSyncing() ||
-		onValidatorsSyncing() ||
 		uids.filter(({ submitted }) => submitted).length > 0
 
 	return isSyncing ? (

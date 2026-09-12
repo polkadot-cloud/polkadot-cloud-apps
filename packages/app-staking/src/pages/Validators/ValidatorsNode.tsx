@@ -10,6 +10,7 @@ import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
+import { ButtonSecondary } from 'ui-buttons'
 import { Page } from 'ui-core/base'
 
 export const ValidatorsNode = ({
@@ -22,7 +23,8 @@ export const ValidatorsNode = ({
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
 	const validatorDetailsEnabled = useValidatorDetailsEnabled()
-	const { getValidators } = useValidators()
+	const { getValidators, validatorsFetched, validatorsError, retryValidators } =
+		useValidators([], true)
 	const validators = getValidators()
 	const { activeValidators, totalValidators, minValidatorBond } =
 		useValidatorStats()
@@ -33,18 +35,26 @@ export const ValidatorsNode = ({
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>
-					{!isReady ? (
+					{validatorsError ? (
+						<div className="item">
+							<h3>{t('errorUnknown', { ns: 'app' })}</h3>
+							<ButtonSecondary
+								text={t('tryAgain', { ns: 'app' })}
+								onClick={retryValidators}
+							/>
+						</div>
+					) : !isReady ? (
 						<div className="item">
 							<h3>{t('connecting')}...</h3>
 						</div>
 					) : (
 						<>
-							{validators.length === 0 && (
+							{validatorsFetched !== 'synced' && (
 								<div className="item">
 									<h3>{t('fetchingValidators')}...</h3>
 								</div>
 							)}
-							{validators.length > 0 && (
+							{validatorsFetched === 'synced' && validators.length > 0 && (
 								<ValidatorList
 									validators={validators}
 									selectable={false}

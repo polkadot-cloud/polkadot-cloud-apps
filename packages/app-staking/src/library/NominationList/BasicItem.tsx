@@ -25,8 +25,11 @@ const Basic = ({
 	isNominationPreloading,
 	nominationError,
 }: ItemProps) => {
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs } = validator
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+	const { address } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const outline = displayFor === 'canvas'
 
 	return (

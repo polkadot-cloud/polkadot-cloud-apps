@@ -74,6 +74,33 @@ describe('runMigrations', () => {
 		)
 	})
 
+	test('removes legacy validator caches without resetting preferences or completed migrations', () => {
+		const storage = createStorage({
+			migrationVersion: '1',
+			polkadot_validators: '{"era":"100","entries":[]}',
+			kusama_validators: 'invalid legacy data',
+			paseo_validators: '{"era":"200","entries":[]}',
+			polkadot_favorites: '["favorite-address"]',
+			autoRpc: 'true',
+			polkadotRpcEndpoints: '["wss://chosen.example"]',
+		})
+		vi.stubGlobal('localStorage', storage)
+
+		runMigrations()
+
+		expect(storage.getItem('polkadot_validators')).toBeNull()
+		expect(storage.getItem('kusama_validators')).toBeNull()
+		expect(storage.getItem('paseo_validators')).toBeNull()
+		expect(storage.getItem('polkadot_favorites')).toBe('["favorite-address"]')
+		expect(storage.getItem('autoRpc')).toBe('true')
+		expect(storage.getItem('polkadotRpcEndpoints')).toBe(
+			'["wss://chosen.example"]',
+		)
+		expect(storage.getItem('migrationVersion')).toBe(
+			String(GlobalMigrationVersion),
+		)
+	})
+
 	test('does not downgrade a newer global migration version', () => {
 		const newerVersion = GlobalMigrationVersion + 1
 		const storage = createStorage({

@@ -5,8 +5,12 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { emitNotification } from 'global-bus'
 import { useApi } from 'hooks/useApi'
+import { useNetwork } from 'hooks/useNetwork'
+import { usePlugins } from 'hooks/usePlugins'
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 
 interface UseNominationSyncProps {
@@ -28,13 +32,25 @@ export const useNominationSync = ({
 		setMethod,
 		setNominations,
 	} = useManageNominations()
+	const { t } = useTranslation('app')
 	const { isReady } = useApi()
+	const { pluginEnabled } = usePlugins()
+	const api = pluginEnabled('staking_api')
 	const { activeAddress } = useActiveAccount()
 	const { validatorOverviews } = useEraStakers()
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Track whether a fetch is already in progress to avoid duplicate requests.
 	const fetchingRef = useRef(false)
+	const { network } = useNetwork()
+	const scope = `${network}:${activeAddress}:${api}`
+	const scopeRef = useRef<string | null>(scope)
+	useEffect(() => {
+		scopeRef.current = scope
+		return () => {
+			scopeRef.current = null
+		}
+	}, [scope])
 
 	// Reset only when the account or initial nominations change, not during edits.
 	useEffect(() => {
@@ -50,10 +66,11 @@ export const useNominationSync = ({
 	// Generate only after validator and era data are ready, with one request in flight.
 	useEffect(() => {
 		const dataReady =
-			isReady &&
-			Boolean(getValidators()?.length) &&
-			!!validatorOverviews &&
-			validatorsFetched === 'synced'
+			api ||
+			(isReady &&
+				Boolean(getValidators()?.length) &&
+				!!validatorOverviews &&
+				validatorsFetched === 'synced')
 
 		if (!fetching || !method || !dataReady || fetchingRef.current) {
 			return
@@ -62,7 +79,14 @@ export const useNominationSync = ({
 		fetchingRef.current = true
 		const generateNominations = async () => {
 			try {
-				updateNominations(await fetchNominations(method))
+				const next = await fetchNominations(method)
+				if (scopeRef.current === scope) updateNominations(next)
+			} catch {
+				if (scopeRef.current === scope)
+					emitNotification({
+						title: t('errorUnknown'),
+						subtitle: t('tryAgain'),
+					})
 			} finally {
 				setFetching(false)
 				fetchingRef.current = false

@@ -777,3 +777,466 @@ test.each(
 		expect(apiQuery).not.toHaveBeenCalled()
 	},
 )
+
+test('node validator entries are lazy and shared across consumers, with separate era and network caches', async () => {
+	const { nodeValidatorEntriesOptions } = await import(
+		'../../data-gate/src/validatorEntries/node'
+	)
+	const input = config()
+	input.node.query.validatorEntries.mockResolvedValue([
+		['validator', { commission: 25_000_000, blocked: false }],
+	])
+	const client = createClient()
+	const observer = new QueryObserver(
+		client,
+		nodeValidatorEntriesOptions(input.node, 'polkadot', 100, false),
+	)
+	observers.push(observer)
+	observer.subscribe(() => {})
+	expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
+	const options = nodeValidatorEntriesOptions(input.node, 'polkadot', 100, true)
+	const results = await Promise.all([
+		client.fetchQuery(options),
+		client.fetchQuery(options),
+	])
+	expect(results[0]).toEqual([
+		{ address: 'validator', prefs: { commission: 2.5, blocked: false } },
+	])
+	expect(results[1]).toEqual(results[0])
+	await client.fetchQuery(options)
+	expect(input.node.query.validatorEntries).toHaveBeenCalledTimes(1)
+	await client.fetchQuery(
+		nodeValidatorEntriesOptions(input.node, 'polkadot', 101, true),
+	)
+	await client.fetchQuery(
+		nodeValidatorEntriesOptions(input.node, 'kusama', 100, true),
+	)
+	expect(input.node.query.validatorEntries).toHaveBeenCalledTimes(3)
+})
+
+test.each(['polkadot', 'kusama'] as const)(
+	'API records on %s require no node readiness, handle missing validators, and never fall back to entries',
+	async (network) => {
+		const { useValidatorRecords } = await import(
+			'../../data-gate/src/validatorEntries'
+		)
+		const input = config(true)
+		setNetwork(network)
+		input.ready = false
+		input.era = 0
+		const client = createClient()
+		let result!: ReturnType<typeof useValidatorRecords>
+		const Consumer = () => {
+			result = useValidatorRecords(['missing', 'validator'])
+			return null
+		}
+		const render = () =>
+			renderToStaticMarkup(
+				createElement(
+					DataGateContext.Provider,
+					{ value: input },
+					createElement(
+						QueryClientProvider,
+						{ client },
+						createElement(Consumer),
+					),
+				),
+			)
+		render()
+		apiQuery.mockResolvedValue({
+			data: {
+				validatorRecords: [
+					{
+						address: 'missing',
+						registered: false,
+						prefs: null,
+						identity: null,
+					},
+					{
+						address: 'validator',
+						registered: true,
+						prefs: { commission: 3, blocked: false },
+						identity: {
+							display: 'Alice',
+							superDisplay: null,
+							superValue: null,
+						},
+					},
+				],
+			},
+		})
+		expect((await result.refetch()).data?.prefs).toEqual({
+			missing: null,
+			validator: { commission: 3, blocked: false },
+		})
+		expect(apiQuery.mock.lastCall?.[0].variables).toEqual({
+			network,
+			addresses: ['missing', 'validator'],
+		})
+		render()
+		expect(result.entries).toBeUndefined()
+		expect(result.data?.identities.validator?.info.display.value).toBe('Alice')
+		apiQuery.mockRejectedValue(new Error('offline'))
+		expect((await result.refetch()).error?.message).toBe('offline')
+		expectNoNodeQueries(input.node)
+	},
+)
+
+test('validator records with all-node demand still resolve explicitly requested unregistered addresses', async () => {
+	const { useValidatorRecords } = await import(
+		'../../data-gate/src/validatorEntries'
+	)
+	const input = config()
+	input.node.query.validatorEntries.mockResolvedValue([
+		['validator', { commission: 0, blocked: false }],
+	])
+	input.node.query.identityOfMulti.mockResolvedValue([])
+	input.node.query.superOfMulti.mockResolvedValue([])
+	const client = createClient()
+	let result!: ReturnType<typeof useValidatorRecords>
+	const Consumer = () => {
+		result = useValidatorRecords(['missing'], true)
+		return null
+	}
+	renderToStaticMarkup(
+		createElement(
+			DataGateContext.Provider,
+			{ value: input },
+			createElement(QueryClientProvider, { client }, createElement(Consumer)),
+		),
+	)
+	expect((await result.refetch()).data?.prefs).toEqual({
+		missing: null,
+		validator: { commission: 0, blocked: false },
+	})
+	expect(input.node.query.validatorEntries).toHaveBeenCalledTimes(1)
+})
+
+test('a captured entries query cannot start a scan after the API plugin is enabled', async () => {
+	const { nodeValidatorEntriesOptions } = await import(
+		'../../data-gate/src/validatorEntries/node'
+	)
+	const input = config()
+	const captured = nodeValidatorEntriesOptions(
+		input.node,
+		'polkadot',
+		100,
+		true,
+	)
+	setPlugins(['staking_api'])
+	await expect(createClient().fetchQuery(captured)).rejects.toThrow(
+		'disabled in API mode',
+	)
+	expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
+})
+
+test('mounting items from a loaded node list keeps the shared records query and loading state stable', async () => {
+	const { useValidatorRecords } = await import(
+		'../../data-gate/src/validatorEntries'
+	)
+	const input = config()
+	input.node.query.validatorEntries.mockResolvedValue([
+		['validator', { commission: 0, blocked: false }],
+	])
+	input.node.query.identityOfMulti.mockResolvedValue([])
+	input.node.query.superOfMulti.mockResolvedValue([])
+	const client = createClient()
+	let addresses: string[] = []
+	let result!: ReturnType<typeof useValidatorRecords>
+	const Consumer = () => {
+		result = useValidatorRecords(addresses, true)
+		return null
+	}
+	const render = () =>
+		renderToStaticMarkup(
+			createElement(
+				DataGateContext.Provider,
+				{ value: input },
+				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+			),
+		)
+	render()
+	await result.refetch()
+	render()
+	expect(result.loading).toBe(false)
+	addresses = ['validator']
+	render()
+	expect(result.loading).toBe(false)
+	expect(
+		client.getQueryCache().findAll({ queryKey: ['validator-records'] }),
+	).toHaveLength(1)
+	expect(input.node.query.validatorEntries).toHaveBeenCalledTimes(1)
+	expect(input.node.query.identityOfMulti).toHaveBeenCalledTimes(1)
+})
+
+const renderValidatorPrefs = async (
+	input: DataGateState,
+	client: QueryClient,
+	addresses: string[],
+) => {
+	const { useValidatorPrefs } = await import(
+		'../../data-gate/src/validatorPrefs'
+	)
+	let result!: ReturnType<typeof useValidatorPrefs>
+	const Consumer = () => {
+		result = useValidatorPrefs(addresses)
+		return null
+	}
+	renderToStaticMarkup(
+		createElement(
+			DataGateContext.Provider,
+			{ value: input },
+			createElement(QueryClientProvider, { client }, createElement(Consumer)),
+		),
+	)
+	return result
+}
+
+test.each([true, false])(
+	'validator preferences share concurrent requests for the same address set (API: %s)',
+	async (api) => {
+		const input = config(api)
+		const client = createClient()
+		input.node.query.validatorsMulti.mockResolvedValue([
+			undefined,
+			{ commission: 25_000_000, blocked: true },
+		])
+		apiQuery.mockResolvedValue({
+			data: {
+				validatorRecords: [
+					{
+						address: 'missing',
+						registered: false,
+						prefs: null,
+						identity: null,
+					},
+					{
+						address: 'validator',
+						registered: true,
+						prefs: { commission: 2.5, blocked: true },
+						identity: null,
+					},
+				],
+			},
+		})
+		const first = await renderValidatorPrefs(input, client, [
+			'validator',
+			'missing',
+		])
+		const second = await renderValidatorPrefs(input, client, [
+			'missing',
+			'validator',
+			'validator',
+		])
+		const results = await Promise.all([first.refetch(), second.refetch()])
+		const expected = {
+			missing: null,
+			validator: { commission: 2.5, blocked: true },
+		}
+		expect(results.map(({ data }) => data)).toEqual([expected, expected])
+		expect(
+			(await renderValidatorPrefs(input, client, ['validator', 'missing']))
+				.data,
+		).toEqual(expected)
+		expect(
+			client.getQueryCache().findAll({
+				queryKey: [api ? 'validator-records' : 'validator-prefs'],
+			}),
+		).toHaveLength(1)
+		if (api) {
+			expect(apiQuery).toHaveBeenCalledTimes(1)
+			expect(apiQuery.mock.lastCall?.[0].variables.addresses).toEqual([
+				'missing',
+				'validator',
+			])
+			expectNoNodeQueries(input.node)
+		} else {
+			expect(input.node.query.validatorsMulti).toHaveBeenCalledExactlyOnceWith([
+				'missing',
+				'validator',
+			])
+			expect(apiQuery).not.toHaveBeenCalled()
+		}
+		expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
+	},
+)
+
+test('API preferences work before node readiness and errors never fetch node preferences', async () => {
+	const input = { ...config(true), ready: false, era: 0 }
+	const client = createClient()
+	await renderValidatorPrefs(input, client, ['validator'])
+	apiQuery.mockRejectedValue(new Error('offline'))
+	const query = client
+		.getQueryCache()
+		.findAll({ queryKey: ['validator-records'] })[0]
+	await expect(query.fetch()).rejects.toThrow('offline')
+	expect(apiQuery).toHaveBeenCalledTimes(1)
+	expectNoNodeQueries(input.node)
+})
+
+test.each([true, false])(
+	'empty favorites disable both preference sources (API: %s)',
+	async (api) => {
+		const input = config(api)
+		const client = createClient()
+		const result = await renderValidatorPrefs(input, client, [])
+		expect(result.data).toBeUndefined()
+		expect(result.loading).toBe(false)
+		const query = client.getQueryCache().findAll({
+			queryKey: [api ? 'validator-records' : 'validator-prefs'],
+		})[0]
+		expect(query.options.queryFn).toBeTypeOf('symbol')
+		expectNoNodeQueries(input.node)
+		expect(apiQuery).not.toHaveBeenCalled()
+	},
+)
+
+test('node preferences wait for readiness and then resolve without a full entries scan', async () => {
+	const input = { ...config(), ready: false }
+	const client = createClient()
+	expect(
+		(await renderValidatorPrefs(input, client, ['validator'])).loading,
+	).toBe(true)
+	expect(
+		client.getQueryCache().findAll({ queryKey: ['validator-prefs'] })[0].options
+			.queryFn,
+	).toBeTypeOf('symbol')
+	expectNoNodeQueries(input.node)
+	input.ready = true
+	input.node.query.validatorsMulti.mockResolvedValue([
+		{ commission: 0, blocked: false },
+	])
+	const result = await renderValidatorPrefs(input, client, ['validator'])
+	expect((await result.refetch()).data).toEqual({
+		validator: { commission: 0, blocked: false },
+	})
+	expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
+})
+
+test('late preference results stay isolated after changing network, source, or favorites', async () => {
+	const input = config()
+	const client = createClient()
+	const pending =
+		deferred<
+			Awaited<ReturnType<ServiceInterface['query']['validatorsMulti']>>
+		>()
+	input.node.query.validatorsMulti.mockReturnValue(pending.promise)
+	const old = await renderValidatorPrefs(input, client, ['old-validator'])
+	const oldRequest = old.refetch()
+	setNetwork('kusama')
+	setPlugins(['staking_api'])
+	apiQuery.mockResolvedValue({
+		data: {
+			validatorRecords: [
+				{
+					address: 'new-validator',
+					registered: true,
+					prefs: { commission: 5, blocked: false },
+					identity: null,
+				},
+			],
+		},
+	})
+	const current = await renderValidatorPrefs(input, client, ['new-validator'])
+	expect(current.data).toBeUndefined()
+	await current.refetch()
+	pending.resolve([{ commission: 0, blocked: true }])
+	await oldRequest
+	expect(
+		(await renderValidatorPrefs(input, client, ['new-validator'])).data,
+	).toEqual({ 'new-validator': { commission: 5, blocked: false } })
+	expect(apiQuery.mock.lastCall?.[0].variables.network).toBe('kusama')
+	expect(input.node.query.validatorsMulti).toHaveBeenCalledTimes(1)
+	expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
+})
+
+test.each([true, false])(
+	'API records and preferences share requests, refreshes and errors (preferences first: %s)',
+	async (preferencesFirst) => {
+		const { useValidatorRecords } = await import(
+			'../../data-gate/src/validatorEntries'
+		)
+		const { useValidatorPrefs } = await import(
+			'../../data-gate/src/validatorPrefs'
+		)
+		const input = { ...config(true), ready: false, era: 0 }
+		const client = createClient()
+		let records!: ReturnType<typeof useValidatorRecords>
+		let prefs!: ReturnType<typeof useValidatorPrefs>
+		const Records = () => {
+			records = useValidatorRecords(['validator', 'missing'])
+			return null
+		}
+		const Prefs = () => {
+			prefs = useValidatorPrefs(['missing', 'validator', 'validator'])
+			return null
+		}
+		const render = () =>
+			renderToStaticMarkup(
+				createElement(
+					DataGateContext.Provider,
+					{ value: input },
+					createElement(
+						QueryClientProvider,
+						{ client },
+						createElement(preferencesFirst ? Prefs : Records),
+						createElement(preferencesFirst ? Records : Prefs),
+					),
+				),
+			)
+		const response = (commission: number, display: string) => ({
+			data: {
+				validatorRecords: [
+					{
+						address: 'missing',
+						registered: false,
+						prefs: null,
+						identity: null,
+					},
+					{
+						address: 'validator',
+						registered: true,
+						prefs: { commission, blocked: false },
+						identity: { display, superDisplay: null, superValue: null },
+					},
+				],
+			},
+		})
+		apiQuery.mockResolvedValue(response(3, 'Alice'))
+		render()
+		await Promise.all(
+			preferencesFirst
+				? [prefs.refetch(), records.refetch()]
+				: [records.refetch(), prefs.refetch()],
+		)
+		render()
+		expect(apiQuery).toHaveBeenCalledTimes(1)
+		expect(prefs.data).toEqual({
+			missing: null,
+			validator: { commission: 3, blocked: false },
+		})
+		expect(records.data?.prefs).toEqual(prefs.data)
+		expect(records.data?.identities.validator?.info.display.value).toBe('Alice')
+		expect(
+			client.getQueryCache().findAll({ queryKey: ['validator-records'] }),
+		).toHaveLength(1)
+		expect(
+			client.getQueryCache().findAll({ queryKey: ['validator-prefs'] }),
+		).toHaveLength(0)
+
+		apiQuery.mockResolvedValue(response(7, 'Bob'))
+		expect((await prefs.refetch()).data?.validator?.commission).toBe(7)
+		render()
+		expect(records.data?.identities.validator?.info.display.value).toBe('Bob')
+		expect(records.data?.prefs).toEqual(prefs.data)
+		expect(apiQuery).toHaveBeenCalledTimes(2)
+
+		apiQuery.mockRejectedValue(new Error('offline'))
+		expect((await records.refetch()).error?.message).toBe('offline')
+		render()
+		expect(prefs.error?.message).toBe('offline')
+		expect(prefs.data?.validator?.commission).toBe(7)
+		expect(records.data?.identities.validator?.info.display.value).toBe('Bob')
+		expectNoNodeQueries(input.node)
+	},
+)

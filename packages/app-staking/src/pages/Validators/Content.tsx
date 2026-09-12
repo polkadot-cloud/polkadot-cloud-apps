@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { lazy, Suspense } from 'react'
 import { PagePreloader } from 'ui-app/PagePreloader'
 
@@ -21,11 +21,11 @@ export const ValidatorsContent = ({
 	showShareLink?: boolean
 	toggleFavorites: boolean
 }) => {
-	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 
 	return (
 		<Suspense fallback={<PagePreloader showStats />}>
-			{retainmentStatsEnabled ? (
+			{validatorDetailsEnabled ? (
 				<ValidatorsAPI
 					showShareLink={showShareLink}
 					toggleFavorites={toggleFavorites}
