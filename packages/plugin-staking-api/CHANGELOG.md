@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.7.0...plugin-staking-api-v1.8.0) (2026-09-12)
+
+
+### Features
+
+* `ValidatorMetrics` display cloud provider and country code ([#3812](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3812)) ([7cdab56](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7cdab5651b5a41f4a3f8cbee9c6396c1659e0045))
+* Add `CLOUD` validator fetch method, cloud validator ([#3793](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3793)) ([af6ee05](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/af6ee056f2d616247879ef2511d8ea62c26d17ba))
+* Add detailed validator list items on Kusama ([#3815](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3815)) ([1c01a96](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1c01a968635eafdb5cfd73651636a70ffa48d4e3))
+* Add hetzner validator warning ([#3806](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3806)) ([ec31d61](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ec31d617c77c2508f2bf79e222f8dabcf64c4aa8))
+* Add validator warnings and optimize nomination UI ([#3794](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3794)) ([582e733](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/582e733902b086f4e7a90d913e0dd0db5965b7d4))
+* Bootstrap additional `data-gate` queries, era stakers data point ([#3811](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3811)) ([dd5bbf9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd5bbf913350f5f806b038ae421cc00cc73c14be))
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* **refactor:** Init `data-gate` with nomination status use case ([#3810](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3810)) ([d9af5f0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d9af5f028a881d4ba51bea811b4e551c8df5bd13))
+* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+* Remove RPC health check ([#3750](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3750)) ([128e3da](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/128e3dacd2738f659ab8e600bb0da216136398e5))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/plugin-staking-api-v1.6.0...plugin-staking-api-v1.7.0) (2026-08-09)
 
 

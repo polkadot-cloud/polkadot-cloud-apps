@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/utils-v1.5.0...utils-v1.6.0) (2026-09-12)
+
+
+### Features
+
+* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/utils-v1.4.0...utils-v1.5.0) (2026-08-09)
 
 

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.7.0...locales-v1.8.0) (2026-09-12)
+
+
+### Features
+
+* `ValidatorMetrics` display cloud provider and country code ([#3812](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3812)) ([7cdab56](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7cdab5651b5a41f4a3f8cbee9c6396c1659e0045))
+* Add `CLOUD` validator fetch method, cloud validator ([#3793](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3793)) ([af6ee05](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/af6ee056f2d616247879ef2511d8ea62c26d17ba))
+* Add hetzner validator warning ([#3806](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3806)) ([ec31d61](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ec31d617c77c2508f2bf79e222f8dabcf64c4aa8))
+* Add validator warnings and optimize nomination UI ([#3794](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3794)) ([582e733](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/582e733902b086f4e7a90d913e0dd0db5965b7d4))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+* **refactor:** Validator performance indicator revision ([#3764](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3764)) ([426c43d](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/426c43df6f2cf93dba2122121cab356fca7427d8))
+* Retainment UI uses rolling 3 month figures in lists ([#3787](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3787)) ([8d5891a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8d5891aea486ca6e65935c615587f9de2d4acebb))
+* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+* **ux:** Add validator warning badges to row items ([#3809](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3809)) ([6283ab7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6283ab7f1ab1bfa41c515ad415c3c3c9130ad91e))
+* **ux:** Confirm re-generate optimal selection ([#3762](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3762)) ([593ff3c](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/593ff3ce60295b6989582c6881646c8bb753bb8a))
+* **ux:** Manage nomination submission to head, with summary popover ([#3758](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3758)) ([db5b1c0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/db5b1c01fdb4ad867363d6dfb381769b4714e93f))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+* **ux:** Refine validator health labels and retainment history ([#3790](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3790)) ([572b2b4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/572b2b4212522330d295b5d0f7b383fc62a9bd38))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+* **ux:** Revise validator bar design w. top header ([#3791](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3791)) ([0ee1b2a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ee1b2ae87735722f96640aebfa444af44ba616c))
+* **ux:** Strip UI for warnings, add waiting only warning ([#3761](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3761)) ([7c19c78](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c19c78bda656fa3ceba3a5cf839593f57eee3c4))
+* Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.6.0...locales-v1.7.0) (2026-08-09)
 
 
