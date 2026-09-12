@@ -60,7 +60,10 @@ export const ValidatorListInner = ({
 	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { erasPerDay } = useErasPerDay()
 	const { setModalResize } = useOverlay().modal
-	const { injectValidatorListData } = useValidators()
+	// Filters need records for the full input, even when every visible row is removed.
+	const { injectValidatorListData } = useValidators(
+		initialValidators.map(({ address }) => address),
+	)
 	const { isReady, activeEra } = useApi()
 	const { applyConfig } = useValidatorFilters()
 	const {

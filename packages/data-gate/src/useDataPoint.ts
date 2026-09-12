@@ -7,11 +7,14 @@ import { dataPointOptions } from './query'
 import type { DataPointConfig } from './types'
 
 // Data-point modules declare their sources; data gate owns query execution and result state.
-export const useDataPoint = <T>(config: DataPointConfig<T>) => {
+export const useDataPoint = <T, Selected = T>(
+	config: DataPointConfig<T>,
+	select?: (data: T) => Selected,
+) => {
 	// Re-evaluate source selection when the provider's network or plugin snapshot changes.
 	useDataGate()
 	const options = dataPointOptions(config)
-	const { data, error, isPending, refetch } = useQuery(options)
+	const { data, error, isPending, refetch } = useQuery({ ...options, select })
 	return {
 		data: options.enabled ? data : undefined,
 		error,

@@ -1039,7 +1039,9 @@ test.each([true, false])(
 				.data,
 		).toEqual(expected)
 		expect(
-			client.getQueryCache().findAll({ queryKey: ['validator-prefs'] }),
+			client.getQueryCache().findAll({
+				queryKey: [api ? 'validator-records' : 'validator-prefs'],
+			}),
 		).toHaveLength(1)
 		if (api) {
 			expect(apiQuery).toHaveBeenCalledTimes(1)
@@ -1066,7 +1068,7 @@ test('API preferences work before node readiness and errors never fetch node pre
 	apiQuery.mockRejectedValue(new Error('offline'))
 	const query = client
 		.getQueryCache()
-		.findAll({ queryKey: ['validator-prefs'] })[0]
+		.findAll({ queryKey: ['validator-records'] })[0]
 	await expect(query.fetch()).rejects.toThrow('offline')
 	expect(apiQuery).toHaveBeenCalledTimes(1)
 	expectNoNodeQueries(input.node)
@@ -1080,9 +1082,9 @@ test.each([true, false])(
 		const result = await renderValidatorPrefs(input, client, [])
 		expect(result.data).toBeUndefined()
 		expect(result.loading).toBe(false)
-		const query = client
-			.getQueryCache()
-			.findAll({ queryKey: ['validator-prefs'] })[0]
+		const query = client.getQueryCache().findAll({
+			queryKey: [api ? 'validator-records' : 'validator-prefs'],
+		})[0]
 		expect(query.options.queryFn).toBeTypeOf('symbol')
 		expectNoNodeQueries(input.node)
 		expect(apiQuery).not.toHaveBeenCalled()
@@ -1147,3 +1149,94 @@ test('late preference results stay isolated after changing network, source, or f
 	expect(input.node.query.validatorsMulti).toHaveBeenCalledTimes(1)
 	expect(input.node.query.validatorEntries).not.toHaveBeenCalled()
 })
+
+test.each([true, false])(
+	'API records and preferences share requests, refreshes and errors (preferences first: %s)',
+	async (preferencesFirst) => {
+		const { useValidatorRecords } = await import(
+			'../../data-gate/src/validatorEntries'
+		)
+		const { useValidatorPrefs } = await import(
+			'../../data-gate/src/validatorPrefs'
+		)
+		const input = { ...config(true), ready: false, era: 0 }
+		const client = createClient()
+		let records!: ReturnType<typeof useValidatorRecords>
+		let prefs!: ReturnType<typeof useValidatorPrefs>
+		const Records = () => {
+			records = useValidatorRecords(['validator', 'missing'])
+			return null
+		}
+		const Prefs = () => {
+			prefs = useValidatorPrefs(['missing', 'validator', 'validator'])
+			return null
+		}
+		const render = () =>
+			renderToStaticMarkup(
+				createElement(
+					DataGateContext.Provider,
+					{ value: input },
+					createElement(
+						QueryClientProvider,
+						{ client },
+						createElement(preferencesFirst ? Prefs : Records),
+						createElement(preferencesFirst ? Records : Prefs),
+					),
+				),
+			)
+		const response = (commission: number, display: string) => ({
+			data: {
+				validatorRecords: [
+					{
+						address: 'missing',
+						registered: false,
+						prefs: null,
+						identity: null,
+					},
+					{
+						address: 'validator',
+						registered: true,
+						prefs: { commission, blocked: false },
+						identity: { display, superDisplay: null, superValue: null },
+					},
+				],
+			},
+		})
+		apiQuery.mockResolvedValue(response(3, 'Alice'))
+		render()
+		await Promise.all(
+			preferencesFirst
+				? [prefs.refetch(), records.refetch()]
+				: [records.refetch(), prefs.refetch()],
+		)
+		render()
+		expect(apiQuery).toHaveBeenCalledTimes(1)
+		expect(prefs.data).toEqual({
+			missing: null,
+			validator: { commission: 3, blocked: false },
+		})
+		expect(records.data?.prefs).toEqual(prefs.data)
+		expect(records.data?.identities.validator?.info.display.value).toBe('Alice')
+		expect(
+			client.getQueryCache().findAll({ queryKey: ['validator-records'] }),
+		).toHaveLength(1)
+		expect(
+			client.getQueryCache().findAll({ queryKey: ['validator-prefs'] }),
+		).toHaveLength(0)
+
+		apiQuery.mockResolvedValue(response(7, 'Bob'))
+		expect((await prefs.refetch()).data?.validator?.commission).toBe(7)
+		render()
+		expect(records.data?.identities.validator?.info.display.value).toBe('Bob')
+		expect(records.data?.prefs).toEqual(prefs.data)
+		expect(apiQuery).toHaveBeenCalledTimes(2)
+
+		apiQuery.mockRejectedValue(new Error('offline'))
+		expect((await records.refetch()).error?.message).toBe('offline')
+		render()
+		expect(prefs.error?.message).toBe('offline')
+		expect(prefs.data?.validator?.commission).toBe(7)
+		expect(records.data?.identities.validator?.info.display.value).toBe('Bob')
+		expectNoNodeQueries(input.node)
+	},
+)

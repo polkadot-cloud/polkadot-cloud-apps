@@ -2,16 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { pluginEnabled } from 'global-bus'
-import { fetchValidatorRecords } from 'plugin-staking-api'
 import type { IdentityOf, SuperIdentity } from 'types'
-import {
-	formatIdentities,
-	formatIdentitiesFromCache,
-	formatSuperIdentities,
-	formatSuperIdentitiesFromCache,
-} from 'utils'
+import { formatIdentities, formatSuperIdentities } from 'utils'
 import { useDataGate } from '../provider'
 import { useDataPoint } from '../useDataPoint'
+import { validatorRecordsApiSource, validatorRecordsKey } from './api'
 import { useNodeValidatorEntries } from './node'
 
 export interface ValidatorRecords {
@@ -38,7 +33,7 @@ export const useValidatorRecords = (
 			? targets.filter((address) => !entriesByAddress.has(address))
 			: targets
 	const result = useDataPoint<ValidatorRecords>({
-		key: ['validator-records', era, requestedKey, !api && allNodeEntries],
+		key: validatorRecordsKey(era, requestedKey, !api && allNodeEntries),
 		node: {
 			enabled: enabled && ready && era > 0,
 			queryFn: async ({ signal }) => {
@@ -67,23 +62,7 @@ export const useValidatorRecords = (
 				}
 			},
 		},
-		stakingApi: {
-			enabled: targets.length > 0,
-			refreshInterval: 60_000,
-			queryFn: async ({ network, signal }) => {
-				const records = await fetchValidatorRecords(network, targets, signal)
-				const identities = records.flatMap(({ address, identity }) =>
-					identity ? [{ address, ...identity }] : [],
-				)
-				return {
-					prefs: Object.fromEntries(
-						records.map((record) => [record.address, record.prefs]),
-					),
-					identities: formatIdentitiesFromCache(targets, identities),
-					supers: formatSuperIdentitiesFromCache(identities),
-				}
-			},
-		},
+		stakingApi: validatorRecordsApiSource(targets),
 	})
 	return {
 		...result,
