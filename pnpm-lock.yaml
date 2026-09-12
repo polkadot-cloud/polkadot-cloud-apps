@@ -1408,9 +1408,12 @@ importers:
       '@polkadot-cloud/connect':
         specifier: ^1.1.0
         version: 1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core':
+        specifier: ^1.1.0
+        version: 1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
         specifier: ^1.2.0
-        version: 1.2.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)(supports-color@10.2.2)
+        version: 1.2.0(@polkadot-cloud/connect-core@1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
@@ -1450,6 +1453,9 @@ importers:
       react:
         specifier: ^19.2.8
         version: 19.3.0
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.3.0(react@19.3.0)
       react-i18next:
         specifier: ^17.0.13
         version: 17.0.13(i18next@26.4.2(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
@@ -5811,20 +5817,6 @@ snapshots:
       dedot: 1.4.0(typescript@6.0.3)
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-    transitivePeerDependencies:
-      - debug
-      - supports-color
-
-  '@polkadot-cloud/connect-ledger@1.2.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)(supports-color@10.2.2)':
-    dependencies:
-      '@ledgerhq/hw-transport-webhid': 6.36.0
-      '@polkadot-cloud/connect': 1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@w3ux/hooks': 2.4.4(react@19.3.0)
-      '@w3ux/utils': 3.1.1
-      '@zondax/ledger-substrate': 2.3.7(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
-      buffer: 6.0.3
-      dedot: 1.4.0(typescript@6.0.3)
-      react: 19.3.0
     transitivePeerDependencies:
       - debug
       - supports-color
