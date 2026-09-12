@@ -14,7 +14,7 @@ export const Identity = ({
 	size = 'default',
 }: IdentityProps) => {
 	const { validatorIdentities, validatorSupers, validatorsFetched } =
-		useValidators()
+		useValidators(displayOverride === undefined ? [address] : [])
 	const display =
 		displayOverride === undefined
 			? getIdentityDisplay(
@@ -22,7 +22,8 @@ export const Identity = ({
 					validatorSupers[address],
 				).node
 			: displayOverride
-	const identityFetched = displayOverride !== undefined || validatorsFetched
+	const identityFetched =
+		displayOverride !== undefined || validatorsFetched === 'synced'
 	const large = size === 'large'
 	const polkiconSize = large ? '2.75rem' : '2.2rem'
 

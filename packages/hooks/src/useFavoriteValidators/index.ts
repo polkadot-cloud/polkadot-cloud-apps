@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { getRelayChainData } from 'consts/util'
-import { useCallback, useEffect, useSyncExternalStore } from 'react'
+import { useValidatorPrefs } from 'data-gate'
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
 import type { NetworkId, Validator } from 'types'
-import { perbillToPercent } from 'utils'
-import { useApi } from '../useApi'
 import { useNetwork } from '../useNetwork'
 import { createSingletonSignal } from '../util'
 import type { FavoriteValidatorsHookInterface } from './types'
@@ -14,12 +13,10 @@ export type { FavoriteValidatorsHookInterface } from './types'
 
 type FavoriteValidatorsStore = {
 	favorites: string[]
-	favoritesList: Validator[] | null
 }
 
 const favoriteValidatorsSignal = createSingletonSignal()
 const storesByNetwork: Partial<Record<NetworkId, FavoriteValidatorsStore>> = {}
-let currentFetchKey: string | null = null
 
 const getFavoriteValidatorsKey = (network: NetworkId) => `${network}_favorites`
 
@@ -58,7 +55,6 @@ const setLocalFavoriteValidators = (
 const getFavoriteValidatorsSnapshot = (network: NetworkId) => {
 	storesByNetwork[network] ??= {
 		favorites: getLocalFavoriteValidators(network),
-		favoritesList: null,
 	}
 	return storesByNetwork[network]
 }
@@ -68,21 +64,8 @@ const setFavoriteValidators = (network: NetworkId, favorites: string[]) => {
 	storesByNetwork[network] = {
 		...current,
 		favorites,
-		favoritesList: null,
 	}
 	setLocalFavoriteValidators(network, favorites)
-	favoriteValidatorsSignal.emit()
-}
-
-const setFavoriteValidatorsList = (
-	network: NetworkId,
-	favoritesList: Validator[],
-) => {
-	const current = getFavoriteValidatorsSnapshot(network)
-	storesByNetwork[network] = {
-		...current,
-		favoritesList,
-	}
 	favoriteValidatorsSignal.emit()
 }
 
@@ -92,60 +75,19 @@ const syncFavoriteValidators = (network: NetworkId) => {
 	if (JSON.stringify(current.favorites) !== JSON.stringify(localFavorites)) {
 		storesByNetwork[network] = {
 			favorites: localFavorites,
-			favoritesList: null,
 		}
 		favoriteValidatorsSignal.emit()
 	}
 }
 
-const fetchFavoriteValidatorsList = async (
-	network: NetworkId,
-	favorites: string[],
-	serviceApi: ReturnType<typeof useApi>['serviceApi'],
-) => {
-	const fetchKey = `${network}:${favorites.join(',')}`
-	currentFetchKey = fetchKey
-
-	if (!favorites.length) {
-		setFavoriteValidatorsList(network, [])
-		return
-	}
-
-	const resultsMulti = await serviceApi.query.validatorsMulti(favorites)
-	if (currentFetchKey !== fetchKey) {
-		return
-	}
-
-	setFavoriteValidatorsList(
-		network,
-		resultsMulti.flatMap((prefs, i) =>
-			prefs
-				? [
-						{
-							address: favorites[i],
-							prefs: {
-								commission: Number(
-									perbillToPercent(prefs.commission).toString(),
-								),
-								blocked: prefs.blocked,
-							},
-						},
-					]
-				: [],
-		),
-	)
-}
-
 const serverFavoriteValidatorsSnapshot: FavoriteValidatorsStore = {
 	favorites: [],
-	favoritesList: null,
 }
 
 export const useFavoriteValidators = (): FavoriteValidatorsHookInterface => {
-	const { isReady, serviceApi } = useApi()
 	const { network } = useNetwork()
 	const { name } = getRelayChainData(network)
-	const { favorites, favoritesList } = useSyncExternalStore(
+	const { favorites } = useSyncExternalStore(
 		favoriteValidatorsSignal.subscribe,
 		() => getFavoriteValidatorsSnapshot(name),
 		() => serverFavoriteValidatorsSnapshot,
@@ -155,11 +97,15 @@ export const useFavoriteValidators = (): FavoriteValidatorsHookInterface => {
 		syncFavoriteValidators(name)
 	}, [name])
 
-	useEffect(() => {
-		if (isReady) {
-			void fetchFavoriteValidatorsList(name, favorites, serviceApi)
-		}
-	}, [isReady, name, favorites, serviceApi])
+	const { data: prefs } = useValidatorPrefs(favorites)
+	const favoritesList = useMemo<Validator[] | null>(() => {
+		if (!favorites.length) return []
+		if (!prefs) return null
+		return favorites.flatMap((address) => {
+			const pref = prefs[address]
+			return pref ? [{ address, prefs: pref }] : []
+		})
+	}, [favorites, prefs])
 
 	const addFavorite = useCallback(
 		(address: string) => {

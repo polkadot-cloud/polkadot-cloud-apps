@@ -4,7 +4,6 @@
 import { extractUrlValue } from '@w3ux/utils'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { emitNotification } from 'global-bus'
-import { useApi } from 'hooks/useApi'
 import { useUi } from 'hooks/useUi'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { useEffect, useRef } from 'react'
@@ -14,42 +13,32 @@ import { useOverlay } from 'ui-overlay'
 
 export const useValidatorFromUrl = () => {
 	const { t } = useTranslation('app')
-	const { isReady } = useApi()
 	const { search } = useLocation()
+	const validator = extractUrlValue('v')
 	const { openCanvas, setCanvasConfig, status } = useOverlay().canvas
 	const { setAdvancedMode } = useUi()
 	const {
-		getValidators,
+		getValidatorPrefs,
+		validatorsError,
 		validatorIdentities,
 		validatorSupers,
 		validatorsFetched,
-	} = useValidators()
+	} = useValidators(validator ? [validator] : [])
 
 	// Track the validator address that was last opened from a URL param
 	const openedRef = useRef<string | null>(null)
 
 	useEffect(() => {
-		if (!isReady || validatorsFetched !== 'synced') {
-			return
-		}
-
-		// Wait until identity data has been fetched. Identities load after
-		// validatorsFetched becomes 'synced', so we need to wait for them
 		if (
-			!Object.keys(validatorIdentities).length &&
-			!Object.keys(validatorSupers).length
-		) {
+			!validator ||
+			validator === openedRef.current ||
+			validatorsError ||
+			validatorsFetched !== 'synced'
+		)
 			return
-		}
-
-		const validator = extractUrlValue('v')
-		if (!validator || validator === openedRef.current) {
-			return
-		}
-
-		// Check if the address belongs to a known validator
-		const allValidators = getValidators()
-		const exists = allValidators.some((v) => v.address === validator)
+		const prefs = getValidatorPrefs(validator)
+		if (prefs === undefined) return
+		const exists = prefs !== null
 
 		if (!exists) {
 			emitNotification({
@@ -87,7 +76,9 @@ export const useValidatorFromUrl = () => {
 			openCanvas(config)
 		}
 	}, [
-		isReady,
+		validator,
+		validatorsError,
+		getValidatorPrefs,
 		validatorsFetched,
 		validatorIdentities,
 		validatorSupers,

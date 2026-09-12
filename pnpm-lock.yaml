@@ -910,6 +910,9 @@ importers:
       consts:
         specifier: workspace:*
         version: link:../consts
+      data-gate:
+        specifier: workspace:*
+        version: link:../data-gate
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
