@@ -83,9 +83,10 @@ export const handleResult = (
 		onReady()
 	}
 	if (status.type === 'BestChainBlockIncluded') {
-		onInBlock()
+		// Stop submission indicators before callbacks that may update the UI or throw.
 		setUidSubmitted(uid, false)
 		setUidPending(uid, false)
+		onInBlock()
 	}
 	if (status.type === 'Finalized') {
 		onFinalized()
