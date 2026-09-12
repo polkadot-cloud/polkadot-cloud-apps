@@ -1,21 +1,17 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEraStakers } from 'contexts/EraStakers'
-import { useMemo } from 'react'
+import { useValidatorOverviews } from 'data-gate'
 import type { Validator } from 'types'
 
 export const useAllValidatorsWaiting = (nominations: Validator[]) => {
-	// Read validator overview activity.
-	const { validatorOverviews } = useEraStakers()
+	const { data: overviews } = useValidatorOverviews(
+		nominations.map(({ address }) => address),
+	)
 
-	return useMemo(() => {
-		// Require overview data and at least one nomination before checking.
-		if (!validatorOverviews || !nominations.length) {
-			return false
-		}
-
-		// All nominees are waiting when none are active in the current era.
-		return nominations.every(({ address }) => !validatorOverviews.has(address))
-	}, [nominations, validatorOverviews])
+	return (
+		!!overviews &&
+		nominations.length > 0 &&
+		nominations.every(({ address }) => !overviews.has(address))
+	)
 }

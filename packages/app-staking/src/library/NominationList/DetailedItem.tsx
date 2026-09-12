@@ -53,11 +53,11 @@ export const DetailedItem = ({
 	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
 		useValidators([validator.address])
 
-	const { address, validatorStatus } = validator
+	const { address, validatorStatus, overview } = validator
 	const resolvedPrefs = getValidatorPrefs(address)
 	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const { unit, units } = getStakingChainData(network)
-	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const { selfStake, selfStakeMax } = useValidatorSelfStake(overview, units)
 	const nominationStatus =
 		nominee?.status === 'active' || nominee?.status === 'inactive'
 			? nominee.status
@@ -199,6 +199,8 @@ export const DetailedItem = ({
 			onRetainmentWindowChange={setRetainmentWindow}
 			summary={
 				<ValidatorSummary
+					overview={overview}
+					overviewUnavailable={validator.overviewUnavailable}
 					address={address}
 					ariaLabel={t('nominationSummary')}
 					isRatePreloading={isPreloading}

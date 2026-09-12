@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useEraStakers } from 'contexts/EraStakers'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidatorOverviews } from 'data-gate'
 import { emitNotification } from 'global-bus'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
@@ -37,7 +37,7 @@ export const useNominationSync = ({
 	const { pluginEnabled } = usePlugins()
 	const api = pluginEnabled('staking_api')
 	const { activeAddress } = useActiveAccount()
-	const { validatorOverviews } = useEraStakers()
+	const { data: overviews } = useValidatorOverviews([], !api)
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Track whether a fetch is already in progress to avoid duplicate requests.
@@ -69,7 +69,7 @@ export const useNominationSync = ({
 			api ||
 			(isReady &&
 				Boolean(getValidators()?.length) &&
-				!!validatorOverviews &&
+				!!overviews &&
 				validatorsFetched === 'synced')
 
 		if (!fetching || !method || !dataReady || fetchingRef.current) {

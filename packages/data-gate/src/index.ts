@@ -17,5 +17,7 @@ export type {
 	SubscriptionContext,
 } from './types'
 export { useValidatorRecords } from './validatorEntries'
+export { useValidatorOverviews } from './validatorOverviews'
+export { useActiveValidatorCount } from './validatorOverviews/count'
 export { useValidatorPrefs } from './validatorPrefs'
 export { useValidatorRewardRates } from './validatorRewardRates'

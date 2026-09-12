@@ -7,6 +7,7 @@ import type {
 	BondFor,
 	MaybeAddress,
 	NominationStatus,
+	ValidatorOverview,
 	ValidatorPrefs,
 	ValidatorStatus,
 } from 'types'
@@ -66,7 +67,8 @@ export interface ParaValidatorProps {
 }
 
 export interface EraStatusProps {
-	address: string
+	unavailable?: boolean
+	overview?: ValidatorOverview | null
 	noMargin: boolean
 	status: ValidatorStatus
 }

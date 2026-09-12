@@ -6,7 +6,7 @@ import { Polkicon } from '@w3ux/react-polkicon'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useValidatorOverviews } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -40,33 +40,19 @@ export const ValidatorMetrics = () => {
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
-	const { validatorOverviews } = useEraStakers()
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
 	const validator = options!.validator
+	const { data: overviews } = useValidatorOverviews([validator])
 	const identity = options!.identity
 
-	// is the validator in the active era
-	const validatorInEra = validatorOverviews?.get(validator)
-
-	let validatorOwnStake = new BigNumber(0)
-	let otherStake = new BigNumber(0)
-	if (validatorInEra) {
-		const { own, total } = validatorInEra
-
-		// Set validator own stake
-		if (own) {
-			validatorOwnStake = new BigNumber(own)
-		}
-
-		// Calculate nominator stake as total minus own stake
-		// This ensures we get the correct total even if we're missing some nominator data
-		if (total) {
-			const totalStake = new BigNumber(total)
-			otherStake = BigNumber.max(0, totalStake.minus(validatorOwnStake))
-		}
-	}
+	const overview = overviews?.get(validator)
+	const validatorOwnStake = new BigNumber(overview?.own ?? 0n)
+	const otherStake = BigNumber.max(
+		0,
+		new BigNumber(overview?.total ?? 0n).minus(validatorOwnStake),
+	)
 
 	const GRAPH_HEIGHT = 250
 

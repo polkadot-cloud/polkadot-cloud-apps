@@ -4,16 +4,17 @@
 import { capitalizeFirstLetter } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
 import type { ValidatorActivityTier } from 'contexts/Validators/types'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTranslation } from 'react-i18next'
-import type { ValidatorStatus } from 'types'
+import type { ValidatorOverview, ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
 import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 
 interface ValidatorSummaryProps {
+	overview?: ValidatorOverview | null
+	overviewUnavailable?: boolean
 	address: string
 	activityTier?: ValidatorActivityTier | null
 	ariaLabel?: string
@@ -30,7 +31,8 @@ interface ValidatorSummaryProps {
 }
 
 export const useValidatorSummaryData = ({
-	address,
+	overview,
+	overviewUnavailable = false,
 	rate,
 	selfStake,
 	selfStakeMax,
@@ -41,14 +43,12 @@ export const useValidatorSummaryData = ({
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
 	const { network } = useNetwork()
-	const { validatorOverviews } = useEraStakers()
 	const { units } = getStakingChainData(network)
 
-	// Explicit API summaries have their own status and loading state. Node summaries need only the
-	// overview, not validator entries, paged nominators, or account sync.
+	// API summaries supply their own status; other rows use the list overview.
 	const hasStatusOverride = statusActive !== undefined
-	const syncing = !hasStatusOverride && validatorOverviews === undefined
-	const overview = validatorOverviews?.get(address)
+	const syncing =
+		!hasStatusOverride && !overviewUnavailable && overview === undefined
 	const validatorStatus = hasStatusOverride
 		? status
 		: overview
@@ -56,11 +56,13 @@ export const useValidatorSummaryData = ({
 			: 'waiting'
 	const statusLabel =
 		statusLabelOverride ??
-		(syncing
-			? t('syncing')
-			: validatorStatus === 'waiting'
-				? capitalizeFirstLetter(t(validatorStatus) ?? '')
-				: t('listItemActive'))
+		(!hasStatusOverride && overviewUnavailable
+			? '—'
+			: syncing
+				? t('syncing')
+				: validatorStatus === 'waiting'
+					? capitalizeFirstLetter(t(validatorStatus) ?? '')
+					: t('listItemActive'))
 	const totalStake =
 		statusValue !== undefined
 			? statusValue.isGreaterThan(0)

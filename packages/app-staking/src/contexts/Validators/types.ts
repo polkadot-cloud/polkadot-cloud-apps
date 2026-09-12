@@ -6,6 +6,7 @@ import type {
 	AnyJson,
 	IdentityOf,
 	Validator,
+	ValidatorOverview,
 	ValidatorPrefs,
 	ValidatorStatus,
 } from 'types'
@@ -16,7 +17,6 @@ export interface ValidatorsContextInterface {
 	validatorsError: Error | null
 	retryValidators: () => void
 	getValidatorPrefs: (address: string) => ValidatorPrefs | null | undefined
-	injectValidatorListData: (entries: Validator[]) => ValidatorListEntry[]
 	getValidators: () => Validator[]
 	validatorIdentities: Record<string, IdentityOf>
 	validatorSupers: Record<string, AnyJson>
@@ -24,7 +24,6 @@ export interface ValidatorsContextInterface {
 	avgRewardRate: number
 	averageEraValidatorReward: AverageEraValidatorReward
 	formatWithPrefs: (addresses: string[]) => Validator[]
-	getValidatorTotalStake: (address: string) => bigint
 	getValidatorRank: (address: string) => number | undefined
 	isValidatorHighPerformance: (address: string) => boolean
 	getValidatorActivityTier: (
@@ -37,5 +36,8 @@ export interface AverageEraValidatorReward {
 	reward: bigint
 }
 export type ValidatorListEntry = Validator & {
+	// Undefined while loading; null when the completed query has no active overview.
+	overview?: ValidatorOverview | null
+	overviewUnavailable?: boolean
 	validatorStatus: ValidatorStatus
 }
