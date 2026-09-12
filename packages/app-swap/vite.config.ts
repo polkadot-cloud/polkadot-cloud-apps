@@ -5,10 +5,15 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
-import { sharedFaviconPlugins, simpleAnalyticsPlugin } from 'vite-shared'
+import {
+	cloudRpcPlugin,
+	sharedFaviconPlugins,
+	simpleAnalyticsPlugin,
+} from 'vite-shared'
 
 export default defineConfig({
 	plugins: [
+		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
 		simpleAnalyticsPlugin(),
 		react(),

@@ -2,6 +2,22 @@
 
 # Polkadot Cloud Apps
 
+## Local RPC authentication
+
+Add `CLOUD_RPC_AUTH_TOKEN=your_dev_bearer_token` to the repository root `.env` file,
+then start or restart any app with its `pnpm dev:*` command. Store the token without
+the `Bearer` prefix.
+
+The shared Vite development proxy forwards the Polkadot Cloud Statemint and People
+connections with `Authorization: Bearer <token>`. This is needed because browsers
+cannot set WebSocket headers, including through Dedot's `headers` option. The token
+stays on the development server and is not included in client code. Other RPC
+providers connect directly. Without a token, Cloud endpoints are omitted from the
+available RPC providers and defaults in development.
+
+Production builds connect directly to the Cloud endpoints using the existing origin
+access rules; the development proxy and token are not needed for deployment.
+
 ## Staking Dashboard
 
 - [**English:** Welcome to Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/en/developer-overview)
