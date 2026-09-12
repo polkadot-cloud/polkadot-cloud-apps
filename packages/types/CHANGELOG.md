@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.6.0...types-v1.7.0) (2026-09-12)
+
+
+### Features
+
+* Bootstrap additional `data-gate` queries, era stakers data point ([#3811](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3811)) ([dd5bbf9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd5bbf913350f5f806b038ae421cc00cc73c14be))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.5.0...types-v1.6.0) (2026-08-09)
 
 
