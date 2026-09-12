@@ -14,6 +14,7 @@ import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 
 interface ValidatorSummaryProps {
 	overview?: ValidatorOverview | null
+	overviewUnavailable?: boolean
 	address: string
 	activityTier?: ValidatorActivityTier | null
 	ariaLabel?: string
@@ -31,6 +32,7 @@ interface ValidatorSummaryProps {
 
 export const useValidatorSummaryData = ({
 	overview,
+	overviewUnavailable = false,
 	rate,
 	selfStake,
 	selfStakeMax,
@@ -45,7 +47,8 @@ export const useValidatorSummaryData = ({
 
 	// API summaries supply their own status; other rows use the list overview.
 	const hasStatusOverride = statusActive !== undefined
-	const syncing = !hasStatusOverride && overview === undefined
+	const syncing =
+		!hasStatusOverride && !overviewUnavailable && overview === undefined
 	const validatorStatus = hasStatusOverride
 		? status
 		: overview
@@ -53,11 +56,13 @@ export const useValidatorSummaryData = ({
 			: 'waiting'
 	const statusLabel =
 		statusLabelOverride ??
-		(syncing
-			? t('syncing')
-			: validatorStatus === 'waiting'
-				? capitalizeFirstLetter(t(validatorStatus) ?? '')
-				: t('listItemActive'))
+		(!hasStatusOverride && overviewUnavailable
+			? '—'
+			: syncing
+				? t('syncing')
+				: validatorStatus === 'waiting'
+					? capitalizeFirstLetter(t(validatorStatus) ?? '')
+					: t('listItemActive'))
 	const totalStake =
 		statusValue !== undefined
 			? statusValue.isGreaterThan(0)

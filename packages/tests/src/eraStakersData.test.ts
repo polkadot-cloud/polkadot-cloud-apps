@@ -45,6 +45,7 @@ const {
 	queries: [] as (FetchQueryOptions & {
 		enabled: boolean
 		refetchInterval: number | false
+		select?: (data: unknown) => unknown
 	})[],
 }))
 
@@ -57,7 +58,10 @@ vi.mock('@tanstack/react-query', async (original) => ({
 		queries.push(options)
 		const query = state.client!.getQueryState(options.queryKey)
 		return {
-			data: query?.data,
+			data:
+				query?.data !== undefined && options.select
+					? options.select(query.data)
+					: query?.data,
 			error: query?.error ?? null,
 			isPending: !query || query.status === 'pending',
 			status: query?.status ?? 'pending',
@@ -141,7 +145,11 @@ afterEach(() => {
 	state.client!.clear()
 })
 const latest = () => queries.at(-1)!
-const fetchLatest = () => state.client!.fetchQuery(latest())
+const fetchLatest = async () => {
+	const options = latest()
+	const data = await state.client!.fetchQuery(options)
+	return options.select ? options.select(data) : data
+}
 const loadExposures = async () => {
 	useNodeEraStakers(true)
 	await state.client!.fetchQuery(queries.at(-2)!)
@@ -825,5 +833,89 @@ test.each([null, -1, 1.5, undefined])(
 		apiQuery.mockResolvedValue({ data: { eraActiveValidatorCount: count } })
 		useActiveValidatorCount()
 		await expect(fetchLatest()).rejects.toThrow('invalid validator count')
+	},
+)
+
+test('unchanged overview refreshes preserve the consumer map and changed stakes replace it', async () => {
+	apiQuery.mockImplementation(async () => ({
+		data: { eraValidatorOverviews: [{ ...apiOverview }] },
+	}))
+	useValidatorOverviews(['validator'])
+	const observer = new QueryObserver(state.client!, latest())
+	const changed = vi.fn()
+	// Match the result fields read by useDataPoint; background fetch state is not a dependency.
+	const tracked = observer.trackResult(observer.getCurrentResult())
+	void tracked.data
+	void tracked.error
+	void tracked.isPending
+	const unsubscribe = observer.subscribe(changed)
+	try {
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().status).toBe('success'),
+		)
+		const first = observer.getCurrentResult().data
+		changed.mockClear()
+		await observer.refetch()
+		expect(observer.getCurrentResult().data).toBe(first)
+		expect(changed).not.toHaveBeenCalled()
+		apiQuery.mockResolvedValueOnce({
+			data: {
+				eraValidatorOverviews: [{ ...apiOverview, total: '90071992547409932' }],
+			},
+		})
+		await observer.refetch()
+		expect(observer.getCurrentResult().data).not.toBe(first)
+		expect(
+			useValidatorOverviews(['validator']).data?.get('validator')?.total,
+		).toBe(90071992547409932n)
+	} finally {
+		unsubscribe()
+	}
+})
+
+test.each(['addresses', 'network', 'era'] as const)(
+	'changing overview %s cancels the old request and ignores its late response',
+	async (scope) => {
+		let finishOld!: (value: unknown) => void
+		apiQuery.mockImplementationOnce(
+			() =>
+				new Promise((resolve) => {
+					finishOld = resolve
+				}),
+		)
+		useValidatorOverviews(['validator'])
+		const observer = new QueryObserver(state.client!, latest())
+		const unsubscribe = observer.subscribe(() => {})
+		try {
+			await vi.waitFor(() => expect(apiQuery).toHaveBeenCalledTimes(1))
+			const signal = apiQuery.mock.calls[0][0].context.fetchOptions.signal
+			const targets = scope === 'addresses' ? ['next-validator'] : ['validator']
+			if (scope === 'network') state.network = 'kusama'
+			if (scope === 'era') state.era++
+			apiQuery.mockResolvedValue({
+				data: {
+					eraValidatorOverviews: [
+						{ ...apiOverview, validator: targets[0], total: '2' },
+					],
+				},
+			})
+			useValidatorOverviews(targets)
+			observer.setOptions(latest())
+			expect(signal.aborted).toBe(true)
+			expect(observer.getCurrentResult().data).toBeUndefined()
+			await vi.waitFor(() =>
+				expect(observer.getCurrentResult().status).toBe('success'),
+			)
+			const current = observer.getCurrentResult().data
+			finishOld({ data: { eraValidatorOverviews: [apiOverview] } })
+			await Promise.resolve()
+			expect(observer.getCurrentResult().data).toBe(current)
+			expect(useValidatorOverviews(targets).data?.get(targets[0])?.total).toBe(
+				2n,
+			)
+			expect(overviewEntries).not.toHaveBeenCalled()
+		} finally {
+			unsubscribe()
+		}
 	},
 )

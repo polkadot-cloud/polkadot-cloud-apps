@@ -65,7 +65,8 @@ export const ValidatorListInner = ({
 	const addresses = initialValidators.map(({ address }) => address)
 	useValidators(addresses)
 	const { isReady, activeEra } = useApi()
-	const { applyConfig, overviews } = useValidatorFilters(addresses)
+	const { applyConfig, overviews, overviewError } =
+		useValidatorFilters(addresses)
 	const {
 		selectable,
 		listFormat,
@@ -80,9 +81,20 @@ export const ValidatorListInner = ({
 	]
 
 	const validators = useMemo<ValidatorListEntry[]>(() => {
-		const entries = injectValidatorListData(initialValidators, overviews)
+		const entries = injectValidatorListData(
+			initialValidators,
+			overviews,
+			overviewError,
+		)
 		return showControls ? applyConfig(config, entries) : entries
-	}, [initialValidators, overviews, applyConfig, config, showControls])
+	}, [
+		initialValidators,
+		overviews,
+		overviewError,
+		applyConfig,
+		config,
+		showControls,
+	])
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =

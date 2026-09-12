@@ -206,6 +206,7 @@ export const DetailedItem = ({
 			summary={
 				<ValidatorSummary
 					overview={overview}
+					overviewUnavailable={validator.overviewUnavailable}
 					address={address}
 					isRatePreloading={isPreloading}
 					rate={rateAfterCommission}

@@ -200,6 +200,7 @@ export const DetailedItem = ({
 			summary={
 				<ValidatorSummary
 					overview={overview}
+					overviewUnavailable={validator.overviewUnavailable}
 					address={address}
 					ariaLabel={t('nominationSummary')}
 					isRatePreloading={isPreloading}

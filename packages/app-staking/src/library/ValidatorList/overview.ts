@@ -8,9 +8,11 @@ import type { Validator, ValidatorOverviews } from 'types'
 export const injectValidatorListData = (
 	validators: Validator[],
 	overviews: ValidatorOverviews | undefined,
+	error?: Error | null,
 ): ValidatorListEntry[] =>
 	validators.map((validator) => ({
 		...validator,
+		overviewUnavailable: !overviews && !!error,
 		overview: overviews
 			? (overviews.get(validator.address) ?? null)
 			: undefined,

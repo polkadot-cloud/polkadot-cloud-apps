@@ -38,5 +38,6 @@ export interface AverageEraValidatorReward {
 export type ValidatorListEntry = Validator & {
 	// Undefined while loading; null when the completed query has no active overview.
 	overview?: ValidatorOverview | null
+	overviewUnavailable?: boolean
 	validatorStatus: ValidatorStatus
 }

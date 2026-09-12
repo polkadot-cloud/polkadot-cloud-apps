@@ -8,7 +8,8 @@ import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Contro
 import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = (addresses: string[] = []) => {
-	const { data: overviews } = useValidatorOverviews(addresses)
+	const { data: overviews, error: overviewError } =
+		useValidatorOverviews(addresses)
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
 
@@ -101,5 +102,5 @@ export const useValidatorFilters = (addresses: string[] = []) => {
 		[applyFilter, applyOrder, applySearch],
 	)
 
-	return { applyConfig, applyFilter, overviews }
+	return { applyConfig, applyFilter, overviews, overviewError }
 }

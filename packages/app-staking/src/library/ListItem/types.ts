@@ -67,6 +67,7 @@ export interface ParaValidatorProps {
 }
 
 export interface EraStatusProps {
+	unavailable?: boolean
 	overview?: ValidatorOverview | null
 	noMargin: boolean
 	status: ValidatorStatus

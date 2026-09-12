@@ -4,6 +4,9 @@
 import type { Validator, ValidatorOverview } from 'types'
 import { stringToBn } from 'utils'
 import { expect, test, vi } from 'vitest'
+import { createElement } from '../../app-staking/node_modules/react/index.js'
+import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import { EraStatus } from '../../app-staking/src/library/ListItem/Labels/EraStatus'
 import { injectValidatorListData } from '../../app-staking/src/library/ValidatorList/overview'
 import { useValidatorSelfStake } from '../../app-staking/src/library/ValidatorList/useValidatorSelfStake'
 import { useValidatorSummaryData } from '../../app-staking/src/library/ValidatorList/ValidatorSummary'
@@ -152,4 +155,66 @@ test('a list snapshot preserves per-row loading, missing, and active states', ()
 			(entry) => entry.overview === undefined,
 		),
 	).toBe(true)
+})
+
+test('failed overview requests show unavailable instead of staying in sync', () => {
+	const [validator] = injectValidatorListData(
+		[{ address: 'validator', prefs: null }],
+		undefined,
+		new Error('offline'),
+	)
+	const result = useValidatorSummaryData({ ...props, ...validator })
+	expect(result.statusLabel).toBe('—')
+	expect(result.totalStake).toBeUndefined()
+})
+
+test('a failed background refresh retains a usable overview and recovery clears the error', () => {
+	const validators: Validator[] = [{ address: 'validator', prefs: null }]
+	const cached = new Map([['validator', overview]])
+	for (const error of [new Error('offline'), null]) {
+		const [validator] = injectValidatorListData(validators, cached, error)
+		expect(
+			useValidatorSummaryData({ ...props, ...validator }).statusLabel,
+		).toBe('listItemActive')
+	}
+})
+
+vi.mock('../../hooks/src/useSyncing', () => ({
+	useSyncing: () => {
+		throw new Error('Row depends on unrelated global syncing')
+	},
+}))
+vi.mock('library/BondStatus', () => ({
+	BondStatus: ({
+		label,
+		value,
+		status,
+	}: {
+		label: string
+		value?: string
+		status: string
+	}) => createElement('span', { 'data-status': status }, label, value),
+}))
+
+test('basic rows show ready totals independently of global syncing', () => {
+	const markup = renderToStaticMarkup(
+		createElement(EraStatus, { overview, status: 'active', noMargin: true }),
+	)
+	expect(markup).toContain('listItemActive')
+	expect(markup).toContain('1,234,567,890 DOT')
+	expect(markup).not.toContain('syncing')
+})
+
+test('basic row failures end syncing without displaying a false zero stake', () => {
+	const markup = renderToStaticMarkup(
+		createElement(EraStatus, {
+			overview: undefined,
+			unavailable: true,
+			status: 'waiting',
+			noMargin: true,
+		}),
+	)
+	expect(markup).toContain('—')
+	expect(markup).not.toContain('syncing')
+	expect(markup).not.toContain('DOT')
 })

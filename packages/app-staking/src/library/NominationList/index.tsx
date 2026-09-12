@@ -52,7 +52,7 @@ export const NominationListInner = ({
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
 	const targets = initialValidators.map(({ address }) => address)
-	const { data: overviews } = useValidatorOverviews(
+	const { data: overviews, error: overviewError } = useValidatorOverviews(
 		targets,
 		validatorDetailsEnabled,
 	)
@@ -72,10 +72,12 @@ export const NominationListInner = ({
 			const status = nomineesByAddress.get(address)?.status
 			return status === 'active' ? 2 : status === 'inactive' ? 1 : 0
 		}
-		return injectValidatorListData(initialValidators, overviews).sort(
-			(a, b) => rank(b.address) - rank(a.address),
-		)
-	}, [initialValidators, nomineesByAddress, overviews])
+		return injectValidatorListData(
+			initialValidators,
+			overviews,
+			overviewError,
+		).sort((a, b) => rank(b.address) - rank(a.address))
+	}, [initialValidators, nomineesByAddress, overviews, overviewError])
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =

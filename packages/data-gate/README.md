@@ -259,14 +259,19 @@ The count requires the API's `eraActiveNominatorCount(network, era)` field to be
 deployed before the updated apps.
 
 `useValidatorOverviews(addresses)` returns an address-keyed map with exact bigint
-stake totals and exposure counts. API mode deduplicates and batches up to 100
+stake totals and exposure counts. Its cache stores plain entries and a stable
+selector builds the map, so unchanged refreshes preserve consumer references.
+API mode deduplicates and batches up to 100
 addresses per request, refreshes every 60 seconds, and needs a known era but no
 node connection. Empty API address sets make no request. Node mode shares the
 raw overview scan with exposure readers. Network, era, address, and source
 changes isolate cached results; API failures never trigger a node fallback.
 
 Lists query once and pass each row its overview: `undefined` while unavailable,
-`null` when absent from a completed snapshot. API lists with their own summaries
+`null` when absent from a completed snapshot. Failed initial requests show an
+unavailable state; background failures retain the last successful overview.
+Overview labels depend on their own query, not account-wide syncing.
+API lists with their own summaries
 need no overview query. `useActiveValidatorCount()` uses a database count in API
 mode and the shared overview cache in node mode.
 
@@ -275,7 +280,8 @@ Deploy the API fields `eraValidatorOverviews(network, era, addresses)` and
 is required.
 
 The era-stakers context retains only legacy exposure consumers; mounting it
-alone starts no queries. Pool status labels use `useNominationStatus` in API
+alone starts no queries. Legacy exposure syncing covers both the prerequisite
+overview fetch and exposure pages, and stops on success or error. Pool status labels use `useNominationStatus` in API
 mode, but the Active pool filter still requires node exposures in both modes.
 
 ## Validation

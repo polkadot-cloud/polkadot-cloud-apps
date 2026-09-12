@@ -5,7 +5,13 @@ import { createSafeContext } from '@w3ux/hooks'
 import { useNodeEraStakers } from 'data-gate'
 import { removeSyncing, setSyncing } from 'global-bus'
 import { useNetwork } from 'hooks/useNetwork'
-import { type ReactNode, useCallback, useEffect, useState } from 'react'
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react'
 import type { MaybeAddress, NominationStatus } from 'types'
 import type { EraStakersContextInterface } from './types'
 
@@ -34,11 +40,9 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 	}, [])
 
 	const enabled = exposureConsumers > 0
-	const { exposures, exposuresLoading, exposuresStatus } = useNodeEraStakers(
-		enabled,
-		enabled,
-	)
-	const loading = enabled && exposuresLoading
+	const { exposures, exposuresStatus } = useNodeEraStakers(enabled, enabled)
+	// Pending includes the prerequisite overview fetch and waiting for node readiness.
+	const loading = enabled && exposuresStatus === 'pending'
 
 	// Sync only while initial data is fetching; exposures require explicit consumers.
 	useEffect(() => {
@@ -66,15 +70,16 @@ export const EraStakersProvider = ({ children }: { children: ReactNode }) => {
 		[exposures],
 	)
 
+	const value = useMemo(
+		() => ({
+			exposuresStatus,
+			subscribeExposures,
+			getNominationsStatusFromEraStakers,
+		}),
+		[exposuresStatus, subscribeExposures, getNominationsStatusFromEraStakers],
+	)
 	return (
-		<EraStakersContext.Provider
-			value={{
-				// Exposure consumers also need to know if the prerequisite overview query failed.
-				exposuresStatus,
-				subscribeExposures,
-				getNominationsStatusFromEraStakers,
-			}}
-		>
+		<EraStakersContext.Provider value={value}>
 			{children}
 		</EraStakersContext.Provider>
 	)
