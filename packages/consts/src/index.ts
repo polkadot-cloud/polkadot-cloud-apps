@@ -30,6 +30,7 @@ export const ManualSigners = ['ledger', 'vault']
 
 // RPC
 export const PolkadotCloudRpcStatemintUrl = 'wss://rpc.polkadot.cloud/statemint'
+export const PolkadotCloudRpcPeopleUrl = 'wss://rpc.polkadot.cloud/people'
 
 // Element Thresholds
 export const SideMenuHiddenWidth = 250

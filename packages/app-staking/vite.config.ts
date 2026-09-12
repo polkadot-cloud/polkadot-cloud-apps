@@ -6,12 +6,17 @@ import { SimpleAnalyticsStakingHostname } from 'consts'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
-import { sharedFaviconPlugins, simpleAnalyticsPlugin } from 'vite-shared'
+import {
+	cloudRpcPlugin,
+	sharedFaviconPlugins,
+	simpleAnalyticsPlugin,
+} from 'vite-shared'
 
 // https://vitejs.dev/config/
 // - `BASE_URL`env variable is used in the codebase to refer to the supplied base.
 export default defineConfig({
 	plugins: [
+		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
 		simpleAnalyticsPlugin({ hostname: SimpleAnalyticsStakingHostname }),
 		react(),
