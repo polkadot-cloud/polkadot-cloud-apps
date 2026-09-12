@@ -58,7 +58,10 @@ export const DetailedItem = ({
 	const resolvedPrefs = getValidatorPrefs(address)
 	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const { unit, units } = getStakingChainData(network)
-	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const { selfStake, selfStakeMax } = useValidatorSelfStake(
+		validator.overview,
+		units,
+	)
 	const {
 		period,
 		window: retainmentWindow,
@@ -205,6 +208,7 @@ export const DetailedItem = ({
 			selected={isSelected}
 			summary={
 				<ValidatorSummary
+					overview={validator.overview}
 					address={address}
 					isRatePreloading={isPreloading}
 					rate={rateAfterCommission}

@@ -3,8 +3,11 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { ListProvider, useList } from 'contexts/List'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
-import { useNomineeStatuses, useValidatorRewardRates } from 'data-gate'
+import {
+	useNomineeStatuses,
+	useValidatorOverviews,
+	useValidatorRewardRates,
+} from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
@@ -22,6 +25,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
+import { injectValidatorListData } from '../ValidatorList/overview'
 import { Item } from './Item'
 import type { NominationListProps } from './types'
 
@@ -47,7 +51,10 @@ export const NominationListInner = ({
 	const { activeEra } = useApi()
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
-	const { injectValidatorListData } = useValidators()
+	const { data: overviews } = useValidatorOverviews(
+		initialValidators.map(({ address }) => address),
+		validatorDetailsEnabled,
+	)
 	const nominator = initialNominator || activeAddress
 	const {
 		data: nominees,
@@ -67,10 +74,10 @@ export const NominationListInner = ({
 			const status = nomineesByAddress.get(address)?.status
 			return status === 'active' ? 2 : status === 'inactive' ? 1 : 0
 		}
-		return injectValidatorListData(initialValidators).sort(
+		return injectValidatorListData(initialValidators, overviews).sort(
 			(a, b) => rank(b.address) - rank(a.address),
 		)
-	}, [initialValidators, nomineesByAddress, injectValidatorListData])
+	}, [initialValidators, nomineesByAddress, overviews])
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =

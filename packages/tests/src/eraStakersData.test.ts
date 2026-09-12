@@ -13,6 +13,8 @@ import { useNodeEraStakers } from '../../data-gate/src/eraStakers/node'
 import { useHasEraBacking } from '../../data-gate/src/hasEraBacking'
 import { useNomineeStatuses } from '../../data-gate/src/nomineeStatuses'
 import { fetchEraNomineeStatuses } from '../../data-gate/src/nomineeStatuses/stakingApi'
+import { useValidatorOverviews } from '../../data-gate/src/validatorOverviews'
+import { useActiveValidatorCount } from '../../data-gate/src/validatorOverviews/count'
 import { useValidatorRewardRates } from '../../data-gate/src/validatorRewardRates'
 import { fetchGetNomineesStatus } from '../../plugin-staking-api/src/queries/getNomineesStatus'
 
@@ -28,6 +30,7 @@ const {
 } = vi.hoisted(() => ({
 	state: {
 		api: true,
+		ready: true,
 		network: 'polkadot',
 		era: 100,
 		client: null as QueryClient | null,
@@ -65,7 +68,7 @@ vi.mock('@tanstack/react-query', async (original) => ({
 vi.mock('../../data-gate/src/provider', () => ({
 	useDataGate: () => ({
 		era: state.era,
-		ready: true,
+		ready: state.ready,
 		node: {
 			query: {
 				erasStakersOverview: overviewQuery,
@@ -103,6 +106,7 @@ vi.mock('../../plugin-staking-api/src/Client', () => ({
 
 beforeEach(() => {
 	state.api = true
+	state.ready = true
 	state.network = 'polkadot'
 	state.era = 100
 	state.exposuresStatus = 'success'
@@ -144,6 +148,181 @@ const loadExposures = async () => {
 	useNodeEraStakers(true)
 	await fetchLatest()
 }
+
+const apiOverview = {
+	validator: 'validator',
+	own: '90071992547409930',
+	total: '90071992547409931',
+	nominatorCount: 1,
+	pageCount: 1,
+}
+
+test.each(['polkadot', 'kusama'])(
+	'API overviews on %s avoid node reads, preserve precision, and share requests before node readiness',
+	async (network) => {
+		state.network = network
+		state.ready = false
+		apiQuery.mockResolvedValue({
+			data: { eraValidatorOverviews: [apiOverview] },
+		})
+		useValidatorOverviews(['validator'])
+		const options = latest()
+		expect(options.enabled).toBe(true)
+		expect(options.refetchInterval).toBe(60_000)
+		const first = fetchLatest()
+		useValidatorOverviews(['validator'])
+		expect(await fetchLatest()).toEqual(await first)
+		expect(useValidatorOverviews(['validator']).data).toEqual([
+			[
+				[100, 'validator'],
+				{
+					own: 90071992547409930n,
+					total: 90071992547409931n,
+					nominatorCount: 1,
+					pageCount: 1,
+				},
+			],
+		])
+		expect(apiQuery).toHaveBeenCalledTimes(1)
+		const request = apiQuery.mock.calls[0][0]
+		expect(request.variables).toEqual({
+			network,
+			era: 100,
+			addresses: ['validator'],
+		})
+		expect(request.fetchPolicy).toBe('no-cache')
+		expect(request.context.queryDeduplication).toBe(false)
+		expect(request.context.fetchOptions.signal).toBeInstanceOf(AbortSignal)
+		expect(overviewEntries).not.toHaveBeenCalled()
+		expect(exposureReads).not.toHaveBeenCalled()
+	},
+)
+
+test('overview API errors do not fall back to node and a refresh can recover', async () => {
+	apiQuery.mockRejectedValueOnce(new Error('offline'))
+	useValidatorOverviews(['validator'])
+	await expect(fetchLatest()).rejects.toThrow('offline')
+	expect(useValidatorOverviews(['validator']).error?.message).toBe('offline')
+	expect(useValidatorOverviews(['validator']).loading).toBe(false)
+	apiQuery.mockResolvedValueOnce({ data: { eraValidatorOverviews: [] } })
+	expect(await fetchLatest()).toEqual([])
+	expect(useValidatorOverviews(['validator']).data).toEqual([])
+	expect(overviewEntries).not.toHaveBeenCalled()
+	expect(exposureReads).not.toHaveBeenCalled()
+})
+
+test('empty API overviews refresh as indexing progresses within the same era', async () => {
+	apiQuery.mockResolvedValueOnce({ data: { eraValidatorOverviews: [] } })
+	useValidatorOverviews(['validator'])
+	const options = latest()
+	expect(await fetchLatest()).toEqual([])
+	apiQuery.mockResolvedValueOnce({
+		data: { eraValidatorOverviews: [apiOverview] },
+	})
+	await state.client!.invalidateQueries({ queryKey: options.queryKey })
+	expect(await fetchLatest()).toHaveLength(1)
+	expect(options.refetchInterval).toBe(60_000)
+})
+
+test('node overview readers and exposure consumers share one raw scan', async () => {
+	state.api = false
+	useValidatorOverviews(['validator'])
+	expect(await fetchLatest()).toHaveLength(1)
+	expect(exposureReads).not.toHaveBeenCalled()
+	await loadExposures()
+	expect(overviewEntries.mock.calls).toEqual([[100]])
+	expect(exposureReads.mock.calls).toEqual([[100]])
+	expect(apiQuery).not.toHaveBeenCalled()
+})
+
+test('switching overview source aborts the API request and ignores its late result', async () => {
+	let finish!: (value: unknown) => void
+	apiQuery.mockImplementation(
+		() =>
+			new Promise((resolve) => {
+				finish = resolve
+			}),
+	)
+	useValidatorOverviews(['validator'])
+	const observer = new QueryObserver(state.client!, latest())
+	const unsubscribe = observer.subscribe(() => {})
+	try {
+		await vi.waitFor(() => expect(apiQuery).toHaveBeenCalledTimes(1))
+		const signal = apiQuery.mock.calls[0][0].context.fetchOptions.signal
+		state.api = false
+		useValidatorOverviews(['validator'])
+		observer.setOptions(latest())
+		expect(signal.aborted).toBe(true)
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().status).toBe('success'),
+		)
+		finish({ data: { eraValidatorOverviews: [apiOverview] } })
+		await Promise.resolve()
+		expect(observer.getCurrentResult().data).toEqual(
+			await overviewEntries.mock.results[0].value,
+		)
+		expect(overviewEntries.mock.calls).toEqual([[100]])
+		expect(exposureReads).not.toHaveBeenCalled()
+	} finally {
+		unsubscribe()
+	}
+})
+
+test('overview caches separate networks, eras, and sources and mask disabled data', async () => {
+	apiQuery.mockResolvedValue({ data: { eraValidatorOverviews: [apiOverview] } })
+	useValidatorOverviews(['validator'])
+	const apiKey = latest().queryKey
+	await fetchLatest()
+	expect(useValidatorOverviews(['validator'], false).data).toBeUndefined()
+	expect(useValidatorOverviews(['validator'], false).loading).toBe(false)
+	expect(latest().enabled).toBe(false)
+	state.era = 101
+	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
+	expect(latest().queryKey).not.toEqual(apiKey)
+	expect(await fetchLatest()).toMatchObject([[[101, 'validator'], {}]])
+	state.network = 'kusama'
+	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
+	await fetchLatest()
+	expect(apiQuery.mock.lastCall![0].variables).toEqual({
+		network: 'kusama',
+		era: 101,
+		addresses: ['validator'],
+	})
+	state.api = false
+	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
+	await fetchLatest()
+	expect(overviewEntries.mock.calls).toEqual([[101]])
+	state.ready = false
+	expect(useValidatorOverviews(['validator']).data).toBeUndefined()
+	expect(latest().enabled).toBe(false)
+	state.api = true
+	state.era = 0
+	useValidatorOverviews(['validator'])
+	expect(latest().enabled).toBe(false)
+})
+
+test.each(
+	[
+		[{ ...apiOverview, validator: 'unrequested' }],
+		[{ ...apiOverview, own: '-1' }],
+		[{ ...apiOverview, total: '1.5' }],
+		[{ ...apiOverview, total: '' }],
+		[{ ...apiOverview, nominatorCount: -1 }],
+		[{ ...apiOverview, pageCount: -1 }],
+		[apiOverview, apiOverview],
+	].map((overviews) => ({ overviews })),
+)(
+	'malformed API overview snapshots remain errors: $overviews',
+	async ({ overviews }) => {
+		apiQuery.mockResolvedValueOnce({
+			data: { eraValidatorOverviews: overviews },
+		})
+		useValidatorOverviews(['validator'])
+		await expect(fetchLatest()).rejects.toThrow('invalid validator overviews')
+		expect(useValidatorOverviews(['validator']).data).toBeUndefined()
+		expect(overviewEntries).not.toHaveBeenCalled()
+	},
+)
 
 test.each(['polkadot', 'kusama'])(
 	'API count on %s refreshes indexed counts without node exposures',
@@ -581,3 +760,61 @@ test('node reward rates share payout and points across the validator batch', asy
 	expect(rewardPoints).toHaveBeenCalledTimes(1)
 	expect(apiQuery).not.toHaveBeenCalled()
 })
+
+test('no API overview demand makes no transport request', async () => {
+	expect(useValidatorOverviews().data).toEqual([])
+	expect(useValidatorOverviews().loading).toBe(false)
+	expect(latest().enabled).toBe(false)
+	expect(apiQuery).not.toHaveBeenCalled()
+	expect(overviewEntries).not.toHaveBeenCalled()
+})
+
+test('overview demand is canonical, bounded and isolated from other address sets', async () => {
+	const addresses = Array.from({ length: 201 }, (_, i) => `validator-${i}`)
+	apiQuery.mockImplementation(async ({ variables }) => ({
+		data: {
+			eraValidatorOverviews: variables.addresses.map((validator: string) => ({
+				...apiOverview,
+				validator,
+			})),
+		},
+	}))
+	useValidatorOverviews(addresses)
+	const key = latest().queryKey
+	expect(await fetchLatest()).toHaveLength(201)
+	expect(
+		apiQuery.mock.calls.map(([request]) => request.variables.addresses.length),
+	).toEqual([100, 100, 1])
+	useValidatorOverviews([...addresses].reverse().concat(addresses))
+	expect(latest().queryKey).toEqual(key)
+	await fetchLatest()
+	expect(apiQuery).toHaveBeenCalledTimes(3)
+	expect(useValidatorOverviews(['new-target']).data).toBeUndefined()
+	expect(overviewEntries).not.toHaveBeenCalled()
+})
+
+test('validator statistics use a count without fetching overview records', async () => {
+	apiQuery.mockResolvedValue({ data: { eraActiveValidatorCount: 600 } })
+	useActiveValidatorCount()
+	expect(await fetchLatest()).toBe(600)
+	expect(apiQuery.mock.calls[0][0].variables).toEqual({
+		network: 'polkadot',
+		era: 100,
+	})
+	expect(overviewEntries).not.toHaveBeenCalled()
+	state.api = false
+	useActiveValidatorCount()
+	expect(await fetchLatest()).toBe(1)
+	useValidatorOverviews(['old-target'])
+	await fetchLatest()
+	expect(overviewEntries).toHaveBeenCalledTimes(1)
+})
+
+test.each([null, -1, 1.5, undefined])(
+	'invalid validator count %s remains an error',
+	async (count) => {
+		apiQuery.mockResolvedValue({ data: { eraActiveValidatorCount: count } })
+		useActiveValidatorCount()
+		await expect(fetchLatest()).rejects.toThrow('invalid validator count')
+	},
+)

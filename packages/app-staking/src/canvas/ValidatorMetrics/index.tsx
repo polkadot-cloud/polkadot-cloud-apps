@@ -6,7 +6,7 @@ import { Polkicon } from '@w3ux/react-polkicon'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useValidatorOverviews } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -40,15 +40,17 @@ export const ValidatorMetrics = () => {
 	const { network } = useNetwork()
 	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
-	const { validatorOverviews } = useEraStakers()
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
 	const validator = options!.validator
+	const { data: overviews } = useValidatorOverviews([validator])
 	const identity = options!.identity
 
 	// is the validator in the active era
-	const validatorInEra = validatorOverviews?.get(validator)
+	const validatorInEra = overviews?.find(
+		([[, address]]) => address === validator,
+	)?.[1]
 
 	let validatorOwnStake = new BigNumber(0)
 	let otherStake = new BigNumber(0)

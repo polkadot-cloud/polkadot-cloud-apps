@@ -85,7 +85,11 @@ const Basic = ({
 						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
-					<EraStatus address={address} status={validatorStatus} noMargin />
+					<EraStatus
+						overview={validator.overview}
+						status={validatorStatus}
+						noMargin
+					/>
 				</div>
 			</BasicItem.Row>
 		</BasicItem.Root>

@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useEraStakers } from 'contexts/EraStakers'
+import type { ValidatorOverview } from 'contexts/Validators/types'
 import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { isMaxSelfStake, planckToUnitBn } from 'utils'
 
-export const useValidatorSelfStake = (address: string, units: number) => {
+export const useValidatorSelfStake = (
+	overview: ValidatorOverview | null | undefined,
+	units: number,
+) => {
 	const hardCapSelfStake = useHardCapSelfStake()
-	const { validatorOverviews } = useEraStakers()
-	const validatorOwnStake = validatorOverviews?.get(address)?.own
+	const validatorOwnStake = overview?.own
 	const selfStakePlanck =
 		validatorOwnStake !== undefined
 			? new BigNumber(validatorOwnStake)

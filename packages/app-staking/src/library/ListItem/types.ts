@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { ValidatorOverview } from 'contexts/Validators/types'
 import type { ReactNode } from 'react'
 import type {
 	BondedPool,
@@ -66,7 +67,7 @@ export interface ParaValidatorProps {
 }
 
 export interface EraStatusProps {
-	address: string
+	overview?: ValidatorOverview | null
 	noMargin: boolean
 	status: ValidatorStatus
 }

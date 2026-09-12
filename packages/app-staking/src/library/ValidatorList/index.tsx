@@ -25,6 +25,7 @@ import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { Item } from './Item'
+import { injectValidatorListData } from './overview'
 import type { ValidatorListProps } from './types'
 import { useValidatorDetails } from './useValidatorDetails'
 
@@ -61,11 +62,11 @@ export const ValidatorListInner = ({
 	const { erasPerDay } = useErasPerDay()
 	const { setModalResize } = useOverlay().modal
 	// Filters need records for the full input, even when every visible row is removed.
-	const { injectValidatorListData } = useValidators(
+	useValidators(initialValidators.map(({ address }) => address))
+	const { isReady, activeEra } = useApi()
+	const { applyConfig, overviews } = useValidatorFilters(
 		initialValidators.map(({ address }) => address),
 	)
-	const { isReady, activeEra } = useApi()
-	const { applyConfig } = useValidatorFilters()
 	const {
 		selectable,
 		listFormat,
@@ -80,8 +81,8 @@ export const ValidatorListInner = ({
 	]
 
 	const validatorsDefault = useMemo(
-		() => injectValidatorListData(initialValidators),
-		[initialValidators, injectValidatorListData],
+		() => injectValidatorListData(initialValidators, overviews),
+		[initialValidators, overviews],
 	)
 	const validators = useMemo<ValidatorListEntry[]>(
 		() =>

@@ -1,14 +1,20 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEraStakers } from 'contexts/EraStakers'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidatorOverviews } from 'data-gate'
 import type { AnyFilter } from 'library/Filter/types'
 import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
 import { useCallback, useMemo } from 'react'
 
-export const useValidatorFilters = () => {
-	const { validatorOverviews } = useEraStakers()
+export const useValidatorFilters = (addresses: string[] = []) => {
+	const { data: overviews } = useValidatorOverviews(addresses)
+	const validatorOverviews = useMemo(
+		() =>
+			overviews &&
+			new Map(overviews.map(([[, address], entry]) => [address, entry])),
+		[overviews],
+	)
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
 
@@ -21,7 +27,7 @@ export const useValidatorFilters = () => {
 	>(
 		() => ({
 			active: (list) =>
-				!validatorOverviews?.size
+				!validatorOverviews
 					? list
 					: list.filter(({ address }: AnyFilter) =>
 							validatorOverviews.has(address),
@@ -29,7 +35,7 @@ export const useValidatorFilters = () => {
 			blocked_nominations: (list) =>
 				list.filter(({ prefs }: AnyFilter) => !prefs?.blocked),
 			in_session: (list) =>
-				!validatorOverviews?.size
+				!validatorOverviews
 					? list
 					: list.filter(
 							({ address }: AnyFilter) => !validatorOverviews.has(address),
@@ -105,5 +111,5 @@ export const useValidatorFilters = () => {
 		[applyFilter, applyOrder, applySearch],
 	)
 
-	return { applyConfig, applyFilter }
+	return { applyConfig, applyFilter, overviews }
 }

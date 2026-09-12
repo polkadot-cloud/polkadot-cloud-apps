@@ -4,6 +4,7 @@
 import type { Sync } from '@w3ux/types'
 import type {
 	AnyJson,
+	ErasStakersOverviewEntries,
 	IdentityOf,
 	Validator,
 	ValidatorPrefs,
@@ -16,7 +17,6 @@ export interface ValidatorsContextInterface {
 	validatorsError: Error | null
 	retryValidators: () => void
 	getValidatorPrefs: (address: string) => ValidatorPrefs | null | undefined
-	injectValidatorListData: (entries: Validator[]) => ValidatorListEntry[]
 	getValidators: () => Validator[]
 	validatorIdentities: Record<string, IdentityOf>
 	validatorSupers: Record<string, AnyJson>
@@ -24,7 +24,6 @@ export interface ValidatorsContextInterface {
 	avgRewardRate: number
 	averageEraValidatorReward: AverageEraValidatorReward
 	formatWithPrefs: (addresses: string[]) => Validator[]
-	getValidatorTotalStake: (address: string) => bigint
 	getValidatorRank: (address: string) => number | undefined
 	isValidatorHighPerformance: (address: string) => boolean
 	getValidatorActivityTier: (
@@ -36,6 +35,10 @@ export interface AverageEraValidatorReward {
 	days: number
 	reward: bigint
 }
+export type ValidatorOverview = ErasStakersOverviewEntries[number][1]
+
 export type ValidatorListEntry = Validator & {
+	// Undefined while loading; null when the completed query has no active overview.
+	overview?: ValidatorOverview | null
 	validatorStatus: ValidatorStatus
 }

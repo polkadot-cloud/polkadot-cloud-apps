@@ -258,11 +258,39 @@ so an initial zero or partial result must be able to update within the same era.
 The count requires the API's `eraActiveNominatorCount(network, era)` field to be
 deployed before the updated apps.
 
+Validator overview readers use `useValidatorOverviews(addresses)`, which returns the same
+era/address-keyed overview entries from either source, including exact bigint
+`own` and `total` stake, `nominatorCount`, and `pageCount`. API mode calls
+`eraValidatorOverviews(network, era, addresses)` and never starts a node overview or exposure
+scan for these readers, including after API errors. It requires a known era but
+does not require node readiness. Indexed snapshots refresh every 60 seconds so
+empty or partial results can update within the era. Node mode shares the raw
+overview cache with the exposure loader. Network, era, and source changes isolate
+the selected snapshots. API requests deduplicate and sort addresses, with a maximum
+of 100 per request. Empty address sets make no request and do not block syncing.
+Lists and detail views call `useValidatorOverviews(addresses)` directly. Lists
+fetch their address set once and pass overview values to their rows; summaries
+and self-stake displays do not issue per-row queries. Explicit API list summaries
+already include status and stake totals, so they need no overview query. Changing the requested set masks the old snapshot
+until the new set is available, including validators absent from the response.
+
+`useActiveValidatorCount()` uses `eraActiveValidatorCount(network, era)` in API
+mode, backed by a database count. It never downloads overview records just to
+count them. Node mode reuses the raw overview cache.
+
+Deploy the staking-api `eraValidatorOverviews` and `eraActiveValidatorCount` GraphQL fields before deploying
+apps using this hook. The resolver reads the existing indexed overview table;
+no database migration is required.
+
 Pool-list status labels use `useNominationStatus` with the pool stash in API mode
 and share the node exposure snapshot in node mode. The Active pool filter still
-uses node exposures even in API mode, and validator overview readers remain on
-the node. Those consumers need a separate migration before API mode can eliminate
-all era-stakers reads.
+explicitly requests node exposures (and their overview prerequisite) even in API
+mode. That consumer needs a separate migration before API mode can eliminate all
+era-stakers reads in the staking app. Mounting the shared era-stakers provider
+without exposure consumers, as app-nominate does, starts no era-stakers queries.
+Overview demand and loading belong to the calling list or detail view; the era
+context retains only legacy exposure state. Node overview readers share one raw
+scan through the query cache.
 
 ## Validation
 

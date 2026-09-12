@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
-import { useEraStakers } from 'contexts/EraStakers'
 import { useValidatorRecords } from 'data-gate'
 import {
 	countValidatorRanks,
@@ -22,7 +21,7 @@ import {
 	useState,
 } from 'react'
 import type { Validator } from 'types'
-import type { ValidatorListEntry, ValidatorsContextInterface } from '../types'
+import type { ValidatorsContextInterface } from '../types'
 import { getActivityTier } from '../Utils'
 import { defaultAverageEraValidatorReward } from './defaults'
 
@@ -48,7 +47,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	const { activeEra, isReady, serviceApi, getConsts } = useApi()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
-	const { validatorOverviews } = useEraStakers()
 	const { erasPerDay, maxSupportedDays } = useErasPerDay()
 
 	const { historyDepth } = getConsts(network)
@@ -101,29 +99,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 	const [averageEraValidatorReward, setAverageEraValidatorReward] = useState(
 		defaultAverageEraValidatorReward,
 	)
-
-	// Inject status into validator entries
-	const injectValidatorListData = (
-		entries: Validator[],
-	): ValidatorListEntry[] =>
-		entries.map((entry) => ({
-			...entry,
-			validatorStatus: validatorOverviews?.has(entry.address)
-				? 'active'
-				: 'waiting',
-		}))
-
-	// Gets a validator's total stake, if any
-	const getValidatorTotalStake = (address: string): bigint => {
-		const inEra = validatorOverviews?.get(address)
-		if (!inEra) {
-			return 0n
-		}
-
-		// Use the total directly from the validator data, which comes from the chain
-		// This ensures we get the correct total even if we're missing some nominator data
-		return BigInt(inEra.total)
-	}
 
 	const getAverageEraValidatorReward = async () => {
 		if (!isReady || activeEra.index === 0) {
@@ -214,7 +189,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 					void records.refetch()
 				},
 				getValidatorPrefs: (address) => records.data?.prefs[address],
-				injectValidatorListData,
 				getValidators,
 				validatorIdentities,
 				validatorSupers,
@@ -226,7 +200,6 @@ export const ValidatorsProvider = ({ children }: { children: ReactNode }) => {
 				avgRewardRate,
 				averageEraValidatorReward,
 				formatWithPrefs,
-				getValidatorTotalStake,
 				getValidatorRank,
 				isValidatorHighPerformance,
 				getValidatorActivityTier,
