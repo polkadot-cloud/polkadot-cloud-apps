@@ -52,10 +52,8 @@ export const NominationListInner = ({
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
 	const targets = initialValidators.map(({ address }) => address)
-	const { data: overviews, error: overviewError } = useValidatorOverviews(
-		targets,
-		validatorDetailsEnabled,
-	)
+	const { data: overviews, error: overviewError } =
+		useValidatorOverviews(targets)
 	const nominator = initialNominator || activeAddress
 	const {
 		data: nominees,

@@ -7,6 +7,8 @@ import { createElement } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { useRetainmentStatsEnabled } from '../../app-staking/src/hooks/useRetainmentStatsEnabled'
 import { useValidatorDetailsEnabled } from '../../app-staking/src/hooks/useValidatorDetailsEnabled'
+import { Item as NominationItem } from '../../app-staking/src/library/NominationList/Item'
+import { Item as ValidatorItem } from '../../app-staking/src/library/ValidatorList/Item'
 import { ValidatorBar } from '../../app-staking/src/library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from '../../app-staking/src/library/ValidatorList/ValidatorCard'
 import { useRetainmentStatsData } from '../../ui-app/src/RetainmentStats/useRetainmentStatsData'
@@ -19,6 +21,22 @@ vi.mock('../../hooks/src/useNetwork', () => ({
 }))
 vi.mock('../../hooks/src/usePlugins', () => ({
 	usePlugins: () => ({ pluginEnabled: () => state.api }),
+}))
+vi.mock(
+	'hooks/useValidatorDetailsEnabled',
+	() => import('../../app-staking/src/hooks/useValidatorDetailsEnabled'),
+)
+vi.mock('../../app-staking/src/library/NominationList/BasicItem', () => ({
+	BasicItem: () => 'basic-item',
+}))
+vi.mock('../../app-staking/src/library/NominationList/DetailedItem', () => ({
+	DetailedItem: () => 'detailed-item',
+}))
+vi.mock('../../app-staking/src/library/ValidatorList/BasicItem', () => ({
+	BasicItem: () => 'basic-item',
+}))
+vi.mock('../../app-staking/src/library/ValidatorList/DetailedItem', () => ({
+	DetailedItem: () => 'detailed-item',
 }))
 vi.mock('contexts/List', () => ({ useList: () => ({ selectable: false }) }))
 vi.mock('library/List/EraPointsGraph/HistoricalEraPoints', () => ({
@@ -50,6 +68,7 @@ test.each([
 	['polkadot', false, false, false],
 	['kusama', false, false, false],
 	['paseo', false, false, false],
+	['paseo', true, false, false],
 ] as const)(
 	'%s API=%s selects enhanced=%s, retainment=%s',
 	(network, api, enhanced, retainment) => {
@@ -57,6 +76,31 @@ test.each([
 		state.api = api
 		expect(useValidatorDetailsEnabled()).toBe(enhanced)
 		expect(useRetainmentStatsEnabled()).toBe(retainment)
+		for (const format of ['row', 'col'] as const) {
+			const props = {
+				validator: {
+					address: 'validator',
+					prefs: null,
+					validatorStatus: 'waiting' as const,
+				},
+				displayFor: 'default' as const,
+				format,
+				eraPoints: [],
+			}
+			const expected = enhanced ? 'detailed-item' : 'basic-item'
+			expect(renderToStaticMarkup(createElement(ValidatorItem, props))).toBe(
+				expected,
+			)
+			expect(
+				renderToStaticMarkup(
+					createElement(NominationItem, {
+						...props,
+						bondFor: 'nominator',
+						nominator: 'stash',
+					}),
+				),
+			).toBe(expected)
+		}
 	},
 )
 
