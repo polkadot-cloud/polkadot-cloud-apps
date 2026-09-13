@@ -140,7 +140,9 @@ test('closes a pending upstream connection when the browser disconnects', async 
 	socket.resume()
 	try {
 		req.destroy()
-		await vi.waitFor(() => expect(socket.destroyed).toBe(true))
+		await vi.waitFor(() =>
+			expect({ destroyed: socket.destroyed, readableEnded: socket.readableEnded }).toEqual({ destroyed: true, readableEnded: true }),
+		)
 	} finally {
 		holdUpgrade = false
 		socket.destroy()
