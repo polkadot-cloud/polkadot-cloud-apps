@@ -54,11 +54,11 @@ export const DetailedItem = ({
 	const { selectable, selected } = useList()
 	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
 		useValidators([validator.address])
-	const { address, validatorStatus } = validator
+	const { address, validatorStatus, overview } = validator
 	const resolvedPrefs = getValidatorPrefs(address)
 	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const { unit, units } = getStakingChainData(network)
-	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const { selfStake, selfStakeMax } = useValidatorSelfStake(overview, units)
 	const {
 		period,
 		window: retainmentWindow,
@@ -205,6 +205,8 @@ export const DetailedItem = ({
 			selected={isSelected}
 			summary={
 				<ValidatorSummary
+					overview={overview}
+					overviewUnavailable={validator.overviewUnavailable}
 					address={address}
 					isRatePreloading={isPreloading}
 					rate={rateAfterCommission}

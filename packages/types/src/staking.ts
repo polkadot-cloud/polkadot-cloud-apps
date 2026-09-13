@@ -7,10 +7,9 @@ export interface EraRewardPoints {
 	total: number
 	individual: Array<[string, number]>
 }
-export type ErasStakersOverviewEntries = [
-	[number, string],
-	SpStakingPagedExposureMetadata,
-][]
+export type ValidatorOverview = SpStakingPagedExposureMetadata
+export type ValidatorOverviews = ReadonlyMap<string, ValidatorOverview>
+export type ErasStakersOverviewEntries = [[number, string], ValidatorOverview][]
 
 export type ErasStakersPagedEntries = [
 	[number, string, number],

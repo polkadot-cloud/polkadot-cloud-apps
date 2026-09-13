@@ -25,6 +25,7 @@ import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { Item } from './Item'
+import { injectValidatorListData } from './overview'
 import type { ValidatorListProps } from './types'
 import { useValidatorDetails } from './useValidatorDetails'
 
@@ -61,11 +62,11 @@ export const ValidatorListInner = ({
 	const { erasPerDay } = useErasPerDay()
 	const { setModalResize } = useOverlay().modal
 	// Filters need records for the full input, even when every visible row is removed.
-	const { injectValidatorListData } = useValidators(
-		initialValidators.map(({ address }) => address),
-	)
+	const addresses = initialValidators.map(({ address }) => address)
+	useValidators(addresses)
 	const { isReady, activeEra } = useApi()
-	const { applyConfig } = useValidatorFilters()
+	const { applyConfig, overviews, overviewError } =
+		useValidatorFilters(addresses)
 	const {
 		selectable,
 		listFormat,
@@ -79,17 +80,21 @@ export const ValidatorListInner = ({
 		{ key: 'default', label: t('unordered', { ns: 'app' }) },
 	]
 
-	const validatorsDefault = useMemo(
-		() => injectValidatorListData(initialValidators),
-		[initialValidators, injectValidatorListData],
-	)
-	const validators = useMemo<ValidatorListEntry[]>(
-		() =>
-			showControls
-				? applyConfig(config, [...validatorsDefault])
-				: validatorsDefault,
-		[applyConfig, config, showControls, validatorsDefault],
-	)
+	const validators = useMemo<ValidatorListEntry[]>(() => {
+		const entries = injectValidatorListData(
+			initialValidators,
+			overviews,
+			overviewError,
+		)
+		return showControls ? applyConfig(config, entries) : entries
+	}, [
+		initialValidators,
+		overviews,
+		overviewError,
+		applyConfig,
+		config,
+		showControls,
+	])
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =

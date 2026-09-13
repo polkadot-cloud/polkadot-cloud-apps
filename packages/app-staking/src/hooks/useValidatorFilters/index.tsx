@@ -1,14 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEraStakers } from 'contexts/EraStakers'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidatorOverviews } from 'data-gate'
 import type { AnyFilter } from 'library/Filter/types'
 import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
 import { useCallback, useMemo } from 'react'
 
-export const useValidatorFilters = () => {
-	const { validatorOverviews } = useEraStakers()
+export const useValidatorFilters = (addresses: string[] = []) => {
+	const { data: overviews, error: overviewError } =
+		useValidatorOverviews(addresses)
 	const { validatorSupers, getValidatorRank, validatorIdentities } =
 		useValidators()
 
@@ -21,19 +22,15 @@ export const useValidatorFilters = () => {
 	>(
 		() => ({
 			active: (list) =>
-				!validatorOverviews?.size
+				!overviews
 					? list
-					: list.filter(({ address }: AnyFilter) =>
-							validatorOverviews.has(address),
-						),
+					: list.filter(({ address }: AnyFilter) => overviews.has(address)),
 			blocked_nominations: (list) =>
 				list.filter(({ prefs }: AnyFilter) => !prefs?.blocked),
 			in_session: (list) =>
-				!validatorOverviews?.size
+				!overviews
 					? list
-					: list.filter(
-							({ address }: AnyFilter) => !validatorOverviews.has(address),
-						),
+					: list.filter(({ address }: AnyFilter) => !overviews.has(address)),
 			missing_identity: (list) =>
 				!identitiesReady
 					? list
@@ -42,7 +39,7 @@ export const useValidatorFilters = () => {
 								validatorIdentities[address] || validatorSupers[address],
 						),
 		}),
-		[validatorOverviews, identitiesReady, validatorIdentities, validatorSupers],
+		[overviews, identitiesReady, validatorIdentities, validatorSupers],
 	)
 
 	const applyFilter = useCallback(
@@ -105,5 +102,5 @@ export const useValidatorFilters = () => {
 		[applyFilter, applyOrder, applySearch],
 	)
 
-	return { applyConfig, applyFilter }
+	return { applyConfig, applyFilter, overviews, overviewError }
 }

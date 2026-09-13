@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
-import { useEraNominatorCount } from 'data-gate'
+import { useActiveValidatorCount, useEraNominatorCount } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
@@ -93,7 +92,11 @@ export const useValidatorStats = (): StatPick<
 	const { t } = useTranslation('pages')
 	const { network } = useNetwork()
 	const { unit, units } = getStakingChainData(network)
-	const { activeValidators } = useEraStakers()
+	const {
+		data: activeValidators = 0,
+		loading,
+		error,
+	} = useActiveValidatorCount()
 	const {
 		validatorCount,
 		counterForValidators,
@@ -106,7 +109,8 @@ export const useValidatorStats = (): StatPick<
 			id: 'activeValidators',
 			type: StatType.PIE,
 			label: t('activeValidators'),
-			value: activeValidators,
+			value: error ? '—' : activeValidators,
+			isPreloading: loading,
 			total: validatorCount,
 			unit: '',
 			pieValue: percentageOf(activeValidators, validatorCount),

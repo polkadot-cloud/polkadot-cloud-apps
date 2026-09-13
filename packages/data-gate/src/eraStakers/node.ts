@@ -5,6 +5,7 @@ import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNetwork } from 'global-bus'
 import type { ErasStakersPagedEntries, Exposure } from 'types'
 import { useDataGate } from '../provider'
+import { nodeValidatorOverviewsOptions } from '../validatorOverviews/node'
 
 // Shared node snapshots for source adapters and the remaining legacy overview/pool consumers.
 // Calling with enabled=false observes no runnable node queries, including during API failures.
@@ -14,10 +15,8 @@ export const useNodeEraStakers = (needsExposures = false, enabled = true) => {
 	const network = getNetwork()
 	const ready = connected && era > 0
 	const overviewOptions = queryOptions({
-		queryKey: ['validator-overviews', network, era],
-		queryFn: () => serviceApi.query.erasStakersOverviewEntries(era),
+		...nodeValidatorOverviewsOptions(serviceApi, network, era),
 		enabled: ready && enabled,
-		staleTime: Infinity,
 	})
 	// Validator activity and totals need only overview entries, never nominator pages.
 	const {
