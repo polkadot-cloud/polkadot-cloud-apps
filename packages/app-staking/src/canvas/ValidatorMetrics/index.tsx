@@ -44,8 +44,9 @@ export const ValidatorMetrics = () => {
 
 	const Token = getChainIcons(network).token
 	const validator = options!.validator
-	const { data: overviews } = useValidatorOverviews([validator])
+	const { data: overviews, loading } = useValidatorOverviews([validator])
 	const identity = options!.identity
+	const stakePlaceholder = loading ? t('syncing', { ns: 'app' }) : '—'
 
 	const overview = overviews?.get(validator)
 	const validatorOwnStake = new BigNumber(overview?.own ?? 0n)
@@ -95,13 +96,16 @@ export const ValidatorMetrics = () => {
 						<Stat withIcon>
 							<Token />
 							{t('selfStake', { ns: 'modals' })}:{' '}
-							{planckToUnitBn(validatorOwnStake, units).toFormat()} {unit}
+							{overviews
+								? `${planckToUnitBn(validatorOwnStake, units).toFormat()} ${unit}`
+								: stakePlaceholder}
 						</Stat>
 						<Stat withIcon>
 							<Token />
 							{t('nominatorStake', { ns: 'modals' })}:{' '}
-							{planckToUnitBn(otherStake, units).decimalPlaces(0).toFormat()}{' '}
-							{unit}
+							{overviews
+								? `${planckToUnitBn(otherStake, units).decimalPlaces(0).toFormat()} ${unit}`
+								: stakePlaceholder}
 						</Stat>
 					</h4>
 				</Subheading>

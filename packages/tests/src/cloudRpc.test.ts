@@ -19,6 +19,7 @@ let vite: ViteDevServer
 let origin: string
 const upstreamRequests: { url?: string; authorization?: string }[] = []
 const upstream = createHttpServer()
+let holdUpgrade = false
 
 beforeAll(async () => {
 	root = await mkdtemp(path.join(tmpdir(), 'cloud-rpc-'))
@@ -31,6 +32,7 @@ beforeAll(async () => {
 			url: req.url,
 			authorization: req.headers.authorization,
 		})
+		if (holdUpgrade) return
 		const accept = createHash('sha1')
 			.update(
 				`${req.headers['sec-websocket-key']}258EAFA5-E914-47DA-95CA-C5AB0DC85B11`,
@@ -119,6 +121,30 @@ test('does not proxy any other RPC path', async () => {
 		expect(response.status).toBe(404)
 	}
 	expect(upstreamRequests).toHaveLength(count)
+})
+
+test('closes a pending upstream connection when the browser disconnects', async () => {
+	holdUpgrade = true
+	const upgraded = once(upstream, 'upgrade')
+	const req = request(`${origin}/__cloud_rpc/statemint`, {
+		headers: {
+			Connection: 'Upgrade',
+			Upgrade: 'websocket',
+			'Sec-WebSocket-Version': '13',
+			'Sec-WebSocket-Key': 'dGhlIHNhbXBsZSBub25jZQ==',
+		},
+	})
+	req.on('error', () => {})
+	req.end()
+	const [, socket] = await upgraded
+	socket.resume()
+	try {
+		req.destroy()
+		await vi.waitFor(() => expect(socket.destroyed).toBe(true))
+	} finally {
+		holdUpgrade = false
+		socket.destroy()
+	}
 })
 
 test('exposes only the proxy path to client code', () => {

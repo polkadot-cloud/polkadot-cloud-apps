@@ -165,7 +165,7 @@ const apiOverview = {
 	pageCount: 1,
 }
 
-test.each(['polkadot', 'kusama'])(
+test.each(['polkadot', 'kusama', 'paseo'])(
 	'API overviews on %s avoid node reads, preserve precision, and share requests before node readiness',
 	async (network) => {
 		state.network = network
@@ -871,6 +871,80 @@ test('unchanged overview refreshes preserve the consumer map and changed stakes 
 	} finally {
 		unsubscribe()
 	}
+})
+
+test('overview response order does not change consumer references', async () => {
+	const entries = [apiOverview, { ...apiOverview, validator: 'another' }]
+	apiQuery.mockResolvedValueOnce({ data: { eraValidatorOverviews: entries } })
+	useValidatorOverviews(['validator', 'another'])
+	const observer = new QueryObserver(state.client!, latest())
+	const unsubscribe = observer.subscribe(() => {})
+	try {
+		await vi.waitFor(() =>
+			expect(observer.getCurrentResult().status).toBe('success'),
+		)
+		const first = observer.getCurrentResult().data
+		apiQuery.mockResolvedValueOnce({
+			data: { eraValidatorOverviews: [...entries].reverse() },
+		})
+		await observer.refetch()
+		expect(observer.getCurrentResult().data).toBe(first)
+	} finally {
+		unsubscribe()
+	}
+})
+
+test('a failed overview batch publishes no partial snapshot and preserves completed data on refresh', async () => {
+	const addresses = Array.from({ length: 101 }, (_, i) => `validator-${i}`)
+	let failLastBatch = true
+	apiQuery.mockImplementation(async ({ variables }) => {
+		if (failLastBatch && variables.addresses.length === 1)
+			throw new Error('batch failed')
+		return {
+			data: {
+				eraValidatorOverviews: variables.addresses.map((validator: string) => ({
+					...apiOverview,
+					validator,
+				})),
+			},
+		}
+	})
+	useValidatorOverviews(addresses)
+	const key = latest().queryKey
+	await expect(fetchLatest()).rejects.toThrow('batch failed')
+	expect(useValidatorOverviews(addresses).data).toBeUndefined()
+	expect(useValidatorOverviews(addresses).loading).toBe(false)
+	failLastBatch = false
+	const completed = await fetchLatest()
+	expect(completed).toHaveProperty('size', 101)
+	failLastBatch = true
+	await state.client!.invalidateQueries({ queryKey: key })
+	await expect(fetchLatest()).rejects.toThrow('batch failed')
+	expect(useValidatorOverviews(addresses).data).toEqual(completed)
+	expect(overviewEntries).not.toHaveBeenCalled()
+	expect(exposureReads).not.toHaveBeenCalled()
+})
+
+test('unmounting an overview consumer cancels remaining API batches', async () => {
+	let finish!: (value: unknown) => void
+	apiQuery.mockImplementationOnce(
+		() =>
+			new Promise((resolve) => {
+				finish = resolve
+			}),
+	)
+	useValidatorOverviews(Array.from({ length: 101 }, (_, i) => `validator-${i}`))
+	const observer = new QueryObserver(state.client!, latest())
+	const unsubscribe = observer.subscribe(() => {})
+	await vi.waitFor(() => expect(apiQuery).toHaveBeenCalledTimes(1))
+	const signal = apiQuery.mock.calls[0][0].context.fetchOptions.signal
+	unsubscribe()
+	expect(signal.aborted).toBe(true)
+	finish({ data: { eraValidatorOverviews: [] } })
+	await new Promise((resolve) => setTimeout(resolve, 0))
+	expect(apiQuery).toHaveBeenCalledTimes(1)
+	expect(state.client!.getQueryData(latest().queryKey)).toBeUndefined()
+	expect(overviewEntries).not.toHaveBeenCalled()
 })
 
 test.each(['addresses', 'network', 'era'] as const)(

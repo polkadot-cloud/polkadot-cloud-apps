@@ -87,7 +87,8 @@ export const useValidatorOverviews = (
 							])
 						}
 					}
-					return entries
+					// Response order can vary without changing the overview snapshot.
+					return entries.sort(([a], [b]) => a.localeCompare(b))
 				},
 			},
 		},

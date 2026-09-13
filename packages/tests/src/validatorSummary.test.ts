@@ -9,7 +9,9 @@ import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/s
 import { EraStatus } from '../../app-staking/src/library/ListItem/Labels/EraStatus'
 import { injectValidatorListData } from '../../app-staking/src/library/ValidatorList/overview'
 import { useValidatorSelfStake } from '../../app-staking/src/library/ValidatorList/useValidatorSelfStake'
+import { ValidatorBar } from '../../app-staking/src/library/ValidatorList/ValidatorBar'
 import { useValidatorSummaryData } from '../../app-staking/src/library/ValidatorList/ValidatorSummary'
+import { useRetainmentStatsData } from '../../ui-app/src/RetainmentStats/useRetainmentStatsData'
 
 // Row summaries must render from the list snapshot, without acquiring their own data.
 vi.mock('data-gate', () => ({
@@ -29,6 +31,17 @@ vi.mock('../../consts/src/util', () => ({
 vi.mock('../../app-staking/src/library/ListItem/Labels/ActivityTier', () => ({
 	ActivityTier: () => null,
 }))
+vi.mock('contexts/List', () => ({ useList: () => ({ selectable: false }) }))
+vi.mock('library/List/EraPointsGraph/HistoricalEraPoints', () => ({
+	HistoricalEraPoints: () => null,
+}))
+vi.mock('../../app-staking/src/library/ListItem/Labels/Identity', () => ({
+	Identity: () => null,
+}))
+vi.mock(
+	'../../app-staking/src/library/ListItem/Buttons/RetainmentHistory',
+	() => ({ RetainmentHistory: () => null }),
+)
 vi.mock(
 	'../../app-staking/node_modules/react-i18next/dist/es/index.js',
 	() => ({
@@ -217,4 +230,47 @@ test('basic row failures end syncing without displaying a false zero stake', () 
 	expect(markup).toContain('—')
 	expect(markup).not.toContain('syncing')
 	expect(markup).not.toContain('DOT')
+})
+
+const BarFixture = ({
+	entry,
+	unavailable,
+}: {
+	entry?: ValidatorOverview | null
+	unavailable: boolean
+}) =>
+	createElement(ValidatorBar, {
+		validator: {
+			address: 'validator',
+			prefs: null,
+			validatorStatus: entry ? 'active' : 'waiting',
+			overview: entry,
+			overviewUnavailable: unavailable,
+		},
+		showRetainment: false,
+		actions: null,
+		displayFor: 'default',
+		eraPoints: [],
+		selfStakeMax: false,
+		unit: 'DOT',
+		retainmentStats: useRetainmentStatsData({
+			selfStakeMax: false,
+			unit: 'DOT',
+			units: 10,
+		}),
+		retainmentWindow: 'THREE_MONTHS',
+		onRetainmentWindowChange: () => {},
+	})
+
+test.each([
+	{ entry: undefined, unavailable: false, label: 'syncing' },
+	{ entry: null, unavailable: false, label: 'Waiting' },
+	{ entry: overview, unavailable: false, label: 'listItemActive' },
+	{ entry: undefined, unavailable: true, label: '—' },
+])('detailed rows render overview state $label', (state) => {
+	const markup = renderToStaticMarkup(createElement(BarFixture, state))
+	expect(markup).toContain(state.label)
+	if (state.label !== 'syncing') expect(markup).not.toContain('syncing')
+	if (state.entry) expect(markup).toContain('1,234,567,890')
+	else expect(markup).not.toContain('1,234,567,890')
 })

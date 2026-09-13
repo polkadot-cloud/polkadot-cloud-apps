@@ -31,6 +31,22 @@ export const cloudRpcPlugin = (): Plugin => ({
 						changeOrigin: true,
 						headers: { Authorization: `Bearer ${token}` },
 						rewrite: (path) => path.slice(proxyPath.length),
+						configure(proxy) {
+							proxy.on('proxyReqWs', (proxyReq, _req, socket) => {
+								proxyReq.on('socket', (upstreamSocket) => {
+									// Stop upstream traffic as soon as the browser disconnects,
+									// including while the WebSocket upgrade is still pending.
+									const disconnect = () => upstreamSocket.destroy()
+									socket.once('end', disconnect)
+									socket.once('close', disconnect)
+									upstreamSocket.once('close', () => {
+										socket.off('end', disconnect)
+										socket.off('close', disconnect)
+									})
+									if (socket.destroyed || socket.readableEnded) disconnect()
+								})
+							})
+						},
 					},
 				},
 			},

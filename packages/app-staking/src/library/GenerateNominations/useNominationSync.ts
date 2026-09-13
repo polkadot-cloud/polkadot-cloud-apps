@@ -37,7 +37,10 @@ export const useNominationSync = ({
 	const { pluginEnabled } = usePlugins()
 	const api = pluginEnabled('staking_api')
 	const { activeAddress } = useActiveAccount()
-	const { data: overviews } = useValidatorOverviews([], !api)
+	const { data: overviews, error: overviewError } = useValidatorOverviews(
+		[],
+		!api,
+	)
 	const { getValidators, validatorsFetched } = useValidators()
 
 	// Track whether a fetch is already in progress to avoid duplicate requests.
@@ -65,6 +68,12 @@ export const useNominationSync = ({
 
 	// Generate only after validator and era data are ready, with one request in flight.
 	useEffect(() => {
+		if (!fetching || !method || fetchingRef.current) return
+		if (!api && !overviews && overviewError) {
+			setFetching(false)
+			emitNotification({ title: t('errorUnknown'), subtitle: t('tryAgain') })
+			return
+		}
 		const dataReady =
 			api ||
 			(isReady &&
@@ -72,9 +81,7 @@ export const useNominationSync = ({
 				!!overviews &&
 				validatorsFetched === 'synced')
 
-		if (!fetching || !method || !dataReady || fetchingRef.current) {
-			return
-		}
+		if (!dataReady) return
 
 		fetchingRef.current = true
 		const generateNominations = async () => {

@@ -160,6 +160,8 @@ export const ValidatorBar = ({
 				</ListItem.Graph>
 				<ListItem.RowMetricGroup data-section="performance">
 					<ValidatorSummaryMetrics
+						overview={validator.overview}
+						overviewUnavailable={validator.overviewUnavailable}
 						activityTier={activityTier}
 						address={address}
 						compact
