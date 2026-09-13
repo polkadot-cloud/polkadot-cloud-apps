@@ -140,9 +140,9 @@ test('closes a pending upstream connection when the browser disconnects', async 
 	socket.resume()
 	try {
 		req.destroy()
-		await vi.waitFor(() =>
-			expect({ destroyed: socket.destroyed, readableEnded: socket.readableEnded }).toEqual({ destroyed: true, readableEnded: true }),
-		)
+		// The upstream HTTP socket allows half-open connections. Observe the proxy's FIN;
+		// destroying the remote socket does not destroy this server-side socket.
+		await vi.waitFor(() => expect(socket.readableEnded).toBe(true))
 	} finally {
 		holdUpgrade = false
 		socket.destroy()
