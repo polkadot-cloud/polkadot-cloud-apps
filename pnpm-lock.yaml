@@ -1059,8 +1059,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       vitest:
-        specifier: ^5.0.0
-        version: 5.0.0(@types/node@26.5.1)(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        specifier: ^5.0.1
+        version: 5.0.1(@types/node@26.5.1)(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
 
   packages/tx-submit:
     dependencies:
@@ -3347,8 +3347,8 @@ packages:
       oxc-transform-react:
         optional: true
 
-  '@vitest/mocker@5.0.0':
-    resolution: {integrity: sha512-66PGTMIiVJP3t4a5yxU9qPtf7MdTBs8jmToMvy+HVflB3Yy13WJZTtPePdvU+wjRV02SKK5doLbSA6o9pwOmiA==}
+  '@vitest/mocker@5.0.1':
+    resolution: {integrity: sha512-6K1DoBNAPGvuOcSsGA4D6x+5zEEff/KmOOP3uetT2TrGpVfI+HRHRnJJfKi5ib/g1vx8IYHQD8s0pbJz8WQI7Q==}
     peerDependencies:
       msw: ^2.4.9
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -3358,8 +3358,8 @@ packages:
       vite:
         optional: true
 
-  '@vitest/spy@5.0.0':
-    resolution: {integrity: sha512-uy+luWBAPw9XfthoHi5AkfHUnuPYEESjl0p/r+meoBnU8bxg5GDQ3Ey8MjcJ6sqahkL4PFyrvfMJJBw7LbU06g==}
+  '@vitest/spy@5.0.1':
+    resolution: {integrity: sha512-rbto/mF/SGERxEgYOek7Xm6B9b+y+mVoo+f4b2LymYO8zM1b7uB5nHuhVMTP2hxdzgxvGiZYGxGIaMvL5y180Q==}
 
   '@w3ux/crypto@1.2.1':
     resolution: {integrity: sha512-mnwC6ULIGN1sgrxs2asnLbAbtMMBs0MCXaYNaO0kJg67YGIr8lAWimhiiJ63nIAajyH0+08dntAGC0TyCplyvA==}
@@ -5047,20 +5047,20 @@ packages:
       yaml:
         optional: true
 
-  vitest@5.0.0:
-    resolution: {integrity: sha512-gpsMNoRhMjMktVxPtstOH4/PJuPyovVaMDr4oDilXaGH1EcqM2OE96SoHT2VIQ6fTGtTjqmHDrEu2X9RQiXf8Q==}
+  vitest@5.0.1:
+    resolution: {integrity: sha512-iA95lQbKEkvrtTkdAgnWbXfbipWiiWe/hDl2P5tMi6WFwD76G0NxXAGp/M9EOcYupeGJRr6wppMc7CoA41TQjg==}
     engines: {node: ^22.12.0 || ^24.0.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@opentelemetry/api': ^1.9.0
       '@types/node': ^22.0.0 || >=24.0.0
-      '@vitest/browser-playwright': 5.0.0
-      '@vitest/browser-preview': 5.0.0
+      '@vitest/browser-playwright': 5.0.1
+      '@vitest/browser-preview': 5.0.1
       '@vitest/browser-webdriverio': ^5.0.0-beta.5 || >=5.0.0
-      '@vitest/coverage-istanbul': 5.0.0
-      '@vitest/coverage-v8': 5.0.0
-      '@vitest/ui': 5.0.0
+      '@vitest/coverage-istanbul': 5.0.1
+      '@vitest/coverage-v8': 5.0.1
+      '@vitest/ui': 5.0.1
       happy-dom: '*'
       jsdom: '*'
       vite: ^6.4.0 || ^7.0.0 || ^8.0.0
@@ -6780,7 +6780,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
@@ -6916,16 +6916,16 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
-  '@vitest/mocker@5.0.0(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
+  '@vitest/mocker@5.0.1(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
-      '@vitest/spy': 5.0.0
+      '@vitest/spy': 5.0.1
       estree-walker: 3.0.3
       magic-string: 1.3.1
     optionalDependencies:
       vite: 8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
-  '@vitest/spy@5.0.0': {}
+  '@vitest/spy@5.0.1': {}
 
   '@w3ux/crypto@1.2.1':
     dependencies:
@@ -8559,10 +8559,10 @@ snapshots:
       sass: 1.104.0
       tsx: 4.23.13
 
-  vitest@5.0.0(@types/node@26.5.1)(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
+  vitest@5.0.1(@types/node@26.5.1)(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.0(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+      '@vitest/mocker': 5.0.1(vite@8.2.2(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
