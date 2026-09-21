@@ -35,7 +35,7 @@
 		"plugin-staking-api": "workspace:*",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
-		"react-i18next": "^17.0.13",
+		"react-i18next": "^17.0.14",
 		"styled-components": "^6.5.3",
 		"types": "workspace:*",
 		"ui-app": "workspace:*",
