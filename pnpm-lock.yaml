@@ -132,7 +132,7 @@ importers:
         version: 6.1.11
       '@vitejs/plugin-react':
         specifier: ^6.1.1
-        version: 6.1.1(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 6.1.1(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       '@w3ux/types':
         specifier: ^2.4.2
         version: 2.4.2
@@ -168,7 +168,7 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   packages/app-nominate:
     dependencies:
@@ -271,13 +271,13 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -464,16 +464,16 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       vite-bundle-visualizer:
         specifier: ^1.2.1
         version: 1.2.1(rolldown@1.2.8)(supports-color@10.2.2)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -621,13 +621,13 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -730,13 +730,13 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       vite-plugin-checker:
         specifier: ^0.14.5
-        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       vite-shared:
         specifier: workspace:*
         version: link:../vite-shared
@@ -752,10 +752,10 @@ importers:
         version: link:../types
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
 
   packages/consts:
     dependencies:
@@ -777,7 +777,7 @@ importers:
         version: link:../types
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   packages/data-gate:
     dependencies:
@@ -891,7 +891,7 @@ importers:
         version: link:../types
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   packages/hooks:
     dependencies:
@@ -958,8 +958,8 @@ importers:
         version: 7.19.0(ws@8.21.3)
     devDependencies:
       '@types/node':
-        specifier: ^26.4.1
-        version: 26.5.1
+        specifier: ^26.6.1
+        version: 26.6.1
       tsx:
         specifier: ^4.23.13
         version: 4.23.13
@@ -968,7 +968,7 @@ importers:
         version: 6.0.3
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   packages/locales:
     dependencies:
@@ -996,7 +996,7 @@ importers:
     devDependencies:
       vite:
         specifier: 8.3.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   packages/plugin-gateway: {}
 
@@ -1060,7 +1060,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^5.0.1
-        version: 5.0.1(@types/node@26.5.1)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.0.1(@types/node@26.6.1)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
 
   packages/tx-submit:
     dependencies:
@@ -1242,7 +1242,7 @@ importers:
     devDependencies:
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
 
   packages/ui-buttons:
     dependencies:
@@ -1486,7 +1486,7 @@ importers:
         version: 2.4.2
       vite-plugin-svgr:
         specifier: ^5.2.0
-        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+        version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
 
   packages/ui-overlay:
     dependencies:
@@ -1608,7 +1608,7 @@ importers:
     dependencies:
       vite:
         specifier: ^8.0.0
-        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+        version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
 packages:
 
@@ -3314,8 +3314,8 @@ packages:
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
-  '@types/node@26.5.1':
-    resolution: {integrity: sha512-CzNm2FezW4VR/LjG6yUdiEgLE/rAQ9Slj5gCu/C2VrdcW7I0ahNZ8DRbHT7zOZ6r3ONgd/bsQIeSaoDGrd1C6g==}
+  '@types/node@26.6.1':
+    resolution: {integrity: sha512-VqGJBMCtdhqkBUCcBLvywI0NJ+KLuVzgNnlBUNFOQjqVxzo2lxLUNg1DSey8+u2u6ktswSAxg+s68QLzWHNOuA==}
 
   '@types/react-dom@19.3.0':
     resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==}
@@ -6879,7 +6879,7 @@ snapshots:
 
   '@types/bn.js@5.2.0':
     dependencies:
-      '@types/node': 26.5.1
+      '@types/node': 26.6.1
 
   '@types/chai@5.2.3':
     dependencies:
@@ -6892,7 +6892,7 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
-  '@types/node@26.5.1':
+  '@types/node@26.6.1':
     dependencies:
       undici-types: 8.9.0
 
@@ -6911,19 +6911,19 @@ snapshots:
   '@types/w3c-web-usb@1.0.14':
     optional: true
 
-  '@vitejs/plugin-react@6.1.1(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
+  '@vitejs/plugin-react@6.1.1(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+      vite: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
-  '@vitest/mocker@5.0.1(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
+  '@vitest/mocker@5.0.1(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.1
       estree-walker: 3.0.3
       magic-string: 1.3.1
     optionalDependencies:
-      vite: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+      vite: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
 
   '@vitest/spy@5.0.1': {}
 
@@ -8518,7 +8518,7 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-checker@0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
+  vite-plugin-checker@0.14.5(@biomejs/biome@2.5.14)(meow@14.1.0)(stylelint@17.15.0(supports-color@10.2.2)(typescript@6.0.3))(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
     dependencies:
       '@babel/code-frame': 7.29.7
       chokidar: 5.0.0
@@ -8527,25 +8527,25 @@ snapshots:
       picomatch: 4.0.7
       proper-lockfile: 4.1.2
       tiny-invariant: 1.3.3
-      vite: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+      vite: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
     optionalDependencies:
       '@biomejs/biome': 2.5.14
       meow: 14.1.0
       stylelint: 17.15.0(supports-color@10.2.2)(typescript@6.0.3)
       typescript: 6.0.3
 
-  vite-plugin-svgr@5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
+  vite-plugin-svgr@5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
     dependencies:
       '@rollup/pluginutils': 5.4.0
       '@svgr/core': 8.1.0(supports-color@10.2.2)(typescript@6.0.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
-      vite: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+      vite: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
 
-  vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13):
+  vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -8553,16 +8553,16 @@ snapshots:
       rolldown: 1.2.8
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.5.1
+      '@types/node': 26.6.1
       esbuild: 0.28.2
       fsevents: 2.3.3
       sass: 1.104.0
       tsx: 4.23.13
 
-  vitest@5.0.1(@types/node@26.5.1)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
+  vitest@5.0.1(@types/node@26.6.1)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.1(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
+      '@vitest/mocker': 5.0.1(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -8573,10 +8573,10 @@ snapshots:
       tinybench: 6.1.4
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
-      vite: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
+      vite: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.0)(tsx@4.23.13)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 26.5.1
+      '@types/node': 26.6.1
     transitivePeerDependencies:
       - msw
 
