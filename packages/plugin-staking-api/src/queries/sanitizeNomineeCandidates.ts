@@ -29,7 +29,16 @@ export const fetchSanitizeNomineeCandidates = (
 ) =>
 	fetchQuery<SanitizeNomineeCandidatesData>(
 		QUERY,
-		{ network, candidates },
+		{
+			network,
+			// Apollo results include __typename, which GraphQL input objects reject.
+			candidates: candidates.map(
+				({ address, prefs: { commission, blocked } }) => ({
+					address,
+					prefs: { commission, blocked },
+				}),
+			),
+		},
 		{ sanitizeNomineeCandidates: candidates },
 		{ throwOnError: true, fetchPolicy: 'no-cache' },
 	)
