@@ -19,6 +19,12 @@ export type ExtensionArrayListItem = ExtensionListItem & {
 }
 
 export const extensions: ExtensionsList = {
+	'cloud-signer': {
+		title: 'Cloud Signer',
+		website: 'polkadot.cloud',
+		category: 'web-extension',
+		features: '*',
+	},
 	ledger: {
 		title: 'Ledger',
 		website: 'ledger.com',
