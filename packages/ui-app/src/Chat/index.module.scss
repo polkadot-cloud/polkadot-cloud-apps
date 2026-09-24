@@ -2,11 +2,33 @@
 SPDX-License-Identifier: GPL-3.0-only */
 
 .trigger {
-	border-radius: var(--btn-sm-radius);
+	position: fixed;
+	right: max(clamp(16px, 2vw, 24px), env(safe-area-inset-right));
+	bottom: max(clamp(16px, 2vw, 24px), env(safe-area-inset-bottom));
+	z-index: 7;
+	display: grid;
+	place-items: center;
+	width: 56px;
+	height: 56px;
+	border: 1px solid var(--gray-900);
+	border-radius: 50%;
+	color: var(--gray-100);
+	background: var(--gray-1000);
+	box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+	font-size: 22px;
+	transition: background-color 150ms, transform 150ms;
+
+	&:hover {
+		background: var(--gray-900);
+	}
+
+	&:active {
+		transform: scale(0.94);
+	}
 
 	&:focus-visible {
 		outline: 2px solid var(--gray-900);
-		outline-offset: -3px;
+		outline-offset: 4px;
 	}
 }
 
@@ -655,7 +677,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.panel, .panel *, .backdrop {
+	.trigger, .panel, .panel *, .backdrop {
 		animation: none !important;
 		transition: none !important;
 		scroll-behavior: auto !important;

@@ -36,32 +36,34 @@ export const Headers = () => {
 	const [openConnect, setOpenConnect] = useState(false)
 
 	return (
-		<Header minimized={sideMenuMinimised}>
-			<section />
-			<section>
-				<Sync />
-				<Account
-					openConnect={openConnect}
-					setOpenConnect={setOpenConnect}
-					sendModal={false}
-				/>
-				<Settings
-					openConnect={openConnect}
-					setOpenConnect={setOpenConnect}
-					menuPopoverFeatures={menuPopoverFeatures}
-				>
-					<NominationHealthSetting />
-				</Settings>
-				<Chat
-					currentNominations={nominations}
-					endpoint={
-						import.meta.env.VITE_MESSAGING_URL ||
-						(import.meta.env.MESSAGING_DEV_PROXY
-							? window.location.origin
-							: 'https://apps-ws.polkadot.cloud')
-					}
-				/>
-			</section>
-		</Header>
+		<>
+			<Header minimized={sideMenuMinimised}>
+				<section />
+				<section>
+					<Sync />
+					<Account
+						openConnect={openConnect}
+						setOpenConnect={setOpenConnect}
+						sendModal={false}
+					/>
+					<Settings
+						openConnect={openConnect}
+						setOpenConnect={setOpenConnect}
+						menuPopoverFeatures={menuPopoverFeatures}
+					>
+						<NominationHealthSetting />
+					</Settings>
+				</section>
+			</Header>
+			<Chat
+				currentNominations={nominations}
+				endpoint={
+					import.meta.env.VITE_MESSAGING_URL ||
+					(import.meta.env.MESSAGING_DEV_PROXY
+						? window.location.origin
+						: 'https://apps-ws.polkadot.cloud')
+				}
+			/>
+		</>
 	)
 }

@@ -4,7 +4,6 @@
 import { faComments, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Dialog } from 'radix-ui'
-import { ButtonHeader } from 'ui-buttons'
 import classes from './index.module.scss'
 import type { ChatPanelProps } from './types'
 
@@ -24,8 +23,12 @@ export const ChatPanel = ({
 	footer,
 }: ChatPanelProps) => (
 	<Dialog.Root open={open} onOpenChange={onOpenChange}>
-		<Dialog.Trigger aria-label={triggerLabel} className={classes.trigger}>
-			<ButtonHeader icon={faComments} />
+		<Dialog.Trigger
+			aria-label={triggerLabel}
+			title={triggerLabel}
+			className={classes.trigger}
+		>
+			<FontAwesomeIcon icon={faComments} />
 		</Dialog.Trigger>
 		<Dialog.Portal container={portalContainer}>
 			<Dialog.Overlay className={classes.backdrop} />

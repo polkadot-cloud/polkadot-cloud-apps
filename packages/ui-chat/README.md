@@ -2,11 +2,13 @@
 
 `ui-chat` connects the Nominate app to staking-api's `service-messaging` using a
 guest credential and short-lived conversation tokens. Only `app-nominate` mounts
-`<Chat />`, at the right end of its header. Other apps do not show a chat launcher.
+`<Chat />`, with a fixed bottom-right launcher over the page. The launcher uses a
+56px circular touch target and respects mobile safe areas. Other apps do not show
+a chat launcher.
 
 Reusable presentation lives in `ui-app/Chat`: `ChatPanel`, `ChatMessages`,
 `ChatComposer`, `ChatNotice`, `ChatWelcome`, `ChatChecklist`, and `ChatDetails`. It uses the same Radix, CSS Module
-SCSS, typography, theme variables, and header button conventions as `ui-core`.
+SCSS, typography, and theme variables as `ui-core`.
 The dialog portals into `useTheme().themeElementRef`, traps keyboard focus,
 closes with Escape, and returns focus to the launcher. On desktop it is a compact
 floating panel; narrow or short viewports use a full-screen layout with safe-area
