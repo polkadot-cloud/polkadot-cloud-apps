@@ -1,0 +1,22 @@
+{
+	"name": "ui-chat",
+	"version": "0.1.0",
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"scripts": {
+		"clear": "rm -rf build tsconfig.tsbuildinfo dist node_modules",
+		"check": "biome check .",
+		"lint": "biome check --write ."
+	},
+	"exports": {
+		".": "./src/index.tsx"
+	},
+	"dependencies": {
+		"hooks": "workspace:*",
+		"react": "^19.2.8",
+		"react-i18next": "^17.0.14",
+		"socket.io-client": "^4.8.3",
+		"ui-app": "workspace:*",
+		"ui-buttons": "workspace:*"
+	}
+}

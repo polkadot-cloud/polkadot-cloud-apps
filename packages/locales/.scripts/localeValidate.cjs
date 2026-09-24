@@ -3,6 +3,7 @@
 
 const { readFileSync, readdirSync } = require('node:fs')
 const { join } = require('node:path')
+const { englishOnlyNamespaces } = require('../src/resourceConfig.json')
 const {
 	getDeepKeys,
 	getDirectories,
@@ -13,6 +14,10 @@ const {
 const SOURCE_LOCALE = 'en'
 const locales = getDirectories(localeDir, [])
 const translations = locales.filter((locale) => locale !== SOURCE_LOCALE)
+// Share the runtime loader's exceptions; all other files and keys require parity.
+const englishOnlyFiles = new Set(
+	englishOnlyNamespaces.map((namespace) => `${namespace}.json`),
+)
 
 const localePath = (...parts) => join(localeDir, ...parts)
 const readLocale = (...parts) =>
@@ -35,14 +40,16 @@ const getKeyParityErrors = () => {
 		const localeFiles = new Set(readdirSync(localePath(locale)))
 
 		for (const file of difference(sourceFiles.keys(), localeFiles)) {
-			errors.push(`Locale "${locale}" is missing file "${file}".`)
+			if (!englishOnlyFiles.has(file)) {
+				errors.push(`Locale "${locale}" is missing file "${file}".`)
+			}
 		}
 		for (const file of difference(localeFiles, sourceFiles)) {
 			errors.push(`Locale "${locale}" has orphaned file "${file}".`)
 		}
 
 		for (const [file, sourceKeys] of sourceFiles) {
-			if (!localeFiles.has(file)) continue
+			if (englishOnlyFiles.has(file) || !localeFiles.has(file)) continue
 			const localeKeys = getKeys(locale, file)
 			for (const [type, keys] of [
 				['Missing', difference(sourceKeys, localeKeys)],

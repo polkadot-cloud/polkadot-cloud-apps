@@ -352,7 +352,9 @@
 		"permissionlessClaimingTurnedOff": "Permissionless claiming is turned off.",
 		"permissionlessCompound": "Permissionless Compounding: Anyone can compound rewards for this member",
 		"permissionlessWithdraw": "Permissionless Withdrawing: Anyone can withdraw rewards for this member",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Points",
 		"pool": "Pool",
 		"poolClaim": "Pool Claim",

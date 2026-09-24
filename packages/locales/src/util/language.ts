@@ -5,9 +5,17 @@ import { extractUrlValue, varToUrlHash } from '@w3ux/utils'
 import { onLocaleFromModalEvent, onLocaleFromUrlEvent } from 'event-tracking'
 import type { i18n } from 'i18next'
 import { DefaultLocale, locales } from '../config'
+import { englishOnlyNamespaces } from '../resourceConfig.json'
 import type { LocaleJson, LocaleProfile } from '../types'
 
 type ProfiledI18n = i18n & { localeProfile?: LocaleProfile }
+
+// English-only features do not require translated resources or cached namespaces.
+const getNamespaces = (lng: string, fallbackResources: LocaleJson) =>
+	Object.keys(fallbackResources).filter(
+		(namespace) =>
+			lng === DefaultLocale || !englishOnlyNamespaces.includes(namespace),
+	)
 
 /* Language Management */
 export const getInitialLanguage = () => {
@@ -55,7 +63,7 @@ export const getResources = (
 				typeof r === 'object' &&
 				r !== null &&
 				!Array.isArray(r) &&
-				Object.keys(fallbackResources).every((namespace) =>
+				getNamespaces(lng, fallbackResources).every((namespace) =>
 					Object.hasOwn(r, namespace),
 				)
 			) {
@@ -102,7 +110,7 @@ export const changeLanguage = async (lng: string, i18next: i18n) => {
 /* Resource Loading */
 const loadResources = async (lng: string, profile: LocaleProfile) => {
 	const resources = await Promise.all(
-		Object.keys(profile.fallbackResources).map((namespace) => {
+		getNamespaces(lng, profile.fallbackResources).map((namespace) => {
 			const path = `../resources/${lng}/${namespace}.json`
 			const load = profile.resourceLoaders[path]
 			if (!load) {

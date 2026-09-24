@@ -6,6 +6,7 @@ import { NominationHealthSetting } from 'library/ManageNominations/NominationHea
 import { Sync } from 'library/Sync'
 import { useState } from 'react'
 import { Account, type MenuPopoverFeatureFlags, Settings } from 'ui-app/Headers'
+import { Chat } from 'ui-chat'
 import { Header } from 'ui-core/base'
 
 const menuPopoverFeatures = {
@@ -39,6 +40,14 @@ export const Headers = () => {
 				>
 					<NominationHealthSetting />
 				</Settings>
+				<Chat
+					endpoint={
+						import.meta.env.VITE_MESSAGING_URL ||
+						(import.meta.env.MESSAGING_DEV_PROXY
+							? window.location.origin
+							: 'https://apps-ws.polkadot.cloud')
+					}
+				/>
 			</section>
 		</Header>
 	)

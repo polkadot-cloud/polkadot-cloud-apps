@@ -38,6 +38,7 @@
 		"simplebar": "6.3.3",
 		"styled-components": "^6.5.3",
 		"ui-app": "workspace:*",
+		"ui-chat": "workspace:*",
 		"ui-core": "workspace:*",
 		"ui-modals": "workspace:*",
 		"ui-overlay": "workspace:*",

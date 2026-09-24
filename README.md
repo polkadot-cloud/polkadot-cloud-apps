@@ -18,6 +18,8 @@ available RPC providers and defaults in development.
 Production builds connect directly to the Cloud endpoints using the existing origin
 access rules; the development proxy and token are not needed for deployment.
 
+For Nominate's local messaging setup, see [Guidance chat](packages/ui-chat/README.md#public-client-configuration).
+
 ## Staking Dashboard
 
 - [**English:** Welcome to Polkadot Cloud Staking!](https://docs.staking.polkadot.cloud/en/developer-overview)
