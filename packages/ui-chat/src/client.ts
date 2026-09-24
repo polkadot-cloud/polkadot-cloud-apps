@@ -24,6 +24,7 @@ import type {
 	ClientEvents,
 	GuestIdentity,
 	GuestSession,
+	GuidanceIntake,
 	SendResult,
 	ServerEvents,
 } from './types'
@@ -109,9 +110,11 @@ export class ChatClient {
 		this.update({
 			messages: [],
 			initialized: false,
+			intakeRequired: null,
 			nextCursor: null,
 			pending: null,
 			sending: false,
+			rejected: false,
 		})
 		this.start()
 	}
@@ -177,6 +180,7 @@ export class ChatClient {
 				throw new RequestError(401)
 			}
 			this.session = session
+			this.update({ intakeRequired: session.intakeRequired })
 
 			// This client owns reconnection so every socket receives a fresh access token.
 			const socket = this.openSocket(this.origin, {
@@ -246,6 +250,9 @@ export class ChatClient {
 	}
 
 	private receive(messages: ChatMessage[]) {
+		if (messages.some((message) => message.authorType === 'CLIENT')) {
+			this.update({ intakeRequired: false })
+		}
 		const pending = this.identity?.pending
 		// History and live broadcasts can confirm a send even when its ack was lost.
 		if (
@@ -261,7 +268,7 @@ export class ChatClient {
 				this.identity.pending = null
 			}
 			this.save()
-			this.update({ pending: null, error: null })
+			this.update({ pending: null, rejected: false, error: null })
 		}
 		this.update({ messages: mergeMessages(this.snapshot.messages, messages) })
 	}
@@ -312,10 +319,14 @@ export class ChatClient {
 		}
 	}
 
-	async send(body: string) {
+	async send(body: string, intake?: GuidanceIntake) {
 		if (
 			this.snapshot.sending ||
 			!this.identity ||
+			this.snapshot.intakeRequired === null ||
+			(this.snapshot.intakeRequired &&
+				!intake &&
+				!this.identity.pending?.intake) ||
 			!body.trim() ||
 			body.trim().length > MAX_MESSAGE_LENGTH
 		) {
@@ -323,14 +334,17 @@ export class ChatClient {
 		}
 
 		// Keep the exact body and requestId until confirmed, even across reloads.
-		const input = this.identity.pending ?? {
+		let input = this.identity.pending ?? {
 			body: body.trim(),
 			requestId: crypto.randomUUID(),
+		}
+		if (this.snapshot.intakeRequired && !input.intake && intake) {
+			input = { ...input, intake: structuredClone(intake) }
 		}
 		const identity = this.identity
 		this.identity.pending = input
 		this.save()
-		this.update({ pending: input, sending: true, error: null })
+		this.update({ pending: input, sending: true, rejected: false, error: null })
 		try {
 			if (!this.socket?.connected) {
 				throw new Error('Disconnected')
@@ -349,9 +363,16 @@ export class ChatClient {
 		} catch (error) {
 			// A broadcast may have confirmed persistence before the ack timed out.
 			if (identity === this.identity && this.identity.pending) {
+				// A second tab may have already completed intake. Refresh the server
+				// state and let the user edit a definitively rejected send.
+				const rejected =
+					error instanceof RequestError && [400, 409].includes(error.status)
+				if (rejected) void this.catchUp().catch(() => {})
 				this.update({
-					error:
-						error instanceof RequestError && error.status === 429
+					rejected,
+					error: rejected
+						? 'rejected'
+						: error instanceof RequestError && error.status === 429
 							? 'rateLimit'
 							: 'send',
 				})
@@ -361,5 +382,12 @@ export class ChatClient {
 				this.update({ sending: false })
 			}
 		}
+	}
+
+	editRejected() {
+		if (!this.snapshot.rejected || !this.identity) return
+		this.identity.pending = null
+		this.save()
+		this.update({ pending: null, rejected: false, error: null })
 	}
 }

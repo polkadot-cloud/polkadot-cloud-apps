@@ -19,6 +19,7 @@ export const ChatMessages = ({
 	onLoadOlder,
 	empty,
 	loading = false,
+	prompt,
 }: ChatMessagesProps) => {
 	const scroll = useRef<HTMLDivElement>(null)
 	const previous = useRef({ first: '', height: 0 })
@@ -75,6 +76,7 @@ export const ChatMessages = ({
 								<div className={classes.bubble}>
 									<strong>{message.author}</strong>
 									<p>{message.body}</p>
+									{message.content}
 								</div>
 								<time dateTime={message.createdAt}>
 									{new Date(message.createdAt).toLocaleString(undefined, {
@@ -87,7 +89,7 @@ export const ChatMessages = ({
 							</li>
 						))}
 					</ol>
-				) : (
+				) : prompt ? null : (
 					<div className={classes.empty} role="status">
 						<div className={classes.emptyIcon} aria-hidden="true">
 							{loading ? (
@@ -103,6 +105,7 @@ export const ChatMessages = ({
 						{empty}
 					</div>
 				)}
+				{prompt}
 			</div>
 			{!atBottom && (
 				<button

@@ -3,6 +3,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { ChatClient } from '../client'
+import type { GuidanceIntake } from '../types'
 import type { ChatHookInterface } from './types'
 
 export const useChat = (endpoint: string): ChatHookInterface => {
@@ -36,15 +37,20 @@ export const useChat = (endpoint: string): ChatHookInterface => {
 		client.startNew()
 	}
 
-	const send = () => {
+	const send = (intake?: GuidanceIntake) => {
 		// The client retains the submitted body until persistence is confirmed.
 		// Clear this draft immediately so an acknowledgement cannot erase later input.
-		void client.send(state.pending?.body ?? draft)
+		void client.send(state.pending?.body ?? draft, intake)
 		setDraft('')
 	}
 
 	const loadOlder = () => {
 		void client.loadOlder()
+	}
+	const editRejected = () => {
+		if (!state.rejected || !state.pending) return
+		setDraft(state.pending.body)
+		client.editRejected()
 	}
 
 	return {
@@ -57,6 +63,7 @@ export const useChat = (endpoint: string): ChatHookInterface => {
 		start,
 		startNew,
 		send,
+		editRejected,
 		loadOlder,
 	}
 }

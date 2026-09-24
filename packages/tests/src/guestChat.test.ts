@@ -59,6 +59,7 @@ const message = (id: string, input?: MessageInput): ChatMessage => ({
 	kind: 'TEXT',
 	body: input?.body ?? `Message ${id}`,
 	requestId: input?.requestId ?? id,
+	intake: input?.intake ?? null,
 })
 const response = (body: object, status = 200) =>
 	({
@@ -66,9 +67,10 @@ const response = (body: object, status = 200) =>
 		status,
 		json: async () => body,
 	}) as Response
-const session = () =>
+const session = (intakeRequired = false) =>
 	response({
 		conversationId,
+		intakeRequired,
 		token: crypto.randomUUID(),
 		expiresAt: Date.now() + 900_000,
 		guestExpiresAt: Date.now() + 30 * 86400_000,
@@ -151,6 +153,123 @@ test('lost acknowledgements keep the exact message and request ID through reload
 	expect(resumed.getSnapshot().pending).toBeNull()
 	expect(readIdentity(origin)?.pending).toBeNull()
 	expect(resumed.getSnapshot().messages).toHaveLength(1)
+})
+
+test('new chats require goals and send the opening message and nomination snapshot together only once', async () => {
+	http.mockResolvedValueOnce(session(true))
+	const value = client()
+	value.start()
+	await flush()
+	expect(value.getSnapshot().intakeRequired).toBe(true)
+	await value.send('No goals')
+	expect(sockets[0].emitWithAck).not.toHaveBeenCalled()
+	const intake = {
+		goals: ['MINIMISE_NOMINATIONS', 'HIGH_RETAINMENT'] as const,
+		currentNominations: [`0x${'ab'.repeat(32)}`],
+	}
+	sockets[0].emitWithAck.mockImplementation(
+		async (_event, input: MessageInput) => ({
+			ok: true,
+			message: message('1', input),
+		}),
+	)
+	await value.send('Please review my nominations', {
+		...intake,
+		goals: [...intake.goals],
+	})
+	expect(sockets[0].emitWithAck).toHaveBeenCalledWith(
+		'message:send',
+		expect.objectContaining({ body: 'Please review my nominations', intake }),
+	)
+	expect(value.getSnapshot().messages[0].intake).toEqual(intake)
+	expect(value.getSnapshot().intakeRequired).toBe(false)
+	await value.send('Thank you', { goals: ['HIGH_RETAINMENT'] })
+	expect(sockets[0].emitWithAck.mock.calls.at(-1)?.[1]).not.toHaveProperty(
+		'intake',
+	)
+})
+
+test('an uncertain opening preserves goals and nominations across reload and wallet changes', async () => {
+	http.mockResolvedValueOnce(session(true))
+	const first = client()
+	first.start()
+	await flush()
+	sockets[0].emitWithAck.mockRejectedValueOnce(new Error('timeout'))
+	const intake = { goals: ['HIGH_RETAINMENT'] as const, currentNominations: [] }
+	await first.send('My first message', { ...intake, goals: [...intake.goals] })
+	const pending = first.getSnapshot().pending!
+	expect(pending.intake).toEqual(intake)
+	first.stop()
+	http.mockResolvedValueOnce(session(true))
+	const resumed = client()
+	resumed.start()
+	await flush()
+	sockets[1].emitWithAck.mockResolvedValue({
+		ok: true,
+		message: message('1', pending),
+	})
+	await resumed.send('Changed', {
+		goals: ['MINIMISE_NOMINATIONS'],
+		currentNominations: [`0x${'cd'.repeat(32)}`],
+	})
+	expect(sockets[1].emitWithAck).toHaveBeenCalledWith('message:send', pending)
+	expect(resumed.getSnapshot().pending).toBeNull()
+	expect(resumed.getSnapshot().intakeRequired).toBe(false)
+})
+
+test('an established conversation keeps the checklist hidden even when its opening is outside the newest history page', async () => {
+	http
+		.mockResolvedValueOnce(session(false))
+		.mockResolvedValueOnce(response({ items: [message('9')], nextCursor: '9' }))
+	const value = client()
+	value.start()
+	await flush()
+	expect(value.getSnapshot().intakeRequired).toBe(false)
+	expect(value.getSnapshot().messages[0].authorType).toBe('STAFF')
+})
+
+test('a competing intake submission can be edited into a normal follow-up without resubmitting goals', async () => {
+	http.mockResolvedValueOnce(session(true))
+	const value = client()
+	value.start()
+	await flush()
+	http.mockResolvedValueOnce(
+		response({
+			items: [
+				{
+					...message('1'),
+					authorType: 'CLIENT',
+					intake: { goals: ['HIGH_RETAINMENT'] },
+				},
+			],
+			nextCursor: null,
+		}),
+	)
+	sockets[0].emitWithAck.mockResolvedValueOnce({
+		ok: false,
+		status: 409,
+		error: 'Goals already submitted',
+	})
+	await value.send('My question', { goals: ['HIGH_RETAINMENT'] })
+	await flush()
+	expect(value.getSnapshot()).toMatchObject({
+		rejected: true,
+		intakeRequired: false,
+		pending: { body: 'My question' },
+	})
+	value.editRejected()
+	expect(value.getSnapshot().pending).toBeNull()
+	sockets[0].emitWithAck.mockImplementation(
+		async (_event, input: MessageInput) => ({
+			ok: true,
+			message: message('2', input),
+		}),
+	)
+	await value.send('My question')
+	expect(sockets[0].emitWithAck.mock.calls.at(-1)?.[1]).not.toHaveProperty(
+		'intake',
+	)
+	expect(value.getSnapshot().rejected).toBe(false)
 })
 
 test('live persistence confirms a send even when its acknowledgement is lost', async () => {

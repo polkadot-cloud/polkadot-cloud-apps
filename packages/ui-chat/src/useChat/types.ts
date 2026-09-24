@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { ChatSnapshot } from '../types'
+import type { ChatSnapshot, GuidanceIntake } from '../types'
 
 export interface ChatHookInterface {
 	state: ChatSnapshot
@@ -12,6 +12,7 @@ export interface ChatHookInterface {
 	setOpen: (open: boolean) => void
 	start: () => void
 	startNew: () => void
-	send: () => void
+	send: (intake?: GuidanceIntake) => void
+	editRejected: () => void
 	loadOlder: () => void
 }

@@ -8,9 +8,11 @@ export const defaultChatSnapshot: ChatSnapshot = {
 	messages: [],
 	nextCursor: null,
 	initialized: false,
+	intakeRequired: null,
 	sending: false,
 	loadingOlder: false,
 	pending: null,
 	persistent: true,
+	rejected: false,
 	error: null,
 }

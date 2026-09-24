@@ -25,6 +25,7 @@ export interface ChatDisplayMessage {
 	createdAt: string
 	mine: boolean
 	author: string
+	content?: ReactNode
 }
 
 export interface ChatMessagesProps {
@@ -37,6 +38,19 @@ export interface ChatMessagesProps {
 	onLoadOlder: () => void
 	empty: ReactNode
 	loading?: boolean
+	prompt?: ReactNode
+}
+
+export interface ChatChecklistProps {
+	legend: string
+	options: { value: string; label: string; checked: boolean }[]
+	onChange: (value: string, checked: boolean) => void
+	disabled?: boolean
+}
+
+export interface ChatDetailsProps {
+	label: string
+	children: ReactNode
 }
 
 export interface ChatNoticeProps {

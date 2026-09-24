@@ -1,6 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useActiveAccount } from '@polkadot-cloud/connect'
+import { useActivePool } from 'hooks/useActivePool'
+import { useBalances } from 'hooks/useBalances'
 import { useUi } from 'hooks/useUi'
 import { NominationHealthSetting } from 'library/ManageNominations/NominationHealthSetting'
 import { Sync } from 'library/Sync'
@@ -21,6 +24,15 @@ const menuPopoverFeatures = {
 
 export const Headers = () => {
 	const { sideMenuMinimised } = useUi()
+	const { activeAddress } = useActiveAccount()
+	const { getStakingLedger } = useBalances()
+	const { activePool, isOwner } = useActivePool()
+	// Match the nomination editor: pool owners manage the pool's nominations.
+	const nominations = activeAddress
+		? activePool && isOwner()
+			? activePool.nominators.targets
+			: getStakingLedger(activeAddress).nominators?.targets
+		: undefined
 	const [openConnect, setOpenConnect] = useState(false)
 
 	return (
@@ -41,6 +53,7 @@ export const Headers = () => {
 					<NominationHealthSetting />
 				</Settings>
 				<Chat
+					currentNominations={nominations}
 					endpoint={
 						import.meta.env.VITE_MESSAGING_URL ||
 						(import.meta.env.MESSAGING_DEV_PROXY

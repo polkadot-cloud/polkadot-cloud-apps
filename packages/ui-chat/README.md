@@ -5,7 +5,7 @@ guest credential and short-lived conversation tokens. Only `app-nominate` mounts
 `<Chat />`, at the right end of its header. Other apps do not show a chat launcher.
 
 Reusable presentation lives in `ui-app/Chat`: `ChatPanel`, `ChatMessages`,
-`ChatComposer`, `ChatNotice`, and `ChatWelcome`. It uses the same Radix, CSS Module
+`ChatComposer`, `ChatNotice`, `ChatWelcome`, `ChatChecklist`, and `ChatDetails`. It uses the same Radix, CSS Module
 SCSS, typography, theme variables, and header button conventions as `ui-core`.
 The dialog portals into `useTheme().themeElementRef`, traps keyboard focus,
 closes with Escape, and returns focus to the launcher. On desktop it is a compact
@@ -68,7 +68,8 @@ directory. Leave the override unset to use the built-in local messaging proxy.
 ## Server configuration (staking-api only)
 
 Before deploying the app, deploy staking-api's
-`20260924120000_guidance_guest_conversations` migration and updated messaging
+`20260924120000_guidance_guest_conversations` and
+`20260924130000_guidance_intake` migrations and updated messaging
 service/dashboard. The messaging service needs an existing `polkadot` network,
 `MESSAGING_TOKEN_SECRET`, and nginx in front of its loopback upstream. Configure
 the exact Nominate and dashboard browser origins in nginx's
@@ -94,6 +95,27 @@ The service signs and returns a token scoped to that one guest conversation.
 This is a runtime per-user credential, not a deployment secret bundled into the
 website. The access JWT stays in memory and the connection renews it before
 expiry. No cloud-apps backend or wallet authentication is required.
+
+Before the first message, an in-chat checklist asks for at least one guidance
+goal: minimise nominations while maintaining daily rewards, and/or prioritise
+high retaining validators. The user sends their goals and opening text together.
+Nominate supplies available current nominations from the active account, using
+the active pool's nominations for pool owners to match the nomination editor.
+The user can choose whether to send them for optimisation; the chat confirms
+sharing without listing individual addresses. No wallet identity or signing
+authority is sent. Unavailable nominations do not prevent a chat.
+
+The API returns `intakeRequired` with each guest session, so the checklist stays
+hidden after submission, including on reload or when the opening message is
+outside the newest history page. Existing conversations are not prompted again.
+The opening message includes an `intake` object with `goals` and optional
+`currentNominations`; history and live events render it as a custom summary.
+The pending send retains this exact snapshot and request ID through lost
+acknowledgements, reloads, and wallet changes. Subsequent messages omit intake.
+If another tab submits the goals first, a rejected send offers **Edit message**
+so the user can keep its text and send a normal follow-up.
+The admin dashboard displays the snapshot for review; no automatic optimisation
+is performed at this stage.
 
 The credential lasts 30 days from creation. It is stored in local storage under
 a key scoped to the messaging origin; clearing that storage loses access. If

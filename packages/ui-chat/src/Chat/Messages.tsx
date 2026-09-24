@@ -3,9 +3,10 @@
 
 import { useTranslation } from 'react-i18next'
 import { ChatMessages, ChatNotice } from 'ui-app/Chat'
+import { GoalsSummary } from './Goals'
 import type { MessagesProps } from './types'
 
-export const Messages = ({ state, onLoadOlder }: MessagesProps) => {
+export const Messages = ({ state, onLoadOlder, prompt }: MessagesProps) => {
 	const { t } = useTranslation('chat')
 	const error =
 		state.error &&
@@ -14,6 +15,7 @@ export const Messages = ({ state, onLoadOlder }: MessagesProps) => {
 			history: t('historyError'),
 			send: t('sendError'),
 			rateLimit: t('rateLimit'),
+			rejected: t('rejected'),
 		}[state.error]
 	const authors = {
 		CLIENT: t('you'),
@@ -42,8 +44,12 @@ export const Messages = ({ state, onLoadOlder }: MessagesProps) => {
 					...message,
 					mine: message.authorType === 'CLIENT',
 					author: authors[message.authorType],
+					content: message.intake ? (
+						<GoalsSummary intake={message.intake} />
+					) : undefined,
 				}))}
 				label={t('history')}
+				prompt={prompt}
 				olderLabel={state.loadingOlder ? t('loading') : t('older')}
 				latestLabel={t('latest')}
 				hasOlder={Boolean(state.nextCursor)}

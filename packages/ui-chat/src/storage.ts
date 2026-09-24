@@ -4,6 +4,29 @@
 import { MAX_MESSAGE_LENGTH } from './consts'
 import type { GuestIdentity, MessageInput } from './types'
 
+const isIntake = (value: unknown): boolean => {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+	const input = value as Record<string, unknown>
+	return (
+		Array.isArray(input.goals) &&
+		input.goals.length > 0 &&
+		input.goals.length <= 2 &&
+		new Set(input.goals).size === input.goals.length &&
+		input.goals.every((goal) =>
+			['MINIMISE_NOMINATIONS', 'HIGH_RETAINMENT'].includes(goal),
+		) &&
+		(!('currentNominations' in input) ||
+			(Array.isArray(input.currentNominations) &&
+				input.currentNominations.length <= 24 &&
+				input.currentNominations.every(
+					(address) =>
+						typeof address === 'string' &&
+						address.length > 0 &&
+						address.length <= 100,
+				)))
+	)
+}
+
 // Keep credentials isolated between local, staging and production services.
 export const storageKey = (origin: string) =>
 	`cloud:guest-chat:polkadot:${origin}`
@@ -19,7 +42,8 @@ const isMessageInput = (value: unknown): value is MessageInput =>
 	'body' in value &&
 	typeof value.body === 'string' &&
 	value.body.trim().length > 0 &&
-	value.body.length <= MAX_MESSAGE_LENGTH
+	value.body.length <= MAX_MESSAGE_LENGTH &&
+	(!('intake' in value) || isIntake(value.intake))
 
 export const readIdentity = (origin: string): GuestIdentity | null => {
 	try {
