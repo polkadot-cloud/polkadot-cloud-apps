@@ -15,9 +15,9 @@
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"@tanstack/react-query": "^5.102.8",
+		"@tanstack/react-query": "^5.103.1",
 		"types": "workspace:*",
 		"typescript": "^6.0.3",
-		"vitest": "^5.0.0"
+		"vitest": "^5.0.1"
 	}
 }
