@@ -13,7 +13,6 @@
 		".": "./src/index.ts"
 	},
 	"dependencies": {
-		"cloud-signer-client": "workspace:*",
 		"@dedot/chaintypes": "^0.280.0",
 		"@polkadot-cloud/connect-core": "^1.1.0",
 		"@polkadot-cloud/connect-proxies": "^0.4.0",

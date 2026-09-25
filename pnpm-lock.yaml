@@ -757,12 +757,6 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.1)(tsx@4.23.13))
 
-  packages/cloud-signer-client:
-    dependencies:
-      dedot:
-        specifier: ^1.4.0
-        version: 1.4.0(typescript@6.0.3)
-
   packages/consts:
     dependencies:
       '@dedot/chain-specs':
@@ -833,9 +827,6 @@ importers:
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
-      cloud-signer-client:
-        specifier: workspace:*
-        version: link:../cloud-signer-client
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -1094,9 +1085,6 @@ importers:
       '@w3ux/types':
         specifier: ^2.4.2
         version: 2.4.2
-      cloud-signer-client:
-        specifier: workspace:*
-        version: link:../cloud-signer-client
       consts:
         specifier: workspace:*
         version: link:../consts

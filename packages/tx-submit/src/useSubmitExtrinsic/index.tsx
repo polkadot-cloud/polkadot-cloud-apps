@@ -9,7 +9,6 @@ import {
 import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
 import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import type { HardwareAccount } from '@w3ux/types'
-import { prepareCloudSigner } from 'cloud-signer-client'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
@@ -150,16 +149,7 @@ export const useSubmitExtrinsic = ({
 				throw new Error(t('walletNotFound'))
 			}
 			// NOTE: Summons extension popup if not already connected
-			if (source === 'cloud-signer') {
-				try {
-					await injectedExtension.enable(dappName)
-				} catch {
-					onError('user_cancelled')
-					return
-				}
-			} else {
-				injectedExtension.enable(dappName)
-			}
+			injectedExtension.enable(dappName)
 		}
 
 		// Pre-submission state update
@@ -269,28 +259,13 @@ export const useSubmitExtrinsic = ({
 			// Extension signer
 			//
 			// Get the signer for this account and submit the transaction
-			let signer = getExtensionAccount(
+			const signer = getExtensionAccount(
 				submitAccount.address,
 				submitAccount.source,
 			)?.signer as InjectedSigner | undefined
 			if (!signer) {
 				onError('technical', 'missing_signer')
 				return
-			}
-			let options = feePaymentOptions
-			if (source === 'cloud-signer') {
-				try {
-					// Hash properties are native chain units, never the selected fee-payment asset.
-					const cloud = await prepareCloudSigner(submitTx.client, signer, {
-						decimals: units,
-						tokenSymbol: unit,
-					})
-					signer = cloud.signer
-					options = { ...feePaymentOptions, metadataHash: cloud.metadataHash }
-				} catch {
-					onError('technical', 'missing_signer')
-					return
-				}
 			}
 			const { nonce } = await submitTx.client.query.system.account(
 				submitAccount.address,
@@ -303,7 +278,7 @@ export const useSubmitExtrinsic = ({
 				signer,
 				nonce + pendingTxCount(network, submitAccount.address),
 				handlers,
-				options,
+				feePaymentOptions,
 			)
 		}
 	}
