@@ -8,7 +8,7 @@ import {
 } from '@polkadot-cloud/connect'
 import { signLedgerPayload, useLedger } from '@polkadot-cloud/connect-ledger'
 import { VaultSigner } from '@polkadot-cloud/connect-vault'
-import type { HardwareAccount } from '@w3ux/types'
+import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'

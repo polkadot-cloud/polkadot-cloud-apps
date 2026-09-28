@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { MaybeString } from '@w3ux/types'
 import type { MaybeAddress, Validator } from 'types'
 
 export interface NominatorSetupsContextInterface {
@@ -25,7 +24,7 @@ export interface NominatorSetup {
 export interface NominatorProgress {
 	payee: PayeeConfig
 	nominations: Validator[]
-	bond: MaybeString
+	bond: string | null
 }
 
 export interface PayeeConfig {

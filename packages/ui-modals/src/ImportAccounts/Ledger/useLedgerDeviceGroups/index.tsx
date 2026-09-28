@@ -3,7 +3,7 @@
 
 import type { LedgerDeviceModel } from '@polkadot-cloud/connect-ledger'
 import { useLedger, useLedgerAccounts } from '@polkadot-cloud/connect-ledger'
-import type { HardwareAccount } from '@w3ux/types'
+import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import { setStateWithRef } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'

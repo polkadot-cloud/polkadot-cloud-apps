@@ -15,6 +15,7 @@
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^7.3.1",
 		"@polkadot-cloud/connect": "^1.1.0",
+		"@polkadot-cloud/connect-core": "^1.1.0",
 		"@polkadot-cloud/connect-ledger": "^1.2.0",
 		"@polkadot-cloud/connect-proxies": "^0.4.0",
 		"@w3ux/factories": "^2.2.2",
