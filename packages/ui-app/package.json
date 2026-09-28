@@ -10,6 +10,7 @@
 	},
 	"exports": {
 		".": "./src/index.tsx",
+		"./util": "./src/util.tsx",
 		"./*": "./src/*/index.tsx"
 	},
 	"dependencies": {
