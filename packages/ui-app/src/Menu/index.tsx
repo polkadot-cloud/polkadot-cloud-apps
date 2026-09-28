@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useOutsideAlerter } from '@w3ux/hooks'
 import { useMenu } from 'hooks/useMenu'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { isValidElement, useEffect, useRef } from 'react'
 import classes from './index.module.scss'
 import { MenuList } from './List'

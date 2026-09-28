@@ -57,3 +57,11 @@ export interface TimeLeftRaw {
 	minutes: number
 	seconds?: number
 }
+
+export interface TimeleftDuration {
+	days: number
+	hours: number
+	minutes: number
+	seconds: number
+	lastMinute: boolean
+}

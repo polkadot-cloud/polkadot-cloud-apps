@@ -1,10 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { getDurationFromNow } from '@w3ux/hooks/util'
 import { fromUnixTime } from 'date-fns'
 import type { TFunction } from 'i18next'
 import type { TimeLeftFormatted, TimeLeftRaw } from 'types'
+import { getDurationFromNow } from './timeleft'
 
 // Formats a given time breakdown (days, hours, minutes, seconds) into a readable structure using a
 // translation function. Falls back to displaying seconds if both days and hours are absent

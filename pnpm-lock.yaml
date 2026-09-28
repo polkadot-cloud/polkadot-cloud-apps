@@ -314,9 +314,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.103.1
         version: 5.103.1(react@19.3.0)
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.3.0)
       '@w3ux/react-odometer':
         specifier: 2.4.5
         version: 2.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -504,9 +501,6 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.3.0)
       '@w3ux/react-odometer':
         specifier: 2.4.5
         version: 2.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1155,9 +1149,6 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.3.0)
       '@w3ux/react-odometer':
         specifier: 2.4.5
         version: 2.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1514,15 +1505,15 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.3.0)
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
       consts:
         specifier: workspace:*
         version: link:../consts
+      hooks:
+        specifier: workspace:*
+        version: link:../hooks
       locales:
         specifier: workspace:*
         version: link:../locales
@@ -1554,9 +1545,6 @@ importers:
 
   packages/utils:
     dependencies:
-      '@w3ux/hooks':
-        specifier: ^2.4.4
-        version: 2.4.4(react@19.3.0)
       '@w3ux/utils':
         specifier: 3.1.1
         version: 3.1.1
