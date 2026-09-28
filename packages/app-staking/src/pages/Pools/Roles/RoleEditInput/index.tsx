@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { formatAccountSs58, isValidAddress } from '@w3ux/util-dedot'
+import { formatAccountSs58, isValidAddress } from '@polkadot-cloud/util-dedot'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import type { FormEvent } from 'react'

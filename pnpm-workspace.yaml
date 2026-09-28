@@ -11,5 +11,7 @@ allowBuilds:
   usb: true
   utf-8-validate: true
 
+minimumReleaseAgeExclude:
+  - '@polkadot-cloud/util-dedot@0.1.0'
 patchedDependencies:
   '@dedot/api@1.4.0': patches/@dedot__api@1.4.0.patch

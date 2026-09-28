@@ -305,6 +305,9 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+      '@polkadot-cloud/util-dedot':
+        specifier: ^0.1.0
+        version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
       '@tanstack/react-query':
         specifier: ^5.103.1
         version: 5.103.1(react@19.3.0)
@@ -317,9 +320,6 @@ importers:
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
         version: 4.0.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -498,6 +498,9 @@ importers:
       '@polkadot-cloud/connect-vault':
         specifier: ^1.1.0
         version: 1.1.0(@polkadot-cloud/connect-core@1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@polkadot-cloud/util-dedot':
+        specifier: ^0.1.0
+        version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/hooks':
         specifier: ^2.4.4
         version: 2.4.4(react@19.3.0)
@@ -507,9 +510,6 @@ importers:
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
         version: 4.0.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -806,9 +806,9 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.4.0(typescript@6.0.3))
+      '@polkadot-cloud/util-dedot':
+        specifier: ^0.1.0
+        version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1149,6 +1149,9 @@ importers:
       '@polkadot-cloud/connect-vault':
         specifier: ^1.1.0
         version: 1.1.0(@polkadot-cloud/connect-core@1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@polkadot-cloud/util-dedot':
+        specifier: ^0.1.0
+        version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/hooks':
         specifier: ^2.4.4
         version: 2.4.4(react@19.3.0)
@@ -1158,9 +1161,6 @@ importers:
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
         version: 4.0.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1402,15 +1402,15 @@ importers:
       '@polkadot-cloud/connect-vault':
         specifier: ^1.1.0
         version: 1.1.0(@polkadot-cloud/connect-core@1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@polkadot-cloud/util-dedot':
+        specifier: ^0.1.0
+        version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/hooks':
         specifier: ^2.4.4
         version: 2.4.4(react@19.3.0)
       '@w3ux/react-polkicon':
         specifier: ^4.0.2
         version: 4.0.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@w3ux/util-dedot':
-        specifier: ^1.0.0
-        version: 1.0.0(dedot@1.4.0(typescript@6.0.3))
       '@w3ux/utils':
         specifier: ^3.1.1
         version: 3.1.1
@@ -2287,6 +2287,11 @@ packages:
       react: ^19.1.0
       react-dom: ^19.1.0
       rxjs: ^7.8.2
+
+  '@polkadot-cloud/util-dedot@0.1.0':
+    resolution: {integrity: sha512-iTdj209JMCrK+Im3288aypjbS0AgwrIGmlM8Z1o3DgzFoQTHMhYrRa7XriD3DRfF2g1xMbOSLgGN0+MojC8w9g==}
+    peerDependencies:
+      dedot: ^1
 
   '@polkadot/keyring@14.0.3':
     resolution: {integrity: sha512-ozp1dQwaHCjgX/fpTTORmHjxdUNQnyiTVJszpzUaUpvtH/IGZhSU/mSHXMqNETS/g57vQa7NatIDcWfyR9abyA==}
@@ -5826,6 +5831,10 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
       rxjs: 7.8.2
+
+  '@polkadot-cloud/util-dedot@0.1.0(dedot@1.4.0(typescript@6.0.3))':
+    dependencies:
+      dedot: 1.4.0(typescript@6.0.3)
 
   '@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3)':
     dependencies:

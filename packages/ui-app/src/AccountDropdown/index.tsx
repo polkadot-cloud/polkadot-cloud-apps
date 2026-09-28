@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faGlasses } from '@fortawesome/free-solid-svg-icons'
+import { formatAccountSs58, isValidAddress } from '@polkadot-cloud/util-dedot'
 import { useOutsideAlerter } from '@w3ux/hooks'
 import { Polkicon } from '@w3ux/react-polkicon'
-import { formatAccountSs58, isValidAddress } from '@w3ux/util-dedot'
 import { ellipsisFn, planckToUnit } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util/chains'
