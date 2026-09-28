@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { Sync } from '@polkadot-cloud/connect-core/types'
+import {
+	createSafeContext,
+	useEffectIgnoreInitial,
+} from '@polkadot-cloud/hooks'
 import type { QueryStatus } from '@tanstack/react-query'
-import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
 import { setStateWithRef, shuffle } from '@w3ux/utils'
 import { hexToString } from 'dedot/utils'
 import { removeSyncing, setSyncing } from 'global-bus'

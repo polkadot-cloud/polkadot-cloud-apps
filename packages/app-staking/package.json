@@ -23,6 +23,7 @@
 		"@polkadot-cloud/connect-core": "^1.1.0",
 		"@polkadot-cloud/connect-ledger": "^1.2.0",
 		"@polkadot-cloud/connect-proxies": "^0.4.0",
+		"@polkadot-cloud/hooks": "^0.1.0",
 		"@polkadot-cloud/util-dedot": "^0.1.0",
 		"@tanstack/react-query": "^5.103.1",
 		"@w3ux/hooks": "^2.4.4",

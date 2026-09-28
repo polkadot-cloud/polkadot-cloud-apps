@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { createSafeContext } from '@w3ux/hooks'
+import { createSafeContext } from '@polkadot-cloud/hooks'
 import { NominationHealthProvider } from 'hooks/useNominationHealth'
 import { Fragment, type ReactNode, useRef, useState } from 'react'
 import type { AnyFunction, Validator } from 'types'

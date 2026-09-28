@@ -12,8 +12,8 @@
 		".": "./src/index.ts"
 	},
 	"dependencies": {
+		"@polkadot-cloud/hooks": "^0.1.0",
 		"@tanstack/react-query": "^5.103.1",
-		"@w3ux/hooks": "^2.4.4",
 		"consts": "workspace:*",
 		"global-bus": "workspace:*",
 		"plugin-staking-api": "workspace:*",

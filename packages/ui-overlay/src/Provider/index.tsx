@@ -1,7 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
+import {
+	createSafeContext,
+	useEffectIgnoreInitial,
+} from '@polkadot-cloud/hooks'
 import { setStateWithRef } from '@w3ux/utils'
 import type { ReactNode, RefObject } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
