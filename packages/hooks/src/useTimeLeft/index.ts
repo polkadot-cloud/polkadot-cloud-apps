@@ -98,8 +98,10 @@ export const useTimeLeft = (props?: UseTimeleftProps) => {
 	// clear intervals on unmount
 	useEffect(
 		() => () => {
-			clearInterval(minInterval)
-			clearInterval(secInterval)
+			clearInterval(minIntervalRef.current)
+			clearInterval(secIntervalRef.current)
+			minIntervalRef.current = undefined
+			secIntervalRef.current = undefined
 		},
 		[],
 	)
