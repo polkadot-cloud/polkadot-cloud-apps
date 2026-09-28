@@ -3,7 +3,7 @@
 
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { ellipsisFn } from '@w3ux/utils'
 import classNames from 'classnames'
 import type React from 'react'

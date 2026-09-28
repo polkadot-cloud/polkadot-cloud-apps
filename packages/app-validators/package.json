@@ -18,7 +18,7 @@
 		"@polkadot-cloud/connect-core": "^1.1.0",
 		"@polkadot-cloud/connect-ledger": "^1.2.0",
 		"@polkadot-cloud/connect-proxies": "^0.4.0",
-		"@w3ux/react-odometer": "2.4.5",
+		"@polkadot-cloud/ui": "^0.1.0",
 		"app-staking": "workspace:*",
 		"buffer": "^6.0.3",
 		"consts": "workspace:*",

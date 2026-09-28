@@ -3,7 +3,7 @@
 
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Odometer } from '@w3ux/react-odometer'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
 import { minDecimalPlaces } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'

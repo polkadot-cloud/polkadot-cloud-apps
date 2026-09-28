@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { capitalizeFirstLetter, unitToPlanck } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { PerbillMultiplier } from 'consts'

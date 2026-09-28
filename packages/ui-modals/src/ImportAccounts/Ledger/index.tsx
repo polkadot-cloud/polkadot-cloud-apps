@@ -10,7 +10,7 @@ import {
 	useLedgerAccounts,
 } from '@polkadot-cloud/connect-ledger'
 import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { setStateWithRef } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'

@@ -36,9 +36,12 @@ vi.mock('../../ui-overlay/src/index', () => ({
 vi.mock('../../hooks/src/useSize', () => ({
 	useSize: () => ({ width: 400, height: 250 }),
 }))
-vi.mock('../../app-staking/node_modules/@w3ux/react-polkicon/index.js', () => ({
-	Polkicon: () => null,
-}))
+vi.mock(
+	'../../app-staking/node_modules/@polkadot-cloud/ui/polkicon/index.js',
+	() => ({
+		Polkicon: () => null,
+	}),
+)
 vi.mock('library/StatusLabel', () => ({ StatusLabel: () => null }))
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',

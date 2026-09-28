@@ -3,7 +3,7 @@
 
 import { faHive } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Odometer } from '@w3ux/react-odometer'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
 import CloudIconSVG from 'assets/icons/cloud.svg?react'
 import BigNumber from 'bignumber.js'
 import {

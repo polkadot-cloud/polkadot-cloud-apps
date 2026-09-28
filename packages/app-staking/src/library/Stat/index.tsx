@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Odometer } from '@w3ux/react-odometer'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { applyWidthAsPadding, minDecimalPlaces } from '@w3ux/utils'
 import { getChainIcons } from 'assets'
 import { useHelp } from 'hooks/useHelp'

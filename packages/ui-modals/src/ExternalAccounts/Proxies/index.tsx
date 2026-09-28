@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useImportedAccounts } from '@polkadot-cloud/connect'
 import { useProxies } from '@polkadot-cloud/connect-proxies'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { ellipsisFn } from '@w3ux/utils'
 import { useHelp } from 'hooks/useHelp'
 import { Fragment, useEffect, useState } from 'react'
