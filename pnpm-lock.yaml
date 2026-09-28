@@ -187,9 +187,6 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@w3ux/factories':
-        specifier: ^2.2.2
-        version: 2.2.2(react@19.3.0)
       '@w3ux/react-odometer':
         specifier: 2.4.5
         version: 2.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -311,9 +308,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.103.1
         version: 5.103.1(react@19.3.0)
-      '@w3ux/factories':
-        specifier: ^2.2.2
-        version: 2.2.2(react@19.3.0)
       '@w3ux/hooks':
         specifier: ^2.4.4
         version: 2.4.4(react@19.3.0)
@@ -643,9 +637,6 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@w3ux/factories':
-        specifier: ^2.2.2
-        version: 2.2.2(react@19.3.0)
       '@w3ux/react-odometer':
         specifier: 2.4.5
         version: 2.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -3348,11 +3339,6 @@ packages:
 
   '@w3ux/crypto@1.2.1':
     resolution: {integrity: sha512-mnwC6ULIGN1sgrxs2asnLbAbtMMBs0MCXaYNaO0kJg67YGIr8lAWimhiiJ63nIAajyH0+08dntAGC0TyCplyvA==}
-
-  '@w3ux/factories@2.2.2':
-    resolution: {integrity: sha512-5Ed1XOAFB7fJwdj3eIkymbdRnHDFePa0qcBoFOn3ZGzZKbP0W+iUQQ5hPQyMZWUSuHtuq0tFMY1D2qqEqZ/1DQ==}
-    peerDependencies:
-      react: ^19.1.0
 
   '@w3ux/hooks@2.4.4':
     resolution: {integrity: sha512-EGzbTMcuRluDXNqdPyCS/aTDmL0YjBaAGt5iWn7fkxgsUYObOjirCrO9OnIUv2Zvr4fr5TFrBbTOMZOVfnJlzw==}
@@ -6915,10 +6901,6 @@ snapshots:
   '@w3ux/crypto@1.2.1':
     dependencies:
       blakejs: 1.2.1
-
-  '@w3ux/factories@2.2.2(react@19.3.0)':
-    dependencies:
-      react: 19.3.0
 
   '@w3ux/hooks@2.4.4(react@19.3.0)':
     dependencies:
