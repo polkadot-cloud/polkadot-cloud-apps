@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { shuffle } from '@w3ux/utils'
+import { shuffle } from '@polkadot-cloud/utils'
 import { StakingApiRetainmentSupportedNetworks } from 'consts/plugins'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { pluginEnabled } from 'global-bus'

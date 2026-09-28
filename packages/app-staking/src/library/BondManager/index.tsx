@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { Odometer } from '@polkadot-cloud/ui/odometer'
-import { minDecimalPlaces, planckToUnit } from '@w3ux/utils'
+import { minDecimalPlaces, planckToUnit } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'

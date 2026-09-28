@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { getPoolMembership } from 'global-bus'

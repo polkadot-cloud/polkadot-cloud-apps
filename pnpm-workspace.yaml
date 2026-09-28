@@ -15,5 +15,6 @@ minimumReleaseAgeExclude:
   - '@polkadot-cloud/util-dedot@0.1.0'
   - '@polkadot-cloud/hooks@0.1.0'
   - '@polkadot-cloud/ui@0.1.0'
+  - '@polkadot-cloud/utils@0.4.1'
 patchedDependencies:
   '@dedot/api@1.4.0': patches/@dedot__api@1.4.0.patch

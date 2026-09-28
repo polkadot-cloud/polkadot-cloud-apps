@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import DiscordSVG from 'assets/brands/discord.svg?react'
 import EnvelopeSVG from 'assets/icons/envelope.svg?react'
 import { PlatformName, PlatformURL } from 'consts'

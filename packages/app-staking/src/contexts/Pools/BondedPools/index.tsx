@@ -6,8 +6,8 @@ import {
 	createSafeContext,
 	useEffectIgnoreInitial,
 } from '@polkadot-cloud/hooks'
+import { setStateWithRef, shuffle } from '@polkadot-cloud/utils'
 import type { QueryStatus } from '@tanstack/react-query'
-import { setStateWithRef, shuffle } from '@w3ux/utils'
 import { hexToString } from 'dedot/utils'
 import { removeSyncing, setSyncing } from 'global-bus'
 import { useApi } from 'hooks/useApi'

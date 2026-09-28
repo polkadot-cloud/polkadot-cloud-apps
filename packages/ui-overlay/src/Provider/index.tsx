@@ -5,7 +5,7 @@ import {
 	createSafeContext,
 	useEffectIgnoreInitial,
 } from '@polkadot-cloud/hooks'
-import { setStateWithRef } from '@w3ux/utils'
+import { setStateWithRef } from '@polkadot-cloud/utils'
 import type { ReactNode, RefObject } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {

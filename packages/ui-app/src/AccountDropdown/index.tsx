@@ -4,7 +4,7 @@
 import { faGlasses } from '@fortawesome/free-solid-svg-icons'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { formatAccountSs58, isValidAddress } from '@polkadot-cloud/util-dedot'
-import { ellipsisFn, planckToUnit } from '@w3ux/utils'
+import { ellipsisFn, planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util/chains'
 import { useApi } from 'hooks/useApi'

@@ -5,7 +5,7 @@ import { Overlays } from 'Overlays'
 import { StakingApi } from 'StakingApi'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
-import { extractUrlValue } from '@w3ux/utils'
+import { extractUrlValue } from '@polkadot-cloud/utils'
 import { PagesConfig } from 'config'
 import { getUnixTime } from 'date-fns'
 import {

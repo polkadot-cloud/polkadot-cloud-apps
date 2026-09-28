@@ -3,7 +3,7 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { capitalizeFirstLetter, unitToPlanck } from '@w3ux/utils'
+import { capitalizeFirstLetter, unitToPlanck } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { PerbillMultiplier } from 'consts'
 import { getStakingChainData } from 'consts/util'

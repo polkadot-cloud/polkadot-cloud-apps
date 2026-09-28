@@ -4,7 +4,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Odometer } from '@polkadot-cloud/ui/odometer'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { applyWidthAsPadding, minDecimalPlaces } from '@w3ux/utils'
+import { applyWidthAsPadding, minDecimalPlaces } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'

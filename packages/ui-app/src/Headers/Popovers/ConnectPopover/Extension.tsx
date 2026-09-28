@@ -8,7 +8,7 @@ import {
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
-import { localStorageOrDefault } from '@w3ux/utils'
+import { localStorageOrDefault } from '@polkadot-cloud/utils'
 import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'

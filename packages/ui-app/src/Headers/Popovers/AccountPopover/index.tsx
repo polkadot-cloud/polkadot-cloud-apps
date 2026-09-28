@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { setActiveProxy } from '@polkadot-cloud/connect-proxies'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import SubscanSVG from 'assets/brands/subscan.svg?react'
 import { getSubscanBalanceChainId } from 'consts/util'
 import { useActiveProxy } from 'hooks/useActiveProxy'

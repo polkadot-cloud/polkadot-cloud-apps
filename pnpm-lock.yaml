@@ -314,12 +314,12 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       '@tanstack/react-query':
         specifier: ^5.103.1
         version: 5.104.0(react@19.3.0)
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
       assets:
         specifier: workspace:*
         version: link:../assets
@@ -501,9 +501,9 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       assets:
         specifier: workspace:*
         version: link:../assets
@@ -800,9 +800,9 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -837,9 +837,9 @@ importers:
       '@polkadot-cloud/connect-core':
         specifier: ^1.1.0
         version: 1.1.0(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -874,9 +874,9 @@ importers:
       '@polkadot-cloud/connect-proxies':
         specifier: ^0.4.0
         version: 0.4.0(@polkadot-cloud/connect@1.1.0(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
@@ -945,9 +945,9 @@ importers:
 
   packages/locales:
     dependencies:
-      '@w3ux/utils':
-        specifier: 3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -1146,9 +1146,9 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       assets:
         specifier: workspace:*
         version: link:../assets
@@ -1231,9 +1231,9 @@ importers:
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
-      '@w3ux/utils':
-        specifier: 3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1271,9 +1271,9 @@ importers:
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
-      '@w3ux/utils':
-        specifier: 3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1308,9 +1308,9 @@ importers:
 
   packages/ui-graphs:
     dependencies:
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
@@ -1396,9 +1396,9 @@ importers:
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       assets:
         specifier: workspace:*
         version: link:../assets
@@ -1463,9 +1463,9 @@ importers:
       '@polkadot-cloud/hooks':
         specifier: ^0.1.0
         version: 0.1.0(react@19.3.0)
-      '@w3ux/utils':
-        specifier: 3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       motion:
         specifier: 12.23.24
         version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1496,9 +1496,9 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
-      '@w3ux/utils':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -1536,9 +1536,9 @@ importers:
 
   packages/utils:
     dependencies:
-      '@w3ux/utils':
-        specifier: 3.1.1
-        version: 3.1.1
+      '@polkadot-cloud/utils':
+        specifier: ^0.4.1
+        version: 0.4.1
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
@@ -2285,6 +2285,9 @@ packages:
     resolution: {integrity: sha512-iTdj209JMCrK+Im3288aypjbS0AgwrIGmlM8Z1o3DgzFoQTHMhYrRa7XriD3DRfF2g1xMbOSLgGN0+MojC8w9g==}
     peerDependencies:
       dedot: ^1
+
+  '@polkadot-cloud/utils@0.4.1':
+    resolution: {integrity: sha512-x/dB1pQowkTjrITj2wSyq6Ve4zSh8ZA2p5D2/ROP2ay20FG0yM5GuK68YyWAbMa+hznkiXlmawEWn66kqgDxgA==}
 
   '@polkadot/keyring@14.0.3':
     resolution: {integrity: sha512-ozp1dQwaHCjgX/fpTTORmHjxdUNQnyiTVJszpzUaUpvtH/IGZhSU/mSHXMqNETS/g57vQa7NatIDcWfyR9abyA==}
@@ -5817,6 +5820,10 @@ snapshots:
   '@polkadot-cloud/util-dedot@0.1.0(dedot@1.4.0(typescript@6.0.3))':
     dependencies:
       dedot: 1.4.0(typescript@6.0.3)
+
+  '@polkadot-cloud/utils@0.4.1':
+    dependencies:
+      '@types/react': 19.3.0
 
   '@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3)':
     dependencies:

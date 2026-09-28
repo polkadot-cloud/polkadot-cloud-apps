@@ -4,7 +4,7 @@
 import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import type { LedgerDeviceModel } from '@polkadot-cloud/connect-ledger'
 import { useLedger, useLedgerAccounts } from '@polkadot-cloud/connect-ledger'
-import { setStateWithRef } from '@w3ux/utils'
+import { setStateWithRef } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import { useEffect, useMemo, useRef, useState } from 'react'

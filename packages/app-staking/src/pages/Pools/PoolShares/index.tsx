@@ -3,7 +3,7 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { Odometer } from '@polkadot-cloud/ui/odometer'
-import { minDecimalPlaces } from '@w3ux/utils'
+import { minDecimalPlaces } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { PoolSharesDays } from 'consts'

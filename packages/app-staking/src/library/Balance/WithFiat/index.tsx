@@ -4,7 +4,7 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Odometer } from '@polkadot-cloud/ui/odometer'
-import { minDecimalPlaces } from '@w3ux/utils'
+import { minDecimalPlaces } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'

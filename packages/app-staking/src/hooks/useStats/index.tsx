@@ -3,7 +3,7 @@
 
 import { faCalculator } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useActiveValidatorCount, useEraNominatorCount } from 'data-gate'

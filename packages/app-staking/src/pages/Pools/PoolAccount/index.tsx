@@ -3,7 +3,7 @@
 
 import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { poolRoleIdentities$ } from 'global-bus'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { motion } from 'motion/react'

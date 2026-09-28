@@ -3,7 +3,7 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useActiveProxy } from 'hooks/useActiveProxy'

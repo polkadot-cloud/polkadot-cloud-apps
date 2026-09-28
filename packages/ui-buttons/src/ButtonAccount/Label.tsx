@@ -4,7 +4,7 @@
 import { faChevronDown, faGlasses } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import classNames from 'classnames'
 import type { ButtonAccountLabelProps } from '../types'
 import classes from './index.module.scss'

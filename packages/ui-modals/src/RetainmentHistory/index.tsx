@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { useNetwork } from 'hooks/useNetwork'
 import { useValidatorRetainment } from 'plugin-staking-api'
 import type { ValidatorRetainmentWindow } from 'plugin-staking-api/types'

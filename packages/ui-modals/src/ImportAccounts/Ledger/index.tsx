@@ -11,7 +11,7 @@ import {
 } from '@polkadot-cloud/connect-ledger'
 import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { setStateWithRef } from '@w3ux/utils'
+import { setStateWithRef } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import { useEffect, useRef, useState } from 'react'

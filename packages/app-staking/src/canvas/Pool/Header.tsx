@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { PerbillMultiplier } from 'consts'
 import { onTabVisitEvent } from 'event-tracking'
 import { useTranslation } from 'react-i18next'

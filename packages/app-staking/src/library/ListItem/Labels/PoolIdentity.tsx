@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { determinePoolDisplay } from 'contexts/Pools/util'
 import { Identity } from 'ui-core/list'

@@ -4,7 +4,7 @@
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { ellipsisFn, unitToPlanck } from '@w3ux/utils'
+import { ellipsisFn, unitToPlanck } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useNominatorSetups } from 'contexts/NominatorSetups'
