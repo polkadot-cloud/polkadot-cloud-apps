@@ -22,11 +22,10 @@
 		"classnames": "^2.5.1",
 		"hooks": "workspace:*",
 		"react": "^19.2.8",
-		"ui-styles": "workspace:*",
-		"ui-core": "workspace:*"
+		"ui-core": "workspace:*",
+		"ui-styles": "workspace:*"
 	},
 	"devDependencies": {
-		"@w3ux/types": "^2.4.2",
 		"dedot": "^1.4.0",
 		"types": "workspace:*"
 	}

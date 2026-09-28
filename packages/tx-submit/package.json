@@ -22,7 +22,6 @@
 		"@polkadot-cloud/connect-core": "^1.1.0",
 		"@polkadot-cloud/connect-ledger": "^1.2.0",
 		"@polkadot-cloud/connect-vault": "^1.1.0",
-		"@w3ux/types": "^2.4.2",
 		"consts": "workspace:*",
 		"dedot": "^1.4.0",
 		"global-bus": "workspace:*",
