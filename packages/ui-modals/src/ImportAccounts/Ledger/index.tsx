@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faUsb } from '@fortawesome/free-brands-svg-icons'
+import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import type { LedgerResponse } from '@polkadot-cloud/connect-ledger'
 import {
 	getLedgerDeviceName,
@@ -10,7 +11,6 @@ import {
 } from '@polkadot-cloud/connect-ledger'
 import { useEffectIgnoreInitial } from '@w3ux/hooks'
 import { Polkicon } from '@w3ux/react-polkicon'
-import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import { setStateWithRef } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'

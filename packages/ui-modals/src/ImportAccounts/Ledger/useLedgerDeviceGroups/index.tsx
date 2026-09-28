@@ -1,9 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import type { LedgerDeviceModel } from '@polkadot-cloud/connect-ledger'
 import { useLedger, useLedgerAccounts } from '@polkadot-cloud/connect-ledger'
-import type { HardwareAccount } from '@polkadot-cloud/connect-core/types'
 import { setStateWithRef } from '@w3ux/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
