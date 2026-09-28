@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import { getEnabledNetworks, getStakingChainData } from 'consts/util'
 import { onNodeProviderTypeChangedEvent } from 'event-tracking'

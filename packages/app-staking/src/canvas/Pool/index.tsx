@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
+import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { getNetworkKnownPoolIds } from 'consts/util/pools'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { poolRoleIdentities$ } from 'global-bus'

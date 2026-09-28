@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { createSafeContext } from '@w3ux/hooks'
+import { createSafeContext } from '@polkadot-cloud/hooks'
 import { useBalances } from 'hooks/useBalances'
 import type { StakingHookInterface } from 'hooks/useStaking'
 import type { ReactNode } from 'react'

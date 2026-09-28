@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faGlasses } from '@fortawesome/free-solid-svg-icons'
-import { useOutsideAlerter } from '@w3ux/hooks'
-import { Polkicon } from '@w3ux/react-polkicon'
-import { formatAccountSs58, isValidAddress } from '@w3ux/util-dedot'
-import { ellipsisFn, planckToUnit } from '@w3ux/utils'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { formatAccountSs58, isValidAddress } from '@polkadot-cloud/util-dedot'
+import { ellipsisFn, planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util/chains'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import SimpleBar from 'simplebar-react'

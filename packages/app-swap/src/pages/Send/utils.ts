@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 
 export const isSameImportedAccount = (

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { appendOrEmpty } from '@w3ux/utils'
+import { appendOrEmpty } from '@polkadot-cloud/utils'
 import { CallToActionLoader } from 'library/Loader/CallToAction'
 import type { CallToActionButton, CallToActionButtonsProps } from './types'
 import { CallToActionWrapper } from './Wrapper'

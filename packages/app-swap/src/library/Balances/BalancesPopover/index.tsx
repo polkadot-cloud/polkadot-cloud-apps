@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useOutsideAlerter } from '@w3ux/hooks'
 import {
 	getFeeTokenColor,
 	getFeeTokenIcon,
@@ -12,6 +11,7 @@ import {
 	StablecoinSymbols,
 } from 'consts/stablecoins'
 import { useStablecoinBalances, useTokenPrices } from 'hooks'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import type { Dispatch, SetStateAction } from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { useOnResize, useOutsideAlerter } from '@w3ux/hooks'
 import CloudSVG from 'assets/icons/cloud.svg?react'
 import { PageWidthMediumThreshold } from 'consts'
+import { useOnResize } from 'hooks/useOnResize'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { useUi } from 'hooks/useUi'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'

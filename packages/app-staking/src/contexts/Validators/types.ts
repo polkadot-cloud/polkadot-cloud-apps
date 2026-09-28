@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { Sync } from '@w3ux/types'
+import type { Sync } from '@polkadot-cloud/connect-core/types'
 import type {
 	AnyJson,
 	IdentityOf,

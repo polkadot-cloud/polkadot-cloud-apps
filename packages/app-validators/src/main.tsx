@@ -15,7 +15,7 @@ import 'ui-styles/theme/index.scss'
 import 'ui-styles/theme/theme.scss'
 
 // Package styles
-import '@w3ux/react-odometer/index.css'
+import '@polkadot-cloud/ui/odometer/index.css'
 import 'simplebar/dist/simplebar.min.css'
 
 const rootElement = document.getElementById('root')

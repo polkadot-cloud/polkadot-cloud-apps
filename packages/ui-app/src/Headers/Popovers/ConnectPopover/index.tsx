@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useExtensions } from '@polkadot-cloud/connect'
-import { useOutsideAlerter } from '@w3ux/hooks'
 import extensions from 'consts/extensions'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'

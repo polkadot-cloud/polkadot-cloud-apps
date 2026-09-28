@@ -4,7 +4,7 @@
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useAccountBalances } from 'hooks/useAccountBalances'
@@ -54,8 +54,8 @@ export const UpdateReserve = () => {
 	const handleChange = (val: BigNumber) => {
 		// deduct ED from reserve amount.
 		val = val.decimalPlaces(3)
-		const actualReserve = BigNumber.max(val.minus(minReserve), 0).toNumber()
-		const actualReservePlanck = unitToPlanck(actualReserve.toString(), units)
+		const actualReserve = BigNumber.max(val.minus(minReserve), 0)
+		const actualReservePlanck = unitToPlanck(actualReserve.toFixed(), units)
 		setSliderReserve(val.decimalPlaces(3).toNumber())
 		setFeeReserveBalance(actualReservePlanck)
 	}

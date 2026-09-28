@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { extractUrlValue, varToUrlHash } from '@w3ux/utils'
+import { extractUrlValue, varToUrlHash } from '@polkadot-cloud/utils'
 import { onLocaleFromModalEvent, onLocaleFromUrlEvent } from 'event-tracking'
 import type { i18n } from 'i18next'
 import { DefaultLocale, locales } from '../config'

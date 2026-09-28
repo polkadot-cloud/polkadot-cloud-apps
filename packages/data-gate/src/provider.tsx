@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { createSafeContext } from '@polkadot-cloud/hooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createSafeContext } from '@w3ux/hooks'
 import { type ReactNode, useState, useSyncExternalStore } from 'react'
 import { createDataGateStore } from './state'
 import type { DataGateState } from './types'

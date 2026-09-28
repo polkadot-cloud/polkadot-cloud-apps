@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useAccountBalances } from 'hooks/useAccountBalances'
@@ -47,7 +47,7 @@ export const Unstake = () => {
 
 	// local bond value
 	const [bond, setBond] = useState<{ bond: string }>({
-		bond: freeToUnbond.toString(),
+		bond: freeToUnbond.toFixed(),
 	})
 
 	// bond valid
@@ -58,7 +58,7 @@ export const Unstake = () => {
 
 	// update bond value on task change
 	useEffect(() => {
-		setBond({ bond: freeToUnbond.toString() })
+		setBond({ bond: freeToUnbond.toFixed() })
 		setBondValid(isValid)
 	}, [freeToUnbond.toString(), isValid])
 

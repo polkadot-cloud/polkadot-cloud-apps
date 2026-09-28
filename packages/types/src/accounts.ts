@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { Account, AccountCommon } from '@w3ux/types'
+import type { Account, AccountCommon } from '@polkadot-cloud/connect-core/types'
 
 export type MaybeAddress = string | null
 

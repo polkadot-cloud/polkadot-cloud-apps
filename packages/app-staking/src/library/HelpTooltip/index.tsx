@@ -6,7 +6,7 @@ import {
 	faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { camelize } from '@w3ux/utils'
+import { camelize } from '@polkadot-cloud/utils'
 import { PlatformDocsURL } from 'consts'
 import { StakingHelpNoDocs } from 'consts/docs'
 import { useFillVariables } from 'hooks/useFillVariables'

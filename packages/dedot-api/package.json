@@ -14,10 +14,10 @@
 	},
 	"dependencies": {
 		"@dedot/chaintypes": "^0.280.0",
-		"@polkadot-cloud/connect-core": "^1.1.0",
-		"@polkadot-cloud/connect-proxies": "^0.4.0",
-		"@w3ux/util-dedot": "^1.0.0",
-		"@w3ux/utils": "^3.1.1",
+		"@polkadot-cloud/connect-core": "^1.2.1",
+		"@polkadot-cloud/connect-proxies": "^0.5.1",
+		"@polkadot-cloud/util-dedot": "^0.1.0",
+		"@polkadot-cloud/utils": "^0.4.1",
 		"consts": "workspace:*",
 		"dedot": "^1.4.0",
 		"global-bus": "workspace:*",
@@ -26,7 +26,6 @@
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"@w3ux/types": "^2.4.2",
 		"types": "workspace:*"
 	}
 }
