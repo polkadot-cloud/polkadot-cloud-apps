@@ -7,10 +7,16 @@ import { ButtonPrimaryInvert } from 'ui-buttons'
 import type { InlineControlsWrapperProps } from './types'
 
 const BaseMenuWrapper = styled.div`
+  --menu-background: var(--gray-400);
+
   width: 100%;
   display: flex;
   align-items: center;
   position: relative;
+
+  .light & {
+    --menu-background: color-mix(in srgb, var(--gray-200), var(--gray-300));
+  }
 
   > .menuControlsInner {
     width: 100%;
@@ -50,7 +56,7 @@ const BaseMenuWrapper = styled.div`
 `
 
 export const MenuWrapper = styled(BaseMenuWrapper)`
-  background: rgb(from var(--gray-400) r g b / 75%);
+  background: rgb(from var(--menu-background) r g b / 75%);
 
   @media (max-width: 1200px) {
     padding: 0 1.5rem;
@@ -72,7 +78,7 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
   margin-top: 1rem;
 
   &::before {
-    background: var(--gray-400);
+    background: var(--menu-background);
     content: '';
     inset: 0 auto 0 50%;
     position: absolute;

@@ -4,8 +4,8 @@
 @use "ui-styles/theme/variables" as *;
 
 .scroll {
-	background: color-mix(in srgb, var(--bg-body) 92%, transparent);
-	backdrop-filter: blur(12px);
+	background: var(--pastel-wash) var(--bg-body);
+	background-attachment: fixed;
 	display: none;
 	position: fixed;
 	top: 0;
@@ -37,8 +37,8 @@
 	}
 
 	@media (max-width: $page-width-medium-threshold) {
-		background: color-mix(in srgb, var(--bg-body) 92%, transparent);
-		backdrop-filter: blur(12px);
+		background: var(--pastel-wash) var(--bg-body);
+		background-attachment: fixed;
 		top: 4rem;
 		padding-top: 0.75rem;
 		padding-bottom: 0.5rem;
@@ -52,8 +52,8 @@
 	}
 
 	&.sticky {
-		background: color-mix(in srgb, var(--bg-body) 92%, transparent);
-		backdrop-filter: blur(12px);
+		background: var(--pastel-wash) var(--bg-body);
+		background-attachment: fixed;
 		padding-top: 2.5rem;
 		padding-bottom: 0.5rem;
 		margin-bottom: 0.25rem;

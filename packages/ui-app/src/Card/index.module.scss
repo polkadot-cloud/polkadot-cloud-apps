@@ -1,8 +1,6 @@
 /* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use "ui-styles/theme/pastel";
-
 .card:not(:global(.transparent), :global(.warning), :global(.prompt)) {
-	@include pastel.edge;
+	border: 1px solid var(--gray-400);
 }

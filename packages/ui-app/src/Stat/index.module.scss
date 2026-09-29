@@ -1,8 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-@use "ui-styles/theme/pastel";
-
 .row {
 	display: flex;
 	flex-flow: row wrap;
@@ -44,8 +42,6 @@
 }
 
 .surface {
-	@include pastel.edge;
-
 	position: relative;
 	display: flex;
 	flex-flow: row nowrap;
@@ -55,7 +51,7 @@
 	margin-right: 1.25rem;
 	padding: 0.75rem 0;
 	background: var(--bg-primary);
-	border: 1px solid transparent;
+	border: 1px solid var(--gray-400);
 	border-radius: 1rem;
 	box-shadow: var(--shadow-alt);
 
@@ -75,13 +71,10 @@
 }
 
 button.surface {
-	border-color: transparent;
 	transition: border-color 0.1s;
 
 	&:hover {
-		--pastel-edge-opacity: var(--edge-hover-opacity);
-
-		border-color: transparent;
+		border-color: var(--gray-600);
 	}
 }
 

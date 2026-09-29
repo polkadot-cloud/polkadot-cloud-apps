@@ -21,7 +21,11 @@ export const Container = ({
 		[commonClasses.btnMarginX]: marginX,
 	})
 	return (
-		<div className={allClasses} style={style}>
+		<div
+			className={allClasses}
+			style={style}
+			aria-disabled={disabled || undefined}
+		>
 			{children}
 		</div>
 	)

@@ -6,6 +6,16 @@
 	background-color: var(--bg-modal);
 	transition: opacity 0.15s;
 
+	:global(.light) & {
+		background-image:
+			linear-gradient(rgb(255 255 255 / 25%), rgb(255 255 255 / 25%)),
+			var(--pastel-wash);
+	}
+
+	:global(.dark) & {
+		background-image: none;
+	}
+
 	&.dimmed {
 		opacity: 0;
 	}

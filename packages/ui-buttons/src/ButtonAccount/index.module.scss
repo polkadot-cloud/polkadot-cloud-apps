@@ -67,7 +67,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 	}
 
 	&:hover {
-		background: var(--gray-500);
+		background: var(--btn-header-hover);
 		color: var(--gray-1000);
 
 		> .arrow {

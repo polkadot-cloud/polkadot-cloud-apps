@@ -60,6 +60,15 @@
 		flex: 1;
 		padding-top: 0.5rem;
 
+		:global(.light) & {
+			background-image: linear-gradient(
+				125deg,
+				color-mix(in srgb, var(--wash-yellow) 75%, rgb(200 200 200 / 6%)),
+				color-mix(in srgb, var(--wash-blue) 75%, rgb(200 200 200 / 7%)) 55%,
+				color-mix(in srgb, var(--wash-purple) 75%, rgb(200 200 200 / 6%))
+			);
+		}
+
 		&.disabled {
 			--pastel-edge-opacity: 0.15;
 

@@ -41,16 +41,3 @@ SPDX-License-Identifier: GPL-3.0-only */
 		box-shadow: var(--pastel-shadow);
 	}
 }
-
-@mixin rule {
-	&::after {
-		content: "";
-		position: absolute;
-		inset: auto 0 0;
-		height: 1px;
-		background: linear-gradient(90deg, var(--pastel-stops));
-		mask-image: linear-gradient(90deg, transparent, #000 15% 85%, transparent);
-		opacity: var(--edge-opacity);
-		pointer-events: none;
-	}
-}

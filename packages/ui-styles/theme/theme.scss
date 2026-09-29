@@ -52,38 +52,39 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	--button-background: var(--pastel-dark-wash);
 	--button-edge-opacity: 0.28;
 	--button-hover-edge-opacity: 0.5;
-	--bg-selected: #e9edf5;
+	--bg-selected: #f5f7fa;
 	--pastel-shadow:
 		-8px 12px 28px -18px rgb(168 197 223 / 30%),
 		8px 12px 28px -18px rgb(199 180 220 / 30%),
 		0 8px 20px -12px rgb(30 35 50 / 12%);
 
 	/* Backgrounds */
-	--bg-body: #f7f7f7;
+	--bg-body: #fafafa;
 	--bg-primary: var(--gray-100);
 	--bg-modal: var(--gray-100);
 	--bg-modal-footer: var(--gray-300);
 	--bg-list: var(--gray-300);
 	--bg-input: var(--gray-100);
-	--overlay-backdrop: rgb(226 230 237 / 75%);
+	--overlay-backdrop: rgb(228 228 228 / 70%);
 	--bg-card-floating: var(--shade-900);
 	--bg-min-side-menu: var(--gray-200);
 
 	/* Buttons */
-	--btn-bg-secondary: var(--gray-300);
-	--btn-tab: var(--gray-500);
-	--btn-canvas-tab: var(--gray-500);
-	--btn-popover-tab-bg: var(--gray-300);
+	--btn-bg-secondary: var(--gray-200);
+	--btn-tab: var(--bg-selected);
+	--btn-canvas-tab: var(--bg-selected);
+	--btn-popover-tab-bg: var(--gray-200);
 	--btn-help-bg: var(--gray-400);
-	--btn-quick-action-bg: var(--gray-300);
+	--btn-quick-action-bg: var(--gray-100);
+	--btn-header-hover: var(--gray-400);
 
 	/* Shadows */
 	--shadow-primary: var(--shade-200);
 	--shadow-secondary: var(--gray-500);
 
 	/* Shimmer */
-	--shimmer-fg: var(--gray-500);
-	--shimmer-bg: var(--gray-600);
+	--shimmer-fg: color-mix(in srgb, var(--gray-400), var(--gray-500));
+	--shimmer-bg: color-mix(in srgb, var(--gray-500), var(--gray-600));
 
 	/* Grid */
 	--grid-primary: var(--gray-500);
@@ -139,7 +140,7 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	--edge-hover-opacity: 0.55;
 	--button-color: #e7eaf0;
 	--button-text: #252630;
-	--button-background: linear-gradient(125deg, #f2edda, #e0eaf3 55%, #eae0f3);
+	--button-background: linear-gradient(125deg, #edeadf, #e4eaef 55%, #eae4ef);
 	--button-edge-opacity: 0.9;
 	--button-hover-edge-opacity: 1;
 	--bg-selected: #333d50;
@@ -152,7 +153,7 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	--bg-modal-footer: var(--gray-200);
 	--bg-list: var(--gray-400);
 	--bg-input: var(--gray-300);
-	--overlay-backdrop: rgb(15 17 23 / 78%);
+	--overlay-backdrop: rgb(40 40 40 / 80%);
 	--bg-card-floating: var(--shade-900);
 	--bg-min-side-menu: var(--gray-300);
 
@@ -163,6 +164,7 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	--btn-popover-tab-bg: var(--gray-400);
 	--btn-help-bg: var(--gray-400);
 	--btn-quick-action-bg: var(--gray-400);
+	--btn-header-hover: var(--gray-500);
 
 	/* Shadows */
 	--shadow-primary: var(--shade-200);
