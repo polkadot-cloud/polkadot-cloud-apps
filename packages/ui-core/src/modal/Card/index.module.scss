@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 .card {
-	background: var(--bg-modal);
+	background-image: var(--pastel-wash);
+	background-color: var(--bg-modal);
 	transition: opacity 0.15s;
 
 	&.dimmed {

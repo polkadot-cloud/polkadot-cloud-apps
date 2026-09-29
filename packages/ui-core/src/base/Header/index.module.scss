@@ -1,9 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
 @use "ui-styles/theme/variables" as *;
 
 .header {
+	@include pastel.rule;
+
+	background: color-mix(in srgb, var(--bg-body) 94%, transparent);
+	backdrop-filter: blur(12px);
 	transition: all var(--transition-duration);
 	position: fixed;
 	top: 0;

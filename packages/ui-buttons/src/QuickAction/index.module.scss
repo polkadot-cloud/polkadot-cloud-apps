@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
 @use "ui-styles/theme/variables" as *;
 
 .container {
@@ -44,8 +45,10 @@
 	padding: 0.4rem;
 
 	.inner {
-		background: var(--btn-quick-action-bg);
-		border: 1px solid var(--accent-300);
+		@include pastel.edge;
+
+		background: var(--pastel-surface) var(--btn-quick-action-bg);
+		border: 1px solid transparent;
 		border-radius: 0.7rem;
 		display: flex;
 		flex-direction: column;
@@ -58,6 +61,8 @@
 		padding-top: 0.5rem;
 
 		&.disabled {
+			--pastel-edge-opacity: 0.15;
+
 			cursor: default;
 
 			> * {
@@ -71,7 +76,6 @@
 
 		> .icon {
 			svg {
-				filter: drop-shadow(3px 3px 2px var(--gray-600));
 				color: var(--gray-900);
 				transition: all 0.3s;
 			}
@@ -89,8 +93,10 @@
 		}
 
 		&.active {
-			&:hover {
-				background: var(--gray-400);
+			&:is(:hover, :focus-visible) {
+				--pastel-edge-opacity: var(--edge-hover-opacity);
+
+				background-color: var(--bg-selected);
 
 				> .icon > svg {
 					color: var(--accent-700);

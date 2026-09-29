@@ -1,6 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
+
 .wrapper {
 	--button-border-radius: 1.4rem;
 
@@ -13,10 +15,11 @@
 }
 
 .button {
+	@include pastel.primary-button;
+
 	height: 100%;
 	width: 100%;
 	padding: 0.4rem 2rem;
-	border: none;
 	border-radius: var(--button-border-radius);
 	display: flex;
 	flex-direction: column;
@@ -25,14 +28,7 @@
 	overflow: hidden;
 	flex-grow: 1;
 	flex-shrink: 1;
-	background-color: var(--gray-1000);
-	color: var(--gray-100);
-	transition: filter 0.15s;
 	cursor: pointer;
-
-	&:hover {
-		filter: brightness(90%);
-	}
 
 	&:disabled {
 		opacity: var(--opacity-disabled);
@@ -76,14 +72,11 @@
 }
 
 .buttonDisabled {
-	background-color: var(--gray-700);
+	background: var(--gray-500);
+	color: var(--gray-1000);
 
-	:global(.dark) & {
-		color: white;
-	}
-
-	&:hover {
-		filter: none;
+	&::before {
+		display: none;
 	}
 }
 
@@ -107,5 +100,11 @@
 			transform: scale(0.98);
 			box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
 		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.buttonPulse {
+		animation: none;
 	}
 }

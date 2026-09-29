@@ -3,20 +3,27 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 @use "sass:list";
 
-/* Gray scale lightness values (percentage) */
-
-/* Light: 100=lightest → 1000=darkest */
-$gray-lightness-light: (100, 97, 95, 92, 88, 80, 63, 50, 33, 17);
-
-/* Dark: 100=darkest → 1000=lightest */
-$gray-lightness-dark: (6, 9, 12, 15, 21, 27, 42, 53, 63, 89);
-
-/* Shade base lightness (semi-transparent overlays) */
-$shade-lightness-light: 92;
-$shade-lightness-dark: 8;
+/* Cool neutrals shared with Cloud Signer, ordered from surface to text. */
+$gray-light: (#fff, #f7f8fa, #f0f1f3, #e9ebef, #dcdfe5, #c0c5cf, #7b808c, #686b74, #51545d, #2b2b2b);
+$gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9adb9, #c5c8d1, #eeeef2);
 
 /* general styles */
 :root {
+	/* The landing page and Cloud Signer's shared pastel palette. */
+	--pastel-yellow: #e3d498;
+	--pastel-green: #a5cdbd;
+	--pastel-blue: #a8c5df;
+	--pastel-purple: #c7b4dc;
+	--pastel-dark-yellow: #353327;
+	--pastel-dark-green: #29362f;
+	--pastel-dark-blue: #2a3343;
+	--pastel-dark-purple: #363041;
+	--pastel-stops: var(--pastel-yellow) 0%, var(--pastel-green) 24%, var(--pastel-blue) 49%, var(--pastel-purple) 76%, var(--pastel-yellow) 100%;
+	--pastel-dark-wash:
+		radial-gradient(ellipse at 0% 0%, var(--pastel-dark-yellow), transparent 65%),
+		radial-gradient(ellipse at 100% 10%, var(--pastel-dark-purple), transparent 65%),
+		radial-gradient(ellipse at 25% 100%, var(--pastel-dark-blue), transparent 70%),
+		radial-gradient(ellipse at 100% 100%, var(--pastel-dark-green), transparent 55%);
 	--btn-sm-radius: 0.75rem;
 	--btn-sm-padding: 0.45rem 1rem;
 	--btn-sm-spacing: 0.125rem;
@@ -33,28 +40,32 @@ $shade-lightness-dark: 8;
 
 /* light theme colors */
 .light {
-	/* Generate gray scale: 100 = lightest, 1000 = darkest */
-	@for $i from 1 through 10 {
-		--gray-#{$i * 100}: hsl(
-			0deg 0% #{list.nth($gray-lightness-light, $i) * 1%}
-		);
-	}
-
-	/* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
-	@for $i from 1 through 10 {
-		--shade-#{$i * 100}: hsl(
-			0deg 0% #{$shade-lightness-light * 1%} / #{$i * 10%}
-		);
-	}
+	--selection: #e4eef8;
+	--wash-yellow: rgb(227 212 152 / 6%);
+	--wash-green: rgb(165 205 189 / 5%);
+	--wash-blue: rgb(168 197 223 / 7%);
+	--wash-purple: rgb(199 180 220 / 6%);
+	--edge-opacity: 0.65;
+	--edge-hover-opacity: 0.95;
+	--button-color: #2b2b2b;
+	--button-text: #fff;
+	--button-background: var(--pastel-dark-wash);
+	--button-edge-opacity: 0.28;
+	--button-hover-edge-opacity: 0.5;
+	--bg-selected: #e9edf5;
+	--pastel-shadow:
+		-8px 12px 28px -18px rgb(168 197 223 / 30%),
+		8px 12px 28px -18px rgb(199 180 220 / 30%),
+		0 8px 20px -12px rgb(30 35 50 / 12%);
 
 	/* Backgrounds */
-	--bg-body: var(--gray-300);
-	--bg-primary: var(--gray-200);
-	--bg-modal: var(--gray-200);
-	--bg-modal-footer: var(--gray-400);
+	--bg-body: #f7f7f7;
+	--bg-primary: var(--gray-100);
+	--bg-modal: var(--gray-100);
+	--bg-modal-footer: var(--gray-300);
 	--bg-list: var(--gray-300);
 	--bg-input: var(--gray-100);
-	--overlay-backdrop: rgb(228 228 228 / 70%);
+	--overlay-backdrop: rgb(226 230 237 / 75%);
 	--bg-card-floating: var(--shade-900);
 	--bg-min-side-menu: var(--gray-200);
 
@@ -94,53 +105,54 @@ $shade-lightness-dark: 8;
 	/* Gradients */
 	--gradient-menu: linear-gradient(
 		180deg,
-		rgb(242 242 242 / 93%) 0%,
-		rgb(234 234 234 / 93%) 100%
+		rgb(247 248 250 / 97%) 0%,
+		rgb(240 241 243 / 97%) 100%
 	);
-	--highlight: rgb(0 0 0 / 4%) 0%;
+	--highlight: var(--bg-selected);
 	--highlight-alt: linear-gradient(
 		90deg,
-		rgb(0 0 0 / 6%) 0%,
-		rgb(0 0 0 / 1%) 95%,
-		rgb(0 0 0 / 0%) 100%
+		rgb(168 197 223 / 22%) 0%,
+		rgb(199 180 220 / 10%) 75%,
+		transparent 100%
 	);
 
-	/* Shadow composites */
-	--shadow:
-		-1px -2px 12px 1px var(--gray-400),
-		0px 0.5px 1px 0px var(--shade-600),
-		0 3.5px 6px -1px var(--gray-500),
-		0.5px -0.5px 0px 0px var(--gray-700),
-		-0.5px 0px 0px 0px var(--gray-700);
-	--shadow-alt:
-		0px 1px 1px 0px var(--shadow-secondary),
-		0 0.5px 1px -1px var(--shadow-secondary),
-		0.4px -0.4px 0px 0px var(--shadow-secondary),
-		-0.4px 0px 0px 0px var(--shadow-secondary);
+	/* Soft elevation; fine edges are applied only to selected surfaces. */
+	--shadow: 0 2px 5px rgb(30 35 50 / 3%), 0 12px 30px -16px rgb(30 35 50 / 12%);
+	--shadow-alt: 0 2px 8px -4px rgb(30 35 50 / 12%);
+
+	color-scheme: light;
+
+	@for $i from 1 through 10 {
+		--gray-#{$i * 100}: #{list.nth($gray-light, $i)};
+		--shade-#{$i * 100}: rgb(233 235 239 / #{$i * 10%});
+	}
 }
 
 /* dark theme colors */
 .dark {
-	/* Generate gray scale: 100 = darkest, 1000 = lightest */
-	@for $i from 1 through 10 {
-		--gray-#{$i * 100}: hsl(0deg 0% #{list.nth($gray-lightness-dark, $i) * 1%});
-	}
-
-	/* Generate shade scale: 100 = 10% opacity, 1000 = 100% opacity */
-	@for $i from 1 through 10 {
-		--shade-#{$i * 100}: hsl(
-			0deg 0% #{$shade-lightness-dark * 1%} / #{$i * 10%}
-		);
-	}
+	--selection: #39435a;
+	--wash-yellow: rgb(53 51 39 / 28%);
+	--wash-green: rgb(41 54 47 / 25%);
+	--wash-blue: rgb(42 51 67 / 30%);
+	--wash-purple: rgb(54 48 65 / 28%);
+	--edge-opacity: 0.3;
+	--edge-hover-opacity: 0.55;
+	--button-color: #e7eaf0;
+	--button-text: #252630;
+	--button-background: linear-gradient(125deg, #f2edda, #e0eaf3 55%, #eae0f3);
+	--button-edge-opacity: 0.9;
+	--button-hover-edge-opacity: 1;
+	--bg-selected: #333d50;
+	--pastel-shadow: 0 6px 18px -8px rgb(0 0 0 / 32%);
 
 	/* Backgrounds */
-	--bg-body: var(--gray-200);
-	--bg-primary: var(--gray-300);
-	--bg-modal: var(--gray-300);
+	--bg-body: var(--gray-100);
+	--bg-primary: var(--gray-200);
+	--bg-modal: var(--gray-200);
 	--bg-modal-footer: var(--gray-200);
 	--bg-list: var(--gray-400);
-	--bg-input: var(--gray-400);
-	--overlay-backdrop: rgb(40 40 40 / 80%);
+	--bg-input: var(--gray-300);
+	--overlay-backdrop: rgb(15 17 23 / 78%);
 	--bg-card-floating: var(--shade-900);
 	--bg-min-side-menu: var(--gray-300);
 
@@ -165,7 +177,7 @@ $shade-lightness-dark: 8;
 	--grid-secondary: var(--gray-500);
 
 	/* Text */
-	--text-tertiary: var(--gray-700);
+	--text-tertiary: var(--gray-800);
 
 	/* Status colors */
 	--status-success: #74da77;
@@ -180,26 +192,34 @@ $shade-lightness-dark: 8;
 	/* Gradients */
 	--gradient-menu: linear-gradient(
 		180deg,
-		rgb(38 38 38 / 93%) 0%,
-		rgb(23 23 23 / 93%) 100%
+		rgb(32 33 38 / 97%) 0%,
+		rgb(23 24 28 / 97%) 100%
 	);
-	--highlight: rgb(255 255 255 / 3%);
+	--highlight: var(--bg-selected);
 	--highlight-alt: linear-gradient(
 		90deg,
-		rgb(255 255 255 / 3%) 0%,
-		rgb(255 255 255 / 1%) 100%
+		rgb(168 197 223 / 12%) 0%,
+		rgb(199 180 220 / 5%) 75%,
+		transparent 100%
 	);
+	--shadow: 0 2px 5px rgb(0 0 0 / 10%), 0 12px 28px -16px rgb(0 0 0 / 35%);
+	--shadow-alt: 0 2px 8px -4px rgb(0 0 0 / 30%);
 
-	/* Shadow composites */
-	--shadow:
-		-1px -2px 10px 0px var(--shadow-secondary),
-		0px 0.5px 1px 0px var(--shade-500),
-		0 3.5px 6px -1px var(--shadow-primary),
-		0.4px -0.4px 0px 0px var(--shadow-primary),
-		-0.4px 0px 0px 0px var(--shadow-primary);
-	--shadow-alt:
-		0px 1px 1px 0px var(--shadow-secondary),
-		0 0.5px 1px -1px var(--shadow-secondary),
-		0.4px -0.4px 0px 0px var(--shadow-secondary),
-		-0.4px 0px 0px 0px var(--shadow-secondary);
+	color-scheme: dark;
+
+	@for $i from 1 through 10 {
+		--gray-#{$i * 100}: #{list.nth($gray-dark, $i)};
+		--shade-#{$i * 100}: rgb(23 24 28 / #{$i * 10%});
+	}
+}
+
+/* Resolve these where the mode tokens live, including overlay theme roots. */
+.light,
+.dark {
+	--pastel-wash:
+		radial-gradient(ellipse at 0% 0%, var(--wash-yellow), transparent 65%),
+		radial-gradient(ellipse at 100% 10%, var(--wash-purple), transparent 65%),
+		radial-gradient(ellipse at 25% 100%, var(--wash-blue), transparent 70%),
+		radial-gradient(ellipse at 100% 100%, var(--wash-green), transparent 55%);
+	--pastel-surface: linear-gradient(125deg, var(--wash-yellow), var(--wash-blue) 55%, var(--wash-purple));
 }

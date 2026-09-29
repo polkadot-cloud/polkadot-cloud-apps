@@ -9,10 +9,6 @@
 	align-items: center;
 	cursor: pointer;
 
-	&:focus {
-		outline: none;
-	}
-
 	* {
 		box-sizing: border-box;
 	}
@@ -79,5 +75,16 @@
 
 	&:active {
 		transform: scale(0.98);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btnActiveTransforms {
+		transition: none;
+
+		&:hover,
+		&:active {
+			transform: none;
+		}
 	}
 }
