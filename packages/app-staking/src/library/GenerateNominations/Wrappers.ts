@@ -94,8 +94,8 @@ export const StandalonePreloader = styled(NominationsLoader)`
   margin-top: 1.4rem;
 
   .light & {
-    --shimmer-fg: var(--gray-500);
-    --shimmer-bg: var(--gray-600);
+    --shimmer-fg: color-mix(in srgb, var(--gray-400), var(--gray-500));
+    --shimmer-bg: color-mix(in srgb, var(--gray-500), var(--gray-600));
   }
 
   .dark & {

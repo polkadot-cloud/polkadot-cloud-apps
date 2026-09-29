@@ -77,6 +77,10 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
 export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
   margin-top: 1rem;
 
+  .light & {
+    --menu-background: #efeff0;
+  }
+
   &::before {
     background: var(--menu-background);
     content: '';
