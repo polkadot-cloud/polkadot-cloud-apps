@@ -150,11 +150,6 @@ export const CloudStartButton = styled(ButtonMonoInvert)`
       transform: none;
     }
 
-    &:focus-visible {
-      outline: 2px solid var(--gray-900);
-      outline-offset: 4px;
-    }
-
     > svg {
       flex-shrink: 0;
       font-size: 0.95em;

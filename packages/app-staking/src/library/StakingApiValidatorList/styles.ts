@@ -88,11 +88,6 @@ export const FilterButton = styled.button`
     border-color: var(--gray-700);
     transform: translateY(-1px);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--gray-900);
-    outline-offset: 2px;
-  }
 `
 
 export const SwitchTrack = styled.span<{ $active: boolean }>`
@@ -149,11 +144,6 @@ export const OrderTab = styled.button<{ $active: boolean }>`
 
   &:hover {
     background: var(--bg-primary);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--gray-900);
-    outline-offset: 1px;
   }
 `
 

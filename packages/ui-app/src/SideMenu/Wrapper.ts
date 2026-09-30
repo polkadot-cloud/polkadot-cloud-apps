@@ -247,8 +247,6 @@ export const BarIconsWrapper = styled.div`
 `
 
 export const BarButton = styled.button`
-  --focus-ring: #b3cfff;
-
   width: 100%;
   padding: 0.95rem 0;
   border-radius: 1rem;
