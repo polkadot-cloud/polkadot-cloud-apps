@@ -126,11 +126,20 @@ export const Item = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--background-secondary);
+  background: var(--bg-primary);
   transition: background var(--transition-duration);
 
+  .dark & {
+    background: var(--gray-300);
+    border-color: var(--gray-400);
+  }
+
   &:hover {
-    background: var(--background-primary);
+    background: var(--gray-200);
+
+    .dark & {
+      background: var(--gray-400);
+    }
   }
 
   .value-node {

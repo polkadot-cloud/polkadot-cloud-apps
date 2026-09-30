@@ -30,6 +30,10 @@ export const AccountWrapper = styled.div`
     width: 100%;
     overflow: hidden;
 
+    .light & {
+      background: var(--gray-300);
+    }
+
     &.noBorder {
       border: none;
     }

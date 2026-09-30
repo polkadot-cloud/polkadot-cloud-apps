@@ -1,7 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
+
 .scroll {
+	@include pastel.edge;
+
+	box-shadow: var(--shadow);
 	border-radius: 1.5rem;
 	position: relative;
 	z-index: 9;

@@ -1,8 +1,19 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
+
 .btnMonoInvert {
-	border: 1px solid var(--gray-1000);
+	@include pastel.edge;
+
+	background: var(--pastel-surface);
+	border: 1px solid transparent;
 	border-radius: var(--btn-lg-radius);
 	color: var(--gray-1000);
+}
+
+.btnMonoInvert:is(:hover, :focus-visible):not(:disabled) {
+	--pastel-edge-opacity: var(--edge-hover-opacity);
+
+	background-color: var(--bg-selected);
 }

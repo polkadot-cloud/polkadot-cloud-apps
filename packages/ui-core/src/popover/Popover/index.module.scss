@@ -5,6 +5,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 .content {
 	background: var(--bg-primary);
+	border: 1px solid var(--gray-500);
 	box-shadow: var(--shadow);
 	border-radius: $popover-border-radius;
 	animation-duration: 400ms;
@@ -14,6 +15,10 @@ SPDX-License-Identifier: GPL-3.0-only */
 	outline: none;
 	transition: height var(--transition-duration);
 
+	:global(.dark) & {
+		--bg-primary: var(--bg-modal);
+	}
+
 	&[data-state="open"][data-side="bottom"] {
 		animation-name: slide-up-and-fade;
 	}
@@ -21,13 +26,13 @@ SPDX-License-Identifier: GPL-3.0-only */
 	z-index: 99;
 
 	&.transparent {
+		border: none;
 		box-shadow: none;
 		background: transparent;
 		border-radius: 0;
 	}
 
 	&.noShadow {
-		border: 1px solid var(--gray-500);
 		box-shadow: none;
 		overflow: hidden;
 	}
