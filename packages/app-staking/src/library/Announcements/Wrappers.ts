@@ -129,8 +129,17 @@ export const Item = styled(motion.div)`
   background: var(--background-secondary);
   transition: background var(--transition-duration);
 
+  .dark & {
+    background: var(--gray-300);
+    border-color: var(--gray-400);
+  }
+
   &:hover {
     background: var(--background-primary);
+
+    .dark & {
+      background: var(--gray-400);
+    }
   }
 
   .value-node {

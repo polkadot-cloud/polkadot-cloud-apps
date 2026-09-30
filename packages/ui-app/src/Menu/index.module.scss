@@ -11,6 +11,13 @@
 	transition: opacity var(--transition-duration);
 	border-radius: 1rem;
 
+	:global(.dark) & {
+		--bg-body: var(--bg-modal);
+		--bg-primary: var(--bg-modal);
+
+		box-shadow: var(--shadow);
+	}
+
 	> button:last-child {
 		border: none;
 	}
@@ -36,6 +43,12 @@
 
 	&:hover {
 		opacity: 0.75;
+	}
+
+	:global(.dark) &:is(:hover, :focus-visible):not(:disabled) {
+		background: var(--bg-selected);
+		color: var(--gray-1000);
+		opacity: 1;
 	}
 
 	&:disabled {

@@ -21,6 +21,11 @@
 	box-shadow: var(--shadow-alt);
 	border: 1px solid var(--shade-200);
 
+	:global(.dark) & {
+		background-color: var(--bg-input);
+		border-color: var(--gray-500);
+	}
+
 	&:hover {
 		border-color: var(--gray-500);
 	}
@@ -71,6 +76,16 @@
 	overflow: hidden;
 }
 
+:global(.dark) .menu {
+	background-color: var(--bg-modal);
+	border-color: var(--gray-500);
+	box-shadow: var(--shadow);
+}
+
+:global(.dark) .chevron {
+	color: var(--gray-800);
+}
+
 .menuTopLayer {
 	z-index: 80;
 }
@@ -91,6 +106,11 @@
 	background-color: var(--gray-200);
 	color: var(--gray-1000);
 	font-weight: 700;
+}
+
+:global(.dark) .option:hover,
+:global(.dark) .optionActive {
+	background-color: var(--bg-selected);
 }
 
 .check {

@@ -5,7 +5,9 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 /* Cool neutrals shared with Cloud Signer, ordered from surface to text. */
 $gray-light: (#fff, #f7f8fa, #f0f1f3, #e9ebef, #dcdfe5, #c0c5cf, #7b808c, #686b74, #51545d, #2b2b2b);
-$gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9adb9, #c5c8d1, #eeeef2);
+
+/* Keep the canvas dark; lift each surface tier before moving into borders and text. */
+$gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac1ce, #cdd3dd, #eceef3);
 
 /* general styles */
 :root {
@@ -131,40 +133,42 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 
 /* dark theme colors */
 .dark {
-	--selection: #39435a;
+	--selection: #414b60;
 	--wash-yellow: rgb(53 51 39 / 28%);
 	--wash-green: rgb(41 54 47 / 25%);
 	--wash-blue: rgb(42 51 67 / 30%);
 	--wash-purple: rgb(54 48 65 / 28%);
-	--edge-opacity: 0.3;
-	--edge-hover-opacity: 0.55;
+	--edge-opacity: 0.26;
+	--edge-hover-opacity: 0.5;
 	--button-color: #e7eaf0;
 	--button-text: #252630;
 	--button-background: linear-gradient(125deg, #edeadf, #e4eaef 55%, #eae4ef);
 	--button-edge-opacity: 0.9;
 	--button-hover-edge-opacity: 1;
-	--bg-selected: #333d50;
+	--bg-selected: #373f50;
+	--focus-ring: #b3cfff;
+	--opacity-disabled: 0.45;
 	--pastel-shadow: 0 6px 18px -8px rgb(0 0 0 / 32%);
 
 	/* Backgrounds */
 	--bg-body: var(--gray-100);
 	--bg-primary: var(--gray-200);
-	--bg-modal: var(--gray-200);
+	--bg-modal: #2c2f37;
 	--bg-modal-footer: var(--gray-200);
-	--bg-list: var(--gray-400);
+	--bg-list: var(--gray-300);
 	--bg-input: var(--gray-300);
-	--overlay-backdrop: rgb(40 40 40 / 80%);
-	--bg-card-floating: var(--shade-900);
-	--bg-min-side-menu: var(--gray-300);
+	--overlay-backdrop: rgb(12 15 21 / 72%);
+	--bg-card-floating: var(--bg-modal);
+	--bg-min-side-menu: var(--gray-200);
 
 	/* Buttons */
 	--btn-bg-secondary: var(--gray-400);
-	--btn-tab: var(--gray-500);
-	--btn-canvas-tab: var(--gray-400);
-	--btn-popover-tab-bg: var(--gray-400);
+	--btn-tab: var(--bg-selected);
+	--btn-canvas-tab: var(--bg-selected);
+	--btn-popover-tab-bg: var(--gray-300);
 	--btn-help-bg: var(--gray-400);
 	--btn-quick-action-bg: var(--gray-400);
-	--btn-header-hover: var(--gray-500);
+	--btn-header-hover: var(--gray-400);
 
 	/* Shadows */
 	--shadow-primary: var(--shade-200);
@@ -175,8 +179,8 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	--shimmer-fg: var(--gray-200);
 
 	/* Grid */
-	--grid-primary: var(--gray-400);
-	--grid-secondary: var(--gray-500);
+	--grid-primary: #3f4550;
+	--grid-secondary: #363c46;
 
 	/* Text */
 	--text-tertiary: var(--gray-800);
@@ -184,28 +188,28 @@ $gray-dark: (#17181c, #202126, #292c33, #30333b, #41444e, #555b69, #969baa, #a9a
 	/* Status colors */
 	--status-success: #74da77;
 	--status-success-transparent: rgb(0 128 0 / 25%);
-	--status-warning: rgb(219 161 0 / 100%);
+	--status-warning: #edc467;
 	--status-warning-transparent: rgb(255 165 0 / 50%);
 	--status-warning-bg: rgb(236 211 125 / 10%);
-	--status-danger: #d14445;
+	--status-danger: #ff9299;
 	--status-danger-transparent: rgb(255 0 0 / 25%);
 	--status-danger-bg: rgb(255 0 0 / 5%);
 
 	/* Gradients */
 	--gradient-menu: linear-gradient(
 		180deg,
-		rgb(32 33 38 / 97%) 0%,
-		rgb(23 24 28 / 97%) 100%
+		rgb(38 40 46 / 98%) 0%,
+		rgb(29 31 37 / 98%) 100%
 	);
 	--highlight: var(--bg-selected);
 	--highlight-alt: linear-gradient(
 		90deg,
-		rgb(168 197 223 / 12%) 0%,
-		rgb(199 180 220 / 5%) 75%,
+		rgb(168 197 223 / 18%) 0%,
+		rgb(199 180 220 / 8%) 75%,
 		transparent 100%
 	);
-	--shadow: 0 2px 5px rgb(0 0 0 / 10%), 0 12px 28px -16px rgb(0 0 0 / 35%);
-	--shadow-alt: 0 2px 8px -4px rgb(0 0 0 / 30%);
+	--shadow: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 6px rgb(0 0 0 / 10%), 0 12px 28px -16px rgb(0 0 0 / 32%);
+	--shadow-alt: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 8px -4px rgb(0 0 0 / 28%);
 
 	color-scheme: dark;
 
