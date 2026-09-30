@@ -108,7 +108,8 @@ input {
 	border: none;
 
 	&::placeholder {
-		color: var(--gray-700);
+		color: var(--text-tertiary);
+		opacity: 1;
 	}
 
 	&.underline {
@@ -121,10 +122,10 @@ input {
 	outline: none;
 }
 
-/* A consistent keyboard focus indicator across dark page and overlay roots. */
-.dark :is(button, a, input, select, textarea, [tabindex]):focus-visible {
+/* Keep keyboard focus visible on page and overlay roots in either theme. */
+:where(.light, .dark) :is(button, a, input, select, textarea, [tabindex]):focus-visible {
 	outline: 2px solid var(--focus-ring);
-	outline-offset: 3px;
+	outline-offset: var(--focus-ring-offset, 3px);
 }
 
 path.primary,

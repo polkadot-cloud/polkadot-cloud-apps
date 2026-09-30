@@ -4,7 +4,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 @use "sass:list";
 
 /* Cool neutrals shared with Cloud Signer, ordered from surface to text. */
-$gray-light: (#fff, #f7f8fa, #f0f1f3, #e9ebef, #dcdfe5, #c0c5cf, #7b808c, #686b74, #51545d, #2b2b2b);
+$gray-light: (#fff, #f7f8fa, #f0f1f3, #e9ebef, #dcdfe5, #c0c5cf, #7b808c, #626672, #51545d, #2b2b2b);
 
 /* Keep the canvas dark; lift each surface tier before moving into borders and text. */
 $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac1ce, #cdd3dd, #eceef3);
@@ -55,6 +55,7 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--button-edge-opacity: 0.28;
 	--button-hover-edge-opacity: 0.5;
 	--bg-selected: #f5f7fa;
+	--focus-ring: #42639b;
 	--pastel-shadow:
 		-8px 12px 28px -18px rgb(168 197 223 / 30%),
 		8px 12px 28px -18px rgb(199 180 220 / 30%),
@@ -66,6 +67,7 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--bg-modal: var(--gray-100);
 	--bg-modal-footer: var(--gray-300);
 	--bg-list: var(--gray-300);
+	--bg-list-item: color-mix(in srgb, var(--bg-primary) 97.5%, black);
 	--bg-input: var(--gray-100);
 	--overlay-backdrop: rgb(228 228 228 / 70%);
 	--bg-card-floating: var(--shade-900);
@@ -79,6 +81,8 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--btn-help-bg: var(--gray-400);
 	--btn-quick-action-bg: var(--gray-100);
 	--btn-header-hover: var(--gray-400);
+	--btn-list-bg: #edeef0;
+	--btn-list-selected-bg: #e2e4e7;
 
 	/* Shadows */
 	--shadow-primary: var(--shade-200);
@@ -98,7 +102,7 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	/* Status colors */
 	--status-success: green;
 	--status-success-transparent: rgb(0 128 0 / 25%);
-	--status-warning: #b0850d;
+	--status-warning: #806108;
 	--status-warning-transparent: rgb(236 211 125 / 50%);
 	--status-warning-bg: rgb(236 211 125 / 10%);
 	--status-danger: #ae2324;
@@ -156,6 +160,7 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--bg-modal: #2c2f37;
 	--bg-modal-footer: var(--gray-200);
 	--bg-list: var(--gray-300);
+	--bg-list-item: var(--gray-300);
 	--bg-input: var(--gray-300);
 	--overlay-backdrop: rgb(12 15 21 / 72%);
 	--bg-card-floating: var(--bg-modal);
@@ -169,6 +174,8 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--btn-help-bg: var(--gray-400);
 	--btn-quick-action-bg: var(--gray-400);
 	--btn-header-hover: var(--gray-400);
+	--btn-list-bg: var(--gray-400);
+	--btn-list-selected-bg: var(--gray-500);
 
 	/* Shadows */
 	--shadow-primary: var(--shade-200);

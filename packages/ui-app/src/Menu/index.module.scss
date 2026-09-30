@@ -41,11 +41,7 @@
 		background: var(--bg-primary);
 	}
 
-	&:hover {
-		opacity: 0.75;
-	}
-
-	:global(.dark) &:is(:hover, :focus-visible):not(:disabled) {
+	&:is(:hover, :focus-visible):not(:disabled) {
 		background: var(--bg-selected);
 		color: var(--gray-1000);
 		opacity: 1;

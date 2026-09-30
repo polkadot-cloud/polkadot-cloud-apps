@@ -14,14 +14,16 @@
 	}
 
 	&.modal {
-	background-color: var(--gray-300);
-	
+		background-color: var(--gray-300);
+
 		&:hover {
 			background-color: var(--gray-400);
 		}
 	}
 
 	&.canvas {
+		--text-tertiary: var(--gray-900);
+
 		background-color: var(--gray-400);
 
 		&:hover {
@@ -41,7 +43,7 @@
 	font-size: 1.1rem;
 	line-height: 1.4rem;
 	font-weight: 700;
-	color: var(--gray-700);
+	color: var(--text-tertiary);
 	text-transform: uppercase;
 }
 
@@ -50,7 +52,7 @@
 	font-size: 1.1rem;
 	line-height: 1.4rem;
 	font-weight: 500;
-	color: var(--gray-700);
+	color: var(--text-tertiary);
 }
 
 .availableButton {

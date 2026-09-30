@@ -6,7 +6,7 @@
 
 	> .surface {
 		align-items: stretch;
-		background: color-mix(in srgb, var(--bg-primary) 97.5%, black);
+		background: var(--bg-list-item);
 		border: 0;
 		border-radius: 0.5rem;
 		position: relative;
@@ -14,13 +14,11 @@
 		width: 100%;
 
 		&.card {
-			background: var(--gray-200);
-			border: 1.25px solid var(--gray-200);
+			border: 1.25px solid var(--bg-list-item);
 			box-shadow: none;
 		}
 
 		:global(.dark) & {
-			background: var(--gray-300);
 			border-color: var(--gray-400);
 		}
 

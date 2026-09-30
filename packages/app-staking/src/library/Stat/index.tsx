@@ -85,7 +85,7 @@ export const Stat = ({
 	return (
 		<Wrapper
 			$isAddress={type === 'address'}
-			style={dimmed ? { opacity: 0.5 } : undefined}
+			className={dimmed ? 'dimmed' : undefined}
 		>
 			<h4>
 				{label}

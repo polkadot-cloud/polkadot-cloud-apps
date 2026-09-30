@@ -32,7 +32,7 @@
 
 		&:hover:not(:disabled),
 		&[aria-pressed='true'] {
-			background: var(--gray-500);
+			background: var(--btn-list-selected-bg);
 			color: var(--gray-900);
 		}
 
