@@ -26,7 +26,7 @@ export const CardWrapper = styled.div.attrs({
   transition: border 0.2s;
 
   &.canvas {
-    background: var(--gray-300);
+    background: var(--gray-200);
     padding: 1.25rem;
 
     &.secondary {

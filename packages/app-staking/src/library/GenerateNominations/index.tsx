@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { MenuControls } from './Controls/MenuControls'
-import { EmbeddedMenuWrapper } from './Controls/Wrappers'
+import { MenuWrapper } from './Controls/Wrappers'
 import { NominationsView } from './NominationsView'
 import type { GenerateNominationsProps } from './types'
 import { useNominationControls } from './useNominationControls'
@@ -43,7 +43,7 @@ export const GenerateNominations = ({
 			menuControls={
 				menuControls ||
 				((validatorControls) => (
-					<EmbeddedMenuWrapper>
+					<MenuWrapper isRounded>
 						<MenuControls
 							allowRevert={false}
 							disabled={!canManageNominations || eligibilityLoading}
@@ -51,7 +51,7 @@ export const GenerateNominations = ({
 						>
 							{validatorControls}
 						</MenuControls>
-					</EmbeddedMenuWrapper>
+					</MenuWrapper>
 				))
 			}
 			selectHandler={selectHandler}

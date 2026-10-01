@@ -3,7 +3,9 @@
 
 import styled from 'styled-components'
 
-const BaseMenuWrapper = styled.div`
+const BaseMenuWrapper = styled.div.withConfig({
+	shouldForwardProp: (prop) => prop !== 'isRounded',
+})<{ isRounded?: boolean }>`
   --menu-background: var(--nomination-menu-color);
   --menu-surface: var(--nomination-menu-surface);
   --menu-popover-background: color-mix(in srgb, var(--menu-surface) 75%, var(--nomination-popover-highlight));
@@ -19,6 +21,20 @@ const BaseMenuWrapper = styled.div`
   border-top: 1px solid var(--menu-border);
   /* Continue the bottom line through empty space; buttons cover it with their own edges. */
   box-shadow: inset 0 -1px 0 var(--menu-border);
+
+  ${({ isRounded }) =>
+		isRounded &&
+		`
+    border: 1px solid var(--menu-border);
+    border-radius: var(--btn-sm-radius);
+    box-shadow: none;
+    overflow: hidden;
+
+    /* Each button still controls its own bottom edge over the surrounding frame. */
+    && > .menuControlsInner {
+      margin-bottom: -1px;
+    }
+  `}
 
   > .menuControlsInner {
     width: 100%;
@@ -155,11 +171,11 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
   background: var(--nomination-menu-surface);
 
   @media (max-width: 1200px) {
-    padding: 0 1.5rem;
+    padding: ${({ isRounded }) => (isRounded ? '0' : '0 1.5rem')};
   }
 
   > .menuControlsInner {
-    max-width: 1200px;
+    max-width: ${({ isRounded }) => (isRounded ? 'none' : '1200px')};
     margin: 0 auto;
 
     > .actions .revert {
@@ -167,6 +183,16 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
       border-color: var(--gray-500);
     }
   }
+
+  ${({ isRounded }) =>
+		isRounded &&
+		`
+    margin-bottom: 1rem;
+
+    > .menuControlsInner > .actions {
+      padding-right: 0.75rem;
+    }
+  `}
 `
 
 export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
@@ -199,16 +225,5 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
       background: var(--gray-500);
       border-color: var(--gray-500);
     }
-  }
-`
-
-export const EmbeddedMenuWrapper = styled(BaseMenuWrapper)`
-  background: var(--nomination-menu-surface);
-  border-radius: var(--btn-sm-radius);
-  margin-bottom: 1rem;
-  overflow: hidden;
-
-  > .menuControlsInner > .actions {
-    padding-right: 0.75rem;
   }
 `
