@@ -5,6 +5,7 @@ import {
 	faCaretDown,
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons'
+import { useList } from 'contexts/List'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
@@ -21,6 +22,7 @@ export const MenuControls = ({
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
+	const { resetSelected } = useList()
 
 	const {
 		method,
@@ -47,6 +49,7 @@ export const MenuControls = ({
 				<RegenerateAction
 					disabled={disabled || fetching}
 					onRegenerate={() => {
+						resetSelected()
 						setMethod('Optimal Selection')
 						setNominations([])
 						setFetching(true)

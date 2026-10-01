@@ -8,18 +8,20 @@ export const MenuSurfaceContext = createContext(
 	'var(--nomination-menu-surface)',
 )
 
-export const MenuPopover = (
-	props: Omit<
-		ComponentProps<typeof Popover>,
-		'background' | 'borderColor' | 'attached' | 'arrow' | 'sideOffset'
-	>,
-) => {
+export const MenuPopover = ({
+	attached = true,
+	...props
+}: Omit<
+	ComponentProps<typeof Popover>,
+	'background' | 'borderColor' | 'arrow' | 'sideOffset'
+>) => {
 	const menuSurface = useContext(MenuSurfaceContext)
 	const background = `color-mix(in srgb, ${menuSurface} 75%, var(--nomination-popover-highlight))`
 	return (
 		<Popover
 			{...props}
-			attached
+			attached={attached}
+			arrow={false}
 			background={background}
 			borderColor={`color-mix(in srgb, ${background} 91%, var(--gray-1000))`}
 		/>

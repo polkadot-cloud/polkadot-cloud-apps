@@ -29,6 +29,7 @@ export const RemoveSelected = ({
 	return createPortal(
 		<MenuPopover
 			align="end"
+			attached={false}
 			content={
 				<Confirmation
 					text={selectHandler.popover.text}
