@@ -9,8 +9,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { ButtonMenu } from 'ui-buttons'
-import { MenuItemButton, Popover } from 'ui-core/popover'
+import { MenuItemButton } from 'ui-core/popover'
 import classes from './index.module.scss'
+import { MenuPopover } from './MenuPopover'
 import type { ListControlsProps } from './types'
 
 export const ListControls = ({
@@ -44,7 +45,7 @@ export const ListControls = ({
 					/>
 				))}
 			{otherValidators.length > 0 && (
-				<Popover
+				<MenuPopover
 					align="start"
 					content={
 						<div className={classes.otherValidatorsMenu}>
@@ -71,7 +72,6 @@ export const ListControls = ({
 					open={otherOpen}
 					portalContainer={themeElementRef.current || undefined}
 					side="bottom"
-					sideOffset={8}
 					width="min(260px, calc(100vw - 2rem))"
 				>
 					<ButtonMenu
@@ -81,7 +81,7 @@ export const ListControls = ({
 						iconRight={faCaretDown}
 						text={t('otherValidators')}
 					/>
-				</Popover>
+				</MenuPopover>
 			)}
 			{['search', 'favorites'].flatMap((controlGroup) =>
 				filterHandlers
@@ -97,7 +97,7 @@ export const ListControls = ({
 					)),
 			)}
 			{selected.length > 0 && (
-				<Popover
+				<MenuPopover
 					align="start"
 					content={
 						<Confirmation
@@ -118,15 +118,15 @@ export const ListControls = ({
 					open={open}
 					portalContainer={themeElementRef.current || undefined}
 					side="bottom"
-					sideOffset={8}
 				>
 					<ButtonMenu
 						asLabel
 						disabled={disabled}
+						className="removeSelected"
 						status="danger"
 						text={selectHandler.title}
 					/>
-				</Popover>
+				</MenuPopover>
 			)}
 		</>
 	)

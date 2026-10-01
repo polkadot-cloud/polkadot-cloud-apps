@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTheme } from 'hooks/useTheme'
 import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Heading, Popover } from 'ui-core/popover'
+import { MenuPopover } from '../Controls/MenuPopover'
 import classes from './index.module.scss'
 
 export const RegenerateAction = ({
@@ -24,16 +24,11 @@ export const RegenerateAction = ({
 	const id = useId()
 
 	return (
-		<Popover
+		<MenuPopover
 			align="start"
 			content={
 				<div className={classes.container}>
-					<Heading
-						border
-						style={{ margin: '0.25rem 0 0.75rem', paddingBottom: '0.75rem' }}
-					>
-						{t('method')}
-					</Heading>
+					<div className={classes.heading}>{t('method')}</div>
 					<button
 						aria-describedby={`${id}-description`}
 						aria-labelledby={`${id}-title`}
@@ -69,10 +64,9 @@ export const RegenerateAction = ({
 			open={open}
 			portalContainer={themeElementRef.current || undefined}
 			side="bottom"
-			sideOffset={8}
 			width="min(380px, calc(100vw - 2rem))"
 		>
 			{children}
-		</Popover>
+		</MenuPopover>
 	)
 }

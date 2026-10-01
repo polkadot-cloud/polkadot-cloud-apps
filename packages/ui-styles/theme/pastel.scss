@@ -9,10 +9,10 @@ SPDX-License-Identifier: GPL-3.0-only */
 			color-mix(in srgb, var(--wash-blue) 65%, transparent) 55%,
 			color-mix(in srgb, var(--wash-purple) 65%, transparent)
 		),
-		color-mix(in srgb, var(--gray-200) 97%, white);
+		color-mix(in srgb, var(--gray-200) 65%, var(--gray-300));
 
 	&:is(:hover, :focus-visible, :active):not(:disabled) {
-		background-color: color-mix(in srgb, var(--gray-300) 97%, white);
+		background-color: color-mix(in srgb, var(--gray-300) 85%, var(--gray-400));
 	}
 }
 

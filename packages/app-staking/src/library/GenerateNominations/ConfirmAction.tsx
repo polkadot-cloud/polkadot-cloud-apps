@@ -4,7 +4,7 @@
 import { useTheme } from 'hooks/useTheme'
 import { Confirm } from 'library/Prompt/Confirm'
 import { useState } from 'react'
-import { Popover } from 'ui-core/popover'
+import { MenuPopover } from './Controls/MenuPopover'
 import type { ConfirmActionProps } from './types'
 
 export const ConfirmAction = ({
@@ -24,7 +24,7 @@ export const ConfirmAction = ({
 	}
 
 	return (
-		<Popover
+		<MenuPopover
 			align={align}
 			content={
 				<Confirm
@@ -39,9 +39,8 @@ export const ConfirmAction = ({
 			open={open}
 			portalContainer={themeElementRef.current || undefined}
 			side="bottom"
-			sideOffset={8}
 		>
 			{children}
-		</Popover>
+		</MenuPopover>
 	)
 }

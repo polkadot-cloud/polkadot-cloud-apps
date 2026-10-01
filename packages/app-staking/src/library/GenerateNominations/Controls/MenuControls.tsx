@@ -42,6 +42,7 @@ export const MenuControls = ({
 			{!method && (
 				<ButtonMenu
 					asLabel
+					className="methodPrompt"
 					disabled
 					text={t('chooseNominationMethod', { ns: 'app' })}
 				/>
@@ -57,11 +58,7 @@ export const MenuControls = ({
 				>
 					<ButtonMenu
 						asLabel
-						className={
-							disabled || fetching
-								? 'generateButton generateDisabled'
-								: 'generateButton'
-						}
+						className="generateButton"
 						disabled={disabled || fetching}
 						iconLeft={faWandMagicSparkles}
 						iconRight={faCaretDown}

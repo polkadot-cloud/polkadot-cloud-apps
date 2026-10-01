@@ -19,6 +19,7 @@ import { CardWrapper } from 'ui-app/Card'
 import { Main } from 'ui-core/canvas'
 import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
+import { MenuSurfaceContext } from './Controls/MenuPopover'
 import { Methods } from './Methods'
 import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
@@ -216,24 +217,32 @@ export const NominationsView = ({
 	)
 
 	return (
-		<ListProvider selectable initialListFormat={listFormat}>
-			{standaloneCards ? (
-				<StandaloneCards>
-					<CardWrapper className="transparent">{controls}</CardWrapper>
-					{standaloneList}
-				</StandaloneCards>
-			) : (
-				<>
-					{controls}
-					{displayFor === 'canvas' ? (
-						<Main size="xl" withMenu>
-							{editor}
-						</Main>
-					) : (
-						editor
-					)}
-				</>
-			)}
-		</ListProvider>
+		<MenuSurfaceContext.Provider
+			value={
+				standaloneCards
+					? 'var(--nomination-standalone-menu-surface)'
+					: 'var(--nomination-menu-surface)'
+			}
+		>
+			<ListProvider selectable initialListFormat={listFormat}>
+				{standaloneCards ? (
+					<StandaloneCards>
+						<CardWrapper className="transparent">{controls}</CardWrapper>
+						{standaloneList}
+					</StandaloneCards>
+				) : (
+					<>
+						{controls}
+						{displayFor === 'canvas' ? (
+							<Main size="xl" withMenu>
+								{editor}
+							</Main>
+						) : (
+							editor
+						)}
+					</>
+				)}
+			</ListProvider>
+		</MenuSurfaceContext.Provider>
 	)
 }

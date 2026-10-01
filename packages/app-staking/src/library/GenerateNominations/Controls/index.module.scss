@@ -12,14 +12,27 @@ SPDX-License-Identifier: GPL-3.0-only */
 	.candidateButton {
 		@include pastel.subtle-surface;
 
+		background-color: color-mix(
+			in srgb,
+			color-mix(in srgb, var(--gray-200) 65%, var(--gray-300)) 98.5%,
+			#000
+		);
 		gap: 0.75rem;
 		padding: 0.9rem 1rem;
-		border: none;
+		border: 1px solid color-mix(in srgb, var(--gray-1000) 7%, transparent);
 		border-radius: 0.85rem;
 		color: var(--gray-1000);
 		font-size: 1.15rem;
 		text-align: left;
 		transition: background-color var(--transition-duration);
+
+		&:is(:hover, :focus-visible, :active):not(:disabled) {
+			background-color: color-mix(
+				in srgb,
+				color-mix(in srgb, var(--gray-300) 85%, var(--gray-400)) 98.5%,
+				#000
+			);
+		}
 
 		&:focus-visible {
 			outline: 2px solid var(--accent-700);

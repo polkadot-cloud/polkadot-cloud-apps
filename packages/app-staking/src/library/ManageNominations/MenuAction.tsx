@@ -4,11 +4,11 @@
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
+import { MenuPopover } from 'library/GenerateNominations/Controls/MenuPopover'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseSubmitExtrinsic } from 'tx-submit/types'
 import { ButtonSubmit, ButtonSubmitWithFee } from 'ui-buttons'
-import { Popover } from 'ui-core/popover'
 import { Form } from './Form'
 import { FixIssuesFooter, NominationSummary } from './Wrappers'
 
@@ -48,14 +48,13 @@ export const MenuAction = ({
 
 	if (needsFix) {
 		return (
-			<Popover
+			<MenuPopover
 				open={open}
 				onOpenChange={setOpen}
 				portalContainer={themeElementRef.current || undefined}
 				width="min(380px, calc(100vw - 2rem))"
 				side="bottom"
 				align="end"
-				sideOffset={8}
 				content={
 					<>
 						<NominationSummary>
@@ -84,12 +83,12 @@ export const MenuAction = ({
 				}
 			>
 				<ButtonSubmit asLabel lg text={t('fixIssues')} />
-			</Popover>
+			</MenuPopover>
 		)
 	}
 
 	return (
-		<Popover
+		<MenuPopover
 			open={open}
 			onOpenChange={setOpen}
 			disabled={!valid}
@@ -97,7 +96,6 @@ export const MenuAction = ({
 			width="min(380px, calc(100vw - 2rem))"
 			side="bottom"
 			align="end"
-			sideOffset={8}
 			content={
 				<Form
 					valid={valid}
@@ -113,6 +111,6 @@ export const MenuAction = ({
 				pulse={valid}
 				disabled={!valid}
 			/>
-		</Popover>
+		</MenuPopover>
 	)
 }
