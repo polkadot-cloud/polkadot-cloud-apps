@@ -14,8 +14,10 @@ import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
+import { Spinner } from 'ui-core/base'
 import { Main } from 'ui-core/canvas'
 import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
@@ -61,7 +63,8 @@ export const NominationsView = ({
 	const { isReady } = useApi()
 	const { network } = useNetwork()
 	const validatorDetailsEnabled = useValidatorDetailsEnabled()
-	const { active: healthCheckActive } = useNominationHealth()
+	const { active: healthCheckActive, isLoading: healthCheckLoading } =
+		useNominationHealth()
 	const { activeAddress } = useActiveAccount()
 	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
@@ -223,6 +226,18 @@ export const NominationsView = ({
 			}
 		>
 			<ListProvider selectable initialListFormat={listFormat}>
+				{selectionActionTarget &&
+					healthCheckActive &&
+					healthCheckLoading &&
+					createPortal(
+						<div
+							role="status"
+							aria-label={t('loadingValidatorDetails', { ns: 'app' })}
+						>
+							<Spinner />
+						</div>,
+						selectionActionTarget,
+					)}
 				{showValidatorControls && (
 					<RemoveSelected
 						disabled={fetching}

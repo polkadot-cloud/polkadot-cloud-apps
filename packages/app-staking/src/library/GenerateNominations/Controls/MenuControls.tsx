@@ -6,10 +6,8 @@ import {
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons'
 import { useManageNominations } from 'contexts/ManageNominations'
-import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
-import { Spinner } from 'ui-core/base'
 import { RegenerateAction } from '../RegenerateAction'
 import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
@@ -23,8 +21,6 @@ export const MenuControls = ({
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
-	const { active: healthCheckActive, isLoading: healthCheckLoading } =
-		useNominationHealth()
 
 	const {
 		method,
@@ -69,14 +65,6 @@ export const MenuControls = ({
 			{children}
 			{(allowRevert || action) && (
 				<div className="actions">
-					{healthCheckActive && healthCheckLoading && (
-						<div
-							role="status"
-							aria-label={t('loadingValidatorDetails', { ns: 'app' })}
-						>
-							<Spinner />
-						</div>
-					)}
 					{allowRevert && (
 						<Revert
 							disabled={

@@ -26,27 +26,17 @@ const selectionActionEnter = keyframes`
   from {
     opacity: 0;
   }
-
-  to {
-    opacity: 1;
-  }
 `
 
 export const SelectionActionTarget = styled.div`
   align-items: center;
   display: flex;
   flex-shrink: 0;
-
-  &:not(:empty) {
-    animation: ${selectionActionEnter} 180ms ease-out;
-
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
-    }
-  }
+  gap: 0.75rem;
 
   > button {
     align-items: center;
+    animation: ${selectionActionEnter} 180ms ease-out;
     background: var(--gray-300);
     border: 0;
     border-radius: var(--btn-lg-radius);
@@ -67,6 +57,10 @@ export const SelectionActionTarget = styled.div`
     &:disabled {
       cursor: default;
       opacity: var(--opacity-disabled);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
     }
   }
 
