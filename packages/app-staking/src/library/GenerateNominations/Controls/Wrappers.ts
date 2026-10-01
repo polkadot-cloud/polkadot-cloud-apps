@@ -112,10 +112,6 @@ const BaseMenuWrapper = styled.div.withConfig({
       cursor: default;
     }
 
-    > button:has(.removeSelected):not(:disabled) {
-      color: var(--status-danger);
-    }
-
     > button:focus-visible {
       outline: 2px solid var(--accent-700);
       outline-offset: -2px;

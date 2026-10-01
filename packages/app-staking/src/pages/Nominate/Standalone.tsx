@@ -10,7 +10,9 @@ import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidators } from 'hooks/useValidators'
+import { SelectionActionTarget } from 'library/GenerateNominations/Wrappers'
 import { Editor } from 'library/ManageNominations/Editor'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
 import { StandaloneStatus } from './Wrappers'
@@ -25,6 +27,8 @@ export const NominateStandalone = () => {
 	const { isLoading, isValidator } = useValidators()
 	const { accountsInitialised } = useImportedAccounts()
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
+	const [selectionActionTarget, setSelectionActionTarget] =
+		useState<HTMLDivElement | null>(null)
 
 	const isPool = Boolean(activePool) && isOwner()
 	const { formatWithPrefs } = useValidatorEntries(
@@ -78,7 +82,10 @@ export const NominateStandalone = () => {
 
 	return (
 		<>
-			<Page.Title title={t('nominate')}>
+			<Page.Title
+				title={t('nominate')}
+				titleActions={<SelectionActionTarget ref={setSelectionActionTarget} />}
+			>
 				<StandaloneStatus $indicator={statusIndicator}>
 					{accountStatus}
 				</StandaloneStatus>
@@ -101,6 +108,7 @@ export const NominateStandalone = () => {
 						}
 						optimalSelectionOnly
 						poolId={poolId}
+						selectionActionTarget={selectionActionTarget}
 						standaloneCards
 					/>
 				</ManageNominationsProvider>

@@ -3,11 +3,9 @@
 
 import { faCaretDown, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useList } from 'contexts/List'
 import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Validator } from 'types'
 import { ButtonMenu } from 'ui-buttons'
 import { MenuItemButton } from 'ui-core/popover'
 import classes from './index.module.scss'
@@ -15,16 +13,12 @@ import { MenuPopover } from './MenuPopover'
 import type { ListControlsProps } from './types'
 
 export const ListControls = ({
-	selectHandler,
 	filterHandlers,
 	disabled = false,
 }: ListControlsProps) => {
-	const { selected, resetSelected } = useList()
 	const { themeElementRef } = useTheme()
 	const { t } = useTranslation('app')
-	const [open, setOpen] = useState(false)
 	const [otherOpen, setOtherOpen] = useState(false)
-	const Confirmation = selectHandler.popover.node
 	const otherValidators = filterHandlers.filter(
 		({ group }) => group === 'other',
 	)
@@ -95,38 +89,6 @@ export const ListControls = ({
 							iconLeft={handler.icon}
 						/>
 					)),
-			)}
-			{selected.length > 0 && (
-				<MenuPopover
-					align="start"
-					content={
-						<Confirmation
-							text={selectHandler.popover.text}
-							controlKey="removeSelected"
-							onClose={() => setOpen(false)}
-							onRevert={() => {
-								selectHandler.popover.callback({
-									selected: selected as Validator[],
-									callback: resetSelected,
-								})
-								setOpen(false)
-							}}
-						/>
-					}
-					disabled={disabled}
-					onOpenChange={setOpen}
-					open={open}
-					portalContainer={themeElementRef.current || undefined}
-					side="bottom"
-				>
-					<ButtonMenu
-						asLabel
-						disabled={disabled}
-						className="removeSelected"
-						status="danger"
-						text={selectHandler.title}
-					/>
-				</MenuPopover>
 			)}
 		</>
 	)

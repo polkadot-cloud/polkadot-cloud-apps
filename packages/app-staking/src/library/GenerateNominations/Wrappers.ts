@@ -1,11 +1,79 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { CardWrapper } from 'ui-app/Card'
 import { ButtonMonoInvert } from 'ui-buttons'
 import { Loader } from 'ui-core/base'
 import type { StandaloneStyleProps } from './types'
+
+export const NominationHeading = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  min-height: 3.2rem;
+  min-width: 0;
+
+  > div:first-child {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+`
+
+const selectionActionEnter = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+`
+
+export const SelectionActionTarget = styled.div`
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+
+  &:not(:empty) {
+    animation: ${selectionActionEnter} 180ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  > button {
+    align-items: center;
+    background: var(--gray-300);
+    border: 0;
+    border-radius: var(--btn-lg-radius);
+    color: var(--gray-900);
+    cursor: pointer;
+    display: flex;
+    font-family: var(--font-family-semibold);
+    font-size: var(--btn-md-font-size);
+    justify-content: center;
+    padding: 0.65rem 1.25rem;
+    transition: background-color var(--transition-duration) ease-in-out;
+    white-space: nowrap;
+
+    &:is(:hover, :focus-visible):not(:disabled) {
+      background: var(--gray-400);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: var(--opacity-disabled);
+    }
+  }
+
+  &:empty {
+    display: none;
+  }
+`
 
 export const AccountPrompt = styled.section`
 	align-items: center;
@@ -108,7 +176,7 @@ export const NominationHealthWrapper = styled.section<StandaloneStyleProps>`
   display: grid;
   gap: 1rem;
   margin: ${({ $standalone }) =>
-		$standalone ? '0 0.9rem 1rem' : '1.5rem 0.9rem 1rem'};
+		$standalone ? '0 0.9rem 1rem' : '0.5rem 0.9rem 1rem'};
   width: calc(100% - 1.8rem);
 `
 

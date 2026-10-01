@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
-import { useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import type { PageTitleProps } from 'types'
 import classes from './index.module.scss'
 
@@ -12,7 +12,11 @@ import classes from './index.module.scss'
  * The element that wraps a page title. Determines the padding and position relative to top of
  * screen when the element is stuck.
  */
-export const Title = ({ title, children }: Omit<PageTitleProps, 'tabs'>) => {
+export const Title = ({
+	title,
+	titleActions,
+	children,
+}: Omit<PageTitleProps, 'tabs'> & { titleActions?: ReactNode }) => {
 	const [sticky, setSticky] = useState(false)
 	const ref = useRef<HTMLElement>(null)
 
@@ -48,6 +52,7 @@ export const Title = ({ title, children }: Omit<PageTitleProps, 'tabs'>) => {
 					<div>
 						<h1 className={h1Classes}>{title}</h1>
 					</div>
+					{titleActions}
 				</section>
 				{children}
 			</header>

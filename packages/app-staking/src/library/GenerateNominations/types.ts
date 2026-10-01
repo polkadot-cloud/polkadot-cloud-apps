@@ -22,6 +22,7 @@ export interface GenerateNominationsProps {
 	eligibilityLoading?: boolean
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	menuControls?: (validatorControls: ReactNode) => ReactNode
+	selectionActionTarget?: HTMLDivElement | null
 	standaloneCards?: boolean
 }
 
@@ -33,6 +34,7 @@ export interface NominationsViewProps {
 	filterHandlers: FilterHandler[]
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
 	menuControls: (validatorControls: ReactNode) => ReactNode
+	selectionActionTarget?: HTMLDivElement | null
 	selectHandler: SelectHandler
 	standaloneCards: boolean
 }

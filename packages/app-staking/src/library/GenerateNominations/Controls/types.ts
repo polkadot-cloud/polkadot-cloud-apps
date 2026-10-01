@@ -3,10 +3,9 @@
 
 import type { ReactNode } from 'react'
 import type { AnyFunction } from 'types'
-import type { FilterHandler, SelectHandler } from '../types'
+import type { FilterHandler } from '../types'
 
 export interface ListControlsProps {
-	selectHandler: SelectHandler
 	filterHandlers: FilterHandler[]
 	disabled?: boolean
 }

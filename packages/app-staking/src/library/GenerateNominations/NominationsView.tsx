@@ -20,6 +20,7 @@ import { Main } from 'ui-core/canvas'
 import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
 import { MenuSurfaceContext } from './Controls/MenuPopover'
+import { RemoveSelected } from './Controls/RemoveSelected'
 import { Methods } from './Methods'
 import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
@@ -41,6 +42,7 @@ export const NominationsView = ({
 	filterHandlers,
 	ineligibleStatus = 'notStaking',
 	menuControls,
+	selectionActionTarget,
 	selectHandler,
 	standaloneCards,
 }: NominationsViewProps) => {
@@ -72,7 +74,7 @@ export const NominationsView = ({
 	// Show method selection until a method is chosen.
 	const showMethodSelection = !isReadOnlyAccount(activeAddress) && !method
 
-	// Keep validator actions in the shared bar for every nomination workflow.
+	// Keep validator controls available for every nomination workflow.
 	const showValidatorControls =
 		canManageNominations &&
 		!eligibilityLoading &&
@@ -114,14 +116,10 @@ export const NominationsView = ({
 		</div>
 	)
 
-	// The menu and validator list share one selection provider.
+	// The menu, header action and validator list share one selection provider.
 	const controls = menuControls(
 		showValidatorControls ? (
-			<ListControls
-				disabled={fetching}
-				filterHandlers={filterHandlers}
-				selectHandler={selectHandler}
-			/>
+			<ListControls disabled={fetching} filterHandlers={filterHandlers} />
 		) : null,
 	)
 
@@ -190,7 +188,7 @@ export const NominationsView = ({
 		<NominationEditorWrapper
 			style={{
 				height: height ? `${height}px` : 'auto',
-				marginTop: method ? '1rem' : 0,
+				marginTop: method && displayFor !== 'canvas' ? '1rem' : 0,
 			}}
 		>
 			<div>
@@ -225,6 +223,13 @@ export const NominationsView = ({
 			}
 		>
 			<ListProvider selectable initialListFormat={listFormat}>
+				{showValidatorControls && (
+					<RemoveSelected
+						disabled={fetching}
+						selectHandler={selectHandler}
+						target={selectionActionTarget}
+					/>
+				)}
 				{standaloneCards ? (
 					<StandaloneCards>
 						<CardWrapper className="transparent">{controls}</CardWrapper>
@@ -234,7 +239,7 @@ export const NominationsView = ({
 					<>
 						{controls}
 						{displayFor === 'canvas' ? (
-							<Main size="xl" withMenu>
+							<Main size="xl" withMenu style={{ paddingTop: '0.75rem' }}>
 								{editor}
 							</Main>
 						) : (

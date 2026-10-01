@@ -30,6 +30,7 @@ interface EditorProps {
 	optimalSelectionOnly?: boolean
 	standaloneCards?: boolean
 	poolId?: number
+	selectionActionTarget?: HTMLDivElement | null
 	callbackSubmit?: () => void
 	callbackInBlock?: (nominationAddresses: string[]) => void
 }
@@ -54,6 +55,7 @@ export const Editor = ({
 	optimalSelectionOnly = false,
 	standaloneCards = false,
 	poolId,
+	selectionActionTarget,
 	callbackSubmit,
 	callbackInBlock,
 }: EditorProps) => {
@@ -165,6 +167,7 @@ export const Editor = ({
 			ineligibleStatus={ineligibleStatus}
 			menuControls={menuControls}
 			setters={nominationSetters}
+			selectionActionTarget={selectionActionTarget}
 			standaloneCards={standaloneCards}
 		/>
 	)

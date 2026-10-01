@@ -16,6 +16,10 @@ export const Wrapper = styled.div`
     align-items: center;
   }
 
+  > section:first-child {
+    gap: 1rem;
+  }
+
   > section:last-child {
     flex: 1;
     justify-content: flex-end;

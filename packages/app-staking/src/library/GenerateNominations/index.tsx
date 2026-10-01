@@ -15,6 +15,7 @@ export const GenerateNominations = ({
 	eligibilityLoading = false,
 	ineligibleStatus,
 	menuControls,
+	selectionActionTarget,
 	standaloneCards = false,
 }: GenerateNominationsProps) => {
 	// Keep nomination actions separate from synchronization and presentation.
@@ -55,6 +56,7 @@ export const GenerateNominations = ({
 				))
 			}
 			selectHandler={selectHandler}
+			selectionActionTarget={selectionActionTarget}
 			standaloneCards={standaloneCards}
 		/>
 	)
