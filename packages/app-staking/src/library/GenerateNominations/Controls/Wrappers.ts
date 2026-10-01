@@ -117,6 +117,15 @@ const BaseMenuWrapper = styled.div.withConfig({
       outline-offset: -2px;
     }
 
+    > button.searchButton {
+      border-inline-start: 0;
+      margin-inline-start: auto;
+    }
+
+    > .searchButton + .actions {
+      margin-left: 0;
+    }
+
     > button svg[data-icon='caret-down'],
     > .actions > button svg[data-icon='caret-down'] {
       transform: scale(0.9);

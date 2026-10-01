@@ -1,7 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faCaretDown, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+	faCaretDown,
+	faMagnifyingGlass,
+	faPlus,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
@@ -102,11 +106,12 @@ export const ListControls = ({
 				.filter(({ group }) => group === 'search')
 				.map((handler) => (
 					<ButtonMenu
-						text={handler.title}
+						className="searchButton"
 						key={handler.title}
 						disabled={disabled || handler.isDisabled()}
 						onClick={handler.onClick}
-						iconLeft={handler.icon}
+						iconLeft={handler.icon || faMagnifyingGlass}
+						text={handler.title}
 					/>
 				))}
 		</>
