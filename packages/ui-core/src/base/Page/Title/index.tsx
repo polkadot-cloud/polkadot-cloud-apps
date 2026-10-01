@@ -48,7 +48,11 @@ export const Title = ({
 		<>
 			<div className={classes.scroll} />
 			<header className={headerClasses} ref={ref}>
-				<section className={classes.title}>
+				<section
+					className={classNames(classes.title, {
+						[classes.withActions]: !!titleActions,
+					})}
+				>
 					<div>
 						<h1 className={h1Classes}>{title}</h1>
 					</div>

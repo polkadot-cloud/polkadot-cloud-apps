@@ -67,6 +67,10 @@
 		margin-bottom: 0.5rem;
 		width: 100%;
 
+		&.withActions {
+			min-height: 3.2rem;
+		}
+
 		> div {
 			> .text {
 				transition: all var(--transition-duration);
