@@ -1,7 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+	faMagnifyingGlass,
+	faPlus,
+	faStar,
+} from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
 import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
@@ -184,15 +188,6 @@ export const useNominationControls = ({
 	// Build filter controls in their display order.
 	const filterHandlers: FilterHandler[] = []
 
-	if (allowFavorites && advancedMode) {
-		filterHandlers.push({
-			group: 'favorites',
-			title: t('addFromFavorites', { ns: 'app' }),
-			onClick: () => openSelectionPrompt(SelectFavorites),
-			isDisabled: () => addDisabled || !favoritesList?.length,
-		})
-	}
-
 	const cloudValidatorHandler: FilterHandler | undefined =
 		retainmentStatsEnabled
 			? {
@@ -255,6 +250,16 @@ export const useNominationControls = ({
 			candidateDisabled ||
 			(!stakingApiEnabled && !availableNominations?.highPerformance.length),
 	})
+
+	if (allowFavorites && advancedMode) {
+		filterHandlers.push({
+			group: 'other',
+			title: t('addFromFavorites', { ns: 'app' }),
+			onClick: () => openSelectionPrompt(SelectFavorites),
+			icon: faStar,
+			isDisabled: () => addDisabled || !favoritesList?.length,
+		})
+	}
 
 	if (stakingApiEnabled) {
 		filterHandlers.push({

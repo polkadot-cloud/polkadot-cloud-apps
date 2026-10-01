@@ -77,19 +77,17 @@ export const ListControls = ({
 					/>
 				</MenuPopover>
 			)}
-			{['search', 'favorites'].flatMap((controlGroup) =>
-				filterHandlers
-					.filter(({ group }) => group === controlGroup)
-					.map((handler) => (
-						<ButtonMenu
-							text={handler.title}
-							key={handler.title}
-							disabled={disabled || handler.isDisabled()}
-							onClick={handler.onClick}
-							iconLeft={handler.icon}
-						/>
-					)),
-			)}
+			{filterHandlers
+				.filter(({ group }) => group === 'search')
+				.map((handler) => (
+					<ButtonMenu
+						text={handler.title}
+						key={handler.title}
+						disabled={disabled || handler.isDisabled()}
+						onClick={handler.onClick}
+						iconLeft={handler.icon}
+					/>
+				))}
 		</>
 	)
 }

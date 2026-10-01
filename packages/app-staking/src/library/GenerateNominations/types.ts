@@ -97,7 +97,7 @@ export interface SelectHandler {
 }
 
 export interface FilterHandler {
-	group: 'cloud' | 'other' | 'search' | 'favorites'
+	group: 'cloud' | 'other' | 'search'
 	title: string
 	onClick: () => void
 	isDisabled: () => boolean
