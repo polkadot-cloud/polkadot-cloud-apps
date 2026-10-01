@@ -17,6 +17,7 @@
 		"addresses": "アドレス",
 		"advancedMode": "詳細モード",
 		"all": "すべて",
+		"allCloudValidatorsSelected": "すべてのCloudバリデータはすでに選択されています。",
 		"allowAll": "すべて許可",
 		"allowAnyoneCompound": "誰でもあなたの報酬を再投資できるようにします。",
 		"allowAnyoneCompoundWithdraw": "誰でもあなたに代わって報酬の再投資または引き出しができるようにします。",

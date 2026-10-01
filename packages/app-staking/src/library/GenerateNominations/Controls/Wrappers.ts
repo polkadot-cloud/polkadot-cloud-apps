@@ -97,17 +97,17 @@ const BaseMenuWrapper = styled.div.withConfig({
       border-inline-start: 0;
     }
 
-    > button:is(:hover, :focus-visible, :active, [data-state='open']):not(:disabled) {
+    > button:is(:hover, :focus-visible, :active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
       background: var(--menu-hover-background);
       color: var(--gray-900);
     }
 
-    > button[data-state='open']:not(:disabled) {
+    > button[data-state='open']:not(:disabled, [aria-disabled='true']) {
       background: var(--menu-popover-background);
       color: var(--gray-1000);
     }
 
-    > button:disabled {
+    > button:is(:disabled, [aria-disabled='true']) {
       color: color-mix(in srgb, var(--menu-foreground) 35%, transparent);
       cursor: default;
     }

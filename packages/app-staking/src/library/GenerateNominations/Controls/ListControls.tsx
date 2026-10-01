@@ -7,6 +7,7 @@ import { useTheme } from 'hooks/useTheme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
+import { Tooltip } from 'ui-core/base'
 import { MenuItemButton } from 'ui-core/popover'
 import classes from './index.module.scss'
 import { MenuPopover } from './MenuPopover'
@@ -29,15 +30,35 @@ export const ListControls = ({
 		<>
 			{filterHandlers
 				.filter(({ group }) => group === 'cloud')
-				.map((handler) => (
-					<ButtonMenu
-						text={handler.title}
-						key={handler.title}
-						disabled={disabled || handler.isDisabled()}
-						onClick={handler.onClick}
-						iconLeft={handler.icon}
-					/>
-				))}
+				.map((handler) => {
+					const isDisabled = disabled || handler.isDisabled()
+					return isDisabled && handler.disabledTooltip ? (
+						<Tooltip
+							container={themeElementRef.current || undefined}
+							key={handler.title}
+							side="top"
+							text={handler.disabledTooltip}
+						>
+							{/* Keep the unavailable action focusable so its explanation is accessible. */}
+							<button aria-disabled="true" type="button">
+								<ButtonMenu
+									asLabel
+									disabled
+									iconLeft={handler.icon}
+									text={handler.title}
+								/>
+							</button>
+						</Tooltip>
+					) : (
+						<ButtonMenu
+							text={handler.title}
+							key={handler.title}
+							disabled={isDisabled}
+							onClick={handler.onClick}
+							iconLeft={handler.icon}
+						/>
+					)
+				})}
 			{otherValidators.length > 0 && (
 				<MenuPopover
 					align="start"

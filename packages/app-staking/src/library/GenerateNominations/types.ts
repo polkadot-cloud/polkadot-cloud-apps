@@ -101,6 +101,7 @@ export interface FilterHandler {
 	title: string
 	onClick: () => void
 	isDisabled: () => boolean
+	disabledTooltip?: string
 	icon?: IconDefinition
 }
 

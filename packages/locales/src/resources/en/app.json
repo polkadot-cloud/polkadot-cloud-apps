@@ -17,6 +17,7 @@
 		"addresses": "Addresses",
 		"advancedMode": "Advanced Mode",
 		"all": "All",
+		"allCloudValidatorsSelected": "All Cloud Validators are already selected.",
 		"allowAll": "Allow All",
 		"allowAnyoneCompound": "Allow anyone to compound your rewards.",
 		"allowAnyoneCompoundWithdraw": "Allow anyone to compound or withdraw rewards on your behalf.",

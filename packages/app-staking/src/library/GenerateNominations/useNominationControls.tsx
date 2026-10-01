@@ -196,6 +196,9 @@ export const useNominationControls = ({
 					onClick: () => addCandidateByStrategy('CLOUD'),
 					icon: faPlus,
 					isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
+					disabledTooltip: allKnownValidatorsNominated
+						? t('allCloudValidatorsSelected', { ns: 'app' })
+						: undefined,
 				}
 			: undefined
 	if (cloudValidatorHandler) {
