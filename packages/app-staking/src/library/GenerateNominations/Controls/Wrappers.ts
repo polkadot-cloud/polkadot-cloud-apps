@@ -15,6 +15,7 @@ const BaseMenuWrapper = styled.div.withConfig({
   --menu-hover-background: color-mix(in srgb, var(--menu-background) 75%, var(--gray-500));
 
   width: 100%;
+  min-width: 0;
   display: flex;
   align-items: center;
   position: relative;
@@ -38,11 +39,21 @@ const BaseMenuWrapper = styled.div.withConfig({
 
   > .menuControlsInner {
     width: 100%;
+    min-width: 0;
     display: flex;
     align-items: stretch;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    white-space: nowrap;
     min-height: 3.8rem;
     position: relative;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     > button,
     > .methodPrompt,
@@ -63,7 +74,6 @@ const BaseMenuWrapper = styled.div.withConfig({
       justify-content: center;
       flex-shrink: 0;
       min-height: 3.8rem;
-      max-width: 100%;
       height: auto;
       padding: 0 1.25rem;
       border-inline-start: 1px solid var(--menu-separator);
@@ -111,12 +121,14 @@ const BaseMenuWrapper = styled.div.withConfig({
       outline-offset: -2px;
     }
 
-    > button svg[data-icon='caret-down'] {
+    > button svg[data-icon='caret-down'],
+    > .actions > button svg[data-icon='caret-down'] {
       transform: scale(0.9);
       transition: transform var(--transition-duration);
     }
 
-    > button[data-state='open'] svg[data-icon='caret-down'] {
+    > button[data-state='open'] svg[data-icon='caret-down'],
+    > .actions > button[data-state='open'] svg[data-icon='caret-down'] {
       transform: rotate(180deg) scale(0.9);
     }
 
@@ -126,6 +138,11 @@ const BaseMenuWrapper = styled.div.withConfig({
     }
 
     > .actions {
+      position: sticky;
+      inset-inline-end: 0;
+      z-index: 1;
+      background: var(--menu-surface);
+      box-shadow: inset 0 -1px 0 var(--menu-border);
       align-items: center;
       display: flex;
       gap: 1rem;
@@ -136,18 +153,13 @@ const BaseMenuWrapper = styled.div.withConfig({
       > button {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
         min-height: 3.8rem;
         padding-block: 0.4rem;
       }
 
       .revert {
         border-radius: var(--btn-sm-radius);
-      }
-
-      @media (max-width: 600px) {
-        border-top: 1px solid var(--menu-separator);
-        justify-content: flex-end;
-        width: 100%;
       }
     }
 
@@ -160,7 +172,8 @@ const BaseMenuWrapper = styled.div.withConfig({
 
     @media (prefers-reduced-motion: reduce) {
       > button,
-      > button svg[data-icon='caret-down'] {
+      > button svg[data-icon='caret-down'],
+      > .actions > button svg[data-icon='caret-down'] {
         transition: none;
       }
     }

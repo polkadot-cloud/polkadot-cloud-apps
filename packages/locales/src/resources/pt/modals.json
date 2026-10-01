@@ -247,7 +247,7 @@
 		"reserveForExistentialDeposit": "Reserva para Depósito Existencial",
 		"reserveForTxFees": "Reserva para Taxas de Transação",
 		"reserveText": "Controle quanto {{unit}} é reservado para pagar as taxas de transação. Este valor é adicionado ao valor necessário para cobrir o depósito existencial da sua conta.",
-		"revertChanges": "Reverter Alterações",
+		"revertChanges": "Reverter",
 		"revertNominationChanges": "Tem certeza de que deseja reverter as alterações nas suas nomeações selecionadas?",
 		"reward": "Recompensa",
 		"rewards": "Recompensas",
