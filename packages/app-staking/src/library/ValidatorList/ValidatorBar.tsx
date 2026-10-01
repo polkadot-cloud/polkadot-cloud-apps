@@ -107,7 +107,11 @@ export const ValidatorBar = ({
 			statusAccent={showRetainment ? retainmentStats.statusAccent : undefined}
 		>
 			<ListItem.RowHeader data-section="identity">
-				{t('identity')}
+				{selectable ? (
+					<Select item={validator} />
+				) : (
+					<span>{t('identity')}</span>
+				)}
 			</ListItem.RowHeader>
 			<ListItem.RowHeader data-section="performance">
 				{t('performance')}
@@ -131,7 +135,6 @@ export const ValidatorBar = ({
 				</ListItem.RowHeader>
 			)}
 			<ListItem.RowIdentity>
-				{selectable && <Select item={validator} />}
 				<ListItem.Identity>
 					{identityNode ?? <Identity address={address} />}
 					{prefs?.blocked === true && (

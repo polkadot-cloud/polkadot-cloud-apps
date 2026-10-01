@@ -17,6 +17,15 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 
+	&[data-section='identity'] {
+		gap: 0.8rem;
+
+		> button {
+			margin: 0;
+			opacity: 1;
+		}
+	}
+
 	> span {
 		min-width: 0;
 		overflow: hidden;
