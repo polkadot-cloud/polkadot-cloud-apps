@@ -16,14 +16,20 @@ export const MenuPopover = ({
 	'background' | 'borderColor' | 'arrow' | 'sideOffset'
 >) => {
 	const menuSurface = useContext(MenuSurfaceContext)
-	const background = `color-mix(in srgb, ${menuSurface} 75%, var(--nomination-popover-highlight))`
+	const background = attached
+		? `color-mix(in srgb, ${menuSurface} 75%, var(--nomination-popover-highlight))`
+		: undefined
 	return (
 		<Popover
 			{...props}
 			attached={attached}
 			arrow={false}
 			background={background}
-			borderColor={`color-mix(in srgb, ${background} 91%, var(--gray-1000))`}
+			borderColor={
+				background
+					? `color-mix(in srgb, ${background} 91%, var(--gray-1000))`
+					: undefined
+			}
 		/>
 	)
 }
