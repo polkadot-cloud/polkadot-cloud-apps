@@ -153,7 +153,8 @@ const BaseMenuWrapper = styled.div.withConfig({
       gap: 1rem;
       margin-left: auto;
       flex-shrink: 0;
-      padding-left: 1rem;
+      /* Leave room for Submit's pulse inside the scrollable bar. */
+      padding-inline: 1rem;
 
       > button {
         display: flex;
@@ -206,10 +207,6 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
 		isRounded &&
 		`
     margin-bottom: 1rem;
-
-    > .menuControlsInner > .actions {
-      padding-right: 0.75rem;
-    }
   `}
 `
 
@@ -235,10 +232,6 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
   }
 
   > .menuControlsInner {
-    > .actions {
-      padding-right: 0.75rem;
-    }
-
     > .actions .revert {
       background: var(--gray-500);
       border-color: var(--gray-500);
