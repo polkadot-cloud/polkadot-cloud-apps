@@ -307,6 +307,7 @@
 		"operatorValidatorCoverage": "多验证人实体覆盖率",
 		"operators": "验证人实体",
 		"optimalSelection": "最佳选择",
+		"optimalSelectionRegenerateSubtitle": "使用5个最佳候选验证人重新生成提名列表，替换您当前的选择。",
 		"optimalSelectionSubtitle": "选择表现最佳且定期活跃的验证人",
 		"order": "顺序",
 		"orderValidators": "验证人排序",

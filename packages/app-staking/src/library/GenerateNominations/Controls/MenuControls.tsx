@@ -10,7 +10,7 @@ import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
 import { Spinner } from 'ui-core/base'
-import { ConfirmAction } from '../ConfirmAction'
+import { RegenerateAction } from '../RegenerateAction'
 import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
 
@@ -27,6 +27,7 @@ export const MenuControls = ({
 
 	const {
 		method,
+		fetching,
 		setMethod,
 		nominations,
 		updateSetters,
@@ -45,28 +46,27 @@ export const MenuControls = ({
 				/>
 			)}
 			{method && (
-				<ConfirmAction
-					align="start"
-					controlKey="regenerate_nominations"
-					disabled={disabled}
-					onConfirm={() => {
+				<RegenerateAction
+					disabled={disabled || fetching}
+					onRegenerate={() => {
 						setMethod('Optimal Selection')
 						setNominations([])
 						setFetching(true)
 					}}
-					text={t('regenerateNominationSelection', { ns: 'modals' })}
 				>
 					<ButtonMenu
 						asLabel
 						className={
-							disabled ? 'generateButton generateDisabled' : 'generateButton'
+							disabled || fetching
+								? 'generateButton generateDisabled'
+								: 'generateButton'
 						}
-						disabled={disabled}
+						disabled={disabled || fetching}
 						iconLeft={faWandMagicSparkles}
 						iconRight={faCaretDown}
 						text={t('generate', { ns: 'app' })}
 					/>
-				</ConfirmAction>
+				</RegenerateAction>
 			)}
 			{(allowRevert || action) && (
 				<div className="actions">

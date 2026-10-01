@@ -311,6 +311,7 @@
 		"operatorValidatorCoverage": "オペレーター配下のバリデーター比率",
 		"operators": "オペレーター",
 		"optimalSelection": "最適な選択",
+		"optimalSelectionRegenerateSubtitle": "5つの最適な候補でノミネーションリストを再生成し、現在の選択を置き換えます。",
 		"optimalSelectionSubtitle": "パフォーマンスが高く定期的にアクティブなバリデータを選択します。",
 		"order": "並び替え",
 		"orderValidators": "バリデータを並び替え",

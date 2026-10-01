@@ -312,6 +312,7 @@
 		"operatorValidatorCoverage": "Cobertura de validadores por operadores",
 		"operators": "Operadores",
 		"optimalSelection": "Selección Óptima",
+		"optimalSelectionRegenerateSubtitle": "Regenera tu lista de nominaciones con 5 candidatos óptimos, reemplazando tu selección actual.",
 		"optimalSelectionSubtitle": "Selecciona validadores de alto rendimiento y regularmente activos.",
 		"order": "Ordenar",
 		"orderValidators": "Ordenar Validadores",

@@ -311,6 +311,7 @@
 		"operatorValidatorCoverage": "운영자 검증자 커버리지",
 		"operators": "운영자",
 		"optimalSelection": "최적 선택",
+		"optimalSelectionRegenerateSubtitle": "최적의 후보 5개로 추천 목록을 다시 생성하여 현재 선택을 대체합니다.",
 		"optimalSelectionSubtitle": "성과가 뛰어나고 정기적으로 활동하는 검증자를 선택합니다.",
 		"order": "순서",
 		"orderValidators": "검증자 정렬",

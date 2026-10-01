@@ -5,12 +5,12 @@ import { useManageNominations } from 'contexts/ManageNominations'
 import { SelectableWrapper } from 'library/List'
 import { useTranslation } from 'react-i18next'
 import { ButtonPrimary, ButtonSecondary } from 'ui-buttons'
-import { ConfirmAction } from '../ConfirmAction'
+import { RegenerateAction } from '../RegenerateAction'
 import type { InlineControlsProps } from './types'
 
 export const InlineControls = ({ displayFor }: InlineControlsProps) => {
 	const { t } = useTranslation()
-	const { method, revertNominations } = useManageNominations()
+	const { method, fetching, revertNominations } = useManageNominations()
 
 	// Determine button style depending on in canvas
 	const ButtonType = displayFor === 'canvas' ? ButtonPrimary : ButtonSecondary
@@ -22,14 +22,13 @@ export const InlineControls = ({ displayFor }: InlineControlsProps) => {
 
 	return (
 		<SelectableWrapper>
-			<ConfirmAction
-				align="start"
-				controlKey="regenerate_nominations"
-				onConfirm={revertNominations}
-				text={t('regenerateNominationSelection', { ns: 'modals' })}
-			>
-				<ButtonType asLabel text={t('reGenerate', { ns: 'app' })} />
-			</ConfirmAction>
+			<RegenerateAction disabled={fetching} onRegenerate={revertNominations}>
+				<ButtonType
+					asLabel
+					disabled={fetching}
+					text={t('reGenerate', { ns: 'app' })}
+				/>
+			</RegenerateAction>
 		</SelectableWrapper>
 	)
 }

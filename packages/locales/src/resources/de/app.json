@@ -311,6 +311,7 @@
 		"operatorValidatorCoverage": "Validator-Abdeckung durch Betreiber",
 		"operators": "Betreiber",
 		"optimalSelection": "Optimale Auswahl",
+		"optimalSelectionRegenerateSubtitle": "Generiere deine Nominierungsliste mit 5 optimalen Kandidaten neu und ersetze damit deine aktuelle Auswahl.",
 		"optimalSelectionSubtitle": "Wählt die leistungsstärksten und regelmäßig aktiven Validatoren aus.",
 		"order": "Reihenfolge",
 		"orderValidators": "Validatoren sortieren",

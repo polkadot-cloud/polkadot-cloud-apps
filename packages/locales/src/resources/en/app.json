@@ -311,6 +311,7 @@
 		"operatorValidatorCoverage": "Operator validator coverage",
 		"operators": "Operators",
 		"optimalSelection": "Optimal Selection",
+		"optimalSelectionRegenerateSubtitle": "Regenerate your nomination list with 5 optimal candidates, replacing your current selection.",
 		"optimalSelectionSubtitle": "Selects top performing and regularly active validators.",
 		"order": "Order",
 		"orderValidators": "Order Validators",

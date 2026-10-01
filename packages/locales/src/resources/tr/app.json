@@ -311,6 +311,7 @@
 		"operatorValidatorCoverage": "Operatör validatör kapsamı",
 		"operators": "Operatörler",
 		"optimalSelection": "Optimal Seçim",
+		"optimalSelectionRegenerateSubtitle": "Mevcut seçiminizi değiştirerek adaylık listenizi en uygun 5 adayla yeniden oluşturun.",
 		"optimalSelectionSubtitle": "En iyi performans gösteren ve düzenli olarak aktif olan validatörleri seçer.",
 		"order": "Sırala",
 		"orderValidators": "Validatörleri Sırala",

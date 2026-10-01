@@ -318,6 +318,7 @@
 		"operatorValidatorCoverage": "Охват валидаторов операторами",
 		"operators": "Операторы",
 		"optimalSelection": "Оптимальный выбор",
+		"optimalSelectionRegenerateSubtitle": "Создайте список номинаций заново с 5 оптимальными кандидатами, заменив текущий выбор.",
 		"optimalSelectionSubtitle": "Выбирает наиболее производительные и регулярно активные валидаторы.",
 		"order": "Сортировать",
 		"orderValidators": "Сортировать валидаторы",
