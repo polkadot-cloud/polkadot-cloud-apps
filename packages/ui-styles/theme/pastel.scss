@@ -1,6 +1,21 @@
 /* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
+@mixin subtle-surface {
+	background:
+		linear-gradient(
+			125deg,
+			color-mix(in srgb, var(--wash-yellow) 65%, transparent),
+			color-mix(in srgb, var(--wash-blue) 65%, transparent) 55%,
+			color-mix(in srgb, var(--wash-purple) 65%, transparent)
+		),
+		color-mix(in srgb, var(--gray-200) 97%, white);
+
+	&:is(:hover, :focus-visible, :active):not(:disabled) {
+		background-color: color-mix(in srgb, var(--gray-300) 97%, white);
+	}
+}
+
 /* An inset edge preserves layout and leaves the surface and hit targets intact.
    Browsers without mask compositing keep a neutral hairline. */
 @mixin edge {

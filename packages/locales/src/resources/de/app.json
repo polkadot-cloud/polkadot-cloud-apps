@@ -246,6 +246,7 @@
 		"maximum": "Maximum",
 		"member_one": "Mitglied",
 		"member_other": "Mitglieder",
+		"method": "Methode",
 		"methods": "Methoden",
 		"metrics": "Metriken",
 		"migrateController": "Controller migrieren",
@@ -316,6 +317,7 @@
 		"order": "Reihenfolge",
 		"orderValidators": "Validatoren sortieren",
 		"otherOptions": "Weitere Optionen",
+		"otherValidators": "Weitere Validatoren",
 		"overview": "Übersicht",
 		"page": "Seite {{page}} von {{total}}",
 		"pageNumber": "Seite {{page}}",
@@ -481,6 +483,7 @@
 		"validatorSearch": {
 			"addToList": "Validatoren zu deiner Nominierungsliste hinzufügen",
 			"clearAllSelected": "Alle Ausgewählten löschen",
+			"search": "Suchen",
 			"searchResults": "Suchergebnisse",
 			"searchValidators": "Validatoren suchen",
 			"searching": "Wird gesucht",

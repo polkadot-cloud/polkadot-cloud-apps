@@ -1,10 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { SelectableWrapper } from 'library/List'
 import styled from 'styled-components'
-import { ButtonPrimaryInvert } from 'ui-buttons'
-import type { InlineControlsWrapperProps } from './types'
 
 const BaseMenuWrapper = styled.div`
   --menu-background: var(--gray-400);
@@ -22,10 +19,18 @@ const BaseMenuWrapper = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
     position: relative;
 
     > button {
-      margin-right: 2.25rem;
+      flex-shrink: 0;
+    }
+
+    > button:focus-visible {
+      border-radius: var(--btn-sm-radius);
+      outline: 2px solid var(--accent-700);
+      outline-offset: 2px;
     }
 
     .generateButton > svg[data-icon='caret-down'] {
@@ -40,7 +45,7 @@ const BaseMenuWrapper = styled.div`
     > .actions {
       align-items: center;
       display: flex;
-      gap: 0.75rem;
+      gap: 1rem;
       margin-left: auto;
       flex-shrink: 0;
 
@@ -50,6 +55,11 @@ const BaseMenuWrapper = styled.div`
 
       .revert {
         border-radius: var(--btn-sm-radius);
+      }
+
+      @media (max-width: 600px) {
+        justify-content: flex-end;
+        width: 100%;
       }
     }
   }
@@ -104,17 +114,9 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
   }
 `
 
-export const InlineControlsWrapper = styled(
-	SelectableWrapper,
-)<InlineControlsWrapperProps>`
-  margin-top: ${({ $standalone }) => ($standalone ? '1.25rem' : '0.25rem')};
-  margin-bottom: ${({ $standalone }) => ($standalone ? '0' : '0.75rem')};
-`
-
-// Draw the outline inside the control so it matches the borderless filter height.
-export const RemoveSelectedButton = styled(ButtonPrimaryInvert)`
-  && {
-    border: 0;
-    box-shadow: inset 0 0 0 1px var(--accent-900);
-  }
+export const EmbeddedMenuWrapper = styled(BaseMenuWrapper)`
+  background: rgb(from var(--menu-background) r g b / 75%);
+  border-radius: var(--btn-sm-radius);
+  margin-bottom: 1rem;
+  padding: 0.4rem 0.75rem;
 `

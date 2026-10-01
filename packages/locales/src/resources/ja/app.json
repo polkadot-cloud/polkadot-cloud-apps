@@ -246,6 +246,7 @@
 		"maximum": "最大",
 		"member_one": "メンバー",
 		"member_other": "メンバー",
+		"method": "方法",
 		"methods": "メソッド",
 		"metrics": "指標",
 		"migrateController": "コントローラーを移行",
@@ -316,6 +317,7 @@
 		"order": "並び替え",
 		"orderValidators": "バリデータを並び替え",
 		"otherOptions": "その他のオプション",
+		"otherValidators": "その他のバリデーター",
 		"overview": "概要",
 		"page": "{{total}}ページ中{{page}}ページ",
 		"pageNumber": "{{page}}ページ",
@@ -481,6 +483,7 @@
 		"validatorSearch": {
 			"addToList": "ノミネーションリストにバリデータを追加",
 			"clearAllSelected": "選択をすべてクリア",
+			"search": "検索",
 			"searchResults": "検索結果",
 			"searchValidators": "バリデータを検索",
 			"searching": "検索中",

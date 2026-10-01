@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 .card {
 	@include pastel.edge;
+	@include pastel.subtle-surface;
 
 	display: flex;
 	align-items: center;
@@ -19,20 +20,14 @@ SPDX-License-Identifier: GPL-3.0-only */
 	border-radius: 0.85rem;
 	overflow: hidden;
 	isolation: isolate;
-	background: var(--pastel-surface) var(--gray-200);
 	color: var(--gray-1000);
 	font-family: inherit;
 	text-align: left;
 	cursor: pointer;
-	transition:
-		background-color 180ms ease,
-		box-shadow 180ms ease;
+	transition: background-color 180ms ease;
 
 	&:is(:hover, :focus-visible):not(:disabled) {
 		--pastel-edge-opacity: var(--edge-hover-opacity);
-
-		background-color: var(--gray-300);
-		box-shadow: var(--pastel-shadow);
 
 		.arrow > svg {
 			transform: translateX(0.2rem);

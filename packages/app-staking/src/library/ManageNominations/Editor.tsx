@@ -14,10 +14,10 @@ import {
 	StandaloneMenuWrapper,
 } from 'library/GenerateNominations/Controls/Wrappers'
 import type { ConnectStatus } from 'library/GenerateNominations/types'
+import type { ReactNode } from 'react'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
 import type { DisplayFor, NominationSelection, Validator } from 'types'
-import { Main } from 'ui-core/canvas'
 import { MenuAction } from './MenuAction'
 
 interface EditorProps {
@@ -142,8 +142,8 @@ export const Editor = ({
 		/>
 	) : undefined
 
-	// Compose the menu once so standalone mode can place it inside its card.
-	const menuControls = (
+	// Render all controls within the generator's shared selection provider.
+	const menuControls = (validatorControls: ReactNode) => (
 		<MenuControlsWrapper>
 			<MenuControls
 				allowRevert={Boolean(method)}
@@ -151,33 +151,21 @@ export const Editor = ({
 				disabled={!canSubmit || eligibilityLoading}
 				optimalSelectionOnly={optimalSelectionOnly}
 				setters={nominationSetters}
-			/>
+			>
+				{validatorControls}
+			</MenuControls>
 		</MenuControlsWrapper>
 	)
 
-	// Compose the shared nomination generator for either canvas or page layout.
-	const nominationsList = (
+	return (
 		<GenerateNominations
 			canManageNominations={canSubmit}
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}
 			ineligibleStatus={ineligibleStatus}
-			menuControls={standaloneCards ? menuControls : undefined}
+			menuControls={menuControls}
 			setters={nominationSetters}
 			standaloneCards={standaloneCards}
 		/>
-	)
-
-	return (
-		<>
-			{!standaloneCards && menuControls}
-			{displayFor === 'canvas' ? (
-				<Main size="xl" withMenu>
-					{nominationsList}
-				</Main>
-			) : (
-				nominationsList
-			)}
-		</>
 	)
 }

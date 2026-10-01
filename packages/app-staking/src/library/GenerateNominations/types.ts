@@ -21,7 +21,7 @@ export interface GenerateNominationsProps {
 	displayFor?: DisplayFor
 	eligibilityLoading?: boolean
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
-	menuControls?: ReactNode
+	menuControls?: (validatorControls: ReactNode) => ReactNode
 	standaloneCards?: boolean
 }
 
@@ -32,7 +32,7 @@ export interface NominationsViewProps {
 	eligibilityLoading: boolean
 	filterHandlers: FilterHandler[]
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
-	menuControls?: ReactNode
+	menuControls: (validatorControls: ReactNode) => ReactNode
 	selectHandler: SelectHandler
 	standaloneCards: boolean
 }
@@ -95,6 +95,7 @@ export interface SelectHandler {
 }
 
 export interface FilterHandler {
+	group: 'cloud' | 'other' | 'search' | 'favorites'
 	title: string
 	onClick: () => void
 	isDisabled: () => boolean

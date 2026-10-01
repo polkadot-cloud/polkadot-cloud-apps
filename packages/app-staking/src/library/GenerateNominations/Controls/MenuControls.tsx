@@ -15,6 +15,7 @@ import { Revert } from '../Revert'
 import type { MenuControlsProps } from './types'
 
 export const MenuControls = ({
+	children,
 	setters,
 	allowRevert,
 	action,
@@ -68,6 +69,7 @@ export const MenuControls = ({
 					/>
 				</RegenerateAction>
 			)}
+			{children}
 			{(allowRevert || action) && (
 				<div className="actions">
 					{healthCheckActive && healthCheckLoading && (
@@ -81,8 +83,10 @@ export const MenuControls = ({
 					{allowRevert && (
 						<Revert
 							disabled={
+								disabled ||
+								fetching ||
 								JSON.stringify(nominations) ===
-								JSON.stringify(defaultNominations)
+									JSON.stringify(defaultNominations)
 							}
 							onClick={() => {
 								setMethod(optimalSelectionOnly ? 'Optimal Selection' : 'manual')

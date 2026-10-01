@@ -243,6 +243,7 @@
 		"max": "最高",
 		"maximum": "最大",
 		"member": "成员",
+		"method": "方法",
 		"methods": "方案选择",
 		"metrics": "指标",
 		"migrateController": "迁移控制器",
@@ -312,6 +313,7 @@
 		"order": "顺序",
 		"orderValidators": "验证人排序",
 		"otherOptions": "其他选项",
+		"otherValidators": "其他验证人",
 		"overview": "总览",
 		"page": "{{page}} / {{total}}",
 		"pageNumber": "第 {{page}} 页",
@@ -471,6 +473,7 @@
 		"validatorSearch": {
 			"addToList": "将验证人添加到您的提名列表",
 			"clearAllSelected": "清除所有选定项",
+			"search": "搜索",
 			"searchResults": "搜索结果",
 			"searchValidators": "搜索验证人",
 			"searching": "搜索中...",

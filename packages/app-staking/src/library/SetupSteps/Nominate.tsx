@@ -11,7 +11,6 @@ import { useNominatorSetups } from 'contexts/NominatorSetups'
 import type { NominatorProgress } from 'contexts/NominatorSetups/types'
 import type { PoolProgress } from 'hooks/usePoolSetups'
 import { usePoolSetups } from 'hooks/usePoolSetups'
-import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { Footer } from 'library/SetupSteps/Footer'
 import { Header } from 'library/SetupSteps/Header'
 import { MotionContainer } from 'library/SetupSteps/MotionContainer'
@@ -77,7 +76,6 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 						})}
 					</h4>
 				</Subheading>
-				<InlineControls displayFor={displayFor} />
 				<GenerateNominations setters={setters} displayFor={displayFor} />
 				<Footer complete={progress.nominations.length > 0} bondFor={bondFor} />
 			</MotionContainer>

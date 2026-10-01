@@ -246,6 +246,7 @@
 		"maximum": "Maksimum",
 		"member_one": "Üye",
 		"member_other": "Üyeler",
+		"method": "Yöntem",
 		"methods": "Yöntemler",
 		"metrics": "Metrikler",
 		"migrateController": "Controller'ı Taşı",
@@ -316,6 +317,7 @@
 		"order": "Sırala",
 		"orderValidators": "Validatörleri Sırala",
 		"otherOptions": "Diğer Seçenekler",
+		"otherValidators": "Diğer Doğrulayıcılar",
 		"overview": "Genel Bakış",
 		"page": "Sayfa {{page}} / {{total}}",
 		"pageNumber": "Sayfa {{page}}",
@@ -481,6 +483,7 @@
 		"validatorSearch": {
 			"addToList": "Nominasyon listenize validatör ekleyin",
 			"clearAllSelected": "Tüm seçilenleri temizle",
+			"search": "Ara",
 			"searchResults": "Arama Sonuçları",
 			"searchValidators": "Validatör Ara",
 			"searching": "Aranıyor",

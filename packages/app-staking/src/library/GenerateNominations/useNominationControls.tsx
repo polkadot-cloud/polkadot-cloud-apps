@@ -47,7 +47,7 @@ export const useNominationControls = ({
 	const { advancedMode } = useUi()
 	const { favoritesList } = useFavoriteValidators()
 	const { openPromptWith, closePrompt } = usePrompt()
-	const { method, nominations, setNominations, updateSetters } =
+	const { method, fetching, nominations, setNominations, updateSetters } =
 		useManageNominations()
 	const { retainmentStatsEnabled, stakingApiEnabled } = useNominationHealth()
 
@@ -73,6 +73,7 @@ export const useNominationControls = ({
 		if (
 			!canManageNominations ||
 			!method ||
+			fetching ||
 			candidateFetching ||
 			nominations.length >= MaxNominations
 		) {
@@ -107,6 +108,7 @@ export const useNominationControls = ({
 			!canManageNominations ||
 			!retainmentStatsEnabled ||
 			!method ||
+			fetching ||
 			candidateFetching ||
 			nominations.length >= MaxNominations
 		) {
@@ -158,7 +160,8 @@ export const useNominationControls = ({
 	}
 
 	const maxNominationsReached = nominations.length >= MaxNominations
-	const addDisabled = !canManageNominations || maxNominationsReached
+	const addDisabled =
+		!canManageNominations || !method || fetching || maxNominationsReached
 	const candidateDisabled = addDisabled || candidateFetching
 	const allKnownValidatorsNominated = PolkadotKnownValidators.every(
 		(knownAddress) =>
@@ -183,6 +186,7 @@ export const useNominationControls = ({
 
 	if (allowFavorites && advancedMode) {
 		filterHandlers.push({
+			group: 'favorites',
 			title: t('addFromFavorites', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SelectFavorites),
 			isDisabled: () => addDisabled || !favoritesList?.length,
@@ -192,6 +196,7 @@ export const useNominationControls = ({
 	const cloudValidatorHandler: FilterHandler | undefined =
 		retainmentStatsEnabled
 			? {
+					group: 'cloud',
 					title: t('cloudValidator', { ns: 'app' }),
 					onClick: () => addCandidateByStrategy('CLOUD'),
 					icon: faPlus,
@@ -202,12 +207,14 @@ export const useNominationControls = ({
 		filterHandlers.push(
 			cloudValidatorHandler,
 			{
+				group: 'other',
 				title: t('highRetainer', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
 				icon: faPlus,
 				isDisabled: () => candidateDisabled,
 			},
 			{
+				group: 'other',
 				title: t('highCompounder', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
 				icon: faPlus,
@@ -217,6 +224,7 @@ export const useNominationControls = ({
 	} else {
 		filterHandlers.push(
 			{
+				group: 'other',
 				title: t('activeValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Active Validator'),
 				icon: faPlus,
@@ -226,6 +234,7 @@ export const useNominationControls = ({
 						!availableNominations?.activeValidators.length),
 			},
 			{
+				group: 'other',
 				title: t('randomValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Random Validator'),
 				icon: faPlus,
@@ -238,6 +247,7 @@ export const useNominationControls = ({
 	}
 
 	filterHandlers.push({
+		group: 'other',
 		title: t('highActivity', { ns: 'app' }),
 		onClick: () => addNominationByType('High Performance Validator'),
 		icon: faPlus,
@@ -248,7 +258,8 @@ export const useNominationControls = ({
 
 	if (stakingApiEnabled) {
 		filterHandlers.push({
-			title: t('validatorSearch.searchValidators', { ns: 'app' }),
+			group: 'search',
+			title: t('validatorSearch.search', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SearchValidators),
 			icon: faMagnifyingGlass,
 			isDisabled: () => addDisabled,

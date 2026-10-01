@@ -246,6 +246,7 @@
 		"maximum": "최대",
 		"member_one": "멤버",
 		"member_other": "멤버",
+		"method": "방법",
 		"methods": "방법",
 		"metrics": "지표",
 		"migrateController": "컨트롤러 마이그레이션",
@@ -316,6 +317,7 @@
 		"order": "순서",
 		"orderValidators": "검증자 정렬",
 		"otherOptions": "다른 옵션",
+		"otherValidators": "다른 검증인",
 		"overview": "개요",
 		"page": "페이지 {{page}}/{{total}}",
 		"pageNumber": "페이지 {{page}}",
@@ -481,6 +483,7 @@
 		"validatorSearch": {
 			"addToList": "노미네이션 목록에 검증자 추가",
 			"clearAllSelected": "선택된 항목 모두 지우기",
+			"search": "검색",
 			"searchResults": "검색 결과",
 			"searchValidators": "검증자 검색",
 			"searching": "검색 중",

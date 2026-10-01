@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTheme } from 'hooks/useTheme'
 import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Popover } from 'ui-core/popover'
+import { Heading, Popover } from 'ui-core/popover'
 import classes from './index.module.scss'
 
 export const RegenerateAction = ({
@@ -28,6 +28,12 @@ export const RegenerateAction = ({
 			align="start"
 			content={
 				<div className={classes.container}>
+					<Heading
+						border
+						style={{ margin: '0.25rem 0 0.75rem', paddingBottom: '0.75rem' }}
+					>
+						{t('method')}
+					</Heading>
 					<button
 						aria-describedby={`${id}-description`}
 						aria-labelledby={`${id}-title`}

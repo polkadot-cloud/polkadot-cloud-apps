@@ -1,6 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { MenuControls } from './Controls/MenuControls'
+import { EmbeddedMenuWrapper } from './Controls/Wrappers'
 import { NominationsView } from './NominationsView'
 import type { GenerateNominationsProps } from './types'
 import { useNominationControls } from './useNominationControls'
@@ -38,7 +40,20 @@ export const GenerateNominations = ({
 			eligibilityLoading={eligibilityLoading}
 			filterHandlers={filterHandlers}
 			ineligibleStatus={ineligibleStatus}
-			menuControls={menuControls}
+			menuControls={
+				menuControls ||
+				((validatorControls) => (
+					<EmbeddedMenuWrapper>
+						<MenuControls
+							allowRevert={false}
+							disabled={!canManageNominations || eligibilityLoading}
+							setters={setters}
+						>
+							{validatorControls}
+						</MenuControls>
+					</EmbeddedMenuWrapper>
+				))
+			}
 			selectHandler={selectHandler}
 			standaloneCards={standaloneCards}
 		/>

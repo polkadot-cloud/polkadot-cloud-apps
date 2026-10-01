@@ -251,6 +251,7 @@
 		"member_few": "Участника",
 		"member_many": "Участников",
 		"member_one": "Участник",
+		"method": "Метод",
 		"methods": "Методы",
 		"metrics": "Метрики",
 		"migrateController": "Перенести контроллер",
@@ -323,6 +324,7 @@
 		"order": "Сортировать",
 		"orderValidators": "Сортировать валидаторы",
 		"otherOptions": "Другие варианты",
+		"otherValidators": "Другие валидаторы",
 		"overview": "Обзор",
 		"page": "Страница {{page}} из {{total}}",
 		"pageNumber": "Страница {{page}}",
@@ -495,6 +497,7 @@
 		"validatorSearch": {
 			"addToList": "Добавьте валидаторы в ваш список номинаций",
 			"clearAllSelected": "Очистить все выбранные",
+			"search": "Поиск",
 			"searchResults": "Результаты поиска",
 			"searchValidators": "Искать валидаторы",
 			"searching": "Поиск",
