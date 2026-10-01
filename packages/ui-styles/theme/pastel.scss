@@ -1,7 +1,15 @@
 /* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@mixin subtle-surface {
+@mixin subtle-surface($shade: 0%) {
+	$surface: color-mix(in srgb, var(--gray-200) 65%, var(--gray-300));
+	$hover: color-mix(in srgb, var(--gray-300) 85%, var(--gray-400));
+
+	@if $shade > 0% {
+		$surface: color-mix(in srgb, #{$surface} #{100% - $shade}, #000);
+		$hover: color-mix(in srgb, #{$hover} #{100% - $shade}, #000);
+	}
+
 	background:
 		linear-gradient(
 			125deg,
@@ -9,10 +17,10 @@ SPDX-License-Identifier: GPL-3.0-only */
 			color-mix(in srgb, var(--wash-blue) 65%, transparent) 55%,
 			color-mix(in srgb, var(--wash-purple) 65%, transparent)
 		),
-		color-mix(in srgb, var(--gray-200) 65%, var(--gray-300));
+		$surface;
 
 	&:is(:hover, :focus-visible, :active):not(:disabled) {
-		background-color: color-mix(in srgb, var(--gray-300) 85%, var(--gray-400));
+		background-color: $hover;
 	}
 }
 

@@ -10,13 +10,11 @@ SPDX-License-Identifier: GPL-3.0-only */
 	padding: 0.75rem;
 
 	.candidateButton {
-		@include pastel.subtle-surface;
+		@include pastel.subtle-surface(1.5%);
 
-		background-color: color-mix(
-			in srgb,
-			color-mix(in srgb, var(--gray-200) 65%, var(--gray-300)) 98.5%,
-			#000
-		);
+		display: flex;
+		align-items: center;
+		width: 100%;
 		gap: 0.75rem;
 		padding: 0.9rem 1rem;
 		border: 1px solid color-mix(in srgb, var(--gray-1000) 7%, transparent);
@@ -24,15 +22,8 @@ SPDX-License-Identifier: GPL-3.0-only */
 		color: var(--gray-1000);
 		font-size: 1.15rem;
 		text-align: left;
+		cursor: pointer;
 		transition: background-color var(--transition-duration);
-
-		&:is(:hover, :focus-visible, :active):not(:disabled) {
-			background-color: color-mix(
-				in srgb,
-				color-mix(in srgb, var(--gray-300) 85%, var(--gray-400)) 98.5%,
-				#000
-			);
-		}
 
 		&:focus-visible {
 			outline: 2px solid var(--accent-700);

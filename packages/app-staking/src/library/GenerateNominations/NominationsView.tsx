@@ -14,15 +14,13 @@ import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
 import { ValidatorListInner } from 'library/ValidatorList'
 import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
-import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
-import { Spinner } from 'ui-core/base'
 import { Main } from 'ui-core/canvas'
 import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
 import { MenuSurfaceContext } from './Controls/MenuPopover'
-import { RemoveSelected } from './Controls/RemoveSelected'
+import { SelectionActions } from './Controls/SelectionActions'
 import { Methods } from './Methods'
 import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
@@ -52,8 +50,6 @@ export const NominationsView = ({
 	const { t } = useTranslation()
 	const {
 		fetching,
-		height,
-		heightRef,
 		method,
 		nominations,
 		setFetching,
@@ -63,8 +59,7 @@ export const NominationsView = ({
 	const { isReady } = useApi()
 	const { network } = useNetwork()
 	const validatorDetailsEnabled = useValidatorDetailsEnabled()
-	const { active: healthCheckActive, isLoading: healthCheckLoading } =
-		useNominationHealth()
+	const { active: healthCheckActive } = useNominationHealth()
 	const { activeAddress } = useActiveAccount()
 	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
@@ -138,9 +133,9 @@ export const NominationsView = ({
 		/>
 	) : null
 
-	// Render the loader and validator list within the same measured container.
+	// Keep loading and the settled list in the same layout position.
 	const nominationsList = listReady && (
-		<div ref={heightRef}>
+		<div>
 			{fetching ? (
 				loading
 			) : showEmptyNominations && cloudValidatorHandler ? (
@@ -190,7 +185,6 @@ export const NominationsView = ({
 	const editor = (
 		<NominationEditorWrapper
 			style={{
-				height: height ? `${height}px` : 'auto',
 				marginTop: method && displayFor !== 'canvas' ? '1rem' : 0,
 			}}
 		>
@@ -225,26 +219,12 @@ export const NominationsView = ({
 					: 'var(--nomination-menu-surface)'
 			}
 		>
-			<ListProvider selectable initialListFormat={listFormat}>
-				{selectionActionTarget &&
-					healthCheckActive &&
-					healthCheckLoading &&
-					createPortal(
-						<div
-							role="status"
-							aria-label={t('loadingValidatorDetails', { ns: 'app' })}
-						>
-							<Spinner />
-						</div>,
-						selectionActionTarget,
-					)}
-				{showValidatorControls && (
-					<RemoveSelected
-						disabled={fetching}
-						selectHandler={selectHandler}
-						target={selectionActionTarget}
-					/>
-				)}
+			<ListProvider key={listFormat} selectable initialListFormat={listFormat}>
+				<SelectionActions
+					disabled={fetching}
+					selectHandler={showValidatorControls ? selectHandler : undefined}
+					target={selectionActionTarget}
+				/>
 				{standaloneCards ? (
 					<StandaloneCards>
 						<CardWrapper className="transparent">{controls}</CardWrapper>

@@ -68,6 +68,7 @@ export const Popover = ({
 					sideOffset={attached ? 0 : sideOffset}
 					collisionPadding={12}
 					onOpenAutoFocus={(event) => event.preventDefault()}
+					onEscapeKeyDown={(event) => event.stopPropagation()}
 					style={{ width, backgroundColor: background, borderColor }}
 					side={side}
 					align={align}

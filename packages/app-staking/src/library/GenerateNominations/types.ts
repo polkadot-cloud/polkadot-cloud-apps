@@ -9,7 +9,6 @@ import type {
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type {
 	AnyFunction,
-	AnyJson,
 	DisplayFor,
 	NominationSelection,
 	Validator,
@@ -41,6 +40,7 @@ export interface NominationsViewProps {
 
 export interface ConfirmActionProps {
 	align?: 'start' | 'center' | 'end'
+	attached?: boolean
 	children: ReactNode
 	controlKey: string
 	disabled?: boolean
@@ -90,7 +90,6 @@ export type AddNominationsType =
 export interface SelectHandler {
 	title: string
 	popover: {
-		node: React.FC<AnyJson>
 		text: string
 		callback: (args: { selected: Validator[]; callback?: AnyFunction }) => void
 	}

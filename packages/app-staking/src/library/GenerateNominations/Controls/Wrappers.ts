@@ -43,120 +43,131 @@ const BaseMenuWrapper = styled.div.withConfig({
     display: flex;
     align-items: stretch;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    white-space: nowrap;
     min-height: 3.8rem;
     position: relative;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    > button,
-    > .methodPrompt,
-    > .actions > button {
-      border-bottom: 1px solid var(--menu-border);
-      background: var(--menu-surface);
-    }
-
-    > button[data-state='open'],
-    > .actions > button[data-state='open'] {
-      border-bottom-color: transparent;
-    }
-
-    > button,
-    > .methodPrompt {
+    > .scrollControls {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      min-height: 3.8rem;
-      height: auto;
-      padding: 0 1.25rem;
-      border-inline-start: 1px solid var(--menu-separator);
-      border-inline-end: 0;
-      border-radius: 0;
-      color: var(--menu-foreground);
-      opacity: 1;
-    }
+      align-items: stretch;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      white-space: nowrap;
 
-    > button > div {
-      height: auto;
-      padding: 0;
-      background: transparent;
-      color: inherit;
-      opacity: 1;
-    }
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
-    /* The trigger owns its left separator so the attached popover shares that edge. */
-    > button:first-child,
-    > .methodPrompt:first-child {
-      border-inline-start: 0;
-    }
+      > button,
+      > .methodPrompt {
+        border-bottom: 1px solid var(--menu-border);
+        background: var(--menu-surface);
+      }
 
-    > button:is(:hover, :focus-visible, :active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
-      background: var(--menu-hover-background);
-      color: var(--gray-900);
-    }
+      > button[data-state='open'] {
+        border-bottom-color: transparent;
+      }
 
-    > button[data-state='open']:not(:disabled, [aria-disabled='true']) {
-      background: var(--menu-popover-background);
-      color: var(--gray-1000);
-    }
+      > button,
+      > .methodPrompt {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        min-height: 3.8rem;
+        height: auto;
+        padding: 0 1.25rem;
+        border-inline-start: 1px solid var(--menu-separator);
+        border-inline-end: 0;
+        border-radius: 0;
+        color: var(--menu-foreground);
+        opacity: 1;
+      }
 
-    > button:is(:disabled, [aria-disabled='true']) {
-      color: color-mix(in srgb, var(--menu-foreground) 35%, transparent);
-      cursor: default;
-    }
+      > button > div {
+        height: auto;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        opacity: 1;
+      }
 
-    > button:focus-visible {
-      outline: 2px solid var(--accent-700);
-      outline-offset: -2px;
-    }
+      /* The trigger owns its left separator so the attached popover shares that edge. */
+      > button:first-child,
+      > .methodPrompt:first-child {
+        border-inline-start: 0;
+      }
 
-    > button.searchButton {
-      border-inline-start: 0;
-      margin-inline-start: auto;
-    }
+      > button:is(:hover, :focus-visible, :active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
+        background: var(--menu-hover-background);
+        color: var(--gray-900);
+      }
 
-    > .searchButton + .actions {
-      margin-left: 0;
-    }
+      > button[data-state='open']:not(:disabled, [aria-disabled='true']) {
+        background: var(--menu-popover-background);
+        color: var(--gray-1000);
+      }
 
-    > button svg[data-icon='caret-down'],
-    > .actions > button svg[data-icon='caret-down'] {
-      transform: scale(0.9);
-      transition: transform var(--transition-duration);
-    }
+      > button:is(:disabled, [aria-disabled='true']) {
+        color: color-mix(in srgb, var(--menu-foreground) 35%, transparent);
+        cursor: default;
+      }
 
-    > button[data-state='open'] svg[data-icon='caret-down'],
-    > .actions > button[data-state='open'] svg[data-icon='caret-down'] {
-      transform: rotate(180deg) scale(0.9);
-    }
+      > button:focus-visible {
+        outline: 2px solid var(--accent-700);
+        outline-offset: -2px;
+      }
 
-    > .methodPrompt {
-      opacity: var(--opacity-disabled);
-      cursor: default;
+      > button.searchButton {
+        border-inline-start: 0;
+        margin-inline-start: auto;
+      }
+
+      > button svg[data-icon='caret-down'] {
+        transform: scale(0.9);
+        transition: transform var(--transition-duration);
+      }
+
+      > button[data-state='open'] svg[data-icon='caret-down'] {
+        transform: rotate(180deg) scale(0.9);
+      }
+
+      > .methodPrompt {
+        opacity: var(--opacity-disabled);
+        cursor: default;
+      }
+
+      @media (max-width: 600px) {
+        > button,
+        > .methodPrompt {
+          padding-inline: 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        > button,
+        > button svg[data-icon='caret-down'] {
+          transition: none;
+        }
+      }
     }
 
     > .actions {
-      position: sticky;
-      inset-inline-end: 0;
-      z-index: 1;
       background: var(--menu-surface);
       box-shadow: inset 0 -1px 0 var(--menu-border);
       align-items: center;
       display: flex;
       gap: 1rem;
-      margin-left: auto;
       flex-shrink: 0;
-      /* Leave room for Submit's pulse inside the scrollable bar. */
+      /* Keep Submit's pulse clear of the surrounding frame. */
       padding-inline: 1rem;
 
       > button {
+        border-bottom: 1px solid var(--menu-border);
+        background: var(--menu-surface);
         display: flex;
         align-items: center;
         flex-shrink: 0;
@@ -164,23 +175,29 @@ const BaseMenuWrapper = styled.div.withConfig({
         padding-block: 0.4rem;
       }
 
+      > button[data-state='open'] {
+        border-bottom-color: transparent;
+      }
+
+      svg[data-icon='caret-down'] {
+        transform: scale(0.9);
+        transition: transform var(--transition-duration);
+      }
+
+      > button[data-state='open'] svg[data-icon='caret-down'] {
+        transform: rotate(180deg) scale(0.9);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        svg[data-icon='caret-down'] {
+          transition: none;
+        }
+      }
+
       .revert {
+        background: var(--gray-500);
+        border-color: var(--gray-500);
         border-radius: var(--btn-sm-radius);
-      }
-    }
-
-    @media (max-width: 600px) {
-      > button,
-      > .methodPrompt {
-        padding-inline: 1rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      > button,
-      > button svg[data-icon='caret-down'],
-      > .actions > button svg[data-icon='caret-down'] {
-        transition: none;
       }
     }
   }
@@ -196,11 +213,6 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
   > .menuControlsInner {
     max-width: ${({ isRounded }) => (isRounded ? 'none' : '1200px')};
     margin: 0 auto;
-
-    > .actions .revert {
-      background: var(--gray-500);
-      border-color: var(--gray-500);
-    }
   }
 
   ${({ isRounded }) =>
@@ -231,10 +243,4 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
     }
   }
 
-  > .menuControlsInner {
-    > .actions .revert {
-      background: var(--gray-500);
-      border-color: var(--gray-500);
-    }
-  }
 `

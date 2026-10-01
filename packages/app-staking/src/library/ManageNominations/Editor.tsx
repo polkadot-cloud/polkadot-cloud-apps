@@ -14,10 +14,11 @@ import {
 	StandaloneMenuWrapper,
 } from 'library/GenerateNominations/Controls/Wrappers'
 import type { ConnectStatus } from 'library/GenerateNominations/types'
+import { nominationsAreEqual } from 'library/GenerateNominations/utils'
 import type { ReactNode } from 'react'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
 import { formatFromProp } from 'tx-submit/util'
-import type { DisplayFor, NominationSelection, Validator } from 'types'
+import type { DisplayFor, NominationSelection } from 'types'
 import { MenuAction } from './MenuAction'
 
 interface EditorProps {
@@ -33,16 +34,6 @@ interface EditorProps {
 	selectionActionTarget?: HTMLDivElement | null
 	callbackSubmit?: () => void
 	callbackInBlock?: (nominationAddresses: string[]) => void
-}
-
-// Compare nomination selections by address, regardless of list order.
-const nominationsAreEqual = (current: Validator[], initial: Validator[]) => {
-	if (current.length !== initial.length) {
-		return false
-	}
-
-	const initialAddresses = new Set(initial.map(({ address }) => address))
-	return current.every(({ address }) => initialAddresses.has(address))
 }
 
 export const Editor = ({

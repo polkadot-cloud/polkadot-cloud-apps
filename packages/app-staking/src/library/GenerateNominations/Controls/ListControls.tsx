@@ -12,7 +12,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
 import { Tooltip } from 'ui-core/base'
-import { MenuItemButton } from 'ui-core/popover'
 import classes from './index.module.scss'
 import { MenuPopover } from './MenuPopover'
 import type { ListControlsProps } from './types'
@@ -69,7 +68,8 @@ export const ListControls = ({
 					content={
 						<div className={classes.otherValidatorsMenu}>
 							{otherValidators.map((handler) => (
-								<MenuItemButton
+								<button
+									type="button"
 									className={classes.candidateButton}
 									disabled={disabled || handler.isDisabled()}
 									key={handler.title}
@@ -82,7 +82,7 @@ export const ListControls = ({
 										<FontAwesomeIcon aria-hidden icon={handler.icon} />
 									)}
 									{handler.title}
-								</MenuItemButton>
+								</button>
 							))}
 						</div>
 					}

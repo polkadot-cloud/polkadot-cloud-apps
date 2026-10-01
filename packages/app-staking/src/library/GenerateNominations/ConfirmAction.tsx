@@ -9,6 +9,7 @@ import type { ConfirmActionProps } from './types'
 
 export const ConfirmAction = ({
 	align = 'end',
+	attached = true,
 	children,
 	controlKey,
 	disabled = false,
@@ -26,6 +27,7 @@ export const ConfirmAction = ({
 	return (
 		<MenuPopover
 			align={align}
+			attached={attached}
 			content={
 				<Confirm
 					controlKey={controlKey}

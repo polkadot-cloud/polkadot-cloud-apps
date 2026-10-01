@@ -22,8 +22,6 @@ vi.mock('contexts/ManageNominations', () => ({
 		...state,
 		nominations: [{ address: 'validator', prefs: null }],
 		defaultNominations: [],
-		height: null,
-		heightRef: { current: null },
 	}),
 }))
 vi.mock('contexts/List', () => import('../../app-staking/src/contexts/List'))
@@ -118,7 +116,7 @@ const props: NominationsViewProps = {
 		),
 	selectHandler: {
 		title: 'removeSelected',
-		popover: { node: () => null, text: '', callback: vi.fn() },
+		popover: { text: '', callback: vi.fn() },
 	},
 	standaloneCards: false,
 }

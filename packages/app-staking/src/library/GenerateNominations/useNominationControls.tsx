@@ -15,7 +15,6 @@ import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useUi } from 'hooks/useUi'
-import { Confirm } from 'library/Prompt/Confirm'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { type ComponentType, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -180,7 +179,6 @@ export const useNominationControls = ({
 		title: t('removeSelected', { ns: 'app' }),
 		popover: {
 			text: t('removeSelectedItems', { ns: 'app' }),
-			node: Confirm,
 			callback: removeNominations,
 		},
 	}

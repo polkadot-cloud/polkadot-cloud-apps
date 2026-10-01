@@ -79,7 +79,7 @@ beforeEach(() => {
 
 const generate = () => {
 	useNominationSync({ fetchNominations, updateNominations })
-	// Run the generation effect; viewport and initial-nomination effects are unrelated.
+	// Run the generation effect; initial-nomination effects are unrelated.
 	effects[2]()
 }
 

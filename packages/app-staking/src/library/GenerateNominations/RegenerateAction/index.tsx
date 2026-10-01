@@ -3,6 +3,7 @@
 
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTheme } from 'hooks/useTheme'
 import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +21,7 @@ export const RegenerateAction = ({
 }) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
+	const { retainmentStatsEnabled } = useNominationHealth()
 	const [open, setOpen] = useState(false)
 	const id = useId()
 
@@ -50,7 +52,11 @@ export const RegenerateAction = ({
 								{t('optimalSelection')}
 							</span>
 							<span className={classes.subtitle} id={`${id}-description`}>
-								{t('optimalSelectionRegenerateSubtitle')}
+								{t(
+									retainmentStatsEnabled
+										? 'optimalSelectionRegenerateSubtitle'
+										: 'optimalSelectionSubtitle',
+								)}
 							</span>
 						</span>
 						<span aria-hidden className={classes.arrow}>

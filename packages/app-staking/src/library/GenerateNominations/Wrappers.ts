@@ -15,6 +15,8 @@ export const NominationHeading = styled.div`
   gap: 0.75rem 1rem;
   min-height: 3.2rem;
   min-width: 0;
+  /* Reserve space for the canvas settings and close controls. */
+  padding-inline-end: 6.5rem;
 
   > div:first-child {
     flex: 0 1 auto;

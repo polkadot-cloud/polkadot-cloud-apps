@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
 import { RegenerateAction } from '../RegenerateAction'
 import { Revert } from '../Revert'
+import { nominationsAreEqual } from '../utils'
 import type { MenuControlsProps } from './types'
 
 export const MenuControls = ({
@@ -37,35 +38,36 @@ export const MenuControls = ({
 
 	return (
 		<div className="menuControlsInner">
-			{!method && (
-				<ButtonMenu
-					asLabel
-					className="methodPrompt"
-					disabled
-					text={t('chooseNominationMethod', { ns: 'app' })}
-				/>
-			)}
-			{method && (
-				<RegenerateAction
-					disabled={disabled || fetching}
-					onRegenerate={() => {
-						resetSelected()
-						setMethod('Optimal Selection')
-						setNominations([])
-						setFetching(true)
-					}}
-				>
+			<div className="scrollControls">
+				{!method && (
 					<ButtonMenu
 						asLabel
-						className="generateButton"
-						disabled={disabled || fetching}
-						iconLeft={faWandMagicSparkles}
-						iconRight={faCaretDown}
-						text={t('generate', { ns: 'app' })}
+						className="methodPrompt"
+						disabled
+						text={t('chooseNominationMethod', { ns: 'app' })}
 					/>
-				</RegenerateAction>
-			)}
-			{children}
+				)}
+				{method && (
+					<RegenerateAction
+						disabled={disabled || fetching}
+						onRegenerate={() => {
+							resetSelected()
+							setMethod('Optimal Selection')
+							setNominations([])
+							setFetching(true)
+						}}
+					>
+						<ButtonMenu
+							asLabel
+							disabled={disabled || fetching}
+							iconLeft={faWandMagicSparkles}
+							iconRight={faCaretDown}
+							text={t('generate', { ns: 'app' })}
+						/>
+					</RegenerateAction>
+				)}
+				{children}
+			</div>
 			{(allowRevert || action) && (
 				<div className="actions">
 					{allowRevert && (
@@ -73,10 +75,10 @@ export const MenuControls = ({
 							disabled={
 								disabled ||
 								fetching ||
-								JSON.stringify(nominations) ===
-									JSON.stringify(defaultNominations)
+								nominationsAreEqual(nominations, defaultNominations)
 							}
 							onClick={() => {
+								resetSelected()
 								setMethod(optimalSelectionOnly ? 'Optimal Selection' : 'manual')
 								updateSetters(setters, defaultNominations)
 								setNominations(defaultNominations)
