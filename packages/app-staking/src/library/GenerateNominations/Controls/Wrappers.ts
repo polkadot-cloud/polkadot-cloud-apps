@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import styled from 'styled-components'
+import { menuColors } from './menuColors'
+
+const { background, borderColor } = menuColors('var(--menu-surface)')
 
 const BaseMenuWrapper = styled.div.withConfig({
 	shouldForwardProp: (prop) => prop !== 'isRounded',
 })<{ isRounded?: boolean }>`
   --menu-surface: var(--nomination-menu-surface);
-  --menu-popover-background: color-mix(in srgb, var(--menu-surface) 35%, var(--nomination-popover-highlight));
-  --menu-border: color-mix(in srgb, color-mix(in srgb, var(--menu-popover-background) 88%, var(--gray-1000)) 50%, var(--gray-500));
+  --menu-popover-background: ${background};
+  --menu-border: ${borderColor};
   --menu-foreground: var(--gray-800);
-  --menu-separator: var(--menu-border);
   --menu-hover-background: color-mix(in srgb, var(--menu-surface) 96%, #000);
 
   width: 100%;
@@ -45,6 +47,39 @@ const BaseMenuWrapper = styled.div.withConfig({
     min-height: 3.8rem;
     position: relative;
 
+    > .scrollControls,
+    > .actions {
+      > button,
+      > .methodPrompt {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        min-height: 3.8rem;
+        border-bottom: 1px solid var(--menu-border);
+        background: var(--menu-surface);
+      }
+
+      > button[data-state='open'] {
+        border-bottom-color: transparent;
+      }
+
+      > button svg[data-icon='caret-down'] {
+        transform: scale(0.9);
+        transition: transform var(--transition-duration);
+      }
+
+      > button[data-state='open'] svg[data-icon='caret-down'] {
+        transform: rotate(180deg) scale(0.9);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        > button,
+        > button svg[data-icon='caret-down'] {
+          transition: none;
+        }
+      }
+    }
+
     > .scrollControls {
       display: flex;
       align-items: stretch;
@@ -62,24 +97,10 @@ const BaseMenuWrapper = styled.div.withConfig({
 
       > button,
       > .methodPrompt {
-        border-bottom: 1px solid var(--menu-border);
-        background: var(--menu-surface);
-      }
-
-      > button[data-state='open'] {
-        border-bottom-color: transparent;
-      }
-
-      > button,
-      > .methodPrompt {
-        display: flex;
-        align-items: center;
         justify-content: center;
-        flex-shrink: 0;
-        min-height: 3.8rem;
         height: auto;
         padding: 0 1.25rem;
-        border-inline-start: 1px solid var(--menu-separator);
+        border-inline-start: 1px solid var(--menu-border);
         border-inline-end: 0;
         border-radius: 0;
         color: var(--menu-foreground);
@@ -120,15 +141,6 @@ const BaseMenuWrapper = styled.div.withConfig({
         margin-inline-start: auto;
       }
 
-      > button svg[data-icon='caret-down'] {
-        transform: scale(0.9);
-        transition: transform var(--transition-duration);
-      }
-
-      > button[data-state='open'] svg[data-icon='caret-down'] {
-        transform: rotate(180deg) scale(0.9);
-      }
-
       > .methodPrompt {
         opacity: var(--opacity-disabled);
         cursor: default;
@@ -138,13 +150,6 @@ const BaseMenuWrapper = styled.div.withConfig({
         > button,
         > .methodPrompt {
           padding-inline: 1rem;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        > button,
-        > button svg[data-icon='caret-down'] {
-          transition: none;
         }
       }
     }
@@ -160,32 +165,7 @@ const BaseMenuWrapper = styled.div.withConfig({
       padding-inline: 1rem;
 
       > button {
-        border-bottom: 1px solid var(--menu-border);
-        background: var(--menu-surface);
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        min-height: 3.8rem;
         padding-block: 0.4rem;
-      }
-
-      > button[data-state='open'] {
-        border-bottom-color: transparent;
-      }
-
-      svg[data-icon='caret-down'] {
-        transform: scale(0.9);
-        transition: transform var(--transition-duration);
-      }
-
-      > button[data-state='open'] svg[data-icon='caret-down'] {
-        transform: rotate(180deg) scale(0.9);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        svg[data-icon='caret-down'] {
-          transition: none;
-        }
       }
 
       .revert {
@@ -235,5 +215,4 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
       left: calc(50% + 1.25rem);
     }
   }
-
 `

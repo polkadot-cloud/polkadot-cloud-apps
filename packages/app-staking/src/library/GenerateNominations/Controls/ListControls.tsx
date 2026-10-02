@@ -27,14 +27,14 @@ export const ListControls = ({
 		({ group }) => group === 'other',
 	)
 	const otherDisabled =
-		disabled || otherValidators.every((handler) => handler.isDisabled())
+		disabled || otherValidators.every((handler) => handler.disabled)
 
 	return (
 		<>
 			{filterHandlers
 				.filter(({ group }) => group === 'cloud')
 				.map((handler) => {
-					const isDisabled = disabled || handler.isDisabled()
+					const isDisabled = disabled || handler.disabled
 					return isDisabled && handler.disabledTooltip ? (
 						<Tooltip
 							container={themeElementRef.current || undefined}
@@ -71,7 +71,7 @@ export const ListControls = ({
 								<button
 									type="button"
 									className={classes.candidateButton}
-									disabled={disabled || handler.isDisabled()}
+									disabled={disabled || handler.disabled}
 									key={handler.title}
 									onClick={() => {
 										handler.onClick()
@@ -89,8 +89,6 @@ export const ListControls = ({
 					disabled={otherDisabled}
 					onOpenChange={setOtherOpen}
 					open={otherOpen}
-					portalContainer={themeElementRef.current || undefined}
-					side="bottom"
 					width="min(260px, calc(100vw - 2rem))"
 				>
 					<ButtonMenu
@@ -108,7 +106,7 @@ export const ListControls = ({
 					<ButtonMenu
 						className="searchButton"
 						key={handler.title}
-						disabled={disabled || handler.isDisabled()}
+						disabled={disabled || handler.disabled}
 						onClick={handler.onClick}
 						iconLeft={handler.icon || faMagnifyingGlass}
 						text={handler.title}

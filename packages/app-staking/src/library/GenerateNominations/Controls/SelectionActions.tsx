@@ -4,7 +4,7 @@
 import { useList } from 'contexts/List'
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
@@ -25,21 +25,21 @@ export const SelectionActions = ({
 	const { nominations } = useManageNominations()
 	const { selected, removeFromSelected, resetSelected } = useList()
 	const { active, isLoading } = useNominationHealth()
-	const addresses = new Set(nominations.map(({ address }) => address))
+	const addresses = useMemo(
+		() => new Set(nominations.map(({ address }) => address)),
+		[nominations],
+	)
 	const selectedValidators = (selected as Validator[]).filter(({ address }) =>
 		addresses.has(address),
 	)
 
 	// Individual removals and issue fixes must also discard their checkbox state.
 	useEffect(() => {
-		const removed = selected.filter(
-			(item) =>
-				!nominations.some(
-					({ address }) => address === (item as Validator).address,
-				),
+		const removed = (selected as Validator[]).filter(
+			({ address }) => !addresses.has(address),
 		)
 		if (removed.length) removeFromSelected(removed)
-	}, [nominations, selected, removeFromSelected])
+	}, [addresses, selected, removeFromSelected])
 
 	if (!target) return null
 

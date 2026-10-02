@@ -66,6 +66,11 @@ export const useNominationControls = ({
 		}
 	}, [scope])
 
+	const maxNominationsReached = nominations.length >= MaxNominations
+	const addDisabled =
+		!canManageNominations || !method || fetching || maxNominationsReached
+	const candidateDisabled = addDisabled || candidateFetching
+
 	// Keep local and externally supplied nomination state in sync.
 	const updateNominations = (nextNominations: Validator[]) => {
 		setNominations([...nextNominations])
@@ -73,15 +78,7 @@ export const useNominationControls = ({
 	}
 
 	const addNominationByType = async (type: AddNominationsType) => {
-		if (
-			!canManageNominations ||
-			!method ||
-			fetching ||
-			candidateFetching ||
-			nominations.length >= MaxNominations
-		) {
-			return
-		}
+		if (candidateDisabled) return
 
 		// All API candidate strategies are asynchronous.
 		const trackCandidateRequest = stakingApiEnabled
@@ -107,16 +104,7 @@ export const useNominationControls = ({
 	const addCandidateByStrategy = async (
 		strategy: ValidatorCandidateStrategy,
 	) => {
-		if (
-			!canManageNominations ||
-			!retainmentStatsEnabled ||
-			!method ||
-			fetching ||
-			candidateFetching ||
-			nominations.length >= MaxNominations
-		) {
-			return
-		}
+		if (!retainmentStatsEnabled || candidateDisabled) return
 
 		setCandidateFetching(true)
 		try {
@@ -162,10 +150,6 @@ export const useNominationControls = ({
 		)
 	}
 
-	const maxNominationsReached = nominations.length >= MaxNominations
-	const addDisabled =
-		!canManageNominations || !method || fetching || maxNominationsReached
-	const candidateDisabled = addDisabled || candidateFetching
 	const allKnownValidatorsNominated = PolkadotKnownValidators.every(
 		(knownAddress) =>
 			nominations.some(({ address }) => address === knownAddress),
@@ -193,7 +177,7 @@ export const useNominationControls = ({
 					title: t('cloudValidator', { ns: 'app' }),
 					onClick: () => addCandidateByStrategy('CLOUD'),
 					icon: faPlus,
-					isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
+					disabled: candidateDisabled || allKnownValidatorsNominated,
 					disabledTooltip: allKnownValidatorsNominated
 						? t('allCloudValidatorsSelected', { ns: 'app' })
 						: undefined,
@@ -207,14 +191,14 @@ export const useNominationControls = ({
 				title: t('highRetainer', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
 				icon: faPlus,
-				isDisabled: () => candidateDisabled,
+				disabled: candidateDisabled,
 			},
 			{
 				group: 'other',
 				title: t('highCompounder', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
 				icon: faPlus,
-				isDisabled: () => candidateDisabled,
+				disabled: candidateDisabled,
 			},
 		)
 	} else {
@@ -224,7 +208,7 @@ export const useNominationControls = ({
 				title: t('activeValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Active Validator'),
 				icon: faPlus,
-				isDisabled: () =>
+				disabled:
 					candidateDisabled ||
 					(!stakingApiEnabled &&
 						!availableNominations?.activeValidators.length),
@@ -234,7 +218,7 @@ export const useNominationControls = ({
 				title: t('randomValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Random Validator'),
 				icon: faPlus,
-				isDisabled: () =>
+				disabled:
 					candidateDisabled ||
 					(!stakingApiEnabled &&
 						!availableNominations?.randomValidators.length),
@@ -247,7 +231,7 @@ export const useNominationControls = ({
 		title: t('highActivity', { ns: 'app' }),
 		onClick: () => addNominationByType('High Performance Validator'),
 		icon: faPlus,
-		isDisabled: () =>
+		disabled:
 			candidateDisabled ||
 			(!stakingApiEnabled && !availableNominations?.highPerformance.length),
 	})
@@ -258,7 +242,7 @@ export const useNominationControls = ({
 			title: t('addFromFavorites', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SelectFavorites),
 			icon: faStar,
-			isDisabled: () => addDisabled || !favoritesList?.length,
+			disabled: addDisabled || !favoritesList?.length,
 		})
 	}
 
@@ -268,7 +252,7 @@ export const useNominationControls = ({
 			title: t('validatorSearch.search', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SearchValidators),
 			icon: faMagnifyingGlass,
-			isDisabled: () => addDisabled,
+			disabled: addDisabled,
 		})
 	}
 

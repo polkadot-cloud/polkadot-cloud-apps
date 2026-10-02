@@ -19,8 +19,15 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 .card {
 	@include pastel.edge;
-	@include pastel.subtle-surface;
 
+	background:
+		linear-gradient(
+			125deg,
+			color-mix(in srgb, var(--wash-yellow) 65%, transparent),
+			color-mix(in srgb, var(--wash-blue) 65%, transparent) 55%,
+			color-mix(in srgb, var(--wash-purple) 65%, transparent)
+		),
+		color-mix(in srgb, var(--gray-200) 65%, var(--gray-300));
 	display: flex;
 	align-items: center;
 	gap: 1rem;
@@ -42,6 +49,10 @@ SPDX-License-Identifier: GPL-3.0-only */
 		.arrow > svg {
 			transform: translateX(0.2rem);
 		}
+	}
+
+	&:is(:hover, :focus-visible, :active):not(:disabled) {
+		background-color: color-mix(in srgb, var(--gray-300) 85%, var(--gray-400));
 	}
 
 	&:disabled {

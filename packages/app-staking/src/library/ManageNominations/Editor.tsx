@@ -62,25 +62,20 @@ export const Editor = ({
 	const { defaultNominations, nominations, setNominations, method } =
 		useManageNominations()
 
-	// Whether nominations are being managed for a pool rather than a nominator.
 	const isPool = bondFor === 'pool'
 
-	// The validator addresses supplied to the nomination extrinsic.
 	const nominationAddresses = nominations.map(({ address }) => address)
 
-	// Whether the current selection differs from the initial nominations.
 	const nominationsChanged = !nominationsAreEqual(
 		nominations,
 		defaultNominations,
 	)
 
-	// Whether the selection contains a valid set of changes to submit.
 	const hasSubmittableChanges =
 		nominationAddresses.length > 0 &&
 		nominationAddresses.length <= MaxNominations &&
 		nominationsChanged
 
-	// Whether nomination health permits the current selection to be submitted.
 	const healthCheckPassed =
 		!healthCheckActive || (!healthCheckLoading && !hasDangerWarnings)
 	const hasSigner =
@@ -90,7 +85,6 @@ export const Editor = ({
 	const submissionValid =
 		canSubmit && hasSigner && hasSubmittableChanges && healthCheckPassed
 
-	// Build the appropriate nomination transaction once submission is valid.
 	const tx = submissionValid
 		? isPool
 			? poolId === undefined
@@ -99,7 +93,6 @@ export const Editor = ({
 			: serviceApi.tx.stakingNominate(nominationAddresses)
 		: undefined
 
-	// Prepare the wallet submission lifecycle for the generated transaction.
 	const submitExtrinsic = useSubmitExtrinsic({
 		tx,
 		dappName,
@@ -121,12 +114,10 @@ export const Editor = ({
 		},
 	]
 
-	// Select the wrapper here, where the page layout is already known.
 	const MenuControlsWrapper = standaloneCards
 		? StandaloneMenuWrapper
 		: MenuWrapper
 
-	// Only expose the submission action after a nomination method is selected.
 	const menuAction = method ? (
 		<MenuAction
 			isPool={isPool}

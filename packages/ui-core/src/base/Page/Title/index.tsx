@@ -25,17 +25,25 @@ export const Title = ({
 	const ref = useRef<HTMLElement>(null)
 
 	useEffect(() => {
-		const observer = new IntersectionObserver(
-			([entry]) => setSticky(entry.intersectionRatio < 1),
-			{ threshold: [1], rootMargin: '-1px 0px 0px 0px' },
-		)
-		if (ref.current) {
-			observer.observe(ref.current)
+		const element = ref.current
+		if (!element) return
+
+		let observer: IntersectionObserver
+		const observeSticky = () => {
+			observer?.disconnect()
+			const top = Number.parseFloat(getComputedStyle(element).top) || 0
+			observer = new IntersectionObserver(
+				([entry]) => setSticky(entry.intersectionRatio < 1),
+				{ threshold: [1], rootMargin: `-${top + 1}px 0px 0px 0px` },
+			)
+			observer.observe(element)
 		}
+
+		observeSticky()
+		window.addEventListener('resize', observeSticky)
 		return () => {
-			if (ref.current) {
-				observer.unobserve(ref.current)
-			}
+			observer.disconnect()
+			window.removeEventListener('resize', observeSticky)
 		}
 	}, [])
 

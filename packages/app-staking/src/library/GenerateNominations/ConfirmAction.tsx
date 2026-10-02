@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useTheme } from 'hooks/useTheme'
 import { Confirm } from 'library/Prompt/Confirm'
 import { useState } from 'react'
 import { MenuPopover } from './Controls/MenuPopover'
@@ -16,7 +15,6 @@ export const ConfirmAction = ({
 	onConfirm,
 	text,
 }: ConfirmActionProps) => {
-	const { themeElementRef } = useTheme()
 	const [open, setOpen] = useState(false)
 
 	const confirm = () => {
@@ -39,8 +37,6 @@ export const ConfirmAction = ({
 			disabled={disabled}
 			onOpenChange={setOpen}
 			open={open}
-			portalContainer={themeElementRef.current || undefined}
-			side="bottom"
 		>
 			{children}
 		</MenuPopover>

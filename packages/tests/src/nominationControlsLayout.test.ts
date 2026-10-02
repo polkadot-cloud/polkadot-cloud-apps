@@ -13,9 +13,15 @@ import type {
 	FilterHandler,
 	NominationsViewProps,
 } from '../../app-staking/src/library/GenerateNominations/types'
+import { MenuAction } from '../../app-staking/src/library/ManageNominations/MenuAction'
 
 const { state } = vi.hoisted(() => ({
-	state: { fetching: false, method: 'Optimal Selection' as string | null },
+	state: {
+		fetching: false,
+		method: 'Optimal Selection' as string | null,
+		healthActive: false,
+		hasDangerWarnings: false,
+	},
 }))
 vi.mock('contexts/ManageNominations', () => ({
 	useManageNominations: () => ({
@@ -54,7 +60,21 @@ vi.mock('../../ui-overlay/src/index', () => ({
 	useOverlay: () => ({ modal: {} }),
 }))
 vi.mock('hooks/useNominationHealth', () => ({
-	useNominationHealth: () => ({ active: false }),
+	useNominationHealth: () => ({
+		active: state.healthActive,
+		hasDangerWarnings: state.hasDangerWarnings,
+		validatorsWithIssues: [],
+	}),
+}))
+vi.mock(
+	'library/GenerateNominations/Controls/MenuPopover',
+	() =>
+		import(
+			'../../app-staking/src/library/GenerateNominations/Controls/MenuPopover'
+		),
+)
+vi.mock('../../app-staking/src/library/ManageNominations/Form', () => ({
+	Form: () => null,
 }))
 vi.mock('hooks/useValidatorDetailsEnabled', () => ({
 	useValidatorDetailsEnabled: () => false,
@@ -90,7 +110,7 @@ const handler = (
 	group,
 	title,
 	onClick: vi.fn(),
-	isDisabled: () => false,
+	disabled: false,
 })
 const filters = [
 	handler('cloud', 'cloudValidator'),
@@ -124,6 +144,8 @@ const props: NominationsViewProps = {
 beforeEach(() => {
 	state.fetching = false
 	state.method = 'Optimal Selection'
+	state.healthActive = false
+	state.hasDangerWarnings = false
 })
 
 test.each([
@@ -184,3 +206,52 @@ test('method selection does not expose validator additions before a method is ch
 	for (const label of ['cloudValidator', 'otherValidators', 'search'])
 		expect(markup).not.toContain(label)
 })
+
+test.each([
+	[false, false, false, 'submit', true],
+	[true, false, true, 'submit', false],
+	[false, true, true, 'submit', false],
+	[true, true, false, 'fixIssues', false],
+	[true, true, true, 'fixIssues', false],
+] as const)(
+	'health=%s warnings=%s valid=%s shows %s with disabled=%s',
+	(healthActive, hasDangerWarnings, valid, label, disabled) => {
+		Object.assign(state, { healthActive, hasDangerWarnings })
+		const markup = renderToStaticMarkup(
+			createElement(MenuAction, {
+				isPool: false,
+				valid,
+				submitExtrinsic: {
+					txInitiated: false,
+					uid: 0,
+					onSubmit: vi.fn(),
+					proxySupported: false,
+					submitAccount: null,
+					proxyAccount: null,
+				},
+			}),
+		)
+		expect(markup).toContain(label)
+		expect(markup.includes('disabled=""')).toBe(disabled)
+	},
+)
+
+test.each([true, false])(
+	'Other Validators disables only when every candidate is unavailable: %s',
+	(allDisabled) => {
+		const markup = renderToStaticMarkup(
+			createElement(NominationsView, {
+				...props,
+				filterHandlers: filters.map((filter) => ({
+					...filter,
+					disabled: filter.title === 'highRetainer' || allDisabled,
+				})),
+			}),
+		)
+		const otherButton = [
+			...markup.matchAll(/<button\b[^>]*>[\s\S]*?<\/button>/g),
+		].find(([button]) => button.includes('otherValidators'))?.[0]
+		expect(otherButton).toBeDefined()
+		expect(otherButton?.includes('disabled=""')).toBe(allDisabled)
+	},
+)

@@ -46,7 +46,6 @@ export const NominationsView = ({
 	selectHandler,
 	standaloneCards,
 }: NominationsViewProps) => {
-	// Resolve shared application state before deriving view conditions.
 	const { t } = useTranslation()
 	const {
 		fetching,
@@ -63,16 +62,9 @@ export const NominationsView = ({
 	const { activeAddress } = useActiveAccount()
 	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
-	// Derive layout and visibility once for use across both presentation modes.
 	const listReady = isReady && method !== null
-
-	// Use rows for enhanced validator details.
 	const listFormat = validatorDetailsEnabled ? 'row' : 'col'
-
-	// Show method selection until a method is chosen.
 	const showMethodSelection = !isReadOnlyAccount(activeAddress) && !method
-
-	// Keep validator controls available for every nomination workflow.
 	const showValidatorControls =
 		canManageNominations &&
 		!eligibilityLoading &&
@@ -94,7 +86,6 @@ export const NominationsView = ({
 	)
 	const allValidatorsWaiting = useAllValidatorsWaiting(nominations)
 
-	// Reuse the same loading and control elements in either layout branch.
 	const loading = (
 		<div
 			aria-label={t('fetchingValidators', { ns: 'pages' })}
@@ -121,7 +112,6 @@ export const NominationsView = ({
 		) : null,
 	)
 
-	// Health output moves into the card in standalone mode without changing data.
 	const nominationHealth = healthCheckActive ? (
 		<NominationHealth
 			allValidatorsWaiting={allValidatorsWaiting}
@@ -133,7 +123,6 @@ export const NominationsView = ({
 		/>
 	) : null
 
-	// Keep loading and the settled list in the same layout position.
 	const nominationsList = listReady && (
 		<div>
 			{fetching ? (
@@ -147,7 +136,7 @@ export const NominationsView = ({
 							lg
 							text={t('startWithCloudValidator', { ns: 'app' })}
 							iconLeft={faPlus}
-							disabled={cloudValidatorHandler.isDisabled()}
+							disabled={cloudValidatorHandler.disabled}
 							onClick={cloudValidatorHandler.onClick}
 						/>
 					</EmptyNominations>
@@ -169,18 +158,16 @@ export const NominationsView = ({
 		</div>
 	)
 
-	// Resolve the standalone card state in account, loading, and eligibility order.
-	const standaloneList = !accountsInitialised ? (
-		standaloneLoading
-	) : eligibilityLoading ? (
-		standaloneLoading
-	) : !activeAddress ? (
-		<Connect />
-	) : !canManageNominations ? (
-		<Connect status={ineligibleStatus} />
-	) : (
-		<CardWrapper>{nominationsList}</CardWrapper>
-	)
+	const standaloneList =
+		!accountsInitialised || eligibilityLoading ? (
+			standaloneLoading
+		) : !activeAddress ? (
+			<Connect />
+		) : !canManageNominations ? (
+			<Connect status={ineligibleStatus} />
+		) : (
+			<CardWrapper>{nominationsList}</CardWrapper>
+		)
 
 	const editor = (
 		<NominationEditorWrapper

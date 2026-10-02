@@ -4,7 +4,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useTheme } from 'hooks/useTheme'
 import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MenuPopover } from '../Controls/MenuPopover'
@@ -20,7 +19,6 @@ export const RegenerateAction = ({
 	onRegenerate: () => void
 }) => {
 	const { t } = useTranslation('app')
-	const { themeElementRef } = useTheme()
 	const { retainmentStatsEnabled } = useNominationHealth()
 	const [open, setOpen] = useState(false)
 	const id = useId()
@@ -68,8 +66,6 @@ export const RegenerateAction = ({
 			disabled={disabled}
 			onOpenChange={setOpen}
 			open={open}
-			portalContainer={themeElementRef.current || undefined}
-			side="bottom"
 			width="min(380px, calc(100vw - 2rem))"
 		>
 			{children}

@@ -99,7 +99,7 @@ export interface FilterHandler {
 	group: 'cloud' | 'other' | 'search'
 	title: string
 	onClick: () => void
-	isDisabled: () => boolean
+	disabled: boolean
 	disabledTooltip?: string
 	icon?: IconDefinition
 }

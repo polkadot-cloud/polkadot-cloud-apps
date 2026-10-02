@@ -3,7 +3,6 @@
 
 import { useManageNominations } from 'contexts/ManageNominations'
 import { useNominationHealth } from 'hooks/useNominationHealth'
-import { useTheme } from 'hooks/useTheme'
 import { MenuPopover } from 'library/GenerateNominations/Controls/MenuPopover'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +21,6 @@ export const MenuAction = ({
 	valid: boolean
 }) => {
 	const { t } = useTranslation('app')
-	const { themeElementRef } = useTheme()
 	const { setNominations } = useManageNominations()
 	const {
 		active: healthCheckActive,
@@ -33,6 +31,7 @@ export const MenuAction = ({
 	} = useNominationHealth()
 	const [open, setOpen] = useState(false)
 	const needsFix = healthCheckActive && hasDangerWarnings
+	const disabled = !needsFix && !valid
 
 	useEffect(() => setOpen(false), [needsFix, valid])
 
@@ -46,16 +45,15 @@ export const MenuAction = ({
 		setOpen(false)
 	}
 
-	if (needsFix) {
-		return (
-			<MenuPopover
-				open={open}
-				onOpenChange={setOpen}
-				portalContainer={themeElementRef.current || undefined}
-				width="min(380px, calc(100vw - 2rem))"
-				side="bottom"
-				align="end"
-				content={
+	return (
+		<MenuPopover
+			open={open}
+			onOpenChange={setOpen}
+			disabled={disabled}
+			width="min(380px, calc(100vw - 2rem))"
+			align="end"
+			content={
+				needsFix ? (
 					<>
 						<NominationSummary>
 							<h3>{t('fixIssues')}</h3>
@@ -80,36 +78,21 @@ export const MenuAction = ({
 							/>
 						</FixIssuesFooter>
 					</>
-				}
-			>
-				<ButtonSubmit asLabel lg text={t('fixIssues')} />
-			</MenuPopover>
-		)
-	}
-
-	return (
-		<MenuPopover
-			open={open}
-			onOpenChange={setOpen}
-			disabled={!valid}
-			portalContainer={themeElementRef.current || undefined}
-			width="min(380px, calc(100vw - 2rem))"
-			side="bottom"
-			align="end"
-			content={
-				<Form
-					valid={valid}
-					requiresMigratedController={!isPool}
-					submitExtrinsic={submitExtrinsic}
-				/>
+				) : (
+					<Form
+						valid={valid}
+						requiresMigratedController={!isPool}
+						submitExtrinsic={submitExtrinsic}
+					/>
+				)
 			}
 		>
 			<ButtonSubmit
 				asLabel
 				lg
-				text={t('submit', { ns: 'modals' })}
-				pulse={valid}
-				disabled={!valid}
+				text={needsFix ? t('fixIssues') : t('submit', { ns: 'modals' })}
+				pulse={!needsFix && valid}
+				disabled={disabled}
 			/>
 		</MenuPopover>
 	)
