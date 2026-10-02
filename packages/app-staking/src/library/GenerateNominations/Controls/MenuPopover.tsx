@@ -17,7 +17,7 @@ export const MenuPopover = ({
 >) => {
 	const menuSurface = useContext(MenuSurfaceContext)
 	const background = attached
-		? `color-mix(in srgb, ${menuSurface} 75%, var(--nomination-popover-highlight))`
+		? `color-mix(in srgb, ${menuSurface} 50%, var(--nomination-popover-highlight))`
 		: undefined
 	return (
 		<Popover

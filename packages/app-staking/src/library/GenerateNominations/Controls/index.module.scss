@@ -1,33 +1,32 @@
 /* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 SPDX-License-Identifier: GPL-3.0-only */
 
-@use "ui-styles/theme/pastel";
-
 .otherValidatorsMenu {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
-	padding: 0.75rem;
 
 	.candidateButton {
-		@include pastel.subtle-surface(1.5%);
-
 		display: flex;
 		align-items: center;
 		width: 100%;
 		gap: 0.75rem;
-		padding: 0.9rem 1rem;
-		border: 1px solid color-mix(in srgb, var(--gray-1000) 7%, transparent);
-		border-radius: 0.85rem;
+		padding: 1rem 1.25rem;
+		border: 0;
+		border-bottom: 1px solid color-mix(in srgb, var(--gray-1000) 7%, transparent);
+		border-radius: 0;
+		background: transparent;
 		color: var(--gray-1000);
 		font-size: 1.15rem;
 		text-align: left;
 		cursor: pointer;
 		transition: background-color var(--transition-duration);
 
-		&:focus-visible {
-			outline: 2px solid var(--accent-700);
-			outline-offset: -2px;
+		&:is(:hover, :focus-visible, :active):not(:disabled) {
+			background-color: color-mix(in srgb, var(--gray-1000) 5%, transparent);
+		}
+
+		&:last-child {
+			border-bottom: 0;
 		}
 
 		&:disabled {

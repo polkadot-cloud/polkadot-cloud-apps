@@ -6,13 +6,12 @@ import styled from 'styled-components'
 const BaseMenuWrapper = styled.div.withConfig({
 	shouldForwardProp: (prop) => prop !== 'isRounded',
 })<{ isRounded?: boolean }>`
-  --menu-background: var(--nomination-menu-color);
   --menu-surface: var(--nomination-menu-surface);
-  --menu-popover-background: color-mix(in srgb, var(--menu-surface) 75%, var(--nomination-popover-highlight));
+  --menu-popover-background: color-mix(in srgb, var(--menu-surface) 50%, var(--nomination-popover-highlight));
   --menu-border: color-mix(in srgb, var(--menu-popover-background) 91%, var(--gray-1000));
   --menu-foreground: var(--gray-800);
   --menu-separator: var(--menu-border);
-  --menu-hover-background: color-mix(in srgb, var(--menu-background) 75%, var(--gray-500));
+  --menu-hover-background: color-mix(in srgb, var(--menu-surface) 96%, #000);
 
   width: 100%;
   min-width: 0;
@@ -101,12 +100,12 @@ const BaseMenuWrapper = styled.div.withConfig({
         border-inline-start: 0;
       }
 
-      > button:is(:hover, :focus-visible, :active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
+      > button:is(:hover, :focus-visible):not(:disabled, [aria-disabled='true']) {
         background: var(--menu-hover-background);
         color: var(--gray-900);
       }
 
-      > button[data-state='open']:not(:disabled, [aria-disabled='true']) {
+      > button:is(:active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
         background: var(--menu-popover-background);
         color: var(--gray-1000);
       }
@@ -114,11 +113,6 @@ const BaseMenuWrapper = styled.div.withConfig({
       > button:is(:disabled, [aria-disabled='true']) {
         color: color-mix(in srgb, var(--menu-foreground) 35%, transparent);
         cursor: default;
-      }
-
-      > button:focus-visible {
-        outline: 2px solid var(--accent-700);
-        outline-offset: -2px;
       }
 
       > button.searchButton {
@@ -223,10 +217,9 @@ export const MenuWrapper = styled(BaseMenuWrapper)`
 `
 
 export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
-  --menu-background: var(--nomination-standalone-menu-color);
   --menu-surface: var(--nomination-standalone-menu-surface);
 
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 
   &::before {
     background: var(--nomination-standalone-menu-surface);

@@ -72,6 +72,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 	display: flex;
 	flex-direction: column;
 	max-height: calc(100vh - ($header-height + 2rem));
+	border-radius: inherit;
 	overflow-y: auto;
 }
 

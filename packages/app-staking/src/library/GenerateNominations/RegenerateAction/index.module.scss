@@ -44,11 +44,6 @@ SPDX-License-Identifier: GPL-3.0-only */
 		}
 	}
 
-	&:focus-visible {
-		outline: 2px solid var(--accent-700);
-		outline-offset: 3px;
-	}
-
 	&:disabled {
 		opacity: var(--opacity-disabled);
 		cursor: default;
