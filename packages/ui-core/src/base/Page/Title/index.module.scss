@@ -61,38 +61,6 @@
 
 	&.standalone {
 		margin-top: 4.5rem;
-
-		@media (max-width: $page-width-medium-threshold) {
-			margin-bottom: 0.25rem;
-
-			&.sticky {
-				padding-bottom: 0.25rem;
-			}
-
-			.title {
-				margin-bottom: 0.25rem;
-
-				> div > .text {
-					font-size: 2.25rem;
-				}
-			}
-		}
-
-		@media (max-width: $small-font-size-max-width) {
-			margin-bottom: 0.125rem;
-
-			&.sticky {
-				padding-bottom: 0.125rem;
-			}
-
-			.title {
-				margin-bottom: 0.125rem;
-
-				> div > .text {
-					font-size: 2rem;
-				}
-			}
-		}
 	}
 
 	.title {
@@ -130,6 +98,44 @@
 					left: -0.75rem;
 					transform: scale(0.85);
 				}
+			}
+		}
+	}
+
+	@media (max-width: $page-width-medium-threshold) {
+		&.default,
+		&.sticky {
+			margin-bottom: 0.25rem;
+		}
+
+		&.sticky {
+			padding-bottom: 0.25rem;
+		}
+
+		.title {
+			margin-bottom: 0.25rem;
+
+			> div > .text {
+				font-size: 2.25rem;
+			}
+		}
+	}
+
+	@media (max-width: $small-font-size-max-width) {
+		&.default,
+		&.sticky {
+			margin-bottom: 0.125rem;
+		}
+
+		&.sticky {
+			padding-bottom: 0.125rem;
+		}
+
+		.title {
+			margin-bottom: 0.125rem;
+
+			> div > .text {
+				font-size: 2rem;
 			}
 		}
 	}
