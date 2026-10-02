@@ -18,19 +18,7 @@
 		white-space: nowrap;
 	}
 
-	> .compact {
-		display: none;
-	}
-
 	@media (max-width: $page-width-small-threshold) {
 		font-size: 1rem;
-
-		> .full {
-			display: none;
-		}
-
-		> .compact {
-			display: block;
-		}
 	}
 }

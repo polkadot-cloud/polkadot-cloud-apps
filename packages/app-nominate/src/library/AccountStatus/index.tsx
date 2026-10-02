@@ -45,12 +45,7 @@ export const AccountStatus = () => {
 			role="status"
 			aria-label={accountStatus}
 		>
-			<span className={classes.full} aria-hidden="true">
-				{accountStatus}
-			</span>
-			<span className={classes.compact} aria-hidden="true">
-				{compactStatus}
-			</span>
+			<span aria-hidden="true">{compactStatus}</span>
 		</div>
 	)
 }

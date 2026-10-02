@@ -7,7 +7,7 @@ const BaseMenuWrapper = styled.div.withConfig({
 	shouldForwardProp: (prop) => prop !== 'isRounded',
 })<{ isRounded?: boolean }>`
   --menu-surface: var(--nomination-menu-surface);
-  --menu-popover-background: color-mix(in srgb, var(--menu-surface) 50%, var(--nomination-popover-highlight));
+  --menu-popover-background: color-mix(in srgb, var(--menu-surface) 35%, var(--nomination-popover-highlight));
   --menu-border: color-mix(in srgb, var(--menu-popover-background) 88%, var(--gray-1000));
   --menu-foreground: var(--gray-800);
   --menu-separator: var(--menu-border);
