@@ -1,10 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/variables" as *;
+
 .identity {
 	gap: 1.5rem;
 
-	@media (width <= 600px) {
+	@media (width <= $small-font-size-max-width) {
 		gap: 0.75rem;
 	}
 }
@@ -28,7 +30,7 @@
 		white-space: nowrap;
 	}
 
-	@media (width <= 600px) {
+	@media (width <= $small-font-size-max-width) {
 		gap: 0.5rem;
 
 		> svg {

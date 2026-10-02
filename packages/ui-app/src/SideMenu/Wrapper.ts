@@ -101,14 +101,13 @@ export const LogoWrapper = styled.div<MinimisedProps>`
   height: 3.5rem;
   padding-top: 0.25rem;
   position: relative;
-  margin-left: ${(props) => (props.$minimised ? '0.75rem' : '0.75rem')};
+  margin-left: 0.75rem;
   margin-bottom: ${(props) => (props.$advancedMode ? '0.25rem' : '0.75rem')};
   transition: transform 0.25s ease;
 
   > svg  {  
-    position: relative;
     margin-left: ${(props) => (props.$minimised ? '0.8rem' : '0.3rem')};
-    width: ${(props) => (props.$minimised ? '2.25rem' : '1.75em')};
+    width: ${(props) => (props.$minimised ? '2.25rem' : '1.75rem')};
     height: ${(props) => (props.$minimised ? '2.25rem' : '1.75rem')};
   }
 

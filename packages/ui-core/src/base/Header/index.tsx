@@ -7,6 +7,7 @@ import classes from './index.module.scss'
 
 export const Header = ({
 	children,
+	className,
 	style,
 	minimized,
 	standalone,
@@ -14,9 +15,9 @@ export const Header = ({
 	minimized?: boolean
 	standalone?: boolean
 }) => {
-	const allClasses = classNames(classes.header, {
-		[classes.minimized]: !!minimized,
-		[classes.standalone]: !!standalone,
+	const allClasses = classNames(classes.header, className, {
+		[classes.minimized]: minimized,
+		[classes.standalone]: standalone,
 	})
 	return (
 		<div className={allClasses} style={style}>

@@ -3,7 +3,7 @@
 
 import { useStandaloneAccount } from 'pages/Nominate/useStandaloneAccount'
 import { useTranslation } from 'react-i18next'
-import { Wrapper } from './Wrapper'
+import classes from './index.module.scss'
 
 export const AccountStatus = () => {
 	const { t } = useTranslation('app')
@@ -19,7 +19,7 @@ export const AccountStatus = () => {
 	let accountStatus: string
 	let compactStatus: string
 
-	if (!accountsInitialised || (activeAddress && eligibilityLoading)) {
+	if (!accountsInitialised || eligibilityLoading) {
 		accountStatus = t('syncingAccounts')
 		compactStatus = t('syncing')
 	} else if (!activeAddress) {
@@ -39,13 +39,18 @@ export const AccountStatus = () => {
 	}
 
 	return (
-		<Wrapper title={accountStatus} role="status" aria-label={accountStatus}>
-			<span className="full" aria-hidden="true">
+		<div
+			className={classes.status}
+			title={accountStatus}
+			role="status"
+			aria-label={accountStatus}
+		>
+			<span className={classes.full} aria-hidden="true">
 				{accountStatus}
 			</span>
-			<span className="compact" aria-hidden="true">
+			<span className={classes.compact} aria-hidden="true">
 				{compactStatus}
 			</span>
-		</Wrapper>
+		</div>
 	)
 }

@@ -27,16 +27,11 @@ export const NominateStandalone = () => {
 	const [selectionActionTarget, setSelectionActionTarget] =
 		useState<HTMLDivElement | null>(null)
 
-	const { formatWithPrefs } = useValidatorEntries(
-		isPool
-			? (activePoolNominations?.targets ?? [])
-			: getNominations(activeAddress),
-	)
-	const nominated = formatWithPrefs(
-		isPool
-			? (activePoolNominations?.targets ?? [])
-			: getNominations(activeAddress),
-	)
+	const nominationTargets = isPool
+		? (activePoolNominations?.targets ?? [])
+		: getNominations(activeAddress)
+	const { formatWithPrefs } = useValidatorEntries(nominationTargets)
+	const nominated = formatWithPrefs(nominationTargets)
 
 	const nominationsKey = nominated.map(({ address }) => address).join(':')
 	const bondFor = isPool ? 'pool' : 'nominator'

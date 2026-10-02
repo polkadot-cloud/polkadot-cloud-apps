@@ -13,16 +13,19 @@ export const useStandaloneAccount = () => {
 	const { activePool, activePoolNominations, isOwner } = useActivePool()
 	const { isBonding, isNominator } = useStaking()
 	const { isLoading, isValidator } = useValidators()
-	const { accountSynced, activePoolSynced } = useSyncing()
-	const { syncing: stakingLedgersSyncing } = useSyncing(['staking-ledgers'])
+	const {
+		accountSynced,
+		activePoolSynced,
+		syncing: eligibilitySyncing,
+	} = useSyncing(['initialization', 'staking-ledgers'])
 
-	const isPool = Boolean(activePool) && isOwner()
+	const isPool = isOwner()
 	const accountIsValidator = isValidator(activeAddress)
 	const eligibilityLoading = Boolean(
 		activeAddress &&
 			(!accountSynced(activeAddress) ||
 				!activePoolSynced(activeAddress) ||
-				stakingLedgersSyncing ||
+				eligibilitySyncing ||
 				isLoading(activeAddress)),
 	)
 
