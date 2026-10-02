@@ -1,0 +1,43 @@
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+SPDX-License-Identifier: GPL-3.0-only */
+
+.otherValidatorsMenu {
+	display: flex;
+	flex-direction: column;
+
+	.candidateButton {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		gap: 0.75rem;
+		padding: 1rem 1.25rem;
+		border: 0;
+		border-bottom: 1px solid color-mix(in srgb, var(--gray-1000) 7%, transparent);
+		border-radius: 0;
+		background: transparent;
+		color: var(--gray-1000);
+		font-size: 1.15rem;
+		text-align: left;
+		cursor: pointer;
+		transition: background-color var(--transition-duration);
+
+		&:is(:hover, :focus-visible, :active):not(:disabled) {
+			background-color: color-mix(in srgb, var(--gray-1000) 5%, transparent);
+		}
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		&:disabled {
+			background: transparent;
+			opacity: var(--opacity-disabled);
+			cursor: default;
+		}
+
+		> svg {
+			flex-shrink: 0;
+			font-size: 0.85em;
+		}
+	}
+}

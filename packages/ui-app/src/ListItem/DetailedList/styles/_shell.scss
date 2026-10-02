@@ -6,7 +6,14 @@
 
 	> .surface {
 		align-items: stretch;
-		background: var(--bg-list-item);
+		background:
+			linear-gradient(
+				125deg,
+				color-mix(in srgb, var(--wash-yellow) 50%, transparent),
+				color-mix(in srgb, var(--wash-blue) 50%, transparent) 55%,
+				color-mix(in srgb, var(--wash-purple) 50%, transparent)
+			)
+			var(--bg-list-item);
 		border: 0;
 		border-radius: 0.5rem;
 		position: relative;

@@ -28,7 +28,6 @@ export const useNominationSync = ({
 		method,
 		nominations,
 		setFetching,
-		setHeight,
 		setMethod,
 		setNominations,
 	} = useManageNominations()
@@ -101,11 +100,4 @@ export const useNominationSync = ({
 		}
 		generateNominations()
 	})
-
-	// Release the temporary list height whenever the viewport changes.
-	useEffect(() => {
-		const resetHeight = () => setHeight(null)
-		window.addEventListener('resize', resetHeight)
-		return () => window.removeEventListener('resize', resetHeight)
-	}, [])
 }

@@ -5,16 +5,17 @@ import {
 	faCaretDown,
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons'
+import { useList } from 'contexts/List'
 import { useManageNominations } from 'contexts/ManageNominations'
-import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useTranslation } from 'react-i18next'
 import { ButtonMenu } from 'ui-buttons'
-import { Spinner } from 'ui-core/base'
-import { ConfirmAction } from '../ConfirmAction'
+import { RegenerateAction } from '../RegenerateAction'
 import { Revert } from '../Revert'
+import { nominationsAreEqual } from '../utils'
 import type { MenuControlsProps } from './types'
 
 export const MenuControls = ({
+	children,
 	setters,
 	allowRevert,
 	action,
@@ -22,11 +23,11 @@ export const MenuControls = ({
 	optimalSelectionOnly = false,
 }: MenuControlsProps) => {
 	const { t } = useTranslation()
-	const { active: healthCheckActive, isLoading: healthCheckLoading } =
-		useNominationHealth()
+	const { resetSelected } = useList()
 
 	const {
 		method,
+		fetching,
 		setMethod,
 		nominations,
 		updateSetters,
@@ -37,54 +38,47 @@ export const MenuControls = ({
 
 	return (
 		<div className="menuControlsInner">
-			{!method && (
-				<ButtonMenu
-					asLabel
-					disabled
-					text={t('chooseNominationMethod', { ns: 'app' })}
-				/>
-			)}
-			{method && (
-				<ConfirmAction
-					align="start"
-					controlKey="regenerate_nominations"
-					disabled={disabled}
-					onConfirm={() => {
-						setMethod('Optimal Selection')
-						setNominations([])
-						setFetching(true)
-					}}
-					text={t('regenerateNominationSelection', { ns: 'modals' })}
-				>
+			<div className="scrollControls">
+				{!method && (
 					<ButtonMenu
 						asLabel
-						className={
-							disabled ? 'generateButton generateDisabled' : 'generateButton'
-						}
-						disabled={disabled}
-						iconLeft={faWandMagicSparkles}
-						iconRight={faCaretDown}
-						text={t('generate', { ns: 'app' })}
+						className="methodPrompt"
+						disabled
+						text={t('chooseNominationMethod', { ns: 'app' })}
 					/>
-				</ConfirmAction>
-			)}
+				)}
+				{method && (
+					<RegenerateAction
+						disabled={disabled || fetching}
+						onRegenerate={() => {
+							resetSelected()
+							setMethod('Optimal Selection')
+							setNominations([])
+							setFetching(true)
+						}}
+					>
+						<ButtonMenu
+							asLabel
+							disabled={disabled || fetching}
+							iconLeft={faWandMagicSparkles}
+							iconRight={faCaretDown}
+							text={t('generate', { ns: 'app' })}
+						/>
+					</RegenerateAction>
+				)}
+				{children}
+			</div>
 			{(allowRevert || action) && (
 				<div className="actions">
-					{healthCheckActive && healthCheckLoading && (
-						<div
-							role="status"
-							aria-label={t('loadingValidatorDetails', { ns: 'app' })}
-						>
-							<Spinner />
-						</div>
-					)}
 					{allowRevert && (
 						<Revert
 							disabled={
-								JSON.stringify(nominations) ===
-								JSON.stringify(defaultNominations)
+								disabled ||
+								fetching ||
+								nominationsAreEqual(nominations, defaultNominations)
 							}
 							onClick={() => {
+								resetSelected()
 								setMethod(optimalSelectionOnly ? 'Optimal Selection' : 'manual')
 								updateSetters(setters, defaultNominations)
 								setNominations(defaultNominations)

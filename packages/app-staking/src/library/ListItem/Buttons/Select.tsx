@@ -14,6 +14,7 @@ export const Select = ({ item }: SelectProps) => {
 	const isSelected = selectedItems.length > 0
 	return (
 		<Checkbox
+			label={item.address}
 			checked={isSelected}
 			onClick={() => {
 				if (isSelected) {

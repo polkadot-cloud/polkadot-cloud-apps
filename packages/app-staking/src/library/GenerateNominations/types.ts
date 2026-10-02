@@ -9,7 +9,6 @@ import type {
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type {
 	AnyFunction,
-	AnyJson,
 	DisplayFor,
 	NominationSelection,
 	Validator,
@@ -21,7 +20,8 @@ export interface GenerateNominationsProps {
 	displayFor?: DisplayFor
 	eligibilityLoading?: boolean
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
-	menuControls?: ReactNode
+	menuControls?: (validatorControls: ReactNode) => ReactNode
+	selectionActionTarget?: HTMLDivElement | null
 	standaloneCards?: boolean
 }
 
@@ -32,13 +32,15 @@ export interface NominationsViewProps {
 	eligibilityLoading: boolean
 	filterHandlers: FilterHandler[]
 	ineligibleStatus?: Exclude<ConnectStatus, 'disconnected'>
-	menuControls?: ReactNode
+	menuControls: (validatorControls: ReactNode) => ReactNode
+	selectionActionTarget?: HTMLDivElement | null
 	selectHandler: SelectHandler
 	standaloneCards: boolean
 }
 
 export interface ConfirmActionProps {
 	align?: 'start' | 'center' | 'end'
+	attached?: boolean
 	children: ReactNode
 	controlKey: string
 	disabled?: boolean
@@ -88,16 +90,17 @@ export type AddNominationsType =
 export interface SelectHandler {
 	title: string
 	popover: {
-		node: React.FC<AnyJson>
 		text: string
 		callback: (args: { selected: Validator[]; callback?: AnyFunction }) => void
 	}
 }
 
 export interface FilterHandler {
+	group: 'cloud' | 'other' | 'search'
 	title: string
 	onClick: () => void
-	isDisabled: () => boolean
+	disabled: boolean
+	disabledTooltip?: string
 	icon?: IconDefinition
 }
 

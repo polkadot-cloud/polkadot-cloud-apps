@@ -25,6 +25,32 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 	z-index: 99;
 
+	&.attached {
+		box-shadow:
+			0 1px 2px color-mix(in srgb, var(--gray-1000) 4%, transparent),
+			0 10px 20px -12px color-mix(in srgb, var(--gray-1000) 18%, transparent);
+
+		&[data-side="bottom"] {
+			border-top: 0;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+
+			> .contentBody {
+				padding-top: 0.25rem;
+			}
+		}
+
+		&[data-side="top"] {
+			border-bottom: 0;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+
+			> .contentBody {
+				padding-bottom: 0.25rem;
+			}
+		}
+	}
+
 	&.transparent {
 		border: none;
 		box-shadow: none;
@@ -46,6 +72,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 	display: flex;
 	flex-direction: column;
 	max-height: calc(100vh - ($header-height + 2rem));
+	border-radius: inherit;
 	overflow-y: auto;
 }
 

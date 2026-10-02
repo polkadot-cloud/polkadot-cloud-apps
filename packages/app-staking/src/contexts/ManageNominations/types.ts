@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { Dispatch, RefObject, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import type { AnyFunction, Validator } from 'types'
 
 export interface ManageNominationsContextInterface {
@@ -9,12 +9,8 @@ export interface ManageNominationsContextInterface {
 	setMethod: Dispatch<SetStateAction<string | null>>
 	fetching: boolean
 	setFetching: Dispatch<SetStateAction<boolean>>
-	height: number | null
-	setHeight: Dispatch<SetStateAction<number | null>>
 	defaultNominations: Validator[]
 	nominations: Validator[]
 	setNominations: Dispatch<SetStateAction<Validator[]>>
-	heightRef: RefObject<HTMLDivElement | null>
 	updateSetters: (setters: AnyFunction[], nominations: Validator[]) => void
-	revertNominations: () => void
 }

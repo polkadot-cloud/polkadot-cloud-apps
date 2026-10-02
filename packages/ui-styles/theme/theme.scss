@@ -42,6 +42,9 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 
 /* light theme colors */
 .light {
+	--nomination-menu-color: color-mix(in srgb, var(--gray-200), var(--gray-300));
+	--nomination-standalone-menu-color: color-mix(in srgb, #ececec 50%, var(--gray-400));
+	--nomination-popover-highlight: var(--gray-100);
 	--selection: #e4eef8;
 	--wash-yellow: rgb(227 212 152 / 6%);
 	--wash-green: rgb(165 205 189 / 5%);
@@ -136,6 +139,9 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 
 /* dark theme colors */
 .dark {
+	--nomination-menu-color: var(--gray-400);
+	--nomination-standalone-menu-color: var(--gray-400);
+	--nomination-popover-highlight: var(--gray-500);
 	--selection: #414b60;
 	--wash-yellow: rgb(53 51 39 / 28%);
 	--wash-green: rgb(41 54 47 / 25%);
@@ -227,6 +233,8 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 /* Resolve these where the mode tokens live, including overlay theme roots. */
 .light,
 .dark {
+	--nomination-menu-surface: color-mix(in srgb, var(--nomination-menu-color) 75%, var(--bg-primary));
+	--nomination-standalone-menu-surface: var(--nomination-standalone-menu-color);
 	--pastel-wash:
 		radial-gradient(ellipse at 0% 0%, var(--wash-yellow), transparent 65%),
 		radial-gradient(ellipse at 100% 10%, var(--wash-purple), transparent 65%),

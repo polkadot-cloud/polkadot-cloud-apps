@@ -247,7 +247,7 @@
 		"reserveForExistentialDeposit": "Varoluşsal Mevduat İçin Rezerv",
 		"reserveForTxFees": "İşlem Ücretleri İçin Rezerv",
 		"reserveText": "İşlem ücretlerini ödemek için ne kadar {{unit}} rezerve edileceğini kontrol edin. Bu miktar, hesabınızın varoluşsal mevduatını karşılamak için gereken fonların üzerine eklenir.",
-		"revertChanges": "Değişiklikleri Geri Al",
+		"revertChanges": "Geri Al",
 		"revertNominationChanges": "Seçtiğiniz nominasyonlardaki değişiklikleri geri almak istediğinizden emin misiniz?",
 		"reward": "Ödül",
 		"rewards": "Ödüller",

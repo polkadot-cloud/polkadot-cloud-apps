@@ -1,7 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+	faMagnifyingGlass,
+	faPlus,
+	faStar,
+} from '@fortawesome/free-solid-svg-icons'
 import { MaxNominations } from 'consts'
 import { PolkadotKnownValidators } from 'consts/validators'
 import { useManageNominations } from 'contexts/ManageNominations'
@@ -11,7 +15,6 @@ import { useFetchMethods } from 'hooks/useFetchMethods'
 import { useNetwork } from 'hooks/useNetwork'
 import { useNominationHealth } from 'hooks/useNominationHealth'
 import { useUi } from 'hooks/useUi'
-import { Confirm } from 'library/Prompt/Confirm'
 import type { ValidatorCandidateStrategy } from 'plugin-staking-api/types'
 import { type ComponentType, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -47,7 +50,7 @@ export const useNominationControls = ({
 	const { advancedMode } = useUi()
 	const { favoritesList } = useFavoriteValidators()
 	const { openPromptWith, closePrompt } = usePrompt()
-	const { method, nominations, setNominations, updateSetters } =
+	const { method, fetching, nominations, setNominations, updateSetters } =
 		useManageNominations()
 	const { retainmentStatsEnabled, stakingApiEnabled } = useNominationHealth()
 
@@ -63,6 +66,11 @@ export const useNominationControls = ({
 		}
 	}, [scope])
 
+	const maxNominationsReached = nominations.length >= MaxNominations
+	const addDisabled =
+		!canManageNominations || !method || fetching || maxNominationsReached
+	const candidateDisabled = addDisabled || candidateFetching
+
 	// Keep local and externally supplied nomination state in sync.
 	const updateNominations = (nextNominations: Validator[]) => {
 		setNominations([...nextNominations])
@@ -70,14 +78,7 @@ export const useNominationControls = ({
 	}
 
 	const addNominationByType = async (type: AddNominationsType) => {
-		if (
-			!canManageNominations ||
-			!method ||
-			candidateFetching ||
-			nominations.length >= MaxNominations
-		) {
-			return
-		}
+		if (candidateDisabled) return
 
 		// All API candidate strategies are asynchronous.
 		const trackCandidateRequest = stakingApiEnabled
@@ -103,15 +104,7 @@ export const useNominationControls = ({
 	const addCandidateByStrategy = async (
 		strategy: ValidatorCandidateStrategy,
 	) => {
-		if (
-			!canManageNominations ||
-			!retainmentStatsEnabled ||
-			!method ||
-			candidateFetching ||
-			nominations.length >= MaxNominations
-		) {
-			return
-		}
+		if (!retainmentStatsEnabled || candidateDisabled) return
 
 		setCandidateFetching(true)
 		try {
@@ -157,9 +150,6 @@ export const useNominationControls = ({
 		)
 	}
 
-	const maxNominationsReached = nominations.length >= MaxNominations
-	const addDisabled = !canManageNominations || maxNominationsReached
-	const candidateDisabled = addDisabled || candidateFetching
 	const allKnownValidatorsNominated = PolkadotKnownValidators.every(
 		(knownAddress) =>
 			nominations.some(({ address }) => address === knownAddress),
@@ -173,7 +163,6 @@ export const useNominationControls = ({
 		title: t('removeSelected', { ns: 'app' }),
 		popover: {
 			text: t('removeSelectedItems', { ns: 'app' }),
-			node: Confirm,
 			callback: removeNominations,
 		},
 	}
@@ -181,55 +170,55 @@ export const useNominationControls = ({
 	// Build filter controls in their display order.
 	const filterHandlers: FilterHandler[] = []
 
-	if (allowFavorites && advancedMode) {
-		filterHandlers.push({
-			title: t('addFromFavorites', { ns: 'app' }),
-			onClick: () => openSelectionPrompt(SelectFavorites),
-			isDisabled: () => addDisabled || !favoritesList?.length,
-		})
-	}
-
 	const cloudValidatorHandler: FilterHandler | undefined =
 		retainmentStatsEnabled
 			? {
+					group: 'cloud',
 					title: t('cloudValidator', { ns: 'app' }),
 					onClick: () => addCandidateByStrategy('CLOUD'),
 					icon: faPlus,
-					isDisabled: () => candidateDisabled || allKnownValidatorsNominated,
+					disabled: candidateDisabled || allKnownValidatorsNominated,
+					disabledTooltip: allKnownValidatorsNominated
+						? t('allCloudValidatorsSelected', { ns: 'app' })
+						: undefined,
 				}
 			: undefined
 	if (cloudValidatorHandler) {
 		filterHandlers.push(
 			cloudValidatorHandler,
 			{
+				group: 'other',
 				title: t('highRetainer', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_RETAINER'),
 				icon: faPlus,
-				isDisabled: () => candidateDisabled,
+				disabled: candidateDisabled,
 			},
 			{
+				group: 'other',
 				title: t('highCompounder', { ns: 'app' }),
 				onClick: () => addCandidateByStrategy('HIGH_COMPOUNDER'),
 				icon: faPlus,
-				isDisabled: () => candidateDisabled,
+				disabled: candidateDisabled,
 			},
 		)
 	} else {
 		filterHandlers.push(
 			{
+				group: 'other',
 				title: t('activeValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Active Validator'),
 				icon: faPlus,
-				isDisabled: () =>
+				disabled:
 					candidateDisabled ||
 					(!stakingApiEnabled &&
 						!availableNominations?.activeValidators.length),
 			},
 			{
+				group: 'other',
 				title: t('randomValidator', { ns: 'app' }),
 				onClick: () => addNominationByType('Random Validator'),
 				icon: faPlus,
-				isDisabled: () =>
+				disabled:
 					candidateDisabled ||
 					(!stakingApiEnabled &&
 						!availableNominations?.randomValidators.length),
@@ -238,20 +227,32 @@ export const useNominationControls = ({
 	}
 
 	filterHandlers.push({
+		group: 'other',
 		title: t('highActivity', { ns: 'app' }),
 		onClick: () => addNominationByType('High Performance Validator'),
 		icon: faPlus,
-		isDisabled: () =>
+		disabled:
 			candidateDisabled ||
 			(!stakingApiEnabled && !availableNominations?.highPerformance.length),
 	})
 
+	if (allowFavorites && advancedMode) {
+		filterHandlers.push({
+			group: 'other',
+			title: t('addFromFavorites', { ns: 'app' }),
+			onClick: () => openSelectionPrompt(SelectFavorites),
+			icon: faStar,
+			disabled: addDisabled || !favoritesList?.length,
+		})
+	}
+
 	if (stakingApiEnabled) {
 		filterHandlers.push({
-			title: t('validatorSearch.searchValidators', { ns: 'app' }),
+			group: 'search',
+			title: t('validatorSearch.search', { ns: 'app' }),
 			onClick: () => openSelectionPrompt(SearchValidators),
 			icon: faMagnifyingGlass,
-			isDisabled: () => addDisabled,
+			disabled: addDisabled,
 		})
 	}
 

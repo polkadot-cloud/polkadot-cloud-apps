@@ -10,6 +10,16 @@ import type { Validator } from 'types'
 import { clampRate, getRetainmentStatus } from 'utils'
 import { ValidatorWarningDefinitions } from './consts'
 
+// Nomination edits are changes to addresses, independent of order or fetched metadata.
+export const nominationsAreEqual = (
+	current: Validator[],
+	initial: Validator[],
+) => {
+	if (current.length !== initial.length) return false
+	const initialAddresses = new Set(initial.map(({ address }) => address))
+	return current.every(({ address }) => initialAddresses.has(address))
+}
+
 export interface ValidatorItemWarning {
 	type: ValidatorWarningType | 'LOW_RETAINMENT'
 	labelKey: string

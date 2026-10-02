@@ -4,7 +4,12 @@
 import { ManageNominationsProvider } from 'contexts/ManageNominations'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useActivePool } from 'hooks/useActivePool'
+import {
+	NominationHeading,
+	SelectionActionTarget,
+} from 'library/GenerateNominations/Wrappers'
 import { Editor } from 'library/ManageNominations/Editor'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HeadFullWidth, Title } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
@@ -18,15 +23,22 @@ export const Inner = () => {
 	} = useOverlay().canvas
 	const { activePool } = useActivePool()
 	const { updatePoolNominations } = useBondedPools()
+	const [selectionActionTarget, setSelectionActionTarget] =
+		useState<HTMLDivElement | null>(null)
 
 	const isPool = options?.bondFor === 'pool'
 
 	return (
 		<>
-			<HeadFullWidth>
-				<Title fullWidth>
-					<h1>{t('manageNominations', { ns: 'modals' })}</h1>
-				</Title>
+			<HeadFullWidth
+				style={{ paddingTop: '1.75rem', paddingBottom: '1.25rem' }}
+			>
+				<NominationHeading>
+					<Title fullWidth>
+						<h1>{t('manageNominations', { ns: 'modals' })}</h1>
+					</Title>
+					<SelectionActionTarget ref={setSelectionActionTarget} />
+				</NominationHeading>
 				<Settings />
 				<CloseCanvas />
 			</HeadFullWidth>
@@ -34,6 +46,7 @@ export const Inner = () => {
 				bondFor={isPool ? 'pool' : 'nominator'}
 				displayFor="canvas"
 				poolId={activePool?.id}
+				selectionActionTarget={selectionActionTarget}
 				callbackSubmit={closeCanvas}
 				callbackInBlock={(nominationAddresses) => {
 					if (isPool && activePool) {

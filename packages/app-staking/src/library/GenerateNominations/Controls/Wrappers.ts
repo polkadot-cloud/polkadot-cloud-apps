@@ -1,54 +1,176 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { SelectableWrapper } from 'library/List'
 import styled from 'styled-components'
-import { ButtonPrimaryInvert } from 'ui-buttons'
-import type { InlineControlsWrapperProps } from './types'
+import { menuColors } from './menuColors'
 
-const BaseMenuWrapper = styled.div`
-  --menu-background: var(--gray-400);
+const { background, borderColor } = menuColors('var(--menu-surface)')
+
+const BaseMenuWrapper = styled.div.withConfig({
+	shouldForwardProp: (prop) => prop !== 'isRounded',
+})<{ isRounded?: boolean }>`
+  --menu-surface: var(--nomination-menu-surface);
+  --menu-popover-background: ${background};
+  --menu-border: ${borderColor};
+  --menu-foreground: var(--gray-800);
+  --menu-hover-background: color-mix(in srgb, var(--menu-surface) 96%, #000);
 
   width: 100%;
+  min-width: 0;
   display: flex;
   align-items: center;
   position: relative;
+  border-top: 1px solid var(--menu-border);
+  /* Continue the bottom line through empty space; buttons cover it with their own edges. */
+  box-shadow: inset 0 -1px 0 var(--menu-border);
 
-  .light & {
-    --menu-background: color-mix(in srgb, var(--gray-200), var(--gray-300));
-  }
+  ${({ isRounded }) =>
+		isRounded &&
+		`
+    border: 1px solid var(--menu-border);
+    border-radius: var(--btn-sm-radius);
+    box-shadow: none;
+    overflow: hidden;
+
+    /* Each button still controls its own bottom edge over the surrounding frame. */
+    && > .menuControlsInner {
+      margin-bottom: -1px;
+    }
+  `}
 
   > .menuControlsInner {
     width: 100%;
+    min-width: 0;
     display: flex;
-    align-items: center;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    min-height: 3.8rem;
     position: relative;
 
-    > button {
-      margin-right: 2.25rem;
+    > .scrollControls,
+    > .actions {
+      > button,
+      > .methodPrompt {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        min-height: 3.8rem;
+        border-bottom: 1px solid var(--menu-border);
+        background: var(--menu-surface);
+      }
+
+      > button[data-state='open'] {
+        border-bottom-color: transparent;
+      }
+
+      > button svg[data-icon='caret-down'] {
+        transform: scale(0.9);
+        transition: transform var(--transition-duration);
+      }
+
+      > button[data-state='open'] svg[data-icon='caret-down'] {
+        transform: rotate(180deg) scale(0.9);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        > button,
+        > button svg[data-icon='caret-down'] {
+          transition: none;
+        }
+      }
     }
 
-    .generateButton > svg[data-icon='caret-down'] {
-      transform: scale(0.9);
-    }
+    > .scrollControls {
+      display: flex;
+      align-items: stretch;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      white-space: nowrap;
 
-    .generateDisabled {
-      background: transparent;
-      opacity: var(--opacity-disabled);
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      > button,
+      > .methodPrompt {
+        justify-content: center;
+        height: auto;
+        padding: 0 1.25rem;
+        border-inline-start: 1px solid var(--menu-border);
+        border-inline-end: 0;
+        border-radius: 0;
+        color: var(--menu-foreground);
+        opacity: 1;
+      }
+
+      > button > div {
+        height: auto;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        opacity: 1;
+      }
+
+      /* The trigger owns its left separator so the attached popover shares that edge. */
+      > button:first-child,
+      > .methodPrompt:first-child {
+        border-inline-start: 0;
+      }
+
+      > button:is(:hover, :focus-visible):not(:disabled, [aria-disabled='true']) {
+        background: var(--menu-hover-background);
+        color: var(--gray-900);
+      }
+
+      > button:is(:active, [data-state='open']):not(:disabled, [aria-disabled='true']) {
+        background: var(--menu-popover-background);
+        color: var(--gray-1000);
+      }
+
+      > button:is(:disabled, [aria-disabled='true']) {
+        color: color-mix(in srgb, var(--menu-foreground) 35%, transparent);
+        cursor: default;
+      }
+
+      > button.searchButton {
+        border-inline-start: 0;
+        margin-inline-start: auto;
+      }
+
+      > .methodPrompt {
+        opacity: var(--opacity-disabled);
+        cursor: default;
+      }
+
+      @media (max-width: 600px) {
+        > button,
+        > .methodPrompt {
+          padding-inline: 1rem;
+        }
+      }
     }
 
     > .actions {
+      background: var(--menu-surface);
+      box-shadow: inset 0 -1px 0 var(--menu-border);
       align-items: center;
       display: flex;
-      gap: 0.75rem;
-      margin-left: auto;
+      gap: 1rem;
       flex-shrink: 0;
+      /* Keep Submit's pulse clear of the surrounding frame. */
+      padding-inline: 1rem;
 
       > button {
-        display: flex;
+        padding-block: 0.4rem;
       }
 
       .revert {
+        background: var(--gray-500);
+        border-color: var(--gray-500);
         border-radius: var(--btn-sm-radius);
       }
     }
@@ -56,35 +178,35 @@ const BaseMenuWrapper = styled.div`
 `
 
 export const MenuWrapper = styled(BaseMenuWrapper)`
-  background: rgb(from var(--menu-background) r g b / 75%);
+  background: var(--nomination-menu-surface);
 
   @media (max-width: 1200px) {
-    padding: 0 1.5rem;
+    padding: ${({ isRounded }) => (isRounded ? '0' : '0 1.5rem')};
   }
 
   > .menuControlsInner {
-    max-width: 1200px;
+    max-width: ${({ isRounded }) => (isRounded ? 'none' : '1200px')};
     margin: 0 auto;
-    padding: 0.4rem 0;
-
-    > .actions .revert {
-      background: var(--gray-500);
-      border-color: var(--gray-500);
-    }
   }
+
+  ${({ isRounded }) =>
+		isRounded &&
+		`
+    margin-bottom: 1rem;
+  `}
 `
 
 export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
-  margin-top: 1rem;
+  --menu-surface: var(--nomination-standalone-menu-surface);
 
-  .light & {
-    --menu-background: #efeff0;
-  }
+  margin-top: 0.5rem;
 
   &::before {
-    background: var(--menu-background);
+    background: var(--nomination-standalone-menu-surface);
+    border-top: 1px solid var(--menu-border);
+    box-shadow: inset 0 -1px 0 var(--menu-border);
     content: '';
-    inset: 0 auto 0 50%;
+    inset: -1px auto 0 50%;
     position: absolute;
     transform: translateX(-50%);
     width: 100vw;
@@ -92,29 +214,5 @@ export const StandaloneMenuWrapper = styled(BaseMenuWrapper)`
     @media (min-width: 826px) {
       left: calc(50% + 1.25rem);
     }
-  }
-
-  > .menuControlsInner {
-    padding: 0.4rem 0.75rem;
-
-    > .actions .revert {
-      background: var(--gray-500);
-      border-color: var(--gray-500);
-    }
-  }
-`
-
-export const InlineControlsWrapper = styled(
-	SelectableWrapper,
-)<InlineControlsWrapperProps>`
-  margin-top: ${({ $standalone }) => ($standalone ? '1.25rem' : '0.25rem')};
-  margin-bottom: ${({ $standalone }) => ($standalone ? '0' : '0.75rem')};
-`
-
-// Draw the outline inside the control so it matches the borderless filter height.
-export const RemoveSelectedButton = styled(ButtonPrimaryInvert)`
-  && {
-    border: 0;
-    box-shadow: inset 0 0 0 1px var(--accent-900);
   }
 `

@@ -1,12 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useUi } from 'hooks/useUi'
+import CloudSVG from 'assets/icons/cloud.svg?react'
+import { AccountStatus } from 'library/AccountStatus'
 import { NominationHealthSetting } from 'library/ManageNominations/NominationHealthSetting'
 import { Sync } from 'library/Sync'
 import { useState } from 'react'
 import { Account, type MenuPopoverFeatureFlags, Settings } from 'ui-app/Headers'
 import { Header } from 'ui-core/base'
+import classes from './Headers.module.scss'
 
 const menuPopoverFeatures = {
 	network: false,
@@ -19,13 +21,18 @@ const menuPopoverFeatures = {
 } satisfies MenuPopoverFeatureFlags
 
 export const Headers = () => {
-	const { sideMenuMinimised } = useUi()
 	const [openConnect, setOpenConnect] = useState(false)
 
 	return (
-		<Header minimized={sideMenuMinimised}>
-			<section />
-			<section>
+		<Header standalone>
+			<section className={classes.identity}>
+				<div className={classes.brand}>
+					<CloudSVG aria-hidden="true" />
+					<span>Cloud</span>
+				</div>
+				<AccountStatus />
+			</section>
+			<section className={classes.controls}>
 				<Sync />
 				<Account
 					openConnect={openConnect}

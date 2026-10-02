@@ -3,7 +3,7 @@
 
 import { createSafeContext } from '@polkadot-cloud/hooks'
 import { NominationHealthProvider } from 'hooks/useNominationHealth'
-import { Fragment, type ReactNode, useRef, useState } from 'react'
+import { Fragment, type ReactNode, useState } from 'react'
 import type { AnyFunction, Validator } from 'types'
 import type { ManageNominationsContextInterface } from './types'
 
@@ -41,12 +41,6 @@ export const ManageNominationsProvider = ({
 	// Store whether validators are being fetched
 	const [fetching, setFetching] = useState(false)
 
-	// Store the height of the container
-	const [height, setHeight] = useState<number | null>(null)
-
-	// Ref for the height of the validator list container
-	const heightRef = useRef<HTMLDivElement | null>(null)
-
 	// Utility to update provided setters with new nominations
 	const updateSetters = (
 		setters: AnyFunction[],
@@ -61,14 +55,6 @@ export const ManageNominationsProvider = ({
 		}
 	}
 
-	// Handle reverting nomination changes
-	const revertNominations = () => {
-		// Set a temporary height to prevent height snapping on re-renders
-		setHeight(heightRef.current?.clientHeight || null)
-		setTimeout(() => setHeight(null), 200)
-		setFetching(true)
-	}
-
 	const HealthProvider = provideNominationHealth
 		? NominationHealthProvider
 		: Fragment
@@ -81,14 +67,10 @@ export const ManageNominationsProvider = ({
 					setMethod,
 					fetching,
 					setFetching,
-					height,
-					setHeight,
 					defaultNominations,
 					nominations,
 					setNominations,
-					heightRef,
 					updateSetters,
-					revertNominations,
 				}}
 			>
 				{children}

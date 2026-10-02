@@ -11,14 +11,15 @@ import { useNominatorSetups } from 'contexts/NominatorSetups'
 import type { NominatorProgress } from 'contexts/NominatorSetups/types'
 import type { PoolProgress } from 'hooks/usePoolSetups'
 import { usePoolSetups } from 'hooks/usePoolSetups'
-import { InlineControls } from 'library/GenerateNominations/Controls/InlineControls'
 import { Footer } from 'library/SetupSteps/Footer'
 import { Header } from 'library/SetupSteps/Header'
 import { MotionContainer } from 'library/SetupSteps/MotionContainer'
 import { Subheading } from 'pages/Nominate/Wrappers'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { GenerateNominations } from '../GenerateNominations'
+import { SelectionActionTarget } from '../GenerateNominations/Wrappers'
 import type { NominationsProps } from './types'
 
 export const Inner = ({ bondFor, section }: NominationsProps) => {
@@ -27,6 +28,8 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 	const { setNominations } = useManageNominations()
 	const { getPoolSetup, setPoolSetup } = usePoolSetups()
 	const { getNominatorSetup, setNominatorSetup } = useNominatorSetups()
+	const [selectionActionTarget, setSelectionActionTarget] =
+		useState<HTMLDivElement | null>(null)
 
 	const setup =
 		bondFor === 'nominator'
@@ -64,6 +67,7 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 	return (
 		<>
 			<Header
+				action={<SelectionActionTarget ref={setSelectionActionTarget} />}
 				thisSection={section}
 				complete={progress.nominations.length > 0}
 				title={t('nominate')}
@@ -77,8 +81,11 @@ export const Inner = ({ bondFor, section }: NominationsProps) => {
 						})}
 					</h4>
 				</Subheading>
-				<InlineControls displayFor={displayFor} />
-				<GenerateNominations setters={setters} displayFor={displayFor} />
+				<GenerateNominations
+					setters={setters}
+					displayFor={displayFor}
+					selectionActionTarget={selectionActionTarget}
+				/>
 				<Footer complete={progress.nominations.length > 0} bondFor={bondFor} />
 			</MotionContainer>
 		</>

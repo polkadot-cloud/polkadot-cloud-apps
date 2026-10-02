@@ -16,8 +16,11 @@ import { useValidatorDetails } from 'library/ValidatorList/useValidatorDetails'
 import { Subheading } from 'pages/Nominate/Wrappers'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
+import { Main } from 'ui-core/canvas'
 import { Connect } from './Connect'
 import { ListControls } from './Controls/ListControls'
+import { MenuSurfaceContext } from './Controls/MenuPopover'
+import { SelectionActions } from './Controls/SelectionActions'
 import { Methods } from './Methods'
 import { NominationHealth } from './NominationHealth'
 import type { NominationsViewProps } from './types'
@@ -39,15 +42,13 @@ export const NominationsView = ({
 	filterHandlers,
 	ineligibleStatus = 'notStaking',
 	menuControls,
+	selectionActionTarget,
 	selectHandler,
 	standaloneCards,
 }: NominationsViewProps) => {
-	// Resolve shared application state before deriving view conditions.
 	const { t } = useTranslation()
 	const {
 		fetching,
-		height,
-		heightRef,
 		method,
 		nominations,
 		setFetching,
@@ -61,21 +62,14 @@ export const NominationsView = ({
 	const { activeAddress } = useActiveAccount()
 	const { accountsInitialised, isReadOnlyAccount } = useImportedAccounts()
 
-	// Derive layout and visibility once for use across both presentation modes.
 	const listReady = isReady && method !== null
-
-	// Use rows for enhanced validator details.
 	const listFormat = validatorDetailsEnabled ? 'row' : 'col'
-
-	// Show method selection until a method is chosen.
 	const showMethodSelection = !isReadOnlyAccount(activeAddress) && !method
-
-	// Show standalone controls when nominations can be managed.
-	const showStandaloneControls =
-		Boolean(activeAddress) &&
+	const showValidatorControls =
 		canManageNominations &&
 		!eligibilityLoading &&
-		listReady
+		listReady &&
+		(!standaloneCards || Boolean(activeAddress))
 	const showEmptyNominations =
 		nominations.length === 0 && canManageNominations && !eligibilityLoading
 
@@ -92,7 +86,6 @@ export const NominationsView = ({
 	)
 	const allValidatorsWaiting = useAllValidatorsWaiting(nominations)
 
-	// Reuse the same loading and control elements in either layout branch.
 	const loading = (
 		<div
 			aria-label={t('fetchingValidators', { ns: 'pages' })}
@@ -112,16 +105,13 @@ export const NominationsView = ({
 		</div>
 	)
 
-	// Compose controls once; each layout decides where and when to render them.
-	const listControls = (
-		<ListControls
-			filterHandlers={filterHandlers}
-			selectHandler={selectHandler}
-			standalone={standaloneCards}
-		/>
+	// The menu, header action and validator list share one selection provider.
+	const controls = menuControls(
+		showValidatorControls ? (
+			<ListControls disabled={fetching} filterHandlers={filterHandlers} />
+		) : null,
 	)
 
-	// Health output moves into the card in standalone mode without changing data.
 	const nominationHealth = healthCheckActive ? (
 		<NominationHealth
 			allValidatorsWaiting={allValidatorsWaiting}
@@ -133,31 +123,20 @@ export const NominationsView = ({
 		/>
 	) : null
 
-	// Standalone controls sit above the card; embedded controls remain in the list.
-	const beforeList = standaloneCards ? (
-		nominationHealth
-	) : (
-		<>
-			{listControls}
-			{nominationHealth}
-		</>
-	)
-
-	// Render the loader and validator list within the same measured container.
 	const nominationsList = listReady && (
-		<div ref={heightRef}>
+		<div>
 			{fetching ? (
 				loading
 			) : showEmptyNominations && cloudValidatorHandler ? (
 				<>
-					{beforeList}
+					{nominationHealth}
 					<EmptyNominations>
 						<h4>{t('noValidatorsSelected', { ns: 'app' })}</h4>
 						<CloudStartButton
 							lg
 							text={t('startWithCloudValidator', { ns: 'app' })}
 							iconLeft={faPlus}
-							disabled={cloudValidatorHandler.isDisabled()}
+							disabled={cloudValidatorHandler.disabled}
 							onClick={cloudValidatorHandler.onClick}
 						/>
 					</EmptyNominations>
@@ -170,7 +149,7 @@ export const NominationsView = ({
 					highlightRetainmentWarnings={healthCheckActive}
 					selectable
 					forceListFormat={listFormat === 'col' ? 'col' : undefined}
-					BeforeListNode={beforeList}
+					BeforeListNode={nominationHealth}
 					onRemove={selectHandler.popover.callback}
 					validatorDetails={validatorDetails}
 					validatorWarnings={validatorWarnings.warnings}
@@ -179,58 +158,78 @@ export const NominationsView = ({
 		</div>
 	)
 
-	// Resolve the standalone card state in account, loading, and eligibility order.
-	const standaloneList = !accountsInitialised ? (
-		standaloneLoading
-	) : eligibilityLoading ? (
-		standaloneLoading
-	) : !activeAddress ? (
-		<Connect />
-	) : !canManageNominations ? (
-		<Connect status={ineligibleStatus} />
-	) : (
-		<CardWrapper>{nominationsList}</CardWrapper>
+	const standaloneList =
+		!accountsInitialised || eligibilityLoading ? (
+			standaloneLoading
+		) : !activeAddress ? (
+			<Connect />
+		) : !canManageNominations ? (
+			<Connect status={ineligibleStatus} />
+		) : (
+			<CardWrapper>{nominationsList}</CardWrapper>
+		)
+
+	const editor = (
+		<NominationEditorWrapper
+			style={{
+				marginTop: method && displayFor !== 'canvas' ? '1rem' : 0,
+			}}
+		>
+			<div>
+				{showMethodSelection && (
+					<>
+						<Subheading>
+							<h4>
+								{t('chooseValidators2', {
+									maxNominations: MaxNominations,
+									ns: 'app',
+								})}
+							</h4>
+						</Subheading>
+						<Methods
+							setFetching={setFetching}
+							setMethod={setMethod}
+							setNominations={setNominations}
+						/>
+					</>
+				)}
+			</div>
+			{nominationsList}
+		</NominationEditorWrapper>
 	)
 
 	return (
-		<ListProvider selectable initialListFormat={listFormat}>
-			{standaloneCards ? (
-				<StandaloneCards>
-					<CardWrapper className="transparent">
-						{menuControls}
-						{showStandaloneControls && listControls}
-					</CardWrapper>
-					{standaloneList}
-				</StandaloneCards>
-			) : (
-				<NominationEditorWrapper
-					style={{
-						height: height ? `${height}px` : 'auto',
-						marginTop: method ? '1rem' : 0,
-					}}
-				>
-					<div>
-						{showMethodSelection && (
-							<>
-								<Subheading>
-									<h4>
-										{t('chooseValidators2', {
-											maxNominations: MaxNominations,
-											ns: 'app',
-										})}
-									</h4>
-								</Subheading>
-								<Methods
-									setFetching={setFetching}
-									setMethod={setMethod}
-									setNominations={setNominations}
-								/>
-							</>
+		<MenuSurfaceContext.Provider
+			value={
+				standaloneCards
+					? 'var(--nomination-standalone-menu-surface)'
+					: 'var(--nomination-menu-surface)'
+			}
+		>
+			<ListProvider key={listFormat} selectable initialListFormat={listFormat}>
+				<SelectionActions
+					disabled={fetching}
+					selectHandler={showValidatorControls ? selectHandler : undefined}
+					target={selectionActionTarget}
+				/>
+				{standaloneCards ? (
+					<StandaloneCards>
+						<CardWrapper className="transparent">{controls}</CardWrapper>
+						{standaloneList}
+					</StandaloneCards>
+				) : (
+					<>
+						{controls}
+						{displayFor === 'canvas' ? (
+							<Main size="xl" withMenu style={{ paddingTop: '0.75rem' }}>
+								{editor}
+							</Main>
+						) : (
+							editor
 						)}
-					</div>
-					{nominationsList}
-				</NominationEditorWrapper>
-			)}
-		</ListProvider>
+					</>
+				)}
+			</ListProvider>
+		</MenuSurfaceContext.Provider>
 	)
 }
