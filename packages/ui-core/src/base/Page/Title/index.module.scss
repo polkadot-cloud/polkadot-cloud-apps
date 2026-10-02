@@ -61,6 +61,18 @@
 
 	&.standalone {
 		margin-top: 4.5rem;
+
+		.title {
+			margin-bottom: 0.15rem;
+
+			@media (max-width: $page-width-medium-threshold) {
+				margin-bottom: 0.125rem;
+			}
+
+			@media (max-width: $small-font-size-max-width) {
+				margin-bottom: 0;
+			}
+		}
 	}
 
 	.title {
