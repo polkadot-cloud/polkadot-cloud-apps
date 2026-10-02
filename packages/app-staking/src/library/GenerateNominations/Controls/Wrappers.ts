@@ -8,7 +8,7 @@ const BaseMenuWrapper = styled.div.withConfig({
 })<{ isRounded?: boolean }>`
   --menu-surface: var(--nomination-menu-surface);
   --menu-popover-background: color-mix(in srgb, var(--menu-surface) 35%, var(--nomination-popover-highlight));
-  --menu-border: color-mix(in srgb, var(--menu-popover-background) 88%, var(--gray-1000));
+  --menu-border: color-mix(in srgb, color-mix(in srgb, var(--menu-popover-background) 88%, var(--gray-1000)) 50%, var(--gray-500));
   --menu-foreground: var(--gray-800);
   --menu-separator: var(--menu-border);
   --menu-hover-background: color-mix(in srgb, var(--menu-surface) 96%, #000);

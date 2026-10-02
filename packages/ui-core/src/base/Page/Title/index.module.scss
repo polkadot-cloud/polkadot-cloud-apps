@@ -60,6 +60,8 @@
 	}
 
 	&.standalone {
+		margin-top: 4.5rem;
+
 		@media (max-width: $page-width-medium-threshold) {
 			margin-bottom: 0.25rem;
 
