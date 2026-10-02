@@ -27,7 +27,7 @@ export const MenuPopover = ({
 			background={background}
 			borderColor={
 				background
-					? `color-mix(in srgb, ${background} 91%, var(--gray-1000))`
+					? `color-mix(in srgb, ${background} 88%, var(--gray-1000))`
 					: undefined
 			}
 		/>

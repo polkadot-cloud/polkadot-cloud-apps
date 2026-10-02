@@ -40,6 +40,7 @@ export const NominateStandalone = () => {
 	return (
 		<>
 			<Page.Title
+				standalone
 				title={t('nominate')}
 				titleActions={<SelectionActionTarget ref={setSelectionActionTarget} />}
 			/>

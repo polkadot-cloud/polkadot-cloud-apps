@@ -16,7 +16,11 @@ export const Title = ({
 	title,
 	titleActions,
 	children,
-}: Omit<PageTitleProps, 'tabs'> & { titleActions?: ReactNode }) => {
+	standalone = false,
+}: Omit<PageTitleProps, 'tabs'> & {
+	titleActions?: ReactNode
+	standalone?: boolean
+}) => {
 	const [sticky, setSticky] = useState(false)
 	const ref = useRef<HTMLElement>(null)
 
@@ -38,6 +42,7 @@ export const Title = ({
 	const headerClasses = classNames(classes.pageTitle, {
 		[classes.default]: !sticky,
 		[classes.sticky]: sticky,
+		[classes.standalone]: standalone,
 	})
 	const h1Classes = classNames(classes.text, {
 		[classes.default]: !sticky,

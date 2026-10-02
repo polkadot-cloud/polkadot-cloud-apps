@@ -43,7 +43,7 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 /* light theme colors */
 .light {
 	--nomination-menu-color: color-mix(in srgb, var(--gray-200), var(--gray-300));
-	--nomination-standalone-menu-color: #efeff0;
+	--nomination-standalone-menu-color: #ececec;
 	--nomination-popover-highlight: var(--gray-100);
 	--selection: #e4eef8;
 	--wash-yellow: rgb(227 212 152 / 6%);

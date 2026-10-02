@@ -59,6 +59,40 @@
 		margin-bottom: 0.25rem;
 	}
 
+	&.standalone {
+		@media (max-width: $page-width-medium-threshold) {
+			margin-bottom: 0.25rem;
+
+			&.sticky {
+				padding-bottom: 0.25rem;
+			}
+
+			.title {
+				margin-bottom: 0.25rem;
+
+				> div > .text {
+					font-size: 2.25rem;
+				}
+			}
+		}
+
+		@media (max-width: $small-font-size-max-width) {
+			margin-bottom: 0.125rem;
+
+			&.sticky {
+				padding-bottom: 0.125rem;
+			}
+
+			.title {
+				margin-bottom: 0.125rem;
+
+				> div > .text {
+					font-size: 2rem;
+				}
+			}
+		}
+	}
+
 	.title {
 		display: flex;
 		flex-wrap: wrap;
