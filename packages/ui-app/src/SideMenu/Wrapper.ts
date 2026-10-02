@@ -99,7 +99,7 @@ export const LogoWrapper = styled.div<MinimisedProps>`
   align-items: center;
   width: 100%;
   height: 3.5rem;
-  padding-top: 1rem;
+  padding-top: 0.25rem;
   position: relative;
   margin-left: ${(props) => (props.$minimised ? '0.75rem' : '0.75rem')};
   margin-bottom: ${(props) => (props.$advancedMode ? '0.25rem' : '0.75rem')};
@@ -110,7 +110,6 @@ export const LogoWrapper = styled.div<MinimisedProps>`
     margin-left: ${(props) => (props.$minimised ? '0.8rem' : '0.3rem')};
     width: ${(props) => (props.$minimised ? '2.25rem' : '1.75em')};
     height: ${(props) => (props.$minimised ? '2.25rem' : '1.75rem')};
-    top: ${(props) => (props.$minimised ? '0' : '0.1rem')};
   }
 
   > h3 {
@@ -130,7 +129,7 @@ export const LogoWrapper = styled.div<MinimisedProps>`
 
 export const ToggleWrapper = styled.button`
   position: absolute;
-  top: 1.7rem;
+  top: 1.225rem;
   width: 1.3rem;
   height: 1.3rem;
   right: -0.75rem;

@@ -9,11 +9,14 @@ export const Header = ({
 	children,
 	style,
 	minimized,
+	standalone,
 }: ComponentBaseWithClassName & {
 	minimized?: boolean
+	standalone?: boolean
 }) => {
 	const allClasses = classNames(classes.header, {
 		[classes.minimized]: !!minimized,
+		[classes.standalone]: !!standalone,
 	})
 	return (
 		<div className={allClasses} style={style}>

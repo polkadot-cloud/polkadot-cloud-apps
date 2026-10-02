@@ -37,4 +37,22 @@
 			padding-left: $side-nav-minimised-width;
 		}
 	}
+
+	&.standalone {
+		flex-wrap: nowrap;
+		padding-left: 0;
+
+		> section {
+			flex-wrap: nowrap;
+
+			&:first-child {
+				min-width: 0;
+				padding-right: 1rem;
+			}
+
+			&:last-child {
+				flex-shrink: 0;
+			}
+		}
+	}
 }

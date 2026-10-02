@@ -193,6 +193,9 @@ importers:
       app-staking:
         specifier: workspace:*
         version: link:../app-staking
+      assets:
+        specifier: workspace:*
+        version: link:../assets
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
