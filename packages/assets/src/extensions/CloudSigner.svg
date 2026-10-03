@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <!-- Matches the pastel-dark-wash theme in ui-styles/theme/theme.scss. -->
+    <radialGradient id="cloud-signer-yellow" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="67.8823">
+      <stop stop-color="#353327"/>
+      <stop offset="65%" stop-color="#353327" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cloud-signer-purple" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="67.8823" gradientTransform="translate(48 4.8) scale(1 .9)">
+      <stop stop-color="#363041"/>
+      <stop offset="65%" stop-color="#363041" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cloud-signer-blue" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="67.8823" gradientTransform="translate(12 48) scale(.75 1)">
+      <stop stop-color="#2a3343"/>
+      <stop offset="70%" stop-color="#2a3343" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cloud-signer-green" gradientUnits="userSpaceOnUse" cx="48" cy="48" r="67.8823">
+      <stop stop-color="#29362f"/>
+      <stop offset="55%" stop-color="#29362f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="#2b2b2b"/>
+  <rect width="48" height="48" rx="12" fill="url(#cloud-signer-green)"/>
+  <rect width="48" height="48" rx="12" fill="url(#cloud-signer-blue)"/>
+  <rect width="48" height="48" rx="12" fill="url(#cloud-signer-purple)"/>
+  <rect width="48" height="48" rx="12" fill="url(#cloud-signer-yellow)"/>
+  <path d="M15 33a8 8 0 1 1 1-16 10 10 0 0 1 19 4 6 6 0 0 1-1 12H15Z" fill="none" stroke="#fff" stroke-width="2.5"/>
+</svg>

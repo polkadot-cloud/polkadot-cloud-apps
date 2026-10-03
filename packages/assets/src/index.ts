@@ -4,6 +4,7 @@
 import type { FunctionComponent, SVGProps } from 'react'
 import type { ChainIcons, NetworkId } from 'types'
 import { chainIcons } from './chains'
+import CloudSigner from './extensions/CloudSigner.svg?react'
 import Ledger from './extensions/Ledger.svg?react'
 import PolkadotJs from './extensions/PolkadotJs.svg?react'
 import PolkadotVault from './extensions/PolkadotVault.svg?react'
@@ -13,6 +14,7 @@ import Talisman from './extensions/Talisman.svg?react'
 type ExtensionIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
 const extensionIcons: Record<string, ExtensionIcon> = {
+	'cloud-signer': CloudSigner,
 	ledger: Ledger,
 	'polkadot-js': PolkadotJs,
 	polkadotvault: PolkadotVault,
