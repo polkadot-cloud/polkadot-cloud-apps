@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.2.0...tx-submit-v0.3.0) (2026-10-03)
+
+
+### Features
+
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **refactor:** Remove legacy extensions  ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.1.0...tx-submit-v0.2.0) (2026-08-09)
 
 

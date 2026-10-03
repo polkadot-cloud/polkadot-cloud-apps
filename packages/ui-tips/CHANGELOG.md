@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-tips-v1.4.0...ui-tips-v1.5.0) (2026-10-03)
+
+
+### Features
+
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+
 ## [1.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-tips-v1.3.0...ui-tips-v1.4.0) (2026-08-09)
 
 

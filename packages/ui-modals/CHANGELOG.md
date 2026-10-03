@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-modals-v0.2.0...ui-modals-v0.3.0) (2026-10-03)
+
+
+### Features
+
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+* **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
+* **ux:** Refine validator health labels and retainment history ([#3790](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3790)) ([572b2b4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/572b2b4212522330d295b5d0f7b383fc62a9bd38))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-modals-v0.1.0...ui-modals-v0.2.0) (2026-08-09)
 
 

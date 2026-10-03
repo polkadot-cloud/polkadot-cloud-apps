@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-styles-v1.5.0...ui-styles-v1.6.0) (2026-10-03)
+
+
+### Features
+
+* **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
+* **ux:** Nominate UI enhancements and simplification ([#3837](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3837)) ([0ddffb7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ddffb756c26c7128315a72f0db7b2dba2fcd613))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-styles-v1.4.0...ui-styles-v1.5.0) (2026-08-09)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.5.0...ui-graphs-v1.6.0) (2026-10-03)
+
+
+### Features
+
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+* **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
+
 ## [1.5.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.4.0...ui-graphs-v1.5.0) (2026-08-09)
 
 
