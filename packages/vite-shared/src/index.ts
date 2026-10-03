@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
 
 export { cloudRpcPlugin } from './cloudRpc.ts'
+export { localeResourcesVersionPlugin } from './locales.ts'
 
 const faviconDir = fileURLToPath(new URL('../public/favicons', import.meta.url))
 

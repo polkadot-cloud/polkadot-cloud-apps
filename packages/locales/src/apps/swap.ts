@@ -13,6 +13,8 @@ const resourceLoaders = import.meta.glob<LocaleJson>(
 )
 
 export const i18next = createI18next({
+	id: 'swap',
+	resourceVersion: import.meta.env.VITE_LOCALE_RESOURCES_VERSION,
 	fallbackResources: {
 		...appEn,
 		...modalsEn,
