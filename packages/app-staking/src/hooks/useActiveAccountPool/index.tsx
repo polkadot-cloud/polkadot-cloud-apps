@@ -65,7 +65,7 @@ export const useActiveAccountPool = () => {
 		!bondedPools.length
 
 	if (!membership) {
-		label = t('membership')
+		label = t('poolMembership')
 	} else if (isDepositor()) {
 		label = `${t('depositorOfPool')} ${membership.poolId}`
 	} else if (isOwner()) {

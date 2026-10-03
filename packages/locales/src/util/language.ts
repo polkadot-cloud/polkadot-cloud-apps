@@ -6,6 +6,11 @@ import { onLocaleFromModalEvent, onLocaleFromUrlEvent } from 'event-tracking'
 import type { i18n } from 'i18next'
 import { DefaultLocale, locales } from '../config'
 import type { LocaleJson, LocaleProfile } from '../types'
+import {
+	normalizeResources,
+	readCachedResources,
+	serializeResources,
+} from './cache'
 
 type ProfiledI18n = i18n & { localeProfile?: LocaleProfile }
 
@@ -37,8 +42,9 @@ export const getInitialLanguage = () => {
 
 export const getResources = (
 	lng: string,
-	fallbackResources: LocaleJson,
+	profile: LocaleProfile,
 ): { resources: Record<string, LocaleJson>; dynamicLoad: boolean } => {
+	const { fallbackResources } = profile
 	if (lng === DefaultLocale) {
 		return {
 			resources: { [lng]: fallbackResources },
@@ -48,24 +54,19 @@ export const getResources = (
 
 	const localResources = localStorage.getItem('lng_resources')
 	if (localResources) {
-		try {
-			const { l, r } = JSON.parse(localResources)
-			if (
-				l === lng &&
-				typeof r === 'object' &&
-				r !== null &&
-				!Array.isArray(r) &&
-				Object.keys(fallbackResources).every((namespace) =>
-					Object.hasOwn(r, namespace),
-				)
-			) {
-				return {
-					resources: { [lng]: r as LocaleJson },
-					dynamicLoad: false,
-				}
+		const cachedResources = readCachedResources(localResources, lng, profile)
+		if (cachedResources) {
+			localStorage.setItem(
+				'lng_resources',
+				serializeResources(lng, cachedResources, profile),
+			)
+			return {
+				resources: {
+					[DefaultLocale]: fallbackResources,
+					[lng]: cachedResources,
+				},
+				dynamicLoad: false,
 			}
-		} catch {
-			// Ignore invalid cached resources.
 		}
 	}
 
@@ -84,16 +85,15 @@ export const changeLanguage = async (lng: string, i18next: i18n) => {
 	onLocaleFromModalEvent(lng)
 
 	// Check whether resources exist and need to be dynamically loaded.
-	const { resources, dynamicLoad } = getResources(
-		lng,
-		profile.fallbackResources,
-	)
+	const { resources, dynamicLoad } = getResources(lng, profile)
 
 	localStorage.setItem('lng', lng)
 	if (dynamicLoad) {
 		await loadLanguage(lng, i18next, profile)
 	} else {
-		addI18nResources(i18next, lng, resources[lng])
+		Object.entries(resources).forEach(([language, resource]) => {
+			addI18nResources(i18next, language, resource)
+		})
 		await i18next.changeLanguage(lng)
 	}
 	varToUrlHash('l', lng, false)
@@ -130,11 +130,20 @@ export const loadLanguage = async (
 	i18next: i18n,
 	profile: LocaleProfile,
 ) => {
-	const resources = await loadResources(lng, profile)
+	const resources = normalizeResources(
+		await loadResources(lng, profile),
+		profile.fallbackResources,
+	)
+	if (!resources) {
+		throw new Error(
+			`Invalid locale resources for profile ${profile.id}: ${lng}`,
+		)
+	}
 	localStorage.setItem(
 		'lng_resources',
-		JSON.stringify({ l: lng, r: resources }),
+		serializeResources(lng, resources, profile),
 	)
+	addI18nResources(i18next, DefaultLocale, profile.fallbackResources)
 	addI18nResources(i18next, lng, resources)
 	await i18next.changeLanguage(lng)
 }

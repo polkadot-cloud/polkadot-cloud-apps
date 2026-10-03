@@ -16,10 +16,7 @@ export {
 
 export const createI18next = (profile: LocaleProfile) => {
 	const lng = getInitialLanguage()
-	const { resources, dynamicLoad } = getResources(
-		lng,
-		profile.fallbackResources,
-	)
+	const { resources, dynamicLoad } = getResources(lng, profile)
 	const i18next = Object.assign(createInstance(), { localeProfile: profile })
 
 	i18next.use(initReactI18next).init({

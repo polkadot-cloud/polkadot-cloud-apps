@@ -160,7 +160,7 @@ export const Form = ({
 									? '...'
 									: `${planckToUnitBn(poolBalance, units)
 											.decimalPlaces(0)
-											.toFormat()} ${unit} ${capitalizeFirstLetter(t('bonded'))}`}
+											.toFormat()} ${unit} ${capitalizeFirstLetter(t('bonded', { ns: 'app' }))}`}
 							</span>
 						</div>
 					</HeaderWrapper>
