@@ -50,9 +50,10 @@ export const StakingApiValidatorListInner = ({
 	const { listFormat, setListFormat } = useList()
 	const [page, setPage] = useState(1)
 	const forceCardLayout = useForceCardLayout()
-	const [config, setConfig] = useState<ValidatorListConfig>(
-		DEFAULT_VALIDATOR_LIST_CONFIG,
-	)
+	const [config, setConfig] = useState<ValidatorListConfig>(() => ({
+		...DEFAULT_VALIDATOR_LIST_CONFIG,
+		order: retainmentEnabled ? DEFAULT_VALIDATOR_LIST_CONFIG.order : 'ACTIVITY',
+	}))
 	const [eraPointsByAddress, setEraPointsByAddress] = useState<
 		Map<string, ValidatorEraPoints[]>
 	>(new Map())

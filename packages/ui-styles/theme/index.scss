@@ -108,7 +108,8 @@ input {
 	border: none;
 
 	&::placeholder {
-		color: var(--gray-700);
+		color: var(--text-tertiary);
+		opacity: 1;
 	}
 
 	&.underline {
@@ -116,10 +117,8 @@ input {
 	}
 }
 
-button:focus,
-input:focus,
-select:focus,
-textarea:focus {
+:focus,
+:focus-visible {
 	outline: none;
 }
 
@@ -178,10 +177,8 @@ label {
 	display: none; /* Chrome, Safari, Opera */
 }
 
-.light ::selection {
-	background-color: #f8e4e8;
-}
-
+.light ::selection,
 .dark ::selection {
-	background-color: #2a151a;
+	background-color: var(--selection);
+	color: var(--gray-1000);
 }

@@ -3,12 +3,12 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 @use "sass:list";
 
-/* Accent scale: rose/pink (hue ≈ 348°) */
-$accent-hue: 348;
-$accent-saturation-light: 55;
-$accent-saturation-dark: 33;
-$accent-lightness-light: (98, 96, 93, 90, 86, 78, 62, 48, 32, 16);
-$accent-lightness-dark: (5, 8, 12, 15, 20, 27, 41, 52, 63, 88);
+/* Accent scale: muted blue-lavender, complementing the shared pastel palette. */
+$accent-hue: 228;
+$accent-saturation-light: 25;
+$accent-saturation-dark: 28;
+$accent-lightness-light: (98, 96, 93, 90, 86, 78, 55, 43, 36, 22);
+$accent-lightness-dark: (10, 14, 18, 23, 30, 39, 60, 70, 80, 91);
 
 .polkadot,
 .kusama {

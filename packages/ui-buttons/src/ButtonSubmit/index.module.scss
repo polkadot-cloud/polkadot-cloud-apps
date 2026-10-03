@@ -1,11 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
+
 .btnSubmit {
-	border: 1px solid var(--gray-1000);
+	@include pastel.primary-button;
+
 	border-radius: var(--btn-sm-radius);
-	background: var(--gray-1000);
-	color: var(--gray-100);
 }
 
 .btnSubmitSm {
@@ -38,5 +39,11 @@
 			transform: scale(0.95);
 			box-shadow: 0 0 0 0 rgb(0 0 0 / 0%);
 		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btnSubmitPulse {
+		animation: none;
 	}
 }

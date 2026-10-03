@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import { useEraStakers } from 'contexts/EraStakers'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { useNominationStatus } from 'data-gate'

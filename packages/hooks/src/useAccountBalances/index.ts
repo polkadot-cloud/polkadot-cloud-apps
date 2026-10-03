@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { NominateBuffer } from 'consts/nominate'
 import { getStakingChainData } from 'consts/util'

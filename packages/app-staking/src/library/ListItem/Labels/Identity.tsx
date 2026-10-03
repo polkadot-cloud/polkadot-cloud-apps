@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Polkicon } from '@w3ux/react-polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useTheme } from 'hooks/useTheme'
 import { getIdentityDisplay } from 'library/List/Utils'

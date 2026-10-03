@@ -17,6 +17,15 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 
+	&[data-section='identity'] {
+		gap: 0.8rem;
+
+		> button {
+			margin: 0;
+			opacity: 1;
+		}
+	}
+
 	> span {
 		min-width: 0;
 		overflow: hidden;
@@ -41,11 +50,6 @@
 		&:hover:not(:disabled) {
 			color: var(--gray-1000);
 			opacity: 1;
-		}
-
-		&:focus-visible {
-			outline: 2px solid var(--gray-900);
-			outline-offset: -2px;
 		}
 
 		&:disabled {

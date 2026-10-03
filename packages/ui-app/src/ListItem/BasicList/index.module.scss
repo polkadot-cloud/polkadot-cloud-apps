@@ -21,8 +21,8 @@
 
 .surface {
 	align-items: center;
-	background: var(--bg-list);
-	border: 1.25px solid var(--bg-list);
+	background: var(--bg-list-item);
+	border: 1.25px solid var(--bg-list-item);
 	border-radius: 0.75rem;
 	display: flex;
 	flex-flow: row wrap;
@@ -33,12 +33,17 @@
 	transition: border var(--transition-duration) ease;
 	width: 100%;
 
+	:global(.dark) & {
+		border-color: var(--gray-500);
+	}
+
 	&.canvas {
-		background: var(--gray-300);
+		background: var(--bg-list-item);
 		border-color: var(--gray-400);
 
 		:global(.dark) & {
-			background: var(--gray-200);
+			background: var(--gray-400);
+			border-color: var(--gray-500);
 		}
 	}
 
@@ -70,6 +75,7 @@
 
 	&.pools {
 		align-items: flex-start;
+		padding-top: 0.65rem;
 	}
 
 	&.large {

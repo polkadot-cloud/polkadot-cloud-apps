@@ -3,7 +3,7 @@
 
 import { faArrowUpRightDots } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Odometer } from '@w3ux/react-odometer'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
 import { useHelp } from 'hooks/useHelp'
 import { Stat } from 'ui-app/Stat'
 import { ButtonHelp } from 'ui-buttons'

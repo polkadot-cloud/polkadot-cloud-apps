@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Odometer } from '@w3ux/react-odometer'
-import { Polkicon } from '@w3ux/react-polkicon'
-import { applyWidthAsPadding, minDecimalPlaces } from '@w3ux/utils'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { applyWidthAsPadding, minDecimalPlaces } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
@@ -85,7 +85,7 @@ export const Stat = ({
 	return (
 		<Wrapper
 			$isAddress={type === 'address'}
-			style={dimmed ? { opacity: 0.5 } : undefined}
+			className={dimmed ? 'dimmed' : undefined}
 		>
 			<h4>
 				{label}

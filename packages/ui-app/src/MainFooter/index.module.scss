@@ -54,9 +54,8 @@
 
 	a,
 	button {
-		color: var(--gray-900);
+		color: var(--text-tertiary);
 		font-size: var(--network-bar-font-size);
-		opacity: 0.75;
 	}
 
 	p {
@@ -120,9 +119,9 @@
 }
 
 .pos {
-	color: #3eb955;
+	color: var(--status-success);
 }
 
 .neg {
-	color: #d2545d;
+	color: var(--status-danger);
 }

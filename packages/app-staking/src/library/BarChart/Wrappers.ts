@@ -44,6 +44,10 @@ export const BarChartWrapper = styled.div<{ $lessPadding?: boolean }>`
   .d4 {
     background: var(--gray-400);
     color: var(--gray-900);
+
+    .light & {
+      background: var(--gray-300);
+    }
   }
 `
 

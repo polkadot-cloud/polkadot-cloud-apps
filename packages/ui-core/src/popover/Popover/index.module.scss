@@ -5,6 +5,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 .content {
 	background: var(--bg-primary);
+	border: 1px solid var(--gray-500);
 	box-shadow: var(--shadow);
 	border-radius: $popover-border-radius;
 	animation-duration: 400ms;
@@ -14,20 +15,50 @@ SPDX-License-Identifier: GPL-3.0-only */
 	outline: none;
 	transition: height var(--transition-duration);
 
+	:global(.dark) & {
+		--bg-primary: var(--bg-modal);
+	}
+
 	&[data-state="open"][data-side="bottom"] {
 		animation-name: slide-up-and-fade;
 	}
 
 	z-index: 99;
 
+	&.attached {
+		box-shadow:
+			0 1px 2px color-mix(in srgb, var(--gray-1000) 4%, transparent),
+			0 10px 20px -12px color-mix(in srgb, var(--gray-1000) 18%, transparent);
+
+		&[data-side="bottom"] {
+			border-top: 0;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+
+			> .contentBody {
+				padding-top: 0.25rem;
+			}
+		}
+
+		&[data-side="top"] {
+			border-bottom: 0;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+
+			> .contentBody {
+				padding-bottom: 0.25rem;
+			}
+		}
+	}
+
 	&.transparent {
+		border: none;
 		box-shadow: none;
 		background: transparent;
 		border-radius: 0;
 	}
 
 	&.noShadow {
-		border: 1px solid var(--gray-500);
 		box-shadow: none;
 		overflow: hidden;
 	}
@@ -41,6 +72,7 @@ SPDX-License-Identifier: GPL-3.0-only */
 	display: flex;
 	flex-direction: column;
 	max-height: calc(100vh - ($header-height + 2rem));
+	border-radius: inherit;
 	overflow-y: auto;
 }
 

@@ -2,24 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ReactNode } from 'react'
-import type { AnyFunction, DisplayFor } from 'types'
-import type { FilterHandler, SelectHandler } from '../types'
-
-export interface InlineControlsProps {
-	displayFor: DisplayFor
-}
-
-export interface InlineControlsWrapperProps {
-	$standalone?: boolean
-}
+import type { AnyFunction } from 'types'
+import type { FilterHandler } from '../types'
 
 export interface ListControlsProps {
-	selectHandler: SelectHandler
 	filterHandlers: FilterHandler[]
-	standalone?: boolean
+	disabled?: boolean
 }
 
 export interface MenuControlsProps {
+	children?: ReactNode
 	setters: AnyFunction[]
 	allowRevert: boolean
 	action?: ReactNode

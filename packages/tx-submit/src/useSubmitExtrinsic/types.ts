@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { MaybeString } from '@w3ux/types'
 import type { SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 import type { ActiveAccount, ActiveProxy, TxFeeDisplay } from 'types'
@@ -19,8 +18,8 @@ export interface UseSubmitExtrinsicProps {
 	tag?: string
 	dappName?: string
 	from: {
-		address: MaybeString
-		source: MaybeString
+		address: string | null
+		source: string | null
 		proxy?: ActiveProxy | null
 	}
 	shouldSubmit: boolean

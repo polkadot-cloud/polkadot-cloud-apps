@@ -26,7 +26,7 @@ export const Entry = forwardRef(
 		return (
 			<div
 				ref={ref}
-				className={`${classes.entry} ${mode} ${theme} ${langClass}`}
+				className={`core-entry ${classes.entry} ${mode} ${theme} ${langClass}`}
 				style={style}
 			>
 				{children}

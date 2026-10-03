@@ -3,13 +3,16 @@
 
 import { PageWidthLargeThreshold, PageWidthMediumThreshold } from 'consts'
 import styled from 'styled-components'
+import classes from './index.module.scss'
 
 export interface CardWrapperProps {
 	height?: string | number
 }
 
 /** Used to separate the main modules throughout an app. */
-export const CardWrapper = styled.div<CardWrapperProps>`
+export const CardWrapper = styled.div.attrs({
+	className: classes.card,
+})<CardWrapperProps>`
   box-shadow: var(--shadow);
   background: var(--bg-primary);
   border-radius: 1.1rem;
@@ -23,7 +26,7 @@ export const CardWrapper = styled.div<CardWrapperProps>`
   transition: border 0.2s;
 
   &.canvas {
-    background: var(--gray-300);
+    background: var(--gray-200);
     padding: 1.25rem;
 
     &.secondary {

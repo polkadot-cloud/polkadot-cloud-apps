@@ -10,8 +10,7 @@
 		"lint": "biome check --write ."
 	},
 	"dependencies": {
-		"@w3ux/hooks": "^2.4.4",
-		"@w3ux/utils": "3.1.1",
+		"@polkadot-cloud/utils": "^0.4.1",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",

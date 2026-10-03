@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { capitalizeFirstLetter, planckToUnit } from '@w3ux/utils'
+import { capitalizeFirstLetter, planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { MaxNominations } from 'consts'
 import {
@@ -31,7 +31,7 @@ export const useFillVariables = () => {
 	const { unit, units } = getStakingChainData(network)
 	const minToEarnRewards = new BigNumber(
 		planckToUnit(
-			BigNumber.max(minNominatorBond, minimumActiveStake).toString(),
+			BigNumber.max(minNominatorBond, minimumActiveStake).toFixed(),
 			units,
 		),
 	)

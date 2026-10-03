@@ -17,16 +17,15 @@
 		"@fortawesome/free-regular-svg-icons": "^7.3.1",
 		"@fortawesome/free-solid-svg-icons": "^7.3.1",
 		"@fortawesome/react-fontawesome": "^3.5.0",
-		"@w3ux/react-polkicon": "^4.0.2",
-		"@w3ux/utils": "3.1.1",
+		"@polkadot-cloud/ui": "^0.1.0",
+		"@polkadot-cloud/utils": "^0.4.1",
 		"classnames": "^2.5.1",
 		"hooks": "workspace:*",
 		"react": "^19.2.8",
-		"ui-styles": "workspace:*",
-		"ui-core": "workspace:*"
+		"ui-core": "workspace:*",
+		"ui-styles": "workspace:*"
 	},
 	"devDependencies": {
-		"@w3ux/types": "^2.4.2",
 		"dedot": "^1.4.0",
 		"types": "workspace:*"
 	}

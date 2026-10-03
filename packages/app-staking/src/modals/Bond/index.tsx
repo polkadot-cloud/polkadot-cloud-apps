@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { maxBigInt, planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { maxBigInt, planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActiveProxy } from 'hooks/useActiveProxy'

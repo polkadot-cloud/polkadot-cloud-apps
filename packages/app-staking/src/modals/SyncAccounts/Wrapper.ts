@@ -10,7 +10,7 @@ export const ModeToggle = styled.div`
 
   button {
     background-color: var(--gray-300);
-    color: var(--gray-700);
+    color: var(--text-tertiary);
 
     &.active {
       background-color: var(--accent-200);

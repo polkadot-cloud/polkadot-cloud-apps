@@ -43,3 +43,25 @@ interface PageProp {
 export type BulletType = 'success' | 'accent' | 'warning' | 'danger'
 
 export type NavSection = 'stake' | 'validators' | 'pools'
+
+export interface TimeLeftFormatted {
+	days: [number, string]
+	hours: [number, string]
+	minutes: [number, string]
+	seconds?: [number, string]
+}
+
+export interface TimeLeftRaw {
+	days: number
+	hours: number
+	minutes: number
+	seconds?: number
+}
+
+export interface TimeleftDuration {
+	days: number
+	hours: number
+	minutes: number
+	seconds: number
+	lastMinute: boolean
+}

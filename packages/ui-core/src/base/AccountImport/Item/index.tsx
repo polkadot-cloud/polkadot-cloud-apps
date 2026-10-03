@@ -3,7 +3,7 @@
 
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ellipsisFn } from '@w3ux/utils'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import classNames from 'classnames'
 import type { FormEvent } from 'react'
 import { useState } from 'react'
