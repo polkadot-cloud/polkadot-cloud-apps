@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.6.0...ui-overlay-v1.7.0) (2026-10-03)
+
+
+### Features
+
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+* **ux:** Add Canvas card design, use with `ManageNominations` ([#3757](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3757)) ([8e7afdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8e7afdd3feacabb9d70f5e2cf90c761a9da9f17d))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.5.0...ui-overlay-v1.6.0) (2026-08-09)
 
 
