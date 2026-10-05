@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { vi } from 'vitest'
+import type { ExtensionAccount } from '../../ui-app/node_modules/@polkadot-cloud/connect-core/types.js'
 
 export const extensionId = 'cloud-signer'
 export const extensionAccount = {
 	address: `0x${'11'.repeat(32)}`,
 	name: 'Public test account',
-}
+	source: extensionId,
+} satisfies ExtensionAccount
 
 export const createExtensionWallet = () => {
 	let publish: (value: (typeof extensionAccount)[]) => void = () => {}

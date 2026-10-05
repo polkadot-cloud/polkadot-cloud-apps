@@ -1,11 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import type { Validator, ValidatorOverview } from 'types'
 import { stringToBn } from 'utils'
 import { expect, test, vi } from 'vitest'
-import { createElement } from '../../app-staking/node_modules/react/index.js'
-import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { EraStatus } from '../../app-staking/src/library/ListItem/Labels/EraStatus'
 import { injectValidatorListData } from '../../app-staking/src/library/ValidatorList/overview'
 import { useValidatorSelfStake } from '../../app-staking/src/library/ValidatorList/useValidatorSelfStake'
@@ -259,7 +259,7 @@ const BarFixture = ({
 			unit: 'DOT',
 			units: 10,
 		}),
-		retainmentWindow: 'THREE_MONTHS',
+		retainmentWindow: 'threeMonths',
 		onRetainmentWindowChange: () => {},
 	})
 
