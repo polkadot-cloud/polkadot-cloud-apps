@@ -17,7 +17,7 @@
 		"validate": "node ./.scripts/localeValidate.cjs"
 	},
 	"dependencies": {
-		"@polkadot-cloud/utils": "^0.4.1",
+		"@polkadot-cloud/utils": "^0.4.5",
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
 		"event-tracking": "workspace:*",

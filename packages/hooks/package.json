@@ -13,10 +13,10 @@
 		"./*": "./src/*/index.ts"
 	},
 	"dependencies": {
-		"@polkadot-cloud/connect": "^1.2.4",
-		"@polkadot-cloud/connect-core": "^1.2.4",
-		"@polkadot-cloud/connect-proxies": "^0.5.4",
-		"@polkadot-cloud/utils": "^0.4.1",
+		"@polkadot-cloud/connect": "^1.2.5",
+		"@polkadot-cloud/connect-core": "^1.2.5",
+		"@polkadot-cloud/connect-proxies": "^0.5.5",
+		"@polkadot-cloud/utils": "^0.4.5",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
 		"data-gate": "workspace:*",

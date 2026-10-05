@@ -13,8 +13,8 @@
 		"./util": "./src/util.ts"
 	},
 	"dependencies": {
-		"@polkadot-cloud/connect-core": "^1.2.4",
-		"@polkadot-cloud/utils": "^0.4.1",
+		"@polkadot-cloud/connect-core": "^1.2.5",
+		"@polkadot-cloud/utils": "^0.4.5",
 		"consts": "workspace:*",
 		"dedot": "^1.4.0",
 		"event-tracking": "workspace:*",

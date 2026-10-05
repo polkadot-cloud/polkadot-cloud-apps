@@ -110,6 +110,7 @@
 		"done": "Fertig",
 		"enterRecipientAddress": "Empfängeradresse eingeben",
 		"exitYourStakingPosition": "Beende deine Staking-Position.",
+		"extensionReloadRequired": "Damit {{extension}} die Verbindung wiederherstellen kann, muss diese Seite neu geladen werden. Jetzt neu laden? Nicht gespeicherte Änderungen können verloren gehen.",
 		"extensions": "Erweiterungen",
 		"failedToFetchToken": "Token konnte nicht abgerufen werden",
 		"favoriteNotNominated": "Favoriten-Validatoren / Nicht nominiert",

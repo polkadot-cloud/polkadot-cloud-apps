@@ -110,6 +110,7 @@
 		"done": "Tamam",
 		"enterRecipientAddress": "Alıcı adresini girin",
 		"exitYourStakingPosition": "Stake pozisyonunuzdan çıkın.",
+		"extensionReloadRequired": "{{extension}} yeniden bağlanabilmek için bu sayfanın yenilenmesini gerektiriyor. Şimdi yenilensin mi? Kaydedilmemiş değişiklikler kaybolabilir.",
 		"extensions": "Uzantılar",
 		"failedToFetchToken": "Token alınamadı",
 		"favoriteNotNominated": "Favori Validatörler / Nominasyon Yapılmamış",

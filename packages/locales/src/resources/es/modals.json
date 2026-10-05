@@ -110,6 +110,7 @@
 		"done": "Hecho",
 		"enterRecipientAddress": "Introduce la dirección del destinatario",
 		"exitYourStakingPosition": "Salir de tu posición de staking.",
+		"extensionReloadRequired": "{{extension}} necesita que se recargue esta página para volver a conectarse. ¿Recargar ahora? Los cambios sin guardar podrían perderse.",
 		"extensions": "Extensiones",
 		"failedToFetchToken": "Error al obtener el token",
 		"favoriteNotNominated": "Validadores Favoritos / No Nominados",

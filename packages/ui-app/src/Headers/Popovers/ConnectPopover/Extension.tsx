@@ -8,7 +8,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
 import { getStatus } from '@polkadot-cloud/connect-core'
-import { disconnectExtension } from '@polkadot-cloud/connect-core/extensions'
+import {
+	disconnectExtension,
+	getExtensionConnectionError,
+} from '@polkadot-cloud/connect-core/extensions'
 import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
@@ -64,10 +67,13 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 		connectingRef.current = true
 		setConnecting(true)
 		let approved = false
+		let connectionError: unknown
 		try {
 			approved = await connectExtension(id)
-		} catch {
+			connectionError = getExtensionConnectionError(id)
+		} catch (error) {
 			// A provider may reject instead of returning a failed connection result.
+			connectionError = error
 		}
 		// Closing the menu or changing networks invalidates its pending UI action.
 		if (version !== requestVersion.current) {
@@ -76,6 +82,18 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 		connectingRef.current = false
 		setConnecting(false)
 		if (!approved || getStatus(id) !== 'connected') {
+			if (
+				id === 'cloud-signer' &&
+				typeof connectionError === 'object' &&
+				connectionError !== null &&
+				'code' in connectionError &&
+				connectionError.code === 'CLOUD_SIGNER_RELOAD_REQUIRED'
+			) {
+				if (confirm(t('extensionReloadRequired', { extension: title }))) {
+					location.reload()
+				}
+				return
+			}
 			alert('Unable to connect to the extension.')
 			return
 		}

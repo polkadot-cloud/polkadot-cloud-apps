@@ -87,6 +87,7 @@ beforeEach(() => {
 	state.status = 'installed'
 	state.network = 'polkadot'
 	state.button = undefined
+	extensions.disconnectExtension(id)
 	core.setStatus('cloud-signer', 'installed')
 	connect.mockImplementation(async () => {
 		core.setStatus('cloud-signer', 'connected')
@@ -307,3 +308,87 @@ test('Disconnect stops live updates from restoring the reconnect preference befo
 	expect(core.getStatus(id)).not.toBe('connected')
 	expect(reload).toHaveBeenCalledOnce()
 })
+
+const reloadRequired = () =>
+	Object.assign(new Error('Extension unavailable. Reload the page.'), {
+		code: 'CLOUD_SIGNER_RELOAD_REQUIRED',
+	})
+
+test.each(['enable', 'accounts', 'rejection'])(
+	'a reload-required failure from %s offers a refresh and reloads only on confirmation',
+	async (stage) => {
+		const wallet = createExtensionWallet()
+		Reflect.set(window, 'injectedWeb3', wallet.injectedWeb3)
+		if (stage === 'enable') wallet.enable.mockRejectedValue(reloadRequired())
+		else if (stage === 'accounts')
+			wallet.extension.accounts.get.mockRejectedValue(reloadRequired())
+		if (stage === 'rejection') connect.mockRejectedValue(reloadRequired())
+		else
+			connect.mockImplementation(() =>
+				extensions.connectExtension('Cloud Apps test', 0, id),
+			)
+		await renderButton().onClick?.()
+		expect(confirm).toHaveBeenCalledExactlyOnceWith('extensionReloadRequired')
+		expect(reload).toHaveBeenCalledOnce()
+		expect(alert).not.toHaveBeenCalled()
+		expect(connectedEvent).not.toHaveBeenCalled()
+		expect(openModal).not.toHaveBeenCalled()
+	},
+)
+
+test('cancelling the refresh preserves the page and allows a successful retry', async () => {
+	const wallet = createExtensionWallet()
+	Reflect.set(window, 'injectedWeb3', wallet.injectedWeb3)
+	wallet.enable.mockRejectedValueOnce(reloadRequired())
+	connect.mockImplementation(() =>
+		extensions.connectExtension('Cloud Apps test', 0, id),
+	)
+	confirm.mockReturnValue(false)
+	await renderButton().onClick?.()
+	expect(confirm).toHaveBeenCalledOnce()
+	expect(reload).not.toHaveBeenCalled()
+	expect(alert).not.toHaveBeenCalled()
+	expect(setOpen).not.toHaveBeenCalled()
+	expect(renderButton().disabled).toBe(false)
+	await renderButton().onClick?.()
+	expect(openModal).toHaveBeenCalledOnce()
+	expect(confirm).toHaveBeenCalledOnce()
+	expect(reload).not.toHaveBeenCalled()
+})
+
+test.each([
+	'Wallet locked. Unlock and try again.',
+	'User rejected request.',
+	'Wallet session closed. Retry the request.',
+	'Extension unavailable. Reload the page.',
+])('an ordinary error does not request a page refresh: %s', async (message) => {
+	const wallet = createExtensionWallet()
+	Reflect.set(window, 'injectedWeb3', wallet.injectedWeb3)
+	wallet.enable.mockRejectedValue(new Error(message))
+	connect.mockImplementation(() =>
+		extensions.connectExtension('Cloud Apps test', 0, id),
+	)
+	await renderButton().onClick?.()
+	expect(confirm).not.toHaveBeenCalled()
+	expect(reload).not.toHaveBeenCalled()
+	expect(alert).toHaveBeenCalledOnce()
+})
+
+test.each(['closed menu', 'changed network'])(
+	'a reload-required error from a stale request cannot prompt: %s',
+	async (change) => {
+		const approval = Promise.withResolvers<boolean>()
+		connect.mockReturnValue(approval.promise)
+		const pending = renderButton().onClick?.()
+		if (change === 'closed menu') act(() => root.render(null))
+		else {
+			state.network = 'kusama'
+			renderButton()
+		}
+		approval.reject(reloadRequired())
+		await pending
+		expect(confirm).not.toHaveBeenCalled()
+		expect(reload).not.toHaveBeenCalled()
+		expect(alert).not.toHaveBeenCalled()
+	},
+)

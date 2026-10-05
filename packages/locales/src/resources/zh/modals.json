@@ -107,6 +107,7 @@
 		"done": "完成",
 		"enterRecipientAddress": "输入接收地址",
 		"exitYourStakingPosition": "退出抵押",
+		"extensionReloadRequired": "{{extension}} 需要刷新此页面才能重新连接。是否立即刷新？未保存的更改可能会丢失。",
 		"extensions": "扩展",
 		"failedToFetchToken": "无法获取代币",
 		"favoriteNotNominated": "收藏夹中的验证人/未提名",

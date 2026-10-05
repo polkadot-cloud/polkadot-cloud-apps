@@ -14,7 +14,7 @@
 		"./util": "./src/util/index.ts"
 	},
 	"dependencies": {
-		"@polkadot-cloud/utils": "^0.4.1",
+		"@polkadot-cloud/utils": "^0.4.5",
 		"bignumber.js": "^11.1.5",
 		"chart.js": "^4.4.9",
 		"chartjs-plugin-annotation": "^3.1.0",

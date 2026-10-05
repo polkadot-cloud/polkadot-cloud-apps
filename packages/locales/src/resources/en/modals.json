@@ -110,6 +110,7 @@
 		"done": "Done",
 		"enterRecipientAddress": "Enter recipient address",
 		"exitYourStakingPosition": "Exit your staking position.",
+		"extensionReloadRequired": "{{extension}} needs this page to be refreshed before it can reconnect. Reload now? Unsaved changes may be lost.",
 		"extensions": "Extensions",
 		"failedToFetchToken": "Failed to fetch token",
 		"favoriteNotNominated": "Favorite Validators / Not Nominated",

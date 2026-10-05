@@ -113,6 +113,7 @@
 		"done": "Готово",
 		"enterRecipientAddress": "Введите адрес получателя",
 		"exitYourStakingPosition": "Выйти из вашей позиции стейкинга.",
+		"extensionReloadRequired": "Для повторного подключения {{extension}} необходимо обновить эту страницу. Обновить сейчас? Несохранённые изменения могут быть потеряны.",
 		"extensions": "Расширения",
 		"failedToFetchToken": "Не удалось получить токен",
 		"favoriteNotNominated": "Избранные валидаторы / не номинированы",

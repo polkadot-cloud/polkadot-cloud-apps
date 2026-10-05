@@ -110,6 +110,7 @@
 		"done": "完了",
 		"enterRecipientAddress": "受取人のアドレスを入力",
 		"exitYourStakingPosition": "ステーキングのポジションを解消します。",
+		"extensionReloadRequired": "{{extension}} に再接続するには、このページの再読み込みが必要です。今すぐ再読み込みしますか？保存していない変更は失われる可能性があります。",
 		"extensions": "拡張機能",
 		"failedToFetchToken": "トークンの取得に失敗しました",
 		"favoriteNotNominated": "お気に入りのバリデータ / 未ノミネート",
