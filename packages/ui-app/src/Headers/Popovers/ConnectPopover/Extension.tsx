@@ -8,10 +8,11 @@ import {
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
-import { localStorageOrDefault } from '@polkadot-cloud/utils'
+import { removeExtensionFromLocal } from '@polkadot-cloud/connect-core'
 import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonMonoInvert } from 'ui-buttons'
 import { ConnectItem } from 'ui-core/popover'
@@ -27,35 +28,45 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 		useExtensions()
 
 	const { id, title, website } = extension
+	const [connecting, setConnecting] = useState(false)
+	const connectingRef = useRef(false)
 
 	const isInstalled = extensionInstalled(id)
 	const canConnect = extensionCanConnect(id)
 	const connected = extensionsStatus[id] === 'connected'
 
 	const Icon = getExtensionIcon(id)
-	const disabled = !isInstalled
+	const disabled = !isInstalled || connecting
 
 	// Handle connect and disconnect from extension.
 	const handleClick = async () => {
+		if (connectingRef.current) {
+			return
+		}
 		if (!connected) {
 			if (canConnect) {
-				await connectExtension(id)
-				onExtensionConnectedEvent(network, id)
-				setOpen(false)
-				openModal({ key: 'Accounts' })
+				connectingRef.current = true
+				setConnecting(true)
+				try {
+					if (!(await connectExtension(id))) {
+						alert('Unable to connect to the extension.')
+						return
+					}
+					onExtensionConnectedEvent(network, id)
+					setOpen(false)
+					openModal({ key: 'Accounts' })
+				} catch {
+					alert('Unable to connect to the extension.')
+				} finally {
+					connectingRef.current = false
+					setConnecting(false)
+				}
 			} else {
 				alert('Unable to connect to the extension.')
 			}
 		} else {
 			if (confirm(t('disconnectFromExtension'))) {
-				const updatedAtiveExtensions = (
-					localStorageOrDefault('active_extensions', [], true) as string[]
-				).filter((ext: string) => ext !== id)
-
-				localStorage.setItem(
-					'active_extensions',
-					JSON.stringify(updatedAtiveExtensions),
-				)
+				removeExtensionFromLocal(id)
 				location.reload()
 			}
 		}

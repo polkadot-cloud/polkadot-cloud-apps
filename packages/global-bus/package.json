@@ -13,7 +13,7 @@
 		"./util": "./src/util.ts"
 	},
 	"dependencies": {
-		"@polkadot-cloud/connect-core": "^1.2.2",
+		"@polkadot-cloud/connect-core": "^1.2.3",
 		"@polkadot-cloud/utils": "^0.4.1",
 		"consts": "workspace:*",
 		"dedot": "^1.4.0",
