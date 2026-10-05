@@ -153,6 +153,58 @@ test('a failed connection can be retried from the same menu', async () => {
 	expect(openModal).toHaveBeenCalledOnce()
 })
 
+test('the first click joins a pending reconnect despite a stale menu status', async () => {
+	const core = await import(
+		'../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js'
+	)
+	const extensions = await import(
+		'../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
+	)
+	const accounts = await import(
+		'../../ui-app/node_modules/@polkadot-cloud/connect-core/accounts/index.js'
+	)
+	const id = 'cloud-signer'
+	const account = {
+		address: `0x${'11'.repeat(32)}`,
+		name: 'Public test account',
+	}
+	let finish!: (value: (typeof account)[]) => void
+	const get = vi.fn(
+		() =>
+			new Promise<(typeof account)[]>((resolve) => {
+				finish = resolve
+			}),
+	)
+	const enable = vi.fn().mockResolvedValue({ accounts: { get }, signer: {} })
+	const injectedWeb3 = { [id]: { enable } }
+	vi.stubGlobal('window', { injectedWeb3, parent: { injectedWeb3 } })
+	core.setStatus(id, 'installed')
+	try {
+		const reconnect = extensions.connectExtension('Cloud Apps test', 0, id)
+		await vi.waitFor(() => expect(get).toHaveBeenCalledOnce())
+		// Core has enabled the wallet, but the menu still shows its previous state.
+		expect(core.canConnect(id)).toBe(false)
+		state.status = 'installed'
+		state.canConnect = false
+		connect.mockImplementation(() =>
+			extensions.connectExtension('Cloud Apps test', 0, id),
+		)
+		const clicked = renderButton().onClick?.()
+		finish([account])
+		await Promise.all([reconnect, clicked])
+		expect(connect).toHaveBeenCalledOnce()
+		expect(enable).toHaveBeenCalledOnce()
+		expect(alert).not.toHaveBeenCalled()
+		expect(connectedEvent).toHaveBeenCalledOnce()
+		expect(openModal).toHaveBeenCalledOnce()
+	} finally {
+		accounts.unsubAll()
+		core.resetAccounts()
+		core.removeStatus(id)
+		vi.stubGlobal('window', undefined)
+	}
+})
+
 test('Disconnect removes the canonical reconnect preference and preserves other wallets', async () => {
 	state.status = 'connected'
 	state.canConnect = false

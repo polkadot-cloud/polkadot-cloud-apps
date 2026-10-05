@@ -24,15 +24,13 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 	const { network } = useNetwork()
 	const { openModal } = useOverlay().modal
 	const { connectExtension } = useExtensionAccounts()
-	const { extensionsStatus, extensionCanConnect, extensionInstalled } =
-		useExtensions()
+	const { extensionsStatus } = useExtensions()
 
 	const { id, title, website } = extension
 	const [connecting, setConnecting] = useState(false)
 	const connectingRef = useRef(false)
 
-	const isInstalled = extensionInstalled(id)
-	const canConnect = extensionCanConnect(id)
+	const isInstalled = extensionsStatus[id] !== undefined
 	const connected = extensionsStatus[id] === 'connected'
 
 	const Icon = getExtensionIcon(id)
@@ -44,25 +42,21 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 			return
 		}
 		if (!connected) {
-			if (canConnect) {
-				connectingRef.current = true
-				setConnecting(true)
-				try {
-					if (!(await connectExtension(id))) {
-						alert('Unable to connect to the extension.')
-						return
-					}
-					onExtensionConnectedEvent(network, id)
-					setOpen(false)
-					openModal({ key: 'Accounts' })
-				} catch {
+			connectingRef.current = true
+			setConnecting(true)
+			try {
+				if (!(await connectExtension(id))) {
 					alert('Unable to connect to the extension.')
-				} finally {
-					connectingRef.current = false
-					setConnecting(false)
+					return
 				}
-			} else {
+				onExtensionConnectedEvent(network, id)
+				setOpen(false)
+				openModal({ key: 'Accounts' })
+			} catch {
 				alert('Unable to connect to the extension.')
+			} finally {
+				connectingRef.current = false
+				setConnecting(false)
 			}
 		} else {
 			if (confirm(t('disconnectFromExtension'))) {
