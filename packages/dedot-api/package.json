@@ -14,8 +14,8 @@
 	},
 	"dependencies": {
 		"@dedot/chaintypes": "^0.280.0",
-		"@polkadot-cloud/connect-core": "^1.2.1",
-		"@polkadot-cloud/connect-proxies": "^0.5.1",
+		"@polkadot-cloud/connect-core": "^1.2.2",
+		"@polkadot-cloud/connect-proxies": "^0.5.2",
 		"@polkadot-cloud/util-dedot": "^0.1.0",
 		"@polkadot-cloud/utils": "^0.4.1",
 		"consts": "workspace:*",

@@ -15,7 +15,7 @@
 	},
 	"dependencies": {
 		"@dedot/chain-specs": "^0.10.0",
-		"@polkadot-cloud/connect-proxies": "^0.5.1",
+		"@polkadot-cloud/connect-proxies": "^0.5.2",
 		"@substrate/connect-known-chains": "^1.10.2",
 		"assets": "workspace:*"
 	},

@@ -17,7 +17,7 @@
 	},
 	"devDependencies": {
 		"@dedot/chaintypes": "^0.280.0",
-		"@polkadot-cloud/connect-core": "^1.2.1",
+		"@polkadot-cloud/connect-core": "^1.2.2",
 		"bignumber.js": "^11.1.5"
 	}
 }

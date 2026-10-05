@@ -176,17 +176,17 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
@@ -297,17 +297,17 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/hooks':
         specifier: ^0.1.0
         version: 0.1.0(react@19.3.0)
@@ -487,17 +487,17 @@ importers:
         specifier: ^3.3.1
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-vault':
-        specifier: ^1.2.0
-        version: 1.2.0(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^1.2.1
+        version: 1.2.1(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
@@ -620,17 +620,17 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
@@ -742,8 +742,8 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@substrate/connect-known-chains':
         specifier: ^1.10.2
         version: 1.10.3
@@ -795,11 +795,11 @@ importers:
         specifier: ^0.280.0
         version: 0.280.0(dedot@1.4.0(typescript@6.0.3))
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/util-dedot':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))
@@ -838,8 +838,8 @@ importers:
   packages/global-bus:
     dependencies:
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/utils':
         specifier: ^0.4.1
         version: 0.4.1
@@ -869,14 +869,14 @@ importers:
   packages/hooks:
     dependencies:
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/utils':
         specifier: ^0.4.1
         version: 0.4.1
@@ -1050,17 +1050,17 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-vault':
-        specifier: ^1.2.0
-        version: 1.2.0(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^1.2.1
+        version: 1.2.1(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       consts:
         specifier: workspace:*
         version: link:../consts
@@ -1105,8 +1105,8 @@ importers:
         specifier: ^0.280.0
         version: 0.280.0(dedot@1.4.0(typescript@6.0.3))
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5
@@ -1129,20 +1129,20 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-vault':
-        specifier: ^1.2.0
-        version: 1.2.0(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^1.2.1
+        version: 1.2.1(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@polkadot-cloud/ui':
         specifier: ^0.1.0
         version: 0.1.0(dedot@1.4.0(typescript@6.0.3))(react@19.3.0)
@@ -1376,20 +1376,20 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.0)
       '@polkadot-cloud/connect':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-core':
-        specifier: ^1.2.1
-        version: 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+        specifier: ^1.2.2
+        version: 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       '@polkadot-cloud/connect-ledger':
-        specifier: ^1.3.1
-        version: 1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
+        specifier: ^1.3.2
+        version: 1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)
       '@polkadot-cloud/connect-proxies':
-        specifier: ^0.5.1
-        version: 0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+        specifier: ^0.5.2
+        version: 0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@polkadot-cloud/connect-vault':
-        specifier: ^1.2.0
-        version: 1.2.0(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^1.2.1
+        version: 1.2.1(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@polkadot-cloud/hooks':
         specifier: ^0.1.0
         version: 0.1.0(react@19.3.0)
@@ -2232,41 +2232,41 @@ packages:
     resolution: {integrity: sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==}
     engines: {node: '>= 10.0.0'}
 
-  '@polkadot-cloud/connect-core@1.2.1':
-    resolution: {integrity: sha512-86ZEQ01R9dNRcF1Hpo4yhNcSd/dqIHC4NNDZuUPZjEaAqNGVjkpCG2EmBqo+AlvVAABjq6cutYFtOR5B0IWIaQ==}
+  '@polkadot-cloud/connect-core@1.2.2':
+    resolution: {integrity: sha512-ZVjcJLYZk4kC36cTD6/OMnMBD78NHQJdQMzE5hAvwu40sqGUwzXjELZDx4eSY7L/OEa7aggy4bILtd+iieAWcQ==}
     peerDependencies:
       dedot: ^1
       rxjs: ^7.8.2
 
-  '@polkadot-cloud/connect-ledger@1.3.1':
-    resolution: {integrity: sha512-OW6StO3W3jKNGrnzzfGtbir7isAGToGpP53GBuifEqUdFlpT/eoLTbFHf+RkO5tBg29yYIURFPt8y15BewNUzg==}
+  '@polkadot-cloud/connect-ledger@1.3.2':
+    resolution: {integrity: sha512-+pJLSLvMwsWRATzF2PTcx950RxjHvveNzWz7A74DKMUq7OORZmQTFYxti0W4Rver/56fdkqrndSV3GPJ9n1k3g==}
     peerDependencies:
-      '@polkadot-cloud/connect': 1.2.1
-      '@polkadot-cloud/connect-core': 1.2.1
+      '@polkadot-cloud/connect': 1.2.2
+      '@polkadot-cloud/connect-core': 1.2.2
       dedot: ^1
       react: ^19.1.0
       react-dom: ^19.1.0
 
-  '@polkadot-cloud/connect-proxies@0.5.1':
-    resolution: {integrity: sha512-Up/+OCPnMrUxb4D57tK7+aMZhEdUnOfvCaHE1F2BirL8+uSThVz83esS9h3EL/PzGg5C+R2OET7lgr5qe/E6MQ==}
+  '@polkadot-cloud/connect-proxies@0.5.2':
+    resolution: {integrity: sha512-HRbiwueoEqhhs7E1LKBi4eBpbeu3Jq0KKF92hQ8eEt+55BfIcwpgurEK2sYnIo24BSGNDSTXES+dVWXrZ0p9Pg==}
     peerDependencies:
-      '@polkadot-cloud/connect': 1.2.1
+      '@polkadot-cloud/connect': 1.2.2
       dedot: ^1
       react: ^19.1.0
       react-dom: ^19.1.0
       rxjs: ^7.8.2
 
-  '@polkadot-cloud/connect-vault@1.2.0':
-    resolution: {integrity: sha512-36nowwYwJJ6NHGOR/3VqqMfZ8sle8/xwNwy0xvPJUhW9kzjvjIejxoHVmt4bIEjtPs46DHiAzDGSyTcpaPOuSg==}
+  '@polkadot-cloud/connect-vault@1.2.1':
+    resolution: {integrity: sha512-jLJF4Ih4xg9faThNBZNSDa52h5Qs3x5wrzY5DKuG8gCga0xLb+p4Ltc20QWKiaP+QLXJOZlslryIHo1ealXceQ==}
     peerDependencies:
-      '@polkadot-cloud/connect': ^1.2.0
-      '@polkadot-cloud/connect-core': ^1.2.0
+      '@polkadot-cloud/connect': ^1.2.2
+      '@polkadot-cloud/connect-core': ^1.2.2
       dedot: ^1
       react: ^19.1.0
       react-dom: ^19.1.0
 
-  '@polkadot-cloud/connect@1.2.1':
-    resolution: {integrity: sha512-+Nw/FjNo9er43fHphaUo/9k3+MHBNUwoNe4KcbOCdeupSRrRCqG4TQsKpEjjNoN8AZhSM33mORVFehjXbc63lQ==}
+  '@polkadot-cloud/connect@1.2.2':
+    resolution: {integrity: sha512-RbxEOBO0qdxx5bWLNRkbb4ljjJtg0opxMEbA1LKq9Fy4HuY3CELX13v3ClXW9vEece+tFyBN9ZhvGXxIhhUn4Q==}
     peerDependencies:
       dedot: ^1
       react: ^19.1.0
@@ -2275,6 +2275,11 @@ packages:
 
   '@polkadot-cloud/hooks@0.1.0':
     resolution: {integrity: sha512-/irhUIIwY3ti4nb7bKt55vUN+56+eDUHuwky3EHewRiMIqCCN2Y9BhqFUQIv9+IEjMNTuOYq4vt4EH/UYA6hxw==}
+    peerDependencies:
+      react: ^19.1.0
+
+  '@polkadot-cloud/hooks@0.1.1':
+    resolution: {integrity: sha512-N9PmyMXFMk8ZmL6ZhawZiihox3QsK3qypiqbWJs3MqN48qcEOop5J/g+FsGJWdkghQDgaD86+ynoSxPVX/iN6A==}
     peerDependencies:
       react: ^19.1.0
 
@@ -2289,8 +2294,16 @@ packages:
     peerDependencies:
       dedot: ^1
 
+  '@polkadot-cloud/util-dedot@0.1.1':
+    resolution: {integrity: sha512-SD7AHugEzWXiFvtJmJw1QrAKhdlC9gKZiC++C0woTK3AzUqrYw1DMJzoSel0K8NUk4EJjjEZOdtN1yvM9qSiaw==}
+    peerDependencies:
+      dedot: ^1
+
   '@polkadot-cloud/utils@0.4.1':
     resolution: {integrity: sha512-x/dB1pQowkTjrITj2wSyq6Ve4zSh8ZA2p5D2/ROP2ay20FG0yM5GuK68YyWAbMa+hznkiXlmawEWn66kqgDxgA==}
+
+  '@polkadot-cloud/utils@0.4.2':
+    resolution: {integrity: sha512-tuYcFyAyev1LJVweZZeEcRrSNeOhTDgoQ7vTvoWwnZ2EnAmLsCVhECdtVQDF436Kd0fNoLr8PuK7GFBSAvuxJA==}
 
   '@polkadot/keyring@14.0.3':
     resolution: {integrity: sha512-ozp1dQwaHCjgX/fpTTORmHjxdUNQnyiTVJszpzUaUpvtH/IGZhSU/mSHXMqNETS/g57vQa7NatIDcWfyR9abyA==}
@@ -5734,20 +5747,20 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.6.0
     optional: true
 
-  '@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)':
+  '@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)':
     dependencies:
-      '@polkadot-cloud/util-dedot': 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@polkadot-cloud/utils': 0.4.1
+      '@polkadot-cloud/util-dedot': 0.1.1(dedot@1.4.0(typescript@6.0.3))
+      '@polkadot-cloud/utils': 0.4.2
       dedot: 1.4.0(typescript@6.0.3)
       rxjs: 7.8.2
 
-  '@polkadot-cloud/connect-ledger@1.3.1(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)':
+  '@polkadot-cloud/connect-ledger@1.3.2(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(debug@4.4.3(supports-color@10.2.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@10.2.2)':
     dependencies:
       '@ledgerhq/hw-transport-webhid': 6.36.0
-      '@polkadot-cloud/connect': 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
-      '@polkadot-cloud/hooks': 0.1.0(react@19.3.0)
-      '@polkadot-cloud/utils': 0.4.1
+      '@polkadot-cloud/connect': 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+      '@polkadot-cloud/hooks': 0.1.1(react@19.3.0)
+      '@polkadot-cloud/utils': 0.4.2
       '@zondax/ledger-substrate': 2.3.7(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       buffer: 6.0.3
       dedot: 1.4.0(typescript@6.0.3)
@@ -5757,22 +5770,22 @@ snapshots:
       - debug
       - supports-color
 
-  '@polkadot-cloud/connect-proxies@0.5.1(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)':
+  '@polkadot-cloud/connect-proxies@0.5.2(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)':
     dependencies:
       '@dedot/chaintypes': 0.263.0(dedot@1.4.0(typescript@6.0.3))
-      '@polkadot-cloud/connect': 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
-      '@polkadot-cloud/hooks': 0.1.0(react@19.3.0)
-      '@polkadot-cloud/utils': 0.4.1
+      '@polkadot-cloud/connect': 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+      '@polkadot-cloud/hooks': 0.1.1(react@19.3.0)
+      '@polkadot-cloud/utils': 0.4.2
       dedot: 1.4.0(typescript@6.0.3)
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
       rxjs: 7.8.2
 
-  '@polkadot-cloud/connect-vault@1.2.0(@polkadot-cloud/connect-core@1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@polkadot-cloud/connect-vault@1.2.1(@polkadot-cloud/connect-core@1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2))(@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2))(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
-      '@polkadot-cloud/connect': 1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
-      '@polkadot-cloud/connect-core': 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+      '@polkadot-cloud/connect': 1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
+      '@polkadot-cloud/connect-core': 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
       dedot: 1.4.0(typescript@6.0.3)
       html5-qrcode: 2.3.8
       qrcode-generator: 1.5.0
@@ -5780,18 +5793,22 @@ snapshots:
       react-dom: 19.3.0(react@19.3.0)
       xxhash-wasm: 1.1.0
 
-  '@polkadot-cloud/connect@1.2.1(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)':
+  '@polkadot-cloud/connect@1.2.2(dedot@1.4.0(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)':
     dependencies:
-      '@polkadot-cloud/connect-core': 1.2.1(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
-      '@polkadot-cloud/hooks': 0.1.0(react@19.3.0)
-      '@polkadot-cloud/util-dedot': 0.1.0(dedot@1.4.0(typescript@6.0.3))
-      '@polkadot-cloud/utils': 0.4.1
+      '@polkadot-cloud/connect-core': 1.2.2(dedot@1.4.0(typescript@6.0.3))(rxjs@7.8.2)
+      '@polkadot-cloud/hooks': 0.1.1(react@19.3.0)
+      '@polkadot-cloud/util-dedot': 0.1.1(dedot@1.4.0(typescript@6.0.3))
+      '@polkadot-cloud/utils': 0.4.2
       dedot: 1.4.0(typescript@6.0.3)
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
       rxjs: 7.8.2
 
   '@polkadot-cloud/hooks@0.1.0(react@19.3.0)':
+    dependencies:
+      react: 19.3.0
+
+  '@polkadot-cloud/hooks@0.1.1(react@19.3.0)':
     dependencies:
       react: 19.3.0
 
@@ -5806,7 +5823,15 @@ snapshots:
     dependencies:
       dedot: 1.4.0(typescript@6.0.3)
 
+  '@polkadot-cloud/util-dedot@0.1.1(dedot@1.4.0(typescript@6.0.3))':
+    dependencies:
+      dedot: 1.4.0(typescript@6.0.3)
+
   '@polkadot-cloud/utils@0.4.1':
+    dependencies:
+      '@types/react': 19.3.0
+
+  '@polkadot-cloud/utils@0.4.2':
     dependencies:
       '@types/react': 19.3.0
 
@@ -6734,7 +6759,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
