@@ -1,9 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
+// @vitest-environment jsdom
 
-import { afterAll, beforeEach, expect, test, vi } from 'vitest'
-import { createElement } from '../../app-staking/node_modules/react/index.js'
-import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import { act, createElement } from 'react'
+import { createRoot } from 'react-dom/client'
+import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
+import * as core from '../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js'
 import { Extension } from '../../ui-app/src/Headers/Popovers/ConnectPopover/Extension'
 import type { ButtonMonoInvertProps } from '../../ui-buttons/src/types'
 
@@ -33,6 +35,7 @@ const {
 		state: {
 			stored,
 			status: 'installed',
+			network: 'polkadot',
 			canConnect: true,
 			button: undefined as ButtonMonoInvertProps | undefined,
 		},
@@ -59,7 +62,7 @@ vi.mock('../../event-tracking/src/index', () => ({
 	onExtensionConnectedEvent: connectedEvent,
 }))
 vi.mock('../../hooks/src/useNetwork', () => ({
-	useNetwork: () => ({ network: 'polkadot' }),
+	useNetwork: () => ({ network: state.network }),
 }))
 vi.mock('../../ui-app/node_modules/react-i18next/dist/es/index.js', () => ({
 	useTranslation: () => ({ t: (key: string) => key }),
@@ -67,7 +70,7 @@ vi.mock('../../ui-app/node_modules/react-i18next/dist/es/index.js', () => ({
 vi.mock('../../ui-buttons/src/index', () => ({
 	ButtonMonoInvert: (props: ButtonMonoInvertProps) => {
 		state.button = props
-		return createElement('button', null, props.text)
+		return createElement('button', { type: 'button' }, props.text)
 	},
 }))
 vi.mock('../../ui-core/src/popover/index.tsx', () => ({
@@ -77,31 +80,50 @@ vi.mock('../../ui-overlay/src/index', () => ({
 	useOverlay: () => ({ modal: { openModal } }),
 }))
 
+let root: ReturnType<typeof createRoot>
+let container: HTMLDivElement
+
 beforeEach(() => {
 	vi.resetAllMocks()
 	state.stored.clear()
 	state.status = 'installed'
+	state.network = 'polkadot'
 	state.canConnect = true
 	state.button = undefined
-	connect.mockResolvedValue(true)
+	core.setStatus('cloud-signer', 'installed')
+	connect.mockImplementation(async () => {
+		core.setStatus('cloud-signer', 'connected')
+		return true
+	})
 	confirm.mockReturnValue(true)
+	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
+	container = document.createElement('div')
+	document.body.append(container)
+	root = createRoot(container)
+})
+
+afterEach(() => {
+	act(() => root.unmount())
+	container.remove()
 })
 
 afterAll(() => vi.unstubAllGlobals())
 
 const renderButton = () => {
-	renderToStaticMarkup(
-		createElement(Extension, {
-			extension: {
-				id: 'cloud-signer',
-				title: 'Cloud Signer',
-				website: 'polkadot.cloud',
-				category: 'web-extension',
-				features: '*',
-			},
-			last: true,
-			setOpen,
-		}),
+	act(() =>
+		root.render(
+			createElement(Extension, {
+				extension: {
+					id: 'cloud-signer',
+					title: 'Cloud Signer',
+					website: 'polkadot.cloud',
+					category: 'web-extension',
+					features: '*',
+				},
+				last: true,
+				setOpen,
+			}),
+		),
 	)
 	return state.button!
 }
@@ -133,6 +155,7 @@ test('a pending approval waits for success and ignores repeated clicks', async (
 	expect(connectedEvent).not.toHaveBeenCalled()
 	expect(setOpen).not.toHaveBeenCalled()
 	expect(openModal).not.toHaveBeenCalled()
+	core.setStatus('cloud-signer', 'connected')
 	approve(true)
 	await connecting
 	expect(connectedEvent).toHaveBeenCalledExactlyOnceWith(
@@ -177,7 +200,7 @@ test('the first click joins a pending reconnect despite a stale menu status', as
 	)
 	const enable = vi.fn().mockResolvedValue({ accounts: { get }, signer: {} })
 	const injectedWeb3 = { [id]: { enable } }
-	vi.stubGlobal('window', { injectedWeb3, parent: { injectedWeb3 } })
+	Reflect.set(window, 'injectedWeb3', injectedWeb3)
 	core.setStatus(id, 'installed')
 	try {
 		const reconnect = extensions.connectExtension('Cloud Apps test', 0, id)
@@ -201,7 +224,7 @@ test('the first click joins a pending reconnect despite a stale menu status', as
 		accounts.unsubAll()
 		core.resetAccounts()
 		core.removeStatus(id)
-		vi.stubGlobal('window', undefined)
+		Reflect.deleteProperty(window, 'injectedWeb3')
 	}
 })
 
@@ -230,4 +253,134 @@ test('cancelled Disconnect preserves the reconnect preference', async () => {
 		JSON.stringify(['cloud-signer']),
 	)
 	expect(reload).not.toHaveBeenCalled()
+})
+
+test.each(['approved', 'failed', 'rejected'])(
+	'a request finishing after the menu closes has no UI effects: %s',
+	async (outcome) => {
+		let finish!: (value: boolean) => void
+		let reject!: (error: Error) => void
+		connect.mockReturnValue(
+			new Promise<boolean>((resolve, fail) => {
+				finish = resolve
+				reject = fail
+			}),
+		)
+		const pending = renderButton().onClick?.()
+		act(() => root.render(null))
+		core.setStatus('cloud-signer', 'connected')
+		if (outcome === 'rejected') reject(new Error('User rejected request.'))
+		else finish(outcome === 'approved')
+		await pending
+		expect(alert).not.toHaveBeenCalled()
+		expect(connectedEvent).not.toHaveBeenCalled()
+		expect(setOpen).not.toHaveBeenCalled()
+		expect(openModal).not.toHaveBeenCalled()
+	},
+)
+
+test('reopening the menu during approval only completes the current menu action', async () => {
+	let approve!: (value: boolean) => void
+	const approval = new Promise<boolean>((resolve) => {
+		approve = resolve
+	})
+	connect.mockReturnValue(approval)
+	const oldClick = renderButton().onClick?.()
+	act(() => root.render(null))
+	const newClick = renderButton().onClick?.()
+	core.setStatus('cloud-signer', 'connected')
+	approve(true)
+	await Promise.all([oldClick, newClick])
+	expect(connectedEvent).toHaveBeenCalledOnce()
+	expect(setOpen).toHaveBeenCalledOnce()
+	expect(openModal).toHaveBeenCalledOnce()
+})
+
+test('a network change invalidates the old menu action and leaves the new one usable', async () => {
+	let approve!: (value: boolean) => void
+	connect.mockReturnValueOnce(
+		new Promise<boolean>((resolve) => {
+			approve = resolve
+		}),
+	)
+	const oldClick = renderButton().onClick?.()
+	state.network = 'kusama'
+	const currentButton = renderButton()
+	expect(currentButton.disabled).toBe(false)
+	core.setStatus('cloud-signer', 'connected')
+	approve(true)
+	await oldClick
+	expect(connectedEvent).not.toHaveBeenCalled()
+	expect(openModal).not.toHaveBeenCalled()
+	await currentButton.onClick?.()
+	expect(connectedEvent).toHaveBeenCalledExactlyOnceWith(
+		'kusama',
+		'cloud-signer',
+	)
+})
+
+test('revocation before the connection result reaches the menu does not fire success effects', async () => {
+	connect.mockImplementation(async () => {
+		core.setStatus('cloud-signer', 'not_authenticated')
+		return true
+	})
+	await renderButton().onClick?.()
+	expect(connectedEvent).not.toHaveBeenCalled()
+	expect(openModal).not.toHaveBeenCalled()
+	expect(alert).toHaveBeenCalledOnce()
+})
+
+test('an Accounts UI failure is not reported as a wallet connection failure', async () => {
+	openModal.mockImplementation(() => {
+		throw new Error('Accounts UI failed')
+	})
+	await expect(renderButton().onClick?.()).rejects.toThrow('Accounts UI failed')
+	expect(alert).not.toHaveBeenCalled()
+	expect(core.getStatus('cloud-signer')).toBe('connected')
+})
+
+test('Disconnect stops live updates from restoring the reconnect preference before reload', async () => {
+	const extensions = await import(
+		'../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
+	)
+	const accounts = await import(
+		'../../ui-app/node_modules/@polkadot-cloud/connect-core/accounts/index.js'
+	)
+	const id = 'cloud-signer'
+	const account = {
+		address: `0x${'11'.repeat(32)}`,
+		name: 'Public test account',
+	}
+	let publish!: (value: (typeof account)[]) => void
+	const unsubscribe = vi.fn()
+	Reflect.set(window, 'injectedWeb3', {
+		[id]: {
+			enable: async () => ({
+				accounts: {
+					get: async () => [account],
+					subscribe: (callback: typeof publish) => {
+						publish = callback
+						return unsubscribe
+					},
+				},
+				signer: {},
+			}),
+		},
+	})
+	try {
+		expect(await extensions.connectExtension('Cloud Apps test', 0, id)).toBe(
+			true,
+		)
+		state.status = 'connected'
+		await renderButton().onClick?.()
+		publish([account])
+		expect(core.getActiveExtensionsLocal()).toEqual([])
+		expect(unsubscribe).toHaveBeenCalledOnce()
+		expect(core.getStatus(id)).not.toBe('connected')
+		expect(reload).toHaveBeenCalledOnce()
+	} finally {
+		accounts.unsubAll()
+		core.resetAccounts()
+		Reflect.deleteProperty(window, 'injectedWeb3')
+	}
 })

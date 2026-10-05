@@ -8,11 +8,12 @@ import {
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
-import { removeExtensionFromLocal } from '@polkadot-cloud/connect-core'
+import { getStatus } from '@polkadot-cloud/connect-core'
+import { disconnectExtension } from '@polkadot-cloud/connect-core/extensions'
 import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonMonoInvert } from 'ui-buttons'
 import { ConnectItem } from 'ui-core/popover'
@@ -29,6 +30,15 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 	const { id, title, website } = extension
 	const [connecting, setConnecting] = useState(false)
 	const connectingRef = useRef(false)
+	const requestVersion = useRef(0)
+
+	useEffect(() => {
+		connectingRef.current = false
+		setConnecting(false)
+		return () => {
+			requestVersion.current++
+		}
+	}, [id, network])
 
 	const isInstalled = extensionsStatus[id] !== undefined
 	const connected = extensionsStatus[id] === 'connected'
@@ -38,29 +48,38 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 
 	// Handle connect and disconnect from extension.
 	const handleClick = async () => {
-		if (connectingRef.current) {
+		if (connectingRef.current || !isInstalled) {
 			return
 		}
 		if (!connected) {
+			const version = ++requestVersion.current
 			connectingRef.current = true
 			setConnecting(true)
+			let approved = false
 			try {
-				if (!(await connectExtension(id))) {
-					alert('Unable to connect to the extension.')
-					return
-				}
-				onExtensionConnectedEvent(network, id)
-				setOpen(false)
-				openModal({ key: 'Accounts' })
+				approved = await connectExtension(id)
 			} catch {
-				alert('Unable to connect to the extension.')
+				// A provider may reject instead of returning a failed connection result.
 			} finally {
-				connectingRef.current = false
-				setConnecting(false)
+				if (version === requestVersion.current) {
+					connectingRef.current = false
+					setConnecting(false)
+				}
 			}
+			// Closing the menu or changing networks invalidates its pending UI action.
+			if (version !== requestVersion.current) {
+				return
+			}
+			if (!approved || getStatus(id) !== 'connected') {
+				alert('Unable to connect to the extension.')
+				return
+			}
+			onExtensionConnectedEvent(network, id)
+			setOpen(false)
+			openModal({ key: 'Accounts' })
 		} else {
 			if (confirm(t('disconnectFromExtension'))) {
-				removeExtensionFromLocal(id)
+				disconnectExtension(id)
 				location.reload()
 			}
 		}
