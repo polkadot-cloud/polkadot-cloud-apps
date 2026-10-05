@@ -20,7 +20,7 @@ export const Wallets = ({
 
 	const extensionItems = installed.concat(other)
 
-	const devTools = extensionItems.filter((ext) => ext.id === 'polkadot-js')
+	const devTools = installed.filter((ext) => ext.id === 'polkadot-js')
 	const otherExtensions = extensionItems.filter(
 		(ext) => ext.id !== 'polkadot-js',
 	)
@@ -73,16 +73,20 @@ export const Wallets = ({
 					/>
 				</section>
 			))}
-			<h4>{t('developerTools', { ns: 'modals' })}</h4>
-			{devTools.map((extension, i) => (
-				<section key={`extension_item_${extension.id}`}>
-					<Extension
-						extension={extension}
-						last={i === devTools.length - 1}
-						setOpen={setOpen}
-					/>
-				</section>
-			))}
+			{devTools.length > 0 && (
+				<>
+					<h4>{t('developerTools', { ns: 'modals' })}</h4>
+					{devTools.map((extension, i) => (
+						<section key={`extension_item_${extension.id}`}>
+							<Extension
+								extension={extension}
+								last={i === devTools.length - 1}
+								setOpen={setOpen}
+							/>
+						</section>
+					))}
+				</>
+			)}
 		</>
 	)
 }
