@@ -1,5 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
+// biome-ignore-all lint/correctness/useHookAtTopLevel: Gate hooks use mocked providers and query hooks; tests call them directly to inspect query options.
 
 import {
 	type FetchQueryOptions,

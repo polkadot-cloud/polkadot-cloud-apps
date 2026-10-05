@@ -1,11 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import type { Validator, ValidatorOverview } from 'types'
 import { stringToBn } from 'utils'
 import { expect, test, vi } from 'vitest'
-import { createElement } from '../../app-staking/node_modules/react/index.js'
-import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { EraStatus } from '../../app-staking/src/library/ListItem/Labels/EraStatus'
 import { injectValidatorListData } from '../../app-staking/src/library/ValidatorList/overview'
 import { useValidatorSelfStake } from '../../app-staking/src/library/ValidatorList/useValidatorSelfStake'
@@ -181,16 +181,17 @@ test('failed overview requests show unavailable instead of staying in sync', () 
 	expect(result.totalStake).toBeUndefined()
 })
 
-test('a failed background refresh retains a usable overview and recovery clears the error', () => {
-	const validators: Validator[] = [{ address: 'validator', prefs: null }]
-	const cached = new Map([['validator', overview]])
-	for (const error of [new Error('offline'), null]) {
+test.each([new Error('offline'), null])(
+	'a cached overview remains usable with background refresh error %s',
+	(error) => {
+		const validators: Validator[] = [{ address: 'validator', prefs: null }]
+		const cached = new Map([['validator', overview]])
 		const [validator] = injectValidatorListData(validators, cached, error)
 		expect(
 			useValidatorSummaryData({ ...props, ...validator }).statusLabel,
 		).toBe('listItemActive')
-	}
-})
+	},
+)
 
 vi.mock('../../hooks/src/useSyncing', () => ({
 	useSyncing: () => {
@@ -258,7 +259,7 @@ const BarFixture = ({
 			unit: 'DOT',
 			units: 10,
 		}),
-		retainmentWindow: 'THREE_MONTHS',
+		retainmentWindow: 'threeMonths',
 		onRetainmentWindowChange: () => {},
 	})
 
