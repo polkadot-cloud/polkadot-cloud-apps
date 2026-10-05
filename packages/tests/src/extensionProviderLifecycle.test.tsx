@@ -11,6 +11,7 @@ import {
 } from '../../ui-app/node_modules/@polkadot-cloud/connect/index.js'
 import { reconnectExtensions } from '../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
 import { addExtensionToLocal } from '../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js'
+import { createExtensionWallet, extensionId } from './extensionWallet'
 
 vi.hoisted(() => {
 	vi.stubGlobal('localStorage', window.localStorage)
@@ -20,25 +21,9 @@ vi.hoisted(() => {
 test('the installed providers expose a refreshed signer to getAccount after reconnect', async () => {
 	vi.useFakeTimers()
 	localStorage.clear()
-	const id = 'cloud-signer'
-	const account = {
-		address: `0x${'11'.repeat(32)}`,
-		name: 'Public test account',
-	}
-	const originalSigner = { signPayload: vi.fn() }
-	const extension = {
-		accounts: {
-			get: async () => [account],
-			subscribe: (callback: (value: (typeof account)[]) => void) => {
-				callback([account])
-				return vi.fn()
-			},
-		},
-		signer: originalSigner,
-	}
-	const enable = vi.fn().mockResolvedValue(extension)
-	Reflect.set(window, 'injectedWeb3', { [id]: { enable } })
-	addExtensionToLocal(id)
+	const { extension, enable, injectedWeb3 } = createExtensionWallet()
+	Reflect.set(window, 'injectedWeb3', injectedWeb3)
+	addExtensionToLocal(extensionId)
 	let imported!: ReturnType<typeof useImportedAccounts>
 	const Probe = () => {
 		imported = useImportedAccounts()
@@ -56,10 +41,13 @@ test('the installed providers expose a refreshed signer to getAccount after reco
 			),
 		)
 		await act(async () => vi.advanceTimersByTimeAsync(1000))
-		const identity = { address: imported.accounts[0].address, source: id }
+		const identity = {
+			address: imported.accounts[0].address,
+			source: extensionId,
+		}
 		expect(imported.getAccount(identity)).toHaveProperty(
 			'signer',
-			originalSigner,
+			extension.signer,
 		)
 		const replacementSigner = { signPayload: vi.fn() }
 		enable.mockResolvedValue({ ...extension, signer: replacementSigner })

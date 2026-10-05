@@ -2,13 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
+import {
+	extensionAccount as account,
+	createExtensionWallet,
+	extensionId as id,
+} from './extensionWallet'
 
-const id = 'cloud-signer'
-const account = {
-	address: `0x${'11'.repeat(32)}`,
-	name: 'Public test account',
-	source: id,
-}
 let core: typeof import('../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js')
 let extensions: typeof import('../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js')
 let accounts: typeof import('../../ui-app/node_modules/@polkadot-cloud/connect-core/accounts/index.js')
@@ -44,28 +43,10 @@ afterEach(() => {
 })
 
 const provider = () => {
-	let publish: (value: (typeof account)[]) => void = () => {}
-	const unsubscribe = vi.fn()
-	const extension = {
-		accounts: {
-			get: vi.fn().mockResolvedValue([account]),
-			subscribe: vi.fn((callback: typeof publish) => {
-				publish = callback
-				callback([account])
-				return unsubscribe
-			}),
-		},
-		signer: { signPayload: vi.fn() },
-	}
-	const enable = vi.fn().mockResolvedValue(extension)
-	const injectedWeb3 = { [id]: { enable } }
+	const wallet = createExtensionWallet()
+	const { injectedWeb3 } = wallet
 	vi.stubGlobal('window', { injectedWeb3, parent: { injectedWeb3 } })
-	return {
-		extension,
-		enable,
-		unsubscribe,
-		publish: (value: (typeof account)[]) => publish(value),
-	}
+	return wallet
 }
 
 const snapshot = () => {
@@ -95,12 +76,8 @@ test('connected status during account loading still joins the pending request', 
 	wallet.extension.accounts.subscribe.mockImplementation(
 		() => wallet.unsubscribe,
 	)
-	let finish!: (value: (typeof account)[]) => void
-	wallet.extension.accounts.get.mockReturnValue(
-		new Promise((resolve) => {
-			finish = resolve
-		}),
-	)
+	const loading = Promise.withResolvers<(typeof account)[]>()
+	wallet.extension.accounts.get.mockReturnValue(loading.promise)
 	const first = extensions.connectExtension('Cloud Apps test', 0, id)
 	await vi.waitFor(() =>
 		expect(wallet.extension.accounts.get).toHaveBeenCalledOnce(),
@@ -109,7 +86,7 @@ test('connected status during account loading still joins the pending request', 
 	expect(snapshot()).toEqual([])
 	const second = extensions.connectExtension('Cloud Apps test', 0, id)
 	expect(second).toBe(first)
-	finish([])
+	loading.resolve([])
 	expect(await second).toBe(false)
 	expect(core.getStatus(id)).toBe('not_authenticated')
 })
@@ -184,12 +161,8 @@ test('a failed account fetch still clears accounts when unsubscribe throws', asy
 
 test('Disconnect cancels a pending wallet without disturbing other accounts or preferences', async () => {
 	const wallet = provider()
-	let finish!: (value: (typeof account)[]) => void
-	wallet.extension.accounts.get.mockReturnValue(
-		new Promise((resolve) => {
-			finish = resolve
-		}),
-	)
+	const loading = Promise.withResolvers<(typeof account)[]>()
+	wallet.extension.accounts.get.mockReturnValue(loading.promise)
 	accounts.processExtensionAccounts({ source: 'talisman', ss58: 0 }, {}, [
 		account,
 	])
@@ -199,7 +172,7 @@ test('Disconnect cancels a pending wallet without disturbing other accounts or p
 		expect(wallet.extension.accounts.get).toHaveBeenCalledOnce(),
 	)
 	extensions.disconnectExtension(id)
-	finish([account])
+	loading.resolve([account])
 	expect(await connecting).toBe(false)
 	wallet.publish([account])
 	expect(snapshot()).toEqual([expect.objectContaining({ source: 'talisman' })])

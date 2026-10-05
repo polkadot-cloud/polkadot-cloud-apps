@@ -181,16 +181,17 @@ test('failed overview requests show unavailable instead of staying in sync', () 
 	expect(result.totalStake).toBeUndefined()
 })
 
-test('a failed background refresh retains a usable overview and recovery clears the error', () => {
-	const validators: Validator[] = [{ address: 'validator', prefs: null }]
-	const cached = new Map([['validator', overview]])
-	for (const error of [new Error('offline'), null]) {
+test.each([new Error('offline'), null])(
+	'a cached overview remains usable with background refresh error %s',
+	(error) => {
+		const validators: Validator[] = [{ address: 'validator', prefs: null }]
+		const cached = new Map([['validator', overview]])
 		const [validator] = injectValidatorListData(validators, cached, error)
 		expect(
 			useValidatorSummaryData({ ...props, ...validator }).statusLabel,
 		).toBe('listItemActive')
-	}
-})
+	},
+)
 
 vi.mock('../../hooks/src/useSyncing', () => ({
 	useSyncing: () => {
