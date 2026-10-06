@@ -1,0 +1,118 @@
+diff --git a/cjs/transform/accessibleTypes.js b/cjs/transform/accessibleTypes.js
+index 0766579c6f64975f5242375af7a205ee21d1acdc..1b04616c83278a5da686cb3e6879f4b7dabb7332 100644
+--- a/cjs/transform/accessibleTypes.js
++++ b/cjs/transform/accessibleTypes.js
+@@ -2,6 +2,7 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.getAccessibleTypes = void 0;
+ const codecs_1 = require("@dedot/codecs");
++const utils_1 = require("@dedot/utils");
+ /**
+  * Get accessible types from metadata
+  *
+@@ -58,7 +59,13 @@ function getAccessibleTypes(metadata) {
+     collectTypesFromId(metadata.latest.extrinsic.callTypeId);
+     collectTypesFromId(metadata.latest.extrinsic.addressTypeId);
+     collectTypesFromId(metadata.latest.extrinsic.signatureTypeId);
+-    metadata.latest.extrinsic.signedExtensions.forEach((ext) => {
++    const { signedExtensions, signedExtensionsByVersion } = metadata.latest.extrinsic;
++    // V4 uses extension version 0; V5-only types must not change the V4 digest.
++    const indexes = signedExtensionsByVersion.get(0);
++    (0, utils_1.assert)(indexes, 'No signed extensions found for extension version 0');
++    indexes.forEach((index) => {
++        const ext = signedExtensions[index];
++        (0, utils_1.assert)(ext, 'Invalid signed extension index for extension version 0');
+         collectTypesFromId(ext.typeId);
+         collectTypesFromId(ext.additionalSigned);
+     });
+diff --git a/cjs/transform/metadata.js b/cjs/transform/metadata.js
+index 07b7daedcedee325d65911fe22dd76183504415b..74763d67629080e1c37bc1768f931e9d1da80fee 100644
+--- a/cjs/transform/metadata.js
++++ b/cjs/transform/metadata.js
+@@ -171,16 +171,23 @@ function generateExtrinsicMetadata(metadata, accessibleTypes) {
+     const extrinsic = metadata.latest.extrinsic;
+     (0, utils_1.assert)(extrinsic.versions.includes(codecs_1.DEFAULT_EXTRINSIC_VERSION), // --
+     'Extrinsic Version 4 Not Found');
++    // Match the V4 payload codec, including the version-zero extension order.
++    const indexes = extrinsic.signedExtensionsByVersion.get(0);
++    (0, utils_1.assert)(indexes, 'No signed extensions found for extension version 0');
+     return {
+         version: codecs_1.DEFAULT_EXTRINSIC_VERSION,
+         addressTypeId: generateTypeRef(extrinsic.addressTypeId, registry, accessibleTypes),
+         callTypeId: generateTypeRef(extrinsic.callTypeId, registry, accessibleTypes),
+         signatureTypeId: generateTypeRef(extrinsic.signatureTypeId, registry, accessibleTypes),
+-        signedExtensions: extrinsic.signedExtensions.map((ext) => ({
+-            identifier: ext.ident,
+-            includedInExtrinsic: generateTypeRef(ext.typeId, registry, accessibleTypes),
+-            includedInSignedData: generateTypeRef(ext.additionalSigned, registry, accessibleTypes),
+-        })),
++        signedExtensions: indexes.map((index) => {
++            const ext = extrinsic.signedExtensions[index];
++            (0, utils_1.assert)(ext, 'Invalid signed extension index for extension version 0');
++            return {
++                identifier: ext.ident,
++                includedInExtrinsic: generateTypeRef(ext.typeId, registry, accessibleTypes),
++                includedInSignedData: generateTypeRef(ext.additionalSigned, registry, accessibleTypes),
++            };
++        }),
+     };
+ }
+ exports.generateExtrinsicMetadata = generateExtrinsicMetadata;
+diff --git a/transform/accessibleTypes.js b/transform/accessibleTypes.js
+index c7c2f29ceca46fba0c7c1d4057f35a082066b0d3..0d22a5ec1b7a9cb4d6101c375dfecaf887c73e83 100644
+--- a/transform/accessibleTypes.js
++++ b/transform/accessibleTypes.js
+@@ -1,4 +1,5 @@
+ import { PortableRegistry } from '@dedot/codecs';
++import { assert } from '@dedot/utils';
+ /**
+  * Get accessible types from metadata
+  *
+@@ -55,7 +56,13 @@ export function getAccessibleTypes(metadata) {
+     collectTypesFromId(metadata.latest.extrinsic.callTypeId);
+     collectTypesFromId(metadata.latest.extrinsic.addressTypeId);
+     collectTypesFromId(metadata.latest.extrinsic.signatureTypeId);
+-    metadata.latest.extrinsic.signedExtensions.forEach((ext) => {
++    const { signedExtensions, signedExtensionsByVersion } = metadata.latest.extrinsic;
++    // V4 uses extension version 0; V5-only types must not change the V4 digest.
++    const indexes = signedExtensionsByVersion.get(0);
++    assert(indexes, 'No signed extensions found for extension version 0');
++    indexes.forEach((index) => {
++        const ext = signedExtensions[index];
++        assert(ext, 'Invalid signed extension index for extension version 0');
+         collectTypesFromId(ext.typeId);
+         collectTypesFromId(ext.additionalSigned);
+     });
+diff --git a/transform/metadata.js b/transform/metadata.js
+index 5f8415abfad4b69c002b9ee5f226eac986238cf0..e1d8327563f4e355abfe30db27c98ae7e225d85a 100644
+--- a/transform/metadata.js
++++ b/transform/metadata.js
+@@ -166,16 +166,23 @@ export function generateExtrinsicMetadata(metadata, accessibleTypes) {
+     const extrinsic = metadata.latest.extrinsic;
+     assert(extrinsic.versions.includes(DEFAULT_EXTRINSIC_VERSION), // --
+     'Extrinsic Version 4 Not Found');
++    // Match the V4 payload codec, including the version-zero extension order.
++    const indexes = extrinsic.signedExtensionsByVersion.get(0);
++    assert(indexes, 'No signed extensions found for extension version 0');
+     return {
+         version: DEFAULT_EXTRINSIC_VERSION,
+         addressTypeId: generateTypeRef(extrinsic.addressTypeId, registry, accessibleTypes),
+         callTypeId: generateTypeRef(extrinsic.callTypeId, registry, accessibleTypes),
+         signatureTypeId: generateTypeRef(extrinsic.signatureTypeId, registry, accessibleTypes),
+-        signedExtensions: extrinsic.signedExtensions.map((ext) => ({
+-            identifier: ext.ident,
+-            includedInExtrinsic: generateTypeRef(ext.typeId, registry, accessibleTypes),
+-            includedInSignedData: generateTypeRef(ext.additionalSigned, registry, accessibleTypes),
+-        })),
++        signedExtensions: indexes.map((index) => {
++            const ext = extrinsic.signedExtensions[index];
++            assert(ext, 'Invalid signed extension index for extension version 0');
++            return {
++                identifier: ext.ident,
++                includedInExtrinsic: generateTypeRef(ext.typeId, registry, accessibleTypes),
++                includedInSignedData: generateTypeRef(ext.additionalSigned, registry, accessibleTypes),
++            };
++        }),
+     };
+ }
+ /**

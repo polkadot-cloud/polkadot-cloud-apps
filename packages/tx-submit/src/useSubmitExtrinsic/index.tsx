@@ -56,7 +56,7 @@ export const useSubmitExtrinsic = ({
 	const { network } = useNetwork()
 	const { getTxSubmission } = useTxMeta()
 	const { extensionsStatus } = useExtensions()
-	const { handleResetLedgerTask } = useLedger()
+	const { handleResetLedgerTask, handleErrors } = useLedger()
 	const { isProxySupported } = useProxySupported()
 	const { openPromptWith, closePrompt } = usePrompt()
 	const { getExtensionAccount } = useExtensionAccounts()
@@ -197,8 +197,9 @@ export const useSubmitExtrinsic = ({
 							extra: result.data,
 						}
 					}
-				} catch (_) {
+				} catch (error) {
 					onError('ledger')
+					handleErrors(error)
 					return
 				}
 			}
