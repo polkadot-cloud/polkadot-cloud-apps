@@ -22,7 +22,6 @@
 		"@polkadot-cloud/ui": "^1.0.0",
 		"app-staking": "workspace:*",
 		"assets": "workspace:*",
-		"buffer": "^6.0.3",
 		"consts": "workspace:*",
 		"data-gate": "workspace:*",
 		"dedot-api": "workspace:*",

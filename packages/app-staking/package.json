@@ -30,7 +30,6 @@
 		"@tanstack/react-query": "^5.103.1",
 		"assets": "workspace:*",
 		"bignumber.js": "^11.1.5",
-		"buffer": "^6.0.3",
 		"classnames": "^2.5.1",
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",

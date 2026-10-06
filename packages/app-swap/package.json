@@ -26,7 +26,6 @@
 		"@polkadot-cloud/util-dedot": "^1.0.0",
 		"@polkadot-cloud/utils": "^1.0.0",
 		"assets": "workspace:*",
-		"buffer": "^6.0.3",
 		"classnames": "^2.5.1",
 		"consts": "workspace:*",
 		"dedot": "^1.4.0",

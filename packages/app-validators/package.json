@@ -20,7 +20,6 @@
 		"@polkadot-cloud/connect-proxies": "^1.0.0",
 		"@polkadot-cloud/ui": "^1.0.0",
 		"app-staking": "workspace:*",
-		"buffer": "^6.0.3",
 		"consts": "workspace:*",
 		"data-gate": "workspace:*",
 		"dedot-api": "workspace:*",
