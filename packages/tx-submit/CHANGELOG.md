@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.1.0...tx-submit-v0.2.0) (2026-08-09)
 
 
