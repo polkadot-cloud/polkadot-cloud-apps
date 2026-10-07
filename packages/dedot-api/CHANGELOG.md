@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.11.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/dedot-api-v0.10.0...dedot-api-v0.11.0) (2026-10-07)
+
+
+### Features
+
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* Bootstrap additional `data-gate` queries, era stakers data point ([#3811](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3811)) ([dd5bbf9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd5bbf913350f5f806b038ae421cc00cc73c14be))
+* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **nominate:** validator flag ([ca7064e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ca7064e427437230ce81d113e34c807e93a177c1))
+* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+
+
+### Bug Fixes
+
+* patch dedot versioned transaction signing ([80ec4b3](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/80ec4b3b7913b3ee5e68b36f23c0345e4adef7bc))
+
 ## [0.10.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/dedot-api-v0.9.0...dedot-api-v0.10.0) (2026-08-09)
 
 
