@@ -13,9 +13,10 @@ import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
 import { SubmittableExtrinsic } from 'dedot'
+import { $Metadata } from 'dedot/codecs'
 import { compactU32 } from 'dedot/shape'
 import type { InjectedSigner } from 'dedot/types'
-import { concatU8a, hexToU8a } from 'dedot/utils'
+import { concatU8a, hexToU8a, u8aToHex } from 'dedot/utils'
 import {
 	addSend,
 	addSignAndSend,
@@ -179,13 +180,16 @@ export const useSubmitExtrinsic = ({
 
 			if (source === 'ledger') {
 				try {
-					const metadata = await serviceApi.signer.metadata(specName)
+					// The signer accepts hex, so encode the metadata already loaded by this tx's client.
+					const metadata = u8aToHex(
+						$Metadata.tryEncode(submitTx.client.metadata),
+					)
 					const result = await signLedgerPayload(
 						specName,
 						submitAccount.address,
 						serviceApi.signer.extraSignedExtension,
 						submitTx,
-						metadata || '0x',
+						metadata,
 						networkInfo,
 						(account as HardwareAccount).index,
 						feePaymentOptions,
