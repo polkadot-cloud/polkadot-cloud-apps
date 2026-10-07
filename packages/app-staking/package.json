@@ -27,7 +27,7 @@
 		"@polkadot-cloud/ui": "^1.0.0",
 		"@polkadot-cloud/util-dedot": "^1.0.0",
 		"@polkadot-cloud/utils": "^1.0.0",
-		"@tanstack/react-query": "^5.103.1",
+		"@tanstack/react-query": "^5.104.1",
 		"assets": "workspace:*",
 		"bignumber.js": "^11.1.5",
 		"classnames": "^2.5.1",
