@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/assets-v1.6.0...assets-v1.7.0) (2026-10-07)
+
+
+### Features
+
+* Add beta Cloud Signer support ([#3838](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3838)) ([f2c452e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f2c452eb92dfffb6c3f444a451b5a141016bc8d7))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/assets-v1.5.0...assets-v1.6.0) (2026-08-09)
 
 

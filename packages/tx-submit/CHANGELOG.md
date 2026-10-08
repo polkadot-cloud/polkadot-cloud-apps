@@ -4,6 +4,17 @@
 
 * Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.2.0...tx-submit-v0.3.0) (2026-10-07)
+
+
+### Features
+
+* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+* **refactor:** Remove legacy extensions  ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.1.0...tx-submit-v0.2.0) (2026-08-09)
 
 
