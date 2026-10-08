@@ -9,6 +9,7 @@ import {
 	useLedgerTxSubmit,
 } from '@polkadot-cloud/connect-ledger'
 import { useHelp } from 'hooks/useHelp'
+import { getLedgerMessageKey } from 'locales/util'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount, DisplayFor, TxFeeDisplay } from 'types'
 import { ButtonHelp, ButtonSubmitWithFee } from 'ui-buttons'
@@ -88,8 +89,8 @@ export const LedgerPrompt = ({ valid }: LedgerPromptProps) => {
 
 	// Translate message codes from ledger-connect
 	const message = verified
-		? `${t('deviceVerified')}. ${t(messageCode, messageParams)}`
-		: t(messageCode, messageParams)
+		? `${t('deviceVerified')}. ${t(getLedgerMessageKey(messageCode), messageParams)}`
+		: t(getLedgerMessageKey(messageCode), messageParams)
 
 	return (
 		<p className="prompt">
