@@ -45,6 +45,15 @@
 				"Çeşitliliği ve validatörlerin merkeziyetsiz bir karışımını en üst düzeye çıkarmak için çeşitli varlıklardan validatörler seçin."
 			]
 		],
+		"managingValidator": [
+			"Doğrulayıcınızı Yönetme",
+			"Doğrulayıcınızın bağlı fonlarını ve ödül alıcısını yönetin, ödüllerini inceleyin.",
+			[
+				"Doğrulayıcınıza bağlanan {NETWORK_UNIT} miktarını panelden yönetin: bağlı miktarı artırın, fonların bağını çözün, kilidi açılmakta olan fonları yeniden bağlayın ve kilit açıldıktan sonra fonları çekin.",
+				"Doğrulayıcınızın ödül hedefini (alıcıyı) değiştirerek gelecekteki ödüllerin nereye gönderileceğini de seçebilirsiniz.",
+				"Doğrulayıcınızın ödeme geçmişini, talep edilmiş ve edilmemiş ödüllerini ve doğrulayıcı teşvik ödüllerini içeren tahminleri incelemek için Ödüller sayfasını ziyaret edin."
+			]
+		],
 		"module": {
 			"cancel": "İptal",
 			"close": "Kapat",

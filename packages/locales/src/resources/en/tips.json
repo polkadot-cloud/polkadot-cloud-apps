@@ -45,6 +45,15 @@
 				"To maximise variety and a decentralised mix of validators, choose validators from a range of entities."
 			]
 		],
+		"managingValidator": [
+			"Managing Your Validator",
+			"Manage your validator's bond and payee, and browse rewards.",
+			[
+				"Use the dashboard to manage the {NETWORK_UNIT} bonded to your validator: add to your bond, unbond funds, rebond unlocking funds, and withdraw funds once they are unlocked.",
+				"You can also change your validator's reward destination (payee) to choose where future rewards are sent.",
+				"Visit the Rewards page to browse your validator's payout history, review claimed and unclaimed rewards, and view projections that include validator incentive rewards."
+			]
+		],
 		"module": {
 			"cancel": "Cancel",
 			"close": "Close",
