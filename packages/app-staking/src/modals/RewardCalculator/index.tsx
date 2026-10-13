@@ -22,7 +22,7 @@ import { useOverlay } from 'ui-overlay'
 import { ContentWrapper } from '../Networks/Wrapper'
 
 const DEFAULT_TOKEN_INPUT = 1000
-const MIN_VALIDATOR_DOT = 10_000
+const MIN_VALIDATOR_INCENTIVE_DOT = 10_000
 
 export const RewardCalculator = () => {
 	const { t } = useTranslation()
@@ -41,20 +41,24 @@ export const RewardCalculator = () => {
 
 	// Store token amount to stake
 	const [inputStakeAmount, setInputStakeAmount] = useState<number | null>(null)
-	const minimumStakeAmount = accountIsValidator
+	const validatorIncentiveThreshold = accountIsValidator
 		? Math.max(
-				network === 'polkadot' ? MIN_VALIDATOR_DOT : 0,
+				network === 'polkadot' ? MIN_VALIDATOR_INCENTIVE_DOT : 0,
 				Number(planckToUnit(minValidatorBond, units)),
 			)
 		: 0
 	const stakeAmount =
-		inputStakeAmount ?? Math.max(DEFAULT_TOKEN_INPUT, minimumStakeAmount)
-	const includeValidatorIncentives = stakeAmount >= minimumStakeAmount
+		inputStakeAmount ??
+		Math.max(DEFAULT_TOKEN_INPUT, validatorIncentiveThreshold)
+	const includeValidatorIncentives =
+		accountIsValidator && stakeAmount >= validatorIncentiveThreshold
 
 	const currentStake = Number(planckToUnit(balances.nominator.active, units))
 	const validatorAnnualReward = Math.max(
 		validatorProjection.annualReward -
-			(includeValidatorIncentives ? 0 : validatorProjection.annualIncentiveReward),
+			(includeValidatorIncentives
+				? 0
+				: validatorProjection.annualIncentiveReward),
 		0,
 	)
 	const rewardRate = accountIsValidator
@@ -112,7 +116,7 @@ export const RewardCalculator = () => {
 						<h4>
 							{t('validatorIncentiveThreshold', {
 								ns: 'pages',
-								threshold: minimumStakeAmount.toLocaleString(),
+								threshold: validatorIncentiveThreshold.toLocaleString(),
 								unit,
 							})}
 						</h4>

@@ -197,7 +197,11 @@ test.each(['9999.99', '1000', '0', ''])(
 		await render()
 		await changeAmount(value)
 		const annualReward = (Number(value) * 1095) / 10000
-		const expectedRewards = [annualReward / 365, annualReward / 12, annualReward]
+		const expectedRewards = [
+			annualReward / 365,
+			annualReward / 12,
+			annualReward,
+		]
 		for (const [index, reward] of rewards().entries()) {
 			expect(reward).toBeCloseTo(expectedRewards[index], 8)
 		}
