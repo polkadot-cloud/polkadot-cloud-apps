@@ -478,6 +478,7 @@
 		"validatorActivity": "30日間のバリデータアクティビティ",
 		"validatorCommission": "バリデータコミッション",
 		"validatorCount": "バリデーター数",
+		"validatorIncentiveReward": "バリデータのインセンティブ報酬",
 		"validatorNotFound": "バリデータが見つかりません",
 		"validatorPerformance": "{{count}}日間のバリデータパフォーマンス",
 		"validatorResultRange": "{{total}}人のバリデータのうち{{first}}～{{last}}件を表示",
