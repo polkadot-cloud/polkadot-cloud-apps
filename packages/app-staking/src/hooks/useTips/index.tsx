@@ -8,6 +8,7 @@ import { useActivePool } from 'hooks/useActivePool'
 import { useFillVariables } from 'hooks/useFillVariables'
 import { useStaking } from 'hooks/useStaking'
 import { useUi } from 'hooks/useUi'
+import { useValidators } from 'hooks/useValidators'
 import { DefaultLocale } from 'locales'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -22,6 +23,8 @@ export const useTips = () => {
 	const { inPool, isOwner } = useActivePool()
 	const { fillVariables } = useFillVariables()
 	const { activeAddress } = useActiveAccount()
+	const { isValidator } = useValidators()
+	const accountIsValidator = isValidator(activeAddress)
 	const { closePrompt, openPromptWith } = usePrompt()
 	const { hasEnoughToNominate } = useAccountBalances(activeAddress)
 
@@ -32,7 +35,7 @@ export const useTips = () => {
 	const segments: number[] = []
 	if (!activeAddress) {
 		segments.push(1)
-	} else if (!isNominating && !inPool) {
+	} else if (!accountIsValidator && !isNominating && !inPool) {
 		if (hasEnoughToNominate) {
 			segments.push(2)
 		} else {
@@ -40,7 +43,9 @@ export const useTips = () => {
 		}
 		segments.push(4)
 	} else {
-		if (isNominating) {
+		if (accountIsValidator) {
+			segments.push(10)
+		} else if (isNominating) {
 			segments.push(5)
 		}
 		if (inPool) {
@@ -50,7 +55,9 @@ export const useTips = () => {
 				segments.push(7)
 			}
 		}
-		segments.push(8)
+		if (!accountIsValidator) {
+			segments.push(8)
+		}
 	}
 
 	// Configure tip items based on segments and staking state

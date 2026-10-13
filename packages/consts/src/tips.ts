@@ -3,11 +3,18 @@
 
 import type { TipConfig } from 'types'
 
+const validatorTip: TipConfig = {
+	id: 'managingValidator',
+	s: 10,
+	page: 'rewards',
+}
+
 export const TipsConfigSimple: TipConfig[] = [
 	{
 		id: 'connectExtensions',
 		s: 1,
 	},
+	validatorTip,
 	{
 		id: 'recommendedNominator',
 		s: 2,
@@ -55,6 +62,7 @@ export const TipsConfigAdvanced: TipConfig[] = [
 		id: 'connectExtensions',
 		s: 1,
 	},
+	validatorTip,
 	{
 		id: 'recommendedNominator',
 		s: 2,

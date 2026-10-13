@@ -45,6 +45,15 @@
 				"Pour maximiser la variété et un mélange décentralisé de validateurs, choisissez des validateurs issus de différentes entités."
 			]
 		],
+		"managingValidator": [
+			"Gérer votre validateur",
+			"Gérez les fonds liés et le bénéficiaire de votre validateur, et consultez ses récompenses.",
+			[
+				"Utilisez le tableau de bord pour gérer les {NETWORK_UNIT} liés à votre validateur : ajoutez des fonds, lancez leur déliaison, reliez les fonds en cours de déblocage et retirez-les une fois débloqués.",
+				"Vous pouvez aussi modifier la destination des récompenses (bénéficiaire) de votre validateur pour choisir où envoyer les futures récompenses.",
+				"Consultez la page Récompenses pour parcourir l’historique des paiements de votre validateur, examiner les récompenses réclamées et non réclamées et voir les projections incluant les récompenses incitatives des validateurs."
+			]
+		],
 		"module": {
 			"cancel": "Annuler",
 			"close": "Fermer",
