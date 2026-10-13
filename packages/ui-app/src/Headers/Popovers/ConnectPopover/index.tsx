@@ -35,7 +35,9 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 	const installed = web.filter((a) => a.id in extensionsStatus)
 
 	const installedIds = new Set(installed.map((a) => a.id))
-	const other = web.filter((a) => !installedIds.has(a.id))
+	const other = web.filter(
+		(a) => a.id === 'cloud-signer' && !installedIds.has(a.id),
+	)
 
 	// Close the menu if clicked outside of its container
 	useOutsideAlerter(popoverRef, () => {
