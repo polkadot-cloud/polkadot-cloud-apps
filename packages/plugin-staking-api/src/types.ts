@@ -193,17 +193,30 @@ export interface OptimalValidatorBatchData {
 }
 
 export interface AllRewardsData {
-	allRewards: NominatorReward[]
+	allRewards: StakingReward[]
 }
 
-export interface NominatorReward {
+interface StakingRewardFields {
 	era: number
 	reward: string
 	claimed: boolean
 	timestamp: number
 	validator: string
-	type: string
+	page: number | null
+	chainId: number | null
 }
+
+export interface NominatorReward extends StakingRewardFields {
+	type: 'nominator'
+}
+
+export interface ValidatorIncentiveReward extends StakingRewardFields {
+	type: 'validator-incentive'
+	page: number
+	chainId: number
+}
+
+export type StakingReward = NominatorReward | ValidatorIncentiveReward
 
 export interface UnclaimedRewardsData {
 	unclaimedRewards: UnclaimedRewards
@@ -437,9 +450,9 @@ export interface PoolMember {
 	}[]
 }
 
-export interface PayoutsAndClaims extends Array<NominatorReward | PoolReward> {}
+export interface PayoutsAndClaims extends Array<StakingReward | PoolReward> {}
 
-export type RewardResult = NominatorReward | PoolReward
+export type RewardResult = StakingReward | PoolReward
 export interface RewardResults extends Array<RewardResult> {}
 
 export interface AverageRewardRateResult {

@@ -17,8 +17,9 @@ import {
 	fetchPoolEraRewards,
 	fetchPoolRewards,
 	fetchRewards,
+	splitStakingRewards,
 } from 'plugin-staking-api'
-import type { NominatorReward, RewardResults } from 'plugin-staking-api/types'
+import type { RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PageTabs } from 'ui-app/PageTabs'
@@ -88,24 +89,14 @@ export const Rewards = () => {
 					: Promise.resolve({ poolEraRewards: [] }),
 			])
 
-		const payouts =
-			allRewards.filter((reward: NominatorReward) => reward.claimed) ?? []
-
-		const unclaimedPayouts =
-			allRewards.filter((reward: NominatorReward) => !reward.claimed) ?? []
-
-		const poolClaims = poolRewards ?? []
+		const { payouts, unclaimedPayouts } = splitStakingRewards(allRewards)
 
 		// Filter zero rewards and order via timestamp, most recent first
-		setPayoutsList(
-			filterAndSortRewards(
-				(allRewards as RewardResults).concat(poolClaims) as RewardResults,
-			),
-		)
+		setPayoutsList(filterAndSortRewards([...allRewards, ...poolRewards]))
 		setPayoutGraphData({
 			payouts,
 			unclaimedPayouts,
-			poolClaims,
+			poolClaims: poolRewards,
 			poolShareRewards: poolShareEnabled ? poolEraRewards : undefined,
 		})
 		setLoading(false)

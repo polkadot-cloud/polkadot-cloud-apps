@@ -26,6 +26,8 @@ const QUERY = gql`
       timestamp
       validator
       type
+      page
+      chainId
     }
   }
 `

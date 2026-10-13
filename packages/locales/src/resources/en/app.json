@@ -477,6 +477,7 @@
 		"validAddress": "Valid address",
 		"validatorActivity": "30 Day Validator Activity",
 		"validatorCommission": "Validator Commission",
+		"validatorIncentiveReward": "Validator Incentive Reward",
 		"validatorCount": "Validator count",
 		"validatorNotFound": "Validator not found",
 		"validatorPerformance": "{{count}} Day Validator Performance",
