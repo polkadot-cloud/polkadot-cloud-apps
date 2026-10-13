@@ -3,3 +3,9 @@
 
 export const REWARD_ITEMS_PER_PAGE = 50
 export const MAX_REWARD_PAGES = 5
+
+export const REWARD_PERIODS = [
+	['daily', 365],
+	['monthly', 12],
+	['annual', 1],
+] as const

@@ -17,27 +17,28 @@ export const getValidatorRewardProjection = (
 	erasPerDay: number,
 	units: number,
 ) => {
+	if (
+		!validator ||
+		activeEra <= 0 ||
+		!Number.isFinite(erasPerDay) ||
+		erasPerDay <= 0
+	) {
+		return { annualReward: 0, annualStakingReward: 0 }
+	}
 	let stakerReward = new BigNumber(0)
 	let incentiveReward = new BigNumber(0)
-	if (
-		validator &&
-		activeEra > 0 &&
-		Number.isFinite(erasPerDay) &&
-		erasPerDay > 0
-	) {
-		for (const reward of rewards) {
-			if (
-				(!isNominatorReward(reward) && !isValidatorIncentiveReward(reward)) ||
-				reward.validator !== validator ||
-				reward.era !== activeEra - 1
-			) {
-				continue
-			}
-			if (isValidatorIncentiveReward(reward)) {
-				incentiveReward = incentiveReward.plus(reward.reward)
-			} else {
-				stakerReward = stakerReward.plus(reward.reward)
-			}
+	for (const reward of rewards) {
+		if (
+			(!isNominatorReward(reward) && !isValidatorIncentiveReward(reward)) ||
+			reward.validator !== validator ||
+			reward.era !== activeEra - 1
+		) {
+			continue
+		}
+		if (reward.type === 'validator-incentive') {
+			incentiveReward = incentiveReward.plus(reward.reward)
+		} else {
+			stakerReward = stakerReward.plus(reward.reward)
 		}
 	}
 	const annualize = (reward: BigNumber) =>
@@ -49,6 +50,6 @@ export const getValidatorRewardProjection = (
 
 	return {
 		annualReward: annualize(stakerReward.plus(incentiveReward)) || 0,
-		annualIncentiveReward: annualize(incentiveReward) || 0,
+		annualStakingReward: annualize(stakerReward) || 0,
 	}
 }

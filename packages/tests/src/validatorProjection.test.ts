@@ -195,6 +195,8 @@ test.each([
 	{ apiEnabled: false },
 	{ activeEra: 0 },
 	{ erasPerDay: 0 },
+	{ erasPerDay: Number.NaN },
+	{ erasPerDay: Number.POSITIVE_INFINITY },
 ])(
 	'ineligible or unready projections skip reward requests: %j',
 	(overrides) => {
@@ -233,11 +235,11 @@ test('projections include every incentive page, whether claimed or unclaimed', (
 		getValidatorRewardProjection(rewards, 'validator', 101, 1, 10),
 	).toEqual({
 		annualReward: 4015,
-		annualIncentiveReward: 4015,
+		annualStakingReward: 0,
 	})
 })
 
-test('ordinary validator rewards are included once and kept out of the incentive subtotal', () => {
+test('ordinary validator rewards are included once and available separately', () => {
 	const rewards: RewardResults = [
 		incentive,
 		{ ...incentive, type: 'nominator', reward: '20000000000' },
@@ -246,7 +248,7 @@ test('ordinary validator rewards are included once and kept out of the incentive
 		getValidatorRewardProjection(rewards, 'validator', 101, 1, 10),
 	).toEqual({
 		annualReward: 1825,
-		annualIncentiveReward: 1095,
+		annualStakingReward: 730,
 	})
 })
 
@@ -262,7 +264,7 @@ test('only the active validator and latest completed era contribute to projectio
 		getValidatorRewardProjection(rewards, 'validator', 101, 1, 10),
 	).toEqual({
 		annualReward: 1095,
-		annualIncentiveReward: 1095,
+		annualStakingReward: 0,
 	})
 })
 
@@ -281,7 +283,7 @@ test.each([
 				erasPerDay,
 				units,
 			),
-		).toEqual({ annualReward, annualIncentiveReward: annualReward })
+		).toEqual({ annualReward, annualStakingReward: 0 })
 	},
 )
 
@@ -297,7 +299,7 @@ test.each([
 	(validator, era, erasPerDay) => {
 		expect(
 			getValidatorRewardProjection([incentive], validator, era, erasPerDay, 10),
-		).toEqual({ annualReward: 0, annualIncentiveReward: 0 })
+		).toEqual({ annualReward: 0, annualStakingReward: 0 })
 	},
 )
 
@@ -306,6 +308,20 @@ test('old incentives do not produce a projection for a validator that missed the
 		getValidatorRewardProjection([incentive], 'validator', 102, 1, 10),
 	).toEqual({
 		annualReward: 0,
-		annualIncentiveReward: 0,
+		annualStakingReward: 0,
 	})
+})
+
+test('ordinary rewards retain precision when incentives are much larger', () => {
+	const projection = getValidatorRewardProjection(
+		[
+			{ ...incentive, reward: '1000000000000000000000000000000' },
+			{ ...incentive, type: 'nominator', reward: '1' },
+		],
+		'validator',
+		101,
+		1,
+		10,
+	)
+	expect(projection.annualStakingReward).toBe(0.0000000365)
 })

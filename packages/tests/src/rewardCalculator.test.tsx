@@ -4,9 +4,7 @@
 import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
 import {
 	act,
-	type ChangeEvent,
 	createElement,
-	type FocusEventHandler,
 } from '../../app-staking/node_modules/react/index.js'
 import {
 	createRoot,
@@ -14,23 +12,21 @@ import {
 } from '../../app-staking/node_modules/react-dom/client.js'
 import { RewardCalculator } from '../../app-staking/src/modals/RewardCalculator'
 
-const { state, dom } = await vi.hoisted(async () => {
+const { state, dom, defaults } = await vi.hoisted(async () => {
 	const { JSDOM } = await import('jsdom')
 	const dom = new JSDOM('<!doctype html><html><body></body></html>')
 	vi.stubGlobal('window', dom.window)
 	vi.stubGlobal('document', dom.window.document)
-	return {
-		dom,
-		state: {
-			accountIsValidator: true,
-			annualReward: 3650,
-			annualIncentiveReward: 2555,
-			currentStake: 100000000000000n,
-			minValidatorBond: 0n,
-			loading: false,
-			unavailable: false,
-		},
+	const defaults = {
+		accountIsValidator: true,
+		annualReward: 3650,
+		annualStakingReward: 1095,
+		currentStake: 100000000000000n,
+		minValidatorBond: 0n,
+		loading: false,
+		unavailable: false,
 	}
+	return { dom, defaults, state: { ...defaults } }
 })
 vi.mock(
 	'../../app-staking/node_modules/@polkadot-cloud/connect/index.js',
@@ -90,23 +86,10 @@ vi.mock('../../ui-core/src/base', () => ({
 	Separator: () => null,
 }))
 vi.mock('../../ui-core/src/modal', () => ({ Padding: 'div' }))
-vi.mock('../../ui-core/src/input', () => ({
-	TokenInput: ({
-		value,
-		onChange,
-		onBlur,
-	}: {
-		value: string
-		onChange: (event: ChangeEvent<HTMLInputElement>) => void
-		onBlur?: FocusEventHandler<HTMLInputElement>
-	}) =>
-		createElement('input', {
-			value,
-			onChange,
-			onBlur,
-			'aria-label': 'DOT Amount',
-		}),
-}))
+vi.mock(
+	'../../ui-core/src/input',
+	() => import('../../ui-core/src/input/TokenInput'),
+)
 vi.mock('../../app-staking/src/modals/Networks/Wrapper', () => ({
 	ContentWrapper: 'div',
 }))
@@ -115,15 +98,7 @@ let container: HTMLDivElement
 let root: Root
 
 beforeEach(async () => {
-	Object.assign(state, {
-		accountIsValidator: true,
-		annualReward: 3650,
-		annualIncentiveReward: 2555,
-		currentStake: 100000000000000n,
-		minValidatorBond: 0n,
-		loading: false,
-		unavailable: false,
-	})
+	Object.assign(state, defaults)
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.stubGlobal('window', dom.window)
 	vi.stubGlobal('document', dom.window.document)
@@ -279,7 +254,8 @@ test('a validator with no bonded stake does not produce infinite projections', a
 })
 
 test('incentive-only reward history produces zero ordinary rewards below the threshold', async () => {
-	state.annualReward = state.annualIncentiveReward
+	state.annualReward = 2555
+	state.annualStakingReward = 0
 	await render()
 	await changeAmount('1000')
 	expect(rewards()).toEqual([0, 0, 0])

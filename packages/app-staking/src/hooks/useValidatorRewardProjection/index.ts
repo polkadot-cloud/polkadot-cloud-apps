@@ -10,6 +10,7 @@ import { usePlugins } from 'hooks/usePlugins'
 import { useSyncing } from 'hooks/useSyncing'
 import { useValidators } from 'hooks/useValidators'
 import { useRewards } from 'plugin-staking-api'
+import { useMemo } from 'react'
 import { getValidatorRewardProjection } from './util'
 
 // Share the same account/network/era-scoped projection between the overview and calculator.
@@ -33,6 +34,7 @@ export const useValidatorRewardProjection = () => {
 			activeAddress &&
 			stakingApiEnabled &&
 			activeEra.index > 0 &&
+			Number.isFinite(erasPerDay) &&
 			erasPerDay > 0,
 	)
 	const { data, loading, error } = useRewards({
@@ -42,14 +44,27 @@ export const useValidatorRewardProjection = () => {
 		skip: !enabled,
 	})
 
-	return {
-		...getValidatorRewardProjection(
-			enabled ? data.allRewards : [],
+	const projection = useMemo(
+		() =>
+			getValidatorRewardProjection(
+				data.allRewards,
+				enabled ? activeAddress : null,
+				activeEra.index,
+				erasPerDay,
+				units,
+			),
+		[
+			data.allRewards,
+			enabled,
 			activeAddress,
 			activeEra.index,
 			erasPerDay,
 			units,
-		),
+		],
+	)
+
+	return {
+		...projection,
 		accountIsValidator,
 		loading:
 			!accountsInitialised ||

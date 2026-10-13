@@ -12,13 +12,14 @@ import { useStakingMetrics } from 'hooks/useStakingMetrics'
 import { useValidatorRewardProjection } from 'hooks/useValidatorRewardProjection'
 import { Balance } from 'library/Balance'
 import type { ChangeEvent } from 'react'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
 import { CardHeader, Separator } from 'ui-core/base'
 import { TokenInput } from 'ui-core/input'
 import { Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
+import { REWARD_PERIODS } from '../../pages/Rewards/constants'
 import { ContentWrapper } from '../Networks/Wrapper'
 
 const DEFAULT_TOKEN_INPUT = 1000
@@ -50,17 +51,11 @@ export const RewardCalculator = () => {
 	const stakeAmount =
 		inputStakeAmount ??
 		Math.max(DEFAULT_TOKEN_INPUT, validatorIncentiveThreshold)
-	const includeValidatorIncentives =
-		accountIsValidator && stakeAmount >= validatorIncentiveThreshold
-
 	const currentStake = Number(planckToUnit(balances.nominator.active, units))
-	const validatorAnnualReward = Math.max(
-		validatorProjection.annualReward -
-			(includeValidatorIncentives
-				? 0
-				: validatorProjection.annualIncentiveReward),
-		0,
-	)
+	const validatorAnnualReward =
+		stakeAmount >= validatorIncentiveThreshold
+			? validatorProjection.annualReward
+			: validatorProjection.annualStakingReward
 	const rewardRate = accountIsValidator
 		? currentStake > 0
 			? validatorAnnualReward / currentStake
@@ -68,8 +63,6 @@ export const RewardCalculator = () => {
 		: getAverageRewardRate() / 100
 
 	const annualReward = stakeAmount * rewardRate || 0
-	const monthlyReward = annualReward / 12
-	const dailyReward = annualReward / 365
 
 	const rewardBalance = (value: number) =>
 		validatorProjection.loading ? (
@@ -106,10 +99,10 @@ export const RewardCalculator = () => {
 					</h4>
 					<TokenInput
 						id="reward-calc-token-input"
-						label={`${t('unitAmount', { ns: 'pages', unit })}`}
+						label={t('unitAmount', { ns: 'pages', unit })}
 						onChange={onChange}
 						placeholder={t('stakePlaceholder', { ns: 'pages' })}
-						value={String(stakeAmount || 0)}
+						value={String(stakeAmount)}
 						marginY
 					/>
 					{accountIsValidator && (
@@ -121,27 +114,17 @@ export const RewardCalculator = () => {
 							})}
 						</h4>
 					)}
-					<Separator lg />
-					<CardHeader>
-						<h4>
-							{t('daily', { ns: 'pages' })} {t('rewards', { ns: 'modals' })}
-						</h4>
-						{rewardBalance(dailyReward)}
-					</CardHeader>
-					<Separator lg />
-					<CardHeader>
-						<h4>
-							{t('monthly', { ns: 'pages' })} {t('rewards', { ns: 'modals' })}
-						</h4>
-						{rewardBalance(monthlyReward)}
-					</CardHeader>
-					<Separator lg />
-					<CardHeader>
-						<h4>
-							{t('annual', { ns: 'pages' })} {t('rewards', { ns: 'modals' })}
-						</h4>
-						{rewardBalance(annualReward)}
-					</CardHeader>
+					{REWARD_PERIODS.map(([period, divisor]) => (
+						<Fragment key={period}>
+							<Separator lg />
+							<CardHeader>
+								<h4>
+									{t(period, { ns: 'pages' })} {t('rewards', { ns: 'modals' })}
+								</h4>
+								{rewardBalance(annualReward / divisor)}
+							</CardHeader>
+						</Fragment>
+					))}
 					<Separator transparent style={{ marginTop: '2.5rem' }} />
 				</ContentWrapper>
 			</Padding>

@@ -6,7 +6,6 @@ import type { ComponentBase } from 'types'
 
 export interface TokenInputProps {
 	onChange: (e: ChangeEvent<HTMLInputElement>) => void
-	onBlur?: FocusEventHandler<HTMLInputElement>
 	placeholder: string
 	value: string
 	marginY?: boolean

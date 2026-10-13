@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
 import { CardHeader, Page, RewardGrid, Separator } from 'ui-core/base'
+import { REWARD_PERIODS } from '../constants'
 import type { PayoutHistoryProps } from '../types'
 import { IncomingPayouts } from './IncomingPayouts'
 import { AccountPayouts } from './PayoutGraph'
@@ -47,7 +48,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const { averageRewardRate, rewardCalculator } = useRewardOverviewStats()
 	const { stakedBalance } = useAccountBalances(activeAddress)
 	const validatorProjection = useValidatorRewardProjection()
-	const { accountIsValidator } = validatorProjection
+	const { accountIsValidator, loading, unavailable } = validatorProjection
 
 	const { unit, units } = getStakingChainData(network)
 	const Token = getChainIcons(network).token
@@ -70,9 +71,11 @@ export const Overview = (props: PayoutHistoryProps) => {
 		? validatorProjection.annualReward
 		: currentStake * (getAverageRewardRate() / 100) || 0
 
-	const projectionLoading = validatorProjection.loading
-	const projectionUnavailable = validatorProjection.unavailable
-	const projectionReady = !projectionLoading && !projectionUnavailable
+	const projectionPlaceholder = loading
+		? t('app:syncing')
+		: unavailable
+			? '—'
+			: undefined
 
 	const incomingPerformance30d = useMemo(() => {
 		const rewards = incomingProjectionData.payeeNominatorRewards.rewards
@@ -124,28 +127,23 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const annualReward =
 		stakedAnnualReward +
 		(includeIncomingProjection ? incomingAnnualProjection : 0)
-	const monthlyReward = annualReward / 12
-	const dailyReward = annualReward / 365
 	const totalDisplayedStake =
 		currentStake + (includeIncomingProjection ? incomingStakedBalance : 0)
 
-	// Format the currency with user's locale and currency preference
-	const formatLocalCurrency = (value: number) =>
-		projectionLoading
-			? t('app:syncing')
-			: projectionUnavailable
-				? '—'
-				: formatFiatCurrency(value, currency)
-
-	const formatProjectedReward = (value: number) =>
-		projectionLoading
-			? t('app:syncing')
-			: projectionUnavailable
-				? '—'
-				: value.toLocaleString('en-US', {
-						minimumFractionDigits: 3,
-						maximumFractionDigits: 3,
-					})
+	const renderProjectedReward = (value: number, fiat = false) => (
+		<h3>
+			{projectionPlaceholder === undefined &&
+				value > 0 &&
+				(!fiat || tokenPrice > 0) && <FontAwesomeIcon icon={faCaretUp} />}
+			{projectionPlaceholder ??
+				(fiat
+					? formatFiatCurrency(value * tokenPrice, currency)
+					: value.toLocaleString('en-US', {
+							minimumFractionDigits: 3,
+							maximumFractionDigits: 3,
+						}))}
+		</h3>
+	)
 
 	const projectedRewardAnnouncements = [
 		{
@@ -167,7 +165,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 		<>
 			<Stat.Row>
 				<Stats items={[averageRewardRate, rewardCalculator]} />
-				{pluginEnabled('staking_api') && <RewardTrend />}
+				{stakingApiEnabled && <RewardTrend />}
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>
@@ -234,69 +232,20 @@ export const Overview = (props: PayoutHistoryProps) => {
 										]}
 									/>
 								</RewardGrid.Head>
-								<RewardGrid.Row>
-									<RewardGrid.Cell>
-										<RewardGrid.Label>{t('daily')}</RewardGrid.Label>
-									</RewardGrid.Cell>
-									<RewardGrid.Cell>
-										<h3>
-											{projectionReady && dailyReward > 0 && (
-												<FontAwesomeIcon icon={faCaretUp} />
-											)}
-											{formatProjectedReward(dailyReward)}
-										</h3>
-									</RewardGrid.Cell>
-									<RewardGrid.Cell>
-										<h3>
-											{projectionReady && dailyReward > 0 && tokenPrice > 0 && (
-												<FontAwesomeIcon icon={faCaretUp} />
-											)}
-											{formatLocalCurrency(dailyReward * tokenPrice)}
-										</h3>
-									</RewardGrid.Cell>
-								</RewardGrid.Row>
-								<RewardGrid.Row>
-									<RewardGrid.Cells
-										items={[
-											<RewardGrid.Label>{t('monthly')}</RewardGrid.Label>,
-											<h3>
-												{projectionReady && monthlyReward > 0 && (
-													<FontAwesomeIcon icon={faCaretUp} />
-												)}
-												{formatProjectedReward(monthlyReward)}
-											</h3>,
-											<h3>
-												{projectionReady &&
-													monthlyReward > 0 &&
-													tokenPrice > 0 && (
-														<FontAwesomeIcon icon={faCaretUp} />
-													)}
-												{formatLocalCurrency(monthlyReward * tokenPrice)}
-											</h3>,
-										]}
-									/>
-								</RewardGrid.Row>
-								<RewardGrid.Row>
-									<RewardGrid.Cells
-										items={[
-											<RewardGrid.Label>{t('annual')}</RewardGrid.Label>,
-											<h3>
-												{projectionReady && annualReward > 0 && (
-													<FontAwesomeIcon icon={faCaretUp} />
-												)}
-												{formatProjectedReward(annualReward)}
-											</h3>,
-											<h3>
-												{projectionReady &&
-													annualReward > 0 &&
-													tokenPrice > 0 && (
-														<FontAwesomeIcon icon={faCaretUp} />
-													)}
-												{formatLocalCurrency(annualReward * tokenPrice)}
-											</h3>,
-										]}
-									/>
-								</RewardGrid.Row>
+								{REWARD_PERIODS.map(([period, divisor]) => {
+									const reward = annualReward / divisor
+									return (
+										<RewardGrid.Row key={period}>
+											<RewardGrid.Cells
+												items={[
+													<RewardGrid.Label>{t(period)}</RewardGrid.Label>,
+													renderProjectedReward(reward),
+													renderProjectedReward(reward, true),
+												]}
+											/>
+										</RewardGrid.Row>
+									)
+								})}
 							</RewardGrid.Root>
 						</CardWrapper>
 					</Page.Row>
