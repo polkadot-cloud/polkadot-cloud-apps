@@ -12,8 +12,8 @@ import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/s
 import { useValidatorRewardProjection } from '../../app-staking/src/hooks/useValidatorRewardProjection'
 import { getValidatorRewardProjection } from '../../app-staking/src/hooks/useValidatorRewardProjection/util'
 
-const { state, rewardsQuery } = vi.hoisted(() => ({
-	state: {
+const { state, rewardsQuery, defaults } = vi.hoisted(() => {
+	const defaults = {
 		activeAddress: 'validator' as string | null,
 		accountsInitialised: true,
 		syncIds: [] as SyncId[],
@@ -27,9 +27,9 @@ const { state, rewardsQuery } = vi.hoisted(() => ({
 		queryLoading: false,
 		queryError: undefined as Error | undefined,
 		rewards: [] as RewardResults,
-	},
-	rewardsQuery: vi.fn(),
-}))
+	}
+	return { defaults, state: { ...defaults }, rewardsQuery: vi.fn() }
+})
 vi.mock(
 	'../../app-staking/node_modules/@polkadot-cloud/connect/index.js',
 	() => ({
@@ -84,21 +84,7 @@ const incentive: ValidatorIncentiveReward = {
 }
 
 beforeEach(() => {
-	Object.assign(state, {
-		activeAddress: 'validator',
-		accountsInitialised: true,
-		syncIds: [],
-		accountSynced: true,
-		network: 'polkadot',
-		activeEra: 101,
-		erasPerDay: 1,
-		isValidator: true,
-		validatorLoading: false,
-		apiEnabled: true,
-		queryLoading: false,
-		queryError: undefined,
-		rewards: [incentive],
-	})
+	Object.assign(state, { ...defaults, rewards: [incentive] })
 	rewardsQuery.mockReset().mockImplementation(() => ({
 		data: { allRewards: state.rewards },
 		loading: state.queryLoading,
