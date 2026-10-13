@@ -24,6 +24,7 @@ const { state, dom } = await vi.hoisted(async () => {
 		state: {
 			accountIsValidator: true,
 			annualReward: 3650,
+			annualIncentiveReward: 2555,
 			currentStake: 100000000000000n,
 			minValidatorBond: 0n,
 			loading: false,
@@ -67,9 +68,9 @@ vi.mock(
 	'../../app-staking/node_modules/react-i18next/dist/es/index.js',
 	() => ({
 		useTranslation: () => ({
-			t: (key: string, options?: { minBondUnit: string; unit: string }) =>
-				key === 'minimumBond'
-					? `A minimum bond of ${options?.minBondUnit} ${options?.unit} is required`
+			t: (key: string, options?: { threshold: string; unit: string }) =>
+				key === 'validatorIncentiveThreshold'
+					? `Validator incentives included after ${options?.threshold} ${options?.unit}`
 					: key,
 		}),
 	}),
@@ -117,6 +118,7 @@ beforeEach(async () => {
 	Object.assign(state, {
 		accountIsValidator: true,
 		annualReward: 3650,
+		annualIncentiveReward: 2555,
 		currentStake: 100000000000000n,
 		minValidatorBond: 0n,
 		loading: false,
@@ -189,32 +191,50 @@ test('validator calculator matches the account projection and scales custom stak
 	expect(rewards()).toEqual([20, 7300 / 12, 7300])
 })
 
-test.each(['9999.99', '0', '', '-100'])(
-	'validator amounts below the minimum (%s) hide projections and reset on blur',
+test.each(['9999.99', '1000', '0', ''])(
+	'validator amounts below the incentive threshold (%s) project only ordinary rewards and remain editable',
 	async (value) => {
 		await render()
 		await changeAmount(value)
-		expect(rewards()).toEqual([])
-		expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-			'10,000 DOT',
+		const annualReward = (Number(value) * 1095) / 10000
+		const expectedRewards = [annualReward / 365, annualReward / 12, annualReward]
+		for (const [index, reward] of rewards().entries()) {
+			expect(reward).toBeCloseTo(expectedRewards[index], 8)
+		}
+		expect(rewards()).toHaveLength(3)
+		expect(container.textContent).toContain(
+			'Validator incentives included after 10,000 DOT',
 		)
 		await blurAmount()
-		expect(input().value).toBe('10000')
+		expect(input().value).toBe(String(Number(value)))
 		expect(container.querySelector('[role="alert"]')).toBeNull()
-		expect(rewards()).toEqual([10, 3650 / 12, 3650])
 	},
 )
 
-test('validator calculators enforce a higher minimum from the chain', async () => {
+test('validator incentives switch on at the threshold and off again below it', async () => {
+	await render()
+	await changeAmount('1000')
+	expect(rewards()).toEqual([0.3, 109.5 / 12, 109.5])
+	await changeAmount('10000')
+	expect(rewards()).toEqual([10, 3650 / 12, 3650])
+	await changeAmount('20000')
+	expect(rewards()).toEqual([20, 7300 / 12, 7300])
+	await changeAmount('1000')
+	expect(rewards()).toEqual([0.3, 109.5 / 12, 109.5])
+})
+
+test('validator calculators respect a higher incentive threshold from the chain', async () => {
 	state.minValidatorBond = 200000000000000n
 	await render()
 	expect(input().value).toBe('20000')
 	await changeAmount('10000')
-	expect(rewards()).toEqual([])
-	expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-		'20,000 DOT',
+	expect(rewards()).toEqual([3, 1095 / 12, 1095])
+	expect(container.textContent).toContain(
+		'Validator incentives included after 20,000 DOT',
 	)
 	await blurAmount()
+	expect(input().value).toBe('10000')
+	await changeAmount('20000')
 	expect(input().value).toBe('20000')
 	expect(rewards()).toEqual([20, 7300 / 12, 7300])
 })
@@ -228,6 +248,7 @@ test('non-validator calculators retain the network rate', async () => {
 	await blurAmount()
 	expect(input().value).toBe('500')
 	expect(container.querySelector('[role="alert"]')).toBeNull()
+	expect(container.textContent).not.toContain('Validator incentives included')
 	expect(rewards()).toEqual([50 / 365, 50 / 12, 50])
 })
 
@@ -251,4 +272,20 @@ test('a validator with no bonded stake does not produce infinite projections', a
 	state.currentStake = 0n
 	await render()
 	expect(rewards()).toEqual([0, 0, 0])
+})
+
+test('incentive-only reward history produces zero ordinary rewards below the threshold', async () => {
+	state.annualReward = state.annualIncentiveReward
+	await render()
+	await changeAmount('1000')
+	expect(rewards()).toEqual([0, 0, 0])
+	await changeAmount('10000')
+	expect(rewards()).toEqual([7, 2555 / 12, 2555])
+})
+
+test('negative calculator amounts are ignored', async () => {
+	await render()
+	await changeAmount('-100')
+	expect(input().value).toBe('10000')
+	expect(rewards()).toEqual([10, 3650 / 12, 3650])
 })

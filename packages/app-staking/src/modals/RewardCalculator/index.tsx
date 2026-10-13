@@ -49,12 +49,17 @@ export const RewardCalculator = () => {
 		: 0
 	const stakeAmount =
 		inputStakeAmount ?? Math.max(DEFAULT_TOKEN_INPUT, minimumStakeAmount)
-	const belowMinimum = accountIsValidator && stakeAmount < minimumStakeAmount
+	const includeValidatorIncentives = stakeAmount >= minimumStakeAmount
 
 	const currentStake = Number(planckToUnit(balances.nominator.active, units))
+	const validatorAnnualReward = Math.max(
+		validatorProjection.annualReward -
+			(includeValidatorIncentives ? 0 : validatorProjection.annualIncentiveReward),
+		0,
+	)
 	const rewardRate = accountIsValidator
 		? currentStake > 0
-			? validatorProjection.annualReward / currentStake
+			? validatorAnnualReward / currentStake
 			: 0
 		: getAverageRewardRate() / 100
 
@@ -65,7 +70,7 @@ export const RewardCalculator = () => {
 	const rewardBalance = (value: number) =>
 		validatorProjection.loading ? (
 			<h3>{t('syncing', { ns: 'app' })}</h3>
-		) : validatorProjection.unavailable || belowMinimum ? (
+		) : validatorProjection.unavailable ? (
 			<h3>—</h3>
 		) : (
 			<Balance.WithFiat Token={<Token />} value={value} currency={currency} />
@@ -73,7 +78,7 @@ export const RewardCalculator = () => {
 
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = Number(e.target.value)
-		if (!Number.isFinite(value)) {
+		if (!Number.isFinite(value) || value < 0) {
 			return
 		}
 		setInputStakeAmount(value)
@@ -87,25 +92,27 @@ export const RewardCalculator = () => {
 			/>
 			<Padding horizontalOnly>
 				<ContentWrapper>
-					<h4>{t('rewardCalcSubtitle', { ns: 'pages', unit })}</h4>
+					<h4>
+						{t(
+							accountIsValidator
+								? 'rewardCalcValidatorSubtitle'
+								: 'rewardCalcSubtitle',
+							{ ns: 'pages', unit },
+						)}
+					</h4>
 					<TokenInput
 						id="reward-calc-token-input"
 						label={`${t('unitAmount', { ns: 'pages', unit })}`}
 						onChange={onChange}
-						onBlur={() => {
-							if (belowMinimum) {
-								setInputStakeAmount(minimumStakeAmount)
-							}
-						}}
 						placeholder={t('stakePlaceholder', { ns: 'pages' })}
 						value={String(stakeAmount || 0)}
 						marginY
 					/>
-					{belowMinimum && (
-						<h4 role="alert">
-							{t('minimumBond', {
-								ns: 'app',
-								minBondUnit: minimumStakeAmount.toLocaleString(),
+					{accountIsValidator && (
+						<h4>
+							{t('validatorIncentiveThreshold', {
+								ns: 'pages',
+								threshold: minimumStakeAmount.toLocaleString(),
 								unit,
 							})}
 						</h4>
