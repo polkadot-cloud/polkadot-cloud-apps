@@ -1,25 +1,16 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type {
-	NominatorReward,
-	PoolReward,
-	RewardResults,
-} from 'plugin-staking-api/types'
+import type { RewardResults } from 'plugin-staking-api/types'
 import type { Dispatch, SetStateAction } from 'react'
+import type { GraphPayoutData } from 'ui-graphs/types'
 
 export type PayoutHistoryProps = PageProps & {
 	loading: boolean
 	payoutGraphData: PayoutGraphData
 }
 
-export interface PayoutGraphData {
-	payouts: NominatorReward[]
-	unclaimedPayouts: NominatorReward[]
-	poolClaims: PoolReward[]
-	// Per-era pool reward shares (Polkadot Cloud pools on Polkadot only)
-	poolShareRewards?: PoolReward[]
-}
+export type PayoutGraphData = GraphPayoutData
 export interface PageProps {
 	payoutsList: RewardResults
 	setPayoutsList: Dispatch<SetStateAction<RewardResults>>

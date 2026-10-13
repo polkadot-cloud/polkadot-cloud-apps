@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { NominatorReward, PoolReward } from 'plugin-staking-api/types'
+import type { PoolReward, StakingReward } from 'plugin-staking-api/types'
 import type { FormatRewardsConfig } from '../types'
 import { getLatestReward, processPayouts } from './dataProcessing'
 
@@ -60,9 +60,9 @@ export const formatRewardsForGraphs = (
 	fromDate: Date,
 	days: number,
 	units: number,
-	payouts: NominatorReward[],
+	payouts: StakingReward[],
 	poolClaims: PoolReward[],
-	unclaimedPayouts: NominatorReward[],
+	unclaimedPayouts: StakingReward[],
 ) =>
 	formatRewardsInternal({
 		fromDate,

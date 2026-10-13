@@ -478,6 +478,7 @@
 		"validatorActivity": "30 Günlük Validatör Etkinliği",
 		"validatorCommission": "Validatör Komisyonu",
 		"validatorCount": "Validatör sayısı",
+		"validatorIncentiveReward": "Validatör Teşvik Ödülü",
 		"validatorNotFound": "Validatör bulunamadı",
 		"validatorPerformance": "{{count}} Günlük Validatör Performansı",
 		"validatorResultRange": "{{total}} doğrulayıcıdan {{first}}–{{last}} arası gösteriliyor",

@@ -478,6 +478,7 @@
 		"validatorActivity": "30-Tage-Validator-Aktivität",
 		"validatorCommission": "Validator Gebühr",
 		"validatorCount": "Anzahl der Validatoren",
+		"validatorIncentiveReward": "Anreizbelohnung für Validatoren",
 		"validatorNotFound": "Validator nicht gefunden",
 		"validatorPerformance": "{{count}}-Tage-Validator-Leistung",
 		"validatorResultRange": "Zeige {{first}}–{{last}} von {{total}} Validatoren",

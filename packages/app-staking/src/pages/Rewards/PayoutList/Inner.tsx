@@ -18,12 +18,12 @@ import { Pagination } from 'library/List/Pagination'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { PoolIdentity } from 'library/ListItem/Labels/PoolIdentity'
 import { motion } from 'motion/react'
-import { isPoolReward, isPoolShareReward } from 'plugin-staking-api'
-import type {
-	NominatorReward,
-	PoolReward,
-	RewardResults,
-} from 'plugin-staking-api/types'
+import {
+	isPoolReward,
+	isPoolShareReward,
+	isValidatorIncentiveReward,
+} from 'plugin-staking-api'
+import type { RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
@@ -135,19 +135,20 @@ export const PayoutList = ({
 					</ListStatusWrapper>
 				) : (
 					<MotionContainer>
-						{listPayouts.map((p) => {
-							const poolReward = isPoolReward(p)
-							const record = poolReward
-								? (p as PoolReward)
-								: (p as NominatorReward)
-
-							const label = poolReward
-								? isPoolShareReward(p)
-									? t('share', { ns: 'app' })
-									: t('poolClaim', { ns: 'app' })
-								: t('payout', { ns: 'app' })
-
-							const labelClass = isPoolShareReward(p)
+						{listPayouts.map((record) => {
+							const poolReward = isPoolReward(record)
+							const poolShare = isPoolShareReward(record)
+							const label = t(
+								poolShare
+									? 'share'
+									: poolReward
+										? 'poolClaim'
+										: isValidatorIncentiveReward(record)
+											? 'validatorIncentiveReward'
+											: 'payout',
+								{ ns: 'app' },
+							)
+							const labelClass = poolShare
 								? 'share'
 								: poolReward
 									? 'claim'
@@ -156,15 +157,10 @@ export const PayoutList = ({
 							let pool: BondedPool | undefined
 							let keyId: string
 							if (poolReward) {
-								const item = p as PoolReward
-								const poolIndex = bondedPools.findIndex(
-									({ id }) => id === item.poolId,
-								)
-								pool = poolIndex >= 0 ? bondedPools[poolIndex] : undefined
-								keyId = `pool_${item.source ?? 'claim'}_${item.poolId}_${item.timestamp}`
+								pool = bondedPools.find(({ id }) => id === record.poolId)
+								keyId = `pool_${record.source ?? 'claim'}_${record.poolId}_${record.timestamp}`
 							} else {
-								const item = p as NominatorReward
-								keyId = `nom_${item.validator}_${item.era}_${item.timestamp}`
+								keyId = `staking_${record.type}_${record.chainId}_${record.validator}_${record.era}_${record.page}_${record.timestamp}`
 							}
 
 							return (
@@ -183,9 +179,7 @@ export const PayoutList = ({
 									}}
 								>
 									<ItemWrapper>
-										<div
-											className={`inner${isPoolShareReward(p) ? ' share' : ''}`}
-										>
+										<div className={`inner${poolShare ? ' share' : ''}`}>
 											<div className="row">
 												<div>
 													<div>
@@ -207,14 +201,9 @@ export const PayoutList = ({
 												<div>
 													<div>
 														{!poolReward ? (
-															<Identity
-																address={(record as NominatorReward).validator}
-															/>
+															<Identity address={record.validator} />
 														) : (
-															<PoolClaim
-																pool={pool}
-																poolId={(record as PoolReward).poolId}
-															/>
+															<PoolClaim pool={pool} poolId={record.poolId} />
 														)}
 														{label === t('slashed') && (
 															<h4>{t('deductedFromBond')}</h4>

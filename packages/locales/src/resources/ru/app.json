@@ -492,6 +492,7 @@
 		"validatorActivity": "Активность валидатора за 30 дней",
 		"validatorCommission": "Комиссия валидатора",
 		"validatorCount": "Количество валидаторов",
+		"validatorIncentiveReward": "Стимулирующее вознаграждение валидатора",
 		"validatorNotFound": "Валидатор не найден",
 		"validatorPerformance": "Производительность валидатора за {{count}} дней",
 		"validatorResultRange": "Показаны валидаторы {{first}}–{{last}} из {{total}}",

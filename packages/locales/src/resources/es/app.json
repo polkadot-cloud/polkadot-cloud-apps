@@ -479,6 +479,7 @@
 		"validatorActivity": "Actividad del validador durante 30 días",
 		"validatorCommission": "Comisión del validador",
 		"validatorCount": "Número de validadores",
+		"validatorIncentiveReward": "Recompensa de incentivo del validador",
 		"validatorNotFound": "Validador no encontrado",
 		"validatorPerformance": "{{count}} Días de Rendimiento del Validador",
 		"validatorResultRange": "Mostrando {{first}}–{{last}} de {{total}} validadores",
