@@ -63,7 +63,7 @@ export const Wallets = ({
 					last
 				/>
 			</section>
-			<h4>{t('webExtensions', { ns: 'app' })}</h4>
+			<h4>{t('extensions', { ns: 'modals' })}</h4>
 			{otherExtensions.map((extension, i) => (
 				<section key={`extension_item_${extension.id}`}>
 					<Extension
