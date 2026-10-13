@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useNominatorStats } from 'hooks/useStats'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidators } from 'hooks/useValidators'
 import { BondManager } from 'library/BondManager'
 import { Nominations } from 'library/Nominations'
 import { Empty } from 'library/Nominations/Empty'
@@ -22,12 +23,13 @@ export const Active = () => {
 	const { t } = useTranslation()
 	const { syncing } = useSyncing()
 	const { isBonding } = useStaking()
+	const { isValidator } = useValidators()
 	const { getNominations } = useBalances()
 	const { activeAddress } = useActiveAccount()
 	const { activeNominators, minimumNominatorBond, minimumActiveStake } =
 		useNominatorStats()
 
-	const { formatWithPrefs } = useValidators(getNominations(activeAddress))
+	const { formatWithPrefs } = useValidatorEntries(getNominations(activeAddress))
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const ROW_HEIGHT = 220
 
@@ -49,7 +51,7 @@ export const Active = () => {
 					<Status height={ROW_HEIGHT} />
 				</Page.RowSection>
 			</Page.Row>
-			{isBonding && (
+			{isBonding && !isValidator(activeAddress) && (
 				<Page.Row>
 					<CardWrapper>
 						{nominated?.length || syncing ? (
