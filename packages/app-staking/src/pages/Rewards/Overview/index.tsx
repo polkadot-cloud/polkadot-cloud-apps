@@ -19,6 +19,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useRewardOverviewStats } from 'hooks/useStats'
 import { useTokenPrices } from 'hooks/useTokenPrices'
+import { useValidatorRewardProjection } from 'hooks/useValidatorRewardProjection'
 import { AnnouncementsList } from 'library/Announcements/AnnouncementsList'
 import { Balance } from 'library/Balance'
 import type { NominatorListItemData } from 'library/NominatorList/types'
@@ -45,6 +46,8 @@ export const Overview = (props: PayoutHistoryProps) => {
 	const { getAverageRewardRate } = useAverageRewardRate()
 	const { averageRewardRate, rewardCalculator } = useRewardOverviewStats()
 	const { stakedBalance } = useAccountBalances(activeAddress)
+	const validatorProjection = useValidatorRewardProjection()
+	const { accountIsValidator } = validatorProjection
 
 	const { unit, units } = getStakingChainData(network)
 	const Token = getChainIcons(network).token
@@ -62,7 +65,14 @@ export const Overview = (props: PayoutHistoryProps) => {
 		useState<boolean>(true)
 
 	const currentStake = stakedBalance.toNumber()
-	const stakedAnnualReward = currentStake * (getAverageRewardRate() / 100) || 0
+
+	const stakedAnnualReward = accountIsValidator
+		? validatorProjection.annualReward
+		: currentStake * (getAverageRewardRate() / 100) || 0
+
+	const projectionLoading = validatorProjection.loading
+	const projectionUnavailable = validatorProjection.unavailable
+	const projectionReady = !projectionLoading && !projectionUnavailable
 
 	const incomingPerformance30d = useMemo(() => {
 		const rewards = incomingProjectionData.payeeNominatorRewards.rewards
@@ -121,7 +131,21 @@ export const Overview = (props: PayoutHistoryProps) => {
 
 	// Format the currency with user's locale and currency preference
 	const formatLocalCurrency = (value: number) =>
-		formatFiatCurrency(value, currency)
+		projectionLoading
+			? t('app:syncing')
+			: projectionUnavailable
+				? '—'
+				: formatFiatCurrency(value, currency)
+
+	const formatProjectedReward = (value: number) =>
+		projectionLoading
+			? t('app:syncing')
+			: projectionUnavailable
+				? '—'
+				: value.toLocaleString('en-US', {
+						minimumFractionDigits: 3,
+						maximumFractionDigits: 3,
+					})
 
 	const projectedRewardAnnouncements = [
 		{
@@ -136,7 +160,6 @@ export const Overview = (props: PayoutHistoryProps) => {
 			),
 		},
 	]
-
 	const showIncomingPayouts =
 		incomingProjectionAccounts.length > 0 && stakingApiEnabled
 
@@ -217,16 +240,15 @@ export const Overview = (props: PayoutHistoryProps) => {
 									</RewardGrid.Cell>
 									<RewardGrid.Cell>
 										<h3>
-											{dailyReward > 0 && <FontAwesomeIcon icon={faCaretUp} />}
-											{dailyReward.toLocaleString('en-US', {
-												minimumFractionDigits: 3,
-												maximumFractionDigits: 3,
-											})}
+											{projectionReady && dailyReward > 0 && (
+												<FontAwesomeIcon icon={faCaretUp} />
+											)}
+											{formatProjectedReward(dailyReward)}
 										</h3>
 									</RewardGrid.Cell>
 									<RewardGrid.Cell>
 										<h3>
-											{dailyReward > 0 && tokenPrice > 0 && (
+											{projectionReady && dailyReward > 0 && tokenPrice > 0 && (
 												<FontAwesomeIcon icon={faCaretUp} />
 											)}
 											{formatLocalCurrency(dailyReward * tokenPrice)}
@@ -238,18 +260,17 @@ export const Overview = (props: PayoutHistoryProps) => {
 										items={[
 											<RewardGrid.Label>{t('monthly')}</RewardGrid.Label>,
 											<h3>
-												{monthlyReward > 0 && (
+												{projectionReady && monthlyReward > 0 && (
 													<FontAwesomeIcon icon={faCaretUp} />
 												)}
-												{monthlyReward.toLocaleString('en-US', {
-													minimumFractionDigits: 3,
-													maximumFractionDigits: 3,
-												})}
+												{formatProjectedReward(monthlyReward)}
 											</h3>,
 											<h3>
-												{monthlyReward > 0 && tokenPrice > 0 && (
-													<FontAwesomeIcon icon={faCaretUp} />
-												)}
+												{projectionReady &&
+													monthlyReward > 0 &&
+													tokenPrice > 0 && (
+														<FontAwesomeIcon icon={faCaretUp} />
+													)}
 												{formatLocalCurrency(monthlyReward * tokenPrice)}
 											</h3>,
 										]}
@@ -260,18 +281,17 @@ export const Overview = (props: PayoutHistoryProps) => {
 										items={[
 											<RewardGrid.Label>{t('annual')}</RewardGrid.Label>,
 											<h3>
-												{annualReward > 0 && (
+												{projectionReady && annualReward > 0 && (
 													<FontAwesomeIcon icon={faCaretUp} />
 												)}
-												{annualReward.toLocaleString('en-US', {
-													minimumFractionDigits: 3,
-													maximumFractionDigits: 3,
-												})}
+												{formatProjectedReward(annualReward)}
 											</h3>,
 											<h3>
-												{annualReward > 0 && tokenPrice > 0 && (
-													<FontAwesomeIcon icon={faCaretUp} />
-												)}
+												{projectionReady &&
+													annualReward > 0 &&
+													tokenPrice > 0 && (
+														<FontAwesomeIcon icon={faCaretUp} />
+													)}
 												{formatLocalCurrency(annualReward * tokenPrice)}
 											</h3>,
 										]}

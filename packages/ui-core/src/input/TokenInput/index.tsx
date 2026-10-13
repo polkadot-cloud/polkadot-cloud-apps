@@ -7,6 +7,7 @@ import classes from './index.module.scss'
 
 export const TokenInput = ({
 	onChange,
+	onBlur,
 	placeholder,
 	value,
 	marginY,
@@ -24,6 +25,7 @@ export const TokenInput = ({
 				id={id}
 				value={value}
 				onChange={(e) => onChange(e)}
+				onBlur={onBlur}
 				placeholder={placeholder}
 			/>
 		</div>
