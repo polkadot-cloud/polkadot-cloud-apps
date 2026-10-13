@@ -32,7 +32,7 @@ export const RewardCalculator = () => {
 	const { config } = useOverlay().modal
 	const { getAverageRewardRate } = useAverageRewardRate()
 	const { balances } = useAccountBalances(activeAddress)
-	const { minValidatorBond } = useStakingMetrics()
+	const { minValidatorBond, hardCapSelfStake } = useStakingMetrics()
 	const validatorProjection = useValidatorRewardProjection()
 	const { accountIsValidator } = validatorProjection
 
@@ -52,17 +52,28 @@ export const RewardCalculator = () => {
 		inputStakeAmount ??
 		Math.max(DEFAULT_TOKEN_INPUT, validatorIncentiveThreshold)
 	const currentStake = Number(planckToUnit(balances.nominator.active, units))
-	const validatorAnnualReward =
-		stakeAmount >= validatorIncentiveThreshold
-			? validatorProjection.annualReward
-			: validatorProjection.annualStakingReward
 	const rewardRate = accountIsValidator
 		? currentStake > 0
-			? validatorAnnualReward / currentStake
+			? validatorProjection.annualStakingReward / currentStake
 			: 0
 		: getAverageRewardRate() / 100
 
-	const annualReward = stakeAmount * rewardRate || 0
+	const selfStakeCap =
+		hardCapSelfStake !== undefined && hardCapSelfStake > 0n
+			? Number(planckToUnit(hardCapSelfStake, units))
+			: Number.POSITIVE_INFINITY
+
+	// The observed incentive already reflects the cap, even if the current bond exceeds it.
+	const annualIncentiveReward =
+		accountIsValidator &&
+		currentStake > 0 &&
+		stakeAmount >= validatorIncentiveThreshold
+			? validatorProjection.annualIncentiveReward *
+				(Math.min(stakeAmount, selfStakeCap) /
+					Math.min(currentStake, selfStakeCap))
+			: 0
+
+	const annualReward = stakeAmount * rewardRate + annualIncentiveReward || 0
 
 	const rewardBalance = (value: number) =>
 		validatorProjection.loading ? (

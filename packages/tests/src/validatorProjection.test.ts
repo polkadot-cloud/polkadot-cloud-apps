@@ -222,6 +222,7 @@ test('projections include every incentive page, whether claimed or unclaimed', (
 	).toEqual({
 		annualReward: 4015,
 		annualStakingReward: 0,
+		annualIncentiveReward: 4015,
 	})
 })
 
@@ -235,6 +236,7 @@ test('ordinary validator rewards are included once and available separately', ()
 	).toEqual({
 		annualReward: 1825,
 		annualStakingReward: 730,
+		annualIncentiveReward: 1095,
 	})
 })
 
@@ -251,6 +253,7 @@ test('only the active validator and latest completed era contribute to projectio
 	).toEqual({
 		annualReward: 1095,
 		annualStakingReward: 0,
+		annualIncentiveReward: 1095,
 	})
 })
 
@@ -269,7 +272,11 @@ test.each([
 				erasPerDay,
 				units,
 			),
-		).toEqual({ annualReward, annualStakingReward: 0 })
+		).toEqual({
+			annualReward,
+			annualStakingReward: 0,
+			annualIncentiveReward: annualReward,
+		})
 	},
 )
 
@@ -285,7 +292,11 @@ test.each([
 	(validator, era, erasPerDay) => {
 		expect(
 			getValidatorRewardProjection([incentive], validator, era, erasPerDay, 10),
-		).toEqual({ annualReward: 0, annualStakingReward: 0 })
+		).toEqual({
+			annualReward: 0,
+			annualStakingReward: 0,
+			annualIncentiveReward: 0,
+		})
 	},
 )
 
@@ -295,6 +306,7 @@ test('old incentives do not produce a projection for a validator that missed the
 	).toEqual({
 		annualReward: 0,
 		annualStakingReward: 0,
+		annualIncentiveReward: 0,
 	})
 })
 

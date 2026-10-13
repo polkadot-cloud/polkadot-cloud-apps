@@ -23,7 +23,7 @@ export const getValidatorRewardProjection = (
 		!Number.isFinite(erasPerDay) ||
 		erasPerDay <= 0
 	) {
-		return { annualReward: 0, annualStakingReward: 0 }
+		return { annualReward: 0, annualStakingReward: 0, annualIncentiveReward: 0 }
 	}
 	let stakerReward = new BigNumber(0)
 	let incentiveReward = new BigNumber(0)
@@ -51,5 +51,6 @@ export const getValidatorRewardProjection = (
 	return {
 		annualReward: annualize(stakerReward.plus(incentiveReward)) || 0,
 		annualStakingReward: annualize(stakerReward) || 0,
+		annualIncentiveReward: annualize(incentiveReward) || 0,
 	}
 }

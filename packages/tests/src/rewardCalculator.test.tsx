@@ -21,8 +21,10 @@ const { state, dom, defaults } = await vi.hoisted(async () => {
 		accountIsValidator: true,
 		annualReward: 3650,
 		annualStakingReward: 1095,
+		annualIncentiveReward: 2555,
 		currentStake: 100000000000000n,
 		minValidatorBond: 0n,
+		hardCapSelfStake: 200000000000000n as bigint | undefined,
 		loading: false,
 		unavailable: false,
 	}
@@ -43,7 +45,10 @@ vi.mock('../../hooks/src/useAccountBalances', () => ({
 	}),
 }))
 vi.mock('../../hooks/src/useStakingMetrics', () => ({
-	useStakingMetrics: () => ({ minValidatorBond: state.minValidatorBond }),
+	useStakingMetrics: () => ({
+		minValidatorBond: state.minValidatorBond,
+		hardCapSelfStake: state.hardCapSelfStake,
+	}),
 }))
 vi.mock('hooks/useAverageRewardRate', () => ({
 	useAverageRewardRate: () => ({ getAverageRewardRate: () => 10 }),
@@ -166,6 +171,50 @@ test('validator calculator matches the account projection and scales custom stak
 	expect(rewards()).toEqual([20, 7300 / 12, 7300])
 })
 
+test('validator incentives stop growing at the self-stake cap while ordinary rewards keep scaling', async () => {
+	await render()
+	await changeAmount('20000')
+	expect(rewards()).toEqual([20, 7300 / 12, 7300])
+	await changeAmount('30000')
+	expect(rewards()).toEqual([23, 8395 / 12, 8395])
+	await changeAmount('40000')
+	expect(rewards()).toEqual([26, 9490 / 12, 9490])
+	await changeAmount('1000')
+	expect(rewards()).toEqual([0.3, 109.5 / 12, 109.5])
+})
+
+test('a current bond above the cap uses capped self-stake to scale observed incentives', async () => {
+	state.currentStake = 400000000000000n
+	await render()
+	expect(rewards()).toEqual([4.25, 1551.25 / 12, 1551.25])
+	await changeAmount('20000')
+	expect(rewards()).toEqual([8.5, 3102.5 / 12, 3102.5])
+	await changeAmount('40000')
+	expect(rewards()).toEqual([10, 3650 / 12, 3650])
+	await changeAmount('80000')
+	expect(rewards()).toEqual([13, 4745 / 12, 4745])
+})
+
+test.each([undefined, 0n])(
+	'validator incentives scale without a ceiling when the chain cap is %s',
+	async (cap) => {
+		state.hardCapSelfStake = cap
+		await render()
+		await changeAmount('40000')
+		expect(rewards()).toEqual([40, 14600 / 12, 14600])
+	},
+)
+
+test('validator projections respond to a chain cap update without changing the entered stake', async () => {
+	await render()
+	await changeAmount('40000')
+	expect(rewards()).toEqual([26, 9490 / 12, 9490])
+	state.hardCapSelfStake = 300000000000000n
+	await render()
+	expect(input().value).toBe('40000')
+	expect(rewards()).toEqual([33, 12045 / 12, 12045])
+})
+
 test.each(['9999.99', '1000', '0', ''])(
 	'validator amounts below the incentive threshold (%s) project only ordinary rewards and remain editable',
 	async (value) => {
@@ -229,6 +278,8 @@ test('non-validator calculators retain the network rate', async () => {
 	expect(container.querySelector('[role="alert"]')).toBeNull()
 	expect(container.textContent).not.toContain('Validator incentives included')
 	expect(rewards()).toEqual([50 / 365, 50 / 12, 50])
+	await changeAmount('40000')
+	expect(rewards()).toEqual([4000 / 365, 4000 / 12, 4000])
 })
 
 test.each([
