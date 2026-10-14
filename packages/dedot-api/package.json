@@ -22,7 +22,7 @@
 		"dedot": "^1.4.0",
 		"global-bus": "workspace:*",
 		"rxjs": "^7.8.2",
-		"smoldot": "^3.4.1",
+		"smoldot": "^3.7.0",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
