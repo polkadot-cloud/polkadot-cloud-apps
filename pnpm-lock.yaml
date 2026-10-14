@@ -144,11 +144,11 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9(postcss@8.5.28)
       prettier:
-        specifier: ^3.9.8
-        version: 3.9.9
+        specifier: ^3.9.10
+        version: 3.9.10
       prettier-plugin-organize-imports:
         specifier: ^4.1.0
-        version: 4.3.0(prettier@3.9.9)(typescript@6.0.3)
+        version: 4.3.0(prettier@3.9.10)(typescript@6.0.3)
       sass:
         specifier: ^1.105.1
         version: 1.105.1
@@ -4295,8 +4295,8 @@ packages:
       vue-tsc:
         optional: true
 
-  prettier@3.9.9:
-    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
+  prettier@3.9.10:
+    resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5320,7 +5320,7 @@ snapshots:
       '@dedot/types': 1.4.0
       '@dedot/utils': 1.4.0
       handlebars: 4.7.9
-      prettier: 3.9.9
+      prettier: 3.9.10
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -7649,12 +7649,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier-plugin-organize-imports@4.3.0(prettier@3.9.9)(typescript@6.0.3):
+  prettier-plugin-organize-imports@4.3.0(prettier@3.9.10)(typescript@6.0.3):
     dependencies:
-      prettier: 3.9.9
+      prettier: 3.9.10
       typescript: 6.0.3
 
-  prettier@3.9.9: {}
+  prettier@3.9.10: {}
 
   proper-lockfile@4.1.2:
     dependencies:
