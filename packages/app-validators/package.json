@@ -26,7 +26,7 @@
 		"hooks": "workspace:*",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"radix-ui": "^1.6.7",
+		"radix-ui": "^1.7.0",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
 		"react-error-boundary": "^6.1.4",
