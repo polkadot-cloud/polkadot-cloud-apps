@@ -3,6 +3,7 @@
 
 import { initDedotService } from 'dedot-api'
 import { createRoot } from 'react-dom/client'
+import { clearDisabledExtensionsLocal } from 'ui-app/util'
 import { version } from '../package.json'
 import { App } from './App'
 
@@ -29,6 +30,9 @@ if (
 ) {
 	localStorage.removeItem('lng_resources')
 }
+
+// Prevent reconnecting to disabled extensions from a saved session
+clearDisabledExtensionsLocal()
 
 initDedotService({
 	network: 'polkadot',
