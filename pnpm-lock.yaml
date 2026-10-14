@@ -808,8 +808,8 @@ importers:
         specifier: ^7.8.2
         version: 7.8.2
       smoldot:
-        specifier: ^3.4.1
-        version: 3.6.0
+        specifier: ^3.7.0
+        version: 3.7.0
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -995,8 +995,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(typescript@6.0.3)
       smoldot:
-        specifier: ^3.4.1
-        version: 3.6.0
+        specifier: ^3.7.0
+        version: 3.7.0
     devDependencies:
       tsx:
         specifier: ^4.23.13
@@ -4561,8 +4561,8 @@ packages:
   smoldot@2.0.40:
     resolution: {integrity: sha512-h6XC/kKDLdZBBTI0X8y4ZxmaZ2KYVVB0+5isCQm6j26ljeNjHZUDOV+hf8VyoE23+jg00wrxNJ2IVcIAURxwtg==}
 
-  smoldot@3.6.0:
-    resolution: {integrity: sha512-kBN6gKq06qPUEfwFmk9Bn5z8Kkzuuvc6VOjZ81KDu080vY0r9Hdd2OCCAqFFwnSC9T/znnHxpNK27gu6eKf8tg==}
+  smoldot@3.7.0:
+    resolution: {integrity: sha512-49/jSn4hVysTu6SL8wTk6JRedG1GhxgDkxQ9hEC9gKMadZvWIoxgBVS2N8OQn4UTpWAd3hpifiBh8tRYPh8EkQ==}
 
   snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
@@ -7951,7 +7951,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  smoldot@3.6.0:
+  smoldot@3.7.0:
     dependencies:
       ws: 8.22.0
     transitivePeerDependencies:
