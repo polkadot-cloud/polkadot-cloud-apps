@@ -919,8 +919,8 @@ importers:
         specifier: ^17.4.2
         version: 17.4.2
       openai:
-        specifier: ^7.28.0
-        version: 7.28.0(ws@8.22.0)
+        specifier: ^7.32.0
+        version: 7.32.0(ws@8.22.0)
     devDependencies:
       '@types/node':
         specifier: ^26.6.4
@@ -4182,8 +4182,8 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openai@7.28.0:
-    resolution: {integrity: sha512-HSY4fFLflQGYe2kvO0atm6/GzhD61gpyiOZZUvO4nptMUhuB1to2K3wwFpFqc5gfEK0SxyIIFiu1yE2MtygWcA==}
+  openai@7.32.0:
+    resolution: {integrity: sha512-avqxu/jl1gsVBCBgFNPr9sTh+wZppQphuhhFy1zEvAJxEaJ4t0ery6hZdOT9kws/EcNTARoQcZs2IT3bliE1SA==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
@@ -7558,7 +7558,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@7.28.0(ws@8.22.0):
+  openai@7.32.0(ws@8.22.0):
     optionalDependencies:
       ws: 8.22.0
 
