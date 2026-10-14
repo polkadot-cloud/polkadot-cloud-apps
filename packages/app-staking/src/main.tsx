@@ -20,6 +20,7 @@ import 'simplebar/dist/simplebar.min.css'
 
 // Global services
 import { initDedotService } from 'dedot-api'
+import { clearDisabledExtensionsLocal } from 'ui-app/util'
 
 const rootElement = document.getElementById('root')
 if (!rootElement) {
@@ -34,6 +35,9 @@ if (
 ) {
 	localStorage.removeItem('lng_resources')
 }
+
+// Prevent reconnecting to disabled extensions from a saved session
+clearDisabledExtensionsLocal()
 
 // Initialise global api service
 initDedotService({

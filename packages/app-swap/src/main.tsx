@@ -4,6 +4,7 @@
 import { App } from 'App'
 import { initDedotService } from 'dedot-api'
 import { createRoot } from 'react-dom/client'
+import { clearDisabledExtensionsLocal } from 'ui-app/util'
 
 // Network styles
 import 'ui-styles/accents/default.scss'
@@ -21,6 +22,9 @@ const rootElement = document.getElementById('root')
 if (!rootElement) {
 	throw new Error('Failed to find the root element')
 }
+
+// Prevent reconnecting to disabled extensions from a saved session
+clearDisabledExtensionsLocal()
 
 initDedotService({
 	network: 'polkadot',
