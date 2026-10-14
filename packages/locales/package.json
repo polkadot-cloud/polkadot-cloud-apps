@@ -21,7 +21,7 @@
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
 		"event-tracking": "workspace:*",
-		"i18next": "^26.4.2",
+		"i18next": "^26.4.3",
 		"react-i18next": "^17.0.14",
 		"utils": "workspace:*"
 	},
