@@ -22,6 +22,11 @@ beforeEach(async () => {
 	extensions = await import(
 		'../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
 	)
+	// Test the exclusion mechanism independently of which extensions are currently disabled.
+	vi.doMock('../../consts/src/extensions', async (importOriginal) => ({
+		...(await importOriginal<object>()),
+		DisabledExtensions: ['talisman'],
+	}))
 	util = await import('../../ui-app/src/util')
 	core.resetAccounts()
 	core.setReconnectSync('unsynced')

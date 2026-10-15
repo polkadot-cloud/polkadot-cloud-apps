@@ -64,7 +64,6 @@ export const extensions: ExtensionsList = {
 }
 
 // Extensions that are hidden from the connect UI and are not reconnected from a saved session.
-// TODO: 14 Oct 2026 - TEMP: Talisman disabled due to Blockaid false positive, revert when resolved.
-export const DisabledExtensions: string[] = ['talisman']
+export const DisabledExtensions: string[] = []
 
 export default extensions
