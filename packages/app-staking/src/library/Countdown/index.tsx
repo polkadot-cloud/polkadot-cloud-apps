@@ -11,7 +11,7 @@ export const Countdown = ({ timeleft, markup = true }: CountdownProps) => {
 	const secondsNumber = seconds ? seconds[0] : 0
 	const secondsLabel = seconds
 		? seconds[1]
-		: t('second', { count: secondsNumber })
+		: t('time.second', { count: secondsNumber })
 
 	if (markup) {
 		return (

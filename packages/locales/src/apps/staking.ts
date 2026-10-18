@@ -15,6 +15,8 @@ const resourceLoaders = import.meta.glob<LocaleJson>(
 )
 
 export const i18next = createI18next({
+	id: 'staking',
+	resourceVersion: import.meta.env.VITE_LOCALE_RESOURCES_VERSION,
 	fallbackResources: {
 		...appEn,
 		...helpEn,

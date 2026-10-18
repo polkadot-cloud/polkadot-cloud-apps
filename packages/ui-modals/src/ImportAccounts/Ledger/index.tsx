@@ -14,6 +14,7 @@ import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { setStateWithRef } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
+import { getLedgerMessageKey } from 'locales/util'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LedgerAddress } from 'types'
@@ -265,7 +266,7 @@ export const Ledger = () => {
 			{!!maybeFeedback && (
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<h3 style={{ padding: '1rem 0 2rem 0' }}>
-						{t(String(feedback?.message), {
+						{t(getLedgerMessageKey(String(feedback?.message)), {
 							ns: 'app',
 							...feedback?.params,
 						})}

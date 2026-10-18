@@ -8,6 +8,7 @@ import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
 import {
 	cloudRpcPlugin,
+	localeResourcesVersionPlugin,
 	sharedFaviconPlugins,
 	simpleAnalyticsPlugin,
 } from 'vite-shared'
@@ -15,6 +16,7 @@ import {
 export default defineConfig({
 	plugins: [
 		cloudRpcPlugin(),
+		localeResourcesVersionPlugin(),
 		...sharedFaviconPlugins(),
 		simpleAnalyticsPlugin({ hostname: SimpleAnalyticsStakingHostname }),
 		react(),

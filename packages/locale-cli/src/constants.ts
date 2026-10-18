@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { localeDefinitions } from 'consts/locales'
+import { discoverNamespaceFiles } from './namespaceFiles'
 export type Locale = keyof typeof localeDefinitions
 
 // Supported locales
@@ -15,13 +16,7 @@ export const LOCALE_NAMES: Record<Locale, string> = Object.fromEntries(
 ) as Record<Locale, string>
 
 // Available namespace files
-export const NAMESPACE_FILES = [
-	'app',
-	'help',
-	'modals',
-	'pages',
-	'tips',
-] as const
+export const NAMESPACE_FILES = discoverNamespaceFiles()
 
 // Context about Polkadot and the staking dashboard
 export const POLKADOT_CONTEXT = `

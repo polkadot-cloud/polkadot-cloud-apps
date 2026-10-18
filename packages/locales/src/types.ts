@@ -10,6 +10,8 @@ export type LocaleJsonValue = string | LocaleJson | LocaleJsonValue[]
 export type LocaleResourceLoaders = Record<string, () => Promise<LocaleJson>>
 
 export interface LocaleProfile {
+	id: string
+	resourceVersion: string
 	fallbackResources: LocaleJson
 	resourceLoaders: LocaleResourceLoaders
 }
