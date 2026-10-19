@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useExtensions } from '@polkadot-cloud/connect'
-import extensions from 'consts/extensions'
+import extensions, { DisabledExtensions } from 'consts/extensions'
 import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
@@ -23,11 +23,13 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 
 	const popoverRef = useRef<HTMLDivElement>(null)
 
-	// Format supported extensions as array
-	const extensionsAsArray = Object.entries(extensions).map(([id, value]) => ({
-		id,
-		...value,
-	}))
+	// Format supported extensions as array, excluding disabled extensions
+	const extensionsAsArray = Object.entries(extensions)
+		.filter(([id]) => !DisabledExtensions.includes(id))
+		.map(([id, value]) => ({
+			id,
+			...value,
+		}))
 
 	// Determine which web extensions to display.
 	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')

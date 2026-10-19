@@ -21,18 +21,18 @@
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.7",
 		"@types/react-helmet": "^6.1.11",
-		"@vitejs/plugin-react": "^6.1.1",
+		"@vitejs/plugin-react": "^6.1.2",
 		"globals": "^17.13.0",
-		"postcss": "^8.5.28",
+		"postcss": "^8.5.29",
 		"postcss-scss": "^4.0.9",
-		"prettier": "^3.9.8",
+		"prettier": "^3.9.10",
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"sass": "^1.105.1",
 		"stylelint": "^17.16.0",
 		"stylelint-config-standard-scss": "^17.0.0",
-		"stylelint-order": "^8.1.1",
+		"stylelint-order": "^8.1.2",
 		"typescript": "^6.0.3",
-		"vite": "8.3.2"
+		"vite": "8.3.4"
 	},
 	"packageManager": "pnpm@12.3.4"
 }

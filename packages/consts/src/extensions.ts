@@ -63,4 +63,7 @@ export const extensions: ExtensionsList = {
 	},
 }
 
+// Extensions that are hidden from the connect UI and are not reconnected from a saved session.
+export const DisabledExtensions: string[] = []
+
 export default extensions
