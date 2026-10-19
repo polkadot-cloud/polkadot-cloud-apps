@@ -131,14 +131,21 @@ test('clearing or replacing a selection discards warnings for removed validators
 })
 
 test('an empty candidate list does not call the warning API', async () => {
-	expect(await fetchGetValidatorWarnings('polkadot', [], { who: 'nominator' })).toEqual({})
+	expect(
+		await fetchGetValidatorWarnings('polkadot', [], { who: 'nominator' }),
+	).toEqual({})
 	expect(query).not.toHaveBeenCalled()
 })
 
-test.each([undefined, null])('without a nominator no warning request is made: %s', async (who) => {
-	expect(await fetchGetValidatorWarnings('polkadot', ['zug'], { who })).toEqual({})
-	expect(query).not.toHaveBeenCalled()
-})
+test.each([undefined, null])(
+	'without a nominator no warning request is made: %s',
+	async (who) => {
+		expect(
+			await fetchGetValidatorWarnings('polkadot', ['zug'], { who }),
+		).toEqual({})
+		expect(query).not.toHaveBeenCalled()
+	},
+)
 
 test('warning queries preserve supplied addresses and bypass the Apollo cache', async () => {
 	query.mockResolvedValue({
@@ -147,13 +154,19 @@ test('warning queries preserve supplied addresses and bypass the Apollo cache', 
 		},
 	})
 	expect(
-		await fetchGetValidatorWarnings('polkadot', ['healthy', 'zug'], { who: 'nominator' }),
+		await fetchGetValidatorWarnings('polkadot', ['healthy', 'zug'], {
+			who: 'nominator',
+		}),
 	).toEqual({
 		zug: ['ZUG_VALIDATOR'],
 	})
 	expect(query).toHaveBeenCalledWith(
 		expect.objectContaining({
-			variables: { network: 'polkadot', candidates: ['healthy', 'zug'], who: 'nominator' },
+			variables: {
+				network: 'polkadot',
+				candidates: ['healthy', 'zug'],
+				who: 'nominator',
+			},
 			fetchPolicy: 'no-cache',
 		}),
 	)
@@ -171,7 +184,9 @@ test.each(['polkadot', 'kusama'])(
 			},
 		})
 		expect(
-			await fetchGetValidatorWarnings(network, ['hetzner', 'both', 'healthy'], { who: 'nominator' }),
+			await fetchGetValidatorWarnings(network, ['hetzner', 'both', 'healthy'], {
+				who: 'nominator',
+			}),
 		).toEqual({
 			hetzner: ['HETZNER'],
 			both: ['ZUG_VALIDATOR', 'HETZNER'],
@@ -181,7 +196,11 @@ test.each(['polkadot', 'kusama'])(
 
 test('a successful response with no warnings returns an empty record', async () => {
 	query.mockResolvedValue({ data: { getValidatorWarnings: [] } })
-	expect(await fetchGetValidatorWarnings('kusama', ['healthy'], { who: 'nominator' })).toEqual({})
+	expect(
+		await fetchGetValidatorWarnings('kusama', ['healthy'], {
+			who: 'nominator',
+		}),
+	).toEqual({})
 })
 
 test('missing warning arrays are normalized before health checks consume them', async () => {
@@ -194,7 +213,9 @@ test('missing warning arrays are normalized before health checks consume them', 
 		},
 	})
 	expect(
-		await fetchGetValidatorWarnings('polkadot', ['missing', 'null'], { who: 'nominator' }),
+		await fetchGetValidatorWarnings('polkadot', ['missing', 'null'], {
+			who: 'nominator',
+		}),
 	).toEqual({
 		missing: [],
 		null: [],
@@ -203,13 +224,18 @@ test('missing warning arrays are normalized before health checks consume them', 
 
 test('warning API failures follow the shared query fallback', async () => {
 	query.mockRejectedValue(new Error('API unavailable'))
-	expect(await fetchGetValidatorWarnings('polkadot', ['zug'], { who: 'nominator' })).toEqual({})
+	expect(
+		await fetchGetValidatorWarnings('polkadot', ['zug'], { who: 'nominator' }),
+	).toEqual({})
 })
 
 test('cached warning and retainment queries propagate failures for retry', async () => {
 	query.mockRejectedValue(new Error('API unavailable'))
 	await expect(
-		fetchGetValidatorWarnings('polkadot', ['zug'], { throwOnError: true, who: 'nominator' }),
+		fetchGetValidatorWarnings('polkadot', ['zug'], {
+			throwOnError: true,
+			who: 'nominator',
+		}),
 	).rejects.toThrow('API unavailable')
 	await expect(
 		fetchValidatorDetailsBatch('polkadot', ['zug'], 99, 1, 30, {
@@ -221,7 +247,10 @@ test('cached warning and retainment queries propagate failures for retry', async
 test('missing response data is not cached as a successful empty result', async () => {
 	query.mockResolvedValue({ data: null })
 	await expect(
-		fetchGetValidatorWarnings('polkadot', ['zug'], { throwOnError: true, who: 'nominator' }),
+		fetchGetValidatorWarnings('polkadot', ['zug'], {
+			throwOnError: true,
+			who: 'nominator',
+		}),
 	).rejects.toThrow('Staking API returned no data')
 })
 
@@ -236,7 +265,11 @@ test('historical backing warnings survive the API transport alongside existing c
 			],
 		},
 	})
-	expect(await fetchGetValidatorWarnings('polkadot', ['historical'], { who: 'nominator' })).toEqual({
+	expect(
+		await fetchGetValidatorWarnings('polkadot', ['historical'], {
+			who: 'nominator',
+		}),
+	).toEqual({
 		historical: ['HETZNER', 'LOW_HISTORICAL_BACKING'],
 	})
 })

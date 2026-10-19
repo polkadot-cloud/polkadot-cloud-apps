@@ -46,7 +46,9 @@ vi.mock(
 		}),
 	}),
 )
-vi.mock('../../hooks/src/useApi', () => ({ useApi: () => ({ isReady: true, activeEra: { index: 100 } }) }))
+vi.mock('../../hooks/src/useApi', () => ({
+	useApi: () => ({ isReady: true, activeEra: { index: 100 } }),
+}))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
 }))

@@ -78,9 +78,18 @@ test('changing nominators does not reuse another account’s warning results', a
 	const poolRequest = { ...request, who: 'pool-stash' }
 	await fetchNominationWarnings(poolRequest)
 	expect(fetchWarnings).toHaveBeenCalledTimes(2)
-	expect(fetchWarnings).toHaveBeenLastCalledWith('polkadot', ['healthy', 'zug'], { throwOnError: true, who: 'pool-stash' })
-	expect(nominationWarningsStore.getSnapshot()[warningRequestKey(request)]?.warnings).toEqual({ zug: ['ZUG_VALIDATOR'] })
-	expect(nominationWarningsStore.getSnapshot()[warningRequestKey(poolRequest)]?.warnings).toEqual({})
+	expect(fetchWarnings).toHaveBeenLastCalledWith(
+		'polkadot',
+		['healthy', 'zug'],
+		{ throwOnError: true, who: 'pool-stash' },
+	)
+	expect(
+		nominationWarningsStore.getSnapshot()[warningRequestKey(request)]?.warnings,
+	).toEqual({ zug: ['ZUG_VALIDATOR'] })
+	expect(
+		nominationWarningsStore.getSnapshot()[warningRequestKey(poolRequest)]
+			?.warnings,
+	).toEqual({})
 })
 
 test('without a staking account no warning data is fetched', async () => {

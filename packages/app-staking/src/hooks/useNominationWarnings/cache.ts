@@ -62,7 +62,10 @@ export const fetchNominationWarnings = async (request: WarningRequest) => {
 
 	try {
 		const [warnings, details] = await Promise.all([
-			fetchGetValidatorWarnings(network, addresses, { throwOnError: true, who }),
+			fetchGetValidatorWarnings(network, addresses, {
+				throwOnError: true,
+				who,
+			}),
 			retainmentStatsEnabled && era > 0
 				? fetchValidatorDetailsBatch(
 						network,

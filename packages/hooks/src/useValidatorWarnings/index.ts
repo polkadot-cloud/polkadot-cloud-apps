@@ -30,13 +30,13 @@ export const useValidatorWarnings = (
 			return
 		}
 		let active = true
-		void fetchGetValidatorWarnings(request.network, request.candidates, { who: request.who }).then(
-			(warnings) => {
-				if (active) {
-					setResult({ request, warnings })
-				}
-			},
-		)
+		void fetchGetValidatorWarnings(request.network, request.candidates, {
+			who: request.who,
+		}).then((warnings) => {
+			if (active) {
+				setResult({ request, warnings })
+			}
+		})
 		return () => {
 			active = false
 		}
@@ -46,7 +46,9 @@ export const useValidatorWarnings = (
 		request.enabled && candidates.length > 0 && result?.request !== request
 	return {
 		warnings:
-			request.enabled && result?.request === request ? result.warnings : EMPTY_WARNINGS,
+			request.enabled && result?.request === request
+				? result.warnings
+				: EMPTY_WARNINGS,
 		isLoading,
 	}
 }

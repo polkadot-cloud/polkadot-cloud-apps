@@ -145,7 +145,9 @@ export const Editor = ({
 
 	return (
 		<GenerateNominations
-			nominator={isPool ? (activePool?.addresses?.stash ?? null) : activeAddress}
+			nominator={
+				isPool ? (activePool?.addresses?.stash ?? null) : activeAddress
+			}
 			canManageNominations={canSubmit}
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}

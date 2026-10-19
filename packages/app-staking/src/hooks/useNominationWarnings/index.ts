@@ -46,7 +46,9 @@ export const useNominationWarnings = () => {
 
 	// Check whether pool nominations are being managed.
 	const forPool = effectiveBondFor === 'pool'
-	const nominator = forPool ? (activePool?.addresses?.stash ?? null) : activeAddress
+	const nominator = forPool
+		? (activePool?.addresses?.stash ?? null)
+		: activeAddress
 	const isPoolMember = forPool && isMember() && !canManagePoolNominations
 
 	// Get the nominations for the resolved staking type.
@@ -91,7 +93,8 @@ export const useNominationWarnings = () => {
 	)
 	const entries = useSingletonStore(nominationWarningsStore)
 	const result = entries[warningRequestKey(request)]
-	const enabled = canDisplay && Boolean(nominator) && validatorAddresses.length > 0
+	const enabled =
+		canDisplay && Boolean(nominator) && validatorAddresses.length > 0
 
 	useEffect(() => {
 		if (enabled) {
