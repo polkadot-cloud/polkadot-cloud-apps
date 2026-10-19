@@ -5,14 +5,13 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useStakeStats } from 'hooks/useStats'
 import { useSyncing } from 'hooks/useSyncing'
-import { NominationWarnings } from 'library/NominationWarnings'
+import { PageTitle } from 'library/PageTitle'
 import { PageWarnings } from 'library/PageWarnings'
 import { Stats } from 'library/Stats'
 import { Active } from 'pages/Nominate/Active'
 import { PoolOverview } from 'pages/Pools/Overview'
 import { useTranslation } from 'react-i18next'
 import { Stat } from 'ui-app/Stat'
-import { Page } from 'ui-core/base'
 
 export const Stake = () => {
 	const { t } = useTranslation('pages')
@@ -36,9 +35,8 @@ export const Stake = () => {
 
 	return (
 		<>
-			<Page.Title title={t('stake')} />
+			<PageTitle title={t('stake')} />
 			<PageWarnings />
-			<NominationWarnings />
 			{!nominating && (
 				<Stat.Row>
 					<Stats items={[averageRewardRate, minimumToJoinPool, nextReward]} />

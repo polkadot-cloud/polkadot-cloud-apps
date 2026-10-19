@@ -52,6 +52,14 @@
 		width: 100% !important;
 	}
 
+	button > div > span {
+		background: transparent;
+		border-radius: 0;
+		height: auto;
+		padding: 0;
+		width: auto;
+	}
+
 	svg {
 		color: var(--gray-800) !important;
 		height: 1.2rem !important;

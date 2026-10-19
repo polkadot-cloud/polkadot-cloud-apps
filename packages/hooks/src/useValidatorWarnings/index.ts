@@ -11,12 +11,14 @@ export const useValidatorWarnings = (
 	network: string,
 	candidates: string[],
 	enabled: boolean,
+	who: string | null,
+	era: number,
 ) => {
 	const candidatesKey = JSON.stringify(candidates)
 	// A new selection gets its own request identity, even when revisiting a prior selection.
 	const request = useMemo(
-		() => ({ network, candidates, enabled }),
-		[network, candidatesKey, enabled],
+		() => ({ network, candidates, enabled: enabled && Boolean(who), who, era }),
+		[network, candidatesKey, enabled, who, era],
 	)
 	const [result, setResult] = useState<{
 		request: typeof request
@@ -28,23 +30,25 @@ export const useValidatorWarnings = (
 			return
 		}
 		let active = true
-		void fetchGetValidatorWarnings(request.network, request.candidates).then(
-			(warnings) => {
-				if (active) {
-					setResult({ request, warnings })
-				}
-			},
-		)
+		void fetchGetValidatorWarnings(request.network, request.candidates, {
+			who: request.who,
+		}).then((warnings) => {
+			if (active) {
+				setResult({ request, warnings })
+			}
+		})
 		return () => {
 			active = false
 		}
 	}, [request])
 
 	const isLoading =
-		enabled && candidates.length > 0 && result?.request !== request
+		request.enabled && candidates.length > 0 && result?.request !== request
 	return {
 		warnings:
-			enabled && result?.request === request ? result.warnings : EMPTY_WARNINGS,
+			request.enabled && result?.request === request
+				? result.warnings
+				: EMPTY_WARNINGS,
 		isLoading,
 	}
 }

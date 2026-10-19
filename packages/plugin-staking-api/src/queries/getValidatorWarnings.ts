@@ -6,8 +6,8 @@ import type { GetValidatorWarningsData, ValidatorWarnings } from '../types'
 import { fetchQuery } from './generic'
 
 const QUERY = gql`
-  query GetValidatorWarnings($network: String!, $candidates: [String!]!) {
-    getValidatorWarnings(network: $network, candidates: $candidates) {
+  query GetValidatorWarnings($network: String!, $candidates: [String!]!, $who: String!) {
+    getValidatorWarnings(network: $network, candidates: $candidates, who: $who) {
       candidate
       warnings
     }
@@ -17,16 +17,17 @@ const QUERY = gql`
 export const fetchGetValidatorWarnings = async (
 	network: string,
 	candidates: string[],
-	options?: { throwOnError?: boolean },
+	options?: { throwOnError?: boolean; who?: string | null },
 ): Promise<ValidatorWarnings> => {
-	if (candidates.length === 0) {
+	const { who, ...queryOptions } = options ?? {}
+	if (candidates.length === 0 || !who) {
 		return {}
 	}
 	const data = await fetchQuery<GetValidatorWarningsData>(
 		QUERY,
-		{ network, candidates },
+		{ network, candidates, who },
 		{ getValidatorWarnings: [] },
-		{ fetchPolicy: 'no-cache', ...options },
+		{ fetchPolicy: 'no-cache', ...queryOptions },
 	)
 	return Object.fromEntries(
 		(data.getValidatorWarnings ?? []).map(({ candidate, warnings }) => [

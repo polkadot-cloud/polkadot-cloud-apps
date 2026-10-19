@@ -536,7 +536,10 @@ export interface GetNominationStatusData {
 	}
 }
 
-export type ValidatorWarningType = 'ZUG_VALIDATOR' | 'HETZNER'
+export type ValidatorWarningType =
+	| 'ZUG_VALIDATOR'
+	| 'HETZNER'
+	| 'LOW_HISTORICAL_BACKING'
 
 export type ValidatorWarnings = Record<string, ValidatorWarningType[]>
 

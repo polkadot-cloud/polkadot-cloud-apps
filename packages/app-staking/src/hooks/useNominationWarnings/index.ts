@@ -12,9 +12,9 @@ import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
 import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import {
+	getPageValidatorWarningGroups,
 	getValidatorItemWarnings,
 	getValidatorsWithRetainment,
-	getValidatorWarningGroups,
 } from 'library/GenerateNominations/utils'
 import { useEffect, useMemo } from 'react'
 import type { BondFor } from 'types'
@@ -46,6 +46,9 @@ export const useNominationWarnings = () => {
 
 	// Check whether pool nominations are being managed.
 	const forPool = effectiveBondFor === 'pool'
+	const nominator = forPool
+		? (activePool?.addresses?.stash ?? null)
+		: activeAddress
 	const isPoolMember = forPool && isMember() && !canManagePoolNominations
 
 	// Get the nominations for the resolved staking type.
@@ -73,6 +76,7 @@ export const useNominationWarnings = () => {
 	const request = useMemo(
 		() => ({
 			network,
+			who: nominator,
 			era: activeEra.index,
 			erasPerDay,
 			retainmentStatsEnabled,
@@ -80,6 +84,7 @@ export const useNominationWarnings = () => {
 		}),
 		[
 			network,
+			nominator,
 			activeEra.index,
 			erasPerDay,
 			retainmentStatsEnabled,
@@ -88,7 +93,8 @@ export const useNominationWarnings = () => {
 	)
 	const entries = useSingletonStore(nominationWarningsStore)
 	const result = entries[warningRequestKey(request)]
-	const enabled = canDisplay && validatorAddresses.length > 0
+	const enabled =
+		canDisplay && Boolean(nominator) && validatorAddresses.length > 0
 
 	useEffect(() => {
 		if (enabled) {
@@ -97,10 +103,9 @@ export const useNominationWarnings = () => {
 	}, [enabled, request])
 
 	const isLoading = enabled && (!result || result.status === 'loading')
-	const validatorWarningGroups = getValidatorWarningGroups(
+	const validatorWarningGroups = getPageValidatorWarningGroups(
 		nominations,
 		result?.warnings ?? {},
-		'danger',
 	)
 	const dangerCount = result?.retainmentByAddress
 		? getValidatorsWithRetainment(
@@ -127,9 +132,7 @@ export const useNominationWarnings = () => {
 			options: {
 				bondFor: effectiveBondFor,
 				nominated: nominations,
-				nominator: forPool
-					? (activePool?.addresses?.stash ?? null)
-					: activeAddress,
+				nominator,
 			},
 			scroll: false,
 			variant: 'card',

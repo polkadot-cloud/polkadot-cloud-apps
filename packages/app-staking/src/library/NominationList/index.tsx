@@ -94,6 +94,8 @@ export const NominationListInner = ({
 		network,
 		addresses,
 		retainmentStatsEnabled,
+		nominator,
+		activeEra.index,
 	)
 	const pageKey = useMemo(
 		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),

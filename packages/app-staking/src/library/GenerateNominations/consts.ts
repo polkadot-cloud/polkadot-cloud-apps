@@ -9,12 +9,23 @@ export const ValidatorWarningDefinitions: {
 	messageKey: string
 	labelKey: string
 	severity: 'danger' | 'warning'
+	showOnPage?: boolean
+	readMoreUrl?: string
 }[] = [
 	{
 		type: 'ZUG_VALIDATOR',
 		messageKey: 'zugValidatorWarning',
 		labelKey: 'zugValidatorWarningLabel',
 		severity: 'danger',
+	},
+	{
+		type: 'LOW_HISTORICAL_BACKING',
+		messageKey: 'lowHistoricalBackingWarning',
+		labelKey: 'lowHistoricalBackingWarningLabel',
+		severity: 'warning',
+		showOnPage: true,
+		readMoreUrl:
+			'https://polkadot.cloud/blog/en/low-backing-validator-warnings',
 	},
 	{
 		type: 'HETZNER',

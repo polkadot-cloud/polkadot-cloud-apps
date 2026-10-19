@@ -6,3 +6,10 @@
 	border-radius: var(--btn-sm-radius);
 	font-size: 1.1rem;
 }
+
+.readMore {
+	color: inherit;
+	display: inline-block;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}

@@ -4,6 +4,7 @@
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { MaxNominations } from 'consts'
 import { useManageNominations } from 'contexts/ManageNominations'
+import { useActivePool } from 'hooks/useActivePool'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useApi } from 'hooks/useApi'
 import { useNominationHealth } from 'hooks/useNominationHealth'
@@ -52,7 +53,8 @@ export const Editor = ({
 }: EditorProps) => {
 	const { serviceApi } = useApi()
 	const { activeProxy } = useActiveProxy()
-	const { activeAccount } = useActiveAccount()
+	const { activeAccount, activeAddress } = useActiveAccount()
+	const { activePool } = useActivePool()
 	const { accountHasSigner } = useImportedAccounts()
 	const {
 		active: healthCheckActive,
@@ -143,6 +145,9 @@ export const Editor = ({
 
 	return (
 		<GenerateNominations
+			nominator={
+				isPool ? (activePool?.addresses?.stash ?? null) : activeAddress
+			}
 			canManageNominations={canSubmit}
 			displayFor={displayFor}
 			eligibilityLoading={eligibilityLoading}
