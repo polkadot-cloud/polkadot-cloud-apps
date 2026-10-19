@@ -10,6 +10,7 @@ import { useNominationSync } from './useNominationSync'
 
 export const GenerateNominations = ({
 	setters = [],
+	nominator,
 	canManageNominations = true,
 	displayFor = 'default',
 	eligibilityLoading = false,
@@ -35,6 +36,7 @@ export const GenerateNominations = ({
 
 	return (
 		<NominationsView
+			nominator={nominator}
 			cloudValidatorHandler={cloudValidatorHandler}
 			canManageNominations={canManageNominations}
 			displayFor={displayFor}

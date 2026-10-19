@@ -22,6 +22,7 @@ vi.mock('../../hooks/src/index', () => import('../../hooks/src/util'))
 
 const request = {
 	network: 'polkadot',
+	who: 'nominator',
 	era: 100,
 	erasPerDay: 1,
 	retainmentStatsEnabled: true,
@@ -69,6 +70,23 @@ test('new eras and selections fetch fresh data without overwriting cached result
 		nominationWarningsStore.getSnapshot()[warningRequestKey(nextSelection)]
 			?.warnings,
 	).toEqual({})
+})
+
+test('changing nominators does not reuse another account’s warning results', async () => {
+	await fetchNominationWarnings(request)
+	fetchWarnings.mockResolvedValue({})
+	const poolRequest = { ...request, who: 'pool-stash' }
+	await fetchNominationWarnings(poolRequest)
+	expect(fetchWarnings).toHaveBeenCalledTimes(2)
+	expect(fetchWarnings).toHaveBeenLastCalledWith('polkadot', ['healthy', 'zug'], { throwOnError: true, who: 'pool-stash' })
+	expect(nominationWarningsStore.getSnapshot()[warningRequestKey(request)]?.warnings).toEqual({ zug: ['ZUG_VALIDATOR'] })
+	expect(nominationWarningsStore.getSnapshot()[warningRequestKey(poolRequest)]?.warnings).toEqual({})
+})
+
+test('without a staking account no warning data is fetched', async () => {
+	await fetchNominationWarnings({ ...request, who: null })
+	expect(fetchWarnings).not.toHaveBeenCalled()
+	expect(fetchDetails).not.toHaveBeenCalled()
 })
 
 test('empty results are cached and empty selections do not fetch', async () => {
@@ -129,6 +147,7 @@ test('Hetzner warnings load on Kusama without unsupported retainment queries', a
 
 	expect(fetchWarnings).toHaveBeenCalledWith('kusama', ['healthy', 'hetzner'], {
 		throwOnError: true,
+		who: 'nominator',
 	})
 	expect(fetchDetails).not.toHaveBeenCalled()
 	expect(

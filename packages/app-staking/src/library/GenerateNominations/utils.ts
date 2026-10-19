@@ -81,6 +81,15 @@ export const getValidatorWarningGroups = (
 		}))
 		.filter(({ validators }) => validators.length > 0)
 
+// Include historical election-risk advisories alongside danger notices on staking pages.
+export const getPageValidatorWarningGroups = (
+	validators: Validator[],
+	warnings: ValidatorWarnings,
+) =>
+	getValidatorWarningGroups(validators, warnings).filter(
+		({ severity, showOnPage }) => severity === 'danger' || showOnPage,
+	)
+
 export const getValidatorsWithHealthIssues = (
 	validators: Validator[],
 	lowRetainmentValidators: Validator[],

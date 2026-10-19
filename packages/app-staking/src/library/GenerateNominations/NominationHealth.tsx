@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
 import { Badge, Separator, StatusCard } from 'ui-core/base'
 import { getRetainmentStatus } from 'utils'
+import { ValidatorWarning } from '../NominationWarnings/ValidatorWarning'
 import type { NominationHealthProps } from './types'
 import {
 	getValidatorsWithHealthIssues,
@@ -131,16 +132,14 @@ export const NominationHealth = ({
 				</div>
 			)}
 			{validatorWarningGroups.map(
-				({ type, messageKey, severity, validators }) => (
-					<StatusCard
+				({ type, messageKey, severity, validators, readMoreUrl }) => (
+					<ValidatorWarning
 						key={type}
-						status={severity}
-						icon={severity === 'danger' ? faCircleExclamation : undefined}
-						iconFrame={severity !== 'danger'}
-						role="status"
+						severity={severity}
+						readMoreUrl={readMoreUrl}
 					>
 						{t(messageKey, { count: validators.length })}
-					</StatusCard>
+					</ValidatorWarning>
 				),
 			)}
 			{averageRetainment !== null && status !== null && (

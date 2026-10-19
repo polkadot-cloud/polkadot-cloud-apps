@@ -176,6 +176,9 @@ test.each<
 		'warning' | 'danger' | undefined,
 	]
 >([
+	[['LOW_HISTORICAL_BACKING'], null, true, 'warning'],
+	[['LOW_HISTORICAL_BACKING'], 90, true, 'warning'],
+	[['LOW_HISTORICAL_BACKING'], 40, true, 'danger'],
 	[['HETZNER'], null, true, 'warning'],
 	[['HETZNER'], 90, true, 'warning'],
 	[['HETZNER'], 60, true, 'warning'],

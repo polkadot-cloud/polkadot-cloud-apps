@@ -13,6 +13,7 @@ import type {
 
 export interface WarningRequest {
 	network: string
+	who: string | null
 	era: number
 	erasPerDay: number
 	retainmentStatsEnabled: boolean
@@ -31,6 +32,7 @@ export const nominationWarningsStore = createSingletonStore<
 
 export const warningRequestKey = ({
 	network,
+	who,
 	era,
 	erasPerDay,
 	retainmentStatsEnabled,
@@ -38,6 +40,7 @@ export const warningRequestKey = ({
 }: WarningRequest) =>
 	JSON.stringify([
 		network,
+		who,
 		era,
 		erasPerDay,
 		retainmentStatsEnabled,
@@ -45,9 +48,9 @@ export const warningRequestKey = ({
 	])
 
 export const fetchNominationWarnings = async (request: WarningRequest) => {
-	const { network, era, erasPerDay, retainmentStatsEnabled } = request
+	const { network, who, era, erasPerDay, retainmentStatsEnabled } = request
 	const addresses = [...new Set(request.addresses)].sort()
-	if (addresses.length === 0) {
+	if (addresses.length === 0 || !who) {
 		return
 	}
 	const key = warningRequestKey(request)
@@ -59,7 +62,7 @@ export const fetchNominationWarnings = async (request: WarningRequest) => {
 
 	try {
 		const [warnings, details] = await Promise.all([
-			fetchGetValidatorWarnings(network, addresses, { throwOnError: true }),
+			fetchGetValidatorWarnings(network, addresses, { throwOnError: true, who }),
 			retainmentStatsEnabled && era > 0
 				? fetchValidatorDetailsBatch(
 						network,

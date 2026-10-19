@@ -30,9 +30,14 @@ vi.mock(
 	}),
 )
 
-test.each([false, true])(
-	'Hetzner-only advisories render orange without retainment data (standalone editor: %s)',
-	(standalone) => {
+test.each([
+	['HETZNER', 'hetznerValidatorWarning', false],
+	['HETZNER', 'hetznerValidatorWarning', true],
+	['LOW_HISTORICAL_BACKING', 'lowHistoricalBackingWarning', false],
+	['LOW_HISTORICAL_BACKING', 'lowHistoricalBackingWarning', true],
+] as const)(
+	'%s advisories render orange without retainment data (message: %s, standalone editor: %s)',
+	(type, messageKey, standalone) => {
 		const markup = renderToStaticMarkup(
 			createElement(NominationHealth, {
 				allValidatorsWaiting: false,
@@ -42,12 +47,21 @@ test.each([false, true])(
 				validators: [
 					{ address: 'hetzner', prefs: { commission: 0, blocked: false } },
 				],
-				warnings: { hetzner: ['HETZNER'] },
+				warnings: { hetzner: [type] },
 			}),
 		)
 		expect(markup).toContain(statusClasses.warning)
-		expect(markup).toContain('hetznerValidatorWarning')
+		expect(markup).toContain(messageKey)
 		expect(markup).toContain('nominationHealthCheckNeedsAttention')
 		expect(markup).not.toContain(statusClasses.danger)
+		if (type === 'LOW_HISTORICAL_BACKING') {
+			expect(markup).toContain(
+				'href="https://polkadot.cloud/blog/en/low-backing-validator-warnings"',
+			)
+			expect(markup).toContain('target="_blank"')
+			expect(markup).toContain('rel="noopener noreferrer"')
+		} else {
+			expect(markup).not.toContain('<a ')
+		}
 	},
 )

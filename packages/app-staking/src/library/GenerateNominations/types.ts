@@ -15,6 +15,7 @@ import type {
 } from 'types'
 
 export interface GenerateNominationsProps {
+	nominator?: string | null
 	setters: AnyFunction[]
 	canManageNominations?: boolean
 	displayFor?: DisplayFor
@@ -26,6 +27,7 @@ export interface GenerateNominationsProps {
 }
 
 export interface NominationsViewProps {
+	nominator?: string | null
 	cloudValidatorHandler?: FilterHandler
 	canManageNominations: boolean
 	displayFor: DisplayFor

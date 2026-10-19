@@ -3,41 +3,9 @@
 
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useNominationWarnings } from 'hooks/useNominationWarnings'
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimary } from 'ui-buttons'
 import { Page, StatusCard } from 'ui-core/base'
-import classes from './index.module.scss'
-
-const ValidatorWarning = ({
-	children,
-	onFix,
-}: {
-	children: ReactNode
-	onFix?: () => void
-}) => {
-	const { t } = useTranslation('app')
-
-	return (
-		<StatusCard
-			action={
-				onFix ? (
-					<ButtonPrimary
-						className={classes.fixButton}
-						onClick={onFix}
-						text={t('fixIssues')}
-					/>
-				) : undefined
-			}
-			icon={faCircleExclamation}
-			iconFrame={false}
-			status="danger"
-			role="status"
-		>
-			{children}
-		</StatusCard>
-	)
-}
+import { ValidatorWarning } from './ValidatorWarning'
 
 export const RetainmentThresholdDanger = ({
 	count,
@@ -75,7 +43,10 @@ export const NominationWarnings = () => {
 						icon={faCircleExclamation}
 						iconFrame={false}
 						status={
-							dangerCount > 0 || validatorWarningGroups.length > 0
+							dangerCount > 0 ||
+							validatorWarningGroups.some(
+								({ severity }) => severity === 'danger',
+							)
 								? 'danger'
 								: 'warning'
 						}
@@ -97,15 +68,21 @@ export const NominationWarnings = () => {
 
 	return (
 		<>
-			{validatorWarningGroups.map(({ type, messageKey, validators }) => (
-				<Page.Row key={type} yMargin="compact">
-					<Page.RowSection standalone>
-						<ValidatorWarning onFix={canFix ? handleFix : undefined}>
-							{t(messageKey, { count: validators.length })}
-						</ValidatorWarning>
-					</Page.RowSection>
-				</Page.Row>
-			))}
+			{validatorWarningGroups.map(
+				({ type, messageKey, severity, validators, readMoreUrl }) => (
+					<Page.Row key={type} yMargin="compact">
+						<Page.RowSection standalone>
+							<ValidatorWarning
+								severity={severity}
+								readMoreUrl={readMoreUrl}
+								onFix={canFix && severity === 'danger' ? handleFix : undefined}
+							>
+								{t(messageKey, { count: validators.length })}
+							</ValidatorWarning>
+						</Page.RowSection>
+					</Page.Row>
+				),
+			)}
 			{dangerCount > 0 && (
 				<Page.Row yMargin="compact">
 					<Page.RowSection standalone>

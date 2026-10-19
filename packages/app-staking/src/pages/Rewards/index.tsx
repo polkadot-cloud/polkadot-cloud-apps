@@ -12,7 +12,7 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { NominationWarnings } from 'library/NominationWarnings'
+import { PageTitle } from 'library/PageTitle'
 import {
 	fetchPoolEraRewards,
 	fetchPoolRewards,
@@ -23,7 +23,6 @@ import type { RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PageTabs } from 'ui-app/PageTabs'
-import { Page } from 'ui-core/base'
 import { filterAndSortRewards } from 'ui-graphs/util'
 import { Overview } from './Overview'
 import { NominatorPayouts, PoolPayouts } from './PayoutList'
@@ -167,14 +166,13 @@ export const Rewards = () => {
 
 	return (
 		<Wrapper>
-			<Page.Title title={t('rewards', { ns: 'modals' })}>
+			<PageTitle title={t('rewards', { ns: 'modals' })}>
 				<PageTabs
 					tabs={tabs}
 					preloading={apiEnabled && tabsSyncing}
 					preloaderTabs={1}
 				/>
-			</Page.Title>
-			<NominationWarnings />
+			</PageTitle>
 			{activeTab === 0 && (
 				<Overview
 					{...pageProps}

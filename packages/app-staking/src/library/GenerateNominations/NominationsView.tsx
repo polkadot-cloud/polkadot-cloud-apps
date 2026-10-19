@@ -35,6 +35,7 @@ import {
 } from './Wrappers'
 
 export const NominationsView = ({
+	nominator,
 	cloudValidatorHandler,
 	canManageNominations,
 	displayFor,
@@ -55,7 +56,7 @@ export const NominationsView = ({
 		setMethod,
 		setNominations,
 	} = useManageNominations()
-	const { isReady } = useApi()
+	const { isReady, activeEra } = useApi()
 	const { network } = useNetwork()
 	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { active: healthCheckActive } = useNominationHealth()
@@ -83,6 +84,8 @@ export const NominationsView = ({
 		network,
 		validatorAddresses,
 		healthCheckActive && listReady && !fetching,
+		nominator === undefined ? activeAddress : nominator,
+		activeEra.index,
 	)
 	const allValidatorsWaiting = useAllValidatorsWaiting(nominations)
 
