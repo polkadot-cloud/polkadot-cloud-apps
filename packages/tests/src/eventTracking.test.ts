@@ -26,54 +26,42 @@ beforeEach(async () => {
 })
 
 afterEach(() => {
+	expect(sa).not.toHaveBeenCalled()
 	document.querySelectorAll('script[data-website-id]').forEach((s) => {
 		s.remove()
 	})
 	vi.unstubAllGlobals()
 })
 
-test('sends existing names and properties to both trackers', () => {
+test('sends existing names and properties only to Umami', () => {
 	events.onNewUserEvent({ utmSource: 'newsletter' })
 	events.onSendTransactionSubmittedEvent('Polkadot', 'DOT')
 
-	for (const tracker of [sa, umami]) {
-		expect(tracker.mock.calls).toEqual([
-			['new_user', { utmSource: 'newsletter' }],
-			['polkadot_tx_submitted_send_dot', {}],
-		])
-	}
+	expect(umami.mock.calls).toEqual([
+		['new_user', { utmSource: 'newsletter' }],
+		['polkadot_tx_submitted_send_dot', {}],
+	])
 })
 
-test.each(['sa_event', 'umami'])(
-	'continues tracking when %s is absent',
-	(missing) => {
-		vi.stubGlobal(missing, undefined)
-		expect(() => events.onReturningUserEvent()).not.toThrow()
-		expect(missing === 'sa_event' ? umami : sa).toHaveBeenCalledExactlyOnceWith(
-			'returning_user',
-			{},
-		)
-	},
-)
+test('does nothing safely when Umami is absent', () => {
+	vi.stubGlobal('umami', undefined)
+	expect(() => events.onReturningUserEvent()).not.toThrow()
+	expect(umami).not.toHaveBeenCalled()
+})
 
-test.each(['sa_event', 'umami'])(
-	'isolates a synchronous failure in %s',
-	(failing) => {
-		const broken = failing === 'sa_event' ? sa : umami
-		broken.mockImplementation(() => {
-			throw new Error('Tracker unavailable')
-		})
-		expect(() => events.onReturningUserEvent()).not.toThrow()
-		expect(failing === 'sa_event' ? umami : sa).toHaveBeenCalledOnce()
-	},
-)
+test('isolates a synchronous Umami failure', () => {
+	umami.mockImplementation(() => {
+		throw new Error('Tracker unavailable')
+	})
+	expect(() => events.onReturningUserEvent()).not.toThrow()
+	expect(umami).toHaveBeenCalledExactlyOnceWith('returning_user', {})
+})
 
-test('handles rejected promises from either tracker', async () => {
-	sa.mockRejectedValue(new Error('SA request rejected'))
+test('handles rejected promises from Umami', async () => {
 	umami.mockRejectedValue(new Error('Umami request rejected'))
 	events.onReturningUserEvent()
 	await new Promise((resolve) => setTimeout(resolve, 0))
-	expect(sa).toHaveBeenCalledOnce()
+
 	expect(umami).toHaveBeenCalledOnce()
 })
 
@@ -84,14 +72,13 @@ test('does nothing safely without browser globals', () => {
 	expect(umami).not.toHaveBeenCalled()
 })
 
-test('flushes startup events once without duplicating SA events', () => {
+test('flushes startup events once and preserves their properties', () => {
 	vi.stubGlobal('umami', undefined)
 	const script = addUmamiScript()
 	const attributes = { utmSource: 'newsletter' }
 	events.onNewUserEvent(attributes)
 	events.onLocaleFromUrlEvent('de')
 	attributes.utmSource = 'changed-after-event'
-	expect(sa).toHaveBeenCalledTimes(2)
 	expect(umami).not.toHaveBeenCalled()
 
 	vi.stubGlobal('umami', { track: umami })
@@ -101,11 +88,9 @@ test('flushes startup events once without duplicating SA events', () => {
 		['new_user', { utmSource: 'newsletter' }],
 		['locale_from_url_de', {}],
 	])
-	expect(sa).toHaveBeenCalledTimes(2)
 
 	events.onLocaleFromModalEvent('en')
 	expect(umami).toHaveBeenLastCalledWith('locale_from_modal_en', {})
-	expect(sa).toHaveBeenCalledTimes(3)
 })
 
 test('does not queue when the production Umami script is absent', () => {
@@ -115,10 +100,9 @@ test('does not queue when the production Umami script is absent', () => {
 	vi.stubGlobal('umami', { track: umami })
 	script.dispatchEvent(new Event('load'))
 	expect(umami).not.toHaveBeenCalled()
-	expect(sa).toHaveBeenCalledOnce()
 })
 
-test('drops queued events on a script error and keeps SA working', () => {
+test('drops queued events on a script error and recovers when Umami is ready', () => {
 	vi.stubGlobal('umami', undefined)
 	const script = addUmamiScript()
 	events.onNewUserEvent()
@@ -127,7 +111,6 @@ test('drops queued events on a script error and keeps SA working', () => {
 	vi.stubGlobal('umami', { track: umami })
 	script.dispatchEvent(new Event('load'))
 	expect(umami).not.toHaveBeenCalled()
-	expect(sa).toHaveBeenCalledTimes(2)
 	events.onLocaleFromModalEvent('en')
 	expect(umami).toHaveBeenCalledExactlyOnceWith('locale_from_modal_en', {})
 })
@@ -138,7 +121,6 @@ test('bounds the queue when the script stalls', () => {
 	for (let i = 0; i < 105; i++) events.onLocaleFromUrlEvent(String(i))
 	vi.stubGlobal('umami', { track: umami })
 	script.dispatchEvent(new Event('load'))
-	expect(sa).toHaveBeenCalledTimes(105)
 	expect(umami).toHaveBeenCalledTimes(100)
 	expect(umami).toHaveBeenLastCalledWith('locale_from_url_99', {})
 })
@@ -157,7 +139,7 @@ test('a failed queued event does not stop subsequent events', () => {
 	expect(umami).toHaveBeenLastCalledWith('locale_from_url_en', {})
 })
 
-test('shortens long Umami names consistently while leaving SA unchanged', () => {
+test('shortens long Umami names consistently and preserves their original names', () => {
 	const source = 'campaign_'.repeat(8)
 	const fullName = `conversion_${source}`
 	events.onConversionEvent(source)
@@ -169,8 +151,6 @@ test('shortens long Umami names consistently while leaving SA unchanged', () => 
 	expect(attributes).toEqual({ original_event_name: fullName })
 	expect(umami.mock.calls[1]).toEqual(umami.mock.calls[0])
 	expect(umami.mock.calls[2][0]).not.toBe(name)
-	expect(sa).toHaveBeenNthCalledWith(1, fullName, {})
-	expect(sa).toHaveBeenNthCalledWith(3, `${fullName}_other`, {})
 })
 
 test('preserves names at the 50-character boundary and caps original-name data', () => {

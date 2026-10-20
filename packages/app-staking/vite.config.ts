@@ -2,16 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import react from '@vitejs/plugin-react'
-import { SimpleAnalyticsStakingHostname } from 'consts'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import svgr from 'vite-plugin-svgr'
-import {
-	cloudRpcPlugin,
-	sharedFaviconPlugins,
-	simpleAnalyticsPlugin,
-	umamiPlugin,
-} from 'vite-shared'
+import { cloudRpcPlugin, sharedFaviconPlugins, umamiPlugin } from 'vite-shared'
 
 // https://vitejs.dev/config/
 // - `BASE_URL`env variable is used in the codebase to refer to the supplied base.
@@ -19,7 +13,6 @@ export default defineConfig({
 	plugins: [
 		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
-		simpleAnalyticsPlugin({ hostname: SimpleAnalyticsStakingHostname }),
 		umamiPlugin({ websiteId: '478d3950-0571-4007-bc2a-9ea74846a758' }),
 		react(),
 		svgr(),

@@ -5,7 +5,6 @@ type EventAttributes = Record<string, unknown>
 type AnalyticsEvent = { name: string; attributes: EventAttributes }
 type Tracker = (event: string, attributes: EventAttributes) => unknown
 type AnalyticsWindow = Window & {
-	sa_event?: Tracker
 	umami?: { track: Tracker }
 }
 
@@ -16,7 +15,7 @@ const sendSafely = async (send: () => unknown) => {
 	try {
 		await send()
 	} catch {
-		// Tracker failures must not affect the app or the other tracker.
+		// Tracker failures must not affect the app.
 	}
 }
 
@@ -70,13 +69,11 @@ const trackUmamiEvent = (event: AnalyticsEvent) => {
 	script.addEventListener('error', settle)
 }
 
-// Keep SA events during the migration, and send the same events to Umami.
 export const onAnalyticsEvent = (
 	event: string,
 	attributes: EventAttributes = {},
 ) => {
 	if (typeof window === 'undefined') return
 
-	sendSafely(() => (window as AnalyticsWindow).sa_event?.(event, attributes))
 	sendSafely(() => trackUmamiEvent(toUmamiEvent(event, attributes)))
 }
