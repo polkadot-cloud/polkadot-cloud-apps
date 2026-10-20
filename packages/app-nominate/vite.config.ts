@@ -10,6 +10,7 @@ import {
 	cloudRpcPlugin,
 	sharedFaviconPlugins,
 	simpleAnalyticsPlugin,
+	umamiPlugin,
 } from 'vite-shared'
 
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
 		cloudRpcPlugin(),
 		...sharedFaviconPlugins(),
 		simpleAnalyticsPlugin({ hostname: SimpleAnalyticsStakingHostname }),
+		umamiPlugin({ websiteId: '27876fa8-4ec5-4353-8a78-65c791f18070' }),
 		react(),
 		svgr(),
 		checker({

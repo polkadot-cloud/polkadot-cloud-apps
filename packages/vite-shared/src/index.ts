@@ -121,3 +121,25 @@ export const simpleAnalyticsPlugin = ({
 		]
 	},
 })
+
+type UmamiPluginOptions = {
+	websiteId: string
+}
+
+export const umamiPlugin = ({ websiteId }: UmamiPluginOptions): Plugin => ({
+	name: 'umami',
+	apply: (_, { command, mode }) => command === 'build' && mode === 'production',
+	transformIndexHtml() {
+		return [
+			{
+				tag: 'script',
+				attrs: {
+					defer: true,
+					src: 'https://ua.polkadot.cloud/script.js',
+					'data-website-id': websiteId,
+				},
+				injectTo: 'head',
+			},
+		]
+	},
+})
