@@ -100,15 +100,15 @@ test('warnings without a URL omit the Read More link and keep the fix action', (
 	expect(markup).toContain('Fix Issues')
 })
 
-test('page titles show an amber historical backing notice directly below the heading', () => {
+test('stake page titles show an amber historical backing notice directly below the heading', () => {
 	state.validatorWarningGroups = getPageValidatorWarningGroups(
 		[{ address: 'historical', prefs: { commission: 0, blocked: false } }],
 		{ historical: ['LOW_HISTORICAL_BACKING'] },
 	)
 	const markup = renderToStaticMarkup(
-		createElement(PageTitle, { title: 'Validators' }),
+		createElement(PageTitle, { title: 'Stake', showNominationWarnings: true }),
 	)
-	expect(markup).toContain('Validators</h1>')
+	expect(markup).toContain('Stake</h1>')
 	expect(markup.indexOf('</header>')).toBeLessThan(
 		markup.indexOf('role="status"'),
 	)

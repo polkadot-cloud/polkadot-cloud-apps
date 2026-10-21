@@ -35,7 +35,7 @@ export const Stake = () => {
 
 	return (
 		<>
-			<PageTitle title={t('stake')} />
+			<PageTitle title={t('stake')} showNominationWarnings />
 			<PageWarnings />
 			{!nominating && (
 				<Stat.Row>

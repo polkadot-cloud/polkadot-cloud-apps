@@ -37,7 +37,7 @@ export const Overview = () => {
 
 	return (
 		<>
-			<PageTitle title={t('overview')} />
+			<PageTitle title={t('overview')} showNominationWarnings />
 			{isBonding &&
 				!syncing &&
 				accountSynced(activeAddress) &&

@@ -5,9 +5,14 @@ import type { ComponentProps } from 'react'
 import { Page } from 'ui-core/base'
 import { NominationWarnings } from '../NominationWarnings'
 
-export const PageTitle = (props: ComponentProps<typeof Page.Title>) => (
+export const PageTitle = ({
+	showNominationWarnings = false,
+	...props
+}: ComponentProps<typeof Page.Title> & {
+	showNominationWarnings?: boolean
+}) => (
 	<>
 		<Page.Title {...props} />
-		<NominationWarnings />
+		{showNominationWarnings && <NominationWarnings />}
 	</>
 )

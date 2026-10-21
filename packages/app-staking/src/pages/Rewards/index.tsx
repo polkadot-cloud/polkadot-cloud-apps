@@ -166,7 +166,7 @@ export const Rewards = () => {
 
 	return (
 		<Wrapper>
-			<PageTitle title={t('rewards', { ns: 'modals' })}>
+			<PageTitle title={t('rewards', { ns: 'modals' })} showNominationWarnings>
 				<PageTabs
 					tabs={tabs}
 					preloading={apiEnabled && tabsSyncing}

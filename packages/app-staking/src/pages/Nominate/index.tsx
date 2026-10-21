@@ -11,7 +11,10 @@ export const Nominate = () => {
 
 	return (
 		<Wrapper>
-			<PageTitle title={t('nominate', { ns: 'pages' })} />
+			<PageTitle
+				title={t('nominate', { ns: 'pages' })}
+				showNominationWarnings
+			/>
 			<Active />
 		</Wrapper>
 	)
