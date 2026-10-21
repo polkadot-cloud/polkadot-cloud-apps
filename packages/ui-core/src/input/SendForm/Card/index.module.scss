@@ -8,7 +8,7 @@
 
 	background-color: var(--bg-primary);
 	border-radius: 1.5rem;
-	padding: 0.5rem;
-	box-shadow: var(--shadow-alt);
+	padding: var(--send-form-padding, 0.5rem);
+	box-shadow: var(--send-form-shadow, var(--shadow-alt));
 	border: 1px solid transparent;
 }

@@ -61,6 +61,7 @@ $container-border-radius: 1.25rem;
 }
 
 .sourceIcon {
+	color: var(--gray-900);
 	margin-top: 0.25rem;
 	margin-right: 0.5rem;
 
@@ -132,8 +133,8 @@ $container-border-radius: 1.25rem;
 }
 
 .chevron {
+	color: var(--text-tertiary);
 	margin-left: auto;
-	opacity: 0.5;
 	font-size: 1rem;
 }
 

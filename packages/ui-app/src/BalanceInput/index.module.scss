@@ -3,14 +3,19 @@
 
 .wrapper {
 	width: 100%;
-	background-color: var(--gray-200);
-	border-radius: 1rem;
+	background-color: var(--balance-input-bg, var(--gray-200));
+	box-shadow: inset 0 0 0 1px var(--balance-input-border, transparent);
+	border-radius: var(--balance-input-radius, 1rem);
 	padding: 1.25rem;
-	margin-bottom: 0.25rem;
-	transition: background-color var(--transition-duration) ease;
+	margin-bottom: var(--balance-input-gap, 0.25rem);
+	transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
 
 	&:hover {
-		background-color: var(--gray-300);
+		background-color: var(--balance-input-hover-bg, var(--gray-300));
+	}
+
+	&:focus-within {
+		box-shadow: inset 0 0 0 1px var(--balance-input-focus-border, transparent);
 	}
 
 	&.modal {

@@ -1,11 +1,51 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.form {
+	// Keep the stronger surface hierarchy local to the swap form.
+	--send-form-padding: 0.7rem;
+	--send-form-section-gap: 0.45rem;
+	--send-form-section-bg: color-mix(in srgb, var(--gray-200), var(--gray-300));
+	--send-form-section-hover-bg: var(--gray-300);
+	--send-form-section-border: var(--gray-500);
+	--send-form-section-focus-border: var(--gray-700);
+	--send-form-section-radius: 0;
+	--send-form-shadow: var(--shadow);
+	--send-form-direction-color: var(--gray-800);
+	--send-form-direction-shadow: inset 0 0 0 1px var(--gray-500), var(--shadow-alt);
+	--balance-input-bg: var(--send-form-section-bg);
+	--balance-input-hover-bg: var(--send-form-section-hover-bg);
+	--balance-input-border: var(--send-form-section-border);
+	--balance-input-focus-border: var(--send-form-section-focus-border);
+	--balance-input-radius: 0;
+	--balance-input-gap: var(--send-form-section-gap);
+	--dropdown-trigger-bg: var(--bg-primary);
+	--dropdown-trigger-border: var(--gray-500);
+	--dropdown-trigger-active-border: var(--gray-700);
+
+	:global(.dark) & {
+		--send-form-section-bg: var(--gray-300);
+		--send-form-section-hover-bg: color-mix(in srgb, var(--gray-300), var(--gray-400));
+	}
+}
+
+.firstSection {
+	--send-form-section-radius: 1rem 1rem 0 0;
+}
+
+.lastSection {
+	--send-form-section-radius: 0 0 1rem 1rem;
+}
+
 .accountDropdown {
 	:global([class*="selected-account-"]) {
-		background-color: var(--gray-100);
-		border-color: var(--shade-200);
+		background-color: var(--bg-primary);
+		border-color: var(--gray-500);
 		box-shadow: var(--shadow-alt);
 
-		&:hover {
-			border-color: var(--shade-200);
+		&:hover,
+		&:focus-within {
+			border-color: var(--gray-700);
 		}
 	}
 }

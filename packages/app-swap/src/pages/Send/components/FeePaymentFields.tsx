@@ -6,6 +6,7 @@ import { Dropdown } from 'ui-app/Dropdown'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
+import classes from '../Send.module.scss'
 import { formatBalance } from '../utils'
 import type { FeePaymentFieldsProps } from './types'
 
@@ -27,6 +28,7 @@ export const FeePaymentFields = ({
 		<>
 			<SendForm.Segment
 				title={t('payFeesIn')}
+				className={classes.lastSection}
 				headerContent={
 					<SendForm.Label label={t('available')}>
 						{balancesLoading

@@ -8,6 +8,7 @@ import classes from './index.module.scss'
 export type SendFormSegmentProps = {
 	title: string
 	children: ReactNode
+	className?: string
 	headerContent?: ReactNode
 	layer?: 'default' | 'raised' | 'top'
 	responsiveHeader?: boolean
@@ -16,12 +17,13 @@ export type SendFormSegmentProps = {
 export const Segment = ({
 	title,
 	children,
+	className,
 	headerContent,
 	layer = 'default',
 	responsiveHeader = false,
 }: SendFormSegmentProps) => (
 	<div
-		className={classNames(classes.segment, {
+		className={classNames(classes.segment, className, {
 			[classes.raisedLayer]: layer === 'raised',
 			[classes.topLayer]: layer === 'top',
 		})}

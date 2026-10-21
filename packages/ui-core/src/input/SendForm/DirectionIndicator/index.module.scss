@@ -18,7 +18,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--gray-600);
+	color: var(--send-form-direction-color, var(--gray-600));
+	box-shadow: var(--send-form-direction-shadow, none);
 	transform: translateY(-50%);
 	pointer-events: auto;
 }
