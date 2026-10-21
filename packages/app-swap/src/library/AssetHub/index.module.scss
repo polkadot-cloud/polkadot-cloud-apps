@@ -1,0 +1,138 @@
+.setting {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	color: var(--text-tertiary);
+	font-size: 0.9rem;
+
+	select,
+	input {
+		max-width: 9rem;
+		padding: 0.5rem;
+		border: 1px solid var(--gray-500);
+		border-radius: 0.5rem;
+		background: var(--bg-primary);
+		color: var(--gray-1000);
+		font: inherit;
+	}
+}
+
+.button {
+	padding: 0.65rem 1rem;
+	border: 1px solid var(--gray-500);
+	border-radius: 0.65rem;
+	background: var(--bg-primary);
+	color: var(--gray-1000);
+	font: inherit;
+	cursor: pointer;
+
+	&[aria-pressed='true'] {
+		border-color: var(--accent-700);
+		box-shadow: inset 0 0 0 1px var(--accent-700);
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+}
+
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0.8rem 0;
+	border: 0;
+	margin: 0;
+}
+
+.details {
+	padding: 0.8rem 1rem;
+	color: var(--text-tertiary);
+	font-size: 0.9rem;
+
+	summary {
+		cursor: pointer;
+	}
+
+	p {
+		margin: 0.6rem 0;
+		line-height: 1.5;
+	}
+}
+
+.route {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 0.6rem;
+	text-align: left;
+}
+
+.output {
+	display: block;
+	padding: 0.75rem 0;
+	color: var(--gray-1000);
+	font-size: 1.6rem;
+	overflow-wrap: anywhere;
+}
+
+.notice {
+	margin: 0;
+	padding: 0.8rem 1rem;
+	color: var(--text-tertiary);
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.layout {
+	width: 100%;
+	max-width: 76rem;
+	margin: 0 auto;
+}
+
+.tableWrap {
+	overflow-x: auto;
+	border: 1px solid var(--gray-500);
+	border-radius: 1rem;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	color: var(--gray-1000);
+	text-align: left;
+
+	th,
+	td {
+		padding: 1rem;
+		border-bottom: 1px solid var(--gray-400);
+		line-height: 1.6;
+	}
+
+	th {
+		color: var(--text-tertiary);
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+
+	small {
+		display: block;
+		color: var(--text-tertiary);
+	}
+}
+
+.recipient {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid var(--gray-500);
+	border-radius: 0.5rem;
+	background: var(--bg-primary);
+	color: var(--gray-1000);
+	font: inherit;
+}

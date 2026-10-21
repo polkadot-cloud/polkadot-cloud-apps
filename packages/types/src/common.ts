@@ -42,7 +42,7 @@ interface PageProp {
 
 export type BulletType = 'success' | 'accent' | 'warning' | 'danger'
 
-export type NavSection = 'stake' | 'validators' | 'pools'
+export type NavSection = 'stake' | 'validators' | 'pools' | 'swap'
 
 export interface TimeLeftFormatted {
 	days: [number, string]

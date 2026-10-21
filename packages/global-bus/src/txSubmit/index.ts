@@ -8,6 +8,7 @@ import { _uids } from './private'
 export const uids$ = _uids.asObservable()
 
 export let subs: Record<number, Unsub> = {}
+let lastUid = 0
 
 export const getUid = (id: number) =>
 	_uids.getValue().find((item) => item.uid === id)
@@ -23,7 +24,7 @@ export const addUid = ({
 }) => {
 	let newUids = [..._uids.getValue()]
 	// Ensure uid is unique
-	const newUid = newUids.length + 1
+	const newUid = ++lastUid
 	// If tag already exists, delete the entry
 	if (tag) {
 		newUids = newUids.filter((item) => item.tag !== tag)

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './accounts'
+export * from './assetHub'
 export * from './balances'
 export * from './common'
 export * from './components'

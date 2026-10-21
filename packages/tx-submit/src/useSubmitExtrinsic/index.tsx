@@ -49,6 +49,7 @@ export const useSubmitExtrinsic = ({
 	feePaymentOptions,
 	feeEstimator,
 	feeDisplay,
+	signingNetworkInfo,
 	callbackSubmit,
 	callbackInBlock,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
@@ -167,7 +168,7 @@ export const useSubmitExtrinsic = ({
 		}
 
 		if (requiresManualSign(submitAccount)) {
-			const networkInfo = {
+			const networkInfo = signingNetworkInfo ?? {
 				decimals: feeDisplay?.units ?? units,
 				tokenSymbol: feeDisplay?.unit || unit,
 			}
@@ -321,10 +322,14 @@ export const useSubmitExtrinsic = ({
 			if (
 				/balance|reserve|locked|freeze|insufficient|funds|minimum/.test(msg)
 			) {
-				subtitle = /locked|freeze/.test(msg)
-					? t('errors.balanceErrorLocked')
-					: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
+				subtitle = /swap/.test(msg)
+					? t('errors.swapPriceChanged')
+					: /locked|freeze/.test(msg)
+						? t('errors.balanceErrorLocked')
+						: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
 			}
+			if (/psm|mintingstopped|allswapsstopped|feetoohigh|exceedsmax/.test(msg))
+				subtitle = t('errors.conversionUnavailable')
 		}
 
 		emitNotification({

@@ -7,8 +7,6 @@ import {
 	getFeeTokenIcon,
 	getStablecoinChainLabel,
 	getStablecoinFeeAssets,
-	StablecoinChains,
-	StablecoinSymbols,
 } from 'consts/stablecoins'
 import { useStablecoinBalances, useTokenPrices } from 'hooks'
 import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
@@ -25,6 +23,8 @@ import {
 	ProportionBar,
 	SegmentedBar,
 } from 'ui-core/popover'
+
+const assetHubChains: StablecoinChainId[] = ['statemint']
 
 const BalancePreloader = ({
 	height = '1rem',
@@ -51,7 +51,7 @@ export const BalancesPopover = ({
 	const popoverRef = useRef<HTMLDivElement>(null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
 	const stablecoinTotal = getStablecoinTotal()
-	const dotTotal = StablecoinChains.reduce(
+	const dotTotal = assetHubChains.reduce(
 		(total, chain) => total.plus(getBalanceUnit(chain, 'DOT')),
 		stablecoinTotal.multipliedBy(0),
 	)
@@ -63,11 +63,13 @@ export const BalancesPopover = ({
 		)
 	const isTotalBalanceUnavailable = (chain?: StablecoinChainId) =>
 		!getDotTotal(chain).isZero() && dotPrice === 0
-	const stablecoinMix = StablecoinSymbols.map((symbol) => ({
-		share: getStablecoinShare({ symbol }),
-		symbol,
-		value: `$${getStablecoinTotal({ symbol }).toFormat(2)}`,
-	}))
+	const stablecoinMix = getStablecoinFeeAssets('statemint')
+		.filter((symbol) => symbol !== 'DOT')
+		.map((symbol) => ({
+			share: getStablecoinShare({ symbol }),
+			symbol,
+			value: `$${getStablecoinTotal({ symbol }).toFormat(2)}`,
+		}))
 
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
@@ -125,7 +127,7 @@ export const BalancesPopover = ({
 							</MenuItem>
 						))}
 
-						{StablecoinChains.map((chain) => (
+						{assetHubChains.map((chain) => (
 							<Fragment key={chain}>
 								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>
@@ -168,7 +170,7 @@ export const BalancesPopover = ({
 					/>
 
 					<ConnectItem.Container>
-						{StablecoinChains.map((chain) => (
+						{assetHubChains.map((chain) => (
 							<Fragment key={chain}>
 								<h4>{getStablecoinChainLabel(chain)}</h4>
 								<MenuItem padded>

@@ -4,7 +4,6 @@
 import { planckToUnit } from '@polkadot-cloud/utils'
 import { useTranslation } from 'react-i18next'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
-import { Dropdown } from 'ui-app/Dropdown'
 import { Page } from 'ui-core/base'
 import { SendForm as SendFormUi } from 'ui-core/input'
 import classes from '../Send.module.scss'
@@ -46,12 +45,7 @@ export const SendForm = ({
 						layer="top"
 						className={classes.firstSection}
 					>
-						<Dropdown
-							options={selection.chainOptions}
-							selected={selection.selectedChain}
-							onSelect={selection.setSelectedChain}
-							variant="full"
-						/>
+						<span>Polkadot Asset Hub</span>
 					</SendFormUi.Segment>
 					<AccountFields
 						accounts={accounts.accounts}
