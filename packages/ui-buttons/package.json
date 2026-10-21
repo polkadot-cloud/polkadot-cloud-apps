@@ -21,7 +21,7 @@
 		"@polkadot-cloud/utils": "^1.0.0",
 		"classnames": "^2.5.1",
 		"hooks": "workspace:*",
-		"react": "^19.2.8",
+		"react": "^19.3.1",
 		"ui-core": "workspace:*",
 		"ui-styles": "workspace:*"
 	},
