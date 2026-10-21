@@ -869,6 +869,9 @@ importers:
       '@polkadot-cloud/utils':
         specifier: ^1.0.0
         version: 1.0.0
+      '@tanstack/react-query':
+        specifier: ^5.104.2
+        version: 5.104.2(react@19.3.0)
       bignumber.js:
         specifier: ^11.1.5
         version: 11.1.5

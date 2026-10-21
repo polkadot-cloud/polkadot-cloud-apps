@@ -7,16 +7,15 @@ import { usePoolMembers } from 'hooks/usePoolMembers'
 import { List, ListStatusHeader, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
-import { fetchPoolMembers } from 'plugin-staking-api'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ButtonSecondary } from 'ui-buttons'
 import { Member } from './Member'
 import type { MembersListProps } from './types'
 
 export const MembersListInner = ({
 	bondedPool,
 	pagination,
-	memberCount,
 	itemsPerPage,
 	isDepositor,
 	isRoot,
@@ -24,72 +23,20 @@ export const MembersListInner = ({
 	isBouncer,
 }: MembersListProps) => {
 	const { t } = useTranslation('pages')
-	const {
-		meta,
-		fetchPoolMemberData,
-		fetchedPoolMembersApi,
-		setFetchedPoolMembersApi,
-	} = usePoolMembers()
-	const { network } = useNetwork()
+	const [page, setPage] = useState(1)
+	const { data, isPending, isFetching, error, refetch } = usePoolMembers(
+		bondedPool.id,
+		page,
+		itemsPerPage,
+	)
+	const totalPages = data
+		? Math.max(1, Math.ceil(data.totalMembers / itemsPerPage))
+		: page
 
-	const poolId = bondedPool.id
-
-	// current page
-	const [page, setPage] = useState<number>(1)
-
-	// pagination
-	const totalPages = Math.ceil(Number(memberCount) / itemsPerPage)
-	const pageEnd = itemsPerPage - 1
-	const pageStart = pageEnd - (itemsPerPage - 1)
-
-	// handle validator list bootstrapping
-	const fetchingMemberList = useRef<boolean>(false)
-
-	const syncMemberList = async () => {
-		try {
-			if (poolId > 0 && !fetchingMemberList.current) {
-				fetchingMemberList.current = true
-				// Calculate offset based on page number (1-indexed)
-				const offset = (page - 1) * itemsPerPage
-				const { poolMembers } = await fetchPoolMembers(
-					network,
-					poolId,
-					itemsPerPage,
-					offset,
-				)
-				fetchingMemberList.current = false
-				if (poolMembers.members.length > 0) {
-					fetchPoolMemberData(poolMembers.members.map(({ address }) => address))
-				}
-				setFetchedPoolMembersApi('synced')
-			}
-		} catch {
-			fetchingMemberList.current = false
-			setFetchedPoolMembersApi('unsynced')
-		}
-	}
-
-	// Merge member data with claim permissions to have all member data in one object
-	const members = meta.poolMembers
-		.map((member, index) => {
-			if (!member) {
-				return undefined
-			}
-			return {
-				...member,
-				claimPermission: meta.claimPermissions[index],
-			}
-		})
-		.filter((m) => m !== undefined)
-
-	// Get paginated subset of members
-	const listMembers = members.slice(pageStart).slice(0, itemsPerPage)
-
-	// Configure list when network is ready to fetch
+	// The last page can disappear after members leave the pool.
 	useEffect(() => {
-		setFetchedPoolMembersApi('unsynced')
-		syncMemberList()
-	}, [poolId, page])
+		if (data && page > totalPages) setPage(totalPages)
+	}, [data, page, totalPages])
 
 	return (
 		<ListWrapper>
@@ -99,16 +46,27 @@ export const MembersListInner = ({
 						page={page}
 						total={totalPages}
 						setter={setPage}
-						disabled={fetchedPoolMembersApi !== 'synced'}
+						disabled={isPending}
 					/>
 				)}
-				{fetchedPoolMembersApi !== 'synced' ? (
+				{error ? (
 					<ListStatusHeader style={{ marginTop: '0.5rem' }}>
-						{t('fetchingMemberList')}....
+						{t('errorUnknown', { ns: 'app' })}
+						<ButtonSecondary
+							text={t('tryAgain', { ns: 'app' })}
+							disabled={isFetching}
+							onClick={() => {
+								void refetch()
+							}}
+						/>
+					</ListStatusHeader>
+				) : isPending ? (
+					<ListStatusHeader style={{ marginTop: '0.5rem' }}>
+						{t('fetchingMemberList')}...
 					</ListStatusHeader>
 				) : (
 					<MotionContainer>
-						{listMembers.map((member) => (
+						{data?.members.map((member) => (
 							<Member
 								key={`pool_member_${member.address}`}
 								member={member}
@@ -126,8 +84,14 @@ export const MembersListInner = ({
 	)
 }
 
-export const MembersList = (props: MembersListProps) => (
-	<ListProvider>
-		<MembersListInner {...props} />
-	</ListProvider>
-)
+export const MembersList = (props: MembersListProps) => {
+	const { network } = useNetwork()
+	return (
+		<ListProvider>
+			<MembersListInner
+				key={`${network}-${props.bondedPool.id}-${props.itemsPerPage}`}
+				{...props}
+			/>
+		</ListProvider>
+	)
+}

@@ -443,12 +443,19 @@ export interface PoolMembers {
 export interface PoolMember {
 	poolId: number
 	address: string
-	points: bigint
+	points: string
+	claimPermission: PoolMemberClaimPermission | null
 	unbondingEras: {
 		era: number
 		amount: string
 	}[]
 }
+
+export type PoolMemberClaimPermission =
+	| 'Permissioned'
+	| 'PermissionlessCompound'
+	| 'PermissionlessWithdraw'
+	| 'PermissionlessAll'
 
 export interface PayoutsAndClaims extends Array<StakingReward | PoolReward> {}
 

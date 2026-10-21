@@ -124,7 +124,7 @@ export const Member = ({
 		>
 			<BasicItem.Root kind="member" canvas>
 				<BasicItem.Row position="top">
-					<Identity address={member.address} />
+					<Identity address={member.address} display={null} />
 					<div>
 						<HeaderButtonRow>
 							{menuItems.length > 0 && (
@@ -143,9 +143,11 @@ export const Member = ({
 				<Separator />
 				<BasicItem.Row position="bottom">
 					<PoolMemberBonded member={member} />
-					<LabelRow>
-						<ClaimPermission claimPermission={member.claimPermission} />
-					</LabelRow>
+					{member.claimPermission !== null && (
+						<LabelRow>
+							<ClaimPermission claimPermission={member.claimPermission} />
+						</LabelRow>
+					)}
 				</BasicItem.Row>
 			</BasicItem.Root>
 		</motion.div>

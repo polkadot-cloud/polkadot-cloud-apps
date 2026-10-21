@@ -25,8 +25,6 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 	const showBlockedPrompt =
 		bondedPool.state === 'Blocked' && (isOwner || isBouncer)
 
-	const memberCount = bondedPool.memberCounter || 0
-
 	return (
 		<>
 			{/* Pool in Blocked state: allow root & bouncer to unbond & withdraw members */}
@@ -73,7 +71,6 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 				<FetchPageMemberList
 					pagination={true}
 					bondedPool={bondedPool}
-					memberCount={memberCount}
 					itemsPerPage={50}
 					isDepositor={isDepositor}
 					isRoot={isRoot}
