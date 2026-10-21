@@ -8,7 +8,6 @@ export interface MembersListProps {
 	bondedPool: BondedPool
 	pagination: boolean
 	itemsPerPage: number
-	isDepositor: boolean
 	isRoot: boolean
 	isOwner: boolean
 	isBouncer: boolean
@@ -17,7 +16,6 @@ export interface MembersListProps {
 export interface MemberProps {
 	member: FetchedPoolMember
 	bondedPool: BondedPool
-	isDepositor: boolean
 	isRoot: boolean
 	isOwner: boolean
 	isBouncer: boolean

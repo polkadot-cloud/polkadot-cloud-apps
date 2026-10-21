@@ -48,7 +48,7 @@ export const WithdrawMember = ({
 	let totalWithdrawUnit = new BigNumber(0)
 
 	unbondingEras.forEach(([era, amount]) => {
-		if (activeEra.index > Number(era)) {
+		if (activeEra.index >= era) {
 			totalWithdrawUnit = totalWithdrawUnit.plus(new BigNumber(amount))
 		}
 	})

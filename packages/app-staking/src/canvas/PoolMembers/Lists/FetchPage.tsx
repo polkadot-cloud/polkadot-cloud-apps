@@ -17,7 +17,6 @@ export const MembersListInner = ({
 	bondedPool,
 	pagination,
 	itemsPerPage,
-	isDepositor,
 	isRoot,
 	isOwner,
 	isBouncer,
@@ -71,7 +70,6 @@ export const MembersListInner = ({
 								key={`pool_member_${member.address}`}
 								member={member}
 								bondedPool={bondedPool}
-								isDepositor={isDepositor}
 								isRoot={isRoot}
 								isOwner={isOwner}
 								isBouncer={isBouncer}

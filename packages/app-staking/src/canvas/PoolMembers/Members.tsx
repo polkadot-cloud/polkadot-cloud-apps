@@ -17,7 +17,6 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 
 	const annuncementBorderColor = getThemeValue('--status-warning')
 
-	const isDepositor = bondedPool.roles.depositor === activeAddress
 	const isRoot = bondedPool.roles.root === activeAddress
 	const isOwner = bondedPool.roles.depositor === activeAddress
 	const isBouncer = bondedPool.roles.bouncer === activeAddress
@@ -72,7 +71,6 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 					pagination={true}
 					bondedPool={bondedPool}
 					itemsPerPage={50}
-					isDepositor={isDepositor}
 					isRoot={isRoot}
 					isOwner={isOwner}
 					isBouncer={isBouncer}

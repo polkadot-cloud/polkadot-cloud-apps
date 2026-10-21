@@ -2,17 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { act, createElement, type ReactNode } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
 import type { BondedPool } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import {
-	act,
-	createElement,
-	type ReactNode,
-} from '../../app-staking/node_modules/react/index.js'
-import {
-	createRoot,
-	type Root,
-} from '../../app-staking/node_modules/react-dom/client.js'
 import { MembersList } from '../../app-staking/src/canvas/PoolMembers/Lists/FetchPage'
 import type { FetchedPoolMember } from '../../hooks/src/usePoolMembers'
 import type { PoolMembersData } from '../../plugin-staking-api/src/types'
@@ -154,7 +147,6 @@ const render = async (poolId = 7) => {
 					bondedPool: { id: poolId, memberCounter: 999 } as BondedPool,
 					pagination: true,
 					itemsPerPage: 50,
-					isDepositor: false,
 					isOwner: false,
 					isRoot: false,
 					isBouncer: false,

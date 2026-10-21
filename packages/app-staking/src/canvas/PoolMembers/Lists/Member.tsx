@@ -29,7 +29,6 @@ import type { MemberProps } from './types'
 export const Member = ({
 	member,
 	bondedPool,
-	isDepositor,
 	isRoot,
 	isOwner,
 	isBouncer,
@@ -43,9 +42,11 @@ export const Member = ({
 	const memberRef = useRef<HTMLDivElement | null>(null)
 
 	const state = bondedPool.state
+	// The depositor restriction applies to this member, not the connected account.
+	const isMemberDepositor = member.address === bondedPool.roles.depositor
 	const canUnbondBlocked =
 		state === 'Blocked' && (isOwner || isBouncer || isRoot)
-	const canUnbondDestroying = state === 'Destroying' && !isDepositor
+	const canUnbondDestroying = state === 'Destroying' && !isMemberDepositor
 
 	const menuItems: AnyJson[] = []
 
@@ -76,7 +77,7 @@ export const Member = ({
 		if (Object.values(unbondingEras).length) {
 			let canWithdraw = false
 			for (const [era] of unbondingEras) {
-				if (activeEra.index > era) {
+				if (activeEra.index >= era) {
 					canWithdraw = true
 				}
 			}
