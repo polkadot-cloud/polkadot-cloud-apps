@@ -10,7 +10,6 @@ import { useStablecoinBalances, useTheme } from 'hooks'
 import {
 	AccountField,
 	FeeField,
-	messageOf,
 	percentage,
 	SlippageField,
 	exchangeClasses as styles,
@@ -19,7 +18,7 @@ import {
 	tokenOptions,
 	useAssetHubMarket,
 } from 'library/AssetHub'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
 	AssetHubSwapQuote,
@@ -36,6 +35,7 @@ import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
 import { useQuoteExpired } from './useQuoteExpired'
+import { useSwapQuote } from './useSwapQuote'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
@@ -59,65 +59,38 @@ export const Swap = () => {
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
 	const [route, setRoute] = useState<'auto' | 'amm' | 'psm'>('auto')
-	const [state, setState] = useState<{
-		key: string
-		quotes?: AssetHubSwapQuote[]
-		error?: string
-	}>()
 	const amountToken = mode === 'exactIn' ? assetIn : assetOut
 	const quotedToken = mode === 'exactIn' ? assetOut : assetIn
 	const parsed = toPlanck(amount, assetHubDecimals(amountToken))
-	const key = `${market?.hash}:${market?.fetchedAt}:${assetIn}:${assetOut}:${mode}:${parsed}`
 	useEffect(() => {
 		void balances.refresh()
 	}, [account?.address, exchange])
-	useEffect(() => {
-		if (!market || !exchange || parsed <= 0n || assetIn === assetOut) return
-		let stale = false
-		const timer = setTimeout(() => {
-			void exchange
-				.quotes(market, { assetIn, assetOut, amount: parsed, mode })
-				.then((quotes) => {
-					if (!stale) setState({ key, quotes })
-				})
-				.catch((error) => {
-					if (!stale) setState({ key, error: messageOf(error) })
-				})
-		}, 250)
-		return () => {
-			stale = true
-			clearTimeout(timer)
-		}
-	}, [key, exchange])
-	const current = state?.key === key ? state : undefined
-	const quotes = current?.quotes
-	const quote =
-		route === 'auto' ? quotes?.[0] : quotes?.find((item) => item.kind === route)
-	const expired = useQuoteExpired(quote?.fetchedAt)
 	const recipient = recipientEnabled
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
 	const recipientValid = isValidAddress(recipient)
-	const { tx, buildError } = useMemo(() => {
-		if (exchange && quote && account && recipientValid && !expired) {
-			try {
-				return {
-					tx: exchange.swap(quote, account.address, recipient, slippage),
-				}
-			} catch (error) {
-				return { buildError: messageOf(error) }
-			}
-		}
-		return {}
-	}, [
-		exchange,
+	const {
+		quotes,
 		quote,
-		account?.address,
+		tx,
+		fee,
+		error: quoteError,
+		requestKey,
+	} = useSwapQuote({
+		exchange,
+		market,
+		account,
+		assetIn,
+		assetOut,
+		amount: parsed,
+		mode,
 		recipient,
 		recipientValid,
 		slippage,
-		expired,
-	])
+		feeAsset,
+		route,
+	})
+	const expired = useQuoteExpired(quote?.fetchedAt)
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
 			? slippageLimit(quote.amountIn, slippage, true)
@@ -130,11 +103,16 @@ export const Swap = () => {
 		: 0n
 	const inputBalance = balances.getBalance('statemint', amountToken)
 	const max = maxSendableBalance(inputBalance, undefined, 0n)
+	const quotedAvailable = maxSendableBalance(
+		balances.getBalance('statemint', quotedToken),
+		undefined,
+		0n,
+	)
 	const routeLabel = (item: AssetHubSwapQuote) =>
 		item.kind === 'psm'
 			? t(item.assetIn === 'USDT' ? 'mintDotUsd' : 'redeemDotUsd')
 			: item.path.join(' → ')
-	const error = marketError || current?.error || buildError
+	const error = marketError || quoteError
 	return (
 		<Page.Row>
 			<SendForm.Container className={`${formClasses.form} ${classes.form}`}>
@@ -241,7 +219,8 @@ export const Swap = () => {
 						}
 						readOnly
 						disabled={!quote}
-						maxAvailable="0"
+						maxAvailable={tokenAmount(quotedAvailable, quotedToken)}
+						syncing={balances.loading}
 						maxDecimals={assetHubDecimals(quotedToken)}
 						options={tokenOptions.filter(
 							(option) => option.value !== amountToken,
@@ -361,10 +340,12 @@ export const Swap = () => {
 					)}
 					<TransactionAction
 						tx={tx}
+						estimatedFee={fee}
+						submissionKey={requestKey}
 						account={account}
 						feeAsset={feeAsset}
 						spends={{ [assetIn]: maxInput }}
-						valid={!!quote && !expired && recipientValid && !error}
+						valid={!!quote && !!tx && !expired && recipientValid}
 						label={quote?.kind === 'psm' ? routeLabel(quote) : t('swapAssets')}
 						onComplete={() => {
 							setAmount('')

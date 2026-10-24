@@ -69,9 +69,13 @@ const BalanceInputControl = ({
 		>
 			<div className={classes.header}>
 				<span className={classes.label}>{label ?? t('amount')}</span>
-				{!readOnly && (
-					<span className={classes.available}>
-						{t('available')}:{' '}
+				<span className={classes.available}>
+					{t('available')}:{' '}
+					{readOnly ? (
+						<span className={classes.availableValue}>
+							{syncing ? '...' : formattedAvailable}
+						</span>
+					) : (
 						<button
 							type="button"
 							className={classes.availableButton}
@@ -80,8 +84,8 @@ const BalanceInputControl = ({
 						>
 							{syncing ? '...' : formattedAvailable}
 						</button>
-					</span>
-				)}
+					)}
+				</span>
 			</div>
 			<div
 				className={classNames(classes.inputRow, {

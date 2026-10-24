@@ -70,7 +70,13 @@ export const useAssetHubMarket = (address?: string) => {
 				const data = await exchange.market(address)
 				if (!cancelled) setState({ exchange, address, data })
 			} catch (error) {
-				if (!cancelled) setState({ exchange, address, error: messageOf(error) })
+				if (!cancelled)
+					setState((previous) => ({
+						...(previous.exchange === exchange && previous.address === address
+							? previous
+							: { exchange, address }),
+						error: messageOf(error),
+					}))
 			} finally {
 				running = false
 			}
@@ -147,6 +153,8 @@ export const SlippageField = ({
 
 type TransactionActionProps = {
 	tx?: SubmittableExtrinsic
+	estimatedFee?: bigint
+	submissionKey?: string
 	account: ImportedAccount | null
 	feeAsset: AssetHubToken
 	spends: Partial<Record<AssetHubToken, bigint>>
@@ -155,17 +163,18 @@ type TransactionActionProps = {
 	onComplete: () => void
 }
 
-// Each call/account/fee combination gets its own submission id. The explicit fee
-// state blocks submission while estimating or after an RPC estimation failure.
+// Background quotes share a submission id until the user changes the request.
+// Other exchange forms continue to allocate an id for each call.
 export const TransactionAction = (props: TransactionActionProps) => (
 	<TransactionActionInner
-		key={`${props.account?.address}:${props.account?.source}:${props.feeAsset}:${props.tx?.toHex()}`}
+		key={`${props.account?.address}:${props.account?.source}:${props.feeAsset}:${props.submissionKey ?? props.tx?.toHex()}`}
 		{...props}
 	/>
 )
 
 const TransactionActionInner = ({
 	tx,
+	estimatedFee,
 	account,
 	feeAsset,
 	spends,
@@ -184,7 +193,8 @@ const TransactionActionInner = ({
 			item.from === account?.address &&
 			(item.submitted || item.pending),
 	)
-	const [fee, setFee] = useState<bigint>()
+	const [localFee, setFee] = useState<bigint>()
+	const fee = estimatedFee ?? localFee
 	const [error, setError] = useState<string>()
 	const [retry, setRetry] = useState(0)
 	const payload = useMemo(
@@ -197,7 +207,7 @@ const TransactionActionInner = ({
 	)
 	const txHex = tx?.toHex()
 	useEffect(() => {
-		if (!tx || !account) return
+		if (!tx || !account || estimatedFee !== undefined) return
 		setFee(undefined)
 		setError(undefined)
 		let stale = false
@@ -218,7 +228,15 @@ const TransactionActionInner = ({
 		return () => {
 			stale = true
 		}
-	}, [txHex, account?.address, payload, feeAsset, serviceApi, retry])
+	}, [
+		txHex,
+		account?.address,
+		payload,
+		feeAsset,
+		serviceApi,
+		retry,
+		estimatedFee,
+	])
 	const feeEstimator = useCallback(async () => {
 		if (fee === undefined) throw new Error('Fee not ready')
 		return fee
@@ -251,6 +269,7 @@ const TransactionActionInner = ({
 		dappName: SwapDappName,
 		feePaymentOptions: payload,
 		feeEstimator,
+		estimatedFee,
 		feeDisplay,
 		signingNetworkInfo: { decimals: 10, tokenSymbol: 'DOT' },
 		callbackInBlock: () => {

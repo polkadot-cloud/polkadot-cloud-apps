@@ -48,6 +48,7 @@ export const useSubmitExtrinsic = ({
 	shouldSubmit,
 	feePaymentOptions,
 	feeEstimator,
+	estimatedFee,
 	feeDisplay,
 	signingNetworkInfo,
 	callbackSubmit,
@@ -426,9 +427,17 @@ export const useSubmitExtrinsic = ({
 
 	useEffect(() => {
 		if (uid > 0) {
-			fetchTxFee()
+			if (estimatedFee !== undefined) updateFee(uid, estimatedFee)
+			else fetchTxFee()
 		}
-	}, [submitAccountKey, uid, feePaymentOptionsKey, txHex, feeEstimator])
+	}, [
+		submitAccountKey,
+		uid,
+		feePaymentOptionsKey,
+		txHex,
+		feeEstimator,
+		estimatedFee,
+	])
 
 	return {
 		txInitiated: !!submitTx,
