@@ -8,9 +8,7 @@ import {
 	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
 import { useStablecoinBalances, useTokenPrices } from 'hooks'
-import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
-import type { Dispatch, SetStateAction } from 'react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount, StablecoinChainId } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
@@ -34,16 +32,14 @@ const BalancePreloader = ({
 	width?: string
 }) => <Loader as="span" style={{ height, width }} />
 
-export const BalancesPopover = ({
+export const BalancesView = ({
 	account,
 	accounts,
 	onSelect,
-	setOpen,
 }: {
 	account: ImportedAccount | null
 	accounts: ImportedAccount[]
 	onSelect: (account: ImportedAccount | null) => void
-	setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
 	const { t } = useTranslation('swap')
 	const { price: dotPrice } = useTokenPrices()
@@ -57,7 +53,6 @@ export const BalancesPopover = ({
 	useEffect(() => {
 		void refresh()
 	}, [refresh])
-	const popoverRef = useRef<HTMLDivElement>(null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
 	const stablecoinTotal = getStablecoinTotal()
 	const dotTotal = assetHubChains.reduce(
@@ -80,18 +75,8 @@ export const BalancesPopover = ({
 			value: `$${getStablecoinTotal({ symbol }).toFormat(2)}`,
 		}))
 
-	useOutsideAlerter(popoverRef, () => {
-		setOpen(false)
-	}, ['header-wallet', 'wallet-account-options'])
-
 	return (
-		<div
-			ref={popoverRef}
-			aria-busy={syncing}
-			onKeyDown={(event) => {
-				if (event.key === 'Escape') setOpen(false)
-			}}
-		>
+		<div aria-busy={syncing}>
 			<div className={classes.accountSelector}>
 				<AccountDropdown
 					key={`${account?.address}:${account?.source}`}
@@ -106,7 +91,6 @@ export const BalancesPopover = ({
 					}
 					disabled={!accounts.length}
 					allowCustomAccounts={false}
-					dropdownClassName="wallet-account-options"
 				/>
 			</div>
 			{syncing && (

@@ -15,6 +15,7 @@ const lazyOverlayComponents = <
 	) as Record<keyof T, ReturnType<typeof lazyNamed>>
 
 const modals = lazyOverlayComponents({
+	Balances: () => import('modals/Balances'),
 	Accounts: () =>
 		import('ui-modals/Accounts').then(({ Accounts: AccountsModal }) => ({
 			Accounts: () => <AccountsModal useCategories={useDefaultCategories} />,

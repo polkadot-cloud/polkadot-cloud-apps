@@ -29,7 +29,6 @@ export const AccountDropdown = ({
 	placeholder,
 	disabled = false,
 	allowCustomAccounts = true,
-	dropdownClassName,
 }: AccountDropdownProps) => {
 	const { t } = useTranslation()
 	const { serviceApi } = useApi()
@@ -287,10 +286,7 @@ export const AccountDropdown = ({
 					top={dropdownPosition.top}
 					left={dropdownPosition.left}
 				>
-					<AccountInput.ListContainer
-						ref={menuRef}
-						className={`${dropdownClass} ${dropdownClassName || ''}`}
-					>
+					<AccountInput.ListContainer ref={menuRef} className={dropdownClass}>
 						<SimpleBar style={{ maxHeight: '300px' }}>
 							{filteredAccounts.map((account) => {
 								const SourceIcon = getAccountSourceIcon(account?.source)

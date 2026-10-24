@@ -12,5 +12,4 @@ export interface AccountDropdownProps {
 	placeholder?: string
 	disabled?: boolean
 	allowCustomAccounts?: boolean
-	dropdownClassName?: string
 }
