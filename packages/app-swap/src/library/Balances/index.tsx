@@ -27,7 +27,7 @@ export const Wallet = () => {
 				openModal({ key: 'Balances', size: 'sm', options })
 			}}
 		>
-			<ButtonHeader className="header-wallet" icon={faWallet} />
+			<ButtonHeader icon={faWallet} />
 		</button>
 	)
 }
