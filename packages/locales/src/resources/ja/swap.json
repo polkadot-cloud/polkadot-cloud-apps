@@ -14,6 +14,7 @@
 		"receive": "受け取り",
 		"payFeesIn": "手数料の支払いトークン",
 		"selectSenderAccount": "送金元アカウントを選択...",
+		"noAccounts": "アカウントなし",
 		"sendAssets": "アセットを送る",
 		"swapAssets": "アセットを交換",
 		"reverseAssetsTooltip": "支払うアセットと受け取るアセットを入れ替えます。",

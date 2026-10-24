@@ -14,6 +14,7 @@
 		"receive": "Recevoir",
 		"payFeesIn": "Payer les frais en",
 		"selectSenderAccount": "Sélectionnez le compte expéditeur...",
+		"noAccounts": "Aucun compte",
 		"sendAssets": "Envoyer des actifs",
 		"swapAssets": "Échanger des actifs",
 		"reverseAssetsTooltip": "Inversez les actifs à payer et à recevoir.",

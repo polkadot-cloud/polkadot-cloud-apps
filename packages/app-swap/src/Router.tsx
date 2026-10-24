@@ -27,6 +27,7 @@ export const Router = () => (
 			<Page.Main>
 				<HelmetProvider>
 					<Headers
+						showAccount={false}
 						NodesLeft={{
 							sync: Sync,
 						}}

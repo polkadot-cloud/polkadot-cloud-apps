@@ -14,6 +14,7 @@
 		"receive": "Получить",
 		"payFeesIn": "Оплата комиссии в",
 		"selectSenderAccount": "Выберите аккаунт отправителя...",
+		"noAccounts": "Нет аккаунтов",
 		"sendAssets": "Отправить активы",
 		"swapAssets": "Обменять активы",
 		"reverseAssetsTooltip": "Поменять местами активы для оплаты и получения.",

@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useActiveAccount } from '@polkadot-cloud/connect'
 import {
 	getFeeTokenColor,
 	getFeeTokenIcon,
@@ -11,10 +10,10 @@ import {
 import { useStablecoinBalances, useTokenPrices } from 'hooks'
 import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import type { Dispatch, SetStateAction } from 'react'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { StablecoinChainId } from 'types'
-import { PopoverTab } from 'ui-buttons'
+import type { ImportedAccount, StablecoinChainId } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Loader } from 'ui-core/base'
 import {
 	ConnectItem,
@@ -23,6 +22,7 @@ import {
 	ProportionBar,
 	SegmentedBar,
 } from 'ui-core/popover'
+import classes from './index.module.scss'
 
 const assetHubChains: StablecoinChainId[] = ['statemint']
 
@@ -35,19 +35,28 @@ const BalancePreloader = ({
 }) => <Loader as="span" style={{ height, width }} />
 
 export const BalancesPopover = ({
+	account,
+	accounts,
+	onSelect,
 	setOpen,
 }: {
+	account: ImportedAccount | null
+	accounts: ImportedAccount[]
+	onSelect: (account: ImportedAccount | null) => void
 	setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
 	const { t } = useTranslation('swap')
-	const { activeAddress } = useActiveAccount()
 	const { price: dotPrice } = useTokenPrices()
 	const {
 		getBalanceUnit,
 		getStablecoinShare,
 		getStablecoinTotal,
 		loading: syncing,
-	} = useStablecoinBalances(activeAddress)
+		refresh,
+	} = useStablecoinBalances(account?.address)
+	useEffect(() => {
+		void refresh()
+	}, [refresh])
 	const popoverRef = useRef<HTMLDivElement>(null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
 	const stablecoinTotal = getStablecoinTotal()
@@ -73,10 +82,33 @@ export const BalancesPopover = ({
 
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
-	}, ['header-wallet'])
+	}, ['header-wallet', 'wallet-account-options'])
 
 	return (
-		<div ref={popoverRef} aria-busy={syncing}>
+		<div
+			ref={popoverRef}
+			aria-busy={syncing}
+			onKeyDown={(event) => {
+				if (event.key === 'Escape') setOpen(false)
+			}}
+		>
+			<div className={classes.accountSelector}>
+				<AccountDropdown
+					key={`${account?.address}:${account?.source}`}
+					accounts={accounts}
+					initialAccount={account}
+					onSelect={onSelect}
+					label={t('account', { ns: 'modals' })}
+					placeholder={
+						accounts.length
+							? t('selectAccount', { ns: 'app' })
+							: t('noAccounts')
+					}
+					disabled={!accounts.length}
+					allowCustomAccounts={false}
+					dropdownClassName="wallet-account-options"
+				/>
+			</div>
 			{syncing && (
 				<span
 					aria-label={t('syncingBalances')}
@@ -84,16 +116,24 @@ export const BalancesPopover = ({
 					role="status"
 				/>
 			)}
-			<PopoverTab.Container position="top">
-				<PopoverTab.Button
-					text={t('balances')}
+			<div className={classes.tabs}>
+				<button
+					type="button"
+					className={classes.tab}
+					aria-pressed={activeTab === 'balances'}
 					onClick={() => setActiveTab('balances')}
-				/>
-				<PopoverTab.Button
-					text={t('mix')}
+				>
+					{t('balances')}
+				</button>
+				<button
+					type="button"
+					className={classes.tab}
+					aria-pressed={activeTab === 'mix'}
 					onClick={() => setActiveTab('mix')}
-				/>
-			</PopoverTab.Container>
+				>
+					{t('mix')}
+				</button>
+			</div>
 
 			{activeTab === 'mix' && (
 				<div>

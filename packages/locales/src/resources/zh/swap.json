@@ -14,6 +14,7 @@
 		"receive": "接收",
 		"payFeesIn": "支付手续费的代币",
 		"selectSenderAccount": "选择发送账户...",
+		"noAccounts": "暂无账户",
 		"sendAssets": "发送资产",
 		"swapAssets": "兑换资产",
 		"reverseAssetsTooltip": "对调支付和接收的资产。",

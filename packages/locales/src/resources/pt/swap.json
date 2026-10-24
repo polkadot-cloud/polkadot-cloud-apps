@@ -14,6 +14,7 @@
 		"receive": "Receber",
 		"payFeesIn": "Pagar taxas em",
 		"selectSenderAccount": "Selecione a conta remetente...",
+		"noAccounts": "Nenhuma conta",
 		"sendAssets": "Enviar ativos",
 		"swapAssets": "Trocar ativos",
 		"reverseAssetsTooltip": "Troque os ativos que paga e recebe.",

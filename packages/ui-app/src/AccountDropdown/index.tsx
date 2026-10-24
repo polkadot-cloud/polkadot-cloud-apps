@@ -28,6 +28,8 @@ export const AccountDropdown = ({
 	label,
 	placeholder,
 	disabled = false,
+	allowCustomAccounts = true,
+	dropdownClassName,
 }: AccountDropdownProps) => {
 	const { t } = useTranslation()
 	const { serviceApi } = useApi()
@@ -134,7 +136,7 @@ export const AccountDropdown = ({
 				account.address.toLowerCase().includes(term.toLowerCase()) ||
 				account.name?.toLowerCase().includes(term.toLowerCase()),
 		)
-		if (isValidAddress(term)) {
+		if (allowCustomAccounts && isValidAddress(term)) {
 			return true
 		}
 		return hasMatchingAccounts
@@ -147,7 +149,7 @@ export const AccountDropdown = ({
 	)
 
 	const validAddress = isValidAddress(searchTerm)
-	if (validAddress) {
+	if (allowCustomAccounts && validAddress) {
 		const formattedAddress = formatAccountSs58(searchTerm, ss58)
 		if (
 			formattedAddress !== null &&
@@ -285,7 +287,10 @@ export const AccountDropdown = ({
 					top={dropdownPosition.top}
 					left={dropdownPosition.left}
 				>
-					<AccountInput.ListContainer ref={menuRef} className={dropdownClass}>
+					<AccountInput.ListContainer
+						ref={menuRef}
+						className={`${dropdownClass} ${dropdownClassName || ''}`}
+					>
 						<SimpleBar style={{ maxHeight: '300px' }}>
 							{filteredAccounts.map((account) => {
 								const SourceIcon = getAccountSourceIcon(account?.source)

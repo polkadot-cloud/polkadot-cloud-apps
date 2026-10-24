@@ -18,6 +18,7 @@ export const Headers = ({
 	NodesLeft,
 	NodesRight,
 	menuPopoverFeatures,
+	showAccount = true,
 }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
 
@@ -33,11 +34,13 @@ export const Headers = ({
 				{Object.entries(NodesLeft || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
-				<Account
-					openConnect={openConnect}
-					setOpenConnect={setOpenConnect}
-					sendModal={menuPopoverFeatures?.sendModal}
-				/>
+				{showAccount && (
+					<Account
+						openConnect={openConnect}
+						setOpenConnect={setOpenConnect}
+						sendModal={menuPopoverFeatures?.sendModal}
+					/>
+				)}
 				{Object.entries(NodesRight || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}

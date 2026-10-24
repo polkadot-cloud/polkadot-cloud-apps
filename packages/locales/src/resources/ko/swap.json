@@ -14,6 +14,7 @@
 		"receive": "수령",
 		"payFeesIn": "수수료 결제 자산",
 		"selectSenderAccount": "보내는 계정을 선택하세요...",
+		"noAccounts": "계정 없음",
 		"sendAssets": "자산 전송",
 		"swapAssets": "자산 교환",
 		"reverseAssetsTooltip": "지불할 자산과 받을 자산을 서로 바꿉니다.",

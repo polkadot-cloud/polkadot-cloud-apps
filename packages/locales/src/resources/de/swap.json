@@ -14,6 +14,7 @@
 		"receive": "Erhalten",
 		"payFeesIn": "Gebühren bezahlen mit",
 		"selectSenderAccount": "Absenderkonto auswählen...",
+		"noAccounts": "Keine Konten",
 		"sendAssets": "Assets senden",
 		"swapAssets": "Assets tauschen",
 		"reverseAssetsTooltip": "Assets für Zahlung und Empfang vertauschen.",
