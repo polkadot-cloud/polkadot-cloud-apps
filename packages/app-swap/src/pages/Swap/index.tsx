@@ -1,10 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { assetHubDecimals } from 'consts/assetHub'
 import { slippageLimit } from 'dedot-api/assetHub/math'
-import { useStablecoinBalances } from 'hooks'
+import { useStablecoinBalances, useTheme } from 'hooks'
 import {
 	AccountField,
 	FeeField,
@@ -16,9 +18,8 @@ import {
 	tokenAmount,
 	tokenOptions,
 	useAssetHubMarket,
-	useNow,
 } from 'library/AssetHub'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
 	AssetHubSwapQuote,
@@ -28,16 +29,17 @@ import type {
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
-import { ButtonTab } from 'ui-buttons'
-import { Page } from 'ui-core/base'
+import { Page, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
+import { useQuoteExpired } from './useQuoteExpired'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
+	const { themeElementRef } = useTheme()
 	const accounts = useSendAccounts()
 	const account = accounts.fromAccount
 	const {
@@ -57,7 +59,6 @@ export const Swap = () => {
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
 	const [route, setRoute] = useState<'auto' | 'amm' | 'psm'>('auto')
-	const now = useNow()
 	const [state, setState] = useState<{
 		key: string
 		quotes?: AssetHubSwapQuote[]
@@ -92,20 +93,31 @@ export const Swap = () => {
 	const quotes = current?.quotes
 	const quote =
 		route === 'auto' ? quotes?.[0] : quotes?.find((item) => item.kind === route)
-	const expired = !!quote && now - quote.fetchedAt > 30_000
+	const expired = useQuoteExpired(quote?.fetchedAt)
 	const recipient = recipientEnabled
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
 	const recipientValid = isValidAddress(recipient)
-	let tx
-	let buildError: string | undefined
-	if (exchange && quote && account && recipientValid && !expired) {
-		try {
-			tx = exchange.swap(quote, account.address, recipient, slippage)
-		} catch (error) {
-			buildError = messageOf(error)
+	const { tx, buildError } = useMemo(() => {
+		if (exchange && quote && account && recipientValid && !expired) {
+			try {
+				return {
+					tx: exchange.swap(quote, account.address, recipient, slippage),
+				}
+			} catch (error) {
+				return { buildError: messageOf(error) }
+			}
 		}
-	}
+		return {}
+	}, [
+		exchange,
+		quote,
+		account?.address,
+		recipient,
+		recipientValid,
+		slippage,
+		expired,
+	])
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
 			? slippageLimit(quote.amountIn, slippage, true)
@@ -161,28 +173,6 @@ export const Swap = () => {
 							</div>
 						)}
 					</AccountField>
-					<fieldset className={classes.amountMode} aria-label={t('amountMode')}>
-						<ButtonTab
-							className={classes.modeButton}
-							title={t('exactInput')}
-							active={mode === 'exactIn'}
-							aria-pressed={mode === 'exactIn'}
-							onClick={() => {
-								setMode('exactIn')
-								setAmount('')
-							}}
-						/>
-						<ButtonTab
-							className={classes.modeButton}
-							title={t('exactOutput')}
-							active={mode === 'exactOut'}
-							aria-pressed={mode === 'exactOut'}
-							onClick={() => {
-								setMode('exactOut')
-								setAmount('')
-							}}
-						/>
-					</fieldset>
 					<BalanceInputMulti
 						label={t(mode === 'exactIn' ? 'youPay' : 'youReceive')}
 						value={amount}
@@ -209,13 +199,36 @@ export const Swap = () => {
 					/>
 					<SendForm.DirectionIndicator
 						label={t('reverseAssets')}
+						tooltip={t('reverseAssetsTooltip')}
+						tooltipContainer={themeElementRef.current || undefined}
 						onReverse={() => {
 							setAssetIn(assetOut)
 							setAssetOut(assetIn)
 							setAmount('')
 							setRoute('auto')
 						}}
-					/>
+					>
+						<Tooltip
+							text={t('amountModeTooltip')}
+							container={themeElementRef.current || undefined}
+							side="top"
+						>
+							<button
+								type="button"
+								className={classes.modeToggle}
+								aria-label={t(
+									mode === 'exactIn' ? 'exactOutput' : 'exactInput',
+								)}
+								onClick={() => {
+									setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
+									setAmount('')
+								}}
+							>
+								<FontAwesomeIcon icon={faArrowRightArrowLeft} />
+								<span>{t(mode === 'exactIn' ? 'pay' : 'receive')}</span>
+							</button>
+						</Tooltip>
+					</SendForm.DirectionIndicator>
 					<BalanceInputMulti
 						label={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
 						value={

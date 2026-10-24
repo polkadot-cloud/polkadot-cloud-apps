@@ -29,7 +29,6 @@ export const Router = () => (
 					<Headers
 						NodesLeft={{
 							sync: Sync,
-							networkLabel: () => <span>Polkadot Asset Hub</span>,
 						}}
 						NodesRight={{ wallet: Wallet }}
 						menuPopoverFeatures={{
