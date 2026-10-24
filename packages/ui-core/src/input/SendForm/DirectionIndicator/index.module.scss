@@ -28,3 +28,22 @@
 	font-size: 1.25rem;
 	line-height: 1.8rem;
 }
+
+.interactiveButton {
+	width: 3.25rem;
+	height: 2.5rem;
+	padding: 0;
+	border: 0;
+	border-radius: 1rem;
+	cursor: pointer;
+
+	.directionIcon {
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-700);
+		outline-offset: 2px;
+	}
+}

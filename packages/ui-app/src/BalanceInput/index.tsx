@@ -30,6 +30,7 @@ const BalanceInputControl = ({
 	maxAvailable,
 	maxDecimals,
 	disabled = false,
+	readOnly = false,
 	syncing = false,
 	label,
 	ariaLabel,
@@ -44,18 +45,20 @@ const BalanceInputControl = ({
 	const formattedAvailable = `${maxAvailable.toFormat()} ${unit}`
 	const maxDisabled = disabled || syncing || maxAvailable.isLessThanOrEqualTo(0)
 	const updateValue = (nextValue: string) => {
+		if (readOnly) return
 		const sanitized = sanitizeBalanceInput(nextValue, maxDecimals)
 		if (sanitized !== null && sanitized !== value) {
-			onChange(sanitized)
+			onChange?.(sanitized)
 		}
 	}
 
 	useEffect(() => {
+		if (readOnly) return
 		const sanitized = sanitizeBalanceInput(value, maxDecimals)
 		if (sanitized !== null && sanitized !== value) {
-			onChange(sanitized)
+			onChange?.(sanitized)
 		}
-	}, [maxDecimals, onChange, value])
+	}, [maxDecimals, onChange, readOnly, value])
 
 	return (
 		<div
@@ -66,23 +69,25 @@ const BalanceInputControl = ({
 		>
 			<div className={classes.header}>
 				<span className={classes.label}>{label ?? t('amount')}</span>
-				<span className={classes.available}>
-					{t('available')}:{' '}
-					<button
-						type="button"
-						className={classes.availableButton}
-						disabled={maxDisabled}
-						onClick={() => updateValue(maxAvailable.toFixed())}
-					>
-						{syncing ? '...' : formattedAvailable}
-					</button>
-				</span>
+				{!readOnly && (
+					<span className={classes.available}>
+						{t('available')}:{' '}
+						<button
+							type="button"
+							className={classes.availableButton}
+							disabled={maxDisabled}
+							onClick={() => updateValue(maxAvailable.toFixed())}
+						>
+							{syncing ? '...' : formattedAvailable}
+						</button>
+					</span>
+				)}
 			</div>
 			<div
 				className={classNames(classes.inputRow, {
 					[classes.inputRowMulti]: trailing,
 				})}
-				style={{ opacity: disabled ? 0.5 : 1 }}
+				style={{ opacity: disabled && !readOnly ? 0.5 : 1 }}
 			>
 				{leading}
 				<input
@@ -91,8 +96,8 @@ const BalanceInputControl = ({
 					value={value}
 					onChange={(event) => updateValue(event.target.value)}
 					onBlur={() => {
-						if (value.endsWith('.')) {
-							onChange(value.slice(0, -1))
+						if (!readOnly && value.endsWith('.')) {
+							onChange?.(value.slice(0, -1))
 						}
 						onBlur?.()
 					}}
@@ -101,7 +106,9 @@ const BalanceInputControl = ({
 					inputMode="decimal"
 					autoComplete="off"
 					aria-label={ariaLabel ?? `${unit} ${t('amount')}`}
+					aria-live={readOnly ? 'polite' : undefined}
 					disabled={disabled}
+					readOnly={readOnly}
 					style={
 						inputFontSize !== undefined
 							? { fontSize: `${inputFontSize}px` }

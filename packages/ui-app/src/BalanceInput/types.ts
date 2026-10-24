@@ -10,7 +10,6 @@ export type BalanceInputValue = BigNumber | string
 
 type SharedBalanceInputProps = {
 	value: string
-	onChange: (value: string) => void
 	maxAvailable: BalanceInputValue
 	disabled?: boolean
 	syncing?: boolean
@@ -21,10 +20,15 @@ type SharedBalanceInputProps = {
 	onBlur?: () => void
 }
 
-export type BalanceInputProps = Omit<SharedBalanceInputProps, 'maxDecimals'>
+type BalanceInputInteractionProps =
+	| { readOnly?: false; onChange: (value: string) => void }
+	| { readOnly: true; onChange?: never }
 
-export type BalanceInputMultiProps<T extends string> =
-	SharedBalanceInputProps & {
+export type BalanceInputProps = Omit<SharedBalanceInputProps, 'maxDecimals'> &
+	BalanceInputInteractionProps
+
+export type BalanceInputMultiProps<T extends string> = SharedBalanceInputProps &
+	BalanceInputInteractionProps & {
 		options: DropdownOption<T>[]
 		selected: DropdownOption<T>
 		onSelect: (option: DropdownOption<T>) => void
@@ -33,9 +37,10 @@ export type BalanceInputMultiProps<T extends string> =
 export type BalanceInputControlProps = Omit<
 	SharedBalanceInputProps,
 	'maxAvailable'
-> & {
-	unit: string
-	maxAvailable: BigNumber
-	leading?: ReactNode
-	trailing?: ReactNode
-}
+> &
+	BalanceInputInteractionProps & {
+		unit: string
+		maxAvailable: BigNumber
+		leading?: ReactNode
+		trailing?: ReactNode
+	}

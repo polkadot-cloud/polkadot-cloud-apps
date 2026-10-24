@@ -95,6 +95,12 @@
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
+
+	&[readonly]:disabled {
+		color: var(--gray-600);
+		-webkit-text-fill-color: var(--gray-600);
+		opacity: 1;
+	}
 }
 
 .tokenIcon {

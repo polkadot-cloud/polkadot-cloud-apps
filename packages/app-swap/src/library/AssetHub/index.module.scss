@@ -1,3 +1,16 @@
+.accountDropdown {
+	:global([class*="selected-account-"]) {
+		background-color: var(--bg-primary);
+		border-color: var(--gray-500);
+		box-shadow: var(--shadow-alt);
+
+		&:hover,
+		&:focus-within {
+			border-color: var(--gray-500);
+		}
+	}
+}
+
 .setting {
 	display: flex;
 	align-items: center;
@@ -74,20 +87,16 @@
 	text-align: left;
 }
 
-.output {
-	display: block;
-	padding: 0.75rem 0;
-	color: var(--gray-1000);
-	font-size: 1.6rem;
-	overflow-wrap: anywhere;
-}
-
 .notice {
 	margin: 0;
 	padding: 0.8rem 1rem;
 	color: var(--text-tertiary);
 	line-height: 1.5;
 	overflow-wrap: anywhere;
+}
+
+.transactionNotice {
+	line-height: 1.5;
 }
 
 .layout {
@@ -125,14 +134,4 @@
 		display: block;
 		color: var(--text-tertiary);
 	}
-}
-
-.recipient {
-	width: 100%;
-	padding: 0.75rem;
-	border: 1px solid var(--gray-500);
-	border-radius: 0.5rem;
-	background: var(--bg-primary);
-	color: var(--gray-1000);
-	font: inherit;
 }

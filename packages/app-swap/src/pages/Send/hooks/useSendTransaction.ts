@@ -133,8 +133,6 @@ export const useSendTransaction = ({
 		feePaymentOptions,
 		feeEstimator,
 		feeDisplay,
-		signingNetworkInfo:
-			chain === 'statemint' ? { decimals: 10, tokenSymbol: 'DOT' } : undefined,
 		callbackSubmit: () => {
 			onSendTransactionSubmittedEvent(chain, token)
 		},

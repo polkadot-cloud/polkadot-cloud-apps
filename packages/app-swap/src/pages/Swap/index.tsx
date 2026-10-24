@@ -20,14 +20,21 @@ import {
 } from 'library/AssetHub'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AssetHubSwapQuote, AssetHubToken, SwapMode } from 'types'
+import type {
+	AssetHubSwapQuote,
+	AssetHubToken,
+	ImportedAccount,
+	SwapMode,
+} from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
-import { Dropdown } from 'ui-app/Dropdown'
+import { ButtonTab } from 'ui-buttons'
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
+import classes from './index.module.scss'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
@@ -47,7 +54,8 @@ export const Swap = () => {
 	const [feeAsset, setFeeAsset] = useState<AssetHubToken>('DOT')
 	const [slippage, setSlippage] = useState(50)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
-	const [recipientInput, setRecipientInput] = useState('')
+	const [recipientAccount, setRecipientAccount] =
+		useState<ImportedAccount | null>(null)
 	const [route, setRoute] = useState<'auto' | 'amm' | 'psm'>('auto')
 	const now = useNow()
 	const [state, setState] = useState<{
@@ -56,6 +64,7 @@ export const Swap = () => {
 		error?: string
 	}>()
 	const amountToken = mode === 'exactIn' ? assetIn : assetOut
+	const quotedToken = mode === 'exactIn' ? assetOut : assetIn
 	const parsed = toPlanck(amount, assetHubDecimals(amountToken))
 	const key = `${market?.hash}:${market?.fetchedAt}:${assetIn}:${assetOut}:${mode}:${parsed}`
 	useEffect(() => {
@@ -85,7 +94,7 @@ export const Swap = () => {
 		route === 'auto' ? quotes?.[0] : quotes?.find((item) => item.kind === route)
 	const expired = !!quote && now - quote.fetchedAt > 30_000
 	const recipient = recipientEnabled
-		? recipientInput.trim()
+		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
 	const recipientValid = isValidAddress(recipient)
 	let tx
@@ -116,7 +125,7 @@ export const Swap = () => {
 	const error = marketError || current?.error || buildError
 	return (
 		<Page.Row>
-			<SendForm.Container className={formClasses.form}>
+			<SendForm.Container className={`${formClasses.form} ${classes.form}`}>
 				<SendForm.Header
 					title={t('swapAssets')}
 					subtitle={t('swapDescription')}
@@ -127,30 +136,52 @@ export const Swap = () => {
 						account={account}
 						accounts={accounts.accountsWithSigners}
 						onSelect={accounts.setFromAccount}
-					/>
-					<fieldset className={styles.tabs} aria-label={t('amountMode')}>
-						<button
-							type="button"
-							className={styles.button}
+						className={formClasses.firstSection}
+					>
+						<label className={classes.recipientSetting}>
+							<input
+								type="checkbox"
+								checked={recipientEnabled}
+								onChange={(event) => setRecipientEnabled(event.target.checked)}
+							/>
+							{t('sendToAnotherAddress')}
+						</label>
+						{recipientEnabled && (
+							<div className={classes.recipientField}>
+								<span className={classes.recipientLabel}>{t('sendTo')}</span>
+								<div className={styles.accountDropdown}>
+									<AccountDropdown
+										key={`${recipientAccount?.address}:${recipientAccount?.source}`}
+										initialAccount={recipientAccount}
+										accounts={accounts.accounts}
+										onSelect={setRecipientAccount}
+										placeholder={t('enterRecipientAddress')}
+									/>
+								</div>
+							</div>
+						)}
+					</AccountField>
+					<fieldset className={classes.amountMode} aria-label={t('amountMode')}>
+						<ButtonTab
+							className={classes.modeButton}
+							title={t('exactInput')}
+							active={mode === 'exactIn'}
 							aria-pressed={mode === 'exactIn'}
 							onClick={() => {
 								setMode('exactIn')
 								setAmount('')
 							}}
-						>
-							{t('exactInput')}
-						</button>
-						<button
-							type="button"
-							className={styles.button}
+						/>
+						<ButtonTab
+							className={classes.modeButton}
+							title={t('exactOutput')}
+							active={mode === 'exactOut'}
 							aria-pressed={mode === 'exactOut'}
 							onClick={() => {
 								setMode('exactOut')
 								setAmount('')
 							}}
-						>
-							{t('exactOutput')}
-						</button>
+						/>
 					</fieldset>
 					<BalanceInputMulti
 						label={t(mode === 'exactIn' ? 'youPay' : 'youReceive')}
@@ -176,48 +207,42 @@ export const Swap = () => {
 						}}
 						ariaLabel={t(mode === 'exactIn' ? 'youPay' : 'youReceive')}
 					/>
-					<button
-						type="button"
-						className={styles.button}
-						aria-label={t('reverseAssets')}
-						onClick={() => {
+					<SendForm.DirectionIndicator
+						label={t('reverseAssets')}
+						onReverse={() => {
 							setAssetIn(assetOut)
 							setAssetOut(assetIn)
 							setAmount('')
 							setRoute('auto')
 						}}
-					>
-						↓↑
-					</button>
-					<SendForm.Segment
-						title={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
-					>
-						<Dropdown
-							options={tokenOptions.filter(
-								(option) => option.value !== amountToken,
-							)}
-							selected={
-								tokenOptions.find(
-									(option) =>
-										option.value === (mode === 'exactIn' ? assetOut : assetIn),
-								)!
-							}
-							onSelect={(option) => {
-								if (mode === 'exactIn') setAssetOut(option.value)
-								else setAssetIn(option.value)
-								setRoute('auto')
-							}}
-							variant="full"
-						/>
-						<output className={styles.output} aria-live="polite">
-							{quote
+					/>
+					<BalanceInputMulti
+						label={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
+						value={
+							quote
 								? tokenAmount(
 										mode === 'exactIn' ? quote.amountOut : quote.amountIn,
-										mode === 'exactIn' ? assetOut : assetIn,
+										quotedToken,
 									)
-								: '—'}
-						</output>
-					</SendForm.Segment>
+								: '0.00'
+						}
+						readOnly
+						disabled={!quote}
+						maxAvailable="0"
+						maxDecimals={assetHubDecimals(quotedToken)}
+						options={tokenOptions.filter(
+							(option) => option.value !== amountToken,
+						)}
+						selected={
+							tokenOptions.find((option) => option.value === quotedToken)!
+						}
+						onSelect={(option) => {
+							if (mode === 'exactIn') setAssetOut(option.value)
+							else setAssetIn(option.value)
+							setRoute('auto')
+						}}
+						ariaLabel={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
+					/>
 					{parsed > 0n && !quotes && !error && (
 						<p className={styles.notice} role="status">
 							{t('fetchingQuote')}
@@ -308,31 +333,11 @@ export const Swap = () => {
 					{quote?.kind === 'amm' && (
 						<SlippageField value={slippage} onChange={setSlippage} />
 					)}
-					<label className={styles.setting}>
-						{t('sendToAnotherAddress')}
-						<input
-							type="checkbox"
-							checked={recipientEnabled}
-							onChange={(event) => setRecipientEnabled(event.target.checked)}
-						/>
-					</label>
-					{recipientEnabled && (
-						<SendForm.Segment title={t('sendTo')}>
-							<input
-								className={styles.recipient}
-								aria-label={t('enterRecipientAddress')}
-								value={recipientInput}
-								onChange={(event) => setRecipientInput(event.target.value)}
-								placeholder={t('enterRecipientAddress')}
-							/>
-							{recipientInput && !recipientValid && (
-								<p className={styles.notice} role="alert">
-									{t('invalidRecipient')}
-								</p>
-							)}
-						</SendForm.Segment>
-					)}
-					<FeeField value={feeAsset} onChange={setFeeAsset} />
+					<FeeField
+						value={feeAsset}
+						onChange={setFeeAsset}
+						className={formClasses.lastSection}
+					/>
 					{expired && (
 						<p className={styles.notice} role="status">
 							{t('quoteExpired')}{' '}

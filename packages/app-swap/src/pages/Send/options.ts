@@ -8,6 +8,7 @@ import {
 	isAssetSendSupported,
 	isStablecoinFeeAssetSupported,
 	SendAssetSymbols,
+	StablecoinChains,
 } from 'consts/stablecoins'
 import type { FeeAssetSymbol, SendAssetSymbol, StablecoinChainId } from 'types'
 import type { DropdownOption } from 'ui-app/Dropdown'
@@ -26,12 +27,11 @@ export const feeAssetOptions: DropdownOption<FeeAssetSymbol>[] =
 		icon: getFeeTokenIcon(symbol),
 	}))
 
-export const chainOptions: DropdownOption<StablecoinChainId>[] = (
-	['statemint'] as StablecoinChainId[]
-).map((chain) => ({
-	value: chain,
-	label: getStablecoinChainLabel(chain),
-}))
+export const chainOptions: DropdownOption<StablecoinChainId>[] =
+	StablecoinChains.map((chain) => ({
+		value: chain,
+		label: getStablecoinChainLabel(chain),
+	}))
 
 export const getTokenOptions = (chain: StablecoinChainId) =>
 	assetOptions.filter((option) => isAssetSendSupported(chain, option.value))

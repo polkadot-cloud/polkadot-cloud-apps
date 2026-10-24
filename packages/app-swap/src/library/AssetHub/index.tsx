@@ -8,6 +8,7 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { canFundExchange } from 'dedot-api/assetHub/math'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
+import type { ReactNode } from 'react'
 import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit'
@@ -15,6 +16,8 @@ import type { AssetHubMarket, AssetHubToken, ImportedAccount } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Dropdown } from 'ui-app/Dropdown'
 import { SubmitTx } from 'ui-app/SubmitTx'
+import { ButtonSecondary } from 'ui-buttons'
+import { StatusCard } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import classes from './index.module.scss'
 
@@ -88,22 +91,31 @@ export const AccountField = ({
 	account,
 	accounts,
 	onSelect,
+	className,
+	children,
 }: {
 	account: ImportedAccount | null
 	accounts: ImportedAccount[]
 	onSelect: (account: ImportedAccount | null) => void
+	className?: string
+	children?: ReactNode
 }) => {
 	const { t } = useTranslation('swap')
 	return (
-		<SendForm.Segment title={t('account')} layer="raised">
-			<AccountDropdown
-				key={`${account?.address}:${account?.source}`}
-				initialAccount={account}
-				accounts={accounts}
-				onSelect={onSelect}
-				placeholder={t('selectSenderAccount')}
-				disabled={!accounts.length}
-			/>
+		<SendForm.Segment title={t('account')} layer="raised" className={className}>
+			<div className={classes.accountDropdown}>
+				<AccountDropdown
+					key={`${account?.address}:${account?.source}`}
+					initialAccount={account}
+					accounts={accounts}
+					onSelect={onSelect}
+					placeholder={t(
+						accounts.length ? 'selectSenderAccount' : 'noAccounts',
+					)}
+					disabled={!accounts.length}
+				/>
+			</div>
+			{children}
 		</SendForm.Segment>
 	)
 }
@@ -257,32 +269,47 @@ const TransactionActionInner = ({
 	return (
 		<>
 			<SendForm.Notes>
-				{accountBusy && (
-					<SendForm.Note label={t('account')}>
-						{t('transactionInProgress')}
-					</SendForm.Note>
-				)}
 				<SendForm.Note label={t('networkFee')}>
-					{error ||
-						(fee === undefined
+					{error
+						? '—'
+						: fee === undefined
 							? tx && account
 								? t('estimatingFee')
 								: '—'
-							: `${tokenAmount(fee, feeAsset)} ${feeAsset}`)}
+							: `${tokenAmount(fee, feeAsset)} ${feeAsset}`}
 				</SendForm.Note>
 				{error && (
-					<button
-						type="button"
-						className={classes.button}
-						onClick={() => setRetry((value) => value + 1)}
+					<StatusCard
+						status="danger"
+						role="alert"
+						className={classes.transactionNotice}
+						action={
+							<ButtonSecondary
+								text={t('retry')}
+								onClick={() => setRetry((value) => value + 1)}
+							/>
+						}
 					>
-						{t('retry')}
-					</button>
+						{error}
+					</StatusCard>
+				)}
+				{accountBusy && (
+					<StatusCard
+						status="warning"
+						role="status"
+						className={classes.transactionNotice}
+					>
+						{t('transactionInProgress')}
+					</StatusCard>
 				)}
 				{valid && account && fee !== undefined && !funded && (
-					<SendForm.Note label={t('balance')}>
+					<StatusCard
+						status="danger"
+						role="alert"
+						className={classes.transactionNotice}
+					>
 						{t('insufficientBalance')}
-					</SendForm.Note>
+					</StatusCard>
 				)}
 			</SendForm.Notes>
 			<SendForm.Action>
@@ -304,13 +331,15 @@ const TransactionActionInner = ({
 export const FeeField = ({
 	value,
 	onChange,
+	className,
 }: {
 	value: AssetHubToken
 	onChange: (token: AssetHubToken) => void
+	className?: string
 }) => {
 	const { t } = useTranslation('swap')
 	return (
-		<SendForm.Segment title={t('payFeesIn')}>
+		<SendForm.Segment title={t('payFeesIn')} className={className}>
 			<Dropdown
 				options={tokenOptions}
 				selected={tokenOptions.find((option) => option.value === value)!}
