@@ -42,9 +42,11 @@ export const SettingsMenu = ({
 export const Settings = ({
 	openConnect,
 	setOpenConnect,
+	openAccountsOnConnect,
 	menuPopoverFeatures,
 	children,
 }: ToggleConnectProps & {
+	openAccountsOnConnect?: boolean
 	menuPopoverFeatures?: MenuPopoverFeatureFlags
 	children?: ReactNode
 }) => {
@@ -55,7 +57,12 @@ export const Settings = ({
 			<Popover
 				open={openConnect}
 				portalContainer={themeElementRef.current || undefined}
-				content={<ConnectPopover setOpen={setOpenConnect} />}
+				content={
+					<ConnectPopover
+						setOpen={setOpenConnect}
+						openAccountsOnConnect={openAccountsOnConnect}
+					/>
+				}
 				onTriggerClick={() => {
 					setOpenConnect(!openConnect)
 				}}

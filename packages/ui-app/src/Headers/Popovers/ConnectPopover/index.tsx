@@ -11,10 +11,13 @@ import { PopoverTab } from 'ui-buttons'
 import { ConnectItem } from 'ui-core/popover'
 import { Proxies } from './Proxies'
 import { ReadOnly } from './ReadOnly'
-import type { SetOpenProp } from './types'
+import type { ConnectPopoverProps } from './types'
 import { Wallets } from './Wallets'
 
-export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
+export const ConnectPopover = ({
+	setOpen,
+	openAccountsOnConnect,
+}: ConnectPopoverProps) => {
 	const { t } = useTranslation()
 	const { extensionsStatus } = useExtensions()
 
@@ -92,6 +95,7 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 						other={other}
 						selectedSection={selectedSection}
 						setOpen={setOpen}
+						openAccountsOnConnect={openAccountsOnConnect}
 					/>
 				</ConnectItem.Container>
 			</motion.section>
