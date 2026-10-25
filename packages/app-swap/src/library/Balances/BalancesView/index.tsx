@@ -213,23 +213,30 @@ export const BalancesView = ({
 										</div>
 									</MenuItem>
 								)}
-								{getStablecoinFeeAssets(chain).map((symbol) => (
-									<MenuItem key={`${chain}-${symbol}`} padded>
-										<div>
-											<img src={getFeeTokenIcon(symbol)} alt="" />
-										</div>
-										<div>
-											<h3>{symbol}</h3>
+								{getStablecoinFeeAssets(chain)
+									.sort(
+										(a, b) =>
+											getBalanceUnit(chain, b).comparedTo(
+												getBalanceUnit(chain, a),
+											) ?? 0,
+									)
+									.map((symbol) => (
+										<MenuItem key={`${chain}-${symbol}`} padded>
 											<div>
-												{syncing ? (
-													<BalancePreloader />
-												) : (
-													<h4>{getBalanceUnit(chain, symbol).toFormat(2)}</h4>
-												)}
+												<img src={getFeeTokenIcon(symbol)} alt="" />
 											</div>
-										</div>
-									</MenuItem>
-								))}
+											<div>
+												<h3>{symbol}</h3>
+												<div>
+													{syncing ? (
+														<BalancePreloader />
+													) : (
+														<h4>{getBalanceUnit(chain, symbol).toFormat(2)}</h4>
+													)}
+												</div>
+											</div>
+										</MenuItem>
+									))}
 							</Fragment>
 						))}
 					</ConnectItem.Container>

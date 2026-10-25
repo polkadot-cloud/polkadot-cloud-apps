@@ -16,6 +16,7 @@ import { Identity } from 'ui-core/base'
 import { AccountInput } from 'ui-core/input'
 import { useOverlay } from 'ui-overlay'
 import classes from './index.module.scss'
+import { useAccountGroups } from './useAccountGroups'
 
 export type AccountsOptions = {
 	initialAccount: ImportedAccount | null
@@ -60,6 +61,7 @@ export const Accounts = () => {
 			),
 		[accounts],
 	)
+	const accountGroups = useAccountGroups(sortedAccounts)
 	const sourcesByAddress = useMemo(() => {
 		const sources = new Map<string, Set<string>>()
 		for (const { address, source } of accounts) {
@@ -92,36 +94,41 @@ export const Accounts = () => {
 						className={classes.accountList}
 						ariaLabel={t('accounts', { ns: 'app' })}
 					>
-						{sortedAccounts.map((item) => (
-							<AccountInput.ListItem
-								key={`${item.address}:${item.source}`}
-								className={classes.accountRow}
-								account={item}
-								isSelected={
-									account?.address === item.address &&
-									account.source === item.source
-								}
-								onClick={selectAccount}
-							>
-								<span className={classes.identicon} aria-hidden>
-									<Polkicon
-										address={item.address}
-										fontSize="2rem"
-										background="transparent"
-									/>
-								</span>
-								<AccountInput.InnerLeft>
-									<AccountInput.ListName
-										name={item.name || ellipsisFn(item.address, 6)}
-									/>
-								</AccountInput.InnerLeft>
-								{(sourcesByAddress.get(item.address)?.size ?? 0) > 1 && (
-									<AccountSourceIcon
-										source={item.source}
-										className={classes.sourceIcon}
-									/>
-								)}
-							</AccountInput.ListItem>
+						{accountGroups.map((group) => (
+							<fieldset key={group.key} className={classes.accountGroup}>
+								<legend className={classes.groupHeading}>{t(group.key)}</legend>
+								{group.accounts.map((item) => (
+									<AccountInput.ListItem
+										key={`${item.address}:${item.source}`}
+										className={classes.accountRow}
+										account={item}
+										isSelected={
+											account?.address === item.address &&
+											account.source === item.source
+										}
+										onClick={selectAccount}
+									>
+										<span className={classes.identicon} aria-hidden>
+											<Polkicon
+												address={item.address}
+												fontSize="2rem"
+												background="transparent"
+											/>
+										</span>
+										<AccountInput.InnerLeft>
+											<AccountInput.ListName
+												name={item.name || ellipsisFn(item.address, 6)}
+											/>
+										</AccountInput.InnerLeft>
+										{(sourcesByAddress.get(item.address)?.size ?? 0) > 1 && (
+											<AccountSourceIcon
+												source={item.source}
+												className={classes.sourceIcon}
+											/>
+										)}
+									</AccountInput.ListItem>
+								))}
+							</fieldset>
 						))}
 					</AccountInput.ListContainer>
 				</aside>
