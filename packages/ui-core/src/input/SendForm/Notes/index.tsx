@@ -7,6 +7,7 @@ import classes from './index.module.scss'
 
 export type SendFormNotesProps = {
 	children: ReactNode
+	className?: string
 }
 
 export type SendFormNoteProps = {
@@ -15,8 +16,8 @@ export type SendFormNoteProps = {
 	variant?: 'default' | 'success'
 }
 
-export const Notes = ({ children }: SendFormNotesProps) => (
-	<div className={classes.notes}>{children}</div>
+export const Notes = ({ children, className }: SendFormNotesProps) => (
+	<div className={classNames(classes.notes, className)}>{children}</div>
 )
 
 export const Note = ({

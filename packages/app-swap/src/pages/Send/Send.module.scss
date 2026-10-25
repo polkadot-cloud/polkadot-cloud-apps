@@ -3,6 +3,9 @@
 
 .form {
 	// Keep the stronger surface hierarchy local to the swap form.
+	--account-input-focus-border: var(--account-input-active-border, var(--gray-700));
+	--account-input-bg: var(--bg-primary);
+	--account-input-shadow: var(--shadow-alt);
 	--send-form-padding: 0.7rem;
 	--send-form-section-gap: 0.45rem;
 	--send-form-section-bg: color-mix(in srgb, var(--gray-200), var(--gray-300));
@@ -35,17 +38,4 @@
 
 .lastSection {
 	--send-form-section-radius: 0 0 1rem 1rem;
-}
-
-.accountDropdown {
-	:global([class*="selected-account-"]) {
-		background-color: var(--bg-primary);
-		border-color: var(--gray-500);
-		box-shadow: var(--shadow-alt);
-
-		&:hover,
-		&:focus-within {
-			border-color: var(--gray-700);
-		}
-	}
 }

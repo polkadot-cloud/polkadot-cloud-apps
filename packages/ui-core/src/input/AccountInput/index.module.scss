@@ -25,7 +25,11 @@ $container-border-radius: 1.25rem;
 	}
 
 	&:hover {
-		border-color: var(--gray-700);
+		border-color: var(--account-input-active-border, var(--gray-700));
+	}
+
+	&:focus-within:not(:hover) {
+		border-color: var(--account-input-focus-border, var(--gray-500));
 	}
 
 	&.disabled {
