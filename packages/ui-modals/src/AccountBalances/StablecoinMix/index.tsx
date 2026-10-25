@@ -14,14 +14,10 @@ import { ConnectItem, Headline, MenuItem, SegmentedBar } from 'ui-core/popover'
 import { BalancePreloader } from '../BalancePreloader'
 import classes from './index.module.scss'
 
-export const StablecoinMix = ({
-	account,
-}: {
-	account: ImportedAccount | null
-}) => {
+export const StablecoinMix = ({ account }: { account: ImportedAccount }) => {
 	const { t } = useTranslation('modals')
 	const { getBalanceUnit, loading: syncing } = useStablecoinBalances(
-		account?.address,
+		account.address,
 	)
 	const stablecoins = getStablecoinFeeAssets('statemint')
 		.filter((symbol) => symbol !== 'DOT')

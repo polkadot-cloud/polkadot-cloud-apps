@@ -52,7 +52,7 @@ vi.mock('../../app-swap/node_modules/@polkadot-cloud/connect/index.js', () => ({
 			state.accounts.find(
 				(item) =>
 					item.address === account?.address && item.source === account?.source,
-			),
+			) ?? null,
 	}),
 }))
 vi.mock(
@@ -251,9 +251,25 @@ test('supports name ordering without category headings using the default categor
 	expect(balanceAccount()).toBe('bob:ledger')
 })
 
-test('accepts category hooks with independent labels, custom ordering and empty categories', async () => {
+test('falls back to name order when both selected and active accounts are unavailable', async () => {
+	const removed = { ...alice, address: 'removed' }
+	state.options = { initialAccount: removed }
+	state.activeAccount = removed
+	setBalances('bob', [balance('USDC', 30_000_000n)])
+	await render()
+	expect(accountRows().map((row) => row.textContent)).toEqual(['Bob', 'Alice'])
+	expect(balanceAccount()).toBe('alice:extension')
+	expect(state.accounts).toEqual([bob, alice])
+})
+
+test('accepts custom category labels and ordering while omitting empty or removed accounts', async () => {
 	await render(() => [
 		{ key: 'empty', labelKey: 'emptyLabel', items: [] },
+		{
+			key: 'stale',
+			labelKey: 'staleLabel',
+			items: [{ address: 'removed', source: 'ledger' }],
+		},
 		{ key: 'featured', labelKey: 'featuredLabel', items: [bob] },
 		{ key: 'other', items: [alice] },
 	])

@@ -93,13 +93,11 @@ export const changeLanguage = async (lng: string, i18next: i18n) => {
 	)
 
 	localStorage.setItem('lng', lng)
-	if (dynamicLoad) {
-		await loadLanguage(lng, i18next, profile)
-	} else {
+	if (!dynamicLoad) {
 		addI18nResources(i18next, lng, resources[lng])
 		await i18next.changeLanguage(lng)
-		if (lng !== DefaultLocale) await loadLanguage(lng, i18next, profile)
 	}
+	if (lng !== DefaultLocale) await loadLanguage(lng, i18next, profile)
 	if (localStorage.getItem('lng') === lng) varToUrlHash('l', lng, false)
 }
 
