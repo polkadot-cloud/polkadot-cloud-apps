@@ -7,7 +7,12 @@ import {
 	AssetHubPoolTokens,
 	assetHubLocation,
 } from 'consts/assetHub'
-import type { DedotClient, SubmittableExtrinsic } from 'dedot'
+import {
+	ChainHeadBlockNotPinnedError,
+	ChainHeadBlockPrunedError,
+	type DedotClient,
+	type SubmittableExtrinsic,
+} from 'dedot'
 import { blake2AsHex, concatU8a, stringToU8a } from 'dedot/utils'
 import type {
 	AssetHubExchange,
@@ -66,13 +71,17 @@ const clampMinimum = (amount: bigint, bps: number) => {
 	const min = slippageLimit(amount, bps)
 	return min > 0n ? min : 1n
 }
+const isUnavailableBlock = (error: unknown) =>
+	error instanceof ChainHeadBlockNotPinnedError ||
+	error instanceof ChainHeadBlockPrunedError ||
+	(error instanceof Error && error.message.startsWith('Block is not pinned'))
 
 export const createAssetHubExchange = (
 	api: DedotClient<PolkadotAssetHubApi>,
 ): AssetHubExchange => {
-	const market: AssetHubExchange['market'] = async (address) => {
+	const readMarket: AssetHubExchange['market'] = async (address) => {
 		const fetchedAt = Date.now()
-		const hash = await api.rpc.chain_getFinalizedHead()
+		const { hash, number: block } = await api.block.finalized()
 		const at = await api.at(hash)
 		const entries = await at.query.assetConversion.pools.entries()
 		const pools = await Promise.all(
@@ -188,18 +197,25 @@ export const createAssetHubExchange = (
 				}
 			}
 		}
-		const header = await api.rpc.chain_getHeader(hash)
-		if (!header) throw new Error('Finalized block is unavailable')
 		return {
 			hash,
-			block: header.number,
+			block,
 			fetchedAt,
 			pools: pools.filter((pool): pool is AssetHubPool => !!pool),
 			psm,
 		}
 	}
 
-	const quotes: AssetHubExchange['quotes'] = async (snapshot, request) => {
+	const market: AssetHubExchange['market'] = async (address) => {
+		try {
+			return await readMarket(address)
+		} catch (error) {
+			if (!isUnavailableBlock(error)) throw error
+			return readMarket(address)
+		}
+	}
+
+	const readQuotes: AssetHubExchange['quotes'] = async (snapshot, request) => {
 		assertAmount(request.amount)
 		if (request.assetIn === request.assetOut) return []
 		const result: AssetHubSwapQuote[] = []
@@ -282,6 +298,17 @@ export const createAssetHubExchange = (
 			const bValue = request.mode === 'exactIn' ? b.amountOut : a.amountIn
 			return aValue > bValue ? -1 : aValue < bValue ? 1 : 0
 		})
+	}
+
+	const quotes: AssetHubExchange['quotes'] = async (snapshot, request) => {
+		try {
+			return await readQuotes(snapshot, request)
+		} catch (error) {
+			if (!isUnavailableBlock(error)) throw error
+			// Rebuild every route from one fresh snapshot, including PSM fees and
+			// capacity. Never reuse a partial quote from the unavailable block.
+			return readQuotes(await market(), request)
+		}
 	}
 
 	const swap: AssetHubExchange['swap'] = (

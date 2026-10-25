@@ -11,6 +11,10 @@ import type {
 } from 'types'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { assetHubLocation } from '../../consts/src/assetHub'
+import {
+	ChainHeadBlockNotPinnedError,
+	ChainHeadBlockPrunedError,
+} from '../../dedot-api/node_modules/dedot/index.js'
 import { createAssetHubExchange } from '../../dedot-api/src/assetHub'
 import {
 	canFundExchange,
@@ -287,9 +291,44 @@ const fakeApi = () => {
 		ceilDiv(amount * 1000n, 997n),
 	)
 	const client = {
+		block: {
+			finalized: vi.fn(async () => ({ hash: '0x5678', number: 2 })),
+		},
+		registry: { metadata: { pallets: [] } },
 		at: vi.fn(async () => ({
+			query: {
+				assetConversion: {
+					pools: {
+						entries: vi.fn(async () =>
+							snapshot().pools.map(({ asset, lpToken }) => [
+								[assetHubLocation('DOT'), assetHubLocation(asset)],
+								{ lpToken },
+							]),
+						),
+					},
+				},
+				poolAssets: {
+					asset: vi.fn(async () => ({
+						status: 'Live',
+						supply: pool.lpSupply,
+						minBalance: pool.lpMinBalance,
+					})),
+					account: vi.fn(async () => ({
+						balance: pool.lpBalance,
+						status: 'Liquid',
+					})),
+				},
+			},
+			consts: {
+				assetConversion: {
+					lpFee: pool.fee,
+					liquidityWithdrawalFee: pool.withdrawalFee,
+					mintMinLiquidity: pool.minLiquidity,
+				},
+			},
 			call: {
 				assetConversionApi: {
+					getReserves: vi.fn(async () => [pool.reserveDot, pool.reserveAsset]),
 					quotePriceExactTokensForTokens: exactIn,
 					quotePriceTokensForExactTokens: exactOut,
 				},
@@ -319,6 +358,109 @@ const fakeApi = () => {
 
 describe('Asset Hub route construction', () => {
 	afterEach(() => vi.restoreAllMocks())
+	test('reads market state at the client finalized block', async () => {
+		const { exchange, client } = fakeApi()
+		const market = await exchange.market('sender')
+		expect(market).toMatchObject({
+			hash: '0x5678',
+			block: 2,
+			psm: null,
+		})
+		expect(
+			market.pools.map(({ asset, lpBalance }) => [asset, lpBalance]),
+		).toEqual(
+			['dotUSD', 'USDT', 'USDC'].map((asset) => [asset, pool.lpBalance]),
+		)
+		expect(client.at).toHaveBeenCalledWith(market.hash)
+	})
+	test.each([
+		new ChainHeadBlockNotPinnedError(
+			'Block hash 0x1234 is not pinned',
+			'0x1234',
+		),
+		new ChainHeadBlockPrunedError(),
+		new Error(
+			'Block is not pinned and Archive JSON-RPC is not supported by the server/node!',
+		),
+	])('refreshes a market whose block became unavailable: %s', async (error) => {
+		const { exchange, client } = fakeApi()
+		client.at.mockRejectedValueOnce(error)
+		const market = await exchange.market('sender')
+		expect(market.hash).toBe('0x5678')
+		expect(
+			market.pools.every(({ lpBalance }) => lpBalance === pool.lpBalance),
+		).toBe(true)
+		expect(client.block.finalized).toHaveBeenCalledTimes(2)
+	})
+	test.each(['exactIn', 'exactOut'] as const)(
+		'restarts every %s route from a fresh snapshot if the second leg loses its block',
+		async (mode) => {
+			const { exchange, client, exactIn, exactOut } = fakeApi()
+			const price = mode === 'exactIn' ? exactIn : exactOut
+			price
+				.mockResolvedValueOnce(123n)
+				.mockRejectedValueOnce(
+					new ChainHeadBlockNotPinnedError(
+						'Block hash 0x1234 is not pinned',
+						'0x1234',
+					),
+				)
+			const oldMarket = { ...snapshot(), fetchedAt: Date.now() - 20_000 }
+			const quotes = await exchange.quotes(oldMarket, {
+				assetIn: 'dotUSD',
+				assetOut: 'USDT',
+				amount: 1_000_000n,
+				mode,
+			})
+			// The fresh market has no PSM: its old price must not survive the retry.
+			expect(quotes).toHaveLength(1)
+			expect(quotes[0]).toMatchObject({
+				kind: 'amm',
+				hash: '0x5678',
+				path: ['dotUSD', 'DOT', 'USDT'],
+			})
+			expect(quotes[0].fetchedAt).toBeGreaterThan(oldMarket.fetchedAt)
+			expect(price).toHaveBeenCalledTimes(4)
+			expect(price.mock.calls[2][2]).toBe(1_000_000n)
+			expect(price.mock.calls[3][2]).toBe(
+				mode === 'exactIn' ? 997_000n : ceilDiv(1_000_000_000n, 997n),
+			)
+			expect(client.block.finalized).toHaveBeenCalledOnce()
+		},
+	)
+	test('stops after one fresh quote attempt if blocks remain unavailable', async () => {
+		const { exchange, client, exactIn } = fakeApi()
+		const error = new ChainHeadBlockNotPinnedError(
+			'Block hash 0x1234 is not pinned',
+			'0x1234',
+		)
+		exactIn.mockRejectedValue(error)
+		await expect(
+			exchange.quotes(snapshot(), {
+				assetIn: 'dotUSD',
+				assetOut: 'USDT',
+				amount: 1_000_000n,
+				mode: 'exactIn',
+			}),
+		).rejects.toBe(error)
+		expect(exactIn).toHaveBeenCalledTimes(2)
+		expect(client.block.finalized).toHaveBeenCalledOnce()
+	})
+	test('propagates other quote errors without retrying or accepting a partial route', async () => {
+		const { exchange, client, exactIn } = fakeApi()
+		const error = new Error('Runtime API unavailable')
+		exactIn.mockRejectedValueOnce(error)
+		await expect(
+			exchange.quotes(snapshot(), {
+				assetIn: 'dotUSD',
+				assetOut: 'USDT',
+				amount: 1_000_000n,
+				mode: 'exactIn',
+			}),
+		).rejects.toBe(error)
+		expect(exactIn).toHaveBeenCalledOnce()
+		expect(client.block.finalized).not.toHaveBeenCalled()
+	})
 	test('compares PSM with the DOT route at one finalized snapshot', async () => {
 		const { exchange, client, exactIn } = fakeApi()
 		const market = snapshot()

@@ -113,14 +113,17 @@ vi.mock('../../ui-app/src/BalanceInput', () => ({
 		value,
 		onChange,
 		readOnly,
+		selected,
 	}: {
 		label: string
 		value: string
 		onChange?: (value: string) => void
 		readOnly?: boolean
+		selected: { value: string }
 	}) =>
 		createElement('input', {
 			'aria-label': label,
+			'data-token': selected.value,
 			value,
 			readOnly,
 			onInput: (event: { currentTarget: HTMLInputElement }) =>
@@ -168,7 +171,25 @@ vi.mock('../../ui-core/src/input', () => {
 			Container: Wrapper,
 			Card: Wrapper,
 			Segment: Wrapper,
-			DirectionIndicator: Wrapper,
+			DirectionIndicator: ({
+				label,
+				onReverse,
+				children,
+			}: {
+				label: string
+				onReverse: () => void
+				children: ReactNode
+			}) =>
+				createElement(
+					'div',
+					null,
+					createElement('button', {
+						type: 'button',
+						'aria-label': label,
+						onClick: onReverse,
+					}),
+					children,
+				),
 			Notes: Wrapper,
 			Note: ({ label, children }: { label: string; children: ReactNode }) =>
 				createElement('div', { 'data-note': label }, label, children),
@@ -271,6 +292,134 @@ afterEach(async () => {
 	_uids.next([])
 	vi.useRealTimers()
 	vi.unstubAllGlobals()
+})
+
+test.each(['exactIn', 'exactOut'] as const)(
+	'%s moves the top asset and amount to the bottom and recalculates the new top amount',
+	async (mode) => {
+		const exactIn = mode === 'exactIn'
+		const initial = {
+			...quote(Date.now()),
+			mode,
+			amountIn: exactIn ? 100_000n : 101_001n,
+			amountOut: exactIn ? 99_001n : 100_000n,
+		}
+		const reversed: AssetHubSwapQuote = {
+			...initial,
+			assetIn: 'dotUSD',
+			assetOut: 'USDT',
+			path: ['dotUSD', 'DOT', 'USDT'],
+			mode: exactIn ? 'exactOut' : 'exactIn',
+			amount: 100_000n,
+			amountIn: exactIn ? 102_002n : 100_000n,
+			amountOut: exactIn ? 100_000n : 98_002n,
+		}
+		quotes.mockResolvedValueOnce([initial]).mockResolvedValueOnce([reversed])
+		await act(async () => root.render(createElement(Swap)))
+		if (!exactIn) {
+			await act(async () =>
+				container
+					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
+					.click(),
+			)
+		}
+		await enterAmount('0.100000', exactIn ? 'youPay' : 'youReceive')
+		await advance(250)
+		expect(submitButton().disabled).toBe(false)
+		await act(async () =>
+			container
+				.querySelector<HTMLButtonElement>('[aria-label="reverseAssets"]')!
+				.click(),
+		)
+		const [top, bottom] =
+			container.querySelectorAll<HTMLInputElement>('input[data-token]')
+		expect(bottom.value).toBe('0.100000')
+		expect(bottom.dataset.token).toBe(exactIn ? 'USDT' : 'dotUSD')
+		expect(bottom.readOnly).toBe(false)
+		expect(top.dataset.token).toBe(exactIn ? 'dotUSD' : 'USDT')
+		expect(top.getAttribute('aria-label')).toBe(
+			exactIn ? 'youPay' : 'youReceive',
+		)
+		expect(top.readOnly).toBe(true)
+		expect(top.value).toBe('0.00')
+		expect(submitButton().disabled).toBe(true)
+		await advance(250)
+		expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+			assetIn: 'dotUSD',
+			assetOut: 'USDT',
+			amount: reversed.amount,
+			mode: reversed.mode,
+		})
+		expect(bottom.value).toBe('0.100000')
+		expect(top.value).toBe(exactIn ? '0.102002' : '0.098002')
+		expect(swap.mock.calls.at(-1)?.[0]).toBe(reversed)
+		expect(submitButton().disabled).toBe(false)
+		await enterAmount('0.2', exactIn ? 'youReceive' : 'youPay')
+		expect(bottom.value).toBe('0.2')
+		expect(submitButton().disabled).toBe(true)
+		await advance(250)
+		expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+			assetIn: 'dotUSD',
+			assetOut: 'USDT',
+			amount: 200_000n,
+			mode: reversed.mode,
+		})
+	},
+)
+
+test('reversing the assets before a quote is ready moves the entered amount and its asset to the bottom', async () => {
+	await act(async () => root.render(createElement(Swap)))
+	await enterAmount('0.123456')
+	await act(async () =>
+		container
+			.querySelector<HTMLButtonElement>('[aria-label="reverseAssets"]')!
+			.click(),
+	)
+	const [top, bottom] =
+		container.querySelectorAll<HTMLInputElement>('input[data-token]')
+	expect(top.dataset.token).toBe('dotUSD')
+	expect(top.value).toBe('0.00')
+	expect(bottom.value).toBe('0.123456')
+	expect(bottom.dataset.token).toBe('USDT')
+	await advance(250)
+	expect(quotes).toHaveBeenCalledExactlyOnceWith(expect.anything(), {
+		assetIn: 'dotUSD',
+		assetOut: 'USDT',
+		amount: 123_456n,
+		mode: 'exactOut',
+	})
+})
+
+test('reversing again moves the current calculated top amount to the bottom', async () => {
+	await configure()
+	quotes.mockResolvedValueOnce([
+		{
+			...quote(Date.now()),
+			assetIn: 'dotUSD',
+			assetOut: 'USDT',
+			mode: 'exactOut',
+			amountIn: 102_002n,
+			amountOut: 100_000n,
+		},
+	])
+	const reverse = container.querySelector<HTMLButtonElement>(
+		'[aria-label="reverseAssets"]',
+	)!
+	await act(async () => reverse.click())
+	await advance(250)
+	await act(async () => reverse.click())
+	const [top, bottom] =
+		container.querySelectorAll<HTMLInputElement>('input[data-token]')
+	expect(top.dataset.token).toBe('USDT')
+	expect(bottom.dataset.token).toBe('dotUSD')
+	expect(bottom.value).toBe('0.102002')
+	await advance(250)
+	expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+		assetIn: 'USDT',
+		assetOut: 'dotUSD',
+		amount: 102_002n,
+		mode: 'exactOut',
+	})
 })
 
 test('polling retains the route, slippage, fee and enabled button until the replacement quote and fee are ready', async () => {

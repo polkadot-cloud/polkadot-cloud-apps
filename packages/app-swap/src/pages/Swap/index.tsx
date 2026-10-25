@@ -57,6 +57,7 @@ export const Swap = () => {
 	const [assetOut, setAssetOut] = useState<AssetHubToken>('dotUSD')
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<SwapMode>('exactIn')
+	const [amountOnTop, setAmountOnTop] = useState(true)
 	const [feeAsset, setFeeAsset] = useState<AssetHubToken>('DOT')
 	const [slippage, setSlippage] = useState(defaultSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
@@ -92,6 +93,12 @@ export const Swap = () => {
 		slippage,
 		feeAsset,
 	})
+	const quotedAmount = quote
+		? tokenAmount(
+				mode === 'exactIn' ? quote.amountOut : quote.amountIn,
+				quotedToken,
+			)
+		: undefined
 	const expired = useQuoteExpired(quote?.fetchedAt)
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
@@ -116,6 +123,41 @@ export const Swap = () => {
 			: item.path.join(' → ')
 	const error = marketError || quoteError
 	const routeLoading = parsed > 0n && !quotes && !error
+	const renderAmountField = (editable: boolean) => {
+		const token = editable ? amountToken : quotedToken
+		const fieldMode = editable
+			? mode
+			: mode === 'exactIn'
+				? 'exactOut'
+				: 'exactIn'
+		return (
+			<BalanceInputMulti
+				label={t(fieldMode === 'exactIn' ? 'youPay' : 'youReceive')}
+				value={editable ? amount : (quotedAmount ?? '0.00')}
+				{...(editable ? { onChange: setAmount } : { readOnly: true as const })}
+				disabled={!editable && !quote}
+				maxAvailable={
+					editable
+						? mode === 'exactIn'
+							? tokenAmount(max, amountToken)
+							: '0'
+						: tokenAmount(quotedAvailable, quotedToken)
+				}
+				maxDecimals={assetHubDecimals(token)}
+				syncing={balances.loading}
+				options={tokenOptions.filter(
+					(option) => option.value !== (editable ? quotedToken : amountToken),
+				)}
+				selected={tokenOptions.find((option) => option.value === token)!}
+				onSelect={(option) => {
+					if (fieldMode === 'exactIn') setAssetIn(option.value)
+					else setAssetOut(option.value)
+					if (editable) setAmount('')
+				}}
+				ariaLabel={t(fieldMode === 'exactIn' ? 'youPay' : 'youReceive')}
+			/>
+		)
+	}
 	return (
 		<Page.Row>
 			<SendForm.Container className={`${formClasses.form} ${classes.form}`}>
@@ -154,29 +196,7 @@ export const Swap = () => {
 							</div>
 						)}
 					</AccountField>
-					<BalanceInputMulti
-						label={t(mode === 'exactIn' ? 'youPay' : 'youReceive')}
-						value={amount}
-						onChange={setAmount}
-						maxAvailable={
-							mode === 'exactIn' ? tokenAmount(max, amountToken) : '0'
-						}
-						maxDecimals={assetHubDecimals(amountToken)}
-						syncing={balances.loading}
-						options={tokenOptions.filter(
-							(option) =>
-								option.value !== (mode === 'exactIn' ? assetOut : assetIn),
-						)}
-						selected={
-							tokenOptions.find((option) => option.value === amountToken)!
-						}
-						onSelect={(option) => {
-							if (mode === 'exactIn') setAssetIn(option.value)
-							else setAssetOut(option.value)
-							setAmount('')
-						}}
-						ariaLabel={t(mode === 'exactIn' ? 'youPay' : 'youReceive')}
-					/>
+					{renderAmountField(amountOnTop)}
 					<SendForm.DirectionIndicator
 						label={t('reverseAssets')}
 						tooltip={t('reverseAssetsTooltip')}
@@ -184,7 +204,12 @@ export const Swap = () => {
 						onReverse={() => {
 							setAssetIn(assetOut)
 							setAssetOut(assetIn)
-							setAmount('')
+							if (amountOnTop) {
+								setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
+							} else {
+								setAmount(quotedAmount ?? '0.00')
+							}
+							setAmountOnTop(false)
 						}}
 					>
 						<Tooltip
@@ -200,6 +225,7 @@ export const Swap = () => {
 								)}
 								onClick={() => {
 									setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
+									setAmountOnTop(true)
 									setAmount('')
 								}}
 							>
@@ -208,33 +234,7 @@ export const Swap = () => {
 							</button>
 						</Tooltip>
 					</SendForm.DirectionIndicator>
-					<BalanceInputMulti
-						label={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
-						value={
-							quote
-								? tokenAmount(
-										mode === 'exactIn' ? quote.amountOut : quote.amountIn,
-										quotedToken,
-									)
-								: '0.00'
-						}
-						readOnly
-						disabled={!quote}
-						maxAvailable={tokenAmount(quotedAvailable, quotedToken)}
-						syncing={balances.loading}
-						maxDecimals={assetHubDecimals(quotedToken)}
-						options={tokenOptions.filter(
-							(option) => option.value !== amountToken,
-						)}
-						selected={
-							tokenOptions.find((option) => option.value === quotedToken)!
-						}
-						onSelect={(option) => {
-							if (mode === 'exactIn') setAssetOut(option.value)
-							else setAssetIn(option.value)
-						}}
-						ariaLabel={t(mode === 'exactIn' ? 'youReceive' : 'youPay')}
-					/>
+					{renderAmountField(!amountOnTop)}
 					<FeeField
 						value={feeAsset}
 						onChange={setFeeAsset}
