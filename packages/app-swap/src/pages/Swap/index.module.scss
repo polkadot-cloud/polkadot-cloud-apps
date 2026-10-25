@@ -25,6 +25,27 @@
 	min-height: 1.5rem;
 }
 
+.quoteNotes > *,
+.feeNotes > :nth-child(-n + 3) {
+	min-height: 2rem;
+	padding-block: 0.25rem;
+}
+
+.quoteNotes > *,
+.feeNotes > :nth-child(-n + 2) {
+	position: relative;
+
+	&::after {
+		position: absolute;
+		right: 0;
+		bottom: -0.375rem;
+		left: 0;
+		border-bottom: 1px solid var(--gray-400);
+		content: '';
+		pointer-events: none;
+	}
+}
+
 .route {
 	display: flex;
 	align-items: center;
@@ -68,6 +89,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.refreshQuote {
+	width: 100%;
+	min-height: 3.25rem;
 }
 
 .slippage {

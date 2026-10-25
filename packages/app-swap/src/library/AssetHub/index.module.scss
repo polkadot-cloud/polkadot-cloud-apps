@@ -69,12 +69,51 @@
 	margin: 0;
 	padding: 0.8rem 1rem;
 	color: var(--text-tertiary);
-	line-height: 1.5;
+	font-family: var(--font-family-default);
+	font-size: 1.1rem;
+	font-weight: 500;
+	line-height: 1.4rem;
 	overflow-wrap: anywhere;
 }
 
 .transactionNotice {
-	line-height: 1.5;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+	margin: 0.75rem 0 0;
+	color: var(--text-tertiary);
+	font-family: var(--font-family-default);
+	font-size: 1.1rem;
+	font-weight: 500;
+	line-height: 1.4rem;
+}
+
+.dangerNotice {
+	color: var(--status-danger);
+}
+
+.warningNotice {
+	color: var(--status-warning);
+}
+
+.noticeIcon {
+	flex-shrink: 0;
+	margin-top: 0.15rem;
+	font-size: 1.05rem;
+}
+
+.noticeCopy {
+	flex: 1;
+	min-width: 0;
+}
+
+.noticeAction {
+	flex-shrink: 0;
+}
+
+.transactionActions {
+	display: grid;
+	gap: 0.75rem;
 }
 
 .layout {

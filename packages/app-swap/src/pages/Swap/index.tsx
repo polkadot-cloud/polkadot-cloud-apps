@@ -10,6 +10,7 @@ import { slippageLimit } from 'dedot-api/assetHub/math'
 import { useStablecoinBalances, useTheme } from 'hooks'
 import {
 	AccountField,
+	ExchangeNotice,
 	FeeField,
 	percentage,
 	exchangeClasses as styles,
@@ -28,6 +29,7 @@ import type {
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
+import { ButtonSecondary } from 'ui-buttons'
 import { Page, ShineText, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
@@ -244,17 +246,18 @@ export const Swap = () => {
 						/>
 					</FeeField>
 					{quotes?.length === 0 && (
-						<p className={styles.notice} role="status">
+						<ExchangeNotice className={styles.notice}>
 							{t('noRoute')}
-						</p>
+						</ExchangeNotice>
 					)}
 					{error && (
-						<p className={styles.notice} role="alert">
-							{error}{' '}
-							<button type="button" className={styles.button} onClick={refresh}>
-								{t('retry')}
-							</button>
-						</p>
+						<ExchangeNotice
+							status="danger"
+							className={styles.notice}
+							action={<ButtonSecondary text={t('retry')} onClick={refresh} />}
+						>
+							{error}
+						</ExchangeNotice>
 					)}
 					<SendForm.Notes className={classes.quoteNotes}>
 						<section
@@ -302,16 +305,18 @@ export const Swap = () => {
 								: '—'}
 						</SendForm.Note>
 					</SendForm.Notes>
-					{expired && (
-						<p className={styles.notice} role="status">
-							{t('quoteExpired')}{' '}
-							<button type="button" className={styles.button} onClick={refresh}>
-								{t('refreshQuote')}
-							</button>
-						</p>
-					)}
 					<TransactionAction
 						notesClassName={classes.feeNotes}
+						beforeSubmit={
+							expired && (
+								<ButtonSecondary
+									text={t('refreshQuote')}
+									size="lg"
+									className={classes.refreshQuote}
+									onClick={refresh}
+								/>
+							)
+						}
 						tx={tx}
 						estimatedFee={fee}
 						submissionKey={requestKey}
@@ -331,6 +336,7 @@ export const Swap = () => {
 						<SendForm.Note label={t('priceImpact')}>
 							{quote ? `${quote.priceImpactBps / 100}%` : '—'}
 						</SendForm.Note>
+						{expired && <ExchangeNotice>{t('quoteExpired')}</ExchangeNotice>}
 					</TransactionAction>
 				</SendForm.Card>
 			</SendForm.Container>

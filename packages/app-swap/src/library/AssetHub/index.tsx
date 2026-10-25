@@ -1,6 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import {
+	faCircleExclamation,
+	faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classNames from 'classnames'
 import { SwapDappName } from 'consts'
 import { AssetHubTokens, assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
@@ -17,7 +23,6 @@ import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Dropdown } from 'ui-app/Dropdown'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { ButtonSecondary } from 'ui-buttons'
-import { StatusCard } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import classes from './index.module.scss'
 
@@ -47,6 +52,34 @@ export const useNow = () => {
 }
 export const messageOf = (error: unknown) =>
 	error instanceof Error ? error.message : 'Unable to read Asset Hub state'
+
+export const ExchangeNotice = ({
+	children,
+	status = 'warning',
+	action,
+	className,
+}: {
+	children: ReactNode
+	status?: 'warning' | 'danger'
+	action?: ReactNode
+	className?: string
+}) => (
+	<div
+		role={status === 'danger' ? 'alert' : 'status'}
+		className={classNames(classes.transactionNotice, className, {
+			[classes.dangerNotice]: status === 'danger',
+			[classes.warningNotice]: status === 'warning',
+		})}
+	>
+		<FontAwesomeIcon
+			icon={status === 'danger' ? faCircleExclamation : faTriangleExclamation}
+			className={classes.noticeIcon}
+			aria-hidden
+		/>
+		<span className={classes.noticeCopy}>{children}</span>
+		{action && <div className={classes.noticeAction}>{action}</div>}
+	</div>
+)
 
 export const useAssetHubMarket = (address?: string) => {
 	const { serviceApi } = useApi()
@@ -166,6 +199,7 @@ type TransactionActionProps = {
 	onComplete: () => void
 	children?: ReactNode
 	notesClassName?: string
+	beforeSubmit?: ReactNode
 }
 
 // Background quotes share a submission id until the user changes the request.
@@ -188,6 +222,7 @@ const TransactionActionInner = ({
 	onComplete,
 	children,
 	notesClassName,
+	beforeSubmit,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -306,10 +341,8 @@ const TransactionActionInner = ({
 				</SendForm.Note>
 				{children}
 				{error && (
-					<StatusCard
+					<ExchangeNotice
 						status="danger"
-						role="alert"
-						className={classes.transactionNotice}
 						action={
 							<ButtonSecondary
 								text={t('retry')}
@@ -318,38 +351,31 @@ const TransactionActionInner = ({
 						}
 					>
 						{error}
-					</StatusCard>
+					</ExchangeNotice>
 				)}
 				{accountBusy && (
-					<StatusCard
-						status="warning"
-						role="status"
-						className={classes.transactionNotice}
-					>
-						{t('transactionInProgress')}
-					</StatusCard>
+					<ExchangeNotice>{t('transactionInProgress')}</ExchangeNotice>
 				)}
 				{valid && account && fee !== undefined && !funded && (
-					<StatusCard
-						status="danger"
-						role="alert"
-						className={classes.transactionNotice}
-					>
+					<ExchangeNotice status="danger">
 						{t('insufficientBalance')}
-					</StatusCard>
+					</ExchangeNotice>
 				)}
 			</SendForm.Notes>
 			<SendForm.Action>
-				<SubmitTx
-					{...submission}
-					submitText={label}
-					valid={ready}
-					noMargin
-					feeDisplay={feeDisplay}
-					feeBalance={feeBalance?.free ?? 0n}
-					hideSigner
-					transparent
-				/>
+				<div className={classes.transactionActions}>
+					{beforeSubmit}
+					<SubmitTx
+						{...submission}
+						submitText={label}
+						valid={ready}
+						noMargin
+						feeDisplay={feeDisplay}
+						feeBalance={feeBalance?.free ?? 0n}
+						hideSigner
+						transparent
+					/>
+				</div>
 			</SendForm.Action>
 		</>
 	)

@@ -143,7 +143,12 @@ vi.mock('../../ui-app/src/SubmitTx', async () => {
 		},
 	}
 })
-vi.mock('../../ui-buttons/src/index', () => ({ ButtonSecondary: () => null }))
+vi.mock('../../ui-buttons/src/index', async () => {
+	const { ButtonSecondary } = await import(
+		'../../ui-buttons/src/ButtonSecondary'
+	)
+	return { ButtonSecondary }
+})
 vi.mock('../../ui-core/src/base', async () => {
 	const { ShineText } = await import('../../ui-core/src/base/ShineText')
 	const Wrapper = ({ children }: { children: ReactNode }) =>
@@ -551,6 +556,17 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
 		slippage,
 	)
+	const refresh = [...container.querySelectorAll('button')].find(
+		(item) => item.textContent === 'refreshQuote',
+	)!
+	expect(refresh.disabled).toBe(false)
+	expect(button.previousElementSibling).toBe(refresh)
+	expect(refresh.closest('[role="status"]')).toBeNull()
+	market.mockImplementation(async () => snapshot())
+	await act(async () => refresh.click())
+	await advance(250)
+	expect(submitButton().disabled).toBe(false)
+	expect(container.contains(refresh)).toBe(false)
 })
 
 test('a failed background fee estimate retains the last complete quote and never enables an unestimated replacement', async () => {
