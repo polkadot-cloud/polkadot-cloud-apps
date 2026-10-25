@@ -91,22 +91,25 @@ const SourceIcon = ({
 	SvgIcon,
 	faIcon,
 	size,
+	className,
 }: {
 	SvgIcon?: FunctionComponent<SVGProps<SVGSVGElement>>
 	faIcon?: IconDefinition
 	size?: string
+	className?: string
 }) => {
 	const style = size ? { width: size, height: size } : undefined
+	const allClasses = classNames(classes.sourceIcon, className)
 	if (SvgIcon) {
 		return (
-			<span className={classes.sourceIcon}>
+			<span className={allClasses}>
 				<SvgIcon style={style} />
 			</span>
 		)
 	}
 	if (faIcon) {
 		return (
-			<span className={classes.sourceIcon}>
+			<span className={allClasses}>
 				<FontAwesomeIcon icon={faIcon} style={style} />
 			</span>
 		)
@@ -151,13 +154,14 @@ const ListItem = ({
 	onClick,
 	onKeyDown,
 	children,
-}: ComponentBase & {
+	className,
+}: ComponentBaseWithClassName & {
 	account: ImportedAccount
 	isSelected: boolean
 	onClick: (account: ImportedAccount) => void
 	onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {
-	const allClasses = classNames(classes.listItem, {
+	const allClasses = classNames(classes.listItem, className, {
 		[classes.selected]: isSelected,
 	})
 	return (

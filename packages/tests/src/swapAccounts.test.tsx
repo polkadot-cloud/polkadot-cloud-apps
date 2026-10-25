@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { act, createElement } from 'react'
+import { act, createElement, type SVGProps } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -64,7 +64,11 @@ vi.mock('../../ui-core/src/base', async () => {
 	return { Identity }
 })
 vi.mock('../../ui-app/src/AccountDropdown', () => ({
-	getAccountSourceIcon: () => undefined,
+	getAccountSourceIcon: (source?: string) => {
+		if (!source || source === 'external') return undefined
+		return (props: SVGProps<SVGSVGElement>) =>
+			createElement('svg', { ...props, 'data-source': source })
+	},
 	AccountDropdown: ({
 		accounts,
 		initialAccount,
@@ -157,6 +161,12 @@ test('lists all accounts in name order and initially shows the active account ba
 		accountRows().map((button) => button.getAttribute('aria-selected')),
 	).toEqual(['false', 'true'])
 	expect(balanceAccount()).toBe('bob:ledger')
+	expect(
+		accountRows().every((row) => !row.querySelector('[data-source]')),
+	).toBe(true)
+	expect(
+		container.querySelector('h3 [data-source]')?.getAttribute('data-source'),
+	).toBe('ledger')
 })
 
 test('sidebar selection changes balances in place without activating an account or closing the modal', async () => {
@@ -207,12 +217,20 @@ test('keeps accounts from different sources distinct even when their addresses m
 	await render()
 	expect(balanceAccount()).toBe('alice:ledger')
 	expect(
+		accountRows().map((row) =>
+			row.querySelector('[data-source]')?.getAttribute('data-source'),
+		),
+	).toEqual(['extension', 'ledger'])
+	expect(
 		accountRows().filter(
 			(button) => button.getAttribute('aria-selected') === 'true',
 		),
 	).toHaveLength(1)
 	await act(async () => accountRows()[0].click())
 	expect(balanceAccount()).toBe('alice:extension')
+	expect(
+		container.querySelector('h3 [data-source]')?.getAttribute('data-source'),
+	).toBe('extension')
 })
 
 test('falls back to an available account if the browsed account is removed', async () => {

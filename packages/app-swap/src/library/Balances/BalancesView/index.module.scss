@@ -30,10 +30,14 @@
 	}
 }
 
+.mix {
+	--popover-headline-padding-block-end: 1rem;
+}
+
 .mixIcons {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
-	padding: 0 1.25rem 0.5rem;
+	vertical-align: middle;
 
 	> img {
 		position: relative;

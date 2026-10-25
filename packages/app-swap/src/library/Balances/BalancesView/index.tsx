@@ -105,15 +105,19 @@ export const BalancesView = ({
 			</div>
 
 			{activeTab === 'mix' && (
-				<div>
-					<Headline title={t('stablecoinMix')} value={null} />
-					{mixIcons.length > 0 && (
-						<div className={classes.mixIcons} aria-hidden="true">
-							{mixIcons.map(({ symbol }) => (
-								<img key={symbol} src={getFeeTokenIcon(symbol)} alt="" />
-							))}
-						</div>
-					)}
+				<div className={classes.mix}>
+					<Headline
+						title={t('stablecoinMix')}
+						value={
+							mixIcons.length > 0 ? (
+								<span className={classes.mixIcons} aria-hidden="true">
+									{mixIcons.map(({ symbol }) => (
+										<img key={symbol} src={getFeeTokenIcon(symbol)} alt="" />
+									))}
+								</span>
+							) : null
+						}
+					/>
 					<ConnectItem.Container>
 						<MenuItem padded>
 							{syncing ? (

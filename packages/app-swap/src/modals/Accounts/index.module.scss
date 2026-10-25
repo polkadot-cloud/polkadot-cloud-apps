@@ -34,9 +34,17 @@
 	overscroll-behavior: contain;
 }
 
+.sidebar .accountRow:not(:last-child) {
+	border-bottom: 1px solid var(--gray-400);
+}
+
+.sidebar .sourceIcon {
+	margin-right: 0;
+}
+
 .identicon {
-	flex: 0 0 2.25rem;
-	width: 2.25rem;
+	flex: 0 0 2rem;
+	width: 2rem;
 }
 
 .balancesPane {
@@ -59,6 +67,17 @@
 .selectedAccount {
 	min-width: 0;
 	padding: 0 1rem 1rem;
+}
+
+.accountName {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+
+	.sourceIcon {
+		flex-shrink: 0;
+		margin: 0;
+	}
 }
 
 .empty {

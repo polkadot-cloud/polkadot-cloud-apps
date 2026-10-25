@@ -22,6 +22,21 @@ export type AccountsOptions = {
 	onSelect: (account: ImportedAccount | null) => void
 }
 
+const AccountSourceIcon = ({
+	source,
+	className,
+}: {
+	source: string
+	className: string
+}) => (
+	<AccountInput.SourceIcon
+		SvgIcon={getAccountSourceIcon(source)}
+		faIcon={source === 'external' ? faGlasses : undefined}
+		size="1.1rem"
+		className={className}
+	/>
+)
+
 export const Accounts = () => {
 	const { t } = useTranslation('swap')
 	const { options } = useOverlay().modal.config
@@ -45,6 +60,15 @@ export const Accounts = () => {
 			),
 		[accounts],
 	)
+	const sourcesByAddress = useMemo(() => {
+		const sources = new Map<string, Set<string>>()
+		for (const { address, source } of accounts) {
+			const accountSources = sources.get(address) ?? new Set<string>()
+			accountSources.add(source)
+			sources.set(address, accountSources)
+		}
+		return sources
+	}, [accounts])
 	const account =
 		accounts.find(
 			(item) =>
@@ -68,42 +92,37 @@ export const Accounts = () => {
 						className={classes.accountList}
 						ariaLabel={t('accounts', { ns: 'app' })}
 					>
-						{sortedAccounts.map((item) => {
-							const SourceIcon = getAccountSourceIcon(item.source)
-							return (
-								<AccountInput.ListItem
-									key={`${item.address}:${item.source}`}
-									account={item}
-									isSelected={
-										account?.address === item.address &&
-										account.source === item.source
-									}
-									onClick={selectAccount}
-								>
-									<span className={classes.identicon} aria-hidden>
-										<Polkicon
-											address={item.address}
-											fontSize="2.25rem"
-											background="transparent"
-										/>
-									</span>
-									<AccountInput.InnerLeft>
-										<AccountInput.ListName
-											name={item.name || ellipsisFn(item.address, 6)}
-										/>
-										<AccountInput.Address address={item.address} />
-									</AccountInput.InnerLeft>
-									{SourceIcon ? (
-										<AccountInput.SourceIcon
-											SvgIcon={SourceIcon}
-											size="1.1rem"
-										/>
-									) : item.source === 'external' ? (
-										<AccountInput.SourceIcon faIcon={faGlasses} size="1.1rem" />
-									) : null}
-								</AccountInput.ListItem>
-							)
-						})}
+						{sortedAccounts.map((item) => (
+							<AccountInput.ListItem
+								key={`${item.address}:${item.source}`}
+								className={classes.accountRow}
+								account={item}
+								isSelected={
+									account?.address === item.address &&
+									account.source === item.source
+								}
+								onClick={selectAccount}
+							>
+								<span className={classes.identicon} aria-hidden>
+									<Polkicon
+										address={item.address}
+										fontSize="2rem"
+										background="transparent"
+									/>
+								</span>
+								<AccountInput.InnerLeft>
+									<AccountInput.ListName
+										name={item.name || ellipsisFn(item.address, 6)}
+									/>
+								</AccountInput.InnerLeft>
+								{(sourcesByAddress.get(item.address)?.size ?? 0) > 1 && (
+									<AccountSourceIcon
+										source={item.source}
+										className={classes.sourceIcon}
+									/>
+								)}
+							</AccountInput.ListItem>
+						))}
 					</AccountInput.ListContainer>
 				</aside>
 				<div className={classes.balancesPane}>
@@ -129,7 +148,15 @@ export const Accounts = () => {
 								<Identity
 									address={account.address}
 									iconSize="3rem"
-									label={account.name || ellipsisFn(account.address, 6)}
+									label={
+										<span className={classes.accountName}>
+											{account.name || ellipsisFn(account.address, 6)}
+											<AccountSourceIcon
+												source={account.source}
+												className={classes.sourceIcon}
+											/>
+										</span>
+									}
 									value={ellipsisFn(account.address, 8)}
 									Action={<ButtonCopy value={account.address} size="0.9rem" />}
 								/>

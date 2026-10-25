@@ -7,6 +7,7 @@
 	align-items: baseline;
 	gap: 1rem;
 	padding: 1.4rem 1.25rem;
+	padding-block-end: var(--popover-headline-padding-block-end, 1.4rem);
 }
 
 .title {
