@@ -12,15 +12,11 @@ import type { ImportedAccount } from 'types'
 import { ConnectItem, Headline, MenuItem } from 'ui-core/popover'
 import { BalancePreloader } from '../BalancePreloader'
 
-export const AllBalances = ({
-	account,
-}: {
-	account: ImportedAccount | null
-}) => {
+export const AllBalances = ({ account }: { account: ImportedAccount }) => {
 	const { t } = useTranslation('modals')
 	const { price: dotPrice } = useTokenPrices()
 	const { getBalanceUnit, loading: syncing } = useStablecoinBalances(
-		account?.address,
+		account.address,
 	)
 	const assets = getStablecoinFeeAssets('statemint').map((symbol) => ({
 		symbol,
@@ -28,14 +24,13 @@ export const AllBalances = ({
 	}))
 	const dotTotal = getBalanceUnit('statemint', 'DOT')
 
-	const stablecoinTotal = assets
+	const total = assets
 		.filter(({ symbol }) => symbol !== 'DOT')
-		.reduce((sum, { value }) => sum.plus(value), dotTotal.multipliedBy(0))
-
-	const total = stablecoinTotal.plus(dotTotal.multipliedBy(dotPrice))
-
+		.reduce(
+			(sum, { value }) => sum.plus(value),
+			dotTotal.multipliedBy(dotPrice),
+		)
 	const totalUnavailable = !dotTotal.isZero() && dotPrice === 0
-
 	const rows = assets.sort((a, b) => b.value.comparedTo(a.value) ?? 0)
 
 	return (

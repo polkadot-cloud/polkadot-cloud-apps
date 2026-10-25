@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useImportedAccounts } from '@polkadot-cloud/connect'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { ellipsisFn } from '@polkadot-cloud/utils'
 import type { AccountListCategory } from 'hooks/useStakingAccountCategories'
@@ -12,28 +13,22 @@ import { AccountInput } from 'ui-core/input'
 import classes from './index.module.scss'
 
 interface AccountsMenuProps {
-	accounts: ImportedAccount[]
 	categories: AccountListCategory[]
 	account: ImportedAccount | null
 	onSelect: (account: ImportedAccount | null) => void
 }
 
 export const AccountsMenu = ({
-	accounts,
 	categories,
 	account,
 	onSelect,
 }: AccountsMenuProps) => {
 	const { t } = useTranslation('modals')
+	const { accounts, getAccount } = useImportedAccounts()
 	const accountCategories = categories
 		.map((category) => ({
 			...category,
-			accounts: category.items.flatMap(({ address, source }) => {
-				const importedAccount = accounts.find(
-					(item) => item.address === address && item.source === source,
-				)
-				return importedAccount ? [importedAccount] : []
-			}),
+			accounts: category.items.map(getAccount).filter((item) => item !== null),
 		}))
 		.filter((category) => category.accounts.length > 0)
 	const sourcesByAddress = useMemo(() => {

@@ -6,7 +6,7 @@ import { ellipsisFn } from '@polkadot-cloud/utils'
 import { useStablecoinAccountCategories } from 'hooks/useStablecoinAccountCategories'
 import { useStablecoinBalances } from 'hooks/useStablecoinBalances'
 import type { UseAccountListCategories } from 'hooks/useStakingAccountCategories'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
 import { AccountDropdown, AccountSourceIcon } from 'ui-app/AccountDropdown'
@@ -15,6 +15,7 @@ import { ModalTitle } from 'ui-app/ModalTitle'
 import { PopoverTab } from 'ui-buttons'
 import { Identity } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
+import { compareAccounts } from 'utils'
 import { AccountsMenu } from './AccountsMenu'
 import { AllBalances } from './AllBalances'
 import classes from './index.module.scss'
@@ -45,28 +46,10 @@ export const AccountBalances = ({
 		useState<ImportedAccount | null>(initialAccount ?? null)
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
 
-	const sortedAccounts = useMemo(
-		() =>
-			[...accounts].sort(
-				(a, b) =>
-					(a.name?.trim() || a.address).localeCompare(
-						b.name?.trim() || b.address,
-						undefined,
-						{ sensitivity: 'base' },
-					) ||
-					a.address.localeCompare(b.address) ||
-					a.source.localeCompare(b.source),
-			),
-		[accounts],
-	)
 	const account =
-		accounts.find(
-			(item) =>
-				item.address === selectedAccount?.address &&
-				item.source === selectedAccount?.source,
-		) ??
+		getAccount(selectedAccount) ??
 		getAccount(activeAccount) ??
-		sortedAccounts[0] ??
+		[...accounts].sort(compareAccounts)[0] ??
 		null
 
 	const { loading: syncing, refresh } = useStablecoinBalances(account?.address)
@@ -84,7 +67,6 @@ export const AccountBalances = ({
 			<ModalTitle title={t('accounts', { ns: 'app' })} />
 			<div className={classes.layout}>
 				<AccountsMenu
-					accounts={accounts}
 					categories={categories}
 					account={account}
 					onSelect={selectAccount}
@@ -96,7 +78,7 @@ export const AccountBalances = ({
 							accounts={accounts}
 							initialAccount={account}
 							onSelect={selectAccount}
-							label={t('account', { ns: 'modals' })}
+							label={t('account')}
 							placeholder={
 								accounts.length
 									? t('selectAccount', { ns: 'app' })

@@ -20,14 +20,14 @@ export const Standalone = ({
 	onMouseOut,
 	disabled,
 }: ButtonAccountStandaloneProps) => {
-	const allClasses = classNames(classes.btnAccount, {
+	const allClasses = classNames(classes.btnAccount, className, {
 		[classes.marginLeft]: marginLeft,
 	})
 
 	return (
 		<button
 			type="button"
-			className={`${className ? `${className} ` : ' '}${allClasses}`}
+			className={allClasses}
 			style={style}
 			disabled={disabled}
 			{...onMouseHandlers({ onClick, onMouseOver, onMouseMove, onMouseOut })}

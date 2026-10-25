@@ -90,25 +90,22 @@ const Address = ({ address, style }: ComponentBase & { address: string }) => {
 const SourceIcon = ({
 	SvgIcon,
 	faIcon,
-	size,
 	className,
 }: {
 	SvgIcon?: FunctionComponent<SVGProps<SVGSVGElement>>
 	faIcon?: IconDefinition
-	size?: string
 	className?: string
 }) => {
-	const style = size ? { width: size, height: size } : undefined
-	const allClasses = classNames(classes.sourceIcon, className)
-	return SvgIcon || faIcon ? (
-		<span className={allClasses}>
-			{SvgIcon ? (
-				<SvgIcon style={style} />
-			) : (
-				<FontAwesomeIcon icon={faIcon!} style={style} />
-			)}
-		</span>
+	const icon = SvgIcon ? (
+		<SvgIcon />
+	) : faIcon ? (
+		<FontAwesomeIcon icon={faIcon} />
 	) : null
+	return (
+		icon && (
+			<span className={classNames(classes.sourceIcon, className)}>{icon}</span>
+		)
+	)
 }
 
 const Balance = ({
@@ -127,19 +124,17 @@ const Balance = ({
 const ListContainer = forwardRef<
 	HTMLDivElement,
 	ComponentBaseWithClassName & { ariaLabel?: string }
->(({ children, style, className, ariaLabel = 'Account selection' }, ref) => {
-	return (
-		<div
-			className={classNames(classes.listContainer, className)}
-			style={style}
-			ref={ref}
-			role="listbox"
-			aria-label={ariaLabel}
-		>
-			{children}
-		</div>
-	)
-})
+>(({ children, style, className, ariaLabel = 'Account selection' }, ref) => (
+	<div
+		className={classNames(classes.listContainer, className)}
+		style={style}
+		ref={ref}
+		role="listbox"
+		aria-label={ariaLabel}
+	>
+		{children}
+	</div>
+))
 
 const ListItem = ({
 	account,
@@ -161,13 +156,15 @@ const ListItem = ({
 		<div
 			className={allClasses}
 			onClick={() => onClick(account)}
-			onKeyDown={(event) => {
-				if (onKeyDown) onKeyDown(event)
-				else if (event.key === 'Enter' || event.key === ' ') {
-					event.preventDefault()
-					onClick(account)
-				}
-			}}
+			onKeyDown={
+				onKeyDown ??
+				((event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault()
+						onClick(account)
+					}
+				})
+			}
 			role="option"
 			tabIndex={0}
 			aria-selected={isSelected}
