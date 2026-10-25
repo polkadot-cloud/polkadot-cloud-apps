@@ -14,6 +14,8 @@ export interface MenuPopoverFeatureFlags {
 }
 
 export interface HeadersProps {
+	showAccount?: boolean
+	openAccountsOnConnect?: boolean
 	NodesLeft?: Record<string, ComponentType>
 	NodesRight?: Record<string, ComponentType>
 	menuPopoverFeatures?: MenuPopoverFeatureFlags

@@ -3,7 +3,7 @@
 
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { SwapDappName } from 'consts'
-import { Wallet } from 'library/Balances'
+import { AccountsButton } from 'library/Accounts'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -39,8 +39,9 @@ export const Router = () => (
 			<Page.Main>
 				<HelmetProvider>
 					<Headers
+						showAccount={false}
 						NodesLeft={{ sync: Sync }}
-						NodesRight={{ wallet: Wallet }}
+						NodesRight={{ accounts: AccountsButton }}
 						menuPopoverFeatures={{
 							network: false,
 							advancedMode: false,

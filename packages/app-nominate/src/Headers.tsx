@@ -40,6 +40,7 @@ export const Headers = () => {
 					sendModal={false}
 				/>
 				<Settings
+					openAccountsOnConnect
 					openConnect={openConnect}
 					setOpenConnect={setOpenConnect}
 					menuPopoverFeatures={menuPopoverFeatures}

@@ -13,6 +13,7 @@ export const Wallets = ({
 	installed,
 	other,
 	setOpen,
+	openAccountsOnConnect,
 	selectedSection,
 }: WalletProps) => {
 	const { t } = useTranslation()
@@ -70,6 +71,7 @@ export const Wallets = ({
 						extension={extension}
 						last={i === otherExtensions.length - 1}
 						setOpen={setOpen}
+						openAccountsOnConnect={openAccountsOnConnect}
 					/>
 				</section>
 			))}
@@ -82,6 +84,7 @@ export const Wallets = ({
 								extension={extension}
 								last={i === devTools.length - 1}
 								setOpen={setOpen}
+								openAccountsOnConnect={openAccountsOnConnect}
 							/>
 						</section>
 					))}

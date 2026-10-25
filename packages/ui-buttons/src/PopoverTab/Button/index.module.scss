@@ -17,7 +17,8 @@
 		opacity: 0.5;
 	}
 
-	&:hover {
+	&:hover,
+	&[aria-pressed="true"] {
 		background: var(--gray-400);
 
 		&:disabled {
