@@ -144,10 +144,16 @@ vi.mock('../../ui-app/src/SubmitTx', async () => {
 	}
 })
 vi.mock('../../ui-buttons/src/index', () => ({ ButtonSecondary: () => null }))
-vi.mock('../../ui-core/src/base', () => {
+vi.mock('../../ui-core/src/base', async () => {
+	const { ShineText } = await import('../../ui-core/src/base/ShineText')
 	const Wrapper = ({ children }: { children: ReactNode }) =>
 		createElement('div', null, children)
-	return { Page: { Row: Wrapper }, Tooltip: Wrapper, StatusCard: Wrapper }
+	return {
+		Page: { Row: Wrapper },
+		ShineText,
+		Tooltip: Wrapper,
+		StatusCard: Wrapper,
+	}
 })
 vi.mock('../../ui-core/src/input', () => {
 	const Wrapper = ({ children }: { children: ReactNode }) =>
@@ -202,10 +208,10 @@ let root: Root
 let container: HTMLDivElement
 const advance = (milliseconds: number) =>
 	act(async () => vi.advanceTimersByTimeAsync(milliseconds))
-const enterAmount = (value: string) =>
+const enterAmount = (value: string, label = 'youPay') =>
 	act(async () => {
 		const input = container.querySelector<HTMLInputElement>(
-			'input[aria-label="youPay"]',
+			`input[aria-label="${label}"]`,
 		)!
 		input.value = value
 		input.dispatchEvent(new Event('input', { bubbles: true }))
@@ -272,7 +278,9 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 		'DOT',
 		'dotUSD',
 	])
-	const slippage = container.querySelector('select')
+	const slippage = container.querySelector<HTMLInputElement>(
+		'input[type="range"]',
+	)
 	const conversion = container.querySelector('[data-note="conversionFee"]')
 	const minimum = container.querySelector('[data-note="minimumReceived"]')
 	const uid = button.dataset.submit
@@ -286,7 +294,9 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(submitButton()).toBe(button)
 	expect(button.disabled).toBe(false)
 	expect(routeView()).toBe(route)
-	expect(container.querySelector('select')).toBe(slippage)
+	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
+		slippage,
+	)
 	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
 		conversion,
 	)
@@ -307,7 +317,9 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(button.disabled).toBe(false)
 	expect(feeText()).toBe('120')
 	expect(routeView()).toBe(route)
-	expect(container.querySelector('select')).toBe(slippage)
+	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
+		slippage,
+	)
 	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
 		conversion,
 	)
@@ -324,7 +336,9 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	await configure()
 	const route = routeView()
 	const minimum = container.querySelector('[data-note="minimumReceived"]')!
-	const slippage = container.querySelector('select')!
+	const slippage = container.querySelector<HTMLInputElement>(
+		'input[type="range"]',
+	)!
 	const pendingQuotes = deferred<AssetHubSwapQuote[]>()
 	quotes.mockReturnValueOnce(pendingQuotes.promise)
 	await advance(15_000)
@@ -335,7 +349,7 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	expect(route.textContent).toContain('fetchingQuote')
 	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived—')
-	expect(slippage.disabled).toBe(true)
+	expect(slippage.disabled).toBe(false)
 	expect(
 		container.querySelector('[data-note="conversionFee"]')!.textContent,
 	).toBe('conversionFee—')
@@ -351,10 +365,12 @@ test('the automatic route and quote rows keep their placeholders until the quote
 	await act(async () => root.render(createElement(Swap)))
 	const route = routeView()
 	const minimum = container.querySelector('[data-note="minimumReceived"]')!
-	const slippage = container.querySelector('select')!
-	expect(route.textContent).toBe('route—')
+	const slippage = container.querySelector<HTMLInputElement>(
+		'input[type="range"]',
+	)!
+	expect(route.querySelector('[aria-live="polite"]')!.textContent).toBe('—')
 	expect(minimum.textContent).toBe('minimumReceived—')
-	expect(slippage.disabled).toBe(true)
+	expect(slippage.disabled).toBe(false)
 	for (const label of ['networkFee', 'conversionFee', 'priceImpact']) {
 		expect(container.querySelector(`[data-note="${label}"]`)!.textContent).toBe(
 			`${label}—`,
@@ -363,10 +379,18 @@ test('the automatic route and quote rows keep their placeholders until the quote
 	await enterAmount('0.1')
 	await advance(250)
 	expect(routeView()).toBe(route)
+	expect(route.querySelector('[aria-live="polite"]')!.textContent).toBe(
+		'fetchingQuote',
+	)
 	expect(minimum.textContent).toBe('minimumReceived—')
 	expect(submitButton().disabled).toBe(true)
 	await act(async () => pendingFee.resolve(100n))
 	expect(routeView()).toBe(route)
+	expect([...route.querySelectorAll('img')].map((icon) => icon.alt)).toEqual([
+		'USDT',
+		'DOT',
+		'dotUSD',
+	])
 	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived0.098505 dotUSD')
 	expect(slippage.disabled).toBe(false)
@@ -381,6 +405,87 @@ test('the automatic route and quote rows keep their placeholders until the quote
 		),
 	).toBe('priceImpact')
 })
+
+test.each(['exactIn', 'exactOut'] as const)(
+	'%s slippage starts collapsed, updates the quote, keeps its value when toggled and resets to the default',
+	async (mode) => {
+		quotes.mockResolvedValue([{ ...quote(Date.now()), mode }])
+		await act(async () => root.render(createElement(Swap)))
+		const toggle = container.querySelector<HTMLButtonElement>(
+			'button[aria-controls][aria-expanded]',
+		)!
+		const panel = document.getElementById(
+			toggle.getAttribute('aria-controls')!,
+		)!
+		const slider = panel.querySelector('input')!
+		const reset = panel.querySelector<HTMLButtonElement>(
+			'[aria-label="resetSlippage"]',
+		)!
+		expect(toggle.textContent).toBe('slippageSettings')
+		expect(toggle.getAttribute('aria-expanded')).toBe('false')
+		expect(panel.hidden).toBe(true)
+		expect(slider.value).toBe('50')
+		expect(slider.getAttribute('aria-valuetext')).toBe('0.5%')
+		expect(reset.disabled).toBe(true)
+		if (mode === 'exactOut') {
+			await act(async () =>
+				container
+					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
+					.click(),
+			)
+		}
+		await enterAmount('0.1', mode === 'exactIn' ? 'youPay' : 'youReceive')
+		await advance(250)
+		await act(async () => toggle.click())
+		expect(panel.hidden).toBe(false)
+		expect(toggle.getAttribute('aria-expanded')).toBe('true')
+		await act(async () => {
+			Object.getOwnPropertyDescriptor(
+				HTMLInputElement.prototype,
+				'value',
+			)!.set!.call(slider, '100')
+			slider.dispatchEvent(new Event('input', { bubbles: true }))
+		})
+		expect(submitButton().disabled).toBe(true)
+		await advance(250)
+		expect(submitButton().disabled).toBe(false)
+		expect(swap.mock.calls.at(-1)?.[3]).toBe(100)
+		expect(slider.getAttribute('aria-valuetext')).toBe('1%')
+		expect(reset.disabled).toBe(false)
+		expect(
+			container.querySelector(
+				`[data-note="${mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent'}"]`,
+			)!.textContent,
+		).toBe(
+			mode === 'exactIn'
+				? 'minimumReceived0.09801 dotUSD'
+				: 'maximumSpent0.101 USDT',
+		)
+		await act(async () => toggle.click())
+		expect(panel.hidden).toBe(true)
+		expect(submitButton().disabled).toBe(false)
+		await act(async () => toggle.click())
+		expect(panel.hidden).toBe(false)
+		expect(slider.value).toBe('100')
+		await act(async () => reset.click())
+		expect(slider.value).toBe('50')
+		expect(slider.getAttribute('aria-valuetext')).toBe('0.5%')
+		expect(reset.disabled).toBe(true)
+		expect(submitButton().disabled).toBe(true)
+		await advance(250)
+		expect(submitButton().disabled).toBe(false)
+		expect(swap.mock.calls.at(-1)?.[3]).toBe(50)
+		expect(
+			container.querySelector(
+				`[data-note="${mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent'}"]`,
+			)!.textContent,
+		).toBe(
+			mode === 'exactIn'
+				? 'minimumReceived0.098505 dotUSD'
+				: 'maximumSpent0.1005 USDT',
+		)
+	},
+)
 
 test.each(['exactIn', 'exactOut'] as const)(
 	'%s always uses the best route without manual route choices',
@@ -419,7 +524,10 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(route.getAttribute('aria-description')).toBe(
 			mode === 'exactIn' ? 'bestOutput' : 'bestInput',
 		)
-		expect(container.querySelector('select')!.disabled).toBe(true)
+		expect(
+			container.querySelector<HTMLInputElement>('input[type="range"]')!
+				.disabled,
+		).toBe(true)
 		expect(submitButton().disabled).toBe(false)
 	},
 )
@@ -428,7 +536,9 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	await configure()
 	const button = submitButton()
 	const route = routeView()
-	const slippage = container.querySelector('select')
+	const slippage = container.querySelector<HTMLInputElement>(
+		'input[type="range"]',
+	)
 	market.mockRejectedValue(new Error('Network unavailable'))
 	await advance(15_000)
 	expect(button.disabled).toBe(false)
@@ -438,7 +548,9 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(button.disabled).toBe(true)
 	expect(feeText()).toBe('100')
 	expect(routeView()).toBe(route)
-	expect(container.querySelector('select')).toBe(slippage)
+	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
+		slippage,
+	)
 })
 
 test('a failed background fee estimate retains the last complete quote and never enables an unestimated replacement', async () => {

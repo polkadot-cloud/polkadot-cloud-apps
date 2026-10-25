@@ -165,6 +165,7 @@ type TransactionActionProps = {
 	label: string
 	onComplete: () => void
 	children?: ReactNode
+	notesClassName?: string
 }
 
 // Background quotes share a submission id until the user changes the request.
@@ -186,6 +187,7 @@ const TransactionActionInner = ({
 	label,
 	onComplete,
 	children,
+	notesClassName,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -292,7 +294,7 @@ const TransactionActionInner = ({
 	)
 	return (
 		<>
-			<SendForm.Notes>
+			<SendForm.Notes className={notesClassName}>
 				<SendForm.Note label={t('networkFee')}>
 					{error
 						? '—'
@@ -357,10 +359,12 @@ export const FeeField = ({
 	value,
 	onChange,
 	className,
+	children,
 }: {
 	value: AssetHubToken
 	onChange: (token: AssetHubToken) => void
 	className?: string
+	children?: ReactNode
 }) => {
 	const { t } = useTranslation('swap')
 	return (
@@ -371,6 +375,7 @@ export const FeeField = ({
 				onSelect={(option) => onChange(option.value)}
 				variant="full"
 			/>
+			{children}
 		</SendForm.Segment>
 	)
 }

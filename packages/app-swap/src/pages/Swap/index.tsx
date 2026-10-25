@@ -12,7 +12,6 @@ import {
 	AccountField,
 	FeeField,
 	percentage,
-	SlippageField,
 	exchangeClasses as styles,
 	TransactionAction,
 	tokenAmount,
@@ -29,12 +28,13 @@ import type {
 } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
-import { Page, Tooltip } from 'ui-core/base'
+import { Page, ShineText, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
+import { defaultSlippageBps, SlippageControl } from './SlippageControl'
 import { useQuoteExpired } from './useQuoteExpired'
 import { useSwapQuote } from './useSwapQuote'
 
@@ -55,7 +55,7 @@ export const Swap = () => {
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<SwapMode>('exactIn')
 	const [feeAsset, setFeeAsset] = useState<AssetHubToken>('DOT')
-	const [slippage, setSlippage] = useState(50)
+	const [slippage, setSlippage] = useState(defaultSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
@@ -112,6 +112,7 @@ export const Swap = () => {
 			? t(item.assetIn === 'USDT' ? 'mintDotUsd' : 'redeemDotUsd')
 			: item.path.join(' → ')
 	const error = marketError || quoteError
+	const routeLoading = parsed > 0n && !quotes && !error
 	return (
 		<Page.Row>
 			<SendForm.Container className={`${formClasses.form} ${classes.form}`}>
@@ -235,7 +236,13 @@ export const Swap = () => {
 						value={feeAsset}
 						onChange={setFeeAsset}
 						className={formClasses.lastSection}
-					/>
+					>
+						<SlippageControl
+							value={slippage}
+							onChange={setSlippage}
+							disabled={quote?.kind === 'psm'}
+						/>
+					</FeeField>
 					{quotes?.length === 0 && (
 						<p className={styles.notice} role="status">
 							{t('noRoute')}
@@ -249,38 +256,41 @@ export const Swap = () => {
 							</button>
 						</p>
 					)}
-					<section
-						className={classes.route}
-						aria-label={t('route')}
-						aria-description={t(
-							mode === 'exactIn' ? 'bestOutput' : 'bestInput',
-						)}
-					>
-						<span>{t('route')}</span>
-						<div className={classes.routeValue} aria-live="polite">
-							{quote ? (
-								<ol className={classes.routePath} aria-label={t('route')}>
-									{quote.path.map((token, index) => (
-										<li key={token}>
-											{index > 0 && <span aria-hidden>→</span>}
-											<Tooltip
-												text={token}
-												container={themeElementRef.current || undefined}
-												side="top"
-											>
-												<img src={getFeeTokenIcon(token)} alt={token} />
-											</Tooltip>
-										</li>
-									))}
-								</ol>
-							) : (
-								<span className={classes.routePlaceholder}>
-									{parsed > 0n && !quotes && !error ? t('fetchingQuote') : '—'}
-								</span>
+					<SendForm.Notes className={classes.quoteNotes}>
+						<section
+							className={classes.route}
+							aria-label={t('route')}
+							aria-description={t(
+								mode === 'exactIn' ? 'bestOutput' : 'bestInput',
 							)}
-						</div>
-					</section>
-					<SendForm.Notes>
+						>
+							<span>{t('route')}</span>
+							<div className={classes.routeValue} aria-live="polite">
+								{quote ? (
+									<ol className={classes.routePath} aria-label={t('route')}>
+										{quote.path.map((token, index) => (
+											<li key={token}>
+												{index > 0 && <span aria-hidden>→</span>}
+												<Tooltip
+													text={token}
+													container={themeElementRef.current || undefined}
+													side="top"
+												>
+													<img src={getFeeTokenIcon(token)} alt={token} />
+												</Tooltip>
+											</li>
+										))}
+									</ol>
+								) : (
+									<ShineText
+										className={classes.routePlaceholder}
+										active={routeLoading}
+									>
+										{routeLoading ? t('fetchingQuote') : '—'}
+									</ShineText>
+								)}
+							</div>
+						</section>
 						<SendForm.Note
 							label={t(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent')}
 						>
@@ -292,11 +302,6 @@ export const Swap = () => {
 								: '—'}
 						</SendForm.Note>
 					</SendForm.Notes>
-					<SlippageField
-						value={slippage}
-						onChange={setSlippage}
-						disabled={quote?.kind !== 'amm'}
-					/>
 					{expired && (
 						<p className={styles.notice} role="status">
 							{t('quoteExpired')}{' '}
@@ -306,6 +311,7 @@ export const Swap = () => {
 						</p>
 					)}
 					<TransactionAction
+						notesClassName={classes.feeNotes}
 						tx={tx}
 						estimatedFee={fee}
 						submissionKey={requestKey}
