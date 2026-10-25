@@ -20,7 +20,7 @@ import { CategoryHeader, Wrapper } from './Wrapper'
 export const DefaultMenu = ({
 	barItems,
 	getActivePageForCategory,
-	localCategory,
+	localCategory = 'stake',
 	pageCategories,
 	pagesConfig,
 	renderMain,
