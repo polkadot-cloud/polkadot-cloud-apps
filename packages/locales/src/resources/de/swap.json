@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "Konto",
-		"amountMode": "Betragsmodus",
 		"amountModeTooltip": "Wählen, ob der Zahlungs- oder Empfangsbetrag eingegeben wird.",
 		"amountToSend": "Zu sendender Betrag",
 		"assetToSend": "Zu sendendes Asset",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "Die Netzwerkgebühr konnte nicht geschätzt werden. Bitte aktualisieren und erneut versuchen.",
 		"fetchingQuote": "Verfügbare Routen werden gesucht…",
 		"insufficientBalance": "Das verfügbare Guthaben reicht nicht für die Transaktion und die Gebühr aus. Mindestguthaben werden reserviert.",
-		"invalidRecipient": "Bitte eine gültige Polkadot-Adresse eingeben.",
 		"maximumSpent": "Höchstens ausgeben",
-		"minimumConversion": "Mindestumtauschbetrag",
 		"minimumReceived": "Mindestens erhalten",
 		"mintDotUsd": "dotUSD prägen",
 		"mix": "Mix",
@@ -32,7 +29,6 @@
 		"pay": "Bezahlen",
 		"payFeesIn": "Gebühren bezahlen mit",
 		"priceImpact": "Preisauswirkung",
-		"psmCapacity": "Verfügbare Prägekapazität",
 		"quoteExpired": "Dieses Angebot ist abgelaufen.",
 		"receive": "Erhalten",
 		"redeemDotUsd": "dotUSD gegen USDT einlösen",
@@ -42,7 +38,6 @@
 		"reverseAssets": "Assets vertauschen",
 		"reverseAssetsTooltip": "Assets für Zahlung und Empfang vertauschen.",
 		"route": "Route",
-		"routeUnavailable": "Die ausgewählte Route ist nicht verfügbar",
 		"selectSenderAccount": "Absenderkonto auswählen...",
 		"sendAssets": "Assets senden",
 		"sendFrom": "Senden von",

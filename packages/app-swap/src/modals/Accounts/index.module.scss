@@ -83,14 +83,12 @@
 }
 
 .mobileSelector {
+	--account-input-bg: var(--bg-primary);
+	--account-input-shadow: var(--shadow-alt);
+
 	display: none;
 	padding: 0 1.5rem 1rem;
 
-	:global([class*="selected-account-"]) {
-		background: var(--bg-primary);
-		border-color: var(--gray-500);
-		box-shadow: var(--shadow-alt);
-	}
 }
 
 .selectedAccount {

@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "Conta",
-		"amountMode": "Modo de valor",
 		"amountModeTooltip": "Escolha se quer inserir o valor a pagar ou a receber.",
 		"amountToSend": "Valor a enviar",
 		"assetToSend": "Ativo a enviar",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "Não foi possível estimar a taxa de rede. Atualize para tentar novamente.",
 		"fetchingQuote": "Buscando rotas disponíveis…",
 		"insufficientBalance": "O saldo disponível é insuficiente para a transação e a taxa. Os saldos mínimos são reservados.",
-		"invalidRecipient": "Insira um endereço Polkadot válido.",
 		"maximumSpent": "Gasto máximo",
-		"minimumConversion": "Conversão mínima",
 		"minimumReceived": "Mínimo recebido",
 		"mintDotUsd": "Emitir dotUSD",
 		"mix": "Composição",
@@ -32,7 +29,6 @@
 		"pay": "Pagar",
 		"payFeesIn": "Pagar taxas em",
 		"priceImpact": "Impacto no preço",
-		"psmCapacity": "Capacidade de emissão disponível",
 		"quoteExpired": "Esta cotação expirou.",
 		"receive": "Receber",
 		"redeemDotUsd": "Resgatar dotUSD por USDT",
@@ -42,7 +38,6 @@
 		"reverseAssets": "Inverter ativos",
 		"reverseAssetsTooltip": "Troque os ativos que paga e recebe.",
 		"route": "Rota",
-		"routeUnavailable": "A rota selecionada não está disponível",
 		"selectSenderAccount": "Selecione a conta remetente...",
 		"sendAssets": "Enviar ativos",
 		"sendFrom": "Enviar de",

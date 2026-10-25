@@ -5,6 +5,7 @@ import type { AssetHubPoolToken, AssetHubToken } from 'types'
 import {
 	AssetHubNativeAssetLocation,
 	getAssetHubAssetLocation,
+	getStablecoinAssetConfig,
 } from './stablecoins'
 
 export const AssetHubTokens: AssetHubToken[] = ['DOT', 'dotUSD', 'USDT', 'USDC']
@@ -13,14 +14,11 @@ export const AssetHubPoolTokens: AssetHubPoolToken[] = [
 	'USDT',
 	'USDC',
 ]
-export const AssetHubAssetIds = {
-	dotUSD: 7873,
-	USDT: 1984,
-	USDC: 1337,
-} as const
+export const assetHubAssetId = (token: AssetHubPoolToken) =>
+	getStablecoinAssetConfig('statemint', token)!.assetId!
 export const assetHubDecimals = (token: AssetHubToken) =>
-	token === 'DOT' ? 10 : 6
+	getStablecoinAssetConfig('statemint', token)!.decimals
 export const assetHubLocation = (token: AssetHubToken) =>
 	token === 'DOT'
 		? AssetHubNativeAssetLocation
-		: getAssetHubAssetLocation(AssetHubAssetIds[token])
+		: getAssetHubAssetLocation(assetHubAssetId(token))

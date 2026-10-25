@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 .form {
+	--account-input-active-border: var(--gray-500);
 	--send-form-section-focus-border: var(--send-form-section-border);
 	--balance-input-focus-border: var(--balance-input-border);
 
@@ -9,40 +10,6 @@
 	input:focus-visible,
 	select:focus-visible {
 		outline: none;
-	}
-}
-
-.form .quoteNotes {
-	padding: 1.25rem 1.25rem 0;
-}
-
-.form .feeNotes {
-	padding: 0.75rem 1.25rem 1.25rem;
-}
-
-.quoteNotes > *,
-.feeNotes > * {
-	min-height: 1.5rem;
-}
-
-.quoteNotes > *,
-.feeNotes > :nth-child(-n + 3) {
-	min-height: 2rem;
-	padding-block: 0.25rem;
-}
-
-.quoteNotes > *,
-.feeNotes > :nth-child(-n + 2) {
-	position: relative;
-
-	&::after {
-		position: absolute;
-		right: 0;
-		bottom: -0.375rem;
-		left: 0;
-		border-bottom: 1px solid var(--gray-400);
-		content: '';
-		pointer-events: none;
 	}
 }
 
@@ -93,6 +60,28 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.routePlaceholder[data-loading] {
+	--shine-color: color-mix(in srgb, var(--text-tertiary) 80%, #fff);
+
+	background: linear-gradient(110deg, var(--shine-color) 35%, #fff 50%, var(--shine-color) 65%) 0 0 / 200% 100%;
+	background-clip: text;
+	color: transparent;
+	animation: text-shine 1.8s ease-in-out infinite;
+}
+
+@keyframes text-shine {
+	from { background-position: 200% 0; }
+	to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+	.routePlaceholder[data-loading] {
+		background: none;
+		color: var(--text-tertiary);
+		animation: none;
+	}
 }
 
 .refreshQuote {

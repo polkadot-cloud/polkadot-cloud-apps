@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "계정",
-		"amountMode": "금액 모드",
 		"amountModeTooltip": "지불 금액과 수령 금액 중 입력할 금액을 선택합니다.",
 		"amountToSend": "전송할 금액",
 		"assetToSend": "전송할 자산",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "네트워크 수수료를 예상할 수 없습니다. 새로고침 후 다시 시도하세요.",
 		"fetchingQuote": "사용 가능한 경로 검색 중…",
 		"insufficientBalance": "거래와 수수료를 지불할 수 있는 잔액이 부족합니다. 최소 잔액은 별도로 유지됩니다.",
-		"invalidRecipient": "유효한 Polkadot 주소를 입력하세요.",
 		"maximumSpent": "최대 지불액",
-		"minimumConversion": "최소 교환 금액",
 		"minimumReceived": "최소 수령액",
 		"mintDotUsd": "dotUSD 발행",
 		"mix": "구성",
@@ -32,7 +29,6 @@
 		"pay": "지불",
 		"payFeesIn": "수수료 결제 자산",
 		"priceImpact": "가격 영향",
-		"psmCapacity": "발행 가능한 금액",
 		"quoteExpired": "이 견적은 만료되었습니다.",
 		"receive": "수령",
 		"redeemDotUsd": "dotUSD를 USDT로 상환",
@@ -42,7 +38,6 @@
 		"reverseAssets": "자산 방향 바꾸기",
 		"reverseAssetsTooltip": "지불할 자산과 받을 자산을 서로 바꿉니다.",
 		"route": "경로",
-		"routeUnavailable": "선택한 경로를 사용할 수 없습니다",
 		"selectSenderAccount": "보내는 계정을 선택하세요...",
 		"sendAssets": "자산 전송",
 		"sendFrom": "보내는 계정",

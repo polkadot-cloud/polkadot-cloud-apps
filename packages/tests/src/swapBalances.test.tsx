@@ -6,7 +6,7 @@ import { act, createElement, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { BalancesView } from '../../app-swap/src/library/Balances/BalancesView'
+import { BalancesView } from '../../app-swap/src/library/Balances/BalancesPopover'
 import {
 	resetStablecoinBalances,
 	setStablecoinBalances,
@@ -98,7 +98,7 @@ test('balances and mix use only Polkadot Hub holdings even when Hydration balanc
 		balance('statemint', 'dotUSD', 10),
 		...hydrationBalances,
 	])
-	expect(container.textContent?.match(/\$120\.00/g)).toHaveLength(2)
+	expect(container.textContent?.match(/\$120\.00/g)).toHaveLength(1)
 	expect(container.textContent).toContain('Polkadot Hub')
 	expect(container.textContent).not.toMatch(/Hydration|HOLLAR/)
 
@@ -116,7 +116,7 @@ test('balances and mix use only Polkadot Hub holdings even when Hydration balanc
 
 test('Hydration-only holdings leave both views empty of value with zero mix percentages', async () => {
 	await render(hydrationBalances)
-	expect(container.textContent?.match(/\$0\.00/g)).toHaveLength(2)
+	expect(container.textContent?.match(/\$0\.00/g)).toHaveLength(1)
 	await openMix()
 	expect(
 		container.querySelector('[role="img"]')?.getAttribute('aria-label'),

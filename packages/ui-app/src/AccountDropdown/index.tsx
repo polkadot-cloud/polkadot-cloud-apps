@@ -22,6 +22,21 @@ import { getAccountSourceIcon } from './util'
 
 export { getAccountSourceIcon } from './util'
 
+export const AccountSourceIcon = ({
+	source,
+	...props
+}: {
+	source?: string
+	size?: string
+	className?: string
+}) => (
+	<AccountInput.SourceIcon
+		{...props}
+		SvgIcon={getAccountSourceIcon(source)}
+		faIcon={source === 'external' ? faGlasses : undefined}
+	/>
+)
+
 export const AccountDropdown = ({
 	accounts,
 	initialAccount,
@@ -190,7 +205,6 @@ export const AccountDropdown = ({
 	}, [containerClass, dropdownClass])
 
 	const inputValue = isInputFocused ? searchTerm : selectedAccount?.name || ''
-	const SelectedSourceIcon = getAccountSourceIcon(selectedAccount?.source)
 
 	return (
 		<>
@@ -270,11 +284,7 @@ export const AccountDropdown = ({
 							/>
 						</div>
 						<div>
-							{SelectedSourceIcon !== undefined ? (
-								<AccountInput.SourceIcon SvgIcon={SelectedSourceIcon} />
-							) : selectedAccount?.source === 'external' ? (
-								<AccountInput.SourceIcon faIcon={faGlasses} />
-							) : null}
+							<AccountSourceIcon source={selectedAccount.source} />
 
 							{!disabled && <AccountInput.Chevron />}
 						</div>
@@ -297,8 +307,6 @@ export const AccountDropdown = ({
 					>
 						<SimpleBar style={{ maxHeight: '300px' }}>
 							{filteredAccounts.map((account) => {
-								const SourceIcon = getAccountSourceIcon(account?.source)
-
 								return (
 									<AccountInput.ListItem
 										account={account}
@@ -321,11 +329,7 @@ export const AccountDropdown = ({
 											/>
 											<AccountInput.Address address={account.address} />
 										</AccountInput.InnerLeft>
-										{SourceIcon !== undefined ? (
-											<AccountInput.SourceIcon SvgIcon={SourceIcon} />
-										) : account.source === 'external' ? (
-											<AccountInput.SourceIcon faIcon={faGlasses} />
-										) : null}
+										<AccountSourceIcon source={account.source} />
 									</AccountInput.ListItem>
 								)
 							})}

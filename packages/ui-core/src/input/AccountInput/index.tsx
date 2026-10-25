@@ -100,22 +100,15 @@ const SourceIcon = ({
 }) => {
 	const style = size ? { width: size, height: size } : undefined
 	const allClasses = classNames(classes.sourceIcon, className)
-	if (SvgIcon) {
-		return (
-			<span className={allClasses}>
+	return SvgIcon || faIcon ? (
+		<span className={allClasses}>
+			{SvgIcon ? (
 				<SvgIcon style={style} />
-			</span>
-		)
-	}
-	if (faIcon) {
-		return (
-			<span className={allClasses}>
-				<FontAwesomeIcon icon={faIcon} style={style} />
-			</span>
-		)
-	}
-
-	return null
+			) : (
+				<FontAwesomeIcon icon={faIcon!} style={style} />
+			)}
+		</span>
+	) : null
 }
 
 const Balance = ({

@@ -21,10 +21,7 @@
 	font-size: 1.15rem;
 	cursor: pointer;
 
-	&:hover {
-		background: var(--btn-popover-tab-bg);
-	}
-
+	&:hover,
 	&[aria-pressed="true"] {
 		background: var(--btn-popover-tab-bg);
 	}

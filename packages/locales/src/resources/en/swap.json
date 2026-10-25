@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "Account",
-		"amountMode": "Amount mode",
 		"amountModeTooltip": "Choose whether to set the amount to pay or receive.",
 		"amountToSend": "Amount to send",
 		"assetToSend": "Asset to Send",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "Unable to estimate the network fee. Refresh to try again.",
 		"fetchingQuote": "Finding available routes…",
 		"insufficientBalance": "Insufficient available balance for the transaction and fee. Minimum balances are reserved.",
-		"invalidRecipient": "Enter a valid Polkadot address.",
 		"maximumSpent": "Maximum spent",
-		"minimumConversion": "Minimum conversion",
 		"minimumReceived": "Minimum received",
 		"mintDotUsd": "Mint dotUSD",
 		"mix": "Mix",
@@ -32,7 +29,6 @@
 		"pay": "Pay",
 		"payFeesIn": "Pay Fees In",
 		"priceImpact": "Price impact",
-		"psmCapacity": "Available minting capacity",
 		"quoteExpired": "This quote has expired.",
 		"receive": "Receive",
 		"redeemDotUsd": "Redeem dotUSD for USDT",
@@ -42,7 +38,6 @@
 		"reverseAssets": "Reverse assets",
 		"reverseAssetsTooltip": "Swap the assets you pay and receive.",
 		"route": "Route",
-		"routeUnavailable": "Selected route is unavailable",
 		"selectSenderAccount": "Select sender account...",
 		"sendAssets": "Send Assets",
 		"sendFrom": "Send From",

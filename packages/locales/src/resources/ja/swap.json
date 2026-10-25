@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "アカウント",
-		"amountMode": "金額モード",
 		"amountModeTooltip": "入力する金額を支払額と受取額から選びます。",
 		"amountToSend": "送金額",
 		"assetToSend": "送金するアセット",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "ネットワーク手数料を見積もれませんでした。更新して再試行してください。",
 		"fetchingQuote": "利用可能なルートを検索中…",
 		"insufficientBalance": "取引と手数料に必要な利用可能残高が不足しています。最低残高は確保されます。",
-		"invalidRecipient": "有効なPolkadotアドレスを入力してください。",
 		"maximumSpent": "最大支払額",
-		"minimumConversion": "最低交換額",
 		"minimumReceived": "最低受取額",
 		"mintDotUsd": "dotUSDを発行",
 		"mix": "構成",
@@ -32,7 +29,6 @@
 		"pay": "支払い",
 		"payFeesIn": "手数料の支払いトークン",
 		"priceImpact": "価格への影響",
-		"psmCapacity": "発行可能額",
 		"quoteExpired": "この見積もりは有効期限が切れています。",
 		"receive": "受け取り",
 		"redeemDotUsd": "dotUSDをUSDTに償還",
@@ -42,7 +38,6 @@
 		"reverseAssets": "資産を入れ替える",
 		"reverseAssetsTooltip": "支払うアセットと受け取るアセットを入れ替えます。",
 		"route": "ルート",
-		"routeUnavailable": "選択したルートは利用できません",
 		"selectSenderAccount": "送金元アカウントを選択...",
 		"sendAssets": "アセットを送る",
 		"sendFrom": "送金元",

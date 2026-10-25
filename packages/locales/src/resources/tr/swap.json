@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "Hesap",
-		"amountMode": "Tutar modu",
 		"amountModeTooltip": "Ödenecek tutarı veya alınacak tutarı girmeyi seçin.",
 		"amountToSend": "Gönderilecek Tutar",
 		"assetToSend": "Gönderilecek Varlık",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "Ağ ücreti tahmin edilemiyor. Yenileyip tekrar deneyin.",
 		"fetchingQuote": "Kullanılabilir rotalar aranıyor…",
 		"insufficientBalance": "İşlem ve ücret için kullanılabilir bakiye yetersiz. Minimum bakiyeler ayrılmıştır.",
-		"invalidRecipient": "Geçerli bir Polkadot adresi girin.",
 		"maximumSpent": "Harcanacak maksimum tutar",
-		"minimumConversion": "Minimum dönüşüm tutarı",
 		"minimumReceived": "Alınacak minimum tutar",
 		"mintDotUsd": "dotUSD bas",
 		"mix": "Dağılım",
@@ -32,7 +29,6 @@
 		"pay": "Öde",
 		"payFeesIn": "Ücretleri Şununla Öde",
 		"priceImpact": "Fiyat etkisi",
-		"psmCapacity": "Kullanılabilir basım kapasitesi",
 		"quoteExpired": "Bu teklifin süresi doldu.",
 		"receive": "Al",
 		"redeemDotUsd": "dotUSD karşılığında USDT al",
@@ -42,7 +38,6 @@
 		"reverseAssets": "Varlıkların yerini değiştir",
 		"reverseAssetsTooltip": "Ödeyeceğiniz ve alacağınız varlıkları değiştirin.",
 		"route": "Rota",
-		"routeUnavailable": "Seçilen rota kullanılamıyor",
 		"selectSenderAccount": "Gönderen hesabını seçin...",
 		"sendAssets": "Varlık Gönder",
 		"sendFrom": "Gönderen",

@@ -26,14 +26,6 @@ export type AssetHubPsm = {
 	weight: number
 }
 
-export type AssetHubMarket = {
-	hash: HexString
-	block: number
-	fetchedAt: number
-	pools: AssetHubPool[]
-	psm: AssetHubPsm | null
-}
-
 export type AssetHubSwapRequest = {
 	assetIn: AssetHubToken
 	assetOut: AssetHubToken
@@ -53,11 +45,7 @@ export type AssetHubSwapQuote = AssetHubSwapRequest & {
 }
 
 export type AssetHubExchange = {
-	market: () => Promise<AssetHubMarket>
-	quotes: (
-		market: AssetHubMarket,
-		request: AssetHubSwapRequest,
-	) => Promise<AssetHubSwapQuote[]>
+	quotes: (request: AssetHubSwapRequest) => Promise<AssetHubSwapQuote[]>
 	swap: (
 		quote: AssetHubSwapQuote,
 		address: string,

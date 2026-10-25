@@ -4,7 +4,7 @@
 $container-border-radius: 1.25rem;
 
 .container {
-	background: var(--gray-300);
+	background: var(--account-input-bg, var(--gray-300));
 	border: 1px solid var(--gray-500);
 	position: relative;
 	padding: 0 0.95rem;
@@ -15,6 +15,7 @@ $container-border-radius: 1.25rem;
 	align-items: center;
 	justify-content: space-between;
 	transition: border 0.15s;
+	box-shadow: var(--account-input-shadow, none);
 	gap: 0.75rem;
 	width: 100%;
 
@@ -24,7 +25,11 @@ $container-border-radius: 1.25rem;
 	}
 
 	&:hover {
-		border-color: var(--gray-700);
+		border-color: var(--account-input-active-border, var(--gray-700));
+	}
+
+	&:focus-within:not(:hover) {
+		border-color: var(--account-input-focus-border, var(--gray-500));
 	}
 
 	&.disabled {

@@ -1,63 +1,69 @@
-.accountDropdown {
-	:global([class*="selected-account-"]) {
-		background-color: var(--bg-primary);
-		border-color: var(--gray-500);
-		box-shadow: var(--shadow-alt);
-
-		&:hover,
-		&:focus-within {
-			border-color: var(--gray-500);
-		}
-	}
-}
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
 
 .notice {
-	margin: 0;
-	padding: 0.8rem 1rem;
-	color: var(--text-tertiary);
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+	margin: 0.75rem 0 0;
+	color: var(--status-warning);
 	font-family: var(--font-family-default);
 	font-size: 1.1rem;
 	font-weight: 500;
 	line-height: 1.4rem;
 	overflow-wrap: anywhere;
-}
 
-.transactionNotice {
-	display: flex;
-	align-items: flex-start;
-	gap: 0.6rem;
-	margin: 0.75rem 0 0;
-	color: var(--text-tertiary);
-	font-family: var(--font-family-default);
-	font-size: 1.1rem;
-	font-weight: 500;
-	line-height: 1.4rem;
-}
+	&[role="alert"] {
+		color: var(--status-danger);
+	}
 
-.dangerNotice {
-	color: var(--status-danger);
-}
+	&[data-padded] {
+		margin: 0;
+		padding: 0.8rem 1rem;
+	}
 
-.warningNotice {
-	color: var(--status-warning);
-}
+	> svg {
+		flex-shrink: 0;
+		margin-top: 0.15rem;
+		font-size: 1.05rem;
+	}
 
-.noticeIcon {
-	flex-shrink: 0;
-	margin-top: 0.15rem;
-	font-size: 1.05rem;
-}
+	> span {
+		flex: 1;
+		min-width: 0;
+	}
 
-.noticeCopy {
-	flex: 1;
-	min-width: 0;
-}
-
-.noticeAction {
-	flex-shrink: 0;
+	> button {
+		flex-shrink: 0;
+	}
 }
 
 .transactionActions {
 	display: grid;
 	gap: 0.75rem;
+}
+
+.notes {
+	> * {
+		min-height: 1.5rem;
+	}
+
+	> :nth-child(-n + 5) {
+		min-height: 2rem;
+		padding-block: 0.25rem;
+	}
+
+	> :nth-child(-n + 4) {
+		position: relative;
+
+		&::after {
+			position: absolute;
+			right: 0;
+			bottom: -0.375rem;
+			left: 0;
+			border-bottom: 1px solid var(--gray-400);
+			content: '';
+			pointer-events: none;
+		}
+	}
 }

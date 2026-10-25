@@ -23,7 +23,6 @@ export const ButtonTab = (props: ButtonTabProps): JSX.Element => {
 		className,
 		style,
 		active,
-		'aria-pressed': ariaPressed,
 		title,
 		badge,
 		onClick,
@@ -54,7 +53,6 @@ export const ButtonTab = (props: ButtonTabProps): JSX.Element => {
 			style={style}
 			type="button"
 			disabled={disabled}
-			aria-pressed={ariaPressed}
 			{...onMouseHandlers({ onClick, onMouseOver, onMouseMove, onMouseOut })}
 		>
 			<span className={classes.btnTabInner}>

@@ -1,20 +1,19 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faGlasses } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { ellipsisFn } from '@polkadot-cloud/utils'
-import { BalancesView } from 'library/Balances/BalancesView'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
-import { AccountDropdown, getAccountSourceIcon } from 'ui-app/AccountDropdown'
+import { AccountDropdown, AccountSourceIcon } from 'ui-app/AccountDropdown'
 import { ButtonCopy } from 'ui-app/ButtonCopy'
 import { ModalTitle } from 'ui-app/ModalTitle'
 import { Identity } from 'ui-core/base'
 import { AccountInput } from 'ui-core/input'
 import { useOverlay } from 'ui-overlay'
+import { BalancesView } from '../../library/Balances/BalancesPopover'
 import classes from './index.module.scss'
 import { useAccountGroups } from './useAccountGroups'
 
@@ -22,21 +21,6 @@ export type AccountsOptions = {
 	initialAccount: ImportedAccount | null
 	onSelect: (account: ImportedAccount | null) => void
 }
-
-const AccountSourceIcon = ({
-	source,
-	className,
-}: {
-	source: string
-	className: string
-}) => (
-	<AccountInput.SourceIcon
-		SvgIcon={getAccountSourceIcon(source)}
-		faIcon={source === 'external' ? faGlasses : undefined}
-		size="1.1rem"
-		className={className}
-	/>
-)
 
 export const Accounts = () => {
 	const { t } = useTranslation('swap')
@@ -168,7 +152,7 @@ export const Accounts = () => {
 									Action={<ButtonCopy value={account.address} size="0.9rem" />}
 								/>
 							</div>
-							<BalancesView account={account} hideTotal />
+							<BalancesView account={account} />
 						</>
 					) : (
 						<p className={classes.empty}>{t('noAccounts')}</p>

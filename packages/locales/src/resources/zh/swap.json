@@ -1,7 +1,6 @@
 {
 	"swap": {
 		"account": "账户",
-		"amountMode": "金额模式",
 		"amountModeTooltip": "选择输入支付金额或接收金额。",
 		"amountToSend": "发送金额",
 		"assetToSend": "发送资产",
@@ -19,9 +18,7 @@
 		"feeUnavailable": "无法估算网络手续费。请刷新后重试。",
 		"fetchingQuote": "正在查找可用路径…",
 		"insufficientBalance": "可用余额不足以支付交易金额和手续费。最低余额已预留。",
-		"invalidRecipient": "请输入有效的 Polkadot 地址。",
 		"maximumSpent": "最高支付金额",
-		"minimumConversion": "最低兑换金额",
 		"minimumReceived": "最低接收金额",
 		"mintDotUsd": "铸造 dotUSD",
 		"mix": "配比",
@@ -32,7 +29,6 @@
 		"pay": "支付",
 		"payFeesIn": "支付手续费的代币",
 		"priceImpact": "价格影响",
-		"psmCapacity": "可用铸造额度",
 		"quoteExpired": "此报价已过期。",
 		"receive": "接收",
 		"redeemDotUsd": "将 dotUSD 赎回为 USDT",
@@ -42,7 +38,6 @@
 		"reverseAssets": "对调资产",
 		"reverseAssetsTooltip": "对调支付和接收的资产。",
 		"route": "路径",
-		"routeUnavailable": "所选路径不可用",
 		"selectSenderAccount": "选择发送账户...",
 		"sendAssets": "发送资产",
 		"sendFrom": "发送方",

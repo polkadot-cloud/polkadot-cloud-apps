@@ -6,7 +6,6 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { act, createElement, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type {
-	AssetHubMarket,
 	AssetHubSwapQuote,
 	ImportedAccount,
 	ServiceInterface,
@@ -16,19 +15,19 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Swap } from '../../app-swap/src/pages/Swap'
 import { _uids } from '../../global-bus/src/txSubmit/private'
 
-const { state, market, quotes, swap, estimate, refreshBalances, views } =
-	vi.hoisted(() => ({
+const { state, quotes, swap, estimate, refreshBalances, views } = vi.hoisted(
+	() => ({
 		state: {
 			serviceApi: undefined as unknown as ServiceInterface,
 			account: { address: 'alice', source: 'extension' } as ImportedAccount,
 		},
-		market: vi.fn(),
 		quotes: vi.fn(),
 		swap: vi.fn(),
 		estimate: vi.fn(),
 		refreshBalances: vi.fn(),
 		views: [] as { valid: boolean; fee: bigint; uid: number }[],
-	}))
+	}),
+)
 
 vi.mock(
 	'../../app-swap/node_modules/@polkadot-cloud/util-dedot/index.js',
@@ -152,60 +151,17 @@ vi.mock('../../ui-buttons/src/index', async () => {
 	)
 	return { ButtonSecondary }
 })
-vi.mock('../../ui-core/src/base', async () => {
-	const { ShineText } = await import('../../ui-core/src/base/ShineText')
-	const Wrapper = ({ children }: { children: ReactNode }) =>
-		createElement('div', null, children)
-	return {
-		Page: { Row: Wrapper },
-		ShineText,
-		Tooltip: Wrapper,
-		StatusCard: Wrapper,
-	}
-})
-vi.mock('../../ui-core/src/input', () => {
-	const Wrapper = ({ children }: { children: ReactNode }) =>
-		createElement('div', null, children)
-	return {
-		SendForm: {
-			Container: Wrapper,
-			Card: Wrapper,
-			Segment: Wrapper,
-			DirectionIndicator: ({
-				label,
-				onReverse,
-				children,
-			}: {
-				label: string
-				onReverse: () => void
-				children: ReactNode
-			}) =>
-				createElement(
-					'div',
-					null,
-					createElement('button', {
-						type: 'button',
-						'aria-label': label,
-						onClick: onReverse,
-					}),
-					children,
-				),
-			Notes: Wrapper,
-			Note: ({ label, children }: { label: string; children: ReactNode }) =>
-				createElement('div', { 'data-note': label }, label, children),
-			Action: Wrapper,
-			Header: () => null,
-		},
-	}
-})
+vi.mock('../../ui-core/src/base/Tooltip', () => ({
+	Tooltip: ({ children }: { children: ReactNode }) => children,
+}))
+vi.mock('../../ui-core/src/base', async () => ({
+	Page: { Row: (await import('../../ui-core/src/base/Page/Row')).Row },
+	Tooltip: (await import('../../ui-core/src/base/Tooltip')).Tooltip,
+}))
+vi.mock('../../ui-core/src/input', async () => ({
+	SendForm: (await import('../../ui-core/src/input/SendForm')).SendForm,
+}))
 
-const snapshot = (): AssetHubMarket => ({
-	hash: `0x${Date.now().toString(16)}`,
-	block: 1,
-	fetchedAt: Date.now(),
-	pools: [],
-	psm: null,
-})
 const quote = (fetchedAt: number, amountOut = 99_000n): AssetHubSwapQuote => ({
 	assetIn: 'USDT',
 	assetOut: 'dotUSD',
@@ -242,13 +198,26 @@ const enterAmount = (value: string, label = 'youPay') =>
 		input.value = value
 		input.dispatchEvent(new Event('input', { bubbles: true }))
 	})
+const note = (label: string) =>
+	[...container.querySelectorAll('span')].find(
+		(span) => span.textContent === label,
+	)!.parentElement!
+const input = (label: string) =>
+	container.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`)!
+const click = (label: string) =>
+	act(async () =>
+		container
+			.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!
+			.click(),
+	)
+const render = () => act(async () => root.render(createElement(Swap)))
 const submitButton = () =>
 	container.querySelector<HTMLButtonElement>('[data-submit]')!
 const feeText = () => container.querySelector('[data-fee]')!.textContent
 const routeView = () =>
 	container.querySelector<HTMLElement>('section[aria-label="route"]')!
 const configure = async () => {
-	await act(async () => root.render(createElement(Swap)))
+	await render()
 	await enterAmount('0.1')
 	await advance(250)
 	expect(submitButton().disabled).toBe(false)
@@ -262,10 +231,7 @@ beforeEach(() => {
 	vi.resetAllMocks()
 	_uids.next([])
 	views.length = 0
-	market.mockImplementation(async () => snapshot())
-	quotes.mockImplementation(async (data: AssetHubMarket) => [
-		quote(data.fetchedAt),
-	])
+	quotes.mockImplementation(async () => [quote(Date.now())])
 	estimate.mockResolvedValue(100n)
 	refreshBalances.mockResolvedValue(undefined)
 	swap.mockImplementation(
@@ -276,7 +242,7 @@ beforeEach(() => {
 			}) as SubmittableExtrinsic,
 	)
 	state.serviceApi = {
-		assetHub: { market, quotes, swap },
+		assetHub: { quotes, swap },
 		stablecoins: {
 			fee: { estimate, paymentOptions: () => undefined },
 		},
@@ -315,22 +281,14 @@ test.each(['exactIn', 'exactOut'] as const)(
 			amountOut: exactIn ? 100_000n : 98_002n,
 		}
 		quotes.mockResolvedValueOnce([initial]).mockResolvedValueOnce([reversed])
-		await act(async () => root.render(createElement(Swap)))
+		await render()
 		if (!exactIn) {
-			await act(async () =>
-				container
-					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
-					.click(),
-			)
+			await click('exactOutput')
 		}
 		await enterAmount('0.100000', exactIn ? 'youPay' : 'youReceive')
 		await advance(250)
 		expect(submitButton().disabled).toBe(false)
-		await act(async () =>
-			container
-				.querySelector<HTMLButtonElement>('[aria-label="reverseAssets"]')!
-				.click(),
-		)
+		await click('reverseAssets')
 		const [top, bottom] =
 			container.querySelectorAll<HTMLInputElement>('input[data-token]')
 		expect(bottom.value).toBe('0.100000')
@@ -344,7 +302,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(top.value).toBe('0.00')
 		expect(submitButton().disabled).toBe(true)
 		await advance(250)
-		expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+		expect(quotes).toHaveBeenLastCalledWith({
 			assetIn: 'dotUSD',
 			assetOut: 'USDT',
 			amount: reversed.amount,
@@ -358,7 +316,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(bottom.value).toBe('0.2')
 		expect(submitButton().disabled).toBe(true)
 		await advance(250)
-		expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+		expect(quotes).toHaveBeenLastCalledWith({
 			assetIn: 'dotUSD',
 			assetOut: 'USDT',
 			amount: 200_000n,
@@ -368,13 +326,9 @@ test.each(['exactIn', 'exactOut'] as const)(
 )
 
 test('reversing the assets before a quote is ready moves the entered amount and its asset to the bottom', async () => {
-	await act(async () => root.render(createElement(Swap)))
+	await render()
 	await enterAmount('0.123456')
-	await act(async () =>
-		container
-			.querySelector<HTMLButtonElement>('[aria-label="reverseAssets"]')!
-			.click(),
-	)
+	await click('reverseAssets')
 	const [top, bottom] =
 		container.querySelectorAll<HTMLInputElement>('input[data-token]')
 	expect(top.dataset.token).toBe('dotUSD')
@@ -382,7 +336,7 @@ test('reversing the assets before a quote is ready moves the entered amount and 
 	expect(bottom.value).toBe('0.123456')
 	expect(bottom.dataset.token).toBe('USDT')
 	await advance(250)
-	expect(quotes).toHaveBeenCalledExactlyOnceWith(expect.anything(), {
+	expect(quotes).toHaveBeenCalledExactlyOnceWith({
 		assetIn: 'dotUSD',
 		assetOut: 'USDT',
 		amount: 123_456n,
@@ -414,7 +368,7 @@ test('reversing again moves the current calculated top amount to the bottom', as
 	expect(bottom.dataset.token).toBe('dotUSD')
 	expect(bottom.value).toBe('0.102002')
 	await advance(250)
-	expect(quotes).toHaveBeenLastCalledWith(expect.anything(), {
+	expect(quotes).toHaveBeenLastCalledWith({
 		assetIn: 'USDT',
 		assetOut: 'dotUSD',
 		amount: 102_002n,
@@ -425,18 +379,24 @@ test('reversing again moves the current calculated top amount to the bottom', as
 test('polling retains the route, slippage, fee and enabled button until the replacement quote and fee are ready', async () => {
 	await configure()
 	const button = submitButton()
-	const fee = container.querySelector('[data-fee]')
-	const route = routeView()
-	expect([...route.querySelectorAll('img')].map((icon) => icon.alt)).toEqual([
-		'USDT',
-		'DOT',
-		'dotUSD',
-	])
-	const slippage = container.querySelector<HTMLInputElement>(
+	const stableSelectors = [
+		'[data-fee]',
+		'section[aria-label="route"]',
 		'input[type="range"]',
+	]
+	const stableNodes = stableSelectors.map((selector) =>
+		container.querySelector(selector),
 	)
-	const conversion = container.querySelector('[data-note="conversionFee"]')
-	const minimum = container.querySelector('[data-note="minimumReceived"]')
+	const stableNotes = ['conversionFee', 'minimumReceived'].map(note)
+	const assertStable = () => {
+		for (const [index, selector] of stableSelectors.entries()) {
+			expect(container.querySelector(selector)).toBe(stableNodes[index])
+		}
+		expect(['conversionFee', 'minimumReceived'].map(note)).toEqual(stableNotes)
+	}
+	expect(
+		[...routeView().querySelectorAll('img')].map((icon) => icon.alt),
+	).toEqual(['USDT', 'DOT', 'dotUSD'])
 	const uid = button.dataset.submit
 	const pendingQuotes = deferred<AssetHubSwapQuote[]>()
 	const pendingFee = deferred<bigint>()
@@ -447,41 +407,20 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	await advance(250)
 	expect(submitButton()).toBe(button)
 	expect(button.disabled).toBe(false)
-	expect(routeView()).toBe(route)
-	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
-		slippage,
-	)
-	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
-		conversion,
-	)
-	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
-	expect(container.querySelector('[data-fee]')).toBe(fee)
+	assertStable()
 	expect(feeText()).toBe('100')
 
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(feeText()).toBe('100')
 	expect(button.disabled).toBe(false)
-	expect(
-		container.querySelector<HTMLInputElement>('[aria-label="youReceive"]')!
-			.value,
-	).toBe('0.099')
+	expect(input('youReceive').value).toBe('0.099')
 	await act(async () => pendingFee.resolve(120n))
 	expect(submitButton()).toBe(button)
 	expect(button.dataset.submit).toBe(uid)
 	expect(button.disabled).toBe(false)
 	expect(feeText()).toBe('120')
-	expect(routeView()).toBe(route)
-	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
-		slippage,
-	)
-	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
-		conversion,
-	)
-	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
-	expect(
-		container.querySelector<HTMLInputElement>('[aria-label="youReceive"]')!
-			.value,
-	).toBe('0.098')
+	assertStable()
+	expect(input('youReceive').value).toBe('0.098')
 	expect(views.every((view) => view.valid && view.fee > 0n)).toBe(true)
 	expect(estimate).toHaveBeenCalledTimes(2)
 })
@@ -489,7 +428,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 test('editing the input invalidates the old quote immediately and ignores an in-flight refresh', async () => {
 	await configure()
 	const route = routeView()
-	const minimum = container.querySelector('[data-note="minimumReceived"]')!
+	const minimum = note('minimumReceived')
 	const slippage = container.querySelector<HTMLInputElement>(
 		'input[type="range"]',
 	)!
@@ -501,12 +440,10 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	expect(submitButton().disabled).toBe(true)
 	expect(routeView()).toBe(route)
 	expect(route.textContent).toContain('fetchingQuote')
-	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
+	expect(note('minimumReceived')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived—')
 	expect(slippage.disabled).toBe(false)
-	expect(
-		container.querySelector('[data-note="conversionFee"]')!.textContent,
-	).toBe('conversionFee—')
+	expect(note('conversionFee').textContent).toBe('conversionFee—')
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(submitButton().disabled).toBe(true)
 	expect(routeView()).toBe(route)
@@ -516,9 +453,9 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 test('the automatic route and quote rows keep their placeholders until the quote and network fee are ready', async () => {
 	const pendingFee = deferred<bigint>()
 	estimate.mockReturnValueOnce(pendingFee.promise)
-	await act(async () => root.render(createElement(Swap)))
+	await render()
 	const route = routeView()
-	const minimum = container.querySelector('[data-note="minimumReceived"]')!
+	const minimum = note('minimumReceived')
 	const slippage = container.querySelector<HTMLInputElement>(
 		'input[type="range"]',
 	)!
@@ -526,9 +463,7 @@ test('the automatic route and quote rows keep their placeholders until the quote
 	expect(minimum.textContent).toBe('minimumReceived—')
 	expect(slippage.disabled).toBe(false)
 	for (const label of ['networkFee', 'conversionFee', 'priceImpact']) {
-		expect(container.querySelector(`[data-note="${label}"]`)!.textContent).toBe(
-			`${label}—`,
-		)
+		expect(note(label).textContent).toBe(`${label}—`)
 	}
 	await enterAmount('0.1')
 	await advance(250)
@@ -545,18 +480,17 @@ test('the automatic route and quote rows keep their placeholders until the quote
 		'DOT',
 		'dotUSD',
 	])
-	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
+	expect(note('minimumReceived')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived0.098505 dotUSD')
 	expect(slippage.disabled).toBe(false)
 	expect(submitButton().disabled).toBe(false)
-	const networkFee = container.querySelector('[data-note="networkFee"]')!
-	expect(networkFee.nextElementSibling?.getAttribute('data-note')).toBe(
+	const networkFee = note('networkFee')
+	expect(networkFee.nextElementSibling?.firstElementChild?.textContent).toBe(
 		'conversionFee',
 	)
 	expect(
-		networkFee.nextElementSibling?.nextElementSibling?.getAttribute(
-			'data-note',
-		),
+		networkFee.nextElementSibling?.nextElementSibling?.firstElementChild
+			?.textContent,
 	).toBe('priceImpact')
 })
 
@@ -564,7 +498,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 	'%s slippage starts collapsed, updates the quote, keeps its value when toggled and resets to the default',
 	async (mode) => {
 		quotes.mockResolvedValue([{ ...quote(Date.now()), mode }])
-		await act(async () => root.render(createElement(Swap)))
+		await render()
 		const toggle = container.querySelector<HTMLButtonElement>(
 			'button[aria-controls][aria-expanded]',
 		)!
@@ -582,11 +516,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(slider.getAttribute('aria-valuetext')).toBe('0.5%')
 		expect(reset.disabled).toBe(true)
 		if (mode === 'exactOut') {
-			await act(async () =>
-				container
-					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
-					.click(),
-			)
+			await click('exactOutput')
 		}
 		await enterAmount('0.1', mode === 'exactIn' ? 'youPay' : 'youReceive')
 		await advance(250)
@@ -607,9 +537,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(slider.getAttribute('aria-valuetext')).toBe('1%')
 		expect(reset.disabled).toBe(false)
 		expect(
-			container.querySelector(
-				`[data-note="${mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent'}"]`,
-			)!.textContent,
+			note(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent').textContent,
 		).toBe(
 			mode === 'exactIn'
 				? 'minimumReceived0.09801 dotUSD'
@@ -630,9 +558,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(submitButton().disabled).toBe(false)
 		expect(swap.mock.calls.at(-1)?.[3]).toBe(50)
 		expect(
-			container.querySelector(
-				`[data-note="${mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent'}"]`,
-			)!.textContent,
+			note(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent').textContent,
 		).toBe(
 			mode === 'exactIn'
 				? 'minimumReceived0.098505 dotUSD'
@@ -651,21 +577,11 @@ test.each(['exactIn', 'exactOut'] as const)(
 			path: ['USDT', 'dotUSD'] as AssetHubSwapQuote['path'],
 		}
 		quotes.mockResolvedValueOnce([best, quote(Date.now())])
-		await act(async () => root.render(createElement(Swap)))
+		await render()
 		if (mode === 'exactOut') {
-			await act(async () =>
-				container
-					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
-					.click(),
-			)
-			await act(async () => {
-				const input = container.querySelector<HTMLInputElement>(
-					'input[aria-label="youReceive"]',
-				)!
-				input.value = '0.1'
-				input.dispatchEvent(new Event('input', { bubbles: true }))
-			})
-		} else await enterAmount('0.1')
+			await click('exactOutput')
+		}
+		await enterAmount('0.1', mode === 'exactIn' ? 'youPay' : 'youReceive')
 		await advance(250)
 		expect(swap.mock.calls[0][0]).toBe(best)
 		const route = routeView()
@@ -693,7 +609,7 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	const slippage = container.querySelector<HTMLInputElement>(
 		'input[type="range"]',
 	)
-	market.mockRejectedValue(new Error('Network unavailable'))
+	quotes.mockRejectedValue(new Error('Network unavailable'))
 	await advance(15_000)
 	expect(button.disabled).toBe(false)
 	expect(feeText()).toBe('100')
@@ -711,7 +627,7 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(refresh.disabled).toBe(false)
 	expect(button.previousElementSibling).toBe(refresh)
 	expect(refresh.closest('[role="status"]')).toBeNull()
-	market.mockImplementation(async () => snapshot())
+	quotes.mockImplementation(async () => [quote(Date.now())])
 	await act(async () => refresh.click())
 	await advance(250)
 	expect(submitButton().disabled).toBe(false)
@@ -728,16 +644,13 @@ test('a failed background fee estimate retains the last complete quote and never
 	expect(submitButton()).toBe(button)
 	expect(button.disabled).toBe(false)
 	expect(feeText()).toBe('100')
-	expect(
-		container.querySelector<HTMLInputElement>('[aria-label="youReceive"]')!
-			.value,
-	).toBe('0.099')
+	expect(input('youReceive').value).toBe('0.099')
 	expect(container.textContent).toContain('feeUnavailable')
 })
 
 test('an initial fee estimation failure blocks submission until retry succeeds', async () => {
 	estimate.mockRejectedValueOnce(new Error('Fee RPC unavailable'))
-	await act(async () => root.render(createElement(Swap)))
+	await render()
 	await enterAmount('0.1')
 	await advance(250)
 	expect(submitButton().disabled).toBe(true)
@@ -746,6 +659,47 @@ test('an initial fee estimation failure blocks submission until retry succeeds',
 		(button) => button.textContent === 'retry',
 	)!
 	await act(async () => retry.click())
+	await advance(250)
+	expect(submitButton().disabled).toBe(false)
+	expect(feeText()).toBe('100')
+})
+
+test('an empty amount makes no market requests and stops polling after clearing the input', async () => {
+	await render()
+	await advance(30_000)
+	expect(quotes).not.toHaveBeenCalled()
+	await enterAmount('0.1')
+	await advance(250)
+	expect(quotes).toHaveBeenCalledOnce()
+	await enterAmount('')
+	await advance(30_000)
+	expect(quotes).toHaveBeenCalledOnce()
+	expect(submitButton().disabled).toBe(true)
+})
+
+test('polling does not overlap an unfinished quote request', async () => {
+	const pending = deferred<AssetHubSwapQuote[]>()
+	quotes.mockReturnValueOnce(pending.promise)
+	await render()
+	await enterAmount('0.1')
+	await advance(30_000)
+	expect(quotes).toHaveBeenCalledOnce()
+	await act(async () => pending.resolve([quote(Date.now())]))
+	expect(submitButton().disabled).toBe(false)
+	await advance(15_000)
+	expect(quotes).toHaveBeenCalledTimes(2)
+})
+
+test('replacing the service invalidates a pending fee and the old quote immediately', async () => {
+	await configure()
+	const pending = deferred<bigint>()
+	estimate.mockReturnValueOnce(pending.promise)
+	await advance(15_000)
+	state.serviceApi = { ...state.serviceApi }
+	await render()
+	expect(submitButton().disabled).toBe(true)
+	await act(async () => pending.resolve(999n))
+	expect(submitButton().disabled).toBe(true)
 	await advance(250)
 	expect(submitButton().disabled).toBe(false)
 	expect(feeText()).toBe('100')

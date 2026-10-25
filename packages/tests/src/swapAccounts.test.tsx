@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { act, createElement, type SVGProps } from 'react'
+import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -81,11 +81,18 @@ vi.mock('../../hooks/src/index', async () => {
 	}
 })
 vi.mock('../../ui-app/src/AccountDropdown', () => ({
-	getAccountSourceIcon: (source?: string) => {
-		if (!source || source === 'external') return undefined
-		return (props: SVGProps<SVGSVGElement>) =>
-			createElement('svg', { ...props, 'data-source': source })
-	},
+	AccountSourceIcon: ({
+		source,
+		className,
+	}: {
+		source: string
+		className: string
+	}) =>
+		createElement(
+			'span',
+			{ className },
+			createElement('svg', { 'data-source': source }),
+		),
 	AccountDropdown: ({
 		accounts,
 		initialAccount,
@@ -125,7 +132,7 @@ vi.mock('../../ui-app/src/AccountDropdown', () => ({
 			),
 		),
 }))
-vi.mock('../../app-swap/src/library/Balances/BalancesView', () => ({
+vi.mock('../../app-swap/src/library/Balances/BalancesPopover', () => ({
 	BalancesView: ({ account }: { account: ImportedAccount }) =>
 		createElement('div', {
 			'data-balances': `${account.address}:${account.source}`,
