@@ -10,8 +10,10 @@ import {
 import styled from 'styled-components'
 import type { MinimisedProps } from './types'
 
-export const Wrapper = styled.div<MinimisedProps>`
-  background: ${(props) => (props.$minimised && !props.$advancedMode ? 'var(--bg-min-side-menu)' : 'none')};
+export const Wrapper = styled.div<
+	MinimisedProps & { $expandedBackground?: boolean }
+>`
+  background: ${(props) => (!props.$advancedMode && (props.$minimised || props.$expandedBackground) ? 'var(--bg-min-side-menu)' : 'none')};
   overflow: auto;
   flex-grow: 1;
   display: flex;

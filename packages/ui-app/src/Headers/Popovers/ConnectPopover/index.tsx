@@ -24,9 +24,10 @@ export const ConnectPopover = ({
 	// Store the active hardware wallet, if selected.
 	const [selectedSection, setSelectedConnectItem] = useState<string>('wallets')
 
+	// Reference to the popover container for detecting outside clicks.
 	const popoverRef = useRef<HTMLDivElement>(null)
 
-	// Format supported extensions as array, excluding disabled extensions
+	// Format supported extensions as array, excluding disabled extensions.
 	const extensionsAsArray = Object.entries(extensions)
 		.filter(([id]) => !DisabledExtensions.includes(id))
 		.map(([id, value]) => ({
@@ -37,6 +38,7 @@ export const ConnectPopover = ({
 	// Determine which web extensions to display.
 	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')
 
+	// Filter installed web extensions from the list of supported extensions.
 	const installed = web.filter((a) => a.id in extensionsStatus)
 
 	const installedIds = new Set(installed.map((a) => a.id))
@@ -44,7 +46,7 @@ export const ConnectPopover = ({
 		(a) => a.id === 'cloud-signer' && !installedIds.has(a.id),
 	)
 
-	// Close the menu if clicked outside of its container
+	// Close the menu if clicked outside of its container.
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
 	}, ['header-connect'])
@@ -58,7 +60,7 @@ export const ConnectPopover = ({
 		},
 	}
 
-	// Gets framer motion props for a management ui item
+	// Gets framer motion props for a management ui item.
 	const getManageProps = (item: string, initial: 'show' | 'hidden') => ({
 		initial,
 		variants,

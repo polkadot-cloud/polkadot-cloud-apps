@@ -34,6 +34,7 @@ export interface DefaultMenuProps extends BaseMenuProps {
 	renderMain: RenderSideMenuMain
 	title: string
 	enableAdvancedMenu: boolean
+	expandedBackground?: boolean
 }
 
 export interface FloatingMenuProps {
@@ -45,6 +46,7 @@ export interface FloatingMenuProps {
 export interface NavSimpleProps {
 	renderMain: RenderSideMenuMain
 	title: string
+	expandedBackground?: boolean
 }
 export type RenderSideMenuMain = (props: SideMenuMainRenderProps) => ReactNode
 

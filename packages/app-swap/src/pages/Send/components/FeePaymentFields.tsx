@@ -15,7 +15,6 @@ export const FeePaymentFields = ({
 	feeAssetOptions,
 	feeBalance,
 	feeDisplay,
-	feeSetupRequired,
 	onSelect,
 	selectedFeeAsset,
 	submission,
@@ -48,13 +47,6 @@ export const FeePaymentFields = ({
 				<SendForm.Note label={t('networkFee')}>
 					<EstimatedTxFee uid={submission.uid} feeDisplay={feeDisplay} />
 				</SendForm.Note>
-				{feeSetupRequired && (
-					<SendForm.Note label={t('feeToken')} variant="success">
-						{t('setFeeTokenBeforeSending', {
-							symbol: selectedFeeAsset.value,
-						})}
-					</SendForm.Note>
-				)}
 			</SendForm.Notes>
 			<SendForm.Action>
 				<SubmitTx

@@ -98,7 +98,6 @@ export type UseSendTransactionProps = {
 export type SendTransaction = {
 	balancesLoading: boolean
 	feeDisplay: TxFeeDisplay
-	feeSetupRequired: boolean
 	maxAvailableToSend: bigint
 	selectedDecimals: number
 	selectedFeeAssetBalance: StablecoinBalance | undefined

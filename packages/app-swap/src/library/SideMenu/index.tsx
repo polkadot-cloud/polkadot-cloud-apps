@@ -26,6 +26,7 @@ export const SideMenu = ({
 				renderMain={renderMain}
 				title="Cloud"
 				enableAdvancedMenu={enableAdvancedMenu}
+				expandedBackground
 			/>
 			<FloatingMenu
 				renderMain={renderMain}

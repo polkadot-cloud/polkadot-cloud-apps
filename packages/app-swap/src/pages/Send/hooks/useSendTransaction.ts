@@ -163,7 +163,6 @@ export const useSendTransaction = ({
 	return {
 		balancesLoading,
 		feeDisplay,
-		feeSetupRequired: hydrationFeeSetup.needsSetup,
 		maxAvailableToSend,
 		selectedDecimals,
 		selectedFeeAssetBalance,
