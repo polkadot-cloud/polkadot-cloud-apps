@@ -4,6 +4,7 @@
 import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
+import classNames from 'classnames'
 import { assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { slippageLimit } from 'dedot-api/assetHub/math'
@@ -268,7 +269,12 @@ export const Swap = () => {
 							)}
 						>
 							<span>{t('route')}</span>
-							<div className={classes.routeValue} aria-live="polite">
+							<div
+								className={classNames(classes.routeValue, {
+									[classes.routeEmpty]: !quote && !routeLoading,
+								})}
+								aria-live="polite"
+							>
 								{quote ? (
 									<ol className={classes.routePath} aria-label={t('route')}>
 										{quote.path.map((token, index) => (

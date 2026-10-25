@@ -20,6 +20,8 @@ import { getTransferableBalance } from 'utils'
 import type { AccountDropdownProps } from './types'
 import { getAccountSourceIcon } from './util'
 
+export { getAccountSourceIcon } from './util'
+
 export const AccountDropdown = ({
 	accounts,
 	initialAccount,
@@ -286,7 +288,13 @@ export const AccountDropdown = ({
 					top={dropdownPosition.top}
 					left={dropdownPosition.left}
 				>
-					<AccountInput.ListContainer ref={menuRef} className={dropdownClass}>
+					<AccountInput.ListContainer
+						ref={menuRef}
+						className={dropdownClass}
+						ariaLabel={
+							label || placeholder || t('selectAccount', { ns: 'app' })
+						}
+					>
 						<SimpleBar style={{ maxHeight: '300px' }}>
 							{filteredAccounts.map((account) => {
 								const SourceIcon = getAccountSourceIcon(account?.source)
@@ -300,11 +308,6 @@ export const AccountDropdown = ({
 										}
 										key={`${account.address}-${account.source}`}
 										onClick={handleSelect}
-										onKeyDown={(e) => {
-											if (e.key === 'Enter' || e.key === ' ') {
-												handleSelect(account)
-											}
-										}}
 									>
 										<Polkicon
 											address={account.address}

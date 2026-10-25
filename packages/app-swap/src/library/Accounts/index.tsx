@@ -1,33 +1,29 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faWallet } from '@fortawesome/free-solid-svg-icons'
-import type { BalancesOptions } from 'modals/Balances'
+import type { AccountsOptions } from 'modals/Accounts'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
-import { ButtonHeader } from 'ui-buttons'
+import { ButtonAccount } from 'ui-buttons'
 import { useOverlay } from 'ui-overlay'
 
-export const Wallet = () => {
-	const { t } = useTranslation('swap')
+export const AccountsButton = () => {
+	const { t } = useTranslation('app')
 	const { openModal } = useOverlay().modal
 	const [selectedAccount, setSelectedAccount] =
 		useState<ImportedAccount | null>(null)
 
 	return (
-		<button
-			type="button"
-			aria-label={t('balances')}
+		<ButtonAccount.Standalone
+			label={t('accounts')}
 			onClick={() => {
-				const options: BalancesOptions = {
+				const options: AccountsOptions = {
 					initialAccount: selectedAccount,
 					onSelect: setSelectedAccount,
 				}
-				openModal({ key: 'Balances', size: 'sm', options })
+				openModal({ key: 'Accounts', size: 'lg', options })
 			}}
-		>
-			<ButtonHeader icon={faWallet} />
-		</button>
+		/>
 	)
 }

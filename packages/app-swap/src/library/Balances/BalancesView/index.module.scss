@@ -1,20 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-.accountSelector {
-	padding: 1rem;
-
-	:global([class*="selected-account-"]) {
-		background: var(--bg-primary);
-		border-color: var(--gray-500);
-		box-shadow: var(--shadow-alt);
-	}
-
-	:global([class*="innerLeft"]) {
-		min-width: 0;
-	}
-}
-
 .tabs {
 	display: flex;
 	gap: 0.5rem;

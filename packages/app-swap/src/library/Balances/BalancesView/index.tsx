@@ -11,7 +11,6 @@ import { useStablecoinBalances, useTokenPrices } from 'hooks'
 import { Fragment, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount, StablecoinChainId } from 'types'
-import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { Loader } from 'ui-core/base'
 import {
 	ConnectItem,
@@ -34,12 +33,8 @@ const BalancePreloader = ({
 
 export const BalancesView = ({
 	account,
-	accounts,
-	onSelect,
 }: {
 	account: ImportedAccount | null
-	accounts: ImportedAccount[]
-	onSelect: (account: ImportedAccount | null) => void
 }) => {
 	const { t } = useTranslation('swap')
 	const { price: dotPrice } = useTokenPrices()
@@ -77,22 +72,6 @@ export const BalancesView = ({
 
 	return (
 		<div aria-busy={syncing}>
-			<div className={classes.accountSelector}>
-				<AccountDropdown
-					key={`${account?.address}:${account?.source}`}
-					accounts={accounts}
-					initialAccount={account}
-					onSelect={onSelect}
-					label={t('account', { ns: 'modals' })}
-					placeholder={
-						accounts.length
-							? t('selectAccount', { ns: 'app' })
-							: t('noAccounts')
-					}
-					disabled={!accounts.length}
-					allowCustomAccounts={false}
-				/>
-			</div>
 			{syncing && (
 				<span
 					aria-label={t('syncingBalances')}

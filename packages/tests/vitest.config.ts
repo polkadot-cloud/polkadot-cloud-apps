@@ -7,6 +7,12 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
 	resolve: {
 		alias: {
+			'library/Balances/BalancesView': fileURLToPath(
+				new URL(
+					'../app-swap/src/library/Balances/BalancesView',
+					import.meta.url,
+				),
+			),
 			'library/AssetHub': fileURLToPath(
 				new URL('../app-swap/src/library/AssetHub', import.meta.url),
 			),

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { SwapDappName } from 'consts'
-import { Wallet } from 'library/Balances'
+import { AccountsButton } from 'library/Accounts'
 import { SideMenu } from 'library/SideMenu'
 import { Sync } from 'library/Sync'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -31,7 +31,7 @@ export const Router = () => (
 						NodesLeft={{
 							sync: Sync,
 						}}
-						NodesRight={{ wallet: Wallet }}
+						NodesRight={{ accounts: AccountsButton }}
 						menuPopoverFeatures={{
 							network: false,
 							advancedMode: false,

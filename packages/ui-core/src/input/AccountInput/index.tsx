@@ -125,21 +125,22 @@ const Balance = ({
 	)
 }
 
-const ListContainer = forwardRef<HTMLDivElement, ComponentBaseWithClassName>(
-	({ children, style, className }, ref) => {
-		return (
-			<div
-				className={classNames(classes.listContainer, className)}
-				style={style}
-				ref={ref}
-				role="listbox"
-				aria-label="Account selection"
-			>
-				{children}
-			</div>
-		)
-	},
-)
+const ListContainer = forwardRef<
+	HTMLDivElement,
+	ComponentBaseWithClassName & { ariaLabel?: string }
+>(({ children, style, className, ariaLabel = 'Account selection' }, ref) => {
+	return (
+		<div
+			className={classNames(classes.listContainer, className)}
+			style={style}
+			ref={ref}
+			role="listbox"
+			aria-label={ariaLabel}
+		>
+			{children}
+		</div>
+	)
+})
 
 const ListItem = ({
 	account,
@@ -151,7 +152,7 @@ const ListItem = ({
 	account: ImportedAccount
 	isSelected: boolean
 	onClick: (account: ImportedAccount) => void
-	onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
+	onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {
 	const allClasses = classNames(classes.listItem, {
 		[classes.selected]: isSelected,
@@ -160,7 +161,13 @@ const ListItem = ({
 		<div
 			className={allClasses}
 			onClick={() => onClick(account)}
-			onKeyDown={(ev) => onKeyDown(ev)}
+			onKeyDown={(event) => {
+				if (onKeyDown) onKeyDown(event)
+				else if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault()
+					onClick(account)
+				}
+			}}
 			role="option"
 			tabIndex={0}
 			aria-selected={isSelected}
