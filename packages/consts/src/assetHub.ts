@@ -16,8 +16,10 @@ export const AssetHubPoolTokens: AssetHubPoolToken[] = [
 ]
 export const assetHubAssetId = (token: AssetHubPoolToken) =>
 	getStablecoinAssetConfig('statemint', token)!.assetId!
+
 export const assetHubDecimals = (token: AssetHubToken) =>
 	getStablecoinAssetConfig('statemint', token)!.decimals
+
 export const assetHubLocation = (token: AssetHubToken) =>
 	token === 'DOT'
 		? AssetHubNativeAssetLocation
