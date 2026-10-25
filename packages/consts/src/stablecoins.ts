@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import dotSvg from 'assets/token/dot.svg'
+import dotUsdSvg from 'assets/token/dotusd.svg'
 import hollarSvg from 'assets/token/hollar.svg'
 import usdcSvg from 'assets/token/usdc.svg'
 import usdtSvg from 'assets/token/usdt.svg'
@@ -22,6 +23,7 @@ const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	USDC: { color: '#3E73C4', decimals: 6 },
 	USDT: { color: '#26A17B', decimals: 6 },
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
+	dotUSD: { color: '#E6007A', decimals: 6 },
 }
 
 // Display icons for every supported fee token.
@@ -30,6 +32,7 @@ const FeeTokenIcons: Record<FeeAssetSymbol, string> = {
 	USDC: usdcSvg,
 	USDT: usdtSvg,
 	HOLLAR: hollarSvg,
+	dotUSD: dotUsdSvg,
 }
 
 // All supported transaction fee asset symbols.
@@ -72,6 +75,10 @@ const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 			USDT: {
 				existentialDeposit: 700_000n,
 				assetId: 1984,
+			},
+			dotUSD: {
+				existentialDeposit: 10_000n,
+				assetId: 7873,
 			},
 		}),
 	},
