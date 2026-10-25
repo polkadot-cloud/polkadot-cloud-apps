@@ -90,26 +90,25 @@ const Address = ({ address, style }: ComponentBase & { address: string }) => {
 const SourceIcon = ({
 	SvgIcon,
 	faIcon,
+	size,
+	className,
 }: {
 	SvgIcon?: FunctionComponent<SVGProps<SVGSVGElement>>
 	faIcon?: IconDefinition
+	size?: string
+	className?: string
 }) => {
-	if (SvgIcon) {
-		return (
-			<span className={classes.sourceIcon}>
-				<SvgIcon />
-			</span>
-		)
-	}
-	if (faIcon) {
-		return (
-			<span className={classes.sourceIcon}>
-				<FontAwesomeIcon icon={faIcon} />
-			</span>
-		)
-	}
-
-	return null
+	const style = size ? { width: size, height: size } : undefined
+	const allClasses = classNames(classes.sourceIcon, className)
+	return SvgIcon || faIcon ? (
+		<span className={allClasses}>
+			{SvgIcon ? (
+				<SvgIcon style={style} />
+			) : (
+				<FontAwesomeIcon icon={faIcon!} style={style} />
+			)}
+		</span>
+	) : null
 }
 
 const Balance = ({
@@ -125,21 +124,22 @@ const Balance = ({
 	)
 }
 
-const ListContainer = forwardRef<HTMLDivElement, ComponentBaseWithClassName>(
-	({ children, style, className }, ref) => {
-		return (
-			<div
-				className={classNames(classes.listContainer, className)}
-				style={style}
-				ref={ref}
-				role="listbox"
-				aria-label="Account selection"
-			>
-				{children}
-			</div>
-		)
-	},
-)
+const ListContainer = forwardRef<
+	HTMLDivElement,
+	ComponentBaseWithClassName & { ariaLabel?: string }
+>(({ children, style, className, ariaLabel = 'Account selection' }, ref) => {
+	return (
+		<div
+			className={classNames(classes.listContainer, className)}
+			style={style}
+			ref={ref}
+			role="listbox"
+			aria-label={ariaLabel}
+		>
+			{children}
+		</div>
+	)
+})
 
 const ListItem = ({
 	account,
@@ -147,20 +147,27 @@ const ListItem = ({
 	onClick,
 	onKeyDown,
 	children,
-}: ComponentBase & {
+	className,
+}: ComponentBaseWithClassName & {
 	account: ImportedAccount
 	isSelected: boolean
 	onClick: (account: ImportedAccount) => void
-	onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
+	onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {
-	const allClasses = classNames(classes.listItem, {
+	const allClasses = classNames(classes.listItem, className, {
 		[classes.selected]: isSelected,
 	})
 	return (
 		<div
 			className={allClasses}
 			onClick={() => onClick(account)}
-			onKeyDown={(ev) => onKeyDown(ev)}
+			onKeyDown={(event) => {
+				if (onKeyDown) onKeyDown(event)
+				else if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault()
+					onClick(account)
+				}
+			}}
 			role="option"
 			tabIndex={0}
 			aria-selected={isSelected}

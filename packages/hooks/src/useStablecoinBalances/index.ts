@@ -24,13 +24,16 @@ const stablecoinBalancesStore = createObservableStore<StablecoinBalancesState>(
 	getStablecoinBalancesState,
 )
 
-export const useStablecoinBalances = (address?: string | null) => {
-	const { serviceApi } = useApi()
-	const balanceState = useSyncExternalStore(
+export const useStablecoinBalancesState = () =>
+	useSyncExternalStore(
 		stablecoinBalancesStore.subscribe,
 		stablecoinBalancesStore.getSnapshot,
 		stablecoinBalancesStore.getSnapshot,
 	)
+
+export const useStablecoinBalances = (address?: string | null) => {
+	const { serviceApi } = useApi()
+	const balanceState = useStablecoinBalancesState()
 	const { balances, status } = address
 		? balanceState[address] || defaultStablecoinBalances
 		: defaultStablecoinBalances

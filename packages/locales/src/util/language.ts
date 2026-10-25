@@ -60,7 +60,10 @@ export const getResources = (
 				)
 			) {
 				return {
-					resources: { [lng]: r as LocaleJson },
+					resources: {
+						[DefaultLocale]: fallbackResources,
+						[lng]: r as LocaleJson,
+					},
 					dynamicLoad: false,
 				}
 			}
@@ -95,8 +98,9 @@ export const changeLanguage = async (lng: string, i18next: i18n) => {
 	} else {
 		addI18nResources(i18next, lng, resources[lng])
 		await i18next.changeLanguage(lng)
+		if (lng !== DefaultLocale) await loadLanguage(lng, i18next, profile)
 	}
-	varToUrlHash('l', lng, false)
+	if (localStorage.getItem('lng') === lng) varToUrlHash('l', lng, false)
 }
 
 /* Resource Loading */
@@ -130,11 +134,13 @@ export const loadLanguage = async (
 	i18next: i18n,
 	profile: LocaleProfile,
 ) => {
+	const selectedLanguage = localStorage.getItem('lng')
 	const resources = await loadResources(lng, profile)
 	localStorage.setItem(
 		'lng_resources',
 		JSON.stringify({ l: lng, r: resources }),
 	)
 	addI18nResources(i18next, lng, resources)
-	await i18next.changeLanguage(lng)
+	if (localStorage.getItem('lng') === selectedLanguage)
+		await i18next.changeLanguage(lng)
 }

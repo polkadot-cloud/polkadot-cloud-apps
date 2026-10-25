@@ -20,6 +20,23 @@ import { getTransferableBalance } from 'utils'
 import type { AccountDropdownProps } from './types'
 import { getAccountSourceIcon } from './util'
 
+export { getAccountSourceIcon } from './util'
+
+export const AccountSourceIcon = ({
+	source,
+	...props
+}: {
+	source?: string
+	size?: string
+	className?: string
+}) => (
+	<AccountInput.SourceIcon
+		{...props}
+		SvgIcon={getAccountSourceIcon(source)}
+		faIcon={source === 'external' ? faGlasses : undefined}
+	/>
+)
+
 export const AccountDropdown = ({
 	accounts,
 	initialAccount,
@@ -28,6 +45,7 @@ export const AccountDropdown = ({
 	label,
 	placeholder,
 	disabled = false,
+	allowCustomAccounts = true,
 }: AccountDropdownProps) => {
 	const { t } = useTranslation()
 	const { serviceApi } = useApi()
@@ -134,7 +152,7 @@ export const AccountDropdown = ({
 				account.address.toLowerCase().includes(term.toLowerCase()) ||
 				account.name?.toLowerCase().includes(term.toLowerCase()),
 		)
-		if (isValidAddress(term)) {
+		if (allowCustomAccounts && isValidAddress(term)) {
 			return true
 		}
 		return hasMatchingAccounts
@@ -147,7 +165,7 @@ export const AccountDropdown = ({
 	)
 
 	const validAddress = isValidAddress(searchTerm)
-	if (validAddress) {
+	if (allowCustomAccounts && validAddress) {
 		const formattedAddress = formatAccountSs58(searchTerm, ss58)
 		if (
 			formattedAddress !== null &&
@@ -187,7 +205,6 @@ export const AccountDropdown = ({
 	}, [containerClass, dropdownClass])
 
 	const inputValue = isInputFocused ? searchTerm : selectedAccount?.name || ''
-	const SelectedSourceIcon = getAccountSourceIcon(selectedAccount?.source)
 
 	return (
 		<>
@@ -267,11 +284,7 @@ export const AccountDropdown = ({
 							/>
 						</div>
 						<div>
-							{SelectedSourceIcon !== undefined ? (
-								<AccountInput.SourceIcon SvgIcon={SelectedSourceIcon} />
-							) : selectedAccount?.source === 'external' ? (
-								<AccountInput.SourceIcon faIcon={faGlasses} />
-							) : null}
+							<AccountSourceIcon source={selectedAccount.source} />
 
 							{!disabled && <AccountInput.Chevron />}
 						</div>
@@ -285,11 +298,15 @@ export const AccountDropdown = ({
 					top={dropdownPosition.top}
 					left={dropdownPosition.left}
 				>
-					<AccountInput.ListContainer ref={menuRef} className={dropdownClass}>
+					<AccountInput.ListContainer
+						ref={menuRef}
+						className={dropdownClass}
+						ariaLabel={
+							label || placeholder || t('selectAccount', { ns: 'app' })
+						}
+					>
 						<SimpleBar style={{ maxHeight: '300px' }}>
 							{filteredAccounts.map((account) => {
-								const SourceIcon = getAccountSourceIcon(account?.source)
-
 								return (
 									<AccountInput.ListItem
 										account={account}
@@ -299,11 +316,6 @@ export const AccountDropdown = ({
 										}
 										key={`${account.address}-${account.source}`}
 										onClick={handleSelect}
-										onKeyDown={(e) => {
-											if (e.key === 'Enter' || e.key === ' ') {
-												handleSelect(account)
-											}
-										}}
 									>
 										<Polkicon
 											address={account.address}
@@ -317,11 +329,7 @@ export const AccountDropdown = ({
 											/>
 											<AccountInput.Address address={account.address} />
 										</AccountInput.InnerLeft>
-										{SourceIcon !== undefined ? (
-											<AccountInput.SourceIcon SvgIcon={SourceIcon} />
-										) : account.source === 'external' ? (
-											<AccountInput.SourceIcon faIcon={faGlasses} />
-										) : null}
+										<AccountSourceIcon source={account.source} />
 									</AccountInput.ListItem>
 								)
 							})}
