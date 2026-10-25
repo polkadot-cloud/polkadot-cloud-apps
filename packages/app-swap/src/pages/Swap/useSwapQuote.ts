@@ -23,7 +23,6 @@ type SwapQuoteOptions = AssetHubSwapRequest & {
 	recipientValid: boolean
 	slippage: number
 	feeAsset: AssetHubToken
-	route: 'auto' | 'amm' | 'psm'
 }
 
 type PreparedQuote = {
@@ -45,7 +44,6 @@ export const useSwapQuote = ({
 	recipientValid,
 	slippage,
 	feeAsset,
-	route,
 	assetIn,
 	assetOut,
 	amount,
@@ -56,7 +54,7 @@ export const useSwapQuote = ({
 	const [state, setState] = useState<PreparedQuote>()
 	// Market snapshots may refresh this request without invalidating its last
 	// usable quote. User edits and account/service changes invalidate it immediately.
-	const requestKey = `${account?.address}:${account?.source}:${assetIn}:${assetOut}:${mode}:${amount}:${recipient}:${recipientValid}:${slippage}:${feeAsset}:${route}`
+	const requestKey = `${account?.address}:${account?.source}:${assetIn}:${assetOut}:${mode}:${amount}:${recipient}:${recipientValid}:${slippage}:${feeAsset}`
 	useEffect(() => {
 		if (!market || !exchange || amount <= 0n || assetIn === assetOut) return
 		let stale = false
@@ -70,10 +68,7 @@ export const useSwapQuote = ({
 						mode,
 					})
 					if (stale) return
-					const quote =
-						route === 'auto'
-							? quotes[0]
-							: quotes.find((item) => item.kind === route)
+					const quote = quotes[0]
 					const tx =
 						quote && account && recipientValid
 							? exchange.swap(quote, account.address, recipient, slippage)

@@ -129,9 +129,11 @@ export const AccountField = ({
 export const SlippageField = ({
 	value,
 	onChange,
+	disabled = false,
 }: {
 	value: number
 	onChange: (value: number) => void
+	disabled?: boolean
 }) => {
 	const { t } = useTranslation('swap')
 	return (
@@ -139,6 +141,7 @@ export const SlippageField = ({
 			{t('slippage')}
 			<select
 				value={value}
+				disabled={disabled}
 				onChange={(event) => onChange(Number(event.target.value))}
 			>
 				{[10, 50, 100, 300, 500].map((bps) => (
@@ -161,6 +164,7 @@ type TransactionActionProps = {
 	valid: boolean
 	label: string
 	onComplete: () => void
+	children?: ReactNode
 }
 
 // Background quotes share a submission id until the user changes the request.
@@ -181,6 +185,7 @@ const TransactionActionInner = ({
 	valid,
 	label,
 	onComplete,
+	children,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -297,6 +302,7 @@ const TransactionActionInner = ({
 								: '—'
 							: `${tokenAmount(fee, feeAsset)} ${feeAsset}`}
 				</SendForm.Note>
+				{children}
 				{error && (
 					<StatusCard
 						status="danger"

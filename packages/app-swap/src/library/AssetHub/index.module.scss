@@ -30,6 +30,10 @@
 		color: var(--gray-1000);
 		font: inherit;
 	}
+
+	select:disabled {
+		opacity: 0.5;
+	}
 }
 
 .button {
@@ -59,32 +63,6 @@
 	padding: 0.8rem 0;
 	border: 0;
 	margin: 0;
-}
-
-.details {
-	padding: 0.8rem 1rem;
-	color: var(--text-tertiary);
-	font-size: 0.9rem;
-
-	summary {
-		cursor: pointer;
-	}
-
-	p {
-		margin: 0.6rem 0;
-		line-height: 1.5;
-	}
-}
-
-.route {
-	display: flex;
-	flex-wrap: wrap;
-	width: 100%;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-top: 0.6rem;
-	text-align: left;
 }
 
 .notice {

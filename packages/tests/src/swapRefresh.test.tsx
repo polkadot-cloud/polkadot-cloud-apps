@@ -213,6 +213,8 @@ const enterAmount = (value: string) =>
 const submitButton = () =>
 	container.querySelector<HTMLButtonElement>('[data-submit]')!
 const feeText = () => container.querySelector('[data-fee]')!.textContent
+const routeView = () =>
+	container.querySelector<HTMLElement>('section[aria-label="route"]')!
 const configure = async () => {
 	await act(async () => root.render(createElement(Swap)))
 	await enterAmount('0.1')
@@ -264,7 +266,12 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	await configure()
 	const button = submitButton()
 	const fee = container.querySelector('[data-fee]')
-	const route = container.querySelector('details')
+	const route = routeView()
+	expect([...route.querySelectorAll('img')].map((icon) => icon.alt)).toEqual([
+		'USDT',
+		'DOT',
+		'dotUSD',
+	])
 	const slippage = container.querySelector('select')
 	const conversion = container.querySelector('[data-note="conversionFee"]')
 	const minimum = container.querySelector('[data-note="minimumReceived"]')
@@ -278,7 +285,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	await advance(250)
 	expect(submitButton()).toBe(button)
 	expect(button.disabled).toBe(false)
-	expect(container.querySelector('details')).toBe(route)
+	expect(routeView()).toBe(route)
 	expect(container.querySelector('select')).toBe(slippage)
 	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
 		conversion,
@@ -299,7 +306,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(button.dataset.submit).toBe(uid)
 	expect(button.disabled).toBe(false)
 	expect(feeText()).toBe('120')
-	expect(container.querySelector('details')).toBe(route)
+	expect(routeView()).toBe(route)
 	expect(container.querySelector('select')).toBe(slippage)
 	expect(container.querySelector('[data-note="conversionFee"]')).toBe(
 		conversion,
@@ -315,22 +322,112 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 
 test('editing the input invalidates the old quote immediately and ignores an in-flight refresh', async () => {
 	await configure()
+	const route = routeView()
+	const minimum = container.querySelector('[data-note="minimumReceived"]')!
+	const slippage = container.querySelector('select')!
 	const pendingQuotes = deferred<AssetHubSwapQuote[]>()
 	quotes.mockReturnValueOnce(pendingQuotes.promise)
 	await advance(15_000)
 	await advance(250)
 	await enterAmount('0.2')
 	expect(submitButton().disabled).toBe(true)
-	expect(container.querySelector('details')).toBeNull()
+	expect(routeView()).toBe(route)
+	expect(route.textContent).toContain('fetchingQuote')
+	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
+	expect(minimum.textContent).toBe('minimumReceived—')
+	expect(slippage.disabled).toBe(true)
+	expect(
+		container.querySelector('[data-note="conversionFee"]')!.textContent,
+	).toBe('conversionFee—')
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(submitButton().disabled).toBe(true)
-	expect(container.querySelector('details')).toBeNull()
+	expect(routeView()).toBe(route)
+	expect(route.textContent).toContain('fetchingQuote')
 })
+
+test('the automatic route and quote rows keep their placeholders until the quote and network fee are ready', async () => {
+	const pendingFee = deferred<bigint>()
+	estimate.mockReturnValueOnce(pendingFee.promise)
+	await act(async () => root.render(createElement(Swap)))
+	const route = routeView()
+	const minimum = container.querySelector('[data-note="minimumReceived"]')!
+	const slippage = container.querySelector('select')!
+	expect(route.textContent).toBe('route—')
+	expect(minimum.textContent).toBe('minimumReceived—')
+	expect(slippage.disabled).toBe(true)
+	for (const label of ['networkFee', 'conversionFee', 'priceImpact']) {
+		expect(container.querySelector(`[data-note="${label}"]`)!.textContent).toBe(
+			`${label}—`,
+		)
+	}
+	await enterAmount('0.1')
+	await advance(250)
+	expect(routeView()).toBe(route)
+	expect(minimum.textContent).toBe('minimumReceived—')
+	expect(submitButton().disabled).toBe(true)
+	await act(async () => pendingFee.resolve(100n))
+	expect(routeView()).toBe(route)
+	expect(container.querySelector('[data-note="minimumReceived"]')).toBe(minimum)
+	expect(minimum.textContent).toBe('minimumReceived0.098505 dotUSD')
+	expect(slippage.disabled).toBe(false)
+	expect(submitButton().disabled).toBe(false)
+	const networkFee = container.querySelector('[data-note="networkFee"]')!
+	expect(networkFee.nextElementSibling?.getAttribute('data-note')).toBe(
+		'conversionFee',
+	)
+	expect(
+		networkFee.nextElementSibling?.nextElementSibling?.getAttribute(
+			'data-note',
+		),
+	).toBe('priceImpact')
+})
+
+test.each(['exactIn', 'exactOut'] as const)(
+	'%s always uses the best route without manual route choices',
+	async (mode) => {
+		const best = {
+			...quote(Date.now()),
+			mode,
+			kind: 'psm' as const,
+			path: ['USDT', 'dotUSD'] as AssetHubSwapQuote['path'],
+		}
+		quotes.mockResolvedValueOnce([best, quote(Date.now())])
+		await act(async () => root.render(createElement(Swap)))
+		if (mode === 'exactOut') {
+			await act(async () =>
+				container
+					.querySelector<HTMLButtonElement>('[aria-label="exactOutput"]')!
+					.click(),
+			)
+			await act(async () => {
+				const input = container.querySelector<HTMLInputElement>(
+					'input[aria-label="youReceive"]',
+				)!
+				input.value = '0.1'
+				input.dispatchEvent(new Event('input', { bubbles: true }))
+			})
+		} else await enterAmount('0.1')
+		await advance(250)
+		expect(swap.mock.calls[0][0]).toBe(best)
+		const route = routeView()
+		expect(route.querySelectorAll('button')).toHaveLength(0)
+		expect(container.querySelector('details, summary')).toBeNull()
+		expect([...route.querySelectorAll('img')].map((icon) => icon.alt)).toEqual([
+			'USDT',
+			'dotUSD',
+		])
+		expect(route.getAttribute('aria-description')).toBe(
+			mode === 'exactIn' ? 'bestOutput' : 'bestInput',
+		)
+		expect(container.querySelector('select')!.disabled).toBe(true)
+		expect(submitButton().disabled).toBe(false)
+	},
+)
 
 test('an unavailable market refresh keeps the visible details but blocks submission once the last quote expires', async () => {
 	await configure()
 	const button = submitButton()
-	const route = container.querySelector('details')
+	const route = routeView()
 	const slippage = container.querySelector('select')
 	market.mockRejectedValue(new Error('Network unavailable'))
 	await advance(15_000)
@@ -340,7 +437,7 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(submitButton()).toBe(button)
 	expect(button.disabled).toBe(true)
 	expect(feeText()).toBe('100')
-	expect(container.querySelector('details')).toBe(route)
+	expect(routeView()).toBe(route)
 	expect(container.querySelector('select')).toBe(slippage)
 })
 
