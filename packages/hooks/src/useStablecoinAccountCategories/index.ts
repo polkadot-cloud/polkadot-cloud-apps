@@ -3,25 +3,28 @@
 
 import { planckToUnit } from '@polkadot-cloud/utils'
 import { getStablecoinFeeAssets } from 'consts/stablecoins'
-import { useStablecoinBalancesState } from 'hooks'
-import { useMemo } from 'react'
-import type { ImportedAccount } from 'types'
+import { useDefaultCategories } from '../useDefaultCategories'
+import { useStablecoinBalancesState } from '../useStablecoinBalances'
+import type { AccountListCategory } from '../useStakingAccountCategories'
 
 const supportedAssets = new Set(getStablecoinFeeAssets('statemint'))
-const groupOrder = [
+
+const categoryOrder = [
 	'withBalances',
 	'syncingBalances',
 	'balanceUnavailable',
 	'noBalance',
 ] as const
 
-type AccountGroupKey = (typeof groupOrder)[number]
+type AccountCategoryKey = (typeof categoryOrder)[number]
 
-export const useAccountGroups = (accounts: ImportedAccount[]) => {
+export const useStablecoinAccountCategories = (): AccountListCategory[] => {
+	const categories = useDefaultCategories()
 	const balances = useStablecoinBalancesState()
 
-	return useMemo(() => {
-		const ranked = accounts.map((account) => {
+	const ranked = categories
+		.flatMap(({ items }) => items)
+		.map((account) => {
 			const entry = balances[account.address]
 			const holdings = (entry?.balances ?? []).filter(
 				({ chain, symbol }) =>
@@ -31,7 +34,7 @@ export const useAccountGroups = (accounts: ImportedAccount[]) => {
 			)
 			const hasBalance = holdings.some(({ free }) => free > 0n)
 			const hasSnapshot = entry?.status === 'synced' || holdings.length > 0
-			const group: AccountGroupKey = hasBalance
+			const category: AccountCategoryKey = hasBalance
 				? 'withBalances'
 				: hasSnapshot
 					? 'noBalance'
@@ -43,17 +46,15 @@ export const useAccountGroups = (accounts: ImportedAccount[]) => {
 					total + Number(planckToUnit(free, decimals)),
 				0,
 			)
-			return { account, group, value }
+			return { account, category, value }
 		})
-		// Keep the original name order for equal values and empty accounts.
-		ranked.sort((a, b) => b.value - a.value)
-		return groupOrder
-			.map((key) => ({
-				key,
-				accounts: ranked
-					.filter(({ group }) => group === key)
-					.map(({ account }) => account),
-			}))
-			.filter((group) => group.accounts.length > 0)
-	}, [accounts, balances])
+	// Keep the original name order for equal values and empty accounts.
+	ranked.sort((a, b) => b.value - a.value)
+	return categoryOrder.map((key) => ({
+		key,
+		labelKey: key,
+		items: ranked
+			.filter(({ category }) => category === key)
+			.map(({ account }) => account),
+	}))
 }

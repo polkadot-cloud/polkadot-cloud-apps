@@ -10,6 +10,7 @@ import classes from './index.module.scss'
 
 export const Standalone = ({
 	label,
+	showChevron = true,
 	className,
 	marginLeft,
 	style,
@@ -32,9 +33,11 @@ export const Standalone = ({
 			{...onMouseHandlers({ onClick, onMouseOver, onMouseMove, onMouseOut })}
 		>
 			<span className={classes.display}>{label}</span>
-			<div className={classes.arrow}>
-				<FontAwesomeIcon icon={faChevronRight} transform="shrink-5" />
-			</div>
+			{showChevron && (
+				<div className={classes.arrow}>
+					<FontAwesomeIcon icon={faChevronRight} transform="shrink-5" />
+				</div>
+			)}
 		</button>
 	)
 }

@@ -6,12 +6,13 @@ import { act, createElement, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { BalancesView } from '../../app-swap/src/library/Balances/BalancesPopover'
 import {
 	resetStablecoinBalances,
 	setStablecoinBalances,
 	setStablecoinBalancesSyncing,
 } from '../../global-bus/src/stablecoinBalances'
+import { AllBalances } from '../../ui-modals/src/AccountBalances/AllBalances'
+import { StablecoinMix } from '../../ui-modals/src/AccountBalances/StablecoinMix'
 
 const { serviceApi } = vi.hoisted(() => ({
 	serviceApi: {
@@ -67,14 +68,10 @@ let container: HTMLDivElement
 const render = async (balances: StablecoinBalance[]) => {
 	const requestId = setStablecoinBalancesSyncing(account.address)
 	setStablecoinBalances(account.address, balances, requestId)
-	await act(async () => root.render(createElement(BalancesView, { account })))
+	await act(async () => root.render(createElement(AllBalances, { account })))
 }
-const openMix = () =>
-	act(async () => {
-		;[...container.querySelectorAll('button')]
-			.find((button) => button.textContent === 'mix')!
-			.click()
-	})
+const renderMix = () =>
+	act(async () => root.render(createElement(StablecoinMix, { account })))
 
 beforeEach(() => {
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -102,7 +99,7 @@ test('balances and mix use only Polkadot Hub holdings even when Hydration balanc
 	expect(container.textContent).toContain('Polkadot Hub')
 	expect(container.textContent).not.toMatch(/Hydration|HOLLAR/)
 
-	await openMix()
+	await renderMix()
 	expect(
 		container.querySelector('[role="img"]')?.getAttribute('aria-label'),
 	).toBe('USDC: 30%, USDT: 60%, dotUSD: 10%')
@@ -117,7 +114,7 @@ test('balances and mix use only Polkadot Hub holdings even when Hydration balanc
 test('Hydration-only holdings leave both views empty of value with zero mix percentages', async () => {
 	await render(hydrationBalances)
 	expect(container.textContent?.match(/\$0\.00/g)).toHaveLength(1)
-	await openMix()
+	await renderMix()
 	expect(
 		container.querySelector('[role="img"]')?.getAttribute('aria-label'),
 	).toBe('USDC: 0%, USDT: 0%, dotUSD: 0%')

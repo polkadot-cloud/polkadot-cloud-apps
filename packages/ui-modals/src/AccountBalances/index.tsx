@@ -2,35 +2,49 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { ellipsisFn } from '@polkadot-cloud/utils'
-import { useMemo, useState } from 'react'
+import { useStablecoinAccountCategories } from 'hooks/useStablecoinAccountCategories'
+import { useStablecoinBalances } from 'hooks/useStablecoinBalances'
+import type { UseAccountListCategories } from 'hooks/useStakingAccountCategories'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
 import { AccountDropdown, AccountSourceIcon } from 'ui-app/AccountDropdown'
 import { ButtonCopy } from 'ui-app/ButtonCopy'
 import { ModalTitle } from 'ui-app/ModalTitle'
+import { PopoverTab } from 'ui-buttons'
 import { Identity } from 'ui-core/base'
-import { AccountInput } from 'ui-core/input'
 import { useOverlay } from 'ui-overlay'
-import { BalancesView } from '../../library/Balances/BalancesPopover'
+import { AccountsMenu } from './AccountsMenu'
+import { AllBalances } from './AllBalances'
 import classes from './index.module.scss'
-import { useAccountGroups } from './useAccountGroups'
+import { StablecoinMix } from './StablecoinMix'
 
-export type AccountsOptions = {
+export type AccountBalancesOptions = {
 	initialAccount: ImportedAccount | null
 	onSelect: (account: ImportedAccount | null) => void
 }
 
-export const Accounts = () => {
-	const { t } = useTranslation('swap')
-	const { options } = useOverlay().modal.config
-	const { initialAccount, onSelect } = (options ??
-		{}) as Partial<AccountsOptions>
+export interface AccountBalancesProps {
+	useCategories?: UseAccountListCategories
+}
+
+export const AccountBalances = ({
+	useCategories = useStablecoinAccountCategories,
+}: AccountBalancesProps = {}) => {
+	const { t } = useTranslation('modals')
+	const categories = useCategories()
 	const { activeAccount } = useActiveAccount()
+	const { options } = useOverlay().modal.config
 	const { accounts, getAccount } = useImportedAccounts()
+
+	const { initialAccount, onSelect } = (options ??
+		{}) as Partial<AccountBalancesOptions>
+
 	const [selectedAccount, setSelectedAccount] =
 		useState<ImportedAccount | null>(initialAccount ?? null)
+	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
+
 	const sortedAccounts = useMemo(
 		() =>
 			[...accounts].sort(
@@ -45,16 +59,6 @@ export const Accounts = () => {
 			),
 		[accounts],
 	)
-	const accountGroups = useAccountGroups(sortedAccounts)
-	const sourcesByAddress = useMemo(() => {
-		const sources = new Map<string, Set<string>>()
-		for (const { address, source } of accounts) {
-			const accountSources = sources.get(address) ?? new Set<string>()
-			accountSources.add(source)
-			sources.set(address, accountSources)
-		}
-		return sources
-	}, [accounts])
 	const account =
 		accounts.find(
 			(item) =>
@@ -64,6 +68,12 @@ export const Accounts = () => {
 		getAccount(activeAccount) ??
 		sortedAccounts[0] ??
 		null
+
+	const { loading: syncing, refresh } = useStablecoinBalances(account?.address)
+	useEffect(() => {
+		void refresh()
+	}, [refresh])
+
 	const selectAccount = (nextAccount: ImportedAccount | null) => {
 		setSelectedAccount(nextAccount)
 		onSelect?.(nextAccount)
@@ -73,49 +83,12 @@ export const Accounts = () => {
 		<div className={classes.modal}>
 			<ModalTitle title={t('accounts', { ns: 'app' })} />
 			<div className={classes.layout}>
-				<aside className={classes.sidebar}>
-					<AccountInput.ListContainer
-						className={classes.accountList}
-						ariaLabel={t('accounts', { ns: 'app' })}
-					>
-						{accountGroups.map((group) => (
-							<fieldset key={group.key} className={classes.accountGroup}>
-								<legend className={classes.groupHeading}>{t(group.key)}</legend>
-								{group.accounts.map((item) => (
-									<AccountInput.ListItem
-										key={`${item.address}:${item.source}`}
-										className={classes.accountRow}
-										account={item}
-										isSelected={
-											account?.address === item.address &&
-											account.source === item.source
-										}
-										onClick={selectAccount}
-									>
-										<span className={classes.identicon} aria-hidden>
-											<Polkicon
-												address={item.address}
-												fontSize="2rem"
-												background="transparent"
-											/>
-										</span>
-										<AccountInput.InnerLeft>
-											<AccountInput.ListName
-												name={item.name || ellipsisFn(item.address, 6)}
-											/>
-										</AccountInput.InnerLeft>
-										{(sourcesByAddress.get(item.address)?.size ?? 0) > 1 && (
-											<AccountSourceIcon
-												source={item.source}
-												className={classes.sourceIcon}
-											/>
-										)}
-									</AccountInput.ListItem>
-								))}
-							</fieldset>
-						))}
-					</AccountInput.ListContainer>
-				</aside>
+				<AccountsMenu
+					accounts={accounts}
+					categories={categories}
+					account={account}
+					onSelect={selectAccount}
+				/>
 				<div className={classes.balancesPane}>
 					<div className={classes.mobileSelector}>
 						<AccountDropdown
@@ -152,7 +125,33 @@ export const Accounts = () => {
 									Action={<ButtonCopy value={account.address} size="0.9rem" />}
 								/>
 							</div>
-							<BalancesView account={account} />
+							<div className={classes.balanceViews} aria-busy={syncing}>
+								{syncing && (
+									<span
+										aria-label={t('syncingBalances')}
+										aria-live="polite"
+										role="status"
+									/>
+								)}
+								<PopoverTab.Container
+									style={{ borderBlock: '1px solid var(--gray-500)' }}
+								>
+									{(['balances', 'mix'] as const).map((tab) => (
+										<PopoverTab.Button
+											key={tab}
+											text={t(tab)}
+											active={activeTab === tab}
+											style={{ borderRadius: 0 }}
+											onClick={() => setActiveTab(tab)}
+										/>
+									))}
+								</PopoverTab.Container>
+								{activeTab === 'balances' ? (
+									<AllBalances account={account} />
+								) : (
+									<StablecoinMix account={account} />
+								)}
+							</div>
 						</>
 					) : (
 						<p className={classes.empty}>{t('noAccounts')}</p>

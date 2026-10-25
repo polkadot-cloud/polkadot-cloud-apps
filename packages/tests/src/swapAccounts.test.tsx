@@ -2,15 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { act, createElement } from 'react'
+import { act, type ComponentType, createElement, Suspense } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { AccountsButton } from '../../app-swap/src/library/Accounts'
-import {
-	Accounts,
-	type AccountsOptions,
-} from '../../app-swap/src/modals/Accounts'
+import { Overlays } from '../../app-swap/src/Overlays'
 import {
 	resetStablecoinBalances,
 	setStablecoinBalance,
@@ -18,21 +15,31 @@ import {
 	setStablecoinBalancesError,
 	setStablecoinBalancesSyncing,
 } from '../../global-bus/src/stablecoinBalances'
+import { useDefaultCategories } from '../../hooks/src/useDefaultCategories'
+import type { UseAccountListCategories } from '../../hooks/src/useStakingAccountCategories'
+import {
+	AccountBalances,
+	type AccountBalancesOptions,
+} from '../../ui-modals/src/AccountBalances'
 
-const { state, openModal, closeModal, setActiveAccount, onSelect } = vi.hoisted(
-	() => ({
+const { state, openModal, closeModal, setActiveAccount, onSelect, serviceApi } =
+	vi.hoisted(() => ({
 		state: {
 			accounts: [] as ImportedAccount[],
 			activeAccount: null as { address: string; source: string } | null,
-			options: undefined as Partial<AccountsOptions> | undefined,
+			options: undefined as Partial<AccountBalancesOptions> | undefined,
 			dotPrice: 2,
 		},
 		openModal: vi.fn(),
 		closeModal: vi.fn(),
 		setActiveAccount: vi.fn(),
 		onSelect: vi.fn(),
-	}),
-)
+		serviceApi: {
+			stablecoins: {
+				query: { balances: vi.fn().mockResolvedValue(undefined) },
+			},
+		},
+	}))
 
 vi.mock('../../app-swap/node_modules/@polkadot-cloud/connect/index.js', () => ({
 	useActiveAccount: () => ({
@@ -55,11 +62,21 @@ vi.mock(
 vi.mock('../../app-swap/node_modules/react-i18next/dist/es/index.js', () => ({
 	useTranslation: () => ({ t: (key: string) => key }),
 }))
-vi.mock('../../ui-overlay/src/index', () => ({
-	useOverlay: () => ({
-		modal: { openModal, closeModal, config: { options: state.options } },
-	}),
-}))
+vi.mock('../../ui-overlay/src/index', async () => {
+	const { lazyNamed } = await import('../../ui-overlay/src/lazyNamed')
+	return {
+		lazyNamed,
+		useOverlay: () => ({
+			modal: { openModal, closeModal, config: { options: state.options } },
+		}),
+		Overlay: ({ modals }: { modals: Record<string, ComponentType> }) =>
+			createElement(
+				Suspense,
+				{ fallback: null },
+				createElement(modals.AccountBalances),
+			),
+	}
+})
 vi.mock('../../ui-app/src/ModalTitle', () => ({
 	ModalTitle: ({ title }: { title: string }) =>
 		createElement('h2', null, title),
@@ -80,6 +97,9 @@ vi.mock('../../hooks/src/index', async () => {
 		useTokenPrices: () => ({ price: state.dotPrice }),
 	}
 })
+vi.mock('../../hooks/src/useApi', () => ({
+	useApi: () => ({ serviceApi }),
+}))
 vi.mock('../../ui-app/src/AccountDropdown', () => ({
 	AccountSourceIcon: ({
 		source,
@@ -132,17 +152,24 @@ vi.mock('../../ui-app/src/AccountDropdown', () => ({
 			),
 		),
 }))
-vi.mock('../../app-swap/src/library/Balances/BalancesPopover', () => ({
-	BalancesView: ({ account }: { account: ImportedAccount }) =>
+vi.mock('../../ui-modals/src/AccountBalances/AllBalances', () => ({
+	AllBalances: ({ account }: { account: ImportedAccount }) =>
 		createElement('div', {
 			'data-balances': `${account.address}:${account.source}`,
+		}),
+}))
+vi.mock('../../ui-modals/src/AccountBalances/StablecoinMix', () => ({
+	StablecoinMix: ({ account }: { account: ImportedAccount }) =>
+		createElement('div', {
+			'data-mix': `${account.address}:${account.source}`,
 		}),
 }))
 vi.mock('../../ui-buttons/src/index', async () => {
 	const { Standalone } = await import(
 		'../../ui-buttons/src/ButtonAccount/Standalone'
 	)
-	return { ButtonAccount: { Standalone } }
+	const { PopoverTab } = await import('../../ui-buttons/src/PopoverTab')
+	return { ButtonAccount: { Standalone }, PopoverTab }
 })
 
 const alice = {
@@ -169,7 +196,10 @@ const setBalances = (address: string, balances: StablecoinBalance[]) => {
 }
 let root: Root
 let container: HTMLDivElement
-const render = () => act(async () => root.render(createElement(Accounts)))
+const render = (useCategories?: UseAccountListCategories) =>
+	act(async () =>
+		root.render(createElement(AccountBalances, { useCategories })),
+	)
 const accountRows = () => [
 	...container.querySelectorAll<HTMLElement>('[role="option"]'),
 ]
@@ -214,6 +244,37 @@ test('lists all accounts in name order and initially shows the active account ba
 	).toBe('ledger')
 })
 
+test('supports name ordering without category headings using the default categories hook', async () => {
+	await render(useDefaultCategories)
+	expect(accountRows().map((row) => row.textContent)).toEqual(['Alice', 'Bob'])
+	expect(container.querySelector('legend')).toBeNull()
+	expect(balanceAccount()).toBe('bob:ledger')
+})
+
+test('accepts category hooks with independent labels, custom ordering and empty categories', async () => {
+	await render(() => [
+		{ key: 'empty', labelKey: 'emptyLabel', items: [] },
+		{ key: 'featured', labelKey: 'featuredLabel', items: [bob] },
+		{ key: 'other', items: [alice] },
+	])
+	expect(accountRows().map((row) => row.textContent)).toEqual(['Bob', 'Alice'])
+	expect(
+		[...container.querySelectorAll('legend')].map((item) => item.textContent),
+	).toEqual(['featuredLabel'])
+	expect(container.querySelectorAll('fieldset')).toHaveLength(2)
+	await act(async () => accountRows()[1].click())
+	expect(balanceAccount()).toBe('alice:extension')
+})
+
+test('the swap overlay loads AccountBalances with its default stablecoin categories', async () => {
+	setBalances('bob', [balance('USDC', 30_000_000n)])
+	await act(async () => root.render(createElement(Overlays)))
+	await act(async () => vi.dynamicImportSettled())
+	expect(accountRows().map((row) => row.textContent)).toEqual(['Bob', 'Alice'])
+	expect(container.querySelector('legend')?.textContent).toBe('withBalances')
+	expect(balanceAccount()).toBe('bob:ledger')
+})
+
 test('sidebar selection changes balances in place without activating an account or closing the modal', async () => {
 	await render()
 	await act(async () => accountRows()[0].click())
@@ -236,6 +297,35 @@ test('the mobile dropdown uses the same selection as the desktop account list', 
 	expect(accountRows()[0].getAttribute('aria-selected')).toBe('true')
 	expect(setActiveAccount).not.toHaveBeenCalled()
 	expect(closeModal).not.toHaveBeenCalled()
+})
+
+test('switching views preserves selection and only refreshes balances when the account address changes', async () => {
+	const refresh = serviceApi.stablecoins.query.balances
+	await render()
+	expect(refresh).toHaveBeenCalledExactlyOnceWith('bob')
+	await act(async () => accountRows()[0].click())
+	expect(refresh).toHaveBeenLastCalledWith('alice')
+	expect(refresh).toHaveBeenCalledTimes(2)
+	const tab = (label: string) =>
+		[...container.querySelectorAll('button')].find(
+			(button) => button.textContent === label,
+		)!
+	await act(async () => tab('mix').click())
+	expect(container.querySelector('[data-mix]')?.getAttribute('data-mix')).toBe(
+		'alice:extension',
+	)
+	expect(tab('mix').getAttribute('aria-pressed')).toBe('true')
+	expect(refresh).toHaveBeenCalledTimes(2)
+	await act(async () => accountRows()[1].click())
+	expect(container.querySelector('[data-mix]')?.getAttribute('data-mix')).toBe(
+		'bob:ledger',
+	)
+	expect(refresh).toHaveBeenLastCalledWith('bob')
+	expect(refresh).toHaveBeenCalledTimes(3)
+	await act(async () => tab('balances').click())
+	expect(balanceAccount()).toBe('bob:ledger')
+	expect(tab('balances').getAttribute('aria-pressed')).toBe('true')
+	expect(refresh).toHaveBeenCalledTimes(3)
 })
 
 test.each(['Enter', ' '])(
@@ -297,13 +387,13 @@ test('handles an empty account list without displaying another account balances'
 	expect(balanceAccount()).toBeUndefined()
 })
 
-test('the Accounts header opens the combined modal and remembers the last browsed account', async () => {
+test('the Accounts header opens AccountBalances and remembers the last browsed account', async () => {
 	await act(async () => root.render(createElement(AccountsButton)))
 	const button = container.querySelector('button')!
 	expect(button.textContent).toBe('accounts')
 	await act(async () => button.click())
 	expect(openModal).toHaveBeenLastCalledWith({
-		key: 'Accounts',
+		key: 'AccountBalances',
 		size: 'lg',
 		options: { initialAccount: null, onSelect: expect.any(Function) },
 	})

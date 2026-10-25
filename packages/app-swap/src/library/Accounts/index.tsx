@@ -1,11 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { AccountsOptions } from 'modals/Accounts'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
 import { ButtonAccount } from 'ui-buttons'
+import type { AccountBalancesOptions } from 'ui-modals/AccountBalances'
 import { useOverlay } from 'ui-overlay'
 
 export const AccountsButton = () => {
@@ -17,12 +17,13 @@ export const AccountsButton = () => {
 	return (
 		<ButtonAccount.Standalone
 			label={t('accounts')}
+			showChevron={false}
 			onClick={() => {
-				const options: AccountsOptions = {
+				const options: AccountBalancesOptions = {
 					initialAccount: selectedAccount,
 					onSelect: setSelectedAccount,
 				}
-				openModal({ key: 'Accounts', size: 'lg', options })
+				openModal({ key: 'AccountBalances', size: 'lg', options })
 			}}
 		/>
 	)
