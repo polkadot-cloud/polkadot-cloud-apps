@@ -94,9 +94,12 @@ export const Accounts = () => {
 										<AccountInput.Address address={item.address} />
 									</AccountInput.InnerLeft>
 									{SourceIcon ? (
-										<AccountInput.SourceIcon SvgIcon={SourceIcon} />
+										<AccountInput.SourceIcon
+											SvgIcon={SourceIcon}
+											size="1.1rem"
+										/>
 									) : item.source === 'external' ? (
-										<AccountInput.SourceIcon faIcon={faGlasses} />
+										<AccountInput.SourceIcon faIcon={faGlasses} size="1.1rem" />
 									) : null}
 								</AccountInput.ListItem>
 							)
@@ -125,13 +128,13 @@ export const Accounts = () => {
 							<div className={classes.selectedAccount}>
 								<Identity
 									address={account.address}
-									iconSize="2.25rem"
+									iconSize="3rem"
 									label={account.name || ellipsisFn(account.address, 6)}
 									value={ellipsisFn(account.address, 8)}
 									Action={<ButtonCopy value={account.address} size="0.9rem" />}
 								/>
 							</div>
-							<BalancesView account={account} />
+							<BalancesView account={account} hideTotal />
 						</>
 					) : (
 						<p className={classes.empty}>{t('noAccounts')}</p>

@@ -25,6 +25,7 @@ $button-padding-sm: 1rem;
 
 	&.padded {
 		padding: $button-padding-sm;
+		padding-inline: var(--popover-menu-item-padding-inline, #{$button-padding-sm});
 	}
 
 	> div,

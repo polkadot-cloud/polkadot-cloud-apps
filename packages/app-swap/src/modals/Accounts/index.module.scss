@@ -42,12 +42,12 @@
 .balancesPane {
 	min-width: 0;
 	align-self: start;
-	padding: 1.25rem 0.5rem 1.5rem;
+	padding: 1.25rem 0 1.5rem;
 }
 
 .mobileSelector {
 	display: none;
-	padding: 0 1rem 1rem;
+	padding: 0 1.5rem 1rem;
 
 	:global([class*="selected-account-"]) {
 		background: var(--bg-primary);
@@ -58,7 +58,7 @@
 
 .selectedAccount {
 	min-width: 0;
-	padding: 0 0.5rem 1rem;
+	padding: 0 1rem 1rem;
 }
 
 .empty {

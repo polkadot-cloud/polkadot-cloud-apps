@@ -1,29 +1,50 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+.balancesView {
+	--popover-menu-item-padding-inline: 1.25rem;
+}
+
 .tabs {
 	display: flex;
-	gap: 0.5rem;
-	padding: 0 1rem 0.75rem;
+	border-block: 1px solid var(--gray-500);
 }
 
 .tab {
 	flex: 1;
 	padding: 0.85rem 1.25rem;
-	border: 1px solid var(--gray-500);
-	border-radius: 1rem;
-	background: var(--btn-popover-tab-bg);
+	border: 0;
+	border-radius: 0;
+	background: var(--bg-primary);
 	color: var(--gray-900);
 	font-family: var(--font-family-semibold);
 	font-size: 1.15rem;
 	cursor: pointer;
 
 	&:hover {
-		background: var(--gray-400);
+		background: var(--btn-popover-tab-bg);
 	}
 
 	&[aria-pressed="true"] {
-		border-color: var(--gray-600);
+		background: var(--btn-popover-tab-bg);
+	}
+}
+
+.mixIcons {
+	display: flex;
+	align-items: center;
+	padding: 0 1.25rem 0.5rem;
+
+	> img {
+		position: relative;
+		width: 2rem;
+		height: 2rem;
+		border: 2px solid var(--bg-primary);
+		border-radius: 50%;
 		background: var(--bg-primary);
+
+		&:not(:first-child) {
+			margin-inline-start: -0.5rem;
+		}
 	}
 }

@@ -90,21 +90,24 @@ const Address = ({ address, style }: ComponentBase & { address: string }) => {
 const SourceIcon = ({
 	SvgIcon,
 	faIcon,
+	size,
 }: {
 	SvgIcon?: FunctionComponent<SVGProps<SVGSVGElement>>
 	faIcon?: IconDefinition
+	size?: string
 }) => {
+	const style = size ? { width: size, height: size } : undefined
 	if (SvgIcon) {
 		return (
 			<span className={classes.sourceIcon}>
-				<SvgIcon />
+				<SvgIcon style={style} />
 			</span>
 		)
 	}
 	if (faIcon) {
 		return (
 			<span className={classes.sourceIcon}>
-				<FontAwesomeIcon icon={faIcon} />
+				<FontAwesomeIcon icon={faIcon} style={style} />
 			</span>
 		)
 	}

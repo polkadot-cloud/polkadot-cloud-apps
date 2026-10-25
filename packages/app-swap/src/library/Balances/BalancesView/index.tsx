@@ -12,13 +12,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount, StablecoinChainId } from 'types'
 import { Loader } from 'ui-core/base'
-import {
-	ConnectItem,
-	Headline,
-	MenuItem,
-	ProportionBar,
-	SegmentedBar,
-} from 'ui-core/popover'
+import { ConnectItem, Headline, MenuItem, SegmentedBar } from 'ui-core/popover'
 import classes from './index.module.scss'
 
 const assetHubChains: StablecoinChainId[] = ['statemint']
@@ -33,14 +27,15 @@ const BalancePreloader = ({
 
 export const BalancesView = ({
 	account,
+	hideTotal = false,
 }: {
 	account: ImportedAccount | null
+	hideTotal?: boolean
 }) => {
 	const { t } = useTranslation('swap')
 	const { price: dotPrice } = useTokenPrices()
 	const {
 		getBalanceUnit,
-		getStablecoinShare,
 		getStablecoinTotal,
 		loading: syncing,
 		refresh,
@@ -49,7 +44,7 @@ export const BalancesView = ({
 		void refresh()
 	}, [refresh])
 	const [activeTab, setActiveTab] = useState<'mix' | 'balances'>('balances')
-	const stablecoinTotal = getStablecoinTotal()
+	const stablecoinTotal = getStablecoinTotal({ chain: 'statemint' })
 	const dotTotal = assetHubChains.reduce(
 		(total, chain) => total.plus(getBalanceUnit(chain, 'DOT')),
 		stablecoinTotal.multipliedBy(0),
@@ -64,14 +59,25 @@ export const BalancesView = ({
 		!getDotTotal(chain).isZero() && dotPrice === 0
 	const stablecoinMix = getStablecoinFeeAssets('statemint')
 		.filter((symbol) => symbol !== 'DOT')
-		.map((symbol) => ({
-			share: getStablecoinShare({ symbol }),
-			symbol,
-			value: `$${getStablecoinTotal({ symbol }).toFormat(2)}`,
-		}))
+		.map((symbol) => {
+			const value = getStablecoinTotal({ chain: 'statemint', symbol })
+			return {
+				share: stablecoinTotal.isZero()
+					? 0
+					: value
+							.dividedBy(stablecoinTotal)
+							.multipliedBy(100)
+							.decimalPlaces(2)
+							.toNumber(),
+				symbol,
+				hasBalance: !value.isZero(),
+			}
+		})
+		.sort((a, b) => Number(b.hasBalance) - Number(a.hasBalance))
+	const mixIcons = stablecoinMix.filter(({ hasBalance }) => hasBalance)
 
 	return (
-		<div aria-busy={syncing}>
+		<div className={classes.balancesView} aria-busy={syncing}>
 			{syncing && (
 				<span
 					aria-label={t('syncingBalances')}
@@ -100,8 +106,15 @@ export const BalancesView = ({
 
 			{activeTab === 'mix' && (
 				<div>
+					<Headline title={t('stablecoinMix')} value={null} />
+					{mixIcons.length > 0 && (
+						<div className={classes.mixIcons} aria-hidden="true">
+							{mixIcons.map(({ symbol }) => (
+								<img key={symbol} src={getFeeTokenIcon(symbol)} alt="" />
+							))}
+						</div>
+					)}
 					<ConnectItem.Container>
-						<h4>{t('stablecoinMix')}</h4>
 						<MenuItem padded>
 							{syncing ? (
 								<BalancePreloader height="0.72rem" width="100%" />
@@ -118,18 +131,21 @@ export const BalancesView = ({
 								/>
 							)}
 						</MenuItem>
-						{stablecoinMix.map(({ symbol, value }) => (
+						{stablecoinMix.map(({ symbol, share }) => (
 							<MenuItem key={symbol} padded>
 								<div>
 									<img src={getFeeTokenIcon(symbol)} alt="" />
 								</div>
 								<div>
 									<h3>{symbol}</h3>
-									<div>{syncing ? <BalancePreloader /> : <h4>{value}</h4>}</div>
+									<div>
+										{syncing ? <BalancePreloader /> : <h4>{share}%</h4>}
+									</div>
 								</div>
 							</MenuItem>
 						))}
 
+						{/* Restore the chain breakdown when more than Polkadot Hub is supported.
 						{assetHubChains.map((chain) => (
 							<Fragment key={chain}>
 								<h4>{getStablecoinChainLabel(chain)}</h4>
@@ -146,13 +162,14 @@ export const BalancesView = ({
 											<BalancePreloader height="0.75rem" width="7rem" />
 										) : (
 											<ProportionBar
-												percentage={getStablecoinShare({ chain })}
+												percentage={stablecoinTotal.isZero() ? 0 : 100}
 											/>
 										)}
 									</div>
 								</MenuItem>
 							</Fragment>
 						))}
+						*/}
 					</ConnectItem.Container>
 				</div>
 			)}
@@ -176,20 +193,22 @@ export const BalancesView = ({
 						{assetHubChains.map((chain) => (
 							<Fragment key={chain}>
 								<h4>{getStablecoinChainLabel(chain)}</h4>
-								<MenuItem padded>
-									<div>
-										<h3>{t('total')}</h3>
+								{!hideTotal && (
+									<MenuItem padded>
 										<div>
-											{syncing ? (
-												<BalancePreloader width="7rem" />
-											) : isTotalBalanceUnavailable(chain) ? (
-												<h4>&mdash;</h4>
-											) : (
-												<h4>${getTotalBalance(chain).toFormat(2)}</h4>
-											)}
+											<h3>{t('total')}</h3>
+											<div>
+												{syncing ? (
+													<BalancePreloader width="7rem" />
+												) : isTotalBalanceUnavailable(chain) ? (
+													<h4>&mdash;</h4>
+												) : (
+													<h4>${getTotalBalance(chain).toFormat(2)}</h4>
+												)}
+											</div>
 										</div>
-									</div>
-								</MenuItem>
+									</MenuItem>
+								)}
 								{getStablecoinFeeAssets(chain).map((symbol) => (
 									<MenuItem key={`${chain}-${symbol}`} padded>
 										<div>
