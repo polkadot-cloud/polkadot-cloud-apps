@@ -19,7 +19,7 @@ export const SideMenu = ({
 		<>
 			<DefaultMenu
 				barItems={[]}
-				getActivePageForCategory={() => '/swap'}
+				getActivePageForCategory={() => '/'}
 				localCategory="swap"
 				pageCategories={[]}
 				pagesConfig={[]}

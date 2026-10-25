@@ -7,12 +7,11 @@ import { Send } from './Send'
 import { Swap } from './Swap'
 
 export const pages: PageItem[] = [
-	{ key: 'swap', Entry: Swap, faIcon: faArrowsRotate },
-	{ key: 'send', Entry: Send, faIcon: faPaperPlane },
+	{ key: 'swap', hash: '/', Entry: Swap, faIcon: faArrowsRotate },
+	{ key: 'send', hash: '/send', Entry: Send, faIcon: faPaperPlane },
 ].map((page) => ({
 	...page,
 	category: 0,
-	uri: `${import.meta.env.BASE_URL}${page.key}`,
-	hash: `/${page.key}`,
+	uri: `${import.meta.env.BASE_URL}${page.hash.slice(1)}`,
 	advanced: false,
 }))

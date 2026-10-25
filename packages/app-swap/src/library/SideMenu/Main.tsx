@@ -18,8 +18,8 @@ export const Main = () => {
 				<Primary
 					key={page.key}
 					name={t(page.key)}
-					to={`/${page.key}`}
-					active={pathname === `/${page.key}`}
+					to={page.hash}
+					active={pathname === page.hash}
 					faIcon={page.faIcon}
 					minimised={sideMenuMinimised}
 				/>
