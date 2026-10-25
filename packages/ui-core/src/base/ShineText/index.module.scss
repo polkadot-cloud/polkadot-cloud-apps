@@ -1,0 +1,47 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.text {
+	--shine-text-base: color-mix(in srgb, var(--text-tertiary) 80%, #fff);
+
+	display: inline-block;
+}
+
+.active {
+	background-image: linear-gradient(
+		110deg,
+		var(--shine-text-color, var(--shine-text-base)) 35%,
+		var(--shine-text-highlight, #fff) 50%,
+		var(--shine-text-color, var(--shine-text-base)) 65%
+	);
+	background-size: 200% 100%;
+	background-clip: text;
+	color: transparent;
+	animation: text-shine 1.8s ease-in-out infinite;
+}
+
+@keyframes text-shine {
+	from {
+		background-position: 200% 0;
+	}
+
+	to {
+		background-position: -200% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.active {
+		background: none;
+		color: var(--shine-text-color, var(--shine-text-base));
+		animation: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.active {
+		background: none;
+		color: canvastext;
+		animation: none;
+	}
+}

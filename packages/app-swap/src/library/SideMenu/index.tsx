@@ -19,13 +19,14 @@ export const SideMenu = ({
 		<>
 			<DefaultMenu
 				barItems={[]}
-				getActivePageForCategory={() => '/send'}
-				localCategory="stake"
+				getActivePageForCategory={() => '/swap'}
+				localCategory="swap"
 				pageCategories={[]}
 				pagesConfig={[]}
 				renderMain={renderMain}
 				title="Cloud"
 				enableAdvancedMenu={enableAdvancedMenu}
+				expandedBackground
 			/>
 			<FloatingMenu
 				renderMain={renderMain}

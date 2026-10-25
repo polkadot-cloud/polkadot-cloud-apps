@@ -520,6 +520,9 @@ importers:
       event-tracking:
         specifier: workspace:*
         version: link:../event-tracking
+      global-bus:
+        specifier: workspace:*
+        version: link:../global-bus
       hooks:
         specifier: workspace:*
         version: link:../hooks

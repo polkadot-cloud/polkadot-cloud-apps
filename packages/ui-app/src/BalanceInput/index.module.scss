@@ -60,15 +60,19 @@
 	color: var(--text-tertiary);
 }
 
+.availableValue,
+.availableButton {
+	color: var(--gray-1000);
+	font-family: var(--font-family-mono);
+	font-size: inherit;
+	font-weight: 700;
+}
+
 .availableButton {
 	padding: 0;
 	background: transparent;
 	border: 0;
 	cursor: pointer;
-	color: var(--gray-1000);
-	font-family: var(--font-family-mono);
-	font-size: inherit;
-	font-weight: 700;
 
 	&:hover:not(:disabled) {
 		text-decoration: underline;
@@ -95,6 +99,12 @@
 	line-height: 3.5rem;
 	font-weight: 800;
 	min-width: 0;
+
+	&[readonly]:disabled {
+		color: var(--gray-600);
+		-webkit-text-fill-color: var(--gray-600);
+		opacity: 1;
+	}
 }
 
 .tokenIcon {

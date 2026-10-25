@@ -1,0 +1,130 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.modal {
+	display: flex;
+	flex-direction: column;
+	min-height: 70dvh;
+}
+
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	flex: 1;
+	min-height: 0;
+	margin-top: 1.5rem;
+	border-top: 1px solid var(--gray-400);
+}
+
+.sidebar {
+	position: relative;
+	min-width: 0;
+	border-right: 1px solid var(--gray-500);
+	background: var(--gray-200);
+}
+
+.sidebar .accountList {
+	position: absolute;
+	inset: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.sidebar .accountRow:not(:last-child) {
+	border-bottom: 1px solid var(--gray-400);
+}
+
+.sidebar .accountRow[aria-selected="true"] {
+	background: var(--gray-100);
+
+	:global(.dark) & {
+		background: var(--gray-300);
+	}
+}
+
+.sidebar .sourceIcon {
+	margin-right: 0;
+}
+
+.accountGroup {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.groupHeading {
+	width: 100%;
+	padding: 0.75rem 1.25rem;
+	border-bottom: 1px solid var(--gray-400);
+	background: var(--gray-300);
+	color: var(--text-tertiary);
+	font-family: var(--font-family-semibold);
+	font-size: 1rem;
+
+	:global(.dark) & {
+		background: var(--gray-100);
+	}
+}
+
+.identicon {
+	flex: 0 0 2rem;
+	width: 2rem;
+}
+
+.balancesPane {
+	min-width: 0;
+	align-self: start;
+	padding: 1.25rem 0 1.5rem;
+}
+
+.mobileSelector {
+	display: none;
+	padding: 0 1.5rem 1rem;
+
+	:global([class*="selected-account-"]) {
+		background: var(--bg-primary);
+		border-color: var(--gray-500);
+		box-shadow: var(--shadow-alt);
+	}
+}
+
+.selectedAccount {
+	min-width: 0;
+	padding: 0 1rem 1rem;
+}
+
+.accountName {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+
+	.sourceIcon {
+		flex-shrink: 0;
+		margin: 0;
+	}
+}
+
+.empty {
+	padding: 1.25rem;
+	color: var(--text-tertiary);
+}
+
+@media (width <= 700px) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sidebar,
+	.selectedAccount {
+		display: none;
+	}
+
+	.mobileSelector {
+		display: block;
+	}
+}

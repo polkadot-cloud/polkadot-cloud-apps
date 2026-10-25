@@ -17,6 +17,7 @@ import type {
 	ServiceInterface,
 	SystemChainId,
 } from 'types'
+import { createAssetHubExchange } from '../assetHub'
 import { BaseService } from '../defaultService/baseService'
 import type { StablecoinBalanceSubscriber } from '../defaultService/subscriptionManager'
 import type { DefaultServiceClass } from '../defaultService/types'
@@ -69,6 +70,9 @@ export class PolkadotService
 		const stablecoinsEnabled =
 			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
 		this.interface = {
+			assetHub: this.features.stablecoins.assetHub
+				? createAssetHubExchange(this.apiHub)
+				: undefined,
 			stablecoins: stablecoinsEnabled
 				? createStablecoinsInterface(
 						this.apiHub,

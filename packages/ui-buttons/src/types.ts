@@ -165,6 +165,7 @@ export type ButtonSubmitInvertProps = ComponentBaseWithClassName &
 
 export type ButtonTabProps = ComponentBaseWithClassName &
 	ButtonCommonProps & {
+		'aria-pressed'?: boolean
 		colorSecondary?: boolean
 		active?: boolean
 		title: string

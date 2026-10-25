@@ -6,7 +6,7 @@ import type { PayloadOptions } from 'dedot/types'
 
 export type StablecoinChainId = 'statemint' | 'hydration'
 
-export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR'
+export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR' | 'dotUSD'
 
 export type FeeAssetSymbol = 'DOT' | StablecoinSymbol
 

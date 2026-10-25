@@ -2,12 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { SubmittableExtrinsic } from 'dedot'
-import type { ExtrinsicSignatureV4 } from 'dedot/codecs'
+import type { DispatchError, ExtrinsicSignatureV4 } from 'dedot/codecs'
 import type { InjectedSigner, PayloadOptions, TxStatus } from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
 import type { TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
-import { deleteTx, setUidPending, setUidSubmitted, subs } from './index'
+import { deleteTx, getUid, setUidPending, setUidSubmitted, subs } from './index'
+
+const dispatchFailure = (tx: SubmittableExtrinsic, error?: DispatchError) =>
+	error
+		? new Error(tx.client.registry.findErrorMeta(error)?.name ?? error.type)
+		: undefined
 
 export const addSignAndSend = async (
 	network: string,
@@ -30,9 +35,13 @@ export const addSignAndSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.signAndSend(from, options, async ({ status }) => {
-			handleResult(uid, status, onRest)
-		})
+		subs[uid] = await tx.signAndSend(
+			from,
+			options,
+			async ({ status, dispatchError }) => {
+				handleResult(uid, status, onRest, dispatchFailure(tx, dispatchError))
+			},
+		)
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
@@ -53,8 +62,8 @@ export const addSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.send(async ({ status }) => {
-			handleResult(uid, status, onRest)
+		subs[uid] = await tx.send(async ({ status, dispatchError }) => {
+			handleResult(uid, status, onRest, dispatchFailure(tx, dispatchError))
 		})
 	} catch (e) {
 		handleError(String(e), onError)
@@ -77,7 +86,14 @@ export const handleResult = (
 		onFinalized: () => void
 		onFailed: (err: Error) => void
 	},
+	dispatchError?: Error,
 ) => {
+	if (!getUid(uid)) return
+	if (dispatchError) {
+		onFailed(dispatchError)
+		deleteTx(uid)
+		return
+	}
 	if (status.type === 'Broadcasting') {
 		setUidPending(uid, true)
 		onReady()

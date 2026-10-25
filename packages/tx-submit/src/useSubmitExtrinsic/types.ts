@@ -25,7 +25,11 @@ export interface UseSubmitExtrinsicProps {
 	shouldSubmit: boolean
 	feePaymentOptions?: PayloadOptions
 	feeEstimator?: TxFeeEstimator
+	// Fee already estimated for this exact call, applied without a loading reset.
+	estimatedFee?: bigint
 	feeDisplay?: TxFeeDisplay
+	// Ledger metadata proofs always use the chain's native currency information.
+	signingNetworkInfo?: { decimals: number; tokenSymbol: string }
 	callbackSubmit?: () => void
 	callbackInBlock?: () => void
 }
