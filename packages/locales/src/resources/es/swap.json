@@ -3,6 +3,7 @@
 		"amountModeTooltip": "Elige si introducir el importe a pagar o a recibir.",
 		"amountToSend": "Cantidad a enviar",
 		"assetToSend": "Activo a enviar",
+		"available": "Disponible",
 		"bestInput": "Automático · menor importe pagado antes de las comisiones de red",
 		"bestOutput": "Automático · mayor importe recibido antes de las comisiones de red",
 		"chain": "Cadena",

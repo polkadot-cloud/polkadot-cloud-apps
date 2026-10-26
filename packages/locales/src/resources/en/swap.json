@@ -3,6 +3,7 @@
 		"amountModeTooltip": "Choose whether to set the amount to pay or receive.",
 		"amountToSend": "Amount to send",
 		"assetToSend": "Asset to Send",
+		"available": "Available",
 		"bestInput": "Automatic · lowest input before network fees",
 		"bestOutput": "Automatic · best output before network fees",
 		"chain": "Chain",

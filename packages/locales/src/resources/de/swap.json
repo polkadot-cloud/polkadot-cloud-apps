@@ -3,6 +3,7 @@
 		"amountModeTooltip": "Wählen, ob der Zahlungs- oder Empfangsbetrag eingegeben wird.",
 		"amountToSend": "Zu sendender Betrag",
 		"assetToSend": "Zu sendendes Asset",
+		"available": "Verfügbar",
 		"bestInput": "Automatisch · niedrigster Zahlungsbetrag vor Netzwerkgebühren",
 		"bestOutput": "Automatisch · höchster Empfangsbetrag vor Netzwerkgebühren",
 		"chain": "Blockchain",

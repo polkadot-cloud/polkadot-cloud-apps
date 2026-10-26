@@ -29,7 +29,7 @@ export const FeePaymentFields = ({
 				title={t('payFeesIn')}
 				className={classes.lastSection}
 				headerContent={
-					<SendForm.Label label={t('available', { ns: 'app' })}>
+					<SendForm.Label label={t('available')}>
 						{balancesLoading
 							? '...'
 							: formatBalance(feeBalance, selectedFeeAsset.value)}

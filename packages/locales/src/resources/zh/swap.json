@@ -3,6 +3,7 @@
 		"amountModeTooltip": "选择输入支付金额或接收金额。",
 		"amountToSend": "发送金额",
 		"assetToSend": "发送资产",
+		"available": "可用",
 		"bestInput": "自动 · 扣除网络手续费前支付金额最少",
 		"bestOutput": "自动 · 扣除网络手续费前接收金额最多",
 		"chain": "链",

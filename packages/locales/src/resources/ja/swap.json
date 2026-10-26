@@ -3,6 +3,7 @@
 		"amountModeTooltip": "入力する金額を支払額と受取額から選びます。",
 		"amountToSend": "送金額",
 		"assetToSend": "送金するアセット",
+		"available": "利用可能",
 		"bestInput": "自動 · ネットワーク手数料を除く支払額が最小",
 		"bestOutput": "自動 · ネットワーク手数料を除く受取額が最大",
 		"chain": "チェーン",

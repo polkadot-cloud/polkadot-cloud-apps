@@ -3,6 +3,7 @@
 		"amountModeTooltip": "지불 금액과 수령 금액 중 입력할 금액을 선택합니다.",
 		"amountToSend": "전송할 금액",
 		"assetToSend": "전송할 자산",
+		"available": "사용 가능",
 		"bestInput": "자동 · 네트워크 수수료 차감 전 최소 지불액",
 		"bestOutput": "자동 · 네트워크 수수료 차감 전 최대 수령액",
 		"chain": "체인",
