@@ -6,7 +6,6 @@ import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
 import { useStablecoinBalances, useTheme } from 'hooks'
-import { useQuoteExpired } from 'hooks/useQuoteExpired'
 import { useSwapQuote } from 'hooks/useSwapQuote'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -57,7 +56,17 @@ export const Swap = () => {
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
 	const recipientValid = isValidAddress(recipient)
-	const { quotes, quote, tx, fee, error, refresh, requestKey } = useSwapQuote({
+	const {
+		quotes,
+		quote,
+		tx,
+		fee,
+		error,
+		loading,
+		expired,
+		refresh,
+		requestKey,
+	} = useSwapQuote({
 		account,
 		assetIn,
 		assetOut,
@@ -78,7 +87,6 @@ export const Swap = () => {
 				quotedToken,
 			)
 		: undefined
-	const expired = useQuoteExpired(quote?.fetchedAt)
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
 			? slippageLimit(quote.amountIn, slippage, 'maximum')
@@ -89,7 +97,7 @@ export const Swap = () => {
 			? slippageLimit(quote.amountOut, slippage)
 			: quote.amountOut
 		: 0n
-	const routeLoading = parsed > 0n && !quotes && !error
+	const routeLoading = loading && !quote
 	const renderAmountField = (editable: boolean) => {
 		const token = editable ? amountToken : quotedToken
 		const paying = editable === (mode === 'exactIn')
@@ -232,13 +240,14 @@ export const Swap = () => {
 					)}
 					<TransactionAction
 						beforeSubmit={
-							expired && (
-								<ButtonSecondary
-									text={t('refreshQuote')}
-									size="lg"
-									className={classes.refreshQuote}
-									onClick={refresh}
-								/>
+							quote &&
+							loading && (
+								<div className={classes.renewingQuote} role="status">
+									<span aria-hidden>
+										<Spinner style={{ width: '1rem' }} />
+									</span>
+									{t('renewingQuote')}
+								</div>
 							)
 						}
 						tx={tx}
@@ -259,7 +268,6 @@ export const Swap = () => {
 							// A wallet may broadcast after the user has already changed the form.
 							if (currentRequestKey.current !== requestKey) return
 							setAmount('')
-							refresh()
 						}}
 					>
 						<SendForm.Note
@@ -322,7 +330,9 @@ export const Swap = () => {
 						<SendForm.Note label={t('priceImpact')}>
 							{quote ? `${quote.priceImpactBps / 100}%` : '—'}
 						</SendForm.Note>
-						{expired && <ExchangeNotice>{t('quoteExpired')}</ExchangeNotice>}
+						{expired && !loading && (
+							<ExchangeNotice>{t('quoteExpired')}</ExchangeNotice>
+						)}
 					</TransactionAction>
 				</SendForm.Card>
 			</SendForm.Container>

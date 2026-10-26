@@ -1,9 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useApi } from '../useApi'
+import { useQuoteExpired } from '../useQuoteExpired'
 import type {
 	PreparedSwapQuote,
 	UseSwapQuote,
@@ -24,8 +25,10 @@ export const useSwapQuote = ({
 	const { serviceApi } = useApi()
 	const { t } = useTranslation('swap')
 	const exchange = serviceApi.swap
-	const [revision, setRevision] = useState(0)
-	const refresh = useCallback(() => setRevision((value) => value + 1), [])
+	const fetchRef = useRef<() => Promise<void>>(undefined)
+	const refresh = useCallback(() => {
+		void fetchRef.current?.()
+	}, [])
 	const [state, setState] = useState<PreparedSwapQuote>()
 	// Market snapshots may refresh this request without invalidating its last
 	// usable quote. User edits and account/service changes invalidate it immediately.
@@ -41,6 +44,11 @@ export const useSwapQuote = ({
 		const fetch = async () => {
 			if (running) return
 			running = true
+			setState((previous) => ({
+				...(previous?.request === request ? previous : { request }),
+				loading: true,
+				error: undefined,
+			}))
 			try {
 				const quotes = await exchange.quotes(request)
 				if (stale) return
@@ -69,6 +77,7 @@ export const useSwapQuote = ({
 				if (!stale)
 					setState({
 						request,
+						loading: false,
 						quotes,
 						quote,
 						tx,
@@ -78,6 +87,7 @@ export const useSwapQuote = ({
 				if (stale) return
 				setState((previous) => ({
 					...(previous?.request === request ? previous : { request }),
+					loading: false,
 					error:
 						error instanceof Error
 							? error.message
@@ -87,14 +97,22 @@ export const useSwapQuote = ({
 				running = false
 			}
 		}
+		fetchRef.current = fetch
 		const timer = setTimeout(fetch, 250)
 		const poll = setInterval(fetch, 15_000)
 		return () => {
 			stale = true
+			fetchRef.current = undefined
 			clearTimeout(timer)
 			clearInterval(poll)
 		}
-	}, [request, revision])
+	}, [request])
 	const current = state?.request === request ? state : undefined
-	return { ...current, requestKey, refresh }
+	const expired = useQuoteExpired(current?.quote?.fetchedAt)
+	useEffect(() => {
+		if (expired) refresh()
+	}, [expired, refresh])
+	const loading =
+		current?.loading ?? (!!exchange && amount > 0n && assetIn !== assetOut)
+	return { ...current, loading, expired, requestKey, refresh }
 }

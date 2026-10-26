@@ -25,7 +25,7 @@
 		"quoteExpired": "Срок действия котировки истёк.",
 		"receive": "Получить",
 		"redeemDotUsd": "Погасить dotUSD за USDT",
-		"refreshQuote": "Обновить котировку",
+		"renewingQuote": "Обновление котировки…",
 		"resetSlippage": "Сбросить проскальзывание до {{value}}%",
 		"retry": "Повторить",
 		"reverseAssets": "Поменять активы местами",

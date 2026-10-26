@@ -25,7 +25,7 @@
 		"quoteExpired": "Bu teklifin süresi doldu.",
 		"receive": "Al",
 		"redeemDotUsd": "dotUSD karşılığında USDT al",
-		"refreshQuote": "Teklifi yenile",
+		"renewingQuote": "Teklif yenileniyor…",
 		"resetSlippage": "Kaymayı %{{value}} olarak sıfırla",
 		"retry": "Tekrar dene",
 		"reverseAssets": "Varlıkların yerini değiştir",

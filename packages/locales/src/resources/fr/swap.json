@@ -25,7 +25,7 @@
 		"quoteExpired": "Cette cotation a expiré.",
 		"receive": "Recevoir",
 		"redeemDotUsd": "Échanger des dotUSD contre des USDT",
-		"refreshQuote": "Actualiser la cotation",
+		"renewingQuote": "Actualisation de la cotation…",
 		"resetSlippage": "Rétablir le glissement à {{value}} %",
 		"retry": "Réessayer",
 		"reverseAssets": "Inverser les actifs",

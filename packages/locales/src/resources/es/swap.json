@@ -25,7 +25,7 @@
 		"quoteExpired": "Esta cotización ha caducado.",
 		"receive": "Recibir",
 		"redeemDotUsd": "Canjear dotUSD por USDT",
-		"refreshQuote": "Actualizar cotización",
+		"renewingQuote": "Actualizando cotización…",
 		"resetSlippage": "Restablecer el deslizamiento al {{value}} %",
 		"retry": "Reintentar",
 		"reverseAssets": "Invertir activos",

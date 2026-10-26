@@ -43,9 +43,12 @@
 	white-space: nowrap;
 }
 
-.refreshQuote {
-	width: 100%;
-	min-height: 3.25rem;
+.renewingQuote {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--text-tertiary);
+	font-size: 1.1rem;
 }
 
 .recipientSetting {

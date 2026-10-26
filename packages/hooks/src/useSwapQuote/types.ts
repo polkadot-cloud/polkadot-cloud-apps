@@ -13,9 +13,10 @@ export type UseSwapQuoteProps = SwapRequest & {
 	feeAsset: SwapToken
 }
 
-// Quotes, transaction, fee, and any error associated with one swap request.
+// Quotes, transaction, fee, and loading or error state associated with one swap request.
 export type PreparedSwapQuote = {
 	request: SwapRequest
+	loading: boolean
 	quotes?: SwapQuote[]
 	quote?: SwapQuote
 	tx?: SubmittableExtrinsic
@@ -23,8 +24,10 @@ export type PreparedSwapQuote = {
 	error?: string
 }
 
-// Current quote state, request identity, and a callback to refresh the quote.
+// Current quote, loading and expiry status, and a callback to refresh immediately.
 export type UseSwapQuote = Partial<PreparedSwapQuote> & {
 	requestKey: string
+	loading: boolean
+	expired: boolean
 	refresh: () => void
 }

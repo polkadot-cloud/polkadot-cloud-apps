@@ -25,7 +25,7 @@
 		"quoteExpired": "この見積もりは有効期限が切れています。",
 		"receive": "受け取り",
 		"redeemDotUsd": "dotUSDをUSDTに償還",
-		"refreshQuote": "見積もりを更新",
+		"renewingQuote": "見積もりを更新中…",
 		"resetSlippage": "スリッページを{{value}}%にリセット",
 		"retry": "再試行",
 		"reverseAssets": "資産を入れ替える",

@@ -25,7 +25,7 @@
 		"quoteExpired": "This quote has expired.",
 		"receive": "Receive",
 		"redeemDotUsd": "Redeem dotUSD for USDT",
-		"refreshQuote": "Refresh quote",
+		"renewingQuote": "Renewing quote…",
 		"resetSlippage": "Reset slippage to {{value}}%",
 		"retry": "Retry",
 		"reverseAssets": "Reverse assets",

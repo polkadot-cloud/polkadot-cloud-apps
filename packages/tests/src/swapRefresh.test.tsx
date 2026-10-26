@@ -498,9 +498,11 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(button.disabled).toBe(false)
 	assertStable()
 	expect(feeText()).toBe('100')
+	expect(container.textContent).toContain('renewingQuote')
 
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(feeText()).toBe('100')
+	expect(container.textContent).toContain('renewingQuote')
 	expect(button.disabled).toBe(false)
 	expect(input('youReceive').value).toBe('0.099')
 	await act(async () => pendingFee.resolve(120n))
@@ -512,6 +514,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(input('youReceive').value).toBe('0.098')
 	expect(views.every((view) => view.valid && view.fee > 0n)).toBe(true)
 	expect(estimate).toHaveBeenCalledTimes(2)
+	expect(container.textContent).not.toContain('renewingQuote')
 })
 
 test('editing the input invalidates the old quote immediately and ignores an in-flight refresh', async () => {
@@ -716,17 +719,75 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(container.querySelector<HTMLDivElement>('[role="slider"]')).toBe(
 		slippage,
 	)
-	const refresh = [...container.querySelectorAll('button')].find(
-		(item) => item.textContent === 'refreshQuote',
-	)!
-	expect(refresh.disabled).toBe(false)
-	expect(button.previousElementSibling).toBe(refresh)
-	expect(refresh.closest('[role="status"]')).toBeNull()
+	expect(container.textContent).not.toContain('refreshQuote')
 	quotes.mockImplementation(async () => [quote(Date.now())])
-	await act(async () => refresh.click())
-	await advance(250)
+	await advance(15_000)
 	expect(submitButton().disabled).toBe(false)
-	expect(container.contains(refresh)).toBe(false)
+	expect(container.textContent).not.toContain('quoteExpired')
+})
+
+test('expiry automatically renews the quote and shows progress until its fee is ready', async () => {
+	quotes.mockImplementationOnce(async () => [quote(Date.now() - 10_000)])
+	await configure()
+	quotes.mockRejectedValueOnce(new Error('Network unavailable'))
+	await advance(15_000)
+	expect(submitButton().disabled).toBe(false)
+	const pendingQuotes = deferred<SwapQuote[]>()
+	const pendingFee = deferred<bigint>()
+	quotes.mockReturnValueOnce(pendingQuotes.promise)
+	estimate.mockReturnValueOnce(pendingFee.promise)
+	await advance(5_001)
+	expect(quotes).toHaveBeenCalledTimes(3)
+	expect(submitButton().disabled).toBe(true)
+	expect(input('youPay').value).toBe('0.1')
+	expect(input('youReceive').value).toBe('0.099')
+	expect(container.querySelector('[role="status"]')?.textContent).toBe(
+		'renewingQuote',
+	)
+	expect(container.textContent).not.toContain('refreshQuote')
+	expect(container.textContent).not.toContain('Network unavailable')
+	await act(async () => pendingQuotes.resolve([quote(Date.now(), 98_000n)]))
+	expect(container.textContent).toContain('renewingQuote')
+	expect(submitButton().disabled).toBe(true)
+	await act(async () => pendingFee.resolve(120n))
+	expect(container.textContent).not.toContain('renewingQuote')
+	expect(input('youReceive').value).toBe('0.098')
+	expect(feeText()).toBe('120')
+	expect(submitButton().disabled).toBe(false)
+})
+
+test('expiry waits for an existing renewal instead of issuing overlapping requests', async () => {
+	await configure()
+	const pending = deferred<SwapQuote[]>()
+	quotes.mockReturnValueOnce(pending.promise)
+	await advance(30_001)
+	expect(quotes).toHaveBeenCalledTimes(2)
+	expect(container.textContent).toContain('renewingQuote')
+	expect(submitButton().disabled).toBe(true)
+	await act(async () => pending.resolve([quote(Date.now())]))
+	expect(container.textContent).not.toContain('renewingQuote')
+	expect(submitButton().disabled).toBe(false)
+})
+
+test('retry immediately shows renewal progress and shares the in-flight request', async () => {
+	await configure()
+	quotes.mockRejectedValueOnce(new Error('Network unavailable'))
+	await advance(15_000)
+	const pending = deferred<SwapQuote[]>()
+	quotes.mockReturnValueOnce(pending.promise)
+	const retry = [...container.querySelectorAll('button')].find(
+		(button) => button.textContent === 'retry',
+	)!
+	await act(async () => {
+		retry.click()
+		retry.click()
+	})
+	expect(quotes).toHaveBeenCalledTimes(3)
+	expect(container.textContent).toContain('renewingQuote')
+	expect(container.textContent).not.toContain('Network unavailable')
+	await act(async () => pending.resolve([quote(Date.now())]))
+	expect(container.textContent).not.toContain('renewingQuote')
+	expect(submitButton().disabled).toBe(false)
 })
 
 test('a failed background fee estimate retains the last complete quote and never enables an unestimated replacement', async () => {

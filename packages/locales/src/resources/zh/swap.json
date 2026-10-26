@@ -25,7 +25,7 @@
 		"quoteExpired": "此报价已过期。",
 		"receive": "接收",
 		"redeemDotUsd": "将 dotUSD 赎回为 USDT",
-		"refreshQuote": "刷新报价",
+		"renewingQuote": "正在更新报价…",
 		"resetSlippage": "将滑点重置为 {{value}}%",
 		"retry": "重试",
 		"reverseAssets": "对调资产",

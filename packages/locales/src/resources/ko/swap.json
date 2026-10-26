@@ -25,7 +25,7 @@
 		"quoteExpired": "이 견적은 만료되었습니다.",
 		"receive": "수령",
 		"redeemDotUsd": "dotUSD를 USDT로 상환",
-		"refreshQuote": "견적 새로고침",
+		"renewingQuote": "견적 갱신 중…",
 		"resetSlippage": "슬리피지를 {{value}}%로 초기화",
 		"retry": "다시 시도",
 		"reverseAssets": "자산 방향 바꾸기",
