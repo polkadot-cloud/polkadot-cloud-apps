@@ -53,7 +53,8 @@
 		"ui-core": "workspace:*",
 		"ui-modals": "workspace:*",
 		"ui-overlay": "workspace:*",
-		"ui-styles": "workspace:*"
+		"ui-styles": "workspace:*",
+		"utils": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*",

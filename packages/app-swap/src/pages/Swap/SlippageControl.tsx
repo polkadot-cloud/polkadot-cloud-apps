@@ -3,7 +3,7 @@
 
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { DefaultSwapSlippageBps } from 'consts/swap'
+import { DefaultSwapSlippageBps, MaxSwapSlippageBps } from 'consts/swap'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Slider } from 'ui-app/Slider'
@@ -40,7 +40,7 @@ export const SlippageControl = ({
 			>
 				<Slider
 					min={10}
-					max={500}
+					max={MaxSwapSlippageBps}
 					step={10}
 					value={value}
 					disabled={disabled}

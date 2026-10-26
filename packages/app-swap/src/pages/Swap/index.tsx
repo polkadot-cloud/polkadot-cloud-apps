@@ -7,7 +7,6 @@ import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import classNames from 'classnames'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
-import { slippageLimit } from 'dedot-api/swap/math'
 import { useStablecoinBalances, useTheme } from 'hooks'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
 import { useSwapQuote } from 'hooks/useSwapQuote'
@@ -20,6 +19,7 @@ import { Dropdown } from 'ui-app/Dropdown'
 import { ButtonSecondary } from 'ui-buttons'
 import { Page, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
+import { maxSendableBalance, slippageLimit } from 'utils'
 import {
 	ExchangeNotice,
 	percentage,
@@ -29,7 +29,7 @@ import {
 } from '../../library/Swap'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import { maxSendableBalance, toPlanck } from '../Send/utils'
+import { toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
 import { SlippageControl } from './SlippageControl'
 
@@ -79,7 +79,7 @@ export const Swap = () => {
 	const expired = useQuoteExpired(quote?.fetchedAt)
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
-			? slippageLimit(quote.amountIn, slippage, true)
+			? slippageLimit(quote.amountIn, slippage, 'maximum')
 			: quote.amountIn
 		: 0n
 	const minOutput = quote

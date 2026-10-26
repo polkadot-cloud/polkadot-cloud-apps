@@ -11,7 +11,6 @@ import { SwapDappName } from 'consts'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { SwapTokens, swapDecimals } from 'consts/swap'
 import type { SubmittableExtrinsic } from 'dedot'
-import { canFundExchange } from 'dedot-api/swap/math'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import type { ReactNode } from 'react'
@@ -21,6 +20,7 @@ import { useSubmitExtrinsic } from 'tx-submit'
 import type { ImportedAccount, SwapToken } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
+import { canFundExchange, ceilDiv } from 'utils'
 import classes from './index.module.scss'
 
 export const tokenOptions = SwapTokens.map((value) => ({
@@ -116,7 +116,7 @@ const TransactionActionInner = ({
 		return fee
 	}, [fee])
 	const feeBalance = balances.getBalance('statemint', feeAsset)
-	const feeReserve = fee === undefined ? 0n : (fee * 110n + 99n) / 100n
+	const feeReserve = fee === undefined ? 0n : ceilDiv(fee * 110n, 100n)
 	const funded = canFundExchange(
 		balances.balances,
 		spends,

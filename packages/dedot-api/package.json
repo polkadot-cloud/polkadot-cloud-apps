@@ -10,8 +10,7 @@
 		"lint": "biome check --write ."
 	},
 	"exports": {
-		".": "./src/index.ts",
-		"./swap/math": "./src/swap/math.ts"
+		".": "./src/index.ts"
 	},
 	"dependencies": {
 		"@dedot/chaintypes": "^0.280.0",

@@ -4,20 +4,20 @@
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import type { SwapPool, SwapPsm, SwapQuote, SwapRequest } from 'types'
+import { canFundExchange, ceilDiv, slippageLimit } from 'utils'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { swapLocation } from '../../consts/src/swap'
+import { U128_MAX } from '../../consts/src/math'
+import {
+	SwapQuoteExpiryMs,
+	SwapTokens,
+	swapLocation,
+} from '../../consts/src/swap'
 import {
 	ChainHeadBlockNotPinnedError,
 	ChainHeadBlockPrunedError,
 } from '../../dedot-api/node_modules/dedot/index.js'
 import { createSwapInterface } from '../../dedot-api/src/swap'
-import {
-	canFundExchange,
-	ceilDiv,
-	psmAmounts,
-	slippageLimit,
-	U128_MAX,
-} from '../../dedot-api/src/swap/math'
+import { psmAmounts, psmDebtLimit } from '../../dedot-api/src/swap/math'
 
 const psm: SwapPsm = {
 	status: 'AllEnabled',
@@ -98,6 +98,18 @@ describe('Upfront funding checks', () => {
 			false,
 		)
 	})
+	test('rejects negative debits and never borrows a matching asset from another chain', () => {
+		expect(canFundExchange([...balances], { USDT: -1n }, 'DOT', 1n)).toBe(false)
+		expect(canFundExchange([...balances], { USDT: 1n }, 'DOT', -1n)).toBe(false)
+		expect(
+			canFundExchange(
+				[{ ...balances[0], chain: 'hydration' }, balances[1]],
+				{ USDT: 1n },
+				'DOT',
+				1n,
+			),
+		).toBe(false)
+	})
 })
 
 describe('PSM fixed-rate quotes', () => {
@@ -150,18 +162,40 @@ describe('PSM fixed-rate quotes', () => {
 		expect(psmAmounts({ ...mint, assetIn: 'USDC' }, psm)).toBeUndefined()
 		expect(() => psmAmounts({ ...mint, amount: U128_MAX + 1n }, psm)).toThrow()
 	})
+	test('rejects an exact-output quote whose gross input overflows u128', () => {
+		expect(
+			psmAmounts({ ...redeem, amount: U128_MAX, mode: 'exactOut' }, psm),
+		).toBeUndefined()
+	})
+	test('applies the aggregate debt limit even when the per-asset share has headroom', () => {
+		expect(psmDebtLimit(1_000n, [100n, 900n], [1, 1], 0)).toBe(100n)
+		expect(psmDebtLimit(1_000n, [100n, 1_001n], [1, 1], 0)).toBe(0n)
+		expect(psmDebtLimit(1_000n, [0n, 0n], [0, 1], 0)).toBe(0n)
+		expect(psmDebtLimit(1_000n, [0n, 0n], [0, 0], 0)).toBe(0n)
+	})
 })
 
 describe('Swap execution bounds', () => {
 	test('rounds maximum spending up and minimum receipt down', () => {
-		expect(slippageLimit(101n, 50, true)).toBe(102n)
+		expect(slippageLimit(101n, 50, 'maximum')).toBe(102n)
 		expect(slippageLimit(101n, 50)).toBe(100n)
 		expect(() => slippageLimit(100n, 501)).toThrow()
 		expect(() => slippageLimit(100n, -1)).toThrow()
 	})
+	test('keeps minimum receipts positive and maximum inputs encodable at the boundaries', () => {
+		expect(slippageLimit(1n, 500)).toBe(1n)
+		expect(slippageLimit(U128_MAX, 500, 'maximum')).toBe(U128_MAX)
+		expect(slippageLimit(U128_MAX - 1n, 0, 'maximum')).toBe(U128_MAX - 1n)
+		for (const amount of [0n, -1n, U128_MAX + 1n]) {
+			expect(() => slippageLimit(amount, 50)).toThrow('Invalid token amount')
+		}
+		for (const bps of [0.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+			expect(() => slippageLimit(100n, bps)).toThrow('Slippage')
+		}
+	})
 })
 
-const fakeApi = (withPsm = false) => {
+const fakeApi = (withPsm = false, lpFee = pool.fee) => {
 	const internal = swapLocation('dotUSD')
 	const pair = [internal, swapLocation('USDT')]
 	const pairs = [pair, [internal, swapLocation('USDC')]]
@@ -234,7 +268,7 @@ const fakeApi = (withPsm = false) => {
 			consts: {
 				psm: { palletId: '0x70792f706567736d' },
 				assetConversion: {
-					lpFee: pool.fee,
+					lpFee,
 				},
 			},
 			call: {
@@ -270,6 +304,85 @@ const fakeApi = (withPsm = false) => {
 
 describe('Asset Hub route construction', () => {
 	afterEach(() => vi.restoreAllMocks())
+	test.each(['exactIn', 'exactOut'] as const)(
+		'quotes every supported pair in %s mode',
+		async (mode) => {
+			for (const assetIn of SwapTokens) {
+				for (const assetOut of SwapTokens) {
+					const { exchange, exactIn, exactOut, client } = fakeApi()
+					const quotes = await exchange.quotes({
+						assetIn,
+						assetOut,
+						amount: 1_000_000n,
+						mode,
+					})
+					if (assetIn === assetOut) {
+						expect(quotes).toEqual([])
+						expect(client.at).not.toHaveBeenCalled()
+						continue
+					}
+					const path =
+						assetIn === 'DOT' || assetOut === 'DOT'
+							? [assetIn, assetOut]
+							: [assetIn, 'DOT', assetOut]
+					expect(quotes).toHaveLength(1)
+					expect(quotes[0]).toMatchObject({
+						kind: 'amm',
+						assetIn,
+						assetOut,
+						path,
+						mode,
+					})
+					expect(
+						mode === 'exactIn' ? quotes[0].amountIn : quotes[0].amountOut,
+					).toBe(1_000_000n)
+					expect(mode === 'exactIn' ? exactIn : exactOut).toHaveBeenCalledTimes(
+						path.length - 1,
+					)
+				}
+			}
+		},
+	)
+	test('retains a valid PSM route when AMM liquidity is missing', async () => {
+		const { exchange, getReserves } = fakeApi(true)
+		getReserves.mockResolvedValue(undefined)
+		expect((await exchange.quotes(mint)).map(({ kind }) => kind)).toEqual([
+			'psm',
+		])
+	})
+	test('rejects unsupported PSM denominations without hiding the AMM route', async () => {
+		const { exchange, query } = fakeApi(true)
+		query.psm.mockResolvedValueOnce({
+			maxDebt: psm.maxDebt,
+			minSwapAmount: 1n,
+			internalDecimals: 12,
+		})
+		expect((await exchange.quotes(mint)).map(({ kind }) => kind)).toEqual([
+			'amm',
+		])
+	})
+	test('keeps full precision across both legs when measuring price impact', async () => {
+		const { exchange, exactIn, getReserves } = fakeApi(false, 0)
+		getReserves
+			.mockResolvedValueOnce([3n, 2n])
+			.mockResolvedValueOnce([1n, 1_000n])
+		exactIn.mockResolvedValueOnce(1n).mockResolvedValueOnce(500n)
+		const [quote] = await exchange.quotes({
+			...mint,
+			assetOut: 'USDC',
+			amount: 1n,
+		})
+		// Marginal output is 1 * (3/2) * (1000/1) = 1500, before the actual 500 output.
+		expect(quote.priceImpactBps).toBe(6666)
+		expect(quote.fee).toBe(0)
+	})
+	test('reports compounded LP fees in parts per million', async () => {
+		const { exchange } = fakeApi()
+		expect((await exchange.quotes(mint))[0].fee).toBe(5991)
+		expect((await exchange.quotes({ ...mint, assetIn: 'DOT' }))[0].fee).toBe(
+			3000,
+		)
+	})
 	test('reads only the requested pools at the finalized block and skips empty pools', async () => {
 		const { exchange, client, getReserves } = fakeApi()
 		expect((await exchange.quotes(mint))[0].hash).toBe('0x5678')
@@ -388,6 +501,19 @@ describe('Asset Hub route construction', () => {
 		])
 		expect(exactOut.mock.calls[1][2]).toBe(ceilDiv(1_000_000_000n, 997n))
 	})
+	test.each(['exactIn', 'exactOut'] as const)(
+		'selects AMM ahead of PSM when its %s quote is better',
+		async (mode) => {
+			const { exchange, exactIn, exactOut } = fakeApi(true)
+			const price = mode === 'exactIn' ? exactIn : exactOut
+			price
+				.mockResolvedValueOnce(1_000_000n)
+				.mockResolvedValueOnce(mode === 'exactIn' ? 2_000_000n : 500_000n)
+			expect(
+				(await exchange.quotes({ ...mint, mode })).map(({ kind }) => kind),
+			).toEqual(['amm', 'psm'])
+		},
+	)
 	test('never invents routes for missing pools or an unapproved PSM asset', async () => {
 		const { exchange, getReserves, query } = fakeApi(true)
 		getReserves.mockResolvedValue(undefined)
@@ -408,7 +534,7 @@ describe('Asset Hub route construction', () => {
 		).toHaveBeenCalledWith(
 			[swapLocation('DOT'), swapLocation('USDT')],
 			quote.amountOut,
-			slippageLimit(quote.amountIn, 50, true),
+			slippageLimit(quote.amountIn, 50, 'maximum'),
 			'recipient',
 			true,
 		)
@@ -429,6 +555,75 @@ describe('Asset Hub route construction', () => {
 			1_000_000n,
 		)
 		expect(client.tx.utility.batchAll).toHaveBeenCalledOnce()
+	})
+	test('encodes redemption followed by a transfer in the same atomic batch', async () => {
+		const { exchange, client } = fakeApi(true)
+		const quote = (await exchange.quotes({ ...redeem, mode: 'exactOut' })).find(
+			({ kind }) => kind === 'psm',
+		)!
+		exchange.swap(quote, 'sender', 'recipient', 50)
+		expect(client.tx.psm.redeem).toHaveBeenCalledWith(
+			swapLocation('dotUSD'),
+			swapLocation('USDT'),
+			quote.amountIn,
+			psm.redeemFee,
+		)
+		expect(client.tx.assets.transfer).toHaveBeenCalledWith(
+			1984,
+			'recipient',
+			quote.amountOut,
+		)
+		expect(client.tx.utility.batchAll.mock.calls[0][0]).toEqual([
+			client.tx.psm.redeem.mock.results[0].value.call,
+			client.tx.assets.transfer.mock.results[0].value.call,
+		])
+	})
+	test('does not add a transfer when the PSM recipient is the signer', async () => {
+		const { exchange, client } = fakeApi(true)
+		const [quote] = await exchange.quotes(mint)
+		exchange.swap(quote, 'sender', 'sender', 50)
+		expect(client.tx.psm.mint).toHaveBeenCalledOnce()
+		expect(client.tx.utility.batchAll).not.toHaveBeenCalled()
+		expect(client.tx.assets.transfer).not.toHaveBeenCalled()
+	})
+	test('uses the same boundary slippage limits in encoded transactions as the UI', async () => {
+		const { exchange, client } = fakeApi()
+		const [quote] = await exchange.quotes({ ...mint, assetIn: 'DOT' })
+		exchange.swap({ ...quote, amountOut: 1n }, 'sender', 'recipient', 500)
+		expect(
+			client.tx.assetConversion.swapExactTokensForTokens.mock.calls[0][2],
+		).toBe(1n)
+		exchange.swap(
+			{ ...quote, mode: 'exactOut', amountIn: U128_MAX },
+			'sender',
+			'recipient',
+			500,
+		)
+		expect(
+			client.tx.assetConversion.swapTokensForExactTokens.mock.calls[0][2],
+		).toBe(U128_MAX)
+	})
+	test('applies the shared quote lifetime at its exact boundary and rejects invalid timestamps', async () => {
+		const { exchange } = fakeApi()
+		vi.spyOn(Date, 'now').mockReturnValue(100_000)
+		const [quote] = await exchange.quotes(mint)
+		expect(() =>
+			exchange.swap(
+				{ ...quote, fetchedAt: 100_000 - SwapQuoteExpiryMs },
+				'sender',
+				'recipient',
+				50,
+			),
+		).not.toThrow()
+		for (const fetchedAt of [
+			100_000 - SwapQuoteExpiryMs - 1,
+			100_001,
+			Number.NaN,
+		]) {
+			expect(() =>
+				exchange.swap({ ...quote, fetchedAt }, 'sender', 'recipient', 50),
+			).toThrow('Quote expired')
+		}
 	})
 	test('blocks stale swap quotes', () => {
 		const { exchange } = fakeApi()

@@ -13,7 +13,7 @@ export type SwapPoolToken = Exclude<SwapToken, 'DOT'>
 // Whether the requested amount fixes the input to spend or the output to receive.
 export type SwapMode = 'exactIn' | 'exactOut'
 
-// Reserves and trading fee for a DOT/token automated market maker (AMM) pool.
+// Reserves and trading fee (parts per million) for a DOT/token automated market maker pool.
 export type SwapPool = {
 	asset: SwapPoolToken
 	reserveDot: bigint
@@ -47,7 +47,9 @@ export type SwapQuote = SwapRequest & {
 	path: SwapToken[]
 	amountIn: bigint
 	amountOut: bigint
+	// Conversion fee in parts per million, excluding the network transaction fee.
 	fee: number
+	// Price movement relative to the fee-adjusted spot rate, in basis points.
 	priceImpactBps: number
 	hash: HexString
 	fetchedAt: number

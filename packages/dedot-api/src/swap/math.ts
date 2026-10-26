@@ -1,53 +1,25 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { StablecoinBalance, SwapPsm, SwapRequest, SwapToken } from 'types'
+import { maxBigInt, minBigInt } from '@polkadot-cloud/utils'
+import { PERBILL, PERMILL, U128_MAX } from 'consts/math'
+import type { SwapPsm, SwapRequest } from 'types'
+import { assertSwapAmount, ceilDiv } from 'utils'
 
-export const PERMILL = 1_000_000n
-export const U128_MAX = (1n << 128n) - 1n
-
-// Outputs cannot fund an upfront fee. Reserve minimum balances and frozen funds
-// together with every planned debit, including a fee paid in the input asset.
-export const canFundExchange = (
-	balances: StablecoinBalance[],
-	spends: Partial<Record<SwapToken, bigint>>,
-	feeAsset: SwapToken,
-	fee: bigint | undefined,
-) => {
-	if (fee === undefined || fee < 0n) return false
-	const debits = new Map<string, bigint>(
-		Object.entries(spends).filter(([, amount]) => amount > 0n),
-	)
-	debits.set(feeAsset, (debits.get(feeAsset) ?? 0n) + fee)
-	for (const [token, debit] of debits) {
-		const balance = balances.find(
-			(item) => item.chain === 'statemint' && item.symbol === token,
-		)
-		if (!balance) return false
-		const floor =
-			balance.frozen > balance.existentialDeposit
-				? balance.frozen
-				: balance.existentialDeposit
-		if (balance.free < floor + debit) return false
-	}
-	return true
-}
-export const ceilDiv = (value: bigint, divisor: bigint) => {
-	if (value < 0n || divisor <= 0n) throw new Error('Invalid division')
-	return (value + divisor - 1n) / divisor
-}
-
-export const assertAmount = (amount: bigint) => {
-	if (amount <= 0n || amount > U128_MAX) throw new Error('Invalid token amount')
-}
-
-export const slippageLimit = (amount: bigint, bps: number, maximum = false) => {
-	assertAmount(amount)
-	if (!Number.isInteger(bps) || bps < 0 || bps > 500)
-		throw new Error('Slippage must be between 0% and 5%')
-	return maximum
-		? ceilDiv(amount * BigInt(10_000 + bps), 10_000n)
-		: (amount * BigInt(10_000 - bps)) / 10_000n
+// Matches the PSM's Perbill share rounding and the remaining aggregate debt ceiling.
+export const psmDebtLimit = (
+	maxDebt: bigint,
+	debts: bigint[],
+	weights: number[],
+	index: number,
+): bigint => {
+	const totalWeight = weights.reduce((sum, weight) => sum + BigInt(weight), 0n)
+	const weight = BigInt(weights[index] ?? 0)
+	const share = totalWeight > 0n ? (weight * PERBILL) / totalWeight : 0n
+	const weightedCap = (maxDebt * share) / PERBILL
+	const otherDebt =
+		debts.reduce((sum, debt) => sum + debt, 0n) - (debts[index] ?? 0n)
+	return minBigInt(weightedCap, maxBigInt(maxDebt - otherDebt, 0n))
 }
 
 // Permill fees use mul_ceil in the PSM. Invert net = floor(gross * (1-fee)).
@@ -60,7 +32,7 @@ export const psmAmounts = (request: SwapRequest, psm: SwapPsm) => {
 		(mint && (psm.status !== 'AllEnabled' || psm.weight === 0))
 	)
 		return undefined
-	assertAmount(request.amount)
+	assertSwapAmount(request.amount)
 	const fee = mint ? psm.mintFee : psm.redeemFee
 	if (!Number.isInteger(fee) || fee < 0 || fee >= Number(PERMILL))
 		return undefined
