@@ -759,7 +759,7 @@ test('replacing the service invalidates a pending fee and the old quote immediat
 })
 
 test.each(['exactIn', 'exactOut'] as const)(
-	'%s clears both amounts on broadcast and keeps the spinner through inclusion and finalization',
+	'%s clears both amounts on broadcast and stops the spinner at inclusion',
 	async (mode) => {
 		await render()
 		if (mode === 'exactOut') await click('exactOutput')
@@ -797,10 +797,12 @@ test.each(['exactIn', 'exactOut'] as const)(
 		await emitStatus({ type: 'BestChainBlockIncluded', value: block })
 		expect(refreshBalances).toHaveBeenCalledOnce()
 		expect(input(editable).value).toBe('0.2')
-		expect(isSpinning()).toBe(true)
+		expect(isSpinning()).toBe(false)
+		expect(getUid(uid)?.submitted).toBe(true)
 		await emitStatus({ type: 'NoLongerInBestChain' })
 		expect(isSpinning()).toBe(true)
 		await emitStatus({ type: 'BestChainBlockIncluded', value: block })
+		expect(isSpinning()).toBe(false)
 		await emitStatus({ type: 'Finalized', value: block })
 		expect(isSpinning()).toBe(false)
 		expect(getUid(uid)).toBeUndefined()
@@ -884,6 +886,7 @@ test('a second swap can be submitted before the first is included, using the nex
 	expect(input('youPay').value).toBe('0.2')
 	const block = { blockHash: '0x01' as const, blockNumber: 1, txIndex: 0 }
 	await emitStatus({ type: 'BestChainBlockIncluded', value: block }, 0)
+	expect(isSpinning()).toBe(true)
 	await emitStatus({ type: 'Finalized', value: block }, 0)
 	expect(getUid(firstUid)).toBeUndefined()
 	expect(getUid(secondUid)?.submitted).toBe(true)
@@ -893,6 +896,10 @@ test('a second swap can be submitted before the first is included, using the nex
 
 	await emitStatus({ type: 'Broadcasting' }, 1)
 	expect(input('youPay').value).toBe('')
+	expect(isSpinning()).toBe(true)
+	await emitStatus({ type: 'BestChainBlockIncluded', value: block }, 1)
+	expect(isSpinning()).toBe(false)
+	expect(getUid(secondUid)?.submitted).toBe(true)
 	await emitStatus({ type: 'Finalized', value: block }, 1)
 	expect(isSpinning()).toBe(false)
 	expect(getUid(secondUid)).toBeUndefined()
@@ -909,5 +916,5 @@ test('an inclusion without a preceding broadcast status releases the form before
 	await enterAmount('0.2')
 	await advance(250)
 	expect(submitButton().disabled).toBe(false)
-	expect(isSpinning()).toBe(true)
+	expect(isSpinning()).toBe(false)
 })

@@ -9,7 +9,8 @@ export const Sync = () => {
 	const { syncing } = useSyncing(['initialization'])
 	const { uids } = useTxMeta()
 	const transactionActive = uids.some(
-		({ submitted, pending }) => submitted || pending,
+		({ submitted, broadcasted, pending }) =>
+			(submitted && !broadcasted) || pending,
 	)
 
 	return syncing || transactionActive ? (
