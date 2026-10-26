@@ -9,7 +9,9 @@ import {
 } from './stablecoins'
 
 export const SwapTokens: SwapToken[] = ['DOT', 'dotUSD', 'USDT', 'USDC']
+
 export const SwapPoolTokens: SwapPoolToken[] = ['dotUSD', 'USDT', 'USDC']
+
 export const swapAssetId = (token: SwapPoolToken) =>
 	getStablecoinAssetConfig('statemint', token)!.assetId!
 
