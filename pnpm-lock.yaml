@@ -904,7 +904,7 @@ importers:
         version: 19.3.1
       react-i18next:
         specifier: ^17.1.0
-        version: 17.1.0
+        version: 17.1.0(i18next@26.5.2(typescript@6.0.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@6.0.3)
       utils:
         specifier: workspace:*
         version: link:../utils
