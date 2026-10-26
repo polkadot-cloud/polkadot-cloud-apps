@@ -29,8 +29,10 @@ import type {
 	ErasStakersOverviewEntries,
 	ErasStakersPagedEntries,
 } from './staking'
+import type { SwapInterface } from './swap'
 
 export interface ServiceInterface {
+	swap?: SwapInterface
 	stablecoins: {
 		query: {
 			balances: (address: string) => Promise<StablecoinBalance[]>

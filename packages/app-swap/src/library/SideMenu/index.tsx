@@ -20,7 +20,6 @@ export const SideMenu = ({
 			<DefaultMenu
 				barItems={[]}
 				getActivePageForCategory={() => '/send'}
-				localCategory="stake"
 				pageCategories={[]}
 				pagesConfig={[]}
 				renderMain={renderMain}
