@@ -2,11 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
-import {
-	AssetHubPoolTokens,
-	assetHubAssetId,
-	assetHubLocation,
-} from 'consts/assetHub'
+import { SwapPoolTokens, swapAssetId, swapLocation } from 'consts/swap'
 import {
 	ChainHeadBlockNotPinnedError,
 	ChainHeadBlockPrunedError,
@@ -16,23 +12,23 @@ import {
 import type { GenericStorageQuery } from 'dedot/types'
 import { blake2AsHex, concatU8a, hexToU8a, stringToU8a } from 'dedot/utils'
 import type {
-	AssetHubExchange,
-	AssetHubPool,
-	AssetHubPsm,
-	AssetHubSwapQuote,
-	AssetHubToken,
+	SwapInterface,
+	SwapPool,
+	SwapPsm,
+	SwapQuote,
+	SwapToken,
 } from 'types'
 import { asTx } from '../util'
 import { assertAmount, PERMILL, psmAmounts, slippageLimit } from './math'
 
-type Location = ReturnType<typeof assetHubLocation>
+type Location = ReturnType<typeof swapLocation>
 type Pair = [Location, Location]
 type PsmInfo = {
 	maxDebt: bigint
 	minSwapAmount: bigint
 	internalDecimals: number
 }
-type External = { status: AssetHubPsm['status']; decimals: number }
+type External = { status: SwapPsm['status']; decimals: number }
 
 // PSM is newer than the shared generated chain package. Bind its small interface to
 // the connected runtime's metadata; calls are encoded by Dedot, never by hand.
@@ -73,22 +69,22 @@ const isUnavailableBlock = (error: unknown) =>
 	error instanceof ChainHeadBlockPrunedError ||
 	(error instanceof Error && error.message.startsWith('Block is not pinned'))
 
-export const createAssetHubExchange = (
+export const createSwapInterface = (
 	api: DedotClient<PolkadotAssetHubApi>,
-): AssetHubExchange => {
-	const readQuotes: AssetHubExchange['quotes'] = async (request) => {
+): SwapInterface => {
+	const readQuotes: SwapInterface['quotes'] = async (request) => {
 		assertAmount(request.amount)
 		if (request.assetIn === request.assetOut) return []
 		const fetchedAt = Date.now()
 		const { hash } = await api.block.finalized()
 		const at = await api.at(hash)
 		const pools = await Promise.all(
-			AssetHubPoolTokens.filter(
+			SwapPoolTokens.filter(
 				(asset) => asset === request.assetIn || asset === request.assetOut,
-			).map(async (asset): Promise<AssetHubPool | undefined> => {
+			).map(async (asset): Promise<SwapPool | undefined> => {
 				const reserves = await at.call.assetConversionApi.getReserves(
-					assetHubLocation('DOT'),
-					assetHubLocation(asset),
+					swapLocation('DOT'),
+					swapLocation(asset),
 				)
 				if (!reserves || reserves.some((reserve) => reserve <= 0n))
 					return undefined
@@ -100,7 +96,7 @@ export const createAssetHubExchange = (
 				}
 			}),
 		)
-		let psm: AssetHubPsm | null = null
+		let psm: SwapPsm | null = null
 		const pallet = at.registry.metadata.pallets.find(
 			({ name }) => name === 'Psm',
 		)
@@ -111,8 +107,8 @@ export const createAssetHubExchange = (
 			)
 		) {
 			const query = at.query.psm as unknown as PsmQueries
-			const internal = assetHubLocation('dotUSD')
-			const pair: Pair = [internal, assetHubLocation('USDT')]
+			const internal = swapLocation('dotUSD')
+			const pair: Pair = [internal, swapLocation('USDT')]
 			const [info, rows] = await Promise.all([
 				query.psm(internal),
 				query.externalAssets.entries(internal),
@@ -147,7 +143,7 @@ export const createAssetHubExchange = (
 						query.assetCeilingWeight.multi(pairs),
 						query.mintingFee(pair),
 						query.redemptionFee(pair),
-						at.query.assets.account([assetHubAssetId('USDT'), reserveAccount]),
+						at.query.assets.account([swapAssetId('USDT'), reserveAccount]),
 					],
 				)
 				const debt = debts[usdtIndex] ?? 0n
@@ -177,7 +173,7 @@ export const createAssetHubExchange = (
 				}
 			}
 		}
-		const result: AssetHubSwapQuote[] = []
+		const result: SwapQuote[] = []
 		const psmQuote = psm && psmAmounts(request, psm)
 		if (psmQuote)
 			result.push({
@@ -189,7 +185,7 @@ export const createAssetHubExchange = (
 				hash,
 				fetchedAt,
 			})
-		const path: AssetHubToken[] =
+		const path: SwapToken[] =
 			request.assetIn === 'DOT' || request.assetOut === 'DOT'
 				? [request.assetIn, request.assetOut]
 				: [request.assetIn, 'DOT', request.assetOut]
@@ -211,8 +207,8 @@ export const createAssetHubExchange = (
 		if (request.mode === 'exactOut') indexes.reverse()
 		for (const index of indexes) {
 			const value = await price(
-				assetHubLocation(path[index]),
-				assetHubLocation(path[index + 1]),
+				swapLocation(path[index]),
+				swapLocation(path[index + 1]),
 				amount,
 				true,
 			)
@@ -255,7 +251,7 @@ export const createAssetHubExchange = (
 		})
 	}
 
-	const quotes: AssetHubExchange['quotes'] = async (request) => {
+	const quotes: SwapInterface['quotes'] = async (request) => {
 		try {
 			return await readQuotes(request)
 		} catch (error) {
@@ -266,7 +262,7 @@ export const createAssetHubExchange = (
 		}
 	}
 
-	const swap: AssetHubExchange['swap'] = (
+	const swap: SwapInterface['swap'] = (
 		quote,
 		address,
 		recipient,
@@ -280,14 +276,14 @@ export const createAssetHubExchange = (
 			const psmTx = api.tx.psm as unknown as PsmTransactions
 			const mint = quote.assetIn === 'USDT'
 			const call = (mint ? psmTx.mint : psmTx.redeem)(
-				assetHubLocation('dotUSD'),
-				assetHubLocation('USDT'),
+				swapLocation('dotUSD'),
+				swapLocation('USDT'),
 				quote.amountIn,
 				quote.fee,
 			)
 			if (address === recipient) return call
 			const transfer = api.tx.assets.transfer(
-				assetHubAssetId(mint ? 'dotUSD' : 'USDT'),
+				swapAssetId(mint ? 'dotUSD' : 'USDT'),
 				recipient,
 				quote.amountOut,
 			)
@@ -297,7 +293,7 @@ export const createAssetHubExchange = (
 			) => SubmittableExtrinsic
 			return batchAll([call.call, asTx(transfer).call])
 		}
-		const path = quote.path.map(assetHubLocation)
+		const path = quote.path.map(swapLocation)
 		return quote.mode === 'exactIn'
 			? asTx(
 					api.tx.assetConversion.swapExactTokensForTokens(

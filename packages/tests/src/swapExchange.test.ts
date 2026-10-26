@@ -3,28 +3,23 @@
 
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
-import type {
-	AssetHubPool,
-	AssetHubPsm,
-	AssetHubSwapQuote,
-	AssetHubSwapRequest,
-} from 'types'
+import type { SwapPool, SwapPsm, SwapQuote, SwapRequest } from 'types'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { assetHubLocation } from '../../consts/src/assetHub'
+import { swapLocation } from '../../consts/src/swap'
 import {
 	ChainHeadBlockNotPinnedError,
 	ChainHeadBlockPrunedError,
 } from '../../dedot-api/node_modules/dedot/index.js'
-import { createAssetHubExchange } from '../../dedot-api/src/assetHub'
+import { createSwapInterface } from '../../dedot-api/src/swap'
 import {
 	canFundExchange,
 	ceilDiv,
 	psmAmounts,
 	slippageLimit,
 	U128_MAX,
-} from '../../dedot-api/src/assetHub/math'
+} from '../../dedot-api/src/swap/math'
 
-const psm: AssetHubPsm = {
+const psm: SwapPsm = {
 	status: 'AllEnabled',
 	maxDebt: 10_000_000_000_000n,
 	debt: 2_000_000_000_000n,
@@ -34,19 +29,19 @@ const psm: AssetHubPsm = {
 	redeemFee: 100,
 	weight: 1_000_000,
 }
-const pool: AssetHubPool = {
+const pool: SwapPool = {
 	asset: 'dotUSD',
 	reserveDot: 1_000_000_000n,
 	reserveAsset: 2_000_000_000n,
 	fee: 3_000,
 }
-const mint: AssetHubSwapRequest = {
+const mint: SwapRequest = {
 	assetIn: 'USDT',
 	assetOut: 'dotUSD',
 	amount: 1_000_000n,
 	mode: 'exactIn',
 }
-const redeem: AssetHubSwapRequest = {
+const redeem: SwapRequest = {
 	...mint,
 	assetIn: 'dotUSD',
 	assetOut: 'USDT',
@@ -167,9 +162,9 @@ describe('Swap execution bounds', () => {
 })
 
 const fakeApi = (withPsm = false) => {
-	const internal = assetHubLocation('dotUSD')
-	const pair = [internal, assetHubLocation('USDT')]
-	const pairs = [pair, [internal, assetHubLocation('USDC')]]
+	const internal = swapLocation('dotUSD')
+	const pair = [internal, swapLocation('USDT')]
+	const pairs = [pair, [internal, swapLocation('USDC')]]
 	const query = {
 		psm: Object.assign(
 			vi.fn(async () => ({
@@ -262,7 +257,7 @@ const fakeApi = (withPsm = false) => {
 	}
 	return {
 		client,
-		exchange: createAssetHubExchange(
+		exchange: createSwapInterface(
 			client as unknown as DedotClient<PolkadotAssetHubApi>,
 		),
 		exactIn,
@@ -280,8 +275,8 @@ describe('Asset Hub route construction', () => {
 		expect((await exchange.quotes(mint))[0].hash).toBe('0x5678')
 		expect(client.at).toHaveBeenCalledExactlyOnceWith('0x5678')
 		expect(getReserves.mock.calls.map((call) => call[1])).toEqual([
-			assetHubLocation('dotUSD'),
-			assetHubLocation('USDT'),
+			swapLocation('dotUSD'),
+			swapLocation('USDT'),
 		])
 		getReserves
 			.mockResolvedValueOnce(undefined)
@@ -301,7 +296,7 @@ describe('Asset Hub route construction', () => {
 			),
 		).toBe(false)
 		expect(query.externalAssets.entries).toHaveBeenCalledWith(
-			assetHubLocation('dotUSD'),
+			swapLocation('dotUSD'),
 		)
 		expect(query.psmDebt.multi).toHaveBeenCalledTimes(2)
 		expect(query.assetCeilingWeight.multi).toHaveBeenCalledWith(
@@ -388,8 +383,8 @@ describe('Asset Hub route construction', () => {
 		})
 		expect(quotes[0].kind).toBe('psm')
 		expect(exactOut.mock.calls[0].slice(0, 2)).toEqual([
-			assetHubLocation('DOT'),
-			assetHubLocation('dotUSD'),
+			swapLocation('DOT'),
+			swapLocation('dotUSD'),
 		])
 		expect(exactOut.mock.calls[1][2]).toBe(ceilDiv(1_000_000_000n, 997n))
 	})
@@ -411,7 +406,7 @@ describe('Asset Hub route construction', () => {
 		expect(
 			client.tx.assetConversion.swapTokensForExactTokens,
 		).toHaveBeenCalledWith(
-			[assetHubLocation('DOT'), assetHubLocation('USDT')],
+			[swapLocation('DOT'), swapLocation('USDT')],
 			quote.amountOut,
 			slippageLimit(quote.amountIn, 50, true),
 			'recipient',
@@ -423,8 +418,8 @@ describe('Asset Hub route construction', () => {
 		const [quote] = await exchange.quotes(mint)
 		exchange.swap(quote, 'sender', 'recipient', 50)
 		expect(client.tx.psm.mint).toHaveBeenCalledWith(
-			assetHubLocation('dotUSD'),
-			assetHubLocation('USDT'),
+			swapLocation('dotUSD'),
+			swapLocation('USDT'),
 			1_000_000n,
 			0,
 		)
@@ -442,7 +437,7 @@ describe('Asset Hub route construction', () => {
 			amountIn: 1n,
 			amountOut: 1n,
 			fetchedAt: Date.now() - 31_000,
-		} as AssetHubSwapQuote
+		} as SwapQuote
 		expect(() => exchange.swap(quote, 'sender', 'recipient', 50)).toThrow(
 			/expired/,
 		)

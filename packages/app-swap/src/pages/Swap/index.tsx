@@ -5,13 +5,13 @@ import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import classNames from 'classnames'
-import { assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
-import { slippageLimit } from 'dedot-api/assetHub/math'
+import { swapDecimals } from 'consts/swap'
+import { slippageLimit } from 'dedot-api/swap/math'
 import { useStablecoinBalances, useTheme } from 'hooks'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AssetHubToken, ImportedAccount, SwapMode } from 'types'
+import type { ImportedAccount, SwapMode, SwapToken } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
@@ -24,7 +24,7 @@ import {
 	TransactionAction,
 	tokenAmount,
 	tokenOptions,
-} from '../../library/AssetHub'
+} from '../../library/Swap'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
@@ -39,19 +39,19 @@ export const Swap = () => {
 	const accounts = useSendAccounts()
 	const account = accounts.fromAccount
 	const balances = useStablecoinBalances(account?.address)
-	const [assetIn, setAssetIn] = useState<AssetHubToken>('USDT')
-	const [assetOut, setAssetOut] = useState<AssetHubToken>('dotUSD')
+	const [assetIn, setAssetIn] = useState<SwapToken>('USDT')
+	const [assetOut, setAssetOut] = useState<SwapToken>('dotUSD')
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<SwapMode>('exactIn')
 	const [amountOnTop, setAmountOnTop] = useState(true)
-	const [feeAsset, setFeeAsset] = useState<AssetHubToken>('DOT')
+	const [feeAsset, setFeeAsset] = useState<SwapToken>('DOT')
 	const [slippage, setSlippage] = useState(defaultSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
 	const amountToken = mode === 'exactIn' ? assetIn : assetOut
 	const quotedToken = mode === 'exactIn' ? assetOut : assetIn
-	const parsed = toPlanck(amount, assetHubDecimals(amountToken))
+	const parsed = toPlanck(amount, swapDecimals(amountToken))
 	useEffect(() => {
 		void balances.refresh()
 	}, [balances.refresh])
@@ -103,7 +103,7 @@ export const Swap = () => {
 				{...(editable ? { onChange: setAmount } : { readOnly: true as const })}
 				disabled={!editable && !quote}
 				maxAvailable={editable && !paying ? '0' : tokenAmount(available, token)}
-				maxDecimals={assetHubDecimals(token)}
+				maxDecimals={swapDecimals(token)}
 				syncing={balances.loading}
 				options={tokenOptions.filter(
 					(option) => option.value !== (editable ? quotedToken : amountToken),

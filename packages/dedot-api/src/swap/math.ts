@@ -1,12 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type {
-	AssetHubPsm,
-	AssetHubSwapRequest,
-	AssetHubToken,
-	StablecoinBalance,
-} from 'types'
+import type { StablecoinBalance, SwapPsm, SwapRequest, SwapToken } from 'types'
 
 export const PERMILL = 1_000_000n
 export const U128_MAX = (1n << 128n) - 1n
@@ -15,8 +10,8 @@ export const U128_MAX = (1n << 128n) - 1n
 // together with every planned debit, including a fee paid in the input asset.
 export const canFundExchange = (
 	balances: StablecoinBalance[],
-	spends: Partial<Record<AssetHubToken, bigint>>,
-	feeAsset: AssetHubToken,
+	spends: Partial<Record<SwapToken, bigint>>,
+	feeAsset: SwapToken,
 	fee: bigint | undefined,
 ) => {
 	if (fee === undefined || fee < 0n) return false
@@ -56,7 +51,7 @@ export const slippageLimit = (amount: bigint, bps: number, maximum = false) => {
 }
 
 // Permill fees use mul_ceil in the PSM. Invert net = floor(gross * (1-fee)).
-export const psmAmounts = (request: AssetHubSwapRequest, psm: AssetHubPsm) => {
+export const psmAmounts = (request: SwapRequest, psm: SwapPsm) => {
 	const mint = request.assetIn === 'USDT' && request.assetOut === 'dotUSD'
 	const redeem = request.assetIn === 'dotUSD' && request.assetOut === 'USDT'
 	if (

@@ -6,10 +6,10 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { act, createElement, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type {
-	AssetHubSwapQuote,
 	ImportedAccount,
 	ServiceInterface,
 	SubmitTxProps,
+	SwapQuote,
 } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Swap } from '../../app-swap/src/pages/Swap'
@@ -162,7 +162,7 @@ vi.mock('../../ui-core/src/input', async () => ({
 	SendForm: (await import('../../ui-core/src/input/SendForm')).SendForm,
 }))
 
-const quote = (fetchedAt: number, amountOut = 99_000n): AssetHubSwapQuote => ({
+const quote = (fetchedAt: number, amountOut = 99_000n): SwapQuote => ({
 	assetIn: 'USDT',
 	assetOut: 'dotUSD',
 	amount: 100_000n,
@@ -235,14 +235,14 @@ beforeEach(() => {
 	estimate.mockResolvedValue(100n)
 	refreshBalances.mockResolvedValue(undefined)
 	swap.mockImplementation(
-		(data: AssetHubSwapQuote) =>
+		(data: SwapQuote) =>
 			({
 				toHex: () => `0x${data.amountOut.toString(16)}`,
 				call: { pallet: 'AssetConversion', palletCall: { name: 'Swap' } },
 			}) as SubmittableExtrinsic,
 	)
 	state.serviceApi = {
-		assetHub: { quotes, swap },
+		swap: { quotes, swap },
 		stablecoins: {
 			fee: { estimate, paymentOptions: () => undefined },
 		},
@@ -270,7 +270,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 			amountIn: exactIn ? 100_000n : 101_001n,
 			amountOut: exactIn ? 99_001n : 100_000n,
 		}
-		const reversed: AssetHubSwapQuote = {
+		const reversed: SwapQuote = {
 			...initial,
 			assetIn: 'dotUSD',
 			assetOut: 'USDT',
@@ -398,7 +398,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 		[...routeView().querySelectorAll('img')].map((icon) => icon.alt),
 	).toEqual(['USDT', 'DOT', 'dotUSD'])
 	const uid = button.dataset.submit
-	const pendingQuotes = deferred<AssetHubSwapQuote[]>()
+	const pendingQuotes = deferred<SwapQuote[]>()
 	const pendingFee = deferred<bigint>()
 	quotes.mockReturnValueOnce(pendingQuotes.promise)
 	estimate.mockReturnValueOnce(pendingFee.promise)
@@ -432,7 +432,7 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	const slippage = container.querySelector<HTMLInputElement>(
 		'input[type="range"]',
 	)!
-	const pendingQuotes = deferred<AssetHubSwapQuote[]>()
+	const pendingQuotes = deferred<SwapQuote[]>()
 	quotes.mockReturnValueOnce(pendingQuotes.promise)
 	await advance(15_000)
 	await advance(250)
@@ -574,7 +574,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 			...quote(Date.now()),
 			mode,
 			kind: 'psm' as const,
-			path: ['USDT', 'dotUSD'] as AssetHubSwapQuote['path'],
+			path: ['USDT', 'dotUSD'] as SwapQuote['path'],
 		}
 		quotes.mockResolvedValueOnce([best, quote(Date.now())])
 		await render()
@@ -678,7 +678,7 @@ test('an empty amount makes no market requests and stops polling after clearing 
 })
 
 test('polling does not overlap an unfinished quote request', async () => {
-	const pending = deferred<AssetHubSwapQuote[]>()
+	const pending = deferred<SwapQuote[]>()
 	quotes.mockReturnValueOnce(pending.promise)
 	await render()
 	await enterAmount('0.1')

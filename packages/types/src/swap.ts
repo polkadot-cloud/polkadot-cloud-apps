@@ -4,18 +4,18 @@
 import type { SubmittableExtrinsic } from 'dedot'
 import type { HexString } from 'dedot/utils'
 
-export type AssetHubToken = 'DOT' | 'dotUSD' | 'USDT' | 'USDC'
-export type AssetHubPoolToken = Exclude<AssetHubToken, 'DOT'>
+export type SwapToken = 'DOT' | 'dotUSD' | 'USDT' | 'USDC'
+export type SwapPoolToken = Exclude<SwapToken, 'DOT'>
 export type SwapMode = 'exactIn' | 'exactOut'
 
-export type AssetHubPool = {
-	asset: AssetHubPoolToken
+export type SwapPool = {
+	asset: SwapPoolToken
 	reserveDot: bigint
 	reserveAsset: bigint
 	fee: number
 }
 
-export type AssetHubPsm = {
+export type SwapPsm = {
 	status: 'AllEnabled' | 'MintingDisabled' | 'AllDisabled'
 	maxDebt: bigint
 	debt: bigint
@@ -26,16 +26,16 @@ export type AssetHubPsm = {
 	weight: number
 }
 
-export type AssetHubSwapRequest = {
-	assetIn: AssetHubToken
-	assetOut: AssetHubToken
+export type SwapRequest = {
+	assetIn: SwapToken
+	assetOut: SwapToken
 	amount: bigint
 	mode: SwapMode
 }
 
-export type AssetHubSwapQuote = AssetHubSwapRequest & {
+export type SwapQuote = SwapRequest & {
 	kind: 'amm' | 'psm'
-	path: AssetHubToken[]
+	path: SwapToken[]
 	amountIn: bigint
 	amountOut: bigint
 	fee: number
@@ -44,10 +44,10 @@ export type AssetHubSwapQuote = AssetHubSwapRequest & {
 	fetchedAt: number
 }
 
-export type AssetHubExchange = {
-	quotes: (request: AssetHubSwapRequest) => Promise<AssetHubSwapQuote[]>
+export type SwapInterface = {
+	quotes: (request: SwapRequest) => Promise<SwapQuote[]>
 	swap: (
-		quote: AssetHubSwapQuote,
+		quote: SwapQuote,
 		address: string,
 		recipient: string,
 		slippageBps: number,

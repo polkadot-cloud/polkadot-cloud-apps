@@ -22,6 +22,7 @@ export type DedotServiceConfig = {
 	network?: DefaultServiceNetworkId
 	nominationPools?: boolean
 	staking?: boolean
+	swap?: boolean
 	stablecoins?: {
 		assetHub?: boolean
 		hydration?: boolean
@@ -31,6 +32,7 @@ export type DedotServiceConfig = {
 export type DedotServiceFeatures = {
 	nominationPools: boolean
 	staking: boolean
+	swap: boolean
 	stablecoins: {
 		assetHub: boolean
 		hydration: boolean

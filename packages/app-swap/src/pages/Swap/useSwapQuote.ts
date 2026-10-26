@@ -5,25 +5,20 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { useApi } from 'hooks/useApi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type {
-	AssetHubSwapQuote,
-	AssetHubSwapRequest,
-	AssetHubToken,
-	ImportedAccount,
-} from 'types'
+import type { ImportedAccount, SwapQuote, SwapRequest, SwapToken } from 'types'
 
-type SwapQuoteOptions = AssetHubSwapRequest & {
+type SwapQuoteOptions = SwapRequest & {
 	account: ImportedAccount | null
 	recipient: string
 	recipientValid: boolean
 	slippage: number
-	feeAsset: AssetHubToken
+	feeAsset: SwapToken
 }
 
 type PreparedQuote = {
-	request: AssetHubSwapRequest
-	quotes?: AssetHubSwapQuote[]
-	quote?: AssetHubSwapQuote
+	request: SwapRequest
+	quotes?: SwapQuote[]
+	quote?: SwapQuote
 	tx?: SubmittableExtrinsic
 	fee?: bigint
 	error?: string
@@ -42,7 +37,7 @@ export const useSwapQuote = ({
 }: SwapQuoteOptions) => {
 	const { serviceApi } = useApi()
 	const { t } = useTranslation('swap')
-	const exchange = serviceApi.assetHub
+	const exchange = serviceApi.swap
 	const [revision, setRevision] = useState(0)
 	const refresh = useCallback(() => setRevision((value) => value + 1), [])
 	const [state, setState] = useState<PreparedQuote>()

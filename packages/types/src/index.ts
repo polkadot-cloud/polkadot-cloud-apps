@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './accounts'
-export * from './assetHub'
 export * from './balances'
 export * from './common'
 export * from './components'
@@ -18,6 +17,7 @@ export * from './pools'
 export * from './stablecoins'
 export * from './staking'
 export * from './stakingLedger'
+export * from './swap'
 export * from './syncing'
 export * from './tips'
 export * from './tx'

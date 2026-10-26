@@ -8,28 +8,28 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { planckToUnit } from '@polkadot-cloud/utils'
 import { SwapDappName } from 'consts'
-import { AssetHubTokens, assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
+import { SwapTokens, swapDecimals } from 'consts/swap'
 import type { SubmittableExtrinsic } from 'dedot'
-import { canFundExchange } from 'dedot-api/assetHub/math'
+import { canFundExchange } from 'dedot-api/swap/math'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import type { ReactNode } from 'react'
 import { useCallback, useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit'
-import type { AssetHubToken, ImportedAccount } from 'types'
+import type { ImportedAccount, SwapToken } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
 import classes from './index.module.scss'
 
-export const tokenOptions = AssetHubTokens.map((value) => ({
+export const tokenOptions = SwapTokens.map((value) => ({
 	value,
 	label: value,
 	icon: getFeeTokenIcon(value),
 }))
-export const tokenAmount = (amount: bigint, token: AssetHubToken) =>
-	planckToUnit(amount, assetHubDecimals(token)).replace(/\.?0+$/, '')
+export const tokenAmount = (amount: bigint, token: SwapToken) =>
+	planckToUnit(amount, swapDecimals(token)).replace(/\.?0+$/, '')
 export const percentage = (permill: number) => `${permill / 10_000}%`
 export const ExchangeNotice = ({
 	children,
@@ -61,8 +61,8 @@ type TransactionActionProps = {
 	estimatedFee: bigint | undefined
 	submissionKey: string
 	account: ImportedAccount | null
-	feeAsset: AssetHubToken
-	spends: Partial<Record<AssetHubToken, bigint>>
+	feeAsset: SwapToken
+	spends: Partial<Record<SwapToken, bigint>>
 	valid: boolean
 	label: string
 	onComplete: () => void
@@ -108,7 +108,7 @@ const TransactionActionInner = ({
 		[serviceApi, feeAsset],
 	)
 	const feeDisplay = useMemo(
-		() => ({ unit: feeAsset, units: assetHubDecimals(feeAsset) }),
+		() => ({ unit: feeAsset, units: swapDecimals(feeAsset) }),
 		[feeAsset],
 	)
 	const feeEstimator = useCallback(async () => {

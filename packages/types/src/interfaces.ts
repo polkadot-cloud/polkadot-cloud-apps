@@ -15,7 +15,6 @@ import type { AccountId32, BytesLike } from 'dedot/codecs'
 import type { Shape } from 'dedot/shape'
 import type { PayloadOptions } from 'dedot/types'
 import type { HexString } from 'dedot/utils'
-import type { AssetHubExchange } from './assetHub'
 import type { IdentityOf, SuperOf } from './identity'
 import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
@@ -30,9 +29,10 @@ import type {
 	ErasStakersOverviewEntries,
 	ErasStakersPagedEntries,
 } from './staking'
+import type { SwapInterface } from './swap'
 
 export interface ServiceInterface {
-	assetHub?: AssetHubExchange
+	swap?: SwapInterface
 	stablecoins: {
 		query: {
 			balances: (address: string) => Promise<StablecoinBalance[]>

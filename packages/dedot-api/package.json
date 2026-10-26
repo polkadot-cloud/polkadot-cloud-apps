@@ -11,7 +11,7 @@
 	},
 	"exports": {
 		".": "./src/index.ts",
-		"./assetHub/math": "./src/assetHub/math.ts"
+		"./swap/math": "./src/swap/math.ts"
 	},
 	"dependencies": {
 		"@dedot/chaintypes": "^0.280.0",
