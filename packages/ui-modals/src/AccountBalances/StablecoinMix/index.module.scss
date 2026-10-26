@@ -5,6 +5,11 @@
 	--popover-headline-padding-block-end: 1rem;
 }
 
+.mixBar {
+	display: flex;
+	padding: 1rem var(--popover-menu-item-padding-inline, 1rem);
+}
+
 .mixIcons {
 	display: inline-flex;
 	align-items: center;

@@ -49,23 +49,20 @@ export const FloatingMenu = ({
 						advancedMode: showAdvancedMode,
 						showHeaders: true,
 					})}
-					<div className="inner">
-						<Page.Side.Heading title={t('support')} minimised={false} />
-						{showAdvancedMode && (
-							<>
-								<Separator />
-								<Primary
-									to={() => {
-										setAdvancedMode(false)
-									}}
-									name={t('exitAdvancedMode')}
-									minimised={false}
-									faIcon={faRightFromBracket}
-									active={false}
-								/>
-							</>
-						)}
-					</div>
+					{showAdvancedMode && (
+						<div className="inner">
+							<Separator />
+							<Primary
+								to={() => {
+									setAdvancedMode(false)
+								}}
+								name={t('exitAdvancedMode')}
+								minimised={false}
+								faIcon={faRightFromBracket}
+								active={false}
+							/>
+						</div>
+					)}
 				</section>
 				<section></section>
 			</Wrapper>

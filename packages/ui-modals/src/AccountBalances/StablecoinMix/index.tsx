@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import {
 	getFeeTokenColor,
 	getFeeTokenIcon,
+	getStablecoinChainLabel,
 	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
 import { useStablecoinBalances } from 'hooks'
@@ -53,7 +54,7 @@ export const StablecoinMix = ({ account }: { account: ImportedAccount }) => {
 				}
 			/>
 			<ConnectItem.Container>
-				<MenuItem padded>
+				<div className={classes.mixBar}>
 					{syncing ? (
 						<BalancePreloader height="0.72rem" width="100%" />
 					) : (
@@ -68,7 +69,8 @@ export const StablecoinMix = ({ account }: { account: ImportedAccount }) => {
 							}))}
 						/>
 					)}
-				</MenuItem>
+				</div>
+				<h4>{getStablecoinChainLabel('statemint')}</h4>
 				{mix.map(({ symbol, share }) => (
 					<MenuItem key={symbol} padded>
 						<div>

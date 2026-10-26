@@ -57,7 +57,11 @@ export const AllBalances = ({ account }: { account: ImportedAccount }) => {
 						<div>
 							<h3>{symbol}</h3>
 							<div>
-								{syncing ? <BalancePreloader /> : <h4>{value.toFormat(2)}</h4>}
+								{syncing ? (
+									<BalancePreloader />
+								) : (
+									<h4>{`${symbol === 'DOT' ? '' : '$'}${value.toFormat()}`}</h4>
+								)}
 							</div>
 						</div>
 					</MenuItem>

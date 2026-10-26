@@ -95,26 +95,30 @@ test('balances and mix use only Polkadot Hub holdings even when Hydration balanc
 		balance('statemint', 'dotUSD', 10),
 		...hydrationBalances,
 	])
-	expect(container.textContent?.match(/\$120\.00/g)).toHaveLength(1)
+	expect(container.querySelector('h2')?.nextElementSibling?.textContent).toBe(
+		'$120.00',
+	)
 	expect(container.textContent).toContain('Polkadot Hub')
 	expect(container.textContent).not.toMatch(/Hydration|HOLLAR/)
 
 	await renderMix()
+	expect(container.querySelector('h4')?.textContent).toBe('Polkadot Hub')
 	expect(
 		container.querySelector('[role="img"]')?.getAttribute('aria-label'),
 	).toBe('USDC: 30%, USDT: 60%, dotUSD: 10%')
 	for (const value of ['30%', '60%', '10%']) {
 		expect(container.textContent).toContain(value)
 	}
-	expect(container.textContent).not.toMatch(
-		/Polkadot Hub|Hydration|HOLLAR|100%|\$/,
-	)
+	expect(container.textContent).not.toMatch(/Hydration|HOLLAR|100%|\$/)
 })
 
 test('Hydration-only holdings leave both views empty of value with zero mix percentages', async () => {
 	await render(hydrationBalances)
-	expect(container.textContent?.match(/\$0\.00/g)).toHaveLength(1)
+	expect(container.querySelector('h2')?.nextElementSibling?.textContent).toBe(
+		'$0.00',
+	)
 	await renderMix()
+	expect(container.querySelector('h4')?.textContent).toBe('Polkadot Hub')
 	expect(
 		container.querySelector('[role="img"]')?.getAttribute('aria-label'),
 	).toBe('USDC: 0%, USDT: 0%, dotUSD: 0%')
