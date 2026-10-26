@@ -100,7 +100,8 @@ export const Swap = () => {
 				value={editable ? amount : (quotedAmount ?? '0.00')}
 				{...(editable ? { onChange: setAmount } : { readOnly: true as const })}
 				disabled={!editable && !quote}
-				maxAvailable={editable && !paying ? '0' : tokenAmount(available, token)}
+				maxAvailable={tokenAmount(available, token)}
+				allowMax={paying}
 				maxDecimals={swapDecimals(token)}
 				syncing={balances.loading}
 				options={tokenOptions.filter(
