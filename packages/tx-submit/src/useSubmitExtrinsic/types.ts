@@ -16,8 +16,6 @@ export interface UseSubmitExtrinsicProps extends TxFeeOptions {
 	}
 	shouldSubmit: boolean
 	feeDisplay?: TxFeeDisplay
-	// Ledger metadata proofs always use the chain's native currency information.
-	signingNetworkInfo?: { decimals: number; tokenSymbol: string }
 	callbackSubmit?: () => void
 	callbackInBlock?: () => void
 }

@@ -36,6 +36,7 @@ import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
 import { useTxFee } from '../useTxFee'
+import { getSigningNetworkInfo } from '../util'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
 export const useSubmitExtrinsic = ({
@@ -48,7 +49,6 @@ export const useSubmitExtrinsic = ({
 	feeEstimator,
 	estimatedFee,
 	feeDisplay,
-	signingNetworkInfo,
 	callbackSubmit,
 	callbackInBlock,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
@@ -66,7 +66,7 @@ export const useSubmitExtrinsic = ({
 	const {
 		balances: { balanceTxFees },
 	} = useAccountBalances(fromAddress)
-	const { unit, units } = getStakingChainData(network)
+	const { unit } = getStakingChainData(network)
 
 	// Store the uid for this transaction
 	const [uid, setUid] = useState<number>(0)
@@ -167,11 +167,6 @@ export const useSubmitExtrinsic = ({
 		}
 
 		if (requiresManualSign(submitAccount)) {
-			const networkInfo = signingNetworkInfo ?? {
-				decimals: feeDisplay?.units ?? units,
-				tokenSymbol: feeDisplay?.unit || unit,
-			}
-
 			const $Signature = serviceApi.codec.$Signature(specName)
 			if (!$Signature) {
 				onError('technical', 'missing_signer')
@@ -180,6 +175,7 @@ export const useSubmitExtrinsic = ({
 
 			if (source === 'ledger') {
 				try {
+					const networkInfo = await getSigningNetworkInfo(submitTx.client)
 					// The signer accepts hex, so encode the metadata already loaded by this tx's client.
 					const metadata = u8aToHex(
 						$Metadata.tryEncode(submitTx.client.metadata),
