@@ -47,8 +47,16 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	color: var(--text-tertiary);
-	font-size: 1.1rem;
+
+	> :first-child {
+		flex-shrink: 0;
+	}
+
+	> :last-child {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }
 
 .recipientSetting {

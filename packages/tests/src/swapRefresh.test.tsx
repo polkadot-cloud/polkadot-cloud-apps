@@ -477,11 +477,18 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 		container.querySelector(selector),
 	)
 	const stableNotes = ['conversionFee', 'minimumReceived'].map(note)
+	const priceImpact = note('priceImpact')
+	const notes = priceImpact.parentElement!
+	const noteCount = notes.childElementCount
+	const actionCount = button.parentElement!.childElementCount
 	const assertStable = () => {
 		for (const [index, selector] of stableSelectors.entries()) {
 			expect(container.querySelector(selector)).toBe(stableNodes[index])
 		}
 		expect(['conversionFee', 'minimumReceived'].map(note)).toEqual(stableNotes)
+		expect(notes.lastElementChild).toBe(priceImpact)
+		expect(notes.childElementCount).toBe(noteCount)
+		expect(button.parentElement!.childElementCount).toBe(actionCount)
 	}
 	expect(
 		[...routeView().querySelectorAll('img')].map((icon) => icon.alt),
@@ -499,6 +506,12 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	assertStable()
 	expect(feeText()).toBe('100')
 	expect(container.textContent).toContain('renewingQuote')
+	expect(
+		priceImpact.firstElementChild?.querySelector('[role="status"]')
+			?.textContent,
+	).toBe('renewingQuote')
+	expect(priceImpact.lastElementChild?.textContent).toBe('0%')
+	expect(container.textContent).not.toContain('priceImpact')
 
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(feeText()).toBe('100')
@@ -515,6 +528,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	expect(views.every((view) => view.valid && view.fee > 0n)).toBe(true)
 	expect(estimate).toHaveBeenCalledTimes(2)
 	expect(container.textContent).not.toContain('renewingQuote')
+	expect(note('priceImpact')).toBe(priceImpact)
 })
 
 test('editing the input invalidates the old quote immediately and ignores an in-flight refresh', async () => {

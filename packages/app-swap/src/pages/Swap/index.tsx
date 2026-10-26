@@ -239,17 +239,6 @@ export const Swap = () => {
 						</ExchangeNotice>
 					)}
 					<TransactionAction
-						beforeSubmit={
-							quote &&
-							loading && (
-								<div className={classes.renewingQuote} role="status">
-									<span aria-hidden>
-										<Spinner style={{ width: '1rem' }} />
-									</span>
-									{t('renewingQuote')}
-								</div>
-							)
-						}
 						tx={tx}
 						estimatedFee={fee}
 						submissionKey={requestKey}
@@ -327,7 +316,20 @@ export const Swap = () => {
 						<SendForm.Note label={t('conversionFee')}>
 							{quote ? percentage(quote.fee) : '—'}
 						</SendForm.Note>
-						<SendForm.Note label={t('priceImpact')}>
+						<SendForm.Note
+							label={
+								quote && loading ? (
+									<span className={classes.renewingQuote} role="status">
+										<span aria-hidden>
+											<Spinner style={{ width: '1rem' }} />
+										</span>
+										<span>{t('renewingQuote')}</span>
+									</span>
+								) : (
+									t('priceImpact')
+								)
+							}
+						>
 							{quote ? `${quote.priceImpactBps / 100}%` : '—'}
 						</SendForm.Note>
 						{expired && !loading && (

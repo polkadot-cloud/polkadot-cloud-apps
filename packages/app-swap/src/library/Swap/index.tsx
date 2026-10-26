@@ -69,7 +69,6 @@ type TransactionActionProps = {
 	label: string
 	onSubmitted: () => void
 	children?: ReactNode
-	beforeSubmit?: ReactNode
 }
 
 // Keep quote rows mounted while a changed request starts a new submission.
@@ -92,7 +91,6 @@ const TransactionActionInner = ({
 	valid,
 	label,
 	onSubmitted,
-	beforeSubmit,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -162,7 +160,6 @@ const TransactionActionInner = ({
 						{t('insufficientBalance')}
 					</ExchangeNotice>
 				)}
-				{beforeSubmit}
 				<SubmitTx
 					{...submission}
 					submitText={label}

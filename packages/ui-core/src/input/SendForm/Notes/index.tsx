@@ -11,7 +11,7 @@ export type SendFormNotesProps = {
 }
 
 export type SendFormNoteProps = HTMLAttributes<HTMLDivElement> & {
-	label: string
+	label: ReactNode
 	children: ReactNode
 	variant?: 'default' | 'success' | 'muted'
 }
