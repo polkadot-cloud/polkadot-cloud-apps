@@ -2,7 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { act, type ComponentType, createElement, Suspense } from 'react'
+import {
+	act,
+	type ComponentType,
+	createElement,
+	type ReactNode,
+	Suspense,
+} from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -62,6 +68,9 @@ vi.mock(
 vi.mock('../../app-swap/node_modules/react-i18next/dist/es/index.js', () => ({
 	useTranslation: () => ({ t: (key: string) => key }),
 }))
+vi.mock('../../assets/src/brands/subscan.svg?react', () => ({
+	default: () => createElement('svg'),
+}))
 vi.mock('../../ui-overlay/src/index', async () => {
 	const { lazyNamed } = await import('../../ui-overlay/src/lazyNamed')
 	return {
@@ -88,6 +97,13 @@ vi.mock('../../ui-core/src/base', async () => {
 	const { Identity } = await import('../../ui-core/src/base/Identity')
 	return { Identity }
 })
+vi.mock('../../ui-core/src/popover', async () => ({
+	...(await vi.importActual('../../ui-core/src/popover')),
+	ConnectItem: {
+		Container: ({ children }: { children: ReactNode }) =>
+			createElement('div', null, children),
+	},
+}))
 vi.mock('../../hooks/src/index', async () => {
 	const { useStablecoinBalancesState } = await import(
 		'../../hooks/src/useStablecoinBalances'
@@ -292,6 +308,8 @@ test('the swap overlay loads AccountBalances with its default stablecoin categor
 })
 
 test('sidebar selection changes balances in place without activating an account or closing the modal', async () => {
+	const openExplorer = vi.fn()
+	vi.stubGlobal('open', openExplorer)
 	await render()
 	await act(async () => accountRows()[0].click())
 	expect(balanceAccount()).toBe('alice:extension')
@@ -300,6 +318,15 @@ test('sidebar selection changes balances in place without activating an account 
 	expect(setActiveAccount).not.toHaveBeenCalled()
 	expect(closeModal).not.toHaveBeenCalled()
 	expect(state.activeAccount).toEqual({ address: 'bob', source: 'ledger' })
+	const subscan = [...container.querySelectorAll('button')].find(
+		(button) => button.textContent === 'Subscan',
+	)!
+	await act(async () => subscan.click())
+	expect(openExplorer).toHaveBeenCalledExactlyOnceWith(
+		'https://assethub-polkadot.subscan.io/account/alice',
+		'_blank',
+		'noopener,noreferrer',
+	)
 })
 
 test('the mobile dropdown uses the same selection as the desktop account list', async () => {
