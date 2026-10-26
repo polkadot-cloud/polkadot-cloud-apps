@@ -32,11 +32,12 @@ import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { createElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ActiveAccount } from 'types'
+import type { ActiveAccount, TxFailure } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
 import { useTxFee } from '../useTxFee'
 import { getSigningNetworkInfo } from '../util'
+import { getTxFailureKey } from './errors'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
 export const useSubmitExtrinsic = ({
@@ -307,29 +308,10 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
-	const onFailed = (error?: Error) => {
-		const displayUnit = feeDisplay?.unit || unit
-		let subtitle = t('errorWithTransaction')
-
-		// Handle only known, user-reported errors - focus on balance-related issues
-		if (error) {
-			const msg = error.message.toLowerCase()
-			if (
-				/balance|reserve|locked|freeze|insufficient|funds|minimum/.test(msg)
-			) {
-				subtitle = /swap/.test(msg)
-					? t('errors.swapPriceChanged')
-					: /locked|freeze/.test(msg)
-						? t('errors.balanceErrorLocked')
-						: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
-			}
-			if (/psm|mintingstopped|allswapsstopped|feetoohigh|exceedsmax/.test(msg))
-				subtitle = t('errors.conversionUnavailable')
-		}
-
+	const onFailed = (failure: TxFailure) => {
 		emitNotification({
 			title: t('failed'),
-			subtitle,
+			subtitle: t(getTxFailureKey(failure), { unit: feeDisplay?.unit || unit }),
 		})
 	}
 

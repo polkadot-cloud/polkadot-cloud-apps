@@ -1,12 +1,17 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { TxStatus } from 'dedot/types'
+import type { TxFailure } from 'types'
 import { afterEach, expect, test, vi } from 'vitest'
+import type { SubmittableExtrinsic } from '../../global-bus/node_modules/dedot/index.js'
+import type { TxStatus } from '../../global-bus/node_modules/dedot/types/index.js'
 import {
+	addSend,
+	addSignAndSend,
 	addUid,
 	getUid,
 	handleResult,
+	removeSub,
 	removeUid,
 	setUidPending,
 } from '../../global-bus/src/txSubmit'
@@ -42,16 +47,150 @@ test('a reverted swap reports failure and never reports inclusion or finalizatio
 		onFinalized: vi.fn(),
 		onFailed: vi.fn(),
 	}
-	const failure = new Error('ProvidedMinimumNotSufficientForSwap')
+	const failure: TxFailure = {
+		type: 'dispatch',
+		error: { type: 'Module', value: { index: 55, error: '0x12000000' } },
+		module: {
+			pallet: 'AssetConversion',
+			name: 'ProvidedMinimumNotSufficientForSwap',
+		},
+	}
 	handleResult(
 		uid,
-		{ type: 'BestChainBlockIncluded' } as TxStatus,
+		{
+			type: 'BestChainBlockIncluded',
+			value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+		},
 		handlers,
 		failure,
 	)
-	handleResult(uid, { type: 'Finalized' } as TxStatus, handlers)
+	handleResult(
+		uid,
+		{
+			type: 'Finalized',
+			value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+		},
+		handlers,
+	)
 	expect(handlers.onFailed).toHaveBeenCalledExactlyOnceWith(failure)
 	expect(handlers.onInBlock).not.toHaveBeenCalled()
 	expect(handlers.onFinalized).not.toHaveBeenCalled()
 	expect(getUid(uid)).toBeUndefined()
 })
+test('an invalid transaction reports a structured failure and removes its submission', () => {
+	const uid = addUid({ network: 'polkadot', from: 'sender' })
+	const handlers = {
+		onReady: vi.fn(),
+		onInBlock: vi.fn(),
+		onFinalized: vi.fn(),
+		onFailed: vi.fn(),
+	}
+	handleResult(uid, { type: 'Invalid', value: { error: 'Rejected' } }, handlers)
+
+	expect(handlers.onFailed).toHaveBeenCalledExactlyOnceWith({
+		type: 'invalid',
+	})
+	expect(handlers.onFinalized).not.toHaveBeenCalled()
+	expect(getUid(uid)).toBeUndefined()
+})
+
+type DispatchFailure = Extract<TxFailure, { type: 'dispatch' }>
+const failures: {
+	name: string
+	error: DispatchFailure['error']
+	module?: DispatchFailure['module']
+}[] = [
+	{
+		name: 'a decoded pallet error',
+		error: { type: 'Module', value: { index: 56, error: '0x03000000' } },
+		module: { pallet: 'Psm', name: 'FeeTooHigh' },
+	},
+	{
+		name: 'an unknown pallet error',
+		error: { type: 'Module', value: { index: 255, error: '0xff000000' } },
+	},
+	{ name: 'a token error', error: { type: 'Token', value: 'Frozen' } },
+]
+
+for (const path of ['extension', 'manual'] as const) {
+	test.each(failures)(
+		`${path} signing preserves $name without reducing it to a message`,
+		async ({ error, module }) => {
+			const uid = addUid({ network: 'polkadot', from: 'sender' })
+			const handlers = {
+				onReady: vi.fn(),
+				onInBlock: vi.fn(),
+				onFinalized: vi.fn(),
+				onFailed: vi.fn(),
+				onError: vi.fn(),
+			}
+			const findErrorMeta = vi.fn().mockReturnValue(module)
+			const submit = async (
+				callback: (result: {
+					status: TxStatus
+					dispatchError: DispatchFailure['error']
+				}) => void | Promise<void>,
+			) => {
+				await callback({
+					status: {
+						type: 'BestChainBlockIncluded',
+						value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+					},
+					dispatchError: error,
+				})
+				return async () => undefined
+			}
+			const tx = {
+				client: { registry: { findErrorMeta } },
+				call: { pallet: 'Utility', palletCall: { name: 'BatchAll' } },
+				attachSignature: vi.fn(),
+				send: submit,
+				signAndSend: (
+					_from: unknown,
+					_options: unknown,
+					callback: Parameters<typeof submit>[0],
+				) => submit(callback),
+			} as unknown as SubmittableExtrinsic
+
+			try {
+				if (path === 'manual') {
+					await addSend(
+						'polkadot',
+						uid,
+						tx,
+						{} as Parameters<typeof addSend>[3],
+						handlers,
+					)
+				} else {
+					await addSignAndSend(
+						'polkadot',
+						uid,
+						'sender',
+						tx,
+						{} as Parameters<typeof addSignAndSend>[4],
+						0,
+						handlers,
+					)
+				}
+
+				expect(handlers.onFailed).toHaveBeenCalledExactlyOnceWith({
+					type: 'dispatch',
+					error,
+					module,
+				})
+				expect(handlers.onFailed.mock.calls[0][0].error).toBe(error)
+				expect(handlers.onError).not.toHaveBeenCalled()
+				expect(handlers.onInBlock).not.toHaveBeenCalled()
+				expect(handlers.onFinalized).not.toHaveBeenCalled()
+				expect(getUid(uid)).toBeUndefined()
+				if (error.type === 'Module') {
+					expect(findErrorMeta).toHaveBeenCalledExactlyOnceWith(error)
+				} else {
+					expect(findErrorMeta).not.toHaveBeenCalled()
+				}
+			} finally {
+				removeSub(uid)
+			}
+		},
+	)
+}

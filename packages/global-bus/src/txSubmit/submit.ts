@@ -5,14 +5,26 @@ import type { SubmittableExtrinsic } from 'dedot'
 import type { DispatchError, ExtrinsicSignatureV4 } from 'dedot/codecs'
 import type { InjectedSigner, PayloadOptions, TxStatus } from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
-import type { TxStatusHandlers } from 'types'
+import type { TxFailure, TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
 import { deleteTx, getUid, setUidPending, setUidSubmitted, subs } from './index'
 
-const dispatchFailure = (tx: SubmittableExtrinsic, error?: DispatchError) =>
-	error
-		? new Error(tx.client.registry.findErrorMeta(error)?.name ?? error.type)
-		: undefined
+const dispatchFailure = (
+	tx: SubmittableExtrinsic,
+	error?: DispatchError,
+): TxFailure | undefined => {
+	if (!error) return
+	const metadata =
+		error.type === 'Module'
+			? tx.client.registry.findErrorMeta(error)
+			: undefined
+
+	return {
+		type: 'dispatch',
+		error,
+		module: metadata && { pallet: metadata.pallet, name: metadata.name },
+	}
+}
 
 export const addSignAndSend = async (
 	network: string,
@@ -80,17 +92,12 @@ export const handleResult = (
 		onInBlock,
 		onFinalized,
 		onFailed,
-	}: {
-		onReady: () => void
-		onInBlock: () => void
-		onFinalized: () => void
-		onFailed: (err: Error) => void
-	},
-	dispatchError?: Error,
+	}: Omit<TxStatusHandlers, 'onError'>,
+	failure?: TxFailure,
 ) => {
 	if (!getUid(uid)) return
-	if (dispatchError) {
-		onFailed(dispatchError)
+	if (failure) {
+		onFailed(failure)
 		deleteTx(uid)
 		return
 	}
@@ -109,7 +116,7 @@ export const handleResult = (
 		deleteTx(uid)
 	}
 	if (status.type === 'Invalid') {
-		onFailed(Error('Invalid transaction'))
+		onFailed({ type: 'invalid' })
 		deleteTx(uid)
 	}
 }
