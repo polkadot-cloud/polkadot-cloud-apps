@@ -36,6 +36,7 @@ export const addUid = ({
 		uid: newUid,
 		network,
 		submitted: false,
+		broadcasted: false,
 		pending: false,
 		from,
 		fee: 0n,
@@ -52,7 +53,14 @@ export const removeUid = (id: number) => {
 
 export const setUidSubmitted = (id: number, newSubmitted: boolean) => {
 	const newUids = [..._uids.getValue()].map((item) =>
-		item.uid === id ? { ...item, submitted: newSubmitted } : item,
+		item.uid === id
+			? {
+					...item,
+					submitted: newSubmitted,
+					broadcasted:
+						newSubmitted && !item.submitted ? false : item.broadcasted,
+				}
+			: item,
 	)
 	_uids.next(newUids)
 }
@@ -60,6 +68,13 @@ export const setUidSubmitted = (id: number, newSubmitted: boolean) => {
 export const setUidPending = (id: number, newPending: boolean) => {
 	const newUids = [..._uids.getValue()].map((item) =>
 		item.uid === id ? { ...item, pending: newPending } : item,
+	)
+	_uids.next(newUids)
+}
+
+export const setUidBroadcasted = (id: number) => {
+	const newUids = [..._uids.getValue()].map((item) =>
+		item.uid === id ? { ...item, broadcasted: true } : item,
 	)
 	_uids.next(newUids)
 }

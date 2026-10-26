@@ -13,7 +13,14 @@ import type {
 import { onTransactionSubmittedEvent } from 'event-tracking'
 import type { TxFailure, TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
-import { deleteTx, getUid, setUidPending, setUidSubmitted, subs } from './index'
+import {
+	deleteTx,
+	getUid,
+	setUidBroadcasted,
+	setUidPending,
+	setUidSubmitted,
+	subs,
+} from './index'
 
 const dispatchFailure = (
 	tx: SubmittableExtrinsic,
@@ -143,7 +150,8 @@ export const handleResult = (
 	}: Omit<TxStatusHandlers, 'onError'>,
 	failure?: TxFailure,
 ) => {
-	if (!getUid(uid)) return
+	const submission = getUid(uid)
+	if (!submission) return
 	if (failure) {
 		try {
 			onFailed(failure)
@@ -154,6 +162,13 @@ export const handleResult = (
 	}
 	if (status.type === 'Broadcasting') {
 		setUidPending(uid, true)
+	}
+	// Inclusion also confirms submission if the node omitted its broadcast status.
+	if (
+		!submission.broadcasted &&
+		(status.type === 'Broadcasting' || status.type === 'BestChainBlockIncluded')
+	) {
+		setUidBroadcasted(uid)
 		onReady()
 	}
 	if (status.type === 'BestChainBlockIncluded') {

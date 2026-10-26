@@ -12,6 +12,8 @@ export type TxSubmissionItem = {
 	fee: bigint
 	from: MaybeAddress
 	submitted: boolean
+	// Remains true after broadcast, including while waiting for finality.
+	broadcasted: boolean
 	pending: boolean
 }
 

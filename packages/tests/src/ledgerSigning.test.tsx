@@ -6,7 +6,13 @@ import { act, createElement, StrictMode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { TxFailure, TxStatusHandlers } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { getUid, handleResult } from '../../global-bus/src/txSubmit'
+import {
+	addUid,
+	getUid,
+	handleResult,
+	setUidPending,
+	setUidSubmitted,
+} from '../../global-bus/src/txSubmit'
 import { _uids } from '../../global-bus/src/txSubmit/private'
 import type { SubmittableExtrinsic } from '../../tx-submit/node_modules/dedot/index.js'
 import type {
@@ -24,6 +30,7 @@ const {
 	addSignAndSend,
 	extraSignedExtension,
 	emitNotification,
+	vaultSign,
 } = vi.hoisted(() => ({
 	state: { source: 'ledger' },
 	signLedgerPayload: vi.fn(),
@@ -32,6 +39,7 @@ const {
 	addSignAndSend: vi.fn(),
 	extraSignedExtension: vi.fn(),
 	emitNotification: vi.fn(),
+	vaultSign: vi.fn(),
 }))
 
 vi.mock(
@@ -43,7 +51,7 @@ vi.mock(
 		useExtensions: () => ({ extensionsStatus: { wallet: 'connected' } }),
 		useImportedAccounts: () => ({
 			getAccount: () => ({ address: 'alice', source: state.source, index: 0 }),
-			requiresManualSign: () => state.source === 'ledger',
+			requiresManualSign: () => ['ledger', 'vault'].includes(state.source),
 		}),
 	}),
 )
@@ -52,6 +60,14 @@ vi.mock(
 	() => ({
 		signLedgerPayload,
 		useLedger: () => ({ handleErrors, handleResetLedgerTask: vi.fn() }),
+	}),
+)
+vi.mock(
+	'../../tx-submit/node_modules/@polkadot-cloud/connect-vault/index.js',
+	() => ({
+		VaultSigner: class {
+			sign = vaultSign
+		},
 	}),
 )
 vi.mock('../../tx-submit/node_modules/dedot/codecs/index.js', async () => ({
@@ -103,6 +119,8 @@ const tx = {
 		query: { system: { account: async () => ({ nonce: 0 }) } },
 	},
 	call: { pallet: 'AssetConversion', palletCall: { name: 'Swap' } },
+	callHex: '0x01',
+	callLength: 1,
 	toHex: () => '0x01',
 } as unknown as SubmittableExtrinsic
 const Probe = (props: UseSubmitExtrinsicProps) => {
@@ -129,6 +147,12 @@ beforeEach(() => {
 	state.source = 'ledger'
 	properties.mockResolvedValue({ tokenSymbol: ['DOT'], tokenDecimals: [10] })
 	signLedgerPayload.mockResolvedValue({ signature: '0x01', data: [] })
+	vaultSign.mockResolvedValue('0x01')
+	extraSignedExtension.mockReturnValue({
+		init: async () => {},
+		toRawPayload: () => ({ data: '0x01' }),
+		data: [],
+	})
 	container = document.createElement('div')
 	document.body.append(container)
 	root = createRoot(container)
@@ -162,7 +186,7 @@ test.each(['USDT', 'dotUSD', 'DOT'])(
 			'0x01',
 			{ decimals: 10, tokenSymbol: 'DOT' },
 			0,
-			feePaymentOptions,
+			{ ...feePaymentOptions, nonce: 0 },
 		)
 		expect(addSend).toHaveBeenCalledOnce()
 	},
@@ -210,6 +234,60 @@ test('extension signing keeps the fee payment options without querying Ledger pr
 	expect(addSignAndSend).toHaveBeenCalledOnce()
 	expect(addSignAndSend.mock.calls[0][7]).toBe(feePaymentOptions)
 })
+
+test('a failed nonce lookup releases signing so the user can retry', async () => {
+	const lookup = vi.spyOn(tx.client.query.system, 'account')
+	lookup.mockRejectedValueOnce(new Error('RPC unavailable'))
+	try {
+		await render()
+		await act(async () => submission.onSubmit())
+		expect(signLedgerPayload).not.toHaveBeenCalled()
+		expect(getUid(submission.uid)?.submitted).toBe(false)
+		await act(async () => submission.onSubmit())
+		expect(addSend).toHaveBeenCalledOnce()
+	} finally {
+		lookup.mockRestore()
+	}
+})
+
+test.each(['ledger', 'vault', 'wallet'])(
+	'%s advances the signing nonce past a pending transaction and retains fee options',
+	async (source) => {
+		state.source = source
+		window.injectedWeb3 = {
+			wallet: {
+				id: 'wallet',
+				title: 'Test wallet',
+				icon: () => null,
+				url: '',
+				enable: vi.fn(),
+			},
+		}
+		const pending = addUid({ network: 'polkadot', from: 'alice' })
+		setUidSubmitted(pending, true)
+		setUidPending(pending, true)
+		const feePaymentOptions = { assetId: 1984 }
+		await render({ feePaymentOptions })
+		await act(async () => submission.onSubmit())
+		if (source === 'ledger') {
+			expect(signLedgerPayload.mock.calls[0][7]).toEqual({
+				assetId: 1984,
+				nonce: 1,
+			})
+			expect(addSend).toHaveBeenCalledOnce()
+		} else if (source === 'vault') {
+			expect(extraSignedExtension.mock.calls[0][2]).toEqual({
+				assetId: 1984,
+				nonce: 1,
+			})
+			expect(vaultSign).toHaveBeenCalledOnce()
+			expect(addSend).toHaveBeenCalledOnce()
+		} else {
+			expect(addSignAndSend.mock.calls[0][5]).toBe(1)
+			expect(addSignAndSend.mock.calls[0][7]).toBe(feePaymentOptions)
+		}
+	},
+)
 
 test.each(['ledger', 'wallet'])(
 	'%s can repeat submissions after finalization or failure without remounting',

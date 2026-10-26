@@ -7,7 +7,13 @@ import { Send } from './Send'
 import { Swap } from './Swap'
 
 export const pages: PageItem[] = [
-	{ key: 'swap', hash: '/', Entry: Swap, faIcon: faArrowsRotate },
+	{
+		key: 'swap',
+		titleNamespace: 'swap',
+		hash: '/',
+		Entry: Swap,
+		faIcon: faArrowsRotate,
+	},
 	{ key: 'send', hash: '/send', Entry: Send, faIcon: faPaperPlane },
 ].map((page) => ({
 	...page,

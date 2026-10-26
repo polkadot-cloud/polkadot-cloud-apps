@@ -242,9 +242,9 @@ const routeView = () =>
 	container.querySelector<HTMLElement>('[role="group"][aria-label="route"]')!
 const isSpinning = () =>
 	container.querySelector('[data-sync]')!.childElementCount > 0
-const emitStatus = (status: TxStatus) =>
+const emitStatus = (status: TxStatus, attempt = -1) =>
 	act(async () => {
-		await signAndSend.mock.calls.at(-1)![2]({ status, events: [] })
+		await signAndSend.mock.calls.at(attempt)![2]({ status, events: [] })
 	})
 const configure = async () => {
 	await render()
@@ -791,7 +791,7 @@ test.each(['exactIn', 'exactOut'] as const)(
 		// A new draft must survive callbacks from the already submitted swap.
 		await enterAmount('0.2', editable)
 		await advance(250)
-		expect(submitButton().disabled).toBe(true)
+		expect(submitButton().disabled).toBe(false)
 		expect(isSpinning()).toBe(true)
 		const block = { blockHash: '0x01' as const, blockNumber: 1, txIndex: 0 }
 		await emitStatus({ type: 'BestChainBlockIncluded', value: block })
@@ -845,10 +845,69 @@ test.each(['Invalid', 'Drop'] as const)(
 		await enterAmount('0.2')
 		await advance(250)
 		expect(isSpinning()).toBe(true)
-		expect(submitButton().disabled).toBe(true)
+		expect(submitButton().disabled).toBe(false)
 		await emitStatus({ type, value: { error: 'Rejected' } })
 		expect(input('youPay').value).toBe('0.2')
 		expect(isSpinning()).toBe(false)
 		expect(submitButton().disabled).toBe(false)
 	},
 )
+
+test('a second swap can be submitted before the first is included, using the next nonce', async () => {
+	await configure()
+	const firstUid = Number(submitButton().dataset.submit)
+	await act(async () => {
+		submitButton().click()
+		submitButton().click()
+	})
+	expect(signAndSend).toHaveBeenCalledOnce()
+	expect(signAndSend.mock.calls[0][1].nonce).toBe(0)
+
+	// Changing the draft must not open a second signer before broadcast.
+	await enterAmount('0.2')
+	await advance(250)
+	expect(submitButton().disabled).toBe(true)
+	await emitStatus({ type: 'Broadcasting' }, 0)
+	await enterAmount('0.2')
+	await advance(250)
+	expect(submitButton().disabled).toBe(false)
+	const secondUid = Number(submitButton().dataset.submit)
+	await act(async () => submitButton().click())
+	expect(signAndSend).toHaveBeenCalledTimes(2)
+	expect(signAndSend.mock.calls[1][1].nonce).toBe(1)
+	expect(getUid(firstUid)?.pending).toBe(true)
+	expect(getUid(secondUid)?.submitted).toBe(true)
+	expect(isSpinning()).toBe(true)
+
+	// Late broadcasts and completion of the first swap must not reset the second.
+	await emitStatus({ type: 'Broadcasting' }, 0)
+	expect(input('youPay').value).toBe('0.2')
+	const block = { blockHash: '0x01' as const, blockNumber: 1, txIndex: 0 }
+	await emitStatus({ type: 'BestChainBlockIncluded', value: block }, 0)
+	await emitStatus({ type: 'Finalized', value: block }, 0)
+	expect(getUid(firstUid)).toBeUndefined()
+	expect(getUid(secondUid)?.submitted).toBe(true)
+	expect(submitButton().disabled).toBe(true)
+	expect(input('youPay').value).toBe('0.2')
+	expect(isSpinning()).toBe(true)
+
+	await emitStatus({ type: 'Broadcasting' }, 1)
+	expect(input('youPay').value).toBe('')
+	await emitStatus({ type: 'Finalized', value: block }, 1)
+	expect(isSpinning()).toBe(false)
+	expect(getUid(secondUid)).toBeUndefined()
+})
+
+test('an inclusion without a preceding broadcast status releases the form before finalization', async () => {
+	await configure()
+	await act(async () => submitButton().click())
+	await emitStatus({
+		type: 'BestChainBlockIncluded',
+		value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+	})
+	expect(input('youPay').value).toBe('')
+	await enterAmount('0.2')
+	await advance(250)
+	expect(submitButton().disabled).toBe(false)
+	expect(isSpinning()).toBe(true)
+})

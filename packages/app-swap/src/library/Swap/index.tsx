@@ -97,11 +97,12 @@ const TransactionActionInner = ({
 	const balances = useStablecoinBalances(account?.address)
 	const { uids } = useTxMeta()
 	const submissionId = useId()
-	const accountBusy = uids.some(
+	const accountSigning = uids.some(
 		(item) =>
 			item.network === 'polkadot' &&
 			item.from === account?.address &&
-			(item.submitted || item.pending),
+			item.submitted &&
+			!item.broadcasted,
 	)
 	const payload = useMemo(
 		() => serviceApi.stablecoins.fee.paymentOptions('statemint', feeAsset),
@@ -129,7 +130,7 @@ const TransactionActionInner = ({
 		!!account &&
 		fee !== undefined &&
 		funded &&
-		!accountBusy &&
+		!accountSigning &&
 		!balances.loading
 	const submission = useSubmitExtrinsic({
 		tx,
