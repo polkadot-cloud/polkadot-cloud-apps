@@ -7,7 +7,7 @@ import { DefaultSwapSlippageBps } from 'consts/swap'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Slider } from 'ui-app/Slider'
-import classes from './index.module.scss'
+import classes from './SlippageControl.module.scss'
 
 export const SlippageControl = ({
 	value,
