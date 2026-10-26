@@ -1,28 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { SubmittableExtrinsic } from 'dedot'
-import { useApi } from 'hooks/useApi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ImportedAccount, SwapQuote, SwapRequest, SwapToken } from 'types'
-
-type SwapQuoteOptions = SwapRequest & {
-	account: ImportedAccount | null
-	recipient: string
-	recipientValid: boolean
-	slippage: number
-	feeAsset: SwapToken
-}
-
-type PreparedQuote = {
-	request: SwapRequest
-	quotes?: SwapQuote[]
-	quote?: SwapQuote
-	tx?: SubmittableExtrinsic
-	fee?: bigint
-	error?: string
-}
+import { useApi } from '../useApi'
+import type {
+	PreparedSwapQuote,
+	UseSwapQuote,
+	UseSwapQuoteProps,
+} from './types'
 
 export const useSwapQuote = ({
 	account,
@@ -34,13 +20,13 @@ export const useSwapQuote = ({
 	assetOut,
 	amount,
 	mode,
-}: SwapQuoteOptions) => {
+}: UseSwapQuoteProps): UseSwapQuote => {
 	const { serviceApi } = useApi()
 	const { t } = useTranslation('swap')
 	const exchange = serviceApi.swap
 	const [revision, setRevision] = useState(0)
 	const refresh = useCallback(() => setRevision((value) => value + 1), [])
-	const [state, setState] = useState<PreparedQuote>()
+	const [state, setState] = useState<PreparedSwapQuote>()
 	// Market snapshots may refresh this request without invalidating its last
 	// usable quote. User edits and account/service changes invalidate it immediately.
 	const requestKey = `${account?.address}:${account?.source}:${assetIn}:${assetOut}:${mode}:${amount}:${recipient}:${recipientValid}:${slippage}:${feeAsset}`

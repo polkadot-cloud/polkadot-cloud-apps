@@ -12,6 +12,9 @@ export const SwapTokens: SwapToken[] = ['DOT', 'dotUSD', 'USDT', 'USDC']
 
 export const SwapPoolTokens: SwapPoolToken[] = ['dotUSD', 'USDT', 'USDC']
 
+// Maximum age of a usable swap quote, in milliseconds.
+export const SwapQuoteExpiryMs = 30_000
+
 export const swapAssetId = (token: SwapPoolToken) =>
 	getStablecoinAssetConfig('statemint', token)!.assetId!
 

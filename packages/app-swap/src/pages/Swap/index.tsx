@@ -9,6 +9,8 @@ import { getFeeTokenIcon } from 'consts/stablecoins'
 import { swapDecimals } from 'consts/swap'
 import { slippageLimit } from 'dedot-api/swap/math'
 import { useStablecoinBalances, useTheme } from 'hooks'
+import { useQuoteExpired } from 'hooks/useQuoteExpired'
+import { useSwapQuote } from 'hooks/useSwapQuote'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount, SwapMode, SwapToken } from 'types'
@@ -30,8 +32,6 @@ import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
 import { defaultSlippageBps, SlippageControl } from './SlippageControl'
-import { useQuoteExpired } from './useQuoteExpired'
-import { useSwapQuote } from './useSwapQuote'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
