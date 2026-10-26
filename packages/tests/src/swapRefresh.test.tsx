@@ -308,7 +308,7 @@ afterEach(async () => {
 })
 
 test.each(['exactIn', 'exactOut'] as const)(
-	'%s moves the top asset and amount to the bottom and recalculates the new top amount',
+	'%s reverses only the tokens, preserving the mode and entered amount',
 	async (mode) => {
 		const exactIn = mode === 'exactIn'
 		const initial = {
@@ -322,10 +322,10 @@ test.each(['exactIn', 'exactOut'] as const)(
 			assetIn: 'dotUSD',
 			assetOut: 'USDT',
 			path: ['dotUSD', 'DOT', 'USDT'],
-			mode: exactIn ? 'exactOut' : 'exactIn',
+			mode,
 			amount: 100_000n,
-			amountIn: exactIn ? 102_002n : 100_000n,
-			amountOut: exactIn ? 100_000n : 98_002n,
+			amountIn: exactIn ? 100_000n : 102_002n,
+			amountOut: exactIn ? 98_002n : 100_000n,
 		}
 		quotes.mockResolvedValueOnce([initial]).mockResolvedValueOnce([reversed])
 		await render()
@@ -338,15 +338,20 @@ test.each(['exactIn', 'exactOut'] as const)(
 		await click('reverseAssets')
 		const [top, bottom] =
 			container.querySelectorAll<HTMLInputElement>('input[data-token]')
-		expect(bottom.value).toBe('0.100000')
-		expect(bottom.dataset.token).toBe(exactIn ? 'USDT' : 'dotUSD')
-		expect(bottom.readOnly).toBe(false)
+		expect(top.value).toBe('0.100000')
 		expect(top.dataset.token).toBe(exactIn ? 'dotUSD' : 'USDT')
+		expect(top.readOnly).toBe(false)
+		expect(bottom.dataset.token).toBe(exactIn ? 'USDT' : 'dotUSD')
 		expect(top.getAttribute('aria-label')).toBe(
 			exactIn ? 'youPay' : 'youReceive',
 		)
-		expect(top.readOnly).toBe(true)
-		expect(top.value).toBe('0.00')
+		expect(bottom.readOnly).toBe(true)
+		expect(bottom.value).toBe('0.00')
+		expect(
+			container.querySelector(
+				`[aria-label="${exactIn ? 'exactOutput' : 'exactInput'}"]`,
+			)?.textContent,
+		).toBe(exactIn ? 'pay' : 'receive')
 		expect(submitButton().disabled).toBe(true)
 		await advance(250)
 		expect(quotes).toHaveBeenLastCalledWith({
@@ -355,12 +360,12 @@ test.each(['exactIn', 'exactOut'] as const)(
 			amount: reversed.amount,
 			mode: reversed.mode,
 		})
-		expect(bottom.value).toBe('0.100000')
-		expect(top.value).toBe(exactIn ? '0.102002' : '0.098002')
+		expect(top.value).toBe('0.100000')
+		expect(bottom.value).toBe(exactIn ? '0.098002' : '0.102002')
 		expect(swap.mock.calls.at(-1)?.[0]).toBe(reversed)
 		expect(submitButton().disabled).toBe(false)
-		await enterAmount('0.2', exactIn ? 'youReceive' : 'youPay')
-		expect(bottom.value).toBe('0.2')
+		await enterAmount('0.2', exactIn ? 'youPay' : 'youReceive')
+		expect(top.value).toBe('0.2')
 		expect(submitButton().disabled).toBe(true)
 		await advance(250)
 		expect(quotes).toHaveBeenLastCalledWith({
@@ -369,38 +374,44 @@ test.each(['exactIn', 'exactOut'] as const)(
 			amount: 200_000n,
 			mode: reversed.mode,
 		})
+		await click(exactIn ? 'exactOutput' : 'exactInput')
+		expect(top.getAttribute('aria-label')).toBe(
+			exactIn ? 'youReceive' : 'youPay',
+		)
+		expect(top.dataset.token).toBe(exactIn ? 'USDT' : 'dotUSD')
+		expect(top.readOnly).toBe(false)
+		expect(top.value).toBe('')
 	},
 )
 
-test('reversing the assets before a quote is ready moves the entered amount and its asset to the bottom', async () => {
+test('reversing the assets before a quote is ready preserves the amount and mode', async () => {
 	await render()
 	await enterAmount('0.123456')
 	await click('reverseAssets')
 	const [top, bottom] =
 		container.querySelectorAll<HTMLInputElement>('input[data-token]')
 	expect(top.dataset.token).toBe('dotUSD')
-	expect(top.value).toBe('0.00')
-	expect(bottom.value).toBe('0.123456')
+	expect(top.value).toBe('0.123456')
+	expect(bottom.value).toBe('0.00')
 	expect(bottom.dataset.token).toBe('USDT')
 	await advance(250)
 	expect(quotes).toHaveBeenCalledExactlyOnceWith({
 		assetIn: 'dotUSD',
 		assetOut: 'USDT',
 		amount: 123_456n,
-		mode: 'exactOut',
+		mode: 'exactIn',
 	})
 })
 
-test('reversing again moves the current calculated top amount to the bottom', async () => {
+test('reversing twice restores the original tokens without replacing the entered amount with a quote', async () => {
 	await configure()
 	quotes.mockResolvedValueOnce([
 		{
 			...quote(Date.now()),
 			assetIn: 'dotUSD',
 			assetOut: 'USDT',
-			mode: 'exactOut',
-			amountIn: 102_002n,
-			amountOut: 100_000n,
+			amountIn: 100_000n,
+			amountOut: 98_002n,
 		},
 	])
 	const reverse = container.querySelector<HTMLButtonElement>(
@@ -413,13 +424,15 @@ test('reversing again moves the current calculated top amount to the bottom', as
 		container.querySelectorAll<HTMLInputElement>('input[data-token]')
 	expect(top.dataset.token).toBe('USDT')
 	expect(bottom.dataset.token).toBe('dotUSD')
-	expect(bottom.value).toBe('0.102002')
+	expect(top.value).toBe('0.1')
+	expect(top.readOnly).toBe(false)
+	expect(bottom.readOnly).toBe(true)
 	await advance(250)
 	expect(quotes).toHaveBeenLastCalledWith({
 		assetIn: 'USDT',
 		assetOut: 'dotUSD',
-		amount: 102_002n,
-		mode: 'exactOut',
+		amount: 100_000n,
+		mode: 'exactIn',
 	})
 })
 

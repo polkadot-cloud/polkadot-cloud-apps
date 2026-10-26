@@ -41,7 +41,6 @@ export const Swap = () => {
 	const [assetOut, setAssetOut] = useState<SwapToken>('dotUSD')
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<SwapMode>('exactIn')
-	const [amountOnTop, setAmountOnTop] = useState(true)
 	const [feeAsset, setFeeAsset] = useState<SwapToken>('DOT')
 	const [slippage, setSlippage] = useState(DefaultSwapSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
@@ -166,7 +165,7 @@ export const Swap = () => {
 							</SendForm.Field>
 						)}
 					</SendForm.Segment>
-					{renderAmountField(amountOnTop)}
+					{renderAmountField(true)}
 					<SendForm.DirectionIndicator
 						label={t('reverseAssets')}
 						tooltip={t('reverseAssetsTooltip')}
@@ -174,12 +173,6 @@ export const Swap = () => {
 						onReverse={() => {
 							setAssetIn(assetOut)
 							setAssetOut(assetIn)
-							if (amountOnTop) {
-								setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
-							} else {
-								setAmount(quotedAmount ?? '0.00')
-							}
-							setAmountOnTop(false)
 						}}
 					>
 						<Tooltip
@@ -194,7 +187,6 @@ export const Swap = () => {
 								)}
 								onClick={() => {
 									setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
-									setAmountOnTop(true)
 									setAmount('')
 								}}
 							>
@@ -202,7 +194,7 @@ export const Swap = () => {
 							</SendForm.DirectionButton>
 						</Tooltip>
 					</SendForm.DirectionIndicator>
-					{renderAmountField(!amountOnTop)}
+					{renderAmountField(false)}
 					<SendForm.Segment
 						title={t('payFeesIn')}
 						className={formClasses.lastSection}
