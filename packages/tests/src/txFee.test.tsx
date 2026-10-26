@@ -169,6 +169,16 @@ test('a current estimation failure clears the previous fee', async () => {
 	expect(getUid(props.uid)?.fee).toBe(0n)
 })
 
+test.each(['tx', 'from'] as const)(
+	'clears the fee when %s becomes unavailable',
+	async (key) => {
+		await render()
+		expect(getUid(props.uid)?.fee).toBe(75n)
+		await render({ [key]: undefined })
+		expect(getUid(props.uid)?.fee).toBe(0n)
+	},
+)
+
 test('unmounting prevents a pending estimate from updating the submission', async () => {
 	const pending = deferred()
 	await render({ feeEstimator: () => pending.promise })

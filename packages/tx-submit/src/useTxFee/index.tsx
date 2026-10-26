@@ -26,7 +26,10 @@ export const useTxFee = ({
 			updateFee(uid, estimatedFee)
 			return
 		}
-		if (!tx || !from) return
+		if (!tx || !from) {
+			updateFee(uid, 0n)
+			return
+		}
 
 		let stale = false
 		updateFee(uid, 0n)
