@@ -18,3 +18,9 @@
 		transform: rotate(1turn);
 	}
 }
+
+@media (prefers-reduced-motion: reduce) {
+	.spinner {
+		animation: none;
+	}
+}

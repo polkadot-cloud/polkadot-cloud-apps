@@ -25,7 +25,7 @@
 		"quoteExpired": "Срок действия котировки истёк.",
 		"receive": "Получить",
 		"redeemDotUsd": "Погасить dotUSD за USDT",
-		"refreshQuote": "Обновить котировку",
+		"renewingQuote": "Обновление котировки…",
 		"resetSlippage": "Сбросить проскальзывание до {{value}}%",
 		"retry": "Повторить",
 		"reverseAssets": "Поменять активы местами",
@@ -42,7 +42,6 @@
 		"swap": "Обмен",
 		"swapAssets": "Обменять активы",
 		"swapDescription": "Обменивайте активы в Polkadot Asset Hub.",
-		"transactionInProgress": "Транзакция этого аккаунта ожидает подписи или включения в блок.",
 		"transferAssetsDescription": "Перевод активов на другой адрес в той же сети.",
 		"youPay": "Вы платите",
 		"youReceive": "Вы получаете"

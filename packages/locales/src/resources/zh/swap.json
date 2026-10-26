@@ -25,7 +25,7 @@
 		"quoteExpired": "此报价已过期。",
 		"receive": "接收",
 		"redeemDotUsd": "将 dotUSD 赎回为 USDT",
-		"refreshQuote": "刷新报价",
+		"renewingQuote": "正在更新报价…",
 		"resetSlippage": "将滑点重置为 {{value}}%",
 		"retry": "重试",
 		"reverseAssets": "对调资产",
@@ -42,7 +42,6 @@
 		"swap": "兑换",
 		"swapAssets": "兑换资产",
 		"swapDescription": "在 Polkadot Asset Hub 上兑换资产。",
-		"transactionInProgress": "此账户有一笔交易正在等待签名或被打包进区块。",
 		"transferAssetsDescription": "将资产转账到同一网络中的其他地址。",
 		"youPay": "支付",
 		"youReceive": "接收"

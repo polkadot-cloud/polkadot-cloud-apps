@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { SwapDappName } from 'consts'
 import { AccountsButton } from 'library/Accounts'
 import { SideMenu } from 'library/SideMenu'
@@ -9,7 +8,6 @@ import { Sync } from 'library/Sync'
 import { ErrorBoundary } from 'react-error-boundary'
 import { HelmetProvider } from 'react-helmet-async'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import type { PageItem } from 'types'
 import { ErrorFallbackApp, ErrorFallbackRoutes } from 'ui-app/ErrorBoundary'
 import { Headers } from 'ui-app/Headers'
 import { MainFooter } from 'ui-app/MainFooter'
@@ -18,17 +16,7 @@ import { Offline } from 'ui-app/Offline'
 import { PageWithTitle } from 'ui-app/PageWithTitle'
 import { Page } from 'ui-core/base'
 import { Overlays } from './Overlays'
-import { Send } from './pages/Send'
-
-const SendPage: PageItem = {
-	category: 0,
-	key: 'send',
-	uri: `${import.meta.env.BASE_URL}send`,
-	hash: '/send',
-	Entry: Send,
-	faIcon: faPaperPlane,
-	advanced: false,
-}
+import { pages } from './pages'
 
 export const Router = () => (
 	<ErrorBoundary FallbackComponent={ErrorFallbackApp}>
@@ -54,14 +42,16 @@ export const Router = () => (
 					/>
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 						<Routes>
-							<Route index element={<Navigate to="/send" replace />} />
-							<Route
-								path="/send"
-								element={
-									<PageWithTitle page={SendPage} appTitle={SwapDappName} />
-								}
-							/>
-							<Route path="*" element={<Navigate to="/send" replace />} />
+							{pages.map((page) => (
+								<Route
+									key={page.key}
+									path={page.hash}
+									element={
+										<PageWithTitle page={page} appTitle={SwapDappName} />
+									}
+								/>
+							))}
+							<Route path="*" element={<Navigate to="/" replace />} />
 						</Routes>
 					</ErrorBoundary>
 					<MainFooter showDocs={false} />

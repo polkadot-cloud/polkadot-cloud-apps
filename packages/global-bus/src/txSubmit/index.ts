@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { Unsub } from 'dedot/types'
+import type { HexString } from 'dedot/utils'
 import type { MaybeAddress } from 'types'
 import { _uids } from './private'
 
@@ -36,6 +37,7 @@ export const addUid = ({
 		uid: newUid,
 		network,
 		submitted: false,
+		broadcasted: false,
 		pending: false,
 		from,
 		fee: 0n,
@@ -50,9 +52,21 @@ export const removeUid = (id: number) => {
 	_uids.next(newUids)
 }
 
-export const setUidSubmitted = (id: number, newSubmitted: boolean) => {
+export const setUidSubmitted = (
+	id: number,
+	newSubmitted: boolean,
+	signer?: { from: string; genesisHash: HexString },
+) => {
 	const newUids = [..._uids.getValue()].map((item) =>
-		item.uid === id ? { ...item, submitted: newSubmitted } : item,
+		item.uid === id
+			? {
+					...item,
+					...signer,
+					submitted: newSubmitted,
+					broadcasted:
+						newSubmitted && !item.submitted ? false : item.broadcasted,
+				}
+			: item,
 	)
 	_uids.next(newUids)
 }
@@ -60,6 +74,13 @@ export const setUidSubmitted = (id: number, newSubmitted: boolean) => {
 export const setUidPending = (id: number, newPending: boolean) => {
 	const newUids = [..._uids.getValue()].map((item) =>
 		item.uid === id ? { ...item, pending: newPending } : item,
+	)
+	_uids.next(newUids)
+}
+
+export const setUidBroadcasted = (id: number) => {
+	const newUids = [..._uids.getValue()].map((item) =>
+		item.uid === id ? { ...item, broadcasted: true } : item,
 	)
 	_uids.next(newUids)
 }
@@ -88,14 +109,12 @@ export const deleteTx = (uid: number) => {
 	removeSub(uid)
 }
 
-export const pendingTxCount = (networkOrFrom: string, from?: string) =>
+export const pendingTxCount = (from: string, genesisHash: HexString) =>
 	_uids
 		.getValue()
 		.filter(
 			(item) =>
-				item.from === (from ?? networkOrFrom) &&
-				(from === undefined || item.network === networkOrFrom) &&
-				item.pending,
+				item.from === from && item.genesisHash === genesisHash && item.pending,
 		).length
 
 export * from './submit'

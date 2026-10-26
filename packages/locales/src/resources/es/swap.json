@@ -25,7 +25,7 @@
 		"quoteExpired": "Esta cotización ha caducado.",
 		"receive": "Recibir",
 		"redeemDotUsd": "Canjear dotUSD por USDT",
-		"refreshQuote": "Actualizar cotización",
+		"renewingQuote": "Actualizando cotización…",
 		"resetSlippage": "Restablecer el deslizamiento al {{value}} %",
 		"retry": "Reintentar",
 		"reverseAssets": "Invertir activos",
@@ -42,7 +42,6 @@
 		"swap": "Intercambio",
 		"swapAssets": "Intercambiar activos",
 		"swapDescription": "Intercambia activos en Polkadot Asset Hub.",
-		"transactionInProgress": "Una transacción de esta cuenta está pendiente de firma o de inclusión en un bloque.",
 		"transferAssetsDescription": "Transfiere activos a otra dirección en la misma red.",
 		"youPay": "Pagas",
 		"youReceive": "Recibes"

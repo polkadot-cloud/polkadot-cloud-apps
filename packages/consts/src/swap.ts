@@ -15,6 +15,9 @@ export const SwapPoolTokens: SwapPoolToken[] = ['dotUSD', 'USDT', 'USDC']
 // Default swap slippage tolerance in basis points (50 bps = 0.5%).
 export const DefaultSwapSlippageBps = 50
 
+// Highest supported slippage tolerance, shared by controls and transaction bounds.
+export const MaxSwapSlippageBps = 500
+
 // Maximum age of a usable swap quote, in milliseconds.
 export const SwapQuoteExpiryMs = 30_000
 

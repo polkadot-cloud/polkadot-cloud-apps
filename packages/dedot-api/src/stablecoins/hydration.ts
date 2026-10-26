@@ -9,6 +9,7 @@ import {
 import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import { decodeAddress, u8aToHex } from 'dedot/utils'
 import type { FeeAssetSymbol } from 'types'
+import { ceilDiv } from 'utils'
 import { asTx } from '../util'
 import type { BalancePair, StablecoinAdapter } from './shared'
 import { toStablecoinBalance, zeroBalance } from './shared'
@@ -29,11 +30,7 @@ const FIXED_U128_DIVISOR = 1_000_000_000_000_000_000n
 
 // Applies a FixedU128 multiplier to a bigint value and rounds up fee estimates.
 const multiplyFixedU128 = (value: bigint, multiplier: bigint): bigint => {
-	if (value === 0n || multiplier === 0n) {
-		return 0n
-	}
-
-	return (value * multiplier + FIXED_U128_DIVISOR - 1n) / FIXED_U128_DIVISOR
+	return ceilDiv(value * multiplier, FIXED_U128_DIVISOR)
 }
 
 // Reads a Hydration token balance from the Tokens pallet.

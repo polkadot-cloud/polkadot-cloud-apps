@@ -164,8 +164,26 @@ export const useSubmitExtrinsic = ({
 			injectedExtension.enable(dappName)
 		}
 
-		// Pre-submission state update
-		setUidSubmitted(uid, true)
+		// The draft can predate account selection; record the actual signer and chain.
+		setUidSubmitted(uid, true, {
+			from: submitAccount.address,
+			genesisHash: submitTx.client.genesisHash,
+		})
+
+		// All signers must advance past transactions already broadcast by this account.
+		let nonce: number
+		try {
+			const accountState = await submitTx.client.query.system.account(
+				submitAccount.address,
+			)
+			nonce =
+				accountState.nonce +
+				pendingTxCount(submitAccount.address, submitTx.client.genesisHash)
+		} catch {
+			onError('technical')
+			return
+		}
+		const signingOptions = { ...feePaymentOptions, nonce }
 
 		// Handle signed transaction
 		let encodedSig
@@ -199,7 +217,7 @@ export const useSubmitExtrinsic = ({
 						metadata,
 						networkInfo,
 						(account as HardwareAccount).index,
-						feePaymentOptions,
+						signingOptions,
 					)
 					if (result) {
 						encodedSig = {
@@ -219,7 +237,7 @@ export const useSubmitExtrinsic = ({
 				const extra = serviceApi.signer.extraSignedExtension(
 					specName,
 					submitAccount.address,
-					feePaymentOptions,
+					signingOptions,
 				)
 				if (!extra) {
 					onError('technical', 'missing_signer')
@@ -279,16 +297,13 @@ export const useSubmitExtrinsic = ({
 				onError('technical', 'missing_signer')
 				return
 			}
-			const { nonce } = await submitTx.client.query.system.account(
-				submitAccount.address,
-			)
 			addSignAndSend(
 				network,
 				uid,
 				submitAccount.address,
 				submitTx,
 				signer,
-				nonce + pendingTxCount(network, submitAccount.address),
+				nonce,
 				handlers,
 				feePaymentOptions,
 			)

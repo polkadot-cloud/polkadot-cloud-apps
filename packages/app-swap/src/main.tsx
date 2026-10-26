@@ -30,6 +30,7 @@ initDedotService({
 	network: 'polkadot',
 	nominationPools: false,
 	staking: false,
+	swap: true,
 })
 
 createRoot(rootElement).render(<App />)

@@ -25,7 +25,7 @@
 		"quoteExpired": "This quote has expired.",
 		"receive": "Receive",
 		"redeemDotUsd": "Redeem dotUSD for USDT",
-		"refreshQuote": "Refresh quote",
+		"renewingQuote": "Renewing quote…",
 		"resetSlippage": "Reset slippage to {{value}}%",
 		"retry": "Retry",
 		"reverseAssets": "Reverse assets",
@@ -42,7 +42,6 @@
 		"swap": "Swap",
 		"swapAssets": "Swap Assets",
 		"swapDescription": "Exchange assets on Polkadot Asset Hub.",
-		"transactionInProgress": "A transaction for this account is awaiting signing or inclusion.",
 		"transferAssetsDescription": "Transfer assets to another address on the same network.",
 		"youPay": "You pay",
 		"youReceive": "You receive"

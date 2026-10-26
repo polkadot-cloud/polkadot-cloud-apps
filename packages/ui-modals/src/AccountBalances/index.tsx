@@ -9,6 +9,7 @@ import type { UseAccountListCategories } from 'hooks/useStakingAccountCategories
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
+import { AccountDetails } from 'ui-app/AccountDetails'
 import { AccountDropdown, AccountSourceIcon } from 'ui-app/AccountDropdown'
 import { ButtonCopy } from 'ui-app/ButtonCopy'
 import { ModalTitle } from 'ui-app/ModalTitle'
@@ -133,6 +134,7 @@ export const AccountBalances = ({
 								) : (
 									<StablecoinMix account={account} />
 								)}
+								<AccountDetails address={account.address} network="polkadot" />
 							</div>
 						</>
 					) : (

@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { StablecoinBalance } from 'types'
-import { planckToUnitBn, sanitizeBalanceInput, stringToBn } from 'utils'
+import {
+	maxSendableBalance,
+	planckToUnitBn,
+	sanitizeBalanceInput,
+	stringToBn,
+} from 'utils'
 import { describe, expect, test, vi } from 'vitest'
 import {
 	getFeeAssetOptions,
 	getTokenOptions,
 } from '../../app-swap/src/pages/Send/options'
-import {
-	formatBalance,
-	maxSendableBalance,
-	toPlanck,
-} from '../../app-swap/src/pages/Send/utils'
+import { formatBalance, toPlanck } from '../../app-swap/src/pages/Send/utils'
 import dotUsdSvg from '../../assets/src/token/dotusd.svg'
 import { createAssetHubStablecoinAdapter } from '../../dedot-api/src/stablecoins/assetHub'
 

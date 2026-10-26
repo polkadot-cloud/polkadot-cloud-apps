@@ -39,6 +39,7 @@
 	cursor: pointer;
 
 	.directionIcon {
+		flex-shrink: 0;
 		font-size: 1rem;
 		line-height: 1;
 	}
@@ -46,5 +47,20 @@
 	&:focus-visible {
 		outline: 2px solid var(--accent-700);
 		outline-offset: 2px;
+	}
+}
+
+.labeledButton {
+	gap: 0.4rem;
+	width: 8rem;
+	max-width: calc(100% - 4rem);
+	padding: 0 0.5rem;
+	font-family: var(--font-family-semibold);
+	font-size: 1.1rem;
+
+	span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 }

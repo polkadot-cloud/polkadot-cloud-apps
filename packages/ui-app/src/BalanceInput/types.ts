@@ -11,6 +11,8 @@ export type BalanceInputValue = BigNumber | string
 type SharedBalanceInputProps = {
 	value: string
 	maxAvailable: BalanceInputValue
+	// Whether clicking the available balance can fill the input.
+	allowMax?: boolean
 	disabled?: boolean
 	syncing?: boolean
 	label?: string

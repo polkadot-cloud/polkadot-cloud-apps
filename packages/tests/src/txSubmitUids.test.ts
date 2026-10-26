@@ -111,7 +111,7 @@ test('a dropped transaction reports failure and releases the submission', () => 
 
 test('a retracted inclusion restores the pending nonce count', () => {
 	const uid = addUid({ network: 'polkadot', from: 'alice' })
-	setUidSubmitted(uid, true)
+	setUidSubmitted(uid, true, { from: 'alice', genesisHash: '0x01' })
 	const handlers = {
 		onReady: vi.fn(),
 		onInBlock: vi.fn(),
@@ -127,10 +127,10 @@ test('a retracted inclusion restores the pending nonce count', () => {
 		},
 		handlers,
 	)
-	expect(pendingTxCount('polkadot', 'alice')).toBe(0)
+	expect(pendingTxCount('alice', '0x01')).toBe(0)
 	expect(getUid(uid)?.submitted).toBe(true)
 	handleResult(uid, { type: 'NoLongerInBestChain' }, handlers)
-	expect(pendingTxCount('polkadot', 'alice')).toBe(1)
+	expect(pendingTxCount('alice', '0x01')).toBe(1)
 	expect(handlers.onFailed).not.toHaveBeenCalled()
 })
 

@@ -17,7 +17,7 @@ test.each([
 	['kusama', 'people-kusama', 'statemine', KusamaService],
 	['paseo', 'people-paseo', 'paseomint', PaseoService],
 ] as const)(
-	'%s leaves swapping unavailable regardless of feature configuration',
+	'%s exposes swapping only when supported and explicitly enabled',
 	(network, people, hub, Service) => {
 		for (const swap of [true, false, undefined]) {
 			for (const assetHub of [true, false]) {
@@ -38,7 +38,14 @@ test.each([
 						{ swap, stablecoins: { assetHub, hydration } },
 					)
 
-					expect(service.interface).toHaveProperty('swap', undefined)
+					if (network === 'polkadot' && swap) {
+						expect(service.interface.swap).toEqual({
+							quotes: expect.any(Function),
+							swap: expect.any(Function),
+						})
+					} else {
+						expect(service.interface).toHaveProperty('swap', undefined)
+					}
 					expect(service.features.swap).toBe(swap ?? false)
 				}
 			}

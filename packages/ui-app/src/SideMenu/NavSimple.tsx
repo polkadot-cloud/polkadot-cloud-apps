@@ -23,6 +23,7 @@ export const NavSimple = ({
 		<>
 			<ToggleWrapper
 				type="button"
+				$inset={expandedBackground && !sideMenuMinimised}
 				onClick={() => setUserSideMenuMinimised(!userSideMenuMinimised)}
 			>
 				<span className="label">
