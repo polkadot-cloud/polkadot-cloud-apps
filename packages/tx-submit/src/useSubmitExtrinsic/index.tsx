@@ -12,7 +12,6 @@ import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
-import { SubmittableExtrinsic } from 'dedot'
 import { $Metadata } from 'dedot/codecs'
 import { compactU32 } from 'dedot/shape'
 import type { InjectedSigner } from 'dedot/types'
@@ -25,7 +24,6 @@ import {
 	getUid,
 	pendingTxCount,
 	setUidSubmitted,
-	updateFee,
 } from 'global-bus'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useApi } from 'hooks/useApi'
@@ -37,7 +35,7 @@ import { useTranslation } from 'react-i18next'
 import type { ActiveAccount } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
-import { stringifyWithBigInt } from '../util'
+import { useTxFee } from '../useTxFee'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
 export const useSubmitExtrinsic = ({
@@ -384,35 +382,6 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
-	// Re-fetch tx fee if tx changes
-	const fetchTxFee = async () => {
-		if (submitTx && submitAccount?.address) {
-			updateFee(uid, 0n)
-			const feeTx = SubmittableExtrinsic.fromTx(
-				submitTx.client as Parameters<typeof SubmittableExtrinsic.fromTx>[0],
-				submitTx.call,
-			)
-			try {
-				const partialFee = feeEstimator
-					? await feeEstimator({
-							tx: feeTx,
-							from: submitAccount.address,
-							feePaymentOptions,
-						})
-					: (await feeTx.paymentInfo(submitAccount.address, feePaymentOptions))
-							.partialFee
-				updateFee(uid, partialFee)
-			} catch {
-				updateFee(uid, 0n)
-			}
-		}
-	}
-
-	// Initialise tx submission
-	const submitAccountKey = stringifyWithBigInt(submitAccount)
-	const feePaymentOptionsKey = stringifyWithBigInt(feePaymentOptions)
-	const txHex = submitTx?.toHex()
-
 	useEffect(() => {
 		// Add a new uid for this transaction
 		if (uid === 0) {
@@ -425,19 +394,14 @@ export const useSubmitExtrinsic = ({
 		}
 	}, [submitAccount?.address, tag, network, uid])
 
-	useEffect(() => {
-		if (uid > 0) {
-			if (estimatedFee !== undefined) updateFee(uid, estimatedFee)
-			else fetchTxFee()
-		}
-	}, [
-		submitAccountKey,
+	useTxFee({
 		uid,
-		feePaymentOptionsKey,
-		txHex,
+		tx: submitTx,
+		from: submitAccount?.address,
+		feePaymentOptions,
 		feeEstimator,
 		estimatedFee,
-	])
+	})
 
 	return {
 		txInitiated: !!submitTx,
