@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { DispatchError } from 'dedot/codecs'
+import type { HexString } from 'dedot/utils'
 import type { ActiveAccount, ActiveProxy, MaybeAddress } from './accounts'
 import type { DisplayFor } from './overlay'
 
@@ -11,6 +12,8 @@ export type TxSubmissionItem = {
 	tag?: string
 	fee: bigint
 	from: MaybeAddress
+	// Set when signing starts; nonces belong to this chain, not the umbrella network.
+	genesisHash?: HexString
 	submitted: boolean
 	// Remains true after broadcast, including while waiting for finality.
 	broadcasted: boolean

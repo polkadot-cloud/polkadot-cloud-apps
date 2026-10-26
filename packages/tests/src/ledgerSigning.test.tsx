@@ -113,6 +113,7 @@ let submission: UseSubmitExtrinsic
 const properties = vi.fn()
 const tx = {
 	client: {
+		genesisHash: '0x01',
 		chainSpec: { properties },
 		runtimeVersion: { specName: 'asset-hub-polkadot' },
 		metadata: {},
@@ -250,9 +251,29 @@ test('a failed nonce lookup releases signing so the user can retry', async () =>
 	}
 })
 
-test.each(['ledger', 'vault', 'wallet'])(
-	'%s advances the signing nonce past a pending transaction and retains fee options',
-	async (source) => {
+test('a draft created before account and transaction selection records the actual signer at submission', async () => {
+	await render({ tx: undefined, from: { address: null, source: null } })
+	const uid = submission.uid
+	expect(getUid(uid)?.from).toBeNull()
+	await render()
+	await act(async () => submission.onSubmit())
+	expect(getUid(uid)).toMatchObject({
+		from: 'alice',
+		genesisHash: tx.client.genesisHash,
+		submitted: true,
+	})
+})
+
+test.each([
+	['ledger', true],
+	['vault', true],
+	['wallet', true],
+	['ledger', false],
+	['vault', false],
+	['wallet', false],
+] as const)(
+	'%s counts pending transactions only on its signing chain (same chain: %s)',
+	async (source, sameChain) => {
 		state.source = source
 		window.injectedWeb3 = {
 			wallet: {
@@ -264,26 +285,30 @@ test.each(['ledger', 'vault', 'wallet'])(
 			},
 		}
 		const pending = addUid({ network: 'polkadot', from: 'alice' })
-		setUidSubmitted(pending, true)
+		setUidSubmitted(pending, true, {
+			from: 'alice',
+			genesisHash: sameChain ? tx.client.genesisHash : '0x02',
+		})
 		setUidPending(pending, true)
+		const nonce = sameChain ? 1 : 0
 		const feePaymentOptions = { assetId: 1984 }
 		await render({ feePaymentOptions })
 		await act(async () => submission.onSubmit())
 		if (source === 'ledger') {
 			expect(signLedgerPayload.mock.calls[0][7]).toEqual({
 				assetId: 1984,
-				nonce: 1,
+				nonce,
 			})
 			expect(addSend).toHaveBeenCalledOnce()
 		} else if (source === 'vault') {
 			expect(extraSignedExtension.mock.calls[0][2]).toEqual({
 				assetId: 1984,
-				nonce: 1,
+				nonce,
 			})
 			expect(vaultSign).toHaveBeenCalledOnce()
 			expect(addSend).toHaveBeenCalledOnce()
 		} else {
-			expect(addSignAndSend.mock.calls[0][5]).toBe(1)
+			expect(addSignAndSend.mock.calls[0][5]).toBe(nonce)
 			expect(addSignAndSend.mock.calls[0][7]).toBe(feePaymentOptions)
 		}
 	},

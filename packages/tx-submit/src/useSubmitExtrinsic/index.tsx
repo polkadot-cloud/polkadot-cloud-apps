@@ -164,8 +164,11 @@ export const useSubmitExtrinsic = ({
 			injectedExtension.enable(dappName)
 		}
 
-		// Pre-submission state update
-		setUidSubmitted(uid, true)
+		// The draft can predate account selection; record the actual signer and chain.
+		setUidSubmitted(uid, true, {
+			from: submitAccount.address,
+			genesisHash: submitTx.client.genesisHash,
+		})
 
 		// All signers must advance past transactions already broadcast by this account.
 		let nonce: number
@@ -174,7 +177,8 @@ export const useSubmitExtrinsic = ({
 				submitAccount.address,
 			)
 			nonce =
-				accountState.nonce + pendingTxCount(network, submitAccount.address)
+				accountState.nonce +
+				pendingTxCount(submitAccount.address, submitTx.client.genesisHash)
 		} catch {
 			onError('technical')
 			return

@@ -11,6 +11,7 @@ import type {
 	ServiceInterface,
 	SubmitTxProps,
 	SwapQuote,
+	SwapRequest,
 } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Sync } from '../../app-swap/src/library/Sync'
@@ -113,7 +114,31 @@ vi.mock('../../app-swap/node_modules/react-i18next/dist/es/index.js', () => ({
 vi.mock('../../ui-app/src/AccountDropdown', () => ({
 	AccountDropdown: () => null,
 }))
-vi.mock('../../ui-app/src/Dropdown', () => ({ Dropdown: () => null }))
+vi.mock('../../ui-app/src/Dropdown', () => ({
+	Dropdown: ({
+		options,
+		selected,
+		onSelect,
+	}: {
+		options: { value: string }[]
+		selected: { value: string }
+		onSelect: (option: { value: string }) => void
+	}) =>
+		createElement(
+			'select',
+			{
+				'aria-label': 'fee asset',
+				value: selected.value,
+				onChange: (event: { currentTarget: HTMLSelectElement }) =>
+					onSelect(
+						options.find(({ value }) => value === event.currentTarget.value)!,
+					),
+			},
+			options.map(({ value }) =>
+				createElement('option', { key: value, value }, value),
+			),
+		),
+}))
 vi.mock('../../ui-app/src/BalanceInput', () => ({
 	BalanceInputMulti: ({
 		label,
@@ -121,16 +146,19 @@ vi.mock('../../ui-app/src/BalanceInput', () => ({
 		onChange,
 		readOnly,
 		selected,
+		maxAvailable,
 	}: {
 		label: string
 		value: string
 		onChange?: (value: string) => void
 		readOnly?: boolean
 		selected: { value: string }
+		maxAvailable: string
 	}) =>
 		createElement('input', {
 			'aria-label': label,
 			'data-token': selected.value,
+			'data-available': maxAvailable,
 			value,
 			readOnly,
 			onInput: (event: { currentTarget: HTMLInputElement }) =>
@@ -278,6 +306,7 @@ beforeEach(() => {
 		(data: SwapQuote) =>
 			({
 				client: {
+					genesisHash: '0x01',
 					runtimeVersion: { specName: 'asset-hub-polkadot' },
 					query: { system: { account: async () => ({ nonce: 0 }) } },
 				},
@@ -883,8 +912,7 @@ test('a second swap can be submitted before the first is included, using the nex
 	await advance(250)
 	expect(submitButton().disabled).toBe(true)
 	await emitStatus({ type: 'Broadcasting' }, 0)
-	await enterAmount('0.2')
-	await advance(250)
+	expect(input('youPay').value).toBe('0.2')
 	expect(submitButton().disabled).toBe(false)
 	const secondUid = Number(submitButton().dataset.submit)
 	await act(async () => submitButton().click())
@@ -930,4 +958,48 @@ test('an inclusion without a preceding broadcast status releases the form before
 	await advance(250)
 	expect(submitButton().disabled).toBe(false)
 	expect(isSpinning()).toBe(false)
+})
+
+test('broadcasting preserves a new token pair even when its entered amount is unchanged', async () => {
+	await configure()
+	await act(async () => submitButton().click())
+	await click('reverseAssets')
+	await advance(250)
+	expect(input('youPay').dataset.token).toBe('dotUSD')
+	expect(input('youPay').value).toBe('0.1')
+	expect(submitButton().disabled).toBe(true)
+	await emitStatus({ type: 'Broadcasting' })
+	expect(input('youPay').dataset.token).toBe('dotUSD')
+	expect(input('youPay').value).toBe('0.1')
+	expect(submitButton().disabled).toBe(false)
+})
+
+test('max-fill reserves the fee margin only when spending the fee token', async () => {
+	quotes.mockImplementation(async (request: SwapRequest) => [
+		{
+			...quote(Date.now()),
+			...request,
+			amountIn: request.amount,
+			amountOut: (request.amount * 99n) / 100n,
+		},
+	])
+	await configure()
+	expect(input('youPay').dataset.available).toBe('999999.999999')
+	await act(async () => {
+		const select = container.querySelector<HTMLSelectElement>(
+			'[aria-label="fee asset"]',
+		)!
+		select.value = 'USDT'
+		select.dispatchEvent(new Event('change', { bubbles: true }))
+	})
+	await advance(250)
+	// The 100-unit estimate reserves 110 units, plus the one-unit minimum balance.
+	expect(input('youPay').dataset.available).toBe('999999.999889')
+	expect(input('youReceive').dataset.available).toBe('999999.999999')
+	await enterAmount(input('youPay').dataset.available!)
+	await advance(250)
+	expect(submitButton().disabled).toBe(false)
+	await enterAmount('999999.99989')
+	await advance(250)
+	expect(submitButton().disabled).toBe(true)
 })

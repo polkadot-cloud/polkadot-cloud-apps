@@ -14,7 +14,7 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import type { ReactNode } from 'react'
-import { useCallback, useEffect, useId, useMemo } from 'react'
+import { useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit'
 import type { ImportedAccount, SwapToken } from 'types'
@@ -31,6 +31,8 @@ export const tokenOptions = SwapTokens.map((value) => ({
 export const tokenAmount = (amount: bigint, token: SwapToken) =>
 	planckToUnit(amount, swapDecimals(token)).replace(/\.?0+$/, '')
 export const percentage = (permill: number) => `${permill / 10_000}%`
+// Leave the same 10% fee margin in max-fill amounts and submission funding checks.
+export const swapFeeReserve = (fee: bigint) => ceilDiv(fee * 110n, 100n)
 export const ExchangeNotice = ({
 	children,
 	status = 'warning',
@@ -112,17 +114,12 @@ const TransactionActionInner = ({
 		() => ({ unit: feeAsset, units: swapDecimals(feeAsset) }),
 		[feeAsset],
 	)
-	const feeEstimator = useCallback(async () => {
-		if (fee === undefined) throw new Error('Fee not ready')
-		return fee
-	}, [fee])
 	const feeBalance = balances.getBalance('statemint', feeAsset)
-	const feeReserve = fee === undefined ? 0n : ceilDiv(fee * 110n, 100n)
 	const funded = canFundExchange(
 		balances.balances,
 		spends,
 		feeAsset,
-		fee === undefined ? undefined : feeReserve,
+		fee === undefined ? undefined : swapFeeReserve(fee),
 	)
 	const ready =
 		valid &&
@@ -142,7 +139,6 @@ const TransactionActionInner = ({
 		tag: `asset-hub-exchange:${submissionId}`,
 		dappName: SwapDappName,
 		feePaymentOptions: payload,
-		feeEstimator,
 		estimatedFee: fee,
 		feeDisplay,
 		callbackSubmit: onSubmitted,

@@ -8,7 +8,7 @@ import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
 import { useStablecoinBalances, useTheme } from 'hooks'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
 import { useSwapQuote } from 'hooks/useSwapQuote'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ImportedAccount, SwapMode, SwapToken } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
@@ -21,6 +21,7 @@ import { maxSendableBalance, slippageLimit } from 'utils'
 import {
 	ExchangeNotice,
 	percentage,
+	swapFeeReserve,
 	TransactionAction,
 	tokenAmount,
 	tokenOptions,
@@ -67,6 +68,10 @@ export const Swap = () => {
 		slippage,
 		feeAsset,
 	})
+	const currentRequestKey = useRef(requestKey)
+	useEffect(() => {
+		currentRequestKey.current = requestKey
+	}, [requestKey])
 	const quotedAmount = quote
 		? tokenAmount(
 				mode === 'exactIn' ? quote.amountOut : quote.amountIn,
@@ -90,8 +95,8 @@ export const Swap = () => {
 		const paying = editable === (mode === 'exactIn')
 		const available = maxSendableBalance(
 			balances.getBalance('statemint', token),
-			undefined,
-			0n,
+			paying ? balances.getBalance('statemint', feeAsset) : undefined,
+			fee === undefined ? 0n : swapFeeReserve(fee),
 		)
 		return (
 			<BalanceInputMulti
@@ -251,6 +256,8 @@ export const Swap = () => {
 								: 'swapAssets',
 						)}
 						onSubmitted={() => {
+							// A wallet may broadcast after the user has already changed the form.
+							if (currentRequestKey.current !== requestKey) return
 							setAmount('')
 							refresh()
 						}}
