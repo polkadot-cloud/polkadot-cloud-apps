@@ -3,6 +3,7 @@
 		"amountModeTooltip": "Choisissez de saisir le montant à payer ou à recevoir.",
 		"amountToSend": "Montant à envoyer",
 		"assetToSend": "Actif à envoyer",
+		"available": "Disponible",
 		"bestInput": "Automatique · montant payé minimal avant frais de réseau",
 		"bestOutput": "Automatique · montant reçu maximal avant frais de réseau",
 		"chain": "Chaîne",
