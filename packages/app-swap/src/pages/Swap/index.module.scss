@@ -125,51 +125,6 @@
 	}
 }
 
-.slippageSlider {
-	width: 100%;
-	min-width: 0;
-	height: 1.5rem;
-	margin: 0;
-	appearance: none;
-	background: transparent;
-	cursor: pointer;
-
-	&::-webkit-slider-runnable-track {
-		height: 0.375rem;
-		border-radius: 1rem;
-		background: #bfbfbf;
-	}
-
-	&::-webkit-slider-thumb {
-		width: 1.25rem;
-		height: 1.25rem;
-		margin-top: -0.4375rem;
-		border: 0;
-		border-radius: 50%;
-		appearance: none;
-		background: #000;
-	}
-
-	&::-moz-range-track {
-		height: 0.375rem;
-		border-radius: 1rem;
-		background: #bfbfbf;
-	}
-
-	&::-moz-range-thumb {
-		width: 1.25rem;
-		height: 1.25rem;
-		border: 0;
-		border-radius: 50%;
-		background: #000;
-	}
-
-	&:disabled {
-		opacity: 0.5;
-		cursor: default;
-	}
-}
-
 .slippageValue {
 	min-width: 3.5rem;
 	color: var(--text-tertiary);

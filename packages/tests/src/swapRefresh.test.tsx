@@ -382,7 +382,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	const stableSelectors = [
 		'[data-fee]',
 		'section[aria-label="route"]',
-		'input[type="range"]',
+		'[role="slider"]',
 	]
 	const stableNodes = stableSelectors.map((selector) =>
 		container.querySelector(selector),
@@ -429,9 +429,7 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	await configure()
 	const route = routeView()
 	const minimum = note('minimumReceived')
-	const slippage = container.querySelector<HTMLInputElement>(
-		'input[type="range"]',
-	)!
+	const slippage = container.querySelector<HTMLDivElement>('[role="slider"]')!
 	const pendingQuotes = deferred<SwapQuote[]>()
 	quotes.mockReturnValueOnce(pendingQuotes.promise)
 	await advance(15_000)
@@ -442,7 +440,7 @@ test('editing the input invalidates the old quote immediately and ignores an in-
 	expect(route.textContent).toContain('fetchingQuote')
 	expect(note('minimumReceived')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived—')
-	expect(slippage.disabled).toBe(false)
+	expect(slippage.getAttribute('aria-disabled')).toBe('false')
 	expect(note('conversionFee').textContent).toBe('conversionFee—')
 	await act(async () => pendingQuotes.resolve([quote(115_000, 98_000n)]))
 	expect(submitButton().disabled).toBe(true)
@@ -456,12 +454,10 @@ test('the automatic route and quote rows keep their placeholders until the quote
 	await render()
 	const route = routeView()
 	const minimum = note('minimumReceived')
-	const slippage = container.querySelector<HTMLInputElement>(
-		'input[type="range"]',
-	)!
+	const slippage = container.querySelector<HTMLDivElement>('[role="slider"]')!
 	expect(route.querySelector('[aria-live="polite"]')!.textContent).toBe('—')
 	expect(minimum.textContent).toBe('minimumReceived—')
-	expect(slippage.disabled).toBe(false)
+	expect(slippage.getAttribute('aria-disabled')).toBe('false')
 	for (const label of ['networkFee', 'conversionFee', 'priceImpact']) {
 		expect(note(label).textContent).toBe(`${label}—`)
 	}
@@ -482,7 +478,7 @@ test('the automatic route and quote rows keep their placeholders until the quote
 	])
 	expect(note('minimumReceived')).toBe(minimum)
 	expect(minimum.textContent).toBe('minimumReceived0.098505 dotUSD')
-	expect(slippage.disabled).toBe(false)
+	expect(slippage.getAttribute('aria-disabled')).toBe('false')
 	expect(submitButton().disabled).toBe(false)
 	const networkFee = note('networkFee')
 	expect(networkFee.nextElementSibling?.firstElementChild?.textContent).toBe(
@@ -505,14 +501,14 @@ test.each(['exactIn', 'exactOut'] as const)(
 		const panel = document.getElementById(
 			toggle.getAttribute('aria-controls')!,
 		)!
-		const slider = panel.querySelector('input')!
+		const slider = panel.querySelector<HTMLDivElement>('[role="slider"]')!
 		const reset = panel.querySelector<HTMLButtonElement>(
 			'[aria-label="resetSlippage"]',
 		)!
 		expect(toggle.textContent).toBe('slippageSettings')
 		expect(toggle.getAttribute('aria-expanded')).toBe('false')
 		expect(panel.hidden).toBe(true)
-		expect(slider.value).toBe('50')
+		expect(slider.getAttribute('aria-valuenow')).toBe('50')
 		expect(slider.getAttribute('aria-valuetext')).toBe('0.5%')
 		expect(reset.disabled).toBe(true)
 		if (mode === 'exactOut') {
@@ -523,13 +519,17 @@ test.each(['exactIn', 'exactOut'] as const)(
 		await act(async () => toggle.click())
 		expect(panel.hidden).toBe(false)
 		expect(toggle.getAttribute('aria-expanded')).toBe('true')
-		await act(async () => {
-			Object.getOwnPropertyDescriptor(
-				HTMLInputElement.prototype,
-				'value',
-			)!.set!.call(slider, '100')
-			slider.dispatchEvent(new Event('input', { bubbles: true }))
-		})
+		for (let step = 0; step < 5; step++) {
+			await act(async () => {
+				slider.dispatchEvent(
+					new KeyboardEvent('keydown', {
+						key: 'ArrowRight',
+						keyCode: 39,
+						bubbles: true,
+					}),
+				)
+			})
+		}
 		expect(submitButton().disabled).toBe(true)
 		await advance(250)
 		expect(submitButton().disabled).toBe(false)
@@ -548,9 +548,9 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(submitButton().disabled).toBe(false)
 		await act(async () => toggle.click())
 		expect(panel.hidden).toBe(false)
-		expect(slider.value).toBe('100')
+		expect(slider.getAttribute('aria-valuenow')).toBe('100')
 		await act(async () => reset.click())
-		expect(slider.value).toBe('50')
+		expect(slider.getAttribute('aria-valuenow')).toBe('50')
 		expect(slider.getAttribute('aria-valuetext')).toBe('0.5%')
 		expect(reset.disabled).toBe(true)
 		expect(submitButton().disabled).toBe(true)
@@ -594,10 +594,18 @@ test.each(['exactIn', 'exactOut'] as const)(
 		expect(route.getAttribute('aria-description')).toBe(
 			mode === 'exactIn' ? 'bestOutput' : 'bestInput',
 		)
-		expect(
-			container.querySelector<HTMLInputElement>('input[type="range"]')!
-				.disabled,
-		).toBe(true)
+		const slider = container.querySelector<HTMLDivElement>('[role="slider"]')!
+		expect(slider.getAttribute('aria-disabled')).toBe('true')
+		await act(async () => {
+			slider.dispatchEvent(
+				new KeyboardEvent('keydown', {
+					key: 'ArrowRight',
+					keyCode: 39,
+					bubbles: true,
+				}),
+			)
+		})
+		expect(slider.getAttribute('aria-valuenow')).toBe('50')
 		expect(submitButton().disabled).toBe(false)
 	},
 )
@@ -606,9 +614,7 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	await configure()
 	const button = submitButton()
 	const route = routeView()
-	const slippage = container.querySelector<HTMLInputElement>(
-		'input[type="range"]',
-	)
+	const slippage = container.querySelector<HTMLDivElement>('[role="slider"]')
 	quotes.mockRejectedValue(new Error('Network unavailable'))
 	await advance(15_000)
 	expect(button.disabled).toBe(false)
@@ -618,7 +624,7 @@ test('an unavailable market refresh keeps the visible details but blocks submiss
 	expect(button.disabled).toBe(true)
 	expect(feeText()).toBe('100')
 	expect(routeView()).toBe(route)
-	expect(container.querySelector<HTMLInputElement>('input[type="range"]')).toBe(
+	expect(container.querySelector<HTMLDivElement>('[role="slider"]')).toBe(
 		slippage,
 	)
 	const refresh = [...container.querySelectorAll('button')].find(

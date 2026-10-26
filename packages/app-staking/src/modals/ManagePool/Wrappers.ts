@@ -76,18 +76,6 @@ export const SliderWrapper = styled.div`
   > div {
     display: flex;
     align-items: center;
-
-    > .slider {
-      flex-grow: 1;
-
-      &.no-value {
-        padding-left: 0;
-      }
-
-      .rc-slider-handle-dragging {
-        box-shadow: 0 !important;
-      }
-    }
   }
 
   .stats {
