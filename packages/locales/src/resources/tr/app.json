@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Hesap",
 		"accountConnected": "Hesap Bağlandı",
 		"accounts": "Hesaplar",
 		"active": "Aktif",
@@ -270,6 +271,7 @@
 		"nextHalving": "Sonraki Halving",
 		"nextRewardsIn": "Sonraki Ödüllere Kalan Süre",
 		"noAccountSelected": "Hesap Seçilmedi",
+		"noAccounts": "Hesap yok",
 		"noActiveValidatorsWarning": "Aday gösterdiğiniz doğrulayıcıların hiçbiri aktif olmadığı için ödül kazanamayabilirsiniz.",
 		"noFilters": "Filtre yok",
 		"noFree": "Bağlanacak serbest {{unit}} bakiyeniz yok.",
@@ -361,7 +363,9 @@
 		"permissionlessClaimingTurnedOff": "İzinsiz talep etme kapalı.",
 		"permissionlessCompound": "İzinsiz Bileşik: Herkes bu üye için ödülleri bileşik hale getirebilir",
 		"permissionlessWithdraw": "İzinsiz Çekme: Herkes bu üye için ödülleri çekebilir",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Puanlar",
 		"pool": "Havuz",
 		"poolClaim": "Havuz Talebi",

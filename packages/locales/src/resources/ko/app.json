@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "계정",
 		"accountConnected": "계정 연결됨",
 		"accounts": "계정",
 		"active": "활성",
@@ -269,6 +270,7 @@
 		"nextHalving": "다음 반감",
 		"nextRewardsIn": "다음 보상까지",
 		"noAccountSelected": "선택된 계정 없음",
+		"noAccounts": "계정 없음",
 		"noActiveValidatorsWarning": "추천한 검증인 중 활성 상태인 검증인이 없어 보상을 받지 못할 수 있습니다.",
 		"noFilters": "필터 없음",
 		"noFree": "본딩할 수 있는 자유 {{unit}}이(가) 없습니다.",
@@ -360,7 +362,9 @@
 		"permissionlessClaimingTurnedOff": "권한이 없는 청구가 비활성화되었습니다.",
 		"permissionlessCompound": "권한이 없는 복리: 누구나 이 멤버의 보상을 복리로 계산할 수 있습니다",
 		"permissionlessWithdraw": "권한이 없는 인출: 누구나 이 멤버의 보상을 인출할 수 있습니다",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "포인트",
 		"pool": "풀",
 		"poolClaim": "풀 청구",

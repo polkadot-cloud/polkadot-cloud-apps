@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Konto",
 		"accountConnected": "Konto verbunden",
 		"accounts": "Konten",
 		"active": "Aktiv",
@@ -270,6 +271,7 @@
 		"nextHalving": "Nächste Halbierung",
 		"nextRewardsIn": "Nächste Belohnungen in",
 		"noAccountSelected": "Kein Konto ausgewählt",
+		"noAccounts": "Keine Konten",
 		"noActiveValidatorsWarning": "Du erhältst möglicherweise keine Belohnungen, da keiner deiner nominierten Validatoren aktiv ist.",
 		"noFilters": "Keine Filter",
 		"noFree": "du hast keine freien {{unit}} zum Binden.",
@@ -361,7 +363,9 @@
 		"permissionlessClaimingTurnedOff": "Genehmigungsfreies Beanspruchen ist deaktiviert.",
 		"permissionlessCompound": "Automatisches Compounding ohne Genehmigung: Jeder kann Belohnungen für dieses Mitglied reinvestieren",
 		"permissionlessWithdraw": "Erlaubnisfreies Abheben: Jeder kann Belohnungen für dieses Mitglied abheben",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Punkte",
 		"pool": "Pool",
 		"poolClaim": "Pool-Anspruch",

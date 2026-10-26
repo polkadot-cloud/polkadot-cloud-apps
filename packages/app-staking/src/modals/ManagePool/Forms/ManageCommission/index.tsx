@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { ModalBack } from 'library/ModalBack'
-import 'rc-slider/assets/index.css'
 import { ItemsWrapper } from 'modals/StakingOptions/Wrappers'
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -78,11 +78,11 @@ export const AccountBalances = ({
 							accounts={accounts}
 							initialAccount={account}
 							onSelect={selectAccount}
-							label={t('account')}
+							label={t('account', { ns: 'app' })}
 							placeholder={
 								accounts.length
 									? t('selectAccount', { ns: 'app' })
-									: t('noAccounts')
+									: t('noAccounts', { ns: 'app' })
 							}
 							disabled={!accounts.length}
 							allowCustomAccounts={false}
@@ -136,7 +136,7 @@ export const AccountBalances = ({
 							</div>
 						</>
 					) : (
-						<p className={classes.empty}>{t('noAccounts')}</p>
+						<p className={classes.empty}>{t('noAccounts', { ns: 'app' })}</p>
 					)}
 				</div>
 			</div>

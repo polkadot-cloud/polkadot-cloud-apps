@@ -6,10 +6,10 @@ import { getRelayChainConsts } from 'consts/util'
 import { intervalToDuration } from 'date-fns'
 import { useNetwork } from 'hooks/useNetwork'
 import { MinDelayInput } from 'library/Form/MinDelayInput'
-import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Slider } from 'ui-app/Slider'
 import type { ChangeRateInput } from '../types'
 import { usePoolCommission } from './provider'
 
@@ -114,16 +114,16 @@ export const ChangeRate = () => {
 					</h5>
 				</div>
 
-				<StyledSlider
+				<Slider
 					value={changeRate.maxIncrease}
 					step={0.1}
+					ariaLabel={t('changeRate')}
+					formatValue={(value) => `${value}%`}
 					onChange={(val) => {
-						if (typeof val === 'number') {
-							setChangeRate({
-								...changeRate,
-								maxIncrease: val,
-							})
-						}
+						setChangeRate({
+							...changeRate,
+							maxIncrease: val,
+						})
 					}}
 				/>
 

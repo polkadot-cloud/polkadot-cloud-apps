@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Cuenta",
 		"accountConnected": "Cuenta Conectada",
 		"accounts": "Cuentas",
 		"active": "Activo",
@@ -272,6 +273,7 @@
 		"nextHalving": "Próximo Halving",
 		"nextRewardsIn": "Próximas Recompensas En",
 		"noAccountSelected": "No hay cuenta seleccionada",
+		"noAccounts": "No hay cuentas",
 		"noActiveValidatorsWarning": "Es posible que no obtengas recompensas porque ninguno de tus validadores nominados está activo.",
 		"noFilters": "Sin filtros",
 		"noFree": "No tienes {{unit}} libre para vincular",
@@ -363,7 +365,9 @@
 		"permissionlessClaimingTurnedOff": "La reclamación sin permisos está desactivada.",
 		"permissionlessCompound": "Reinversión sin permisos: Cualquiera puede reinvertir recompensas para este miembro",
 		"permissionlessWithdraw": "Retiro sin permisos: Cualquiera puede retirar recompensas para este miembro",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Puntos",
 		"pool": "Pool",
 		"poolClaim": "Reclamación del Pool",
