@@ -69,6 +69,7 @@ export class PolkadotService
 		const stablecoinsEnabled =
 			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
 		this.interface = {
+			swap: undefined,
 			stablecoins: stablecoinsEnabled
 				? createStablecoinsInterface(
 						this.apiHub,

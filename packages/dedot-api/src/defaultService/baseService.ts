@@ -76,6 +76,7 @@ export class BaseService<
 		this.features = {
 			nominationPools: features.nominationPools ?? true,
 			staking: features.staking ?? true,
+			swap: features.swap ?? false,
 			stablecoins: {
 				assetHub: features.stablecoins?.assetHub ?? true,
 				hydration: features.stablecoins?.hydration ?? true,

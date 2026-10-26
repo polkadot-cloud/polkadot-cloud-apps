@@ -66,14 +66,14 @@ const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 		label: 'Polkadot Hub',
 		assets: withFeeTokenMetadata({
 			DOT: {
-				existentialDeposit: 10_000_000_000n,
+				existentialDeposit: 100_000_000n,
 			},
 			USDC: {
-				existentialDeposit: 700_000n,
+				existentialDeposit: 10_000n,
 				assetId: 1337,
 			},
 			USDT: {
-				existentialDeposit: 700_000n,
+				existentialDeposit: 10_000n,
 				assetId: 1984,
 			},
 			dotUSD: {

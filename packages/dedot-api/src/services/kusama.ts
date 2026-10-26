@@ -60,6 +60,7 @@ export class KusamaService
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
+			swap: undefined,
 			stablecoins: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
