@@ -3,6 +3,7 @@
 // @vitest-environment jsdom
 
 import type { SubmittableExtrinsic } from 'dedot'
+import type { TxStatus } from 'dedot/types'
 import { act, createElement, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type {
@@ -12,11 +13,13 @@ import type {
 	SwapQuote,
 } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
+import { Sync } from '../../app-swap/src/library/Sync'
 import { Swap } from '../../app-swap/src/pages/Swap'
+import { getUid, removeSub, subs } from '../../global-bus/src/txSubmit'
 import { _uids } from '../../global-bus/src/txSubmit/private'
 
-const { state, quotes, swap, estimate, refreshBalances, views } = vi.hoisted(
-	() => ({
+const { state, quotes, swap, estimate, refreshBalances, signAndSend, views } =
+	vi.hoisted(() => ({
 		state: {
 			serviceApi: undefined as unknown as ServiceInterface,
 			account: { address: 'alice', source: 'extension' } as ImportedAccount,
@@ -25,9 +28,9 @@ const { state, quotes, swap, estimate, refreshBalances, views } = vi.hoisted(
 		swap: vi.fn(),
 		estimate: vi.fn(),
 		refreshBalances: vi.fn(),
+		signAndSend: vi.fn(),
 		views: [] as { valid: boolean; fee: bigint; uid: number }[],
-	}),
-)
+	}))
 
 vi.mock(
 	'../../app-swap/node_modules/@polkadot-cloud/util-dedot/index.js',
@@ -72,8 +75,10 @@ vi.mock('../../app-swap/src/pages/Send/hooks/useSendAccounts', () => ({
 vi.mock(
 	'../../tx-submit/node_modules/@polkadot-cloud/connect/index.js',
 	() => ({
-		useExtensionAccounts: () => ({ getExtensionAccount: vi.fn() }),
-		useExtensions: () => ({ extensionsStatus: {} }),
+		useExtensionAccounts: () => ({
+			getExtensionAccount: () => ({ signer: {} }),
+		}),
+		useExtensions: () => ({ extensionsStatus: { extension: 'connected' } }),
 		useImportedAccounts: () => ({
 			getAccount: () => state.account,
 			requiresManualSign: () => false,
@@ -91,6 +96,9 @@ vi.mock('../../hooks/src/useAccountBalances', () => ({
 }))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
+}))
+vi.mock('../../hooks/src/useSyncing', () => ({
+	useSyncing: () => ({ syncing: false }),
 }))
 vi.mock('../../hooks/src/useProxySupported', () => ({
 	useProxySupported: () => ({ isProxySupported: () => false }),
@@ -132,13 +140,18 @@ vi.mock('../../ui-app/src/BalanceInput', () => ({
 vi.mock('../../ui-app/src/SubmitTx', async () => {
 	const { useTxMeta } = await import('../../hooks/src/useTxMeta')
 	return {
-		SubmitTx: ({ uid, valid, submitText }: SubmitTxProps) => {
+		SubmitTx: ({ uid, valid, submitText, onSubmit }: SubmitTxProps) => {
 			const { getTxSubmission } = useTxMeta()
 			const fee = getTxSubmission(uid)?.fee ?? 0n
 			views.push({ uid, fee, valid })
 			return createElement(
 				'button',
-				{ type: 'button', 'data-submit': uid, disabled: !valid },
+				{
+					type: 'button',
+					'data-submit': uid,
+					disabled: !valid || getTxSubmission(uid)?.submitted,
+					onClick: onSubmit,
+				},
 				submitText,
 				createElement('span', { 'data-fee': true }, fee.toString()),
 			)
@@ -156,6 +169,7 @@ vi.mock('../../ui-core/src/base/Tooltip', () => ({
 }))
 vi.mock('../../ui-core/src/base', async () => ({
 	Page: { Row: (await import('../../ui-core/src/base/Page/Row')).Row },
+	Spinner: (await import('../../ui-core/src/base/Spinner')).Spinner,
 	Tooltip: (await import('../../ui-core/src/base/Tooltip')).Tooltip,
 }))
 vi.mock('../../ui-core/src/input', async () => ({
@@ -210,12 +224,28 @@ const click = (label: string) =>
 			.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!
 			.click(),
 	)
-const render = () => act(async () => root.render(createElement(Swap)))
+const render = () =>
+	act(async () =>
+		root.render(
+			<>
+				<div data-sync>
+					<Sync />
+				</div>
+				<Swap />
+			</>,
+		),
+	)
 const submitButton = () =>
 	container.querySelector<HTMLButtonElement>('[data-submit]')!
 const feeText = () => container.querySelector('[data-fee]')!.textContent
 const routeView = () =>
-	container.querySelector<HTMLElement>('section[aria-label="route"]')!
+	container.querySelector<HTMLElement>('[role="group"][aria-label="route"]')!
+const isSpinning = () =>
+	container.querySelector('[data-sync]')!.childElementCount > 0
+const emitStatus = (status: TxStatus) =>
+	act(async () => {
+		await signAndSend.mock.calls.at(-1)![2]({ status, events: [] })
+	})
 const configure = async () => {
 	await render()
 	await enterAmount('0.1')
@@ -234,12 +264,27 @@ beforeEach(() => {
 	quotes.mockImplementation(async () => [quote(Date.now())])
 	estimate.mockResolvedValue(100n)
 	refreshBalances.mockResolvedValue(undefined)
+	signAndSend.mockResolvedValue(async () => {})
+	window.injectedWeb3 = {
+		extension: {
+			id: 'extension',
+			title: 'Test wallet',
+			icon: () => null,
+			url: '',
+			enable: vi.fn(),
+		},
+	}
 	swap.mockImplementation(
 		(data: SwapQuote) =>
 			({
+				client: {
+					runtimeVersion: { specName: 'asset-hub-polkadot' },
+					query: { system: { account: async () => ({ nonce: 0 }) } },
+				},
 				toHex: () => `0x${data.amountOut.toString(16)}`,
 				call: { pallet: 'AssetConversion', palletCall: { name: 'Swap' } },
-			}) as SubmittableExtrinsic,
+				signAndSend,
+			}) as unknown as SubmittableExtrinsic,
 	)
 	state.serviceApi = {
 		swap: { quotes, swap },
@@ -255,7 +300,9 @@ beforeEach(() => {
 afterEach(async () => {
 	await act(async () => root.unmount())
 	container.remove()
+	for (const uid of Object.keys(subs)) removeSub(Number(uid))
 	_uids.next([])
+	delete window.injectedWeb3
 	vi.useRealTimers()
 	vi.unstubAllGlobals()
 })
@@ -381,7 +428,7 @@ test('polling retains the route, slippage, fee and enabled button until the repl
 	const button = submitButton()
 	const stableSelectors = [
 		'[data-fee]',
-		'section[aria-label="route"]',
+		'[role="group"][aria-label="route"]',
 		'[role="slider"]',
 	]
 	const stableNodes = stableSelectors.map((selector) =>
@@ -710,3 +757,98 @@ test('replacing the service invalidates a pending fee and the old quote immediat
 	expect(submitButton().disabled).toBe(false)
 	expect(feeText()).toBe('100')
 })
+
+test.each(['exactIn', 'exactOut'] as const)(
+	'%s clears both amounts on broadcast and keeps the spinner through inclusion and finalization',
+	async (mode) => {
+		await render()
+		if (mode === 'exactOut') await click('exactOutput')
+		const editable = mode === 'exactIn' ? 'youPay' : 'youReceive'
+		await enterAmount('0.1', editable)
+		await advance(250)
+		refreshBalances.mockClear()
+		const uid = Number(submitButton().dataset.submit)
+		expect(isSpinning()).toBe(false)
+		await act(async () => submitButton().click())
+		expect(signAndSend).toHaveBeenCalledOnce()
+		expect(input(editable).value).toBe('0.1')
+		expect(isSpinning()).toBe(true)
+		expect(getUid(uid)?.submitted).toBe(true)
+
+		await emitStatus({ type: 'Broadcasting' })
+		expect(input(editable).value).toBe('')
+		expect(input(mode === 'exactIn' ? 'youReceive' : 'youPay').value).toBe(
+			'0.00',
+		)
+		expect(routeView().textContent).toBe('route—')
+		expect(Number(submitButton().dataset.submit)).not.toBe(uid)
+		expect(getUid(uid)?.pending).toBe(true)
+		expect(submitButton().disabled).toBe(true)
+		expect(isSpinning()).toBe(true)
+		expect(refreshBalances).not.toHaveBeenCalled()
+		expect(container.textContent).not.toContain('transactionInProgress')
+
+		// A new draft must survive callbacks from the already submitted swap.
+		await enterAmount('0.2', editable)
+		await advance(250)
+		expect(submitButton().disabled).toBe(true)
+		expect(isSpinning()).toBe(true)
+		const block = { blockHash: '0x01' as const, blockNumber: 1, txIndex: 0 }
+		await emitStatus({ type: 'BestChainBlockIncluded', value: block })
+		expect(refreshBalances).toHaveBeenCalledOnce()
+		expect(input(editable).value).toBe('0.2')
+		expect(isSpinning()).toBe(true)
+		await emitStatus({ type: 'NoLongerInBestChain' })
+		expect(isSpinning()).toBe(true)
+		await emitStatus({ type: 'BestChainBlockIncluded', value: block })
+		await emitStatus({ type: 'Finalized', value: block })
+		expect(isSpinning()).toBe(false)
+		expect(getUid(uid)).toBeUndefined()
+		expect(input(editable).value).toBe('0.2')
+		expect(submitButton().disabled).toBe(false)
+
+		await act(async () => submitButton().click())
+		expect(signAndSend).toHaveBeenCalledTimes(2)
+		await emitStatus({ type: 'Broadcasting' })
+		expect(input(editable).value).toBe('')
+		expect(isSpinning()).toBe(true)
+		await emitStatus({ type: 'Finalized', value: block })
+		expect(isSpinning()).toBe(false)
+	},
+)
+
+test('cancelling signing preserves the amounts, clears the spinner and permits retry', async () => {
+	await configure()
+	const signing = deferred<never>()
+	signAndSend.mockReturnValueOnce(signing.promise)
+	await act(async () => submitButton().click())
+	expect(input('youPay').value).toBe('0.1')
+	expect(input('youReceive').value).toBe('0.099')
+	expect(isSpinning()).toBe(true)
+	await act(async () => signing.reject(new Error('User cancelled')))
+	expect(input('youPay').value).toBe('0.1')
+	expect(input('youReceive').value).toBe('0.099')
+	expect(isSpinning()).toBe(false)
+	expect(submitButton().disabled).toBe(false)
+	await act(async () => submitButton().click())
+	await emitStatus({ type: 'Broadcasting' })
+	expect(input('youPay').value).toBe('')
+	expect(isSpinning()).toBe(true)
+})
+
+test.each(['Invalid', 'Drop'] as const)(
+	'a %s status clears the spinner after the form reset without discarding a new draft',
+	async (type) => {
+		await configure()
+		await act(async () => submitButton().click())
+		await emitStatus({ type: 'Broadcasting' })
+		await enterAmount('0.2')
+		await advance(250)
+		expect(isSpinning()).toBe(true)
+		expect(submitButton().disabled).toBe(true)
+		await emitStatus({ type, value: { error: 'Rejected' } })
+		expect(input('youPay').value).toBe('0.2')
+		expect(isSpinning()).toBe(false)
+		expect(submitButton().disabled).toBe(false)
+	},
+)

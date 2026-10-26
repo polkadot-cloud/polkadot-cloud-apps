@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import classes from './index.module.scss'
 
 export type SendFormNotesProps = {
@@ -10,10 +10,10 @@ export type SendFormNotesProps = {
 	className?: string
 }
 
-export type SendFormNoteProps = {
+export type SendFormNoteProps = HTMLAttributes<HTMLDivElement> & {
 	label: string
 	children: ReactNode
-	variant?: 'default' | 'success'
+	variant?: 'default' | 'success' | 'muted'
 }
 
 export const Notes = ({ children, className }: SendFormNotesProps) => (
@@ -24,16 +24,19 @@ export const Note = ({
 	label,
 	children,
 	variant = 'default',
+	className,
+	...props
 }: SendFormNoteProps) => (
-	<div className={classes.note}>
+	<div className={classNames(classes.note, className)} {...props}>
 		<span className={classes.label}>{label}</span>
-		<span
+		<div
 			className={classNames(classes.value, {
 				[classes.defaultValue]: variant === 'default',
 				[classes.successValue]: variant === 'success',
+				[classes.mutedValue]: variant === 'muted',
 			})}
 		>
 			{children}
-		</span>
+		</div>
 	</div>
 )

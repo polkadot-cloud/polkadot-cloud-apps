@@ -2,9 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
-import classNames from 'classnames'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
 import { useStablecoinBalances, useTheme } from 'hooks'
@@ -17,7 +15,7 @@ import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
 import { ButtonSecondary } from 'ui-buttons'
-import { Page, Tooltip } from 'ui-core/base'
+import { Page, Spinner, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { maxSendableBalance, slippageLimit } from 'utils'
 import {
@@ -153,8 +151,10 @@ export const Swap = () => {
 							{t('sendToAnotherAddress')}
 						</label>
 						{recipientEnabled && (
-							<div className={classes.recipientField}>
-								<span className={classes.recipientLabel}>{t('sendTo')}</span>
+							<SendForm.Field
+								title={t('sendTo')}
+								className={classes.recipientField}
+							>
 								<AccountDropdown
 									key={`${recipientAccount?.address}:${recipientAccount?.source}`}
 									initialAccount={recipientAccount}
@@ -162,7 +162,7 @@ export const Swap = () => {
 									onSelect={setRecipientAccount}
 									placeholder={t('enterRecipientAddress')}
 								/>
-							</div>
+							</SendForm.Field>
 						)}
 					</SendForm.Segment>
 					{renderAmountField(amountOnTop)}
@@ -186,9 +186,8 @@ export const Swap = () => {
 							container={themeElementRef.current || undefined}
 							side="top"
 						>
-							<button
-								type="button"
-								className={classes.modeToggle}
+							<SendForm.DirectionButton
+								icon={faArrowRightArrowLeft}
 								aria-label={t(
 									mode === 'exactIn' ? 'exactOutput' : 'exactInput',
 								)}
@@ -198,9 +197,8 @@ export const Swap = () => {
 									setAmount('')
 								}}
 							>
-								<FontAwesomeIcon icon={faArrowRightArrowLeft} />
-								<span>{t(mode === 'exactIn' ? 'pay' : 'receive')}</span>
-							</button>
+								{t(mode === 'exactIn' ? 'pay' : 'receive')}
+							</SendForm.DirectionButton>
 						</Tooltip>
 					</SendForm.DirectionIndicator>
 					{renderAmountField(!amountOnTop)}
@@ -259,25 +257,21 @@ export const Swap = () => {
 									: 'redeemDotUsd'
 								: 'swapAssets',
 						)}
-						onComplete={() => {
+						onSubmitted={() => {
 							setAmount('')
 							refresh()
 						}}
 					>
-						<section
-							className={classes.route}
+						<SendForm.Note
+							label={t('route')}
+							variant="muted"
+							role="group"
 							aria-label={t('route')}
 							aria-description={t(
 								mode === 'exactIn' ? 'bestOutput' : 'bestInput',
 							)}
 						>
-							<span>{t('route')}</span>
-							<div
-								className={classNames(classes.routeValue, {
-									[classes.routeEmpty]: !quote && !routeLoading,
-								})}
-								aria-live="polite"
-							>
+							<div className={classes.routeValue} aria-live="polite">
 								{quote ? (
 									<ol className={classes.routePath} aria-label={t('route')}>
 										{quote.path.map((token, index) => (
@@ -294,15 +288,19 @@ export const Swap = () => {
 										))}
 									</ol>
 								) : (
-									<span
-										className={classes.routePlaceholder}
-										data-loading={routeLoading || undefined}
-									>
-										{routeLoading ? t('fetchingQuote') : '—'}
-									</span>
+									<>
+										{routeLoading && (
+											<div aria-hidden>
+												<Spinner style={{ width: '1rem' }} />
+											</div>
+										)}
+										<span className={classes.routePlaceholder}>
+											{routeLoading ? t('fetchingQuote') : '—'}
+										</span>
+									</>
 								)}
 							</div>
-						</section>
+						</SendForm.Note>
 						<SendForm.Note
 							label={t(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent')}
 						>

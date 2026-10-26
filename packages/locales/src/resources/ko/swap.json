@@ -42,7 +42,6 @@
 		"swap": "스왑",
 		"swapAssets": "자산 교환",
 		"swapDescription": "Polkadot Asset Hub에서 자산을 교환하세요.",
-		"transactionInProgress": "이 계정의 거래가 서명 또는 블록에 포함되기를 기다리고 있습니다.",
 		"transferAssetsDescription": "동일 네트워크의 다른 주소로 자산을 전송하세요.",
 		"youPay": "지불 금액",
 		"youReceive": "받는 금액"

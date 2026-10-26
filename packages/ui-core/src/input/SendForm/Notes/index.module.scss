@@ -13,6 +13,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	gap: 0.75rem;
 	font-size: 1.1rem;
 	line-height: 1.4rem;
 }
@@ -23,6 +24,7 @@
 }
 
 .value {
+	min-width: 0;
 	font-weight: 500;
 }
 
@@ -33,4 +35,8 @@
 
 .successValue {
 	color: var(--status-success);
+}
+
+.mutedValue {
+	color: var(--text-tertiary);
 }

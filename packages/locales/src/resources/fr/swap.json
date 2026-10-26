@@ -42,7 +42,6 @@
 		"swap": "Échange",
 		"swapAssets": "Échanger des actifs",
 		"swapDescription": "Échangez des actifs sur Polkadot Asset Hub.",
-		"transactionInProgress": "Une transaction de ce compte attend une signature ou son inclusion dans un bloc.",
 		"transferAssetsDescription": "Transférez des actifs vers une autre adresse sur le même réseau.",
 		"youPay": "Vous payez",
 		"youReceive": "Vous recevez"

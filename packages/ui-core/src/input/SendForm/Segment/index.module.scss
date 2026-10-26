@@ -35,30 +35,3 @@
 	position: relative;
 	z-index: 6;
 }
-
-.titleRow {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 1rem;
-}
-
-.title {
-	font-size: 1.1rem;
-	line-height: 1.4rem;
-	font-weight: 700;
-	color: var(--text-tertiary);
-	text-transform: uppercase;
-}
-
-.responsiveTitleRow {
-	margin-bottom: 0.75rem;
-}
-
-@media (width <= 560px) {
-	.responsiveTitleRow {
-		align-items: flex-start;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-}

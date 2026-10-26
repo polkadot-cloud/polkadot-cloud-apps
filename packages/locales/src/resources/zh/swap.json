@@ -42,7 +42,6 @@
 		"swap": "兑换",
 		"swapAssets": "兑换资产",
 		"swapDescription": "在 Polkadot Asset Hub 上兑换资产。",
-		"transactionInProgress": "此账户有一笔交易正在等待签名或被打包进区块。",
 		"transferAssetsDescription": "将资产转账到同一网络中的其他地址。",
 		"youPay": "支付",
 		"youReceive": "接收"

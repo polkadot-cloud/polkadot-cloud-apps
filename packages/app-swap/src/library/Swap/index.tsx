@@ -65,7 +65,7 @@ type TransactionActionProps = {
 	spends: Partial<Record<SwapToken, bigint>>
 	valid: boolean
 	label: string
-	onComplete: () => void
+	onSubmitted: () => void
 	children?: ReactNode
 	beforeSubmit?: ReactNode
 }
@@ -89,7 +89,7 @@ const TransactionActionInner = ({
 	spends,
 	valid,
 	label,
-	onComplete,
+	onSubmitted,
 	beforeSubmit,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
@@ -144,9 +144,9 @@ const TransactionActionInner = ({
 		feeEstimator,
 		estimatedFee: fee,
 		feeDisplay,
+		callbackSubmit: onSubmitted,
 		callbackInBlock: () => {
 			void balances.refresh()
-			onComplete()
 		},
 	})
 	useEffect(
@@ -160,9 +160,6 @@ const TransactionActionInner = ({
 	return (
 		<SendForm.Action>
 			<div className={classes.transactionActions}>
-				{accountBusy && (
-					<ExchangeNotice>{t('transactionInProgress')}</ExchangeNotice>
-				)}
 				{valid && account && fee !== undefined && !funded && (
 					<ExchangeNotice status="danger">
 						{t('insufficientBalance')}
