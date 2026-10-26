@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "アカウント",
 		"accountConnected": "アカウントが接続されました",
 		"accounts": "アカウント",
 		"active": "アクティブ",
@@ -269,6 +270,7 @@
 		"nextHalving": "次回の半減",
 		"nextRewardsIn": "次回の報酬まで",
 		"noAccountSelected": "アカウントが選択されていません",
+		"noAccounts": "アカウントなし",
 		"noActiveValidatorsWarning": "指名したバリデーターが1つもアクティブではないため、報酬を獲得できない可能性があります。",
 		"noFilters": "フィルターなし",
 		"noFree": "ボンドできる{{unit}}がありません。",
@@ -360,7 +362,9 @@
 		"permissionlessClaimingTurnedOff": "許可不要の受け取りは無効になっています。",
 		"permissionlessCompound": "許可不要の再投資: 誰でもこのメンバーの報酬を再投資できます",
 		"permissionlessWithdraw": "許可不要の引き出し: 誰でもこのメンバーの報酬を引き出せます",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "ポイント",
 		"pool": "プール",
 		"poolClaim": "プールの受け取り",

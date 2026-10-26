@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useApi } from 'hooks/useApi'
-import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
 import { useTranslation } from 'react-i18next'
+import { Slider } from 'ui-app/Slider'
 import { perbillToPercent } from 'utils'
 import { usePoolCommission } from './provider'
 
@@ -37,17 +37,17 @@ export const MaxCommission = () => {
 					</h5>
 				</div>
 
-				<StyledSlider
+				<Slider
 					max={globalMaxCommissionUnit}
 					value={maxCommission}
 					step={0.05}
+					ariaLabel={t('maxCommission')}
+					formatValue={(value) => `${value}%`}
 					onChange={(val) => {
-						if (typeof val === 'number') {
-							val = Number(val.toFixed(2))
-							setMaxCommission(val)
-							if (val < commission) {
-								setCommission(val)
-							}
+						val = Number(val.toFixed(2))
+						setMaxCommission(val)
+						if (val < commission) {
+							setCommission(val)
 						}
 					}}
 				/>

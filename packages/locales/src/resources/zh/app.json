@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "账户",
 		"accountConnected": "帐户已连接",
 		"accounts": "账户",
 		"active": "激活",
@@ -266,6 +267,7 @@
 		"nextHalving": "下一次减半",
 		"nextRewardsIn": "下一次奖励于",
 		"noAccountSelected": "无账户被选中",
+		"noAccounts": "暂无账户",
 		"noActiveValidatorsWarning": "由于您提名的验证者均未处于活跃状态，您可能无法获得奖励。",
 		"noFilters": "无筛选",
 		"noFree": "您没有可用的 {{unit}} 可质押",
@@ -356,7 +358,9 @@
 		"permissionlessClaimingTurnedOff": "己许可申领己关闭",
 		"permissionlessCompound": "无需许可复投：任何人均可为该成员复投奖励",
 		"permissionlessWithdraw": "无需许可提取：任何人均可为该成员提取奖励",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "点数",
 		"pool": "提名池",
 		"poolClaim": "提名池申领",

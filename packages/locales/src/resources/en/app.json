@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Account",
 		"accountConnected": "Account Connected",
 		"accounts": "Accounts",
 		"active": "Active",
@@ -270,6 +271,7 @@
 		"nextHalving": "Next Halving",
 		"nextRewardsIn": "Next Rewards In",
 		"noAccountSelected": "No Account Selected",
+		"noAccounts": "No accounts",
 		"noActiveValidatorsWarning": "You may not earn rewards because none of your nominated validators are active.",
 		"noFilters": "No filters",
 		"noFree": "You have no free {{unit}} to bond.",
@@ -361,7 +363,9 @@
 		"permissionlessClaimingTurnedOff": "Permissionless claiming is turned off.",
 		"permissionlessCompound": "Permissionless Compounding: Anyone can compound rewards for this member",
 		"permissionlessWithdraw": "Permissionless Withdrawing: Anyone can withdraw rewards for this member",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Points",
 		"pool": "Pool",
 		"poolClaim": "Pool Claim",
