@@ -3,11 +3,10 @@
 
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { DefaultSwapSlippageBps } from 'consts/swap'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import classes from './index.module.scss'
-
-export const defaultSlippageBps = 50
 
 export const SlippageControl = ({
 	value,
@@ -57,9 +56,11 @@ export const SlippageControl = ({
 				<button
 					type="button"
 					className={classes.slippageReset}
-					aria-label={t('resetSlippage', { value: defaultSlippageBps / 100 })}
-					disabled={disabled || value === defaultSlippageBps}
-					onClick={() => onChange(defaultSlippageBps)}
+					aria-label={t('resetSlippage', {
+						value: DefaultSwapSlippageBps / 100,
+					})}
+					disabled={disabled || value === DefaultSwapSlippageBps}
+					onClick={() => onChange(DefaultSwapSlippageBps)}
 				>
 					{t('reset', { ns: 'app' })}
 				</button>

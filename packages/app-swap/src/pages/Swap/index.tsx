@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import classNames from 'classnames'
 import { getFeeTokenIcon } from 'consts/stablecoins'
-import { swapDecimals } from 'consts/swap'
+import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
 import { slippageLimit } from 'dedot-api/swap/math'
 import { useStablecoinBalances, useTheme } from 'hooks'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
@@ -31,7 +31,7 @@ import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import { maxSendableBalance, toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
-import { defaultSlippageBps, SlippageControl } from './SlippageControl'
+import { SlippageControl } from './SlippageControl'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
@@ -45,7 +45,7 @@ export const Swap = () => {
 	const [mode, setMode] = useState<SwapMode>('exactIn')
 	const [amountOnTop, setAmountOnTop] = useState(true)
 	const [feeAsset, setFeeAsset] = useState<SwapToken>('DOT')
-	const [slippage, setSlippage] = useState(defaultSlippageBps)
+	const [slippage, setSlippage] = useState(DefaultSwapSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
