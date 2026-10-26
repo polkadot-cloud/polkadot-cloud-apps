@@ -4,10 +4,16 @@
 import type { SubmittableExtrinsic } from 'dedot'
 import type { HexString } from 'dedot/utils'
 
+// Tokens supported by swapping on Polkadot Asset Hub.
 export type SwapToken = 'DOT' | 'dotUSD' | 'USDT' | 'USDC'
+
+// Non-DOT tokens paired with DOT in a liquidity pool.
 export type SwapPoolToken = Exclude<SwapToken, 'DOT'>
+
+// Whether the requested amount fixes the input to spend or the output to receive.
 export type SwapMode = 'exactIn' | 'exactOut'
 
+// Reserves and trading fee for a DOT/token automated market maker (AMM) pool.
 export type SwapPool = {
 	asset: SwapPoolToken
 	reserveDot: bigint
@@ -15,6 +21,7 @@ export type SwapPool = {
 	fee: number
 }
 
+// Reserves, fees, and mint/redeem limits for the dotUSD peg stability module (PSM).
 export type SwapPsm = {
 	status: 'AllEnabled' | 'MintingDisabled' | 'AllDisabled'
 	maxDebt: bigint
@@ -26,6 +33,7 @@ export type SwapPsm = {
 	weight: number
 }
 
+// Token pair, amount, and swap mode used to request quotes.
 export type SwapRequest = {
 	assetIn: SwapToken
 	assetOut: SwapToken
@@ -33,6 +41,7 @@ export type SwapRequest = {
 	mode: SwapMode
 }
 
+// An AMM or PSM route with quoted amounts, fees, price impact, and the source block.
 export type SwapQuote = SwapRequest & {
 	kind: 'amm' | 'psm'
 	path: SwapToken[]
@@ -44,6 +53,7 @@ export type SwapQuote = SwapRequest & {
 	fetchedAt: number
 }
 
+// Service methods for fetching swap quotes and building swap transactions.
 export type SwapInterface = {
 	quotes: (request: SwapRequest) => Promise<SwapQuote[]>
 	swap: (
