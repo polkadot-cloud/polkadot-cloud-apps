@@ -17,7 +17,7 @@ export const Main = () => {
 			{pages.map((page) => (
 				<Primary
 					key={page.key}
-					name={t(page.key)}
+					name={t(page.key, { ns: page.key === 'swap' ? 'swap' : 'app' })}
 					to={page.hash}
 					active={pathname === page.hash}
 					faIcon={page.faIcon}

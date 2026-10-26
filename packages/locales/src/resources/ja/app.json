@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "アカウント",
 		"accountConnected": "アカウントが接続されました",
 		"accounts": "アカウント",
 		"active": "アクティブ",
@@ -269,6 +270,7 @@
 		"nextHalving": "次回の半減",
 		"nextRewardsIn": "次回の報酬まで",
 		"noAccountSelected": "アカウントが選択されていません",
+		"noAccounts": "アカウントなし",
 		"noActiveValidatorsWarning": "指名したバリデーターが1つもアクティブではないため、報酬を獲得できない可能性があります。",
 		"noFilters": "フィルターなし",
 		"noFree": "ボンドできる{{unit}}がありません。",
@@ -435,7 +437,6 @@
 		"successfullyFetchedAddress": "アドレスを正常に取得しました",
 		"support": "サポート",
 		"supportChannels": "サポートチャネル",
-		"swap": "スワップ",
 		"switchAccount": "アカウントを切り替え",
 		"syncAccounts": "アカウントを同期",
 		"syncing": "同期中",

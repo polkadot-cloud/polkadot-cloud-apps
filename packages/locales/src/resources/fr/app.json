@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Compte",
 		"accountConnected": "Compte connecté",
 		"accounts": "Comptes",
 		"active": "Actif",
@@ -272,6 +273,7 @@
 		"nextHalving": "Prochain halving",
 		"nextRewardsIn": "Prochaines récompenses dans",
 		"noAccountSelected": "Aucun compte sélectionné",
+		"noAccounts": "Aucun compte",
 		"noActiveValidatorsWarning": "Vous pourriez ne pas recevoir de récompenses, car aucun de vos validateurs nommés n’est actif.",
 		"noFilters": "Aucun filtre",
 		"noFree": "Vous n'avez aucun {{unit}} disponible à engager.",
@@ -438,7 +440,6 @@
 		"successfullyFetchedAddress": "Adresse récupérée avec succès",
 		"support": "Assistance",
 		"supportChannels": "Canaux d'assistance",
-		"swap": "Échange",
 		"switchAccount": "Changer de compte",
 		"syncAccounts": "Synchroniser les comptes",
 		"syncing": "Synchronisation",

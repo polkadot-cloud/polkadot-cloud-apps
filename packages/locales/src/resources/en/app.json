@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Account",
 		"accountConnected": "Account Connected",
 		"accounts": "Accounts",
 		"active": "Active",
@@ -270,6 +271,7 @@
 		"nextHalving": "Next Halving",
 		"nextRewardsIn": "Next Rewards In",
 		"noAccountSelected": "No Account Selected",
+		"noAccounts": "No accounts",
 		"noActiveValidatorsWarning": "You may not earn rewards because none of your nominated validators are active.",
 		"noFilters": "No filters",
 		"noFree": "You have no free {{unit}} to bond.",
@@ -436,7 +438,6 @@
 		"successfullyFetchedAddress": "Successfully Fetched Address",
 		"support": "Support",
 		"supportChannels": "Support Channels",
-		"swap": "Swap",
 		"switchAccount": "Switch Account",
 		"syncAccounts": "Sync Accounts",
 		"syncing": "Syncing",

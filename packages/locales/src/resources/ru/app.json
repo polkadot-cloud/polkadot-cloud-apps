@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Аккаунт",
 		"accountConnected": "Аккаунт подключён",
 		"accounts": "Аккаунты",
 		"active": "Активно",
@@ -277,6 +278,7 @@
 		"nextHalving": "Следующий халвинг",
 		"nextRewardsIn": "Следующие вознаграждения через",
 		"noAccountSelected": "Аккаунт не выбран",
+		"noAccounts": "Нет аккаунтов",
 		"noActiveValidatorsWarning": "Вы можете не получать награды, поскольку ни один из выбранных вами валидаторов не активен.",
 		"noFilters": "Нет фильтров",
 		"noFree": "У вас нет доступных {{unit}} для блокировки.",
@@ -446,7 +448,6 @@
 		"successfullyFetchedAddress": "Адрес успешно получен",
 		"support": "Поддержка",
 		"supportChannels": "Каналы поддержки",
-		"swap": "Обмен",
 		"switchAccount": "Сменить аккаунт",
 		"syncAccounts": "Синхронизировать аккаунты",
 		"syncing": "Синхронизация",

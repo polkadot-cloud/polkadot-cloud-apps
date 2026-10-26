@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Hesap",
 		"accountConnected": "Hesap Bağlandı",
 		"accounts": "Hesaplar",
 		"active": "Aktif",
@@ -270,6 +271,7 @@
 		"nextHalving": "Sonraki Halving",
 		"nextRewardsIn": "Sonraki Ödüllere Kalan Süre",
 		"noAccountSelected": "Hesap Seçilmedi",
+		"noAccounts": "Hesap yok",
 		"noActiveValidatorsWarning": "Aday gösterdiğiniz doğrulayıcıların hiçbiri aktif olmadığı için ödül kazanamayabilirsiniz.",
 		"noFilters": "Filtre yok",
 		"noFree": "Bağlanacak serbest {{unit}} bakiyeniz yok.",
@@ -436,7 +438,6 @@
 		"successfullyFetchedAddress": "Adres Başarıyla Alındı",
 		"support": "Destek",
 		"supportChannels": "Destek Kanalları",
-		"swap": "Takas",
 		"switchAccount": "Hesap Değiştir",
 		"syncAccounts": "Hesapları Senkronize Et",
 		"syncing": "Senkronize Ediliyor",

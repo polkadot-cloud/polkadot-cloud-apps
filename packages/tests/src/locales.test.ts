@@ -112,16 +112,10 @@ const swapBundles = import.meta.glob<{ swap: Record<string, string> }>(
 	'../../locales/src/resources/*/swap.json',
 	{ eager: true, import: 'default' },
 )
-const appBundles = import.meta.glob<{ app: Record<string, unknown> }>(
-	'../../locales/src/resources/*/app.json',
-	{ eager: true, import: 'default' },
-)
 const englishSwap = swapBundles['../../locales/src/resources/en/swap.json'].swap
 for (const [path, { swap }] of Object.entries(swapBundles)) {
 	test(`${path} includes every swap label and preserves interpolation variables`, () => {
 		expect(Object.keys(swap).sort()).toEqual(Object.keys(englishSwap).sort())
-		const app = appBundles[path.replace('/swap.json', '/app.json')].app
-		expect(app.swap).toBeTruthy()
 		for (const [key, value] of Object.entries(swap)) {
 			expect(value.trim()).not.toBe('')
 			expect(value.match(/\{\{[^}]+\}\}/g) ?? []).toEqual(

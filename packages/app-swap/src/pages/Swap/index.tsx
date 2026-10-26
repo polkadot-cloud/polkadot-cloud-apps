@@ -128,7 +128,7 @@ export const Swap = () => {
 				/>
 				<SendForm.Card>
 					<SendForm.Segment
-						title={t('account')}
+						title={t('account', { ns: 'app' })}
 						layer="raised"
 						className={formClasses.firstSection}
 					>
@@ -137,11 +137,11 @@ export const Swap = () => {
 							initialAccount={account}
 							accounts={accounts.accountsWithSigners}
 							onSelect={accounts.setFromAccount}
-							placeholder={t(
+							placeholder={
 								accounts.accountsWithSigners.length
-									? 'selectSenderAccount'
-									: 'noAccounts',
-							)}
+									? t('selectSenderAccount')
+									: t('noAccounts', { ns: 'app' })
+							}
 							disabled={!accounts.accountsWithSigners.length}
 						/>
 						<label className={classes.recipientSetting}>

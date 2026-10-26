@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "账户",
 		"accountConnected": "帐户已连接",
 		"accounts": "账户",
 		"active": "激活",
@@ -266,6 +267,7 @@
 		"nextHalving": "下一次减半",
 		"nextRewardsIn": "下一次奖励于",
 		"noAccountSelected": "无账户被选中",
+		"noAccounts": "暂无账户",
 		"noActiveValidatorsWarning": "由于您提名的验证者均未处于活跃状态，您可能无法获得奖励。",
 		"noFilters": "无筛选",
 		"noFree": "您没有可用的 {{unit}} 可质押",
@@ -431,7 +433,6 @@
 		"successfullyFetchedAddress": "成功获取地址",
 		"support": "支持",
 		"supportChannels": "支持渠道",
-		"swap": "兑换",
 		"switchAccount": "切换账户",
 		"syncAccounts": "同步账户",
 		"syncing": "正在同步",
