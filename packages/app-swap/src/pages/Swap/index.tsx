@@ -2,73 +2,56 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
-import classNames from 'classnames'
-import { assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
-import { slippageLimit } from 'dedot-api/assetHub/math'
+import { DefaultSwapSlippageBps, swapDecimals } from 'consts/swap'
 import { useStablecoinBalances, useTheme } from 'hooks'
+import { useSwapQuote } from 'hooks/useSwapQuote'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { ImportedAccount, SwapMode, SwapToken } from 'types'
+import { AccountDropdown } from 'ui-app/AccountDropdown'
+import { BalanceInputMulti } from 'ui-app/BalanceInput'
+import { Dropdown } from 'ui-app/Dropdown'
+import { ButtonSecondary } from 'ui-buttons'
+import { Page, Spinner, Tooltip } from 'ui-core/base'
+import { SendForm } from 'ui-core/input'
+import { maxSendableBalance, slippageLimit } from 'utils'
 import {
-	AccountField,
 	ExchangeNotice,
-	FeeField,
 	percentage,
-	exchangeClasses as styles,
+	swapFeeReserve,
 	TransactionAction,
 	tokenAmount,
 	tokenOptions,
-	useAssetHubMarket,
-} from 'library/AssetHub'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import type {
-	AssetHubSwapQuote,
-	AssetHubToken,
-	ImportedAccount,
-	SwapMode,
-} from 'types'
-import { AccountDropdown } from 'ui-app/AccountDropdown'
-import { BalanceInputMulti } from 'ui-app/BalanceInput'
-import { ButtonSecondary } from 'ui-buttons'
-import { Page, ShineText, Tooltip } from 'ui-core/base'
-import { SendForm } from 'ui-core/input'
+} from '../../library/Swap'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import { maxSendableBalance, toPlanck } from '../Send/utils'
+import { toPlanck } from '../Send/utils'
 import classes from './index.module.scss'
-import { defaultSlippageBps, SlippageControl } from './SlippageControl'
-import { useQuoteExpired } from './useQuoteExpired'
-import { useSwapQuote } from './useSwapQuote'
+import { SlippageControl } from './SlippageControl'
 
 export const Swap = () => {
 	const { t } = useTranslation('swap')
 	const { themeElementRef } = useTheme()
 	const accounts = useSendAccounts()
 	const account = accounts.fromAccount
-	const {
-		exchange,
-		market,
-		error: marketError,
-		refresh,
-	} = useAssetHubMarket(account?.address)
 	const balances = useStablecoinBalances(account?.address)
-	const [assetIn, setAssetIn] = useState<AssetHubToken>('USDT')
-	const [assetOut, setAssetOut] = useState<AssetHubToken>('dotUSD')
+	const [assetIn, setAssetIn] = useState<SwapToken>('USDT')
+	const [assetOut, setAssetOut] = useState<SwapToken>('dotUSD')
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<SwapMode>('exactIn')
-	const [amountOnTop, setAmountOnTop] = useState(true)
-	const [feeAsset, setFeeAsset] = useState<AssetHubToken>('DOT')
-	const [slippage, setSlippage] = useState(defaultSlippageBps)
+	const [feeAsset, setFeeAsset] = useState<SwapToken>('DOT')
+	const [slippage, setSlippage] = useState(DefaultSwapSlippageBps)
 	const [recipientEnabled, setRecipientEnabled] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
 	const amountToken = mode === 'exactIn' ? assetIn : assetOut
 	const quotedToken = mode === 'exactIn' ? assetOut : assetIn
-	const parsed = toPlanck(amount, assetHubDecimals(amountToken))
+	const parsed = toPlanck(amount, swapDecimals(amountToken))
 	useEffect(() => {
 		void balances.refresh()
-	}, [account?.address, exchange])
+	}, [balances.refresh])
 	const recipient = recipientEnabled
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
@@ -78,11 +61,12 @@ export const Swap = () => {
 		quote,
 		tx,
 		fee,
-		error: quoteError,
+		error,
+		loading,
+		expired,
+		refresh,
 		requestKey,
 	} = useSwapQuote({
-		exchange,
-		market,
 		account,
 		assetIn,
 		assetOut,
@@ -93,16 +77,19 @@ export const Swap = () => {
 		slippage,
 		feeAsset,
 	})
+	const currentRequestKey = useRef(requestKey)
+	useEffect(() => {
+		currentRequestKey.current = requestKey
+	}, [requestKey])
 	const quotedAmount = quote
 		? tokenAmount(
 				mode === 'exactIn' ? quote.amountOut : quote.amountIn,
 				quotedToken,
 			)
 		: undefined
-	const expired = useQuoteExpired(quote?.fetchedAt)
 	const maxInput = quote
 		? quote.kind === 'amm' && mode === 'exactOut'
-			? slippageLimit(quote.amountIn, slippage, true)
+			? slippageLimit(quote.amountIn, slippage, 'maximum')
 			: quote.amountIn
 		: 0n
 	const minOutput = quote
@@ -110,51 +97,35 @@ export const Swap = () => {
 			? slippageLimit(quote.amountOut, slippage)
 			: quote.amountOut
 		: 0n
-	const inputBalance = balances.getBalance('statemint', amountToken)
-	const max = maxSendableBalance(inputBalance, undefined, 0n)
-	const quotedAvailable = maxSendableBalance(
-		balances.getBalance('statemint', quotedToken),
-		undefined,
-		0n,
-	)
-	const routeLabel = (item: AssetHubSwapQuote) =>
-		item.kind === 'psm'
-			? t(item.assetIn === 'USDT' ? 'mintDotUsd' : 'redeemDotUsd')
-			: item.path.join(' → ')
-	const error = marketError || quoteError
-	const routeLoading = parsed > 0n && !quotes && !error
+	const routeLoading = loading && !quote
 	const renderAmountField = (editable: boolean) => {
 		const token = editable ? amountToken : quotedToken
-		const fieldMode = editable
-			? mode
-			: mode === 'exactIn'
-				? 'exactOut'
-				: 'exactIn'
+		const paying = editable === (mode === 'exactIn')
+		const available = maxSendableBalance(
+			balances.getBalance('statemint', token),
+			paying ? balances.getBalance('statemint', feeAsset) : undefined,
+			fee === undefined ? 0n : swapFeeReserve(fee),
+		)
 		return (
 			<BalanceInputMulti
-				label={t(fieldMode === 'exactIn' ? 'youPay' : 'youReceive')}
+				label={t(paying ? 'youPay' : 'youReceive')}
 				value={editable ? amount : (quotedAmount ?? '0.00')}
 				{...(editable ? { onChange: setAmount } : { readOnly: true as const })}
 				disabled={!editable && !quote}
-				maxAvailable={
-					editable
-						? mode === 'exactIn'
-							? tokenAmount(max, amountToken)
-							: '0'
-						: tokenAmount(quotedAvailable, quotedToken)
-				}
-				maxDecimals={assetHubDecimals(token)}
+				maxAvailable={tokenAmount(available, token)}
+				allowMax={paying}
+				maxDecimals={swapDecimals(token)}
 				syncing={balances.loading}
 				options={tokenOptions.filter(
 					(option) => option.value !== (editable ? quotedToken : amountToken),
 				)}
 				selected={tokenOptions.find((option) => option.value === token)!}
 				onSelect={(option) => {
-					if (fieldMode === 'exactIn') setAssetIn(option.value)
+					if (paying) setAssetIn(option.value)
 					else setAssetOut(option.value)
 					if (editable) setAmount('')
 				}}
-				ariaLabel={t(fieldMode === 'exactIn' ? 'youPay' : 'youReceive')}
+				ariaLabel={t(paying ? 'youPay' : 'youReceive')}
 			/>
 		)
 	}
@@ -167,12 +138,23 @@ export const Swap = () => {
 					label="Beta"
 				/>
 				<SendForm.Card>
-					<AccountField
-						account={account}
-						accounts={accounts.accountsWithSigners}
-						onSelect={accounts.setFromAccount}
+					<SendForm.Segment
+						title={t('account', { ns: 'app' })}
+						layer="raised"
 						className={formClasses.firstSection}
 					>
+						<AccountDropdown
+							key={`${account?.address}:${account?.source}`}
+							initialAccount={account}
+							accounts={accounts.accountsWithSigners}
+							onSelect={accounts.setFromAccount}
+							placeholder={
+								accounts.accountsWithSigners.length
+									? t('selectSenderAccount')
+									: t('noAccounts', { ns: 'app' })
+							}
+							disabled={!accounts.accountsWithSigners.length}
+						/>
 						<label className={classes.recipientSetting}>
 							<input
 								type="checkbox"
@@ -182,21 +164,21 @@ export const Swap = () => {
 							{t('sendToAnotherAddress')}
 						</label>
 						{recipientEnabled && (
-							<div className={classes.recipientField}>
-								<span className={classes.recipientLabel}>{t('sendTo')}</span>
-								<div className={styles.accountDropdown}>
-									<AccountDropdown
-										key={`${recipientAccount?.address}:${recipientAccount?.source}`}
-										initialAccount={recipientAccount}
-										accounts={accounts.accounts}
-										onSelect={setRecipientAccount}
-										placeholder={t('enterRecipientAddress')}
-									/>
-								</div>
-							</div>
+							<SendForm.Field
+								title={t('sendTo')}
+								className={classes.recipientField}
+							>
+								<AccountDropdown
+									key={`${recipientAccount?.address}:${recipientAccount?.source}`}
+									initialAccount={recipientAccount}
+									accounts={accounts.accounts}
+									onSelect={setRecipientAccount}
+									placeholder={t('enterRecipientAddress')}
+								/>
+							</SendForm.Field>
 						)}
-					</AccountField>
-					{renderAmountField(amountOnTop)}
+					</SendForm.Segment>
+					{renderAmountField(true)}
 					<SendForm.DirectionIndicator
 						label={t('reverseAssets')}
 						tooltip={t('reverseAssetsTooltip')}
@@ -204,12 +186,6 @@ export const Swap = () => {
 						onReverse={() => {
 							setAssetIn(assetOut)
 							setAssetOut(assetIn)
-							if (amountOnTop) {
-								setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
-							} else {
-								setAmount(quotedAmount ?? '0.00')
-							}
-							setAmountOnTop(false)
 						}}
 					>
 						<Tooltip
@@ -217,64 +193,82 @@ export const Swap = () => {
 							container={themeElementRef.current || undefined}
 							side="top"
 						>
-							<button
-								type="button"
-								className={classes.modeToggle}
+							<SendForm.DirectionButton
+								icon={faArrowRightArrowLeft}
 								aria-label={t(
 									mode === 'exactIn' ? 'exactOutput' : 'exactInput',
 								)}
 								onClick={() => {
 									setMode(mode === 'exactIn' ? 'exactOut' : 'exactIn')
-									setAmountOnTop(true)
 									setAmount('')
 								}}
 							>
-								<FontAwesomeIcon icon={faArrowRightArrowLeft} />
-								<span>{t(mode === 'exactIn' ? 'pay' : 'receive')}</span>
-							</button>
+								{t(mode === 'exactIn' ? 'pay' : 'receive')}
+							</SendForm.DirectionButton>
 						</Tooltip>
 					</SendForm.DirectionIndicator>
-					{renderAmountField(!amountOnTop)}
-					<FeeField
-						value={feeAsset}
-						onChange={setFeeAsset}
+					{renderAmountField(false)}
+					<SendForm.Segment
+						title={t('payFeesIn')}
 						className={formClasses.lastSection}
 					>
+						<Dropdown
+							options={tokenOptions}
+							selected={
+								tokenOptions.find((option) => option.value === feeAsset)!
+							}
+							onSelect={(option) => setFeeAsset(option.value)}
+							variant="full"
+						/>
 						<SlippageControl
 							value={slippage}
 							onChange={setSlippage}
 							disabled={quote?.kind === 'psm'}
 						/>
-					</FeeField>
+					</SendForm.Segment>
 					{quotes?.length === 0 && (
-						<ExchangeNotice className={styles.notice}>
-							{t('noRoute')}
-						</ExchangeNotice>
+						<ExchangeNotice padded>{t('noRoute')}</ExchangeNotice>
 					)}
 					{error && (
 						<ExchangeNotice
 							status="danger"
-							className={styles.notice}
+							padded
 							action={<ButtonSecondary text={t('retry')} onClick={refresh} />}
 						>
 							{error}
 						</ExchangeNotice>
 					)}
-					<SendForm.Notes className={classes.quoteNotes}>
-						<section
-							className={classes.route}
+					<TransactionAction
+						tx={tx}
+						estimatedFee={fee}
+						submissionKey={requestKey}
+						account={account}
+						feeAsset={feeAsset}
+						spends={{ [assetIn]: maxInput }}
+						valid={!!quote && !!tx && !expired && recipientValid}
+						label={t(
+							quote?.kind === 'psm'
+								? quote.assetIn === 'USDT'
+									? 'mintDotUsd'
+									: 'redeemDotUsd'
+								: 'swapAssets',
+						)}
+						onSubmitted={() => {
+							// A wallet may broadcast after the user has already changed the form.
+							if (currentRequestKey.current !== requestKey) return
+							setAmount('')
+						}}
+					>
+						<SendForm.Note
+							label={t('route')}
+							variant="muted"
+							role="group"
 							aria-label={t('route')}
 							aria-description={t(
 								mode === 'exactIn' ? 'bestOutput' : 'bestInput',
 							)}
 						>
-							<span>{t('route')}</span>
-							<div
-								className={classNames(classes.routeValue, {
-									[classes.routeEmpty]: !quote && !routeLoading,
-								})}
-								aria-live="polite"
-							>
+							<div className={classes.routeValue} aria-live="polite">
 								{quote ? (
 									<ol className={classes.routePath} aria-label={t('route')}>
 										{quote.path.map((token, index) => (
@@ -291,15 +285,19 @@ export const Swap = () => {
 										))}
 									</ol>
 								) : (
-									<ShineText
-										className={classes.routePlaceholder}
-										active={routeLoading}
-									>
-										{routeLoading ? t('fetchingQuote') : '—'}
-									</ShineText>
+									<>
+										{routeLoading && (
+											<div aria-hidden>
+												<Spinner style={{ width: '1rem' }} />
+											</div>
+										)}
+										<span className={classes.routePlaceholder}>
+											{routeLoading ? t('fetchingQuote') : '—'}
+										</span>
+									</>
 								)}
 							</div>
-						</section>
+						</SendForm.Note>
 						<SendForm.Note
 							label={t(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent')}
 						>
@@ -310,39 +308,33 @@ export const Swap = () => {
 									)} ${mode === 'exactIn' ? assetOut : assetIn}`
 								: '—'}
 						</SendForm.Note>
-					</SendForm.Notes>
-					<TransactionAction
-						notesClassName={classes.feeNotes}
-						beforeSubmit={
-							expired && (
-								<ButtonSecondary
-									text={t('refreshQuote')}
-									size="lg"
-									className={classes.refreshQuote}
-									onClick={refresh}
-								/>
-							)
-						}
-						tx={tx}
-						estimatedFee={fee}
-						submissionKey={requestKey}
-						account={account}
-						feeAsset={feeAsset}
-						spends={{ [assetIn]: maxInput }}
-						valid={!!quote && !!tx && !expired && recipientValid}
-						label={quote?.kind === 'psm' ? routeLabel(quote) : t('swapAssets')}
-						onComplete={() => {
-							setAmount('')
-							refresh()
-						}}
-					>
+						<SendForm.Note label={t('networkFee')}>
+							{fee === undefined
+								? '—'
+								: `${tokenAmount(fee, feeAsset)} ${feeAsset}`}
+						</SendForm.Note>
 						<SendForm.Note label={t('conversionFee')}>
 							{quote ? percentage(quote.fee) : '—'}
 						</SendForm.Note>
-						<SendForm.Note label={t('priceImpact')}>
+						<SendForm.Note
+							label={
+								quote && loading ? (
+									<span className={classes.renewingQuote} role="status">
+										<span aria-hidden>
+											<Spinner style={{ width: '1rem' }} />
+										</span>
+										<span>{t('renewingQuote')}</span>
+									</span>
+								) : (
+									t('priceImpact')
+								)
+							}
+						>
 							{quote ? `${quote.priceImpactBps / 100}%` : '—'}
 						</SendForm.Note>
-						{expired && <ExchangeNotice>{t('quoteExpired')}</ExchangeNotice>}
+						{expired && !loading && (
+							<ExchangeNotice>{t('quoteExpired')}</ExchangeNotice>
+						)}
 					</TransactionAction>
 				</SendForm.Card>
 			</SendForm.Container>

@@ -5,7 +5,7 @@
 import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { useQuoteExpired } from '../../app-swap/src/pages/Swap/useQuoteExpired'
+import { useQuoteExpired } from '../../hooks/src/useQuoteExpired'
 
 let root: Root
 let container: HTMLDivElement

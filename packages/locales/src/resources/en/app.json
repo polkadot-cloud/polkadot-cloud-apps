@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Account",
 		"accountConnected": "Account Connected",
 		"accounts": "Accounts",
 		"active": "Active",
@@ -129,6 +130,7 @@
 			"commissionErrorExceedsGlobal": "Commission rate exceeds global maximum",
 			"commissionErrorExceedsMax": "Commission rate exceeds maximum allowed",
 			"commissionErrorInvalidPayee": "Invalid commission payee address",
+			"conversionUnavailable": "This conversion is no longer available at the quoted fee or capacity. Refresh and try again.",
 			"poolErrorBlocked": "Pool is currently blocked",
 			"poolErrorDestroying": "Pool is being destroyed",
 			"poolErrorFull": "Pool has reached maximum member limit",
@@ -136,6 +138,7 @@
 			"stakingErrorEraConstraint": "Operation not allowed in current era",
 			"stakingErrorMaxNominations": "Maximum nominations exceeded (16 validators)",
 			"stakingErrorMinBond": "Bond amount below minimum requirement",
+			"swapPriceChanged": "The price changed beyond your limit. Refresh the quote and try again.",
 			"technicalErrorAppNotOpen": "Hardware app not open",
 			"technicalErrorDeviceBusy": "Hardware device is busy",
 			"technicalErrorDeviceDisconnected": "Hardware device disconnected",
@@ -159,9 +162,7 @@
 			"validationErrorInvalidPoolId": "Invalid pool ID",
 			"validationErrorInvalidValidator": "Invalid validator address",
 			"validationErrorMetadataTooLong": "Metadata exceeds maximum length",
-			"validationErrorParameterRange": "Parameter value out of valid range",
-			"swapPriceChanged": "The price changed beyond your limit. Refresh the quote and try again.",
-			"conversionUnavailable": "This conversion is no longer available at the quoted fee or capacity. Refresh and try again."
+			"validationErrorParameterRange": "Parameter value out of valid range"
 		},
 		"exclude": "Exclude",
 		"exitAdvancedMode": "Exit Advanced Mode",
@@ -270,6 +271,7 @@
 		"nextHalving": "Next Halving",
 		"nextRewardsIn": "Next Rewards In",
 		"noAccountSelected": "No Account Selected",
+		"noAccounts": "No accounts",
 		"noActiveValidatorsWarning": "You may not earn rewards because none of your nominated validators are active.",
 		"noFilters": "No filters",
 		"noFree": "You have no free {{unit}} to bond.",

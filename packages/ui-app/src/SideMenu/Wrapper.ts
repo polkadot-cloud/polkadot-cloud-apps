@@ -128,12 +128,12 @@ export const LogoWrapper = styled.div<MinimisedProps>`
   }
 `
 
-export const ToggleWrapper = styled.button`
+export const ToggleWrapper = styled.button<{ $inset?: boolean }>`
   position: absolute;
   top: 1.225rem;
   width: 1.3rem;
   height: 1.3rem;
-  right: -0.75rem;
+  right: ${(props) => (props.$inset ? '0.75rem' : '-0.75rem')};
   display: flex;
   align-items: center;
   z-index: 10;

@@ -10,6 +10,7 @@
 	},
 	"exports": {
 		".": "./src/index.ts",
+		"./*/types": "./src/*/types.ts",
 		"./*": "./src/*/index.ts"
 	},
 	"dependencies": {
@@ -17,7 +18,7 @@
 		"@polkadot-cloud/connect-core": "^2.0.0",
 		"@polkadot-cloud/connect-proxies": "^1.0.0",
 		"@polkadot-cloud/utils": "^1.0.0",
-		"@tanstack/react-query": "^5.104.2",
+		"@tanstack/react-query": "^5.104.4",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
 		"data-gate": "workspace:*",
@@ -26,7 +27,8 @@
 		"global-bus": "workspace:*",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.8",
+		"react": "^19.3.1",
+		"react-i18next": "^17.1.0",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {

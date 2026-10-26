@@ -23,7 +23,7 @@ const FeeTokenMetadata: Record<FeeAssetSymbol, AssetMetadata> = {
 	USDC: { color: '#3E73C4', decimals: 6 },
 	USDT: { color: '#26A17B', decimals: 6 },
 	HOLLAR: { color: '#B3CF92', decimals: 18 },
-	dotUSD: { color: '#E6007A', decimals: 6 },
+	dotUSD: { color: '#000000', decimals: 6 },
 }
 
 // Display icons for every supported fee token.

@@ -28,6 +28,7 @@ const BalanceInputControl = ({
 	value,
 	unit,
 	maxAvailable,
+	allowMax = true,
 	maxDecimals,
 	disabled = false,
 	readOnly = false,
@@ -71,7 +72,7 @@ const BalanceInputControl = ({
 				<span className={classes.label}>{label ?? t('amount')}</span>
 				<span className={classes.available}>
 					{t('available')}:{' '}
-					{readOnly ? (
+					{readOnly || !allowMax ? (
 						<span className={classes.availableValue}>
 							{syncing ? '...' : formattedAvailable}
 						</span>

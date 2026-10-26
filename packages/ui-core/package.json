@@ -28,9 +28,9 @@
 		"@polkadot-cloud/utils": "^1.0.0",
 		"classnames": "^2.5.1",
 		"motion": "12.23.24",
-		"radix-ui": "^1.7.0",
-		"react": "^19.2.8",
-		"react-dom": "^19.2.8",
+		"radix-ui": "^1.8.1",
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1",
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
 		"ui-styles": "workspace:*"

@@ -11,7 +11,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TxFeeEstimator } from 'tx-submit/types'
 import { useSubmitExtrinsic } from 'tx-submit/useSubmitExtrinsic'
-import { isSameAddress, maxSendableBalance, toPlanck } from '../utils'
+import { maxSendableBalance } from 'utils'
+import { isSameAddress, toPlanck } from '../utils'
 import type {
 	ResolvedTransferTx,
 	SendTransaction,

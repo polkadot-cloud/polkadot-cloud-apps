@@ -22,6 +22,8 @@ export type PageCategoryItems = PageCategory[]
 export interface PageItem {
 	category: number
 	key: string
+	// Translation namespace for the page title and navigation label; defaults to app.
+	titleNamespace?: string
 	uri: string
 	hash: string
 	Entry: FC<PageProps>

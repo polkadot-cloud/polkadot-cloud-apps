@@ -13,11 +13,11 @@
 	},
 	"dependencies": {
 		"@polkadot-cloud/hooks": "^1.0.0",
-		"@tanstack/react-query": "^5.104.2",
+		"@tanstack/react-query": "^5.104.4",
 		"consts": "workspace:*",
 		"global-bus": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.8",
+		"react": "^19.3.1",
 		"rxjs": "^7.8.2",
 		"utils": "workspace:*"
 	},

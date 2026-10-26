@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "アカウント",
 		"accountConnected": "アカウントが接続されました",
 		"accounts": "アカウント",
 		"active": "アクティブ",
@@ -129,6 +130,7 @@
 			"commissionErrorExceedsGlobal": "コミッションレートがグローバル最大値を超えています",
 			"commissionErrorExceedsMax": "コミッションレートが許容最大値を超えています",
 			"commissionErrorInvalidPayee": "無効なコミッション受取人アドレスです",
+			"conversionUnavailable": "この交換は、提示された手数料または容量では利用できなくなりました。更新して、もう一度お試しください。",
 			"poolErrorBlocked": "プールは現在ブロックされています",
 			"poolErrorDestroying": "プールは破棄中です",
 			"poolErrorFull": "プールがメンバー数の上限に達しています",
@@ -136,6 +138,7 @@
 			"stakingErrorEraConstraint": "現在のエラでは操作が許可されていません",
 			"stakingErrorMaxNominations": "ノミネーションの最大数を超えています（バリデータ16個）",
 			"stakingErrorMinBond": "ボンド額が最小要件を下回っています",
+			"swapPriceChanged": "価格が設定した上限を超えて変動しました。見積もりを更新して、もう一度お試しください。",
 			"technicalErrorAppNotOpen": "ハードウェアアプリが開かれていません",
 			"technicalErrorDeviceBusy": "ハードウェアデバイスがビジー状態です",
 			"technicalErrorDeviceDisconnected": "ハードウェアデバイスが切断されました",
@@ -268,6 +271,7 @@
 		"nextHalving": "次回の半減",
 		"nextRewardsIn": "次回の報酬まで",
 		"noAccountSelected": "アカウントが選択されていません",
+		"noAccounts": "アカウントなし",
 		"noActiveValidatorsWarning": "指名したバリデーターが1つもアクティブではないため、報酬を獲得できない可能性があります。",
 		"noFilters": "フィルターなし",
 		"noFree": "ボンドできる{{unit}}がありません。",
@@ -359,7 +363,9 @@
 		"permissionlessClaimingTurnedOff": "許可不要の受け取りは無効になっています。",
 		"permissionlessCompound": "許可不要の再投資: 誰でもこのメンバーの報酬を再投資できます",
 		"permissionlessWithdraw": "許可不要の引き出し: 誰でもこのメンバーの報酬を引き出せます",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "ポイント",
 		"pool": "プール",
 		"poolClaim": "プールの受け取り",

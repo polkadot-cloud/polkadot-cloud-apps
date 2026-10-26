@@ -11,14 +11,12 @@ import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
-import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
-import { ModalTitle } from 'ui-app/ModalTitle'
-import { ButtonHelp } from 'ui-buttons'
-import 'rc-slider/assets/index.css'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimaryInvert } from 'ui-buttons'
+import { ModalTitle } from 'ui-app/ModalTitle'
+import { Slider } from 'ui-app/Slider'
+import { ButtonHelp, ButtonPrimaryInvert } from 'ui-buttons'
 import { CardHeader } from 'ui-core/base'
 import { Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
@@ -72,20 +70,19 @@ export const UpdateReserve = () => {
 			<Padding horizontalOnly>
 				<SliderWrapper style={{ margin: '1rem 0' }}>
 					<p>{t('reserveText', { unit })}</p>
-					<div>
-						<StyledSlider
-							className="no-padding"
-							min={0}
-							max={maxReserve.toNumber()}
-							value={sliderReserve}
-							step={0.01}
-							onChange={(val) => {
-								if (typeof val === 'number' && val >= minReserve.toNumber()) {
-									handleChange(new BigNumber(val))
-								}
-							}}
-						/>
-					</div>
+					<Slider
+						min={0}
+						max={maxReserve.toNumber()}
+						value={sliderReserve}
+						step={0.01}
+						ariaLabel={t('reserveBalance')}
+						formatValue={(value) => `${value} ${unit}`}
+						onChange={(val) => {
+							if (val >= minReserve.toNumber()) {
+								handleChange(new BigNumber(val))
+							}
+						}}
+					/>
 					<div className="stats">
 						<CardHeader>
 							<h4>

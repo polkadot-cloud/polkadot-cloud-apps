@@ -17,9 +17,9 @@ export const Main = () => {
 			{pages.map((page) => (
 				<Primary
 					key={page.key}
-					name={t(page.key)}
-					to={`/${page.key}`}
-					active={pathname === `/${page.key}`}
+					name={t(page.key, { ns: page.titleNamespace ?? 'app' })}
+					to={page.hash}
+					active={pathname === page.hash}
 					faIcon={page.faIcon}
 					minimised={sideMenuMinimised}
 				/>

@@ -99,23 +99,16 @@ const SourceIcon = ({
 	className?: string
 }) => {
 	const style = size ? { width: size, height: size } : undefined
-	const allClasses = classNames(classes.sourceIcon, className)
-	if (SvgIcon) {
-		return (
-			<span className={allClasses}>
-				<SvgIcon style={style} />
-			</span>
+	const icon = SvgIcon ? (
+		<SvgIcon style={style} />
+	) : faIcon ? (
+		<FontAwesomeIcon icon={faIcon} style={style} />
+	) : null
+	return (
+		icon && (
+			<span className={classNames(classes.sourceIcon, className)}>{icon}</span>
 		)
-	}
-	if (faIcon) {
-		return (
-			<span className={allClasses}>
-				<FontAwesomeIcon icon={faIcon} style={style} />
-			</span>
-		)
-	}
-
-	return null
+	)
 }
 
 const Balance = ({
@@ -134,19 +127,17 @@ const Balance = ({
 const ListContainer = forwardRef<
 	HTMLDivElement,
 	ComponentBaseWithClassName & { ariaLabel?: string }
->(({ children, style, className, ariaLabel = 'Account selection' }, ref) => {
-	return (
-		<div
-			className={classNames(classes.listContainer, className)}
-			style={style}
-			ref={ref}
-			role="listbox"
-			aria-label={ariaLabel}
-		>
-			{children}
-		</div>
-	)
-})
+>(({ children, style, className, ariaLabel = 'Account selection' }, ref) => (
+	<div
+		className={classNames(classes.listContainer, className)}
+		style={style}
+		ref={ref}
+		role="listbox"
+		aria-label={ariaLabel}
+	>
+		{children}
+	</div>
+))
 
 const ListItem = ({
 	account,
@@ -168,13 +159,15 @@ const ListItem = ({
 		<div
 			className={allClasses}
 			onClick={() => onClick(account)}
-			onKeyDown={(event) => {
-				if (onKeyDown) onKeyDown(event)
-				else if (event.key === 'Enter' || event.key === ' ') {
-					event.preventDefault()
-					onClick(account)
-				}
-			}}
+			onKeyDown={
+				onKeyDown ??
+				((event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault()
+						onClick(account)
+					}
+				})
+			}
 			role="option"
 			tabIndex={0}
 			aria-selected={isSelected}

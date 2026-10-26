@@ -28,9 +28,7 @@ export const Router = () => (
 				<HelmetProvider>
 					<Headers
 						showAccount={false}
-						NodesLeft={{
-							sync: Sync,
-						}}
+						NodesLeft={{ sync: Sync }}
 						NodesRight={{ accounts: AccountsButton }}
 						menuPopoverFeatures={{
 							network: false,
@@ -44,17 +42,16 @@ export const Router = () => (
 					/>
 					<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 						<Routes>
-							<Route index element={<Navigate to="/swap" replace />} />
 							{pages.map((page) => (
 								<Route
 									key={page.key}
-									path={`/${page.key}`}
+									path={page.hash}
 									element={
 										<PageWithTitle page={page} appTitle={SwapDappName} />
 									}
 								/>
 							))}
-							<Route path="*" element={<Navigate to="/swap" replace />} />
+							<Route path="*" element={<Navigate to="/" replace />} />
 						</Routes>
 					</ErrorBoundary>
 					<MainFooter showDocs={false} />

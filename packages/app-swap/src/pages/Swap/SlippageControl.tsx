@@ -3,11 +3,11 @@
 
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { DefaultSwapSlippageBps, MaxSwapSlippageBps } from 'consts/swap'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import classes from './index.module.scss'
-
-export const defaultSlippageBps = 50
+import { Slider } from 'ui-app/Slider'
+import classes from './SlippageControl.module.scss'
 
 export const SlippageControl = ({
 	value,
@@ -38,28 +38,25 @@ export const SlippageControl = ({
 				className={classes.slippagePanel}
 				hidden={!expanded}
 			>
-				<input
-					id={`${id}-slider`}
-					className={classes.slippageSlider}
-					type="range"
+				<Slider
 					min={10}
-					max={500}
+					max={MaxSwapSlippageBps}
 					step={10}
 					value={value}
 					disabled={disabled}
-					aria-label={t('slippage')}
-					aria-valuetext={`${value / 100}%`}
-					onChange={(event) => onChange(Number(event.target.value))}
+					ariaLabel={t('slippage')}
+					formatValue={(value) => `${value / 100}%`}
+					onChange={onChange}
 				/>
-				<output className={classes.slippageValue} htmlFor={`${id}-slider`}>
-					{value / 100}%
-				</output>
+				<output className={classes.slippageValue}>{value / 100}%</output>
 				<button
 					type="button"
 					className={classes.slippageReset}
-					aria-label={t('resetSlippage', { value: defaultSlippageBps / 100 })}
-					disabled={disabled || value === defaultSlippageBps}
-					onClick={() => onChange(defaultSlippageBps)}
+					aria-label={t('resetSlippage', {
+						value: DefaultSwapSlippageBps / 100,
+					})}
+					disabled={disabled || value === DefaultSwapSlippageBps}
+					onClick={() => onChange(DefaultSwapSlippageBps)}
 				>
 					{t('reset', { ns: 'app' })}
 				</button>

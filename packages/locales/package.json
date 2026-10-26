@@ -21,8 +21,8 @@
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
 		"event-tracking": "workspace:*",
-		"i18next": "^26.4.3",
-		"react-i18next": "^17.0.16",
+		"i18next": "^26.5.2",
+		"react-i18next": "^17.1.0",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {

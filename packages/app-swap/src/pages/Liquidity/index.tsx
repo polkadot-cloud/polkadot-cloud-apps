@@ -34,9 +34,10 @@ import type {
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
+import { maxSendableBalance } from 'utils'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import { maxSendableBalance, toPlanck } from '../Send/utils'
+import { toPlanck } from '../Send/utils'
 
 export const Liquidity = () => {
 	const { t } = useTranslation('swap')

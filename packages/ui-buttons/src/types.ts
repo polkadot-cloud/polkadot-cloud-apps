@@ -235,6 +235,7 @@ export type ButtonAccountLabelProps = ComponentBaseWithClassName & {
 export type ButtonAccountStandaloneProps = ComponentBaseWithClassName &
 	OnMouseHandlersProps & {
 		label: string
+		showChevron?: boolean
 		marginLeft?: boolean
 		marginRight?: boolean
 		marginX?: boolean
@@ -251,6 +252,7 @@ export type ButtonModalProps = ComponentBaseWithClassName &
 export type ButtonPopoverTabProps = ComponentBaseWithClassName &
 	OnMouseHandlersProps & {
 		text: string
+		active?: boolean
 		status?: 'warning' | 'danger'
 		disabled?: boolean
 		grow?: boolean

@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "账户",
 		"accountConnected": "帐户已连接",
 		"accounts": "账户",
 		"active": "激活",
@@ -128,6 +129,7 @@
 			"commissionErrorExceedsGlobal": "佣金率超过全局最大值",
 			"commissionErrorExceedsMax": "佣金率超过允许的最大值",
 			"commissionErrorInvalidPayee": "佣金收款人地址无效",
+			"conversionUnavailable": "此兑换已无法按报价中的费用或额度进行。请刷新后重试。",
 			"poolErrorBlocked": "提名池当前被阻止",
 			"poolErrorDestroying": "提名池正在被销毁",
 			"poolErrorFull": "提名池已达到最大成员限制",
@@ -135,6 +137,7 @@
 			"stakingErrorEraConstraint": "当前时代不允许此操作",
 			"stakingErrorMaxNominations": "超过最大提名数量(16个验证人)",
 			"stakingErrorMinBond": "质押金额低于最低要求",
+			"swapPriceChanged": "价格变动已超出您设置的限制。请刷新报价后重试。",
 			"technicalErrorAppNotOpen": "硬件应用未打开",
 			"technicalErrorDeviceBusy": "硬件设备忙碌",
 			"technicalErrorDeviceDisconnected": "硬件设备已断开连接",
@@ -265,6 +268,7 @@
 		"nextHalving": "下一次减半",
 		"nextRewardsIn": "下一次奖励于",
 		"noAccountSelected": "无账户被选中",
+		"noAccounts": "暂无账户",
 		"noActiveValidatorsWarning": "由于您提名的验证者均未处于活跃状态，您可能无法获得奖励。",
 		"noFilters": "无筛选",
 		"noFree": "您没有可用的 {{unit}} 可质押",
@@ -355,7 +359,9 @@
 		"permissionlessClaimingTurnedOff": "己许可申领己关闭",
 		"permissionlessCompound": "无需许可复投：任何人均可为该成员复投奖励",
 		"permissionlessWithdraw": "无需许可提取：任何人均可为该成员提取奖励",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "点数",
 		"pool": "提名池",
 		"poolClaim": "提名池申领",

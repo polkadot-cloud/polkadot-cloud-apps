@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "계정",
 		"accountConnected": "계정 연결됨",
 		"accounts": "계정",
 		"active": "활성",
@@ -129,6 +130,7 @@
 			"commissionErrorExceedsGlobal": "수수료가 전역 최대치를 초과합니다",
 			"commissionErrorExceedsMax": "수수료가 최대 허용 비율을 초과합니다",
 			"commissionErrorInvalidPayee": "유효하지 않은 수수료 수령자 주소입니다",
+			"conversionUnavailable": "제시된 수수료 또는 한도로는 더 이상 전환할 수 없습니다. 새로고침하고 다시 시도하세요.",
 			"poolErrorBlocked": "풀이 현재 차단되어 있습니다",
 			"poolErrorDestroying": "풀이 삭제 중입니다",
 			"poolErrorFull": "풀이 최대 멤버 한도에 도달했습니다",
@@ -136,6 +138,7 @@
 			"stakingErrorEraConstraint": "현재 에라에서는 이 작업이 허용되지 않습니다",
 			"stakingErrorMaxNominations": "최대 노미네이션 수 초과 (16개 검증자)",
 			"stakingErrorMinBond": "본드 금액이 최소 요구사항 미만입니다",
+			"swapPriceChanged": "가격 변동이 설정한 한도를 초과했습니다. 견적을 새로고침하고 다시 시도하세요.",
 			"technicalErrorAppNotOpen": "하드웨어 앱이 열려있지 않습니다",
 			"technicalErrorDeviceBusy": "하드웨어 장치가 사용 중입니다",
 			"technicalErrorDeviceDisconnected": "하드웨어 장치 연결이 끊어졌습니다",
@@ -268,6 +271,7 @@
 		"nextHalving": "다음 반감",
 		"nextRewardsIn": "다음 보상까지",
 		"noAccountSelected": "선택된 계정 없음",
+		"noAccounts": "계정 없음",
 		"noActiveValidatorsWarning": "추천한 검증인 중 활성 상태인 검증인이 없어 보상을 받지 못할 수 있습니다.",
 		"noFilters": "필터 없음",
 		"noFree": "본딩할 수 있는 자유 {{unit}}이(가) 없습니다.",
@@ -359,7 +363,9 @@
 		"permissionlessClaimingTurnedOff": "권한이 없는 청구가 비활성화되었습니다.",
 		"permissionlessCompound": "권한이 없는 복리: 누구나 이 멤버의 보상을 복리로 계산할 수 있습니다",
 		"permissionlessWithdraw": "권한이 없는 인출: 누구나 이 멤버의 보상을 인출할 수 있습니다",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "포인트",
 		"pool": "풀",
 		"poolClaim": "풀 청구",

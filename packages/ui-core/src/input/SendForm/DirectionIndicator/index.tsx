@@ -6,9 +6,39 @@ import {
 	faArrowRightArrowLeft,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { ReactNode } from 'react'
+import classNames from 'classnames'
 import { Tooltip } from '../../../base/Tooltip'
 import classes from './index.module.scss'
+import type {
+	SendFormDirectionButtonProps,
+	SendFormDirectionIndicatorProps,
+} from './types'
+
+export const DirectionButton = ({
+	icon,
+	rotation,
+	children,
+	className,
+	...props
+}: SendFormDirectionButtonProps) => (
+	<button
+		type="button"
+		className={classNames(
+			classes.directionButton,
+			classes.interactiveButton,
+			{ [classes.labeledButton]: !!children },
+			className,
+		)}
+		{...props}
+	>
+		<FontAwesomeIcon
+			icon={icon}
+			rotation={rotation}
+			className={classes.directionIcon}
+		/>
+		{children && <span>{children}</span>}
+	</button>
+)
 
 export const DirectionIndicator = ({
 	onReverse,
@@ -16,26 +46,14 @@ export const DirectionIndicator = ({
 	children,
 	tooltip,
 	tooltipContainer,
-}: {
-	onReverse?: () => void
-	label?: string
-	children?: ReactNode
-	tooltip?: string
-	tooltipContainer?: HTMLDivElement
-} = {}) => {
+}: SendFormDirectionIndicatorProps = {}) => {
 	const button = onReverse ? (
-		<button
-			type="button"
-			className={`${classes.directionButton} ${classes.interactiveButton}`}
+		<DirectionButton
+			icon={faArrowRightArrowLeft}
+			rotation={90}
 			aria-label={label}
 			onClick={onReverse}
-		>
-			<FontAwesomeIcon
-				icon={faArrowRightArrowLeft}
-				rotation={90}
-				className={classes.directionIcon}
-			/>
-		</button>
+		/>
 	) : (
 		<div className={classes.directionButton}>
 			<FontAwesomeIcon icon={faArrowDown} className={classes.directionIcon} />

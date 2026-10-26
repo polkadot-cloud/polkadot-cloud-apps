@@ -19,6 +19,7 @@ export const Headers = ({
 	NodesRight,
 	menuPopoverFeatures,
 	showAccount = true,
+	openAccountsOnConnect,
 }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
 
@@ -48,6 +49,7 @@ export const Headers = ({
 				<Settings
 					openConnect={openConnect}
 					setOpenConnect={setOpenConnect}
+					openAccountsOnConnect={openAccountsOnConnect}
 					menuPopoverFeatures={menuPopoverFeatures}
 				/>
 			</section>

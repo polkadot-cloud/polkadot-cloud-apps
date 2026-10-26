@@ -26,6 +26,7 @@ import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
 import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
+import { createSwapInterface } from '../swap'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 import type { DedotServiceConfig } from '../types'
@@ -73,6 +74,7 @@ export class PolkadotService
 			assetHub: this.features.stablecoins.assetHub
 				? createAssetHubExchange(this.apiHub)
 				: undefined,
+			swap: this.features.swap ? createSwapInterface(this.apiHub) : undefined,
 			stablecoins: stablecoinsEnabled
 				? createStablecoinsInterface(
 						this.apiHub,

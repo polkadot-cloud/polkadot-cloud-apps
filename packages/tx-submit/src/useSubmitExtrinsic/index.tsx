@@ -12,7 +12,6 @@ import { VaultSigner } from '@polkadot-cloud/connect-vault'
 import { ManualSigners, StakingDappName } from 'consts'
 import { TxErrorKeyMap } from 'consts/tx'
 import { getStakingChainData } from 'consts/util'
-import { SubmittableExtrinsic } from 'dedot'
 import { $Metadata } from 'dedot/codecs'
 import { compactU32 } from 'dedot/shape'
 import type { InjectedSigner } from 'dedot/types'
@@ -25,19 +24,20 @@ import {
 	getUid,
 	pendingTxCount,
 	setUidSubmitted,
-	updateFee,
 } from 'global-bus'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
-import { createElement, useEffect, useState } from 'react'
+import { createElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ActiveAccount } from 'types'
+import type { ActiveAccount, TxFailure } from 'types'
 import { usePrompt } from 'ui-overlay'
 import { QRSignPrompt } from '../QRSignPrompt'
-import { stringifyWithBigInt } from '../util'
+import { useTxFee } from '../useTxFee'
+import { getSigningNetworkInfo } from '../util'
+import { getTxFailureKey } from './errors'
 import type { UseSubmitExtrinsic, UseSubmitExtrinsicProps } from './types'
 
 export const useSubmitExtrinsic = ({
@@ -50,7 +50,6 @@ export const useSubmitExtrinsic = ({
 	feeEstimator,
 	estimatedFee,
 	feeDisplay,
-	signingNetworkInfo,
 	callbackSubmit,
 	callbackInBlock,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
@@ -68,10 +67,11 @@ export const useSubmitExtrinsic = ({
 	const {
 		balances: { balanceTxFees },
 	} = useAccountBalances(fromAddress)
-	const { unit, units } = getStakingChainData(network)
+	const { unit } = getStakingChainData(network)
 
 	// Store the uid for this transaction
 	const [uid, setUid] = useState<number>(0)
+	const currentUid = useRef(0)
 
 	// Get the imported account for the `from` address
 	const fromAccount =
@@ -129,9 +129,18 @@ export const useSubmitExtrinsic = ({
 		}
 	}
 
+	// Release only this attempt; late callbacks must not reset a newer submission.
+	const renewSubmission = () => {
+		if (currentUid.current === uid) {
+			currentUid.current = 0
+			setUid(0)
+		}
+	}
+
 	// Extrinsic submission handler
 	const onSubmit = async () => {
-		if (!submitTx || getUid(uid)?.submitted || !submitAccount) {
+		const submission = getUid(uid)
+		if (!submitTx || !submission || submission.submitted || !submitAccount) {
 			return
 		}
 
@@ -155,8 +164,26 @@ export const useSubmitExtrinsic = ({
 			injectedExtension.enable(dappName)
 		}
 
-		// Pre-submission state update
-		setUidSubmitted(uid, true)
+		// The draft can predate account selection; record the actual signer and chain.
+		setUidSubmitted(uid, true, {
+			from: submitAccount.address,
+			genesisHash: submitTx.client.genesisHash,
+		})
+
+		// All signers must advance past transactions already broadcast by this account.
+		let nonce: number
+		try {
+			const accountState = await submitTx.client.query.system.account(
+				submitAccount.address,
+			)
+			nonce =
+				accountState.nonce +
+				pendingTxCount(submitAccount.address, submitTx.client.genesisHash)
+		} catch {
+			onError('technical')
+			return
+		}
+		const signingOptions = { ...feePaymentOptions, nonce }
 
 		// Handle signed transaction
 		let encodedSig
@@ -169,11 +196,6 @@ export const useSubmitExtrinsic = ({
 		}
 
 		if (requiresManualSign(submitAccount)) {
-			const networkInfo = signingNetworkInfo ?? {
-				decimals: feeDisplay?.units ?? units,
-				tokenSymbol: feeDisplay?.unit || unit,
-			}
-
 			const $Signature = serviceApi.codec.$Signature(specName)
 			if (!$Signature) {
 				onError('technical', 'missing_signer')
@@ -182,6 +204,7 @@ export const useSubmitExtrinsic = ({
 
 			if (source === 'ledger') {
 				try {
+					const networkInfo = await getSigningNetworkInfo(submitTx.client)
 					// The signer accepts hex, so encode the metadata already loaded by this tx's client.
 					const metadata = u8aToHex(
 						$Metadata.tryEncode(submitTx.client.metadata),
@@ -194,7 +217,7 @@ export const useSubmitExtrinsic = ({
 						metadata,
 						networkInfo,
 						(account as HardwareAccount).index,
-						feePaymentOptions,
+						signingOptions,
 					)
 					if (result) {
 						encodedSig = {
@@ -214,7 +237,7 @@ export const useSubmitExtrinsic = ({
 				const extra = serviceApi.signer.extraSignedExtension(
 					specName,
 					submitAccount.address,
-					feePaymentOptions,
+					signingOptions,
 				)
 				if (!extra) {
 					onError('technical', 'missing_signer')
@@ -274,16 +297,13 @@ export const useSubmitExtrinsic = ({
 				onError('technical', 'missing_signer')
 				return
 			}
-			const { nonce } = await submitTx.client.query.system.account(
-				submitAccount.address,
-			)
 			addSignAndSend(
 				network,
 				uid,
 				submitAccount.address,
 				submitTx,
 				signer,
-				nonce + pendingTxCount(network, submitAccount.address),
+				nonce,
 				handlers,
 				feePaymentOptions,
 			)
@@ -299,6 +319,7 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onInBlock = () => {
+		renewSubmission()
 		emitNotification({
 			title: t('inBlock'),
 			subtitle: t('transactionInBlock'),
@@ -307,35 +328,18 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onFinalized = () => {
+		renewSubmission()
 		emitNotification({
 			title: t('finalized'),
 			subtitle: t('transactionSuccessful'),
 		})
 	}
 
-	const onFailed = (error?: Error) => {
-		const displayUnit = feeDisplay?.unit || unit
-		let subtitle = t('errorWithTransaction')
-
-		// Handle only known, user-reported errors - focus on balance-related issues
-		if (error) {
-			const msg = error.message.toLowerCase()
-			if (
-				/balance|reserve|locked|freeze|insufficient|funds|minimum/.test(msg)
-			) {
-				subtitle = /swap/.test(msg)
-					? t('errors.swapPriceChanged')
-					: /locked|freeze/.test(msg)
-						? t('errors.balanceErrorLocked')
-						: t('errors.balanceErrorReserveRequired', { unit: displayUnit })
-			}
-			if (/psm|mintingstopped|allswapsstopped|feetoohigh|exceedsmax/.test(msg))
-				subtitle = t('errors.conversionUnavailable')
-		}
-
+	const onFailed = (failure: TxFailure) => {
+		renewSubmission()
 		emitNotification({
 			title: t('failed'),
-			subtitle,
+			subtitle: t(getTxFailureKey(failure), { unit: feeDisplay?.unit || unit }),
 		})
 	}
 
@@ -384,60 +388,27 @@ export const useSubmitExtrinsic = ({
 		})
 	}
 
-	// Re-fetch tx fee if tx changes
-	const fetchTxFee = async () => {
-		if (submitTx && submitAccount?.address) {
-			updateFee(uid, 0n)
-			const feeTx = SubmittableExtrinsic.fromTx(
-				submitTx.client as Parameters<typeof SubmittableExtrinsic.fromTx>[0],
-				submitTx.call,
-			)
-			try {
-				const partialFee = feeEstimator
-					? await feeEstimator({
-							tx: feeTx,
-							from: submitAccount.address,
-							feePaymentOptions,
-						})
-					: (await feeTx.paymentInfo(submitAccount.address, feePaymentOptions))
-							.partialFee
-				updateFee(uid, partialFee)
-			} catch {
-				updateFee(uid, 0n)
-			}
-		}
-	}
-
-	// Initialise tx submission
-	const submitAccountKey = stringifyWithBigInt(submitAccount)
-	const feePaymentOptionsKey = stringifyWithBigInt(feePaymentOptions)
-	const txHex = submitTx?.toHex()
-
 	useEffect(() => {
-		// Add a new uid for this transaction
-		if (uid === 0) {
+		// Reserve the next attempt once inclusion or a terminal result releases the form.
+		if (currentUid.current === 0) {
 			const newUid = addUid({
 				network,
 				from: submitAccount?.address || null,
 				tag,
 			})
+			currentUid.current = newUid
 			setUid(newUid)
 		}
 	}, [submitAccount?.address, tag, network, uid])
 
-	useEffect(() => {
-		if (uid > 0) {
-			if (estimatedFee !== undefined) updateFee(uid, estimatedFee)
-			else fetchTxFee()
-		}
-	}, [
-		submitAccountKey,
+	useTxFee({
 		uid,
-		feePaymentOptionsKey,
-		txHex,
+		tx: submitTx,
+		from: submitAccount?.address,
+		feePaymentOptions,
 		feeEstimator,
 		estimatedFee,
-	])
+	})
 
 	return {
 		txInitiated: !!submitTx,

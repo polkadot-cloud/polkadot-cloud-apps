@@ -3,10 +3,10 @@
 
 import type { SubmittableExtrinsic } from 'dedot'
 import type { HexString } from 'dedot/utils'
+import type { SwapMode } from './swap'
 
 export type AssetHubToken = 'DOT' | 'dotUSD' | 'USDT' | 'USDC'
 export type AssetHubPoolToken = Exclude<AssetHubToken, 'DOT'>
-export type SwapMode = 'exactIn' | 'exactOut'
 
 export type AssetHubPool = {
 	asset: AssetHubPoolToken

@@ -313,7 +313,6 @@ const TransactionActionInner = ({
 		feeEstimator,
 		estimatedFee,
 		feeDisplay,
-		signingNetworkInfo: { decimals: 10, tokenSymbol: 'DOT' },
 		callbackInBlock: () => {
 			void balances.refresh()
 			onComplete()

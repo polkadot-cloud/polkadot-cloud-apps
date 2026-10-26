@@ -22,6 +22,20 @@ import { getAccountSourceIcon } from './util'
 
 export { getAccountSourceIcon } from './util'
 
+export const AccountSourceIcon = ({
+	source,
+	className,
+}: {
+	source?: string
+	className?: string
+}) => (
+	<AccountInput.SourceIcon
+		className={className}
+		SvgIcon={getAccountSourceIcon(source)}
+		faIcon={source === 'external' ? faGlasses : undefined}
+	/>
+)
+
 export const AccountDropdown = ({
 	accounts,
 	initialAccount,
@@ -43,11 +57,7 @@ export const AccountDropdown = ({
 
 	const [selectedAccount, setSelectedAccount] =
 		useState<ImportedAccount | null>(
-			initialAccount !== undefined
-				? initialAccount
-				: accounts.length > 0
-					? accounts[0]
-					: null,
+			initialAccount === undefined ? (accounts[0] ?? null) : initialAccount,
 		)
 
 	const selectedAddress = selectedAccount?.address || ''
@@ -131,26 +141,18 @@ export const AccountDropdown = ({
 		}
 	}, [accounts, selectedAccount, initialAccount])
 
-	const hasFilteredAccounts = (term: string): boolean => {
-		const hasMatchingAccounts = accounts.some(
-			(account) =>
-				account.address.toLowerCase().includes(term.toLowerCase()) ||
-				account.name?.toLowerCase().includes(term.toLowerCase()),
+	const filterAccounts = (term: string) => {
+		const query = term.toLowerCase()
+		return accounts.filter(
+			({ address, name }) =>
+				address.toLowerCase().includes(query) ||
+				name?.toLowerCase().includes(query),
 		)
-		if (allowCustomAccounts && isValidAddress(term)) {
-			return true
-		}
-		return hasMatchingAccounts
 	}
 
-	let filteredAccounts = accounts.filter(
-		(account) =>
-			account.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			account.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-	)
+	let filteredAccounts = filterAccounts(searchTerm)
 
-	const validAddress = isValidAddress(searchTerm)
-	if (allowCustomAccounts && validAddress) {
+	if (allowCustomAccounts && isValidAddress(searchTerm)) {
 		const formattedAddress = formatAccountSs58(searchTerm, ss58)
 		if (
 			formattedAddress !== null &&
@@ -168,7 +170,11 @@ export const AccountDropdown = ({
 	}
 
 	const handleOpenDropdown = (term = searchTerm) => {
-		if (hasFilteredAccounts(term) && !disabled) {
+		if (
+			!disabled &&
+			(filterAccounts(term).length > 0 ||
+				(allowCustomAccounts && isValidAddress(term)))
+		) {
 			setIsOpen(true)
 		}
 	}
@@ -190,7 +196,6 @@ export const AccountDropdown = ({
 	}, [containerClass, dropdownClass])
 
 	const inputValue = isInputFocused ? searchTerm : selectedAccount?.name || ''
-	const SelectedSourceIcon = getAccountSourceIcon(selectedAccount?.source)
 
 	return (
 		<>
@@ -217,7 +222,7 @@ export const AccountDropdown = ({
 					}}
 				>
 					<Polkicon
-						address={selectedAccount?.address || ''}
+						address={selectedAddress}
 						fontSize="2.75rem"
 						background="transparent"
 					/>
@@ -253,7 +258,7 @@ export const AccountDropdown = ({
 						}}
 					/>
 					{!isInputFocused && selectedAccount && (
-						<AccountInput.Address address={selectedAccount?.address || ''} />
+						<AccountInput.Address address={selectedAccount.address} />
 					)}
 				</AccountInput.InnerLeft>
 				{!isInputFocused && selectedAccount && (
@@ -261,20 +266,14 @@ export const AccountDropdown = ({
 						<div>
 							<AccountInput.Balance
 								label={t('free', { ns: 'modals' })}
-								value={new BigNumber(
-									planckToUnit(transferableBalance || 0n, units),
-								)
+								value={new BigNumber(planckToUnit(transferableBalance, units))
 									.decimalPlaces(3)
 									.toFormat()}
 								unit={unit}
 							/>
 						</div>
 						<div>
-							{SelectedSourceIcon !== undefined ? (
-								<AccountInput.SourceIcon SvgIcon={SelectedSourceIcon} />
-							) : selectedAccount?.source === 'external' ? (
-								<AccountInput.SourceIcon faIcon={faGlasses} />
-							) : null}
+							<AccountSourceIcon source={selectedAccount.source} />
 
 							{!disabled && <AccountInput.Chevron />}
 						</div>
@@ -296,39 +295,31 @@ export const AccountDropdown = ({
 						}
 					>
 						<SimpleBar style={{ maxHeight: '300px' }}>
-							{filteredAccounts.map((account) => {
-								const SourceIcon = getAccountSourceIcon(account?.source)
+							{filteredAccounts.map((account) => (
+								<AccountInput.ListItem
+									account={account}
+									isSelected={
+										selectedAccount?.address === account.address &&
+										selectedAccount?.source === account.source
+									}
+									key={`${account.address}-${account.source}`}
+									onClick={handleSelect}
+								>
+									<Polkicon
+										address={account.address}
+										fontSize="2.25rem"
+										background="transparent"
+									/>
 
-								return (
-									<AccountInput.ListItem
-										account={account}
-										isSelected={
-											selectedAccount?.address === account.address &&
-											selectedAccount?.source === account.source
-										}
-										key={`${account.address}-${account.source}`}
-										onClick={handleSelect}
-									>
-										<Polkicon
-											address={account.address}
-											fontSize="2.25rem"
-											background="transparent"
+									<AccountInput.InnerLeft>
+										<AccountInput.ListName
+											name={account.name || ellipsisFn(account.address, 6)}
 										/>
-
-										<AccountInput.InnerLeft>
-											<AccountInput.ListName
-												name={account.name || ellipsisFn(account.address, 6)}
-											/>
-											<AccountInput.Address address={account.address} />
-										</AccountInput.InnerLeft>
-										{SourceIcon !== undefined ? (
-											<AccountInput.SourceIcon SvgIcon={SourceIcon} />
-										) : account.source === 'external' ? (
-											<AccountInput.SourceIcon faIcon={faGlasses} />
-										) : null}
-									</AccountInput.ListItem>
-								)
-							})}
+										<AccountInput.Address address={account.address} />
+									</AccountInput.InnerLeft>
+									<AccountSourceIcon source={account.source} />
+								</AccountInput.ListItem>
+							))}
 						</SimpleBar>
 					</AccountInput.ListContainer>
 				</RootPortal>

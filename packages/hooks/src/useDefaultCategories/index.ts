@@ -2,15 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useImportedAccounts } from '@polkadot-cloud/connect'
+import { compareAccounts } from 'utils'
 import type { AccountListCategory } from '../useStakingAccountCategories'
-
-const accountSortValue = ({
-	address,
-	name,
-}: {
-	address: string
-	name?: string
-}) => name?.trim() || address
 
 export const useDefaultCategories = (): AccountListCategory[] => {
 	const { accounts } = useImportedAccounts()
@@ -19,22 +12,7 @@ export const useDefaultCategories = (): AccountListCategory[] => {
 		{
 			key: 'default',
 			items: [...accounts]
-				.sort((a, b) => {
-					const nameSort = accountSortValue(a).localeCompare(
-						accountSortValue(b),
-						undefined,
-						{ sensitivity: 'base' },
-					)
-
-					if (nameSort !== 0) {
-						return nameSort
-					}
-
-					return (
-						a.address.localeCompare(b.address) ||
-						a.source.localeCompare(b.source)
-					)
-				})
+				.sort(compareAccounts)
 				.map(({ address, source }) => ({ address, source })),
 		},
 	]

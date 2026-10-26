@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Compte",
 		"accountConnected": "Compte connecté",
 		"accounts": "Comptes",
 		"active": "Actif",
@@ -129,6 +130,7 @@
 			"commissionErrorExceedsGlobal": "Le taux de commission dépasse le maximum global",
 			"commissionErrorExceedsMax": "Le taux de commission dépasse le maximum autorisé",
 			"commissionErrorInvalidPayee": "Adresse de bénéficiaire de commission invalide",
+			"conversionUnavailable": "Cette conversion n’est plus disponible aux frais ou à la capacité indiqués. Actualisez et réessayez.",
 			"poolErrorBlocked": "Le pool est actuellement bloqué",
 			"poolErrorDestroying": "Le pool est en cours de destruction",
 			"poolErrorFull": "Le pool a atteint la limite maximale de membres",
@@ -136,6 +138,7 @@
 			"stakingErrorEraConstraint": "Opération non autorisée dans l'ère actuelle",
 			"stakingErrorMaxNominations": "Nombre maximal de nominations dépassé (16 validateurs)",
 			"stakingErrorMinBond": "Montant à engager inférieur à l'exigence minimale",
+			"swapPriceChanged": "Le prix a évolué au-delà de votre limite. Actualisez la cotation et réessayez.",
 			"technicalErrorAppNotOpen": "L'application matérielle n'est pas ouverte",
 			"technicalErrorDeviceBusy": "L'appareil matériel est occupé",
 			"technicalErrorDeviceDisconnected": "Appareil matériel déconnecté",
@@ -271,6 +274,7 @@
 		"nextHalving": "Prochain halving",
 		"nextRewardsIn": "Prochaines récompenses dans",
 		"noAccountSelected": "Aucun compte sélectionné",
+		"noAccounts": "Aucun compte",
 		"noActiveValidatorsWarning": "Vous pourriez ne pas recevoir de récompenses, car aucun de vos validateurs nommés n’est actif.",
 		"noFilters": "Aucun filtre",
 		"noFree": "Vous n'avez aucun {{unit}} disponible à engager.",
@@ -362,7 +366,9 @@
 		"permissionlessClaimingTurnedOff": "La réclamation sans permission est désactivée.",
 		"permissionlessCompound": "Capitalisation sans permission : quiconque peut capitaliser les récompenses pour ce membre",
 		"permissionlessWithdraw": "Retrait sans permission : quiconque peut retirer les récompenses pour ce membre",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Points",
 		"pool": "Pool",
 		"poolClaim": "Réclamation du pool",

@@ -22,7 +22,12 @@ import { ConnectItem } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import type { ExtensionProps } from './types'
 
-export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
+export const Extension = ({
+	extension,
+	last,
+	setOpen,
+	openAccountsOnConnect = false,
+}: ExtensionProps) => {
 	const { t } = useTranslation('modals')
 	const { network } = useNetwork()
 	const { openModal } = useOverlay().modal
@@ -99,7 +104,7 @@ export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
 		}
 		onExtensionConnectedEvent(network, id)
 		setOpen(false)
-		openModal({ key: 'Accounts' })
+		if (openAccountsOnConnect) openModal({ key: 'Accounts' })
 	}
 
 	return (
