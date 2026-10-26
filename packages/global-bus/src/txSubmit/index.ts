@@ -25,9 +25,12 @@ export const addUid = ({
 	let newUids = [..._uids.getValue()]
 	// Ensure uid is unique
 	const newUid = ++lastUid
-	// If tag already exists, delete the entry
+	// Move the tag to the new draft while keeping active attempts until they finish.
 	if (tag) {
-		newUids = newUids.filter((item) => item.tag !== tag)
+		newUids = newUids.flatMap((item) => {
+			if (item.tag !== tag) return [item]
+			return item.submitted || item.pending ? [{ ...item, tag: undefined }] : []
+		})
 	}
 	newUids.push({
 		uid: newUid,
@@ -71,10 +74,10 @@ export const updateFee = (uid: number, fee: bigint) => {
 export const removeSub = (uid: number) => {
 	const sub = subs[uid]
 	if (sub) {
-		sub()
 		subs = Object.fromEntries(
 			Object.entries(subs).filter(([key]) => Number(key) !== uid),
 		)
+		void sub().catch(() => {})
 	}
 }
 

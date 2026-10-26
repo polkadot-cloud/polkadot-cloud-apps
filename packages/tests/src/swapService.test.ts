@@ -3,40 +3,56 @@
 // @vitest-environment jsdom
 
 import { expect, test, vi } from 'vitest'
+import { KusamaService } from '../../dedot-api/src/services/kusama'
+import { PaseoService } from '../../dedot-api/src/services/paseo'
 import { PolkadotService } from '../../dedot-api/src/services/polkadot'
+import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
 
-type ServiceArgs = ConstructorParameters<typeof PolkadotService>
+type ServiceApi = ConstructorParameters<typeof PolkadotService>[2] &
+	ConstructorParameters<typeof KusamaService>[2] &
+	ConstructorParameters<typeof PaseoService>[2]
 
-test.each([true, false, undefined])(
-	'swap=%s is independent of stablecoin support',
-	(swap) => {
-		for (const assetHub of [true, false]) {
-			for (const hydration of [true, false]) {
-				const api = { on: vi.fn() } as unknown as ServiceArgs[2]
-				const provider = {} as ServiceArgs[3]
-				const service = new PolkadotService(
-					{
-						network: 'polkadot',
-						rpcEndpoints: {},
-						providerType: 'ws',
-						autoRpc: true,
-					},
-					['polkadot', 'people-polkadot', 'statemint'],
-					api,
-					provider,
-					provider,
-					{ swap, stablecoins: { assetHub, hydration } },
-				)
+test.each([
+	['polkadot', 'people-polkadot', 'statemint', PolkadotService],
+	['kusama', 'people-kusama', 'statemine', KusamaService],
+	['paseo', 'people-paseo', 'paseomint', PaseoService],
+] as const)(
+	'%s exposes swapping only when supported and explicitly enabled',
+	(network, people, hub, Service) => {
+		for (const swap of [true, false, undefined]) {
+			for (const assetHub of [true, false]) {
+				for (const hydration of [true, false]) {
+					const api = { on: vi.fn() } as unknown as ServiceApi
+					const provider = {} as ConstructorParameters<typeof Service>[3]
+					const service = new Service(
+						{
+							network,
+							rpcEndpoints: {},
+							providerType: 'ws',
+							autoRpc: true,
+						},
+						[network, people, hub],
+						api,
+						provider,
+						provider,
+						{ swap, stablecoins: { assetHub, hydration } },
+					)
 
-				if (swap) {
-					expect(service.interface.swap).toEqual({
-						quotes: expect.any(Function),
-						swap: expect.any(Function),
-					})
-				} else {
-					expect(service.interface.swap).toBeUndefined()
+					if (network === 'polkadot' && swap) {
+						expect(service.interface.swap).toEqual({
+							quotes: expect.any(Function),
+							swap: expect.any(Function),
+						})
+					} else {
+						expect(service.interface).toHaveProperty('swap', undefined)
+					}
+					expect(service.features.swap).toBe(swap ?? false)
 				}
 			}
 		}
 	},
 )
+
+test('the default service leaves swapping unavailable', () => {
+	expect(defaultServiceInterface).toHaveProperty('swap', undefined)
+})

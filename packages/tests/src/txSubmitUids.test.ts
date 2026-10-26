@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { TxFailure } from 'types'
+import type { TxFailure, TxStatusHandlers } from 'types'
 import { afterEach, expect, test, vi } from 'vitest'
 import type { SubmittableExtrinsic } from '../../global-bus/node_modules/dedot/index.js'
 import type { TxStatus } from '../../global-bus/node_modules/dedot/types/index.js'
@@ -11,13 +11,19 @@ import {
 	addUid,
 	getUid,
 	handleResult,
+	pendingTxCount,
 	removeSub,
 	removeUid,
 	setUidPending,
+	setUidSubmitted,
+	subs,
 } from '../../global-bus/src/txSubmit'
 import { _uids } from '../../global-bus/src/txSubmit/private'
 
-afterEach(() => _uids.next([]))
+afterEach(() => {
+	for (const uid of Object.keys(subs)) removeSub(Number(uid))
+	_uids.next([])
+})
 
 test('transaction ids remain unique when a quote footer is removed beside a pending transaction', () => {
 	const first = addUid({ network: 'polkadot', from: 'sender' })
@@ -36,6 +42,96 @@ test('new submissions never reuse the id of a completed transaction', () => {
 	const uid = addUid({ network: 'polkadot', from: 'sender' })
 	removeUid(uid)
 	expect(addUid({ network: 'polkadot', from: 'sender' })).toBeGreaterThan(uid)
+})
+
+test('replacing a tagged draft preserves an active submission with that tag', () => {
+	const first = addUid({ network: 'polkadot', from: 'alice', tag: 'send' })
+	setUidSubmitted(first, true)
+	const next = addUid({ network: 'polkadot', from: 'alice', tag: 'send' })
+	expect(getUid(first)).toMatchObject({ submitted: true, tag: undefined })
+	expect(getUid(next)?.tag).toBe('send')
+	expect(_uids.getValue().filter(({ tag }) => tag === 'send')).toHaveLength(1)
+})
+
+test.each(['finalized', 'invalid', 'dispatch'] as const)(
+	'cleans up a %s attempt even when its callback throws',
+	(outcome) => {
+		const uid = addUid({ network: 'polkadot', from: 'alice' })
+		const unsubscribe = vi.fn().mockResolvedValue(undefined)
+		subs[uid] = unsubscribe
+		const fail = () => {
+			throw new Error('UI callback failed')
+		}
+		const handlers: TxStatusHandlers = {
+			onReady: vi.fn(),
+			onInBlock: vi.fn(),
+			onFinalized: fail,
+			onFailed: fail,
+			onError: vi.fn(),
+		}
+		const status: TxStatus =
+			outcome === 'invalid'
+				? { type: 'Invalid', value: { error: 'Rejected' } }
+				: {
+						type: 'Finalized',
+						value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+					}
+		expect(() =>
+			handleResult(
+				uid,
+				status,
+				handlers,
+				outcome === 'dispatch'
+					? { type: 'dispatch', error: { type: 'BadOrigin' } }
+					: undefined,
+			),
+		).toThrow('UI callback failed')
+		expect(getUid(uid)).toBeUndefined()
+		expect(subs[uid]).toBeUndefined()
+		expect(unsubscribe).toHaveBeenCalledOnce()
+	},
+)
+
+test('a dropped transaction reports failure and releases the submission', () => {
+	const uid = addUid({ network: 'polkadot', from: 'alice' })
+	const handlers = {
+		onReady: vi.fn(),
+		onInBlock: vi.fn(),
+		onFinalized: vi.fn(),
+		onFailed: vi.fn(),
+	}
+	handleResult(
+		uid,
+		{ type: 'Drop', value: { error: 'Dropped from pool' } },
+		handlers,
+	)
+	expect(handlers.onFailed).toHaveBeenCalledExactlyOnceWith({ type: 'invalid' })
+	expect(getUid(uid)).toBeUndefined()
+})
+
+test('a retracted inclusion restores the pending nonce count', () => {
+	const uid = addUid({ network: 'polkadot', from: 'alice' })
+	setUidSubmitted(uid, true)
+	const handlers = {
+		onReady: vi.fn(),
+		onInBlock: vi.fn(),
+		onFinalized: vi.fn(),
+		onFailed: vi.fn(),
+	}
+	handleResult(uid, { type: 'Broadcasting' }, handlers)
+	handleResult(
+		uid,
+		{
+			type: 'BestChainBlockIncluded',
+			value: { blockHash: '0x01', blockNumber: 1, txIndex: 0 },
+		},
+		handlers,
+	)
+	expect(pendingTxCount('polkadot', 'alice')).toBe(0)
+	expect(getUid(uid)?.submitted).toBe(true)
+	handleResult(uid, { type: 'NoLongerInBestChain' }, handlers)
+	expect(pendingTxCount('polkadot', 'alice')).toBe(1)
+	expect(handlers.onFailed).not.toHaveBeenCalled()
 })
 
 test('a reverted swap reports failure and never reports inclusion or finalization as success', () => {
@@ -125,6 +221,7 @@ for (const path of ['extension', 'manual'] as const) {
 				onError: vi.fn(),
 			}
 			const findErrorMeta = vi.fn().mockReturnValue(module)
+			const unsubscribe = vi.fn().mockResolvedValue(undefined)
 			const submit = async (
 				callback: (result: {
 					status: TxStatus
@@ -138,7 +235,7 @@ for (const path of ['extension', 'manual'] as const) {
 					},
 					dispatchError: error,
 				})
-				return async () => undefined
+				return unsubscribe
 			}
 			const tx = {
 				client: { registry: { findErrorMeta } },
@@ -183,6 +280,8 @@ for (const path of ['extension', 'manual'] as const) {
 				expect(handlers.onInBlock).not.toHaveBeenCalled()
 				expect(handlers.onFinalized).not.toHaveBeenCalled()
 				expect(getUid(uid)).toBeUndefined()
+				expect(subs[uid]).toBeUndefined()
+				expect(unsubscribe).toHaveBeenCalledOnce()
 				if (error.type === 'Module') {
 					expect(findErrorMeta).toHaveBeenCalledExactlyOnceWith(error)
 				} else {

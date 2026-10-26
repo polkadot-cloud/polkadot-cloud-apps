@@ -3,7 +3,13 @@
 
 import type { SubmittableExtrinsic } from 'dedot'
 import type { DispatchError, ExtrinsicSignatureV4 } from 'dedot/codecs'
-import type { InjectedSigner, PayloadOptions, TxStatus } from 'dedot/types'
+import type {
+	InjectedSigner,
+	ISubmittableResult,
+	PayloadOptions,
+	TxStatus,
+	Unsub,
+} from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
 import type { TxFailure, TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
@@ -12,7 +18,26 @@ import { deleteTx, getUid, setUidPending, setUidSubmitted, subs } from './index'
 const dispatchFailure = (
 	tx: SubmittableExtrinsic,
 	error?: DispatchError,
+	events: ISubmittableResult['events'] = [],
 ): TxFailure | undefined => {
+	// Proxy and non-atomic batch calls can fail inside a successful outer extrinsic.
+	if (!error) {
+		for (const {
+			event: { pallet, palletEvent },
+		} of events) {
+			if (typeof palletEvent === 'string') continue
+			if (pallet === 'Proxy' && palletEvent.name === 'ProxyExecuted') {
+				if (palletEvent.data.result.isErr) error = palletEvent.data.result.err
+			} else if (
+				pallet === 'Utility' &&
+				(palletEvent.name === 'BatchInterrupted' ||
+					palletEvent.name === 'ItemFailed')
+			) {
+				error = palletEvent.data.error
+			}
+			if (error) break
+		}
+	}
 	if (!error) return
 	const metadata =
 		error.type === 'Module'
@@ -23,6 +48,15 @@ const dispatchFailure = (
 		type: 'dispatch',
 		error,
 		module: metadata && { pallet: metadata.pallet, name: metadata.name },
+	}
+}
+
+// A terminal callback may run before send/signAndSend returns its unsubscribe handle.
+const registerSub = (uid: number, unsubscribe: Unsub) => {
+	if (getUid(uid)) {
+		subs[uid] = unsubscribe
+	} else {
+		void unsubscribe().catch(() => {})
 	}
 }
 
@@ -47,13 +81,19 @@ export const addSignAndSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.signAndSend(
+		const unsubscribe = await tx.signAndSend(
 			from,
 			options,
-			async ({ status, dispatchError }) => {
-				handleResult(uid, status, onRest, dispatchFailure(tx, dispatchError))
+			async ({ status, dispatchError, events }) => {
+				handleResult(
+					uid,
+					status,
+					onRest,
+					dispatchFailure(tx, dispatchError, events),
+				)
 			},
 		)
+		registerSub(uid, unsubscribe)
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
@@ -74,9 +114,17 @@ export const addSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.send(async ({ status, dispatchError }) => {
-			handleResult(uid, status, onRest, dispatchFailure(tx, dispatchError))
-		})
+		const unsubscribe = await tx.send(
+			async ({ status, dispatchError, events }) => {
+				handleResult(
+					uid,
+					status,
+					onRest,
+					dispatchFailure(tx, dispatchError, events),
+				)
+			},
+		)
+		registerSub(uid, unsubscribe)
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
@@ -97,8 +145,11 @@ export const handleResult = (
 ) => {
 	if (!getUid(uid)) return
 	if (failure) {
-		onFailed(failure)
-		deleteTx(uid)
+		try {
+			onFailed(failure)
+		} finally {
+			deleteTx(uid)
+		}
 		return
 	}
 	if (status.type === 'Broadcasting') {
@@ -106,18 +157,26 @@ export const handleResult = (
 		onReady()
 	}
 	if (status.type === 'BestChainBlockIncluded') {
-		// Stop submission indicators before callbacks that may update the UI or throw.
-		setUidSubmitted(uid, false)
+		// Keep this attempt registered until finalization while the hook opens the next draft.
 		setUidPending(uid, false)
 		onInBlock()
 	}
-	if (status.type === 'Finalized') {
-		onFinalized()
-		deleteTx(uid)
+	if (status.type === 'NoLongerInBestChain') {
+		setUidPending(uid, true)
 	}
-	if (status.type === 'Invalid') {
-		onFailed({ type: 'invalid' })
-		deleteTx(uid)
+	if (status.type === 'Finalized') {
+		try {
+			onFinalized()
+		} finally {
+			deleteTx(uid)
+		}
+	}
+	if (status.type === 'Invalid' || status.type === 'Drop') {
+		try {
+			onFailed({ type: 'invalid' })
+		} finally {
+			deleteTx(uid)
+		}
 	}
 }
 

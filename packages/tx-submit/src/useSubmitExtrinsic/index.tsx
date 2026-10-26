@@ -30,7 +30,7 @@ import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useProxySupported } from 'hooks/useProxySupported'
 import { useTxMeta } from 'hooks/useTxMeta'
-import { createElement, useEffect, useState } from 'react'
+import { createElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ActiveAccount, TxFailure } from 'types'
 import { usePrompt } from 'ui-overlay'
@@ -71,6 +71,7 @@ export const useSubmitExtrinsic = ({
 
 	// Store the uid for this transaction
 	const [uid, setUid] = useState<number>(0)
+	const currentUid = useRef(0)
 
 	// Get the imported account for the `from` address
 	const fromAccount =
@@ -128,9 +129,18 @@ export const useSubmitExtrinsic = ({
 		}
 	}
 
+	// Release only this attempt; late callbacks must not reset a newer submission.
+	const renewSubmission = () => {
+		if (currentUid.current === uid) {
+			currentUid.current = 0
+			setUid(0)
+		}
+	}
+
 	// Extrinsic submission handler
 	const onSubmit = async () => {
-		if (!submitTx || getUid(uid)?.submitted || !submitAccount) {
+		const submission = getUid(uid)
+		if (!submitTx || !submission || submission.submitted || !submitAccount) {
 			return
 		}
 
@@ -294,6 +304,7 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onInBlock = () => {
+		renewSubmission()
 		emitNotification({
 			title: t('inBlock'),
 			subtitle: t('transactionInBlock'),
@@ -302,6 +313,7 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onFinalized = () => {
+		renewSubmission()
 		emitNotification({
 			title: t('finalized'),
 			subtitle: t('transactionSuccessful'),
@@ -309,6 +321,7 @@ export const useSubmitExtrinsic = ({
 	}
 
 	const onFailed = (failure: TxFailure) => {
+		renewSubmission()
 		emitNotification({
 			title: t('failed'),
 			subtitle: t(getTxFailureKey(failure), { unit: feeDisplay?.unit || unit }),
@@ -361,13 +374,14 @@ export const useSubmitExtrinsic = ({
 	}
 
 	useEffect(() => {
-		// Add a new uid for this transaction
-		if (uid === 0) {
+		// Reserve the next attempt once inclusion or a terminal result releases the form.
+		if (currentUid.current === 0) {
 			const newUid = addUid({
 				network,
 				from: submitAccount?.address || null,
 				tag,
 			})
+			currentUid.current = newUid
 			setUid(newUid)
 		}
 	}, [submitAccount?.address, tag, network, uid])
