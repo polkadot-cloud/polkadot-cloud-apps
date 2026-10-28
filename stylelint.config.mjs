@@ -1,8 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { Config } from 'stylelint'
-
+/** @satisfies {import('stylelint').Config} */
 export default {
 	extends: ['stylelint-config-standard-scss'],
 	plugins: ['stylelint-order'],
@@ -28,4 +27,4 @@ export default {
 			},
 		],
 	},
-} satisfies Config
+}
