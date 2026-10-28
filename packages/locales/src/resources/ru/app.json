@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Аккаунт",
 		"accountConnected": "Аккаунт подключён",
 		"accounts": "Аккаунты",
 		"active": "Активно",
@@ -130,6 +131,7 @@
 			"commissionErrorExceedsGlobal": "Ставка комиссии превышает глобальный максимум",
 			"commissionErrorExceedsMax": "Ставка комиссии превышает максимально допустимую",
 			"commissionErrorInvalidPayee": "Недопустимый адрес получателя комиссии",
+			"conversionUnavailable": "Эта конвертация больше недоступна с указанной комиссией или лимитом. Обновите данные и попробуйте снова.",
 			"poolErrorBlocked": "Пул сейчас заблокирован",
 			"poolErrorDestroying": "Пул уничтожается",
 			"poolErrorFull": "Пул достиг максимального числа участников",
@@ -137,6 +139,7 @@
 			"stakingErrorEraConstraint": "Операция не разрешена в текущей эре",
 			"stakingErrorMaxNominations": "Превышено максимальное число номинаций (16 валидаторов)",
 			"stakingErrorMinBond": "Сумма блокировки ниже минимального требования",
+			"swapPriceChanged": "Изменение цены превысило установленный лимит. Обновите котировку и попробуйте снова.",
 			"technicalErrorAppNotOpen": "Приложение на устройстве не открыто",
 			"technicalErrorDeviceBusy": "Аппаратное устройство занято",
 			"technicalErrorDeviceDisconnected": "Аппаратное устройство отключено",
@@ -275,6 +278,7 @@
 		"nextHalving": "Следующий халвинг",
 		"nextRewardsIn": "Следующие вознаграждения через",
 		"noAccountSelected": "Аккаунт не выбран",
+		"noAccounts": "Нет аккаунтов",
 		"noActiveValidatorsWarning": "Вы можете не получать награды, поскольку ни один из выбранных вами валидаторов не активен.",
 		"noFilters": "Нет фильтров",
 		"noFree": "У вас нет доступных {{unit}} для блокировки.",
@@ -368,7 +372,9 @@
 		"permissionlessClaimingTurnedOff": "Получение без разрешения отключено.",
 		"permissionlessCompound": "Реинвестирование без разрешения: кто угодно может реинвестировать вознаграждения для этого участника",
 		"permissionlessWithdraw": "Вывод без разрешения: кто угодно может выводить вознаграждения для этого участника",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Очки",
 		"pool": "Пул",
 		"poolClaim": "Получение из пула",

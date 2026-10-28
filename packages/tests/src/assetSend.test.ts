@@ -2,13 +2,117 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { StablecoinBalance } from 'types'
-import { planckToUnitBn, sanitizeBalanceInput, stringToBn } from 'utils'
-import { describe, expect, test } from 'vitest'
 import {
-	formatBalance,
 	maxSendableBalance,
-	toPlanck,
-} from '../../app-swap/src/pages/Send/utils'
+	planckToUnitBn,
+	sanitizeBalanceInput,
+	stringToBn,
+} from 'utils'
+import { describe, expect, test, vi } from 'vitest'
+import {
+	getFeeAssetOptions,
+	getTokenOptions,
+} from '../../app-swap/src/pages/Send/options'
+import { formatBalance, toPlanck } from '../../app-swap/src/pages/Send/utils'
+import dotUsdSvg from '../../assets/src/token/dotusd.svg'
+import { createAssetHubStablecoinAdapter } from '../../dedot-api/src/stablecoins/assetHub'
+
+type AssetHubApi = Parameters<typeof createAssetHubStablecoinAdapter>[0]
+
+describe('Asset Send dotUSD support', () => {
+	test('offers dotUSD for transfers and fees on Polkadot Hub only', () => {
+		for (const getOptions of [getTokenOptions, getFeeAssetOptions]) {
+			expect(getOptions('statemint')).toContainEqual({
+				value: 'dotUSD',
+				label: 'dotUSD',
+				icon: dotUsdSvg,
+			})
+			expect(getOptions('hydration').map(({ value }) => value)).not.toContain(
+				'dotUSD',
+			)
+		}
+	})
+
+	test('reads dotUSD balances and builds transfers with six-decimal amounts', async () => {
+		const account = vi.fn().mockResolvedValue({
+			balance: 2_000_000n,
+			status: 'Liquid',
+		})
+		const tx = {}
+		const transferKeepAlive = vi.fn().mockReturnValue(tx)
+		const adapter = createAssetHubStablecoinAdapter({
+			query: { assets: { account } },
+			tx: { assets: { transferKeepAlive } },
+		} as unknown as AssetHubApi)
+
+		const balance = await adapter.balance('sender', 'dotUSD')
+		expect(account).toHaveBeenCalledWith([7873, 'sender'])
+		expect(balance).toEqual({
+			chain: 'statemint',
+			symbol: 'dotUSD',
+			free: 2_000_000n,
+			frozen: 0n,
+			existentialDeposit: 10_000n,
+			decimals: 6,
+		})
+		expect(formatBalance(balance, 'dotUSD')).toBe('2.000000 dotUSD')
+		expect(maxSendableBalance(balance, balance, 2_500n)).toBe(1_987_500n)
+		expect(
+			await adapter.transfer({
+				chain: 'statemint',
+				symbol: 'dotUSD',
+				recipient: 'recipient',
+				amount: toPlanck('1.234567', balance!.decimals),
+			}),
+		).toBe(tx)
+		expect(transferKeepAlive).toHaveBeenCalledWith(
+			7873,
+			'recipient',
+			1_234_567n,
+		)
+	})
+
+	test('uses the dotUSD asset location for fee payment and conversion', async () => {
+		const quotePriceTokensForExactTokens = vi.fn().mockResolvedValue(2_500n)
+		const adapter = createAssetHubStablecoinAdapter({
+			call: { assetConversionApi: { quotePriceTokensForExactTokens } },
+		} as unknown as AssetHubApi)
+		const assetLocation = {
+			parents: 0,
+			interior: {
+				type: 'X2',
+				value: [
+					{ type: 'PalletInstance', value: 50 },
+					{ type: 'GeneralIndex', value: 7873n },
+				],
+			},
+		}
+		const payloadOptions = adapter.paymentOptions('dotUSD')
+		const paymentInfo = vi.fn().mockResolvedValue({ partialFee: 1_000_000n })
+		const tx = { paymentInfo } as unknown as Parameters<
+			typeof adapter.estimateFee
+		>[0]['tx']
+
+		expect(adapter.feeAssets).toContain('dotUSD')
+		expect(payloadOptions).toEqual({ assetId: assetLocation })
+		expect(
+			await adapter.estimateFee({
+				chain: 'statemint',
+				symbol: 'dotUSD',
+				tx,
+				from: 'sender',
+				payloadOptions,
+			}),
+		).toBe(2_500n)
+		expect(paymentInfo).toHaveBeenCalledWith('sender', payloadOptions)
+		expect(quotePriceTokensForExactTokens).toHaveBeenCalledWith(
+			assetLocation,
+			{ parents: 1, interior: { type: 'Here' } },
+			1_000_000n,
+			true,
+		)
+	})
+})
 
 const dotBalance: StablecoinBalance = {
 	chain: 'statemint',

@@ -4,6 +4,7 @@
 import type { ServiceInterface } from 'types'
 
 export const defaultServiceInterface: ServiceInterface = {
+	swap: undefined,
 	stablecoins: {
 		query: {
 			balances: async () => [],

@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useDefaultCategories } from 'hooks/useDefaultCategories'
 import type { OverlayLoader } from 'ui-overlay'
 import { lazyNamed, Overlay } from 'ui-overlay'
 
@@ -15,10 +14,7 @@ const lazyOverlayComponents = <
 	) as Record<keyof T, ReturnType<typeof lazyNamed>>
 
 const modals = lazyOverlayComponents({
-	Accounts: () =>
-		import('ui-modals/Accounts').then(({ Accounts: AccountsModal }) => ({
-			Accounts: () => <AccountsModal useCategories={useDefaultCategories} />,
-		})),
+	AccountBalances: () => import('ui-modals/AccountBalances'),
 	DiscordSupport: () => import('ui-modals/DiscordSupport'),
 	ExternalAccounts: () => import('ui-modals/ExternalAccounts'),
 	ImportAccounts: () => import('ui-modals/ImportAccounts'),

@@ -6,13 +6,8 @@ import LedgerSVG from 'assets/extensions/LedgerSquare.svg?react'
 import PolkadotVaultSVG from 'assets/extensions/PolkadotVault.svg?react'
 
 export const getAccountSourceIcon = (source?: string) => {
-	const SelectedIcon = source
-		? source === 'ledger'
-			? LedgerSVG
-			: source === 'vault'
-				? PolkadotVaultSVG
-				: getExtensionIcon(source) || undefined
-		: undefined
-
-	return SelectedIcon
+	if (!source) return undefined
+	if (source === 'ledger') return LedgerSVG
+	if (source === 'vault') return PolkadotVaultSVG
+	return getExtensionIcon(source) || undefined
 }

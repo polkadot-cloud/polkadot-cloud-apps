@@ -4,7 +4,8 @@
 import { Action } from './Action'
 import { Card } from './Card'
 import { Container } from './Container'
-import { DirectionIndicator } from './DirectionIndicator'
+import { DirectionButton, DirectionIndicator } from './DirectionIndicator'
+import { Field } from './Field'
 import { Header } from './Header'
 import { Label } from './Label'
 import { Note, Notes } from './Notes'
@@ -14,7 +15,9 @@ export const SendForm = {
 	Action,
 	Card,
 	Container,
+	DirectionButton,
 	DirectionIndicator,
+	Field,
 	Header,
 	Label,
 	Note,

@@ -10,8 +10,10 @@ import {
 import styled from 'styled-components'
 import type { MinimisedProps } from './types'
 
-export const Wrapper = styled.div<MinimisedProps>`
-  background: ${(props) => (props.$minimised && !props.$advancedMode ? 'var(--bg-min-side-menu)' : 'none')};
+export const Wrapper = styled.div<
+	MinimisedProps & { $expandedBackground?: boolean }
+>`
+  background: ${(props) => (!props.$advancedMode && (props.$minimised || props.$expandedBackground) ? 'var(--bg-min-side-menu)' : 'none')};
   overflow: auto;
   flex-grow: 1;
   display: flex;
@@ -126,12 +128,12 @@ export const LogoWrapper = styled.div<MinimisedProps>`
   }
 `
 
-export const ToggleWrapper = styled.button`
+export const ToggleWrapper = styled.button<{ $inset?: boolean }>`
   position: absolute;
   top: 1.225rem;
   width: 1.3rem;
   height: 1.3rem;
-  right: -0.75rem;
+  right: ${(props) => (props.$inset ? '0.75rem' : '-0.75rem')};
   display: flex;
   align-items: center;
   z-index: 10;

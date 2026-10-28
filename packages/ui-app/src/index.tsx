@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+export * from './AccountDetails'
 export * from './AccountDropdown'
 export * from './AccountInput'
 export * from './BalanceInput'
@@ -19,6 +20,7 @@ export * from './PagePreloader'
 export * from './PageTabs'
 export * from './PageWithTitle'
 export * from './RetainmentStats'
+export * from './Slider'
 export * from './Stat'
 export * from './SubmitTx'
 export * from './Tx'
