@@ -73,7 +73,7 @@ export const RewardsStatus = () => {
 			helpKey="Pool Rewards"
 			type="odometer"
 			stat={{ value: labelRewards }}
-			dimmed={!inPool || pendingRewards === 0n}
+			dimmed={!inPool || pendingRewards <= minUnclaimedDisplay}
 			buttons={syncing ? [] : buttonsRewards}
 		/>
 	)

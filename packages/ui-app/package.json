@@ -34,6 +34,7 @@
 		"event-tracking": "workspace:*",
 		"global-bus": "workspace:*",
 		"hooks": "workspace:*",
+		"locales": "workspace:*",
 		"motion": "12.23.24",
 		"rc-slider": "^11.1.6",
 		"react": "^19.3.1",

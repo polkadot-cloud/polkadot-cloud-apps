@@ -21,7 +21,7 @@ import { UnstakePrompts } from './UnstakePrompts'
 
 export const Active = () => {
 	const { t } = useTranslation()
-	const { syncing } = useSyncing()
+	const { syncing, accountSynced } = useSyncing()
 	const { isBonding } = useStaking()
 	const { isValidator } = useValidators()
 	const { getNominations } = useBalances()
@@ -32,6 +32,12 @@ export const Active = () => {
 	const { formatWithPrefs } = useValidatorEntries(getNominations(activeAddress))
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const ROW_HEIGHT = 220
+
+	// Preload the bond card while account data syncs, matching the pool card, so
+	// the button row shows a skeleton instead of disabled buttons during sync.
+	const isPreloading = activeAddress
+		? syncing || !accountSynced(activeAddress)
+		: syncing
 
 	return (
 		<>
@@ -44,7 +50,7 @@ export const Active = () => {
 			<Page.Row>
 				<Page.RowSection secondary vLast>
 					<CardWrapper height={ROW_HEIGHT}>
-						<BondManager bondFor="nominator" />
+						<BondManager bondFor="nominator" isPreloading={isPreloading} />
 					</CardWrapper>
 				</Page.RowSection>
 				<Page.RowSection hLast>
