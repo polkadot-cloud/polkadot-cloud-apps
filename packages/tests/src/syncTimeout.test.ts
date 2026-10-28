@@ -16,7 +16,7 @@ afterEach(() => {
 })
 
 test('timeout functionality works correctly', () => {
-	const timeouts = new Map<string, NodeJS.Timeout>()
+	const timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 	const syncIds = new Set<string>()
 
 	const clearSyncTimeout = (id: string) => {

@@ -44,9 +44,6 @@ importers:
       prettier:
         specifier: ^3.9.5
         version: 3.9.6
-      prettier-plugin-organize-imports:
-        specifier: ^4.1.0
-        version: 4.3.0(prettier@3.9.6)(typescript@7.0.2)
       sass:
         specifier: ^1.102.0
         version: 1.102.0
@@ -4356,16 +4353,6 @@ packages:
     deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
 
-  prettier-plugin-organize-imports@4.3.0:
-    resolution: {integrity: sha512-FxFz0qFhyBsGdIsb697f/EkvHzi5SZOhWAjxcx2dLt+Q532bAlhswcXGYB1yzjZ69kW8UoadFBw7TyNwlq96Iw==}
-    peerDependencies:
-      prettier: '>=2.0'
-      typescript: '>=2.9'
-      vue-tsc: ^2.1.0 || 3
-    peerDependenciesMeta:
-      vue-tsc:
-        optional: true
-
   prettier@3.9.6:
     resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
     engines: {node: '>=14'}
@@ -8080,11 +8067,6 @@ snapshots:
       tar-fs: 2.1.5
       tunnel-agent: 0.6.0
     optional: true
-
-  prettier-plugin-organize-imports@4.3.0(prettier@3.9.6)(typescript@7.0.2):
-    dependencies:
-      prettier: 3.9.6
-      typescript: 7.0.2
 
   prettier@3.9.6: {}
 
