@@ -22,7 +22,7 @@
 		"date-fns": "^4.4.0",
 		"event-tracking": "workspace:*",
 		"i18next": "^26.5.2",
-		"react-i18next": "^17.1.0",
+		"react-i18next": "^17.1.9",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
