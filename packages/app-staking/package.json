@@ -39,7 +39,7 @@
 		"event-tracking": "workspace:*",
 		"global-bus": "workspace:*",
 		"hooks": "workspace:*",
-		"i18next-browser-languagedetector": "^8.2.1",
+		"i18next-browser-languagedetector": "^8.2.3",
 		"locales": "workspace:*",
 		"motion": "12.23.24",
 		"plugin-gateway": "workspace:*",
