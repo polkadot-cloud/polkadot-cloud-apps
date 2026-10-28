@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-app-v0.2.0...ui-app-v0.3.0) (2026-10-28)
+
+
+### Features
+
+* Add `CLOUD` validator fetch method, cloud validator ([#3793](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3793)) ([af6ee05](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/af6ee056f2d616247879ef2511d8ea62c26d17ba))
+* Add detailed validator list items on Kusama ([#3815](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3815)) ([1c01a96](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1c01a968635eafdb5cfd73651636a70ffa48d4e3))
+* add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
+* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+* Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
+* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+* Implement low backing warnings ([#3871](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3871)) ([c9011f5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9011f59c3b8f44cfb2ad4a5d13e9d04212cfcfa))
+* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+* prepare swap interface and shared transaction hooks ([#3887](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3887)) ([62ad126](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/62ad126fd87f50d423375fb96f4731760ca647a1))
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+* **refactor:** Remove legacy extensions  ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+* Retainment UI uses rolling 3 month figures in lists ([#3787](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3787)) ([8d5891a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8d5891aea486ca6e65935c615587f9de2d4acebb))
+* Swap UI enhancements ([#3886](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3886)) ([2a6cbcf](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2a6cbcf3241e4a88f98ac928262843f83284438a))
+* **ux:** Add validator warning badges to row items ([#3809](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3809)) ([6283ab7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6283ab7f1ab1bfa41c515ad415c3c3c9130ad91e))
+* **ux:** Header menu link revision, links to footer ([#3789](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3789)) ([5fdf0de](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5fdf0de01ee3150eb6e7e0f9316c4fca949b18cf))
+* **ux:** input guards, loading states, footer price & confirmation toasts ([#3613](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3613)) ([7db254b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7db254b736b817932ccf58c26651240086e074e6))
+* **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
+* **ux:** Manage Nominations menu simplification ([#3759](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3759)) ([e973d6b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e973d6b29061727e72420e12093345d458b21cf3))
+* **ux:** Nominate UI enhancements and simplification ([#3837](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3837)) ([0ddffb7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ddffb756c26c7128315a72f0db7b2dba2fcd613))
+* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+* **ux:** Revise validator bar design w. top header ([#3791](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3791)) ([0ee1b2a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ee1b2ae87735722f96640aebfa444af44ba616c))
+* **ux:** Strip UI for warnings, add waiting only warning ([#3761](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3761)) ([7c19c78](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c19c78bda656fa3ceba3a5cf839593f57eee3c4))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-app-v0.1.0...ui-app-v0.2.0) (2026-08-09)
 
 

@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.1.0...tests-v1.2.0) (2026-10-28)
+
+
+### Features
+
+* Add detailed validator list items on Kusama ([#3815](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3815)) ([1c01a96](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1c01a968635eafdb5cfd73651636a70ffa48d4e3))
+* Add hetzner validator warning ([#3806](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3806)) ([ec31d61](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ec31d617c77c2508f2bf79e222f8dabcf64c4aa8))
+* add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
+* Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
+* Add validator warnings and optimize nomination UI ([#3794](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3794)) ([582e733](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/582e733902b086f4e7a90d913e0dd0db5965b7d4))
+* Bootstrap additional `data-gate` queries, era stakers data point ([#3811](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3811)) ([dd5bbf9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd5bbf913350f5f806b038ae421cc00cc73c14be))
+* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+* Implement low backing warnings ([#3871](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3871)) ([c9011f5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9011f59c3b8f44cfb2ad4a5d13e9d04212cfcfa))
+* implement overviews in focused queries ([#3818](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3818)) ([ad540ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ad540ca58d23cec44abba07e81acd2e1cf8c4c71))
+* prepare swap interface and shared transaction hooks ([#3887](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3887)) ([62ad126](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/62ad126fd87f50d423375fb96f4731760ca647a1))
+* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+* **refactor:** Init `data-gate` with nomination status use case ([#3810](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3810)) ([d9af5f0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d9af5f028a881d4ba51bea811b4e551c8df5bd13))
+* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+* **refactor:** Speed up validator status and total stake syncing ([#3808](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3808)) ([6ffed46](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6ffed46b0e198c9c25dab37042ff076417c6eac4))
+* Retainment UI uses rolling 3 month figures in lists ([#3787](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3787)) ([8d5891a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8d5891aea486ca6e65935c615587f9de2d4acebb))
+* Support cloud rpc auth token ([#3817](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3817)) ([1590005](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/15900052faac815912e3a51fe3f79968b040bb16))
+* support dotUSD in asset send ([#3884](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3884)) ([a6ac3f7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a6ac3f7e056a4d8ab4966bdabcd2f552313a1ae3))
+* **ux:** Add validator warning badges to row items ([#3809](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3809)) ([6283ab7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6283ab7f1ab1bfa41c515ad415c3c3c9130ad91e))
+* **ux:** Nominate UI enhancements and simplification ([#3837](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3837)) ([0ddffb7](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/0ddffb756c26c7128315a72f0db7b2dba2fcd613))
+* Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
+* Validator incentive rewards support ([#3853](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3853)) ([dbba5f4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dbba5f4570d1b022be79066b9e29c3e8d350b020))
+* Validator reward projection enhancements ([#3854](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3854)) ([fc2084d](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/fc2084dd739933a06f878674e174f88c77a75940))
+
 ## [1.1.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.0.0...tests-v1.1.0) (2026-08-09)
 
 
