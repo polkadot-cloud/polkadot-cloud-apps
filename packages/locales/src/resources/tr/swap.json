@@ -44,6 +44,21 @@
 		"swapDescription": "Polkadot Asset Hub üzerinde varlık takas edin.",
 		"transferAssetsDescription": "Varlıkları aynı ağdaki başka bir adrese aktarın.",
 		"youPay": "Ödeyeceğiniz",
-		"youReceive": "Alacağınız"
+		"youReceive": "Alacağınız",
+		"crossChain": "Zincirler arası",
+		"crossChainDescription": "Polkadot Asset Hub ve Hydration arasında sabit coin gönderin.",
+		"crossChainSend": "Zincirler arası gönder",
+		"crossChainAssetsNote": "Polkadot üzerinde çıkarılan USDC ve USDT desteklenir. HOLLAR ve dotUSD için desteklenen bir rota yoktur. Teslimat asenkrondur; tahmini ücretler ve alınan tutar değişebilir.",
+		"checkingCrossChain": "Bakiyeler, ücretler ve hedefteki yürütme kontrol ediliyor…",
+		"destinationChain": "Hedef zincir",
+		"destinationXcmFee": "Hedef ücreti (varışta düşülür)",
+		"estimatedReceived": "Tahmini alınan tutar",
+		"originXcmFee": "Kaynak XCM ücreti",
+		"reverseChains": "Zincirleri ters çevir",
+		"sourceChain": "Kaynak zincir",
+		"xcmStatusSubmitted": "Transfer kaynak zincirde gönderildi. Kesinleşmesi bekleniyor…",
+		"xcmStatusFinalized": "Kaynak zincirde kesinleşti. Hedef bakiyenin güncellenmesi bekleniyor…",
+		"xcmStatusBalanceUpdated": "Alıcının hedef zincirdeki bakiyesi beklenen tutar kadar arttı.",
+		"xcmStatusUnconfirmed": "Kaynak işlem kesinleşti. Teslimat henüz doğrulanmadı; tekrar göndermeden önce hedef bakiyeyi kontrol edin."
 	}
 }

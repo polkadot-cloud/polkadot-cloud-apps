@@ -44,6 +44,21 @@
 		"swapDescription": "Обменивайте активы в Polkadot Asset Hub.",
 		"transferAssetsDescription": "Перевод активов на другой адрес в той же сети.",
 		"youPay": "Вы платите",
-		"youReceive": "Вы получаете"
+		"youReceive": "Вы получаете",
+		"crossChain": "Кроссчейн",
+		"crossChainDescription": "Отправляйте стейблкоины между Polkadot Asset Hub и Hydration.",
+		"crossChainSend": "Отправить между сетями",
+		"crossChainAssetsNote": "Поддерживаются USDC и USDT, выпущенные в Polkadot. Для HOLLAR и dotUSD нет поддерживаемого маршрута. Доставка асинхронная; оценка комиссий и суммы получения может измениться.",
+		"checkingCrossChain": "Проверка балансов, комиссий и выполнения в сети назначения…",
+		"destinationChain": "Сеть назначения",
+		"destinationXcmFee": "Комиссия назначения (вычитается при получении)",
+		"estimatedReceived": "Ожидаемая сумма получения",
+		"originXcmFee": "Комиссия XCM в исходной сети",
+		"reverseChains": "Поменять сети местами",
+		"sourceChain": "Исходная сеть",
+		"xcmStatusSubmitted": "Перевод отправлен в исходной сети. Ожидание финализации…",
+		"xcmStatusFinalized": "Финализировано в исходной сети. Ожидание обновления баланса в сети назначения…",
+		"xcmStatusBalanceUpdated": "Баланс получателя в сети назначения увеличился на ожидаемую сумму.",
+		"xcmStatusUnconfirmed": "Исходная транзакция финализирована. Доставка не подтверждена; проверьте баланс в сети назначения перед повторной отправкой."
 	}
 }

@@ -60,6 +60,37 @@ export type AssetTransferInput = {
 // Retained for consumers of the original stablecoin service API.
 export type StablecoinTransferInput = AssetTransferInput
 
+// Polkadot-native stablecoins registered on both Asset Hub and Hydration.
+export type CrossChainAsset = 'USDC' | 'USDT'
+
+export type CrossChainTransferInput = {
+	from: StablecoinChainId
+	to: StablecoinChainId
+	symbol: CrossChainAsset
+	amount: bigint
+	sender: string
+	recipient: string
+	feeAsset: 'DOT' | CrossChainAsset
+}
+
+export type CrossChainFee = {
+	amount: bigint
+	symbol: string
+	decimals: number
+}
+
+// A successfully simulated transfer; amounts and fees are in base units.
+export type CrossChainTransfer = {
+	tx: SubmittableExtrinsic
+	originFee: CrossChainFee
+	// Asset Hub can deduct its XCM execution fee from the transferred asset.
+	originFeeFromAmount: boolean
+	destinationFee: CrossChainFee
+	receivedAmount: bigint
+	destinationBalance: bigint
+	fetchedAt: number
+}
+
 // Fee asset selection and signing options for a transaction on a supported chain.
 export type StablecoinFeePayment = {
 	chain: StablecoinChainId

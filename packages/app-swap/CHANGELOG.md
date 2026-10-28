@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Add Cross-chain USDC and USDT transfers between Polkadot Asset Hub and Hydration, with XCM preflight, fee estimates, wallet signing, and destination balance monitoring.
 * Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-swap-v0.1.0...app-swap-v0.2.0) (2026-08-09)

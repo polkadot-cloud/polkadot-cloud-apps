@@ -85,6 +85,19 @@ export const createStablecoinsInterface = (
 	}
 
 	return {
+		...(features.assetHub &&
+			features.hydration && {
+				xcm: {
+					prepare: async (input) => {
+						const { prepareCrossChainTransfer } = await import('../xcm')
+						return prepareCrossChainTransfer(
+							apiHub,
+							await getHydrationApi(),
+							input,
+						)
+					},
+				},
+			}),
 		query: {
 			balances: queryBalances,
 			balance: async (address, chain, symbol) =>

@@ -44,6 +44,21 @@
 		"swapDescription": "Intercambia activos en Polkadot Asset Hub.",
 		"transferAssetsDescription": "Transfiere activos a otra dirección en la misma red.",
 		"youPay": "Pagas",
-		"youReceive": "Recibes"
+		"youReceive": "Recibes",
+		"crossChain": "Entre cadenas",
+		"crossChainDescription": "Envía stablecoins entre Polkadot Asset Hub y Hydration.",
+		"crossChainSend": "Enviar entre cadenas",
+		"crossChainAssetsNote": "Se admiten USDC y USDT emitidos en Polkadot. HOLLAR y dotUSD no tienen una ruta compatible. La entrega es asíncrona; las comisiones y el importe recibido estimados pueden cambiar.",
+		"checkingCrossChain": "Comprobando saldos, comisiones y ejecución en destino…",
+		"destinationChain": "Cadena de destino",
+		"destinationXcmFee": "Comisión de destino (descontada al llegar)",
+		"estimatedReceived": "Importe recibido estimado",
+		"originXcmFee": "Comisión XCM de origen",
+		"reverseChains": "Invertir cadenas",
+		"sourceChain": "Cadena de origen",
+		"xcmStatusSubmitted": "Transferencia enviada en la cadena de origen. Esperando su finalización…",
+		"xcmStatusFinalized": "Finalizada en la cadena de origen. Esperando la actualización del saldo de destino…",
+		"xcmStatusBalanceUpdated": "El saldo de destino del destinatario ha aumentado en el importe esperado.",
+		"xcmStatusUnconfirmed": "La transacción de origen ha finalizado. La entrega no se ha confirmado; comprueba el saldo de destino antes de volver a enviar."
 	}
 }

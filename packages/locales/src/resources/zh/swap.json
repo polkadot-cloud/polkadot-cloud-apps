@@ -44,6 +44,21 @@
 		"swapDescription": "在 Polkadot Asset Hub 上兑换资产。",
 		"transferAssetsDescription": "将资产转账到同一网络中的其他地址。",
 		"youPay": "支付",
-		"youReceive": "接收"
+		"youReceive": "接收",
+		"crossChain": "跨链",
+		"crossChainDescription": "在 Polkadot Asset Hub 和 Hydration 之间发送稳定币。",
+		"crossChainSend": "跨链发送",
+		"crossChainAssetsNote": "支持在 Polkadot 上发行的 USDC 和 USDT。HOLLAR 和 dotUSD 暂无支持的路线。到账是异步的；预估费用和收款金额可能变化。",
+		"checkingCrossChain": "正在检查余额、费用和目标链执行情况…",
+		"destinationChain": "目标链",
+		"destinationXcmFee": "目标链费用（到账时扣除）",
+		"estimatedReceived": "预估到账金额",
+		"originXcmFee": "来源链 XCM 费用",
+		"reverseChains": "交换链",
+		"sourceChain": "来源链",
+		"xcmStatusSubmitted": "转账已在来源链提交，等待最终确认…",
+		"xcmStatusFinalized": "来源链已最终确认，等待目标链余额更新…",
+		"xcmStatusBalanceUpdated": "收款人的目标链余额已增加预期金额。",
+		"xcmStatusUnconfirmed": "来源链交易已最终确认，尚未确认到账；再次发送前请检查目标链余额。"
 	}
 }

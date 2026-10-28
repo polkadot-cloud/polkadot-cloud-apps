@@ -1,0 +1,158 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { SwapDappName } from 'consts'
+import { getUid, removeUid } from 'global-bus'
+import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSubmitExtrinsic } from 'tx-submit'
+import type {
+	CrossChainTransfer,
+	CrossChainTransferInput,
+	ImportedAccount,
+} from 'types'
+import { SubmitTx } from 'ui-app/SubmitTx'
+import { SendForm } from 'ui-core/input'
+import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
+import { canFundTransfer } from './utils'
+
+export const TransferAction = ({
+	input,
+	account,
+	quote,
+	networkFee,
+	valid,
+}: {
+	input: CrossChainTransferInput
+	account: ImportedAccount | null
+	quote?: CrossChainTransfer
+	networkFee?: bigint
+	valid: boolean
+}) => {
+	const { t } = useTranslation('swap')
+	const { serviceApi } = useApi()
+	const { uids } = useTxMeta()
+	const balances = useStablecoinBalances(account?.address)
+	const [stage, setStage] = useState<
+		'submitted' | 'finalized' | 'balanceUpdated' | 'unconfirmed' | undefined
+	>()
+	const [sent, setSent] = useState<CrossChainTransfer>()
+	const signing = uids.some(
+		(item) =>
+			item.from === account?.address && item.submitted && !item.broadcasted,
+	)
+	const ready =
+		valid &&
+		!!quote &&
+		!!account &&
+		networkFee !== undefined &&
+		!stage &&
+		!signing &&
+		!balances.loading &&
+		canFundTransfer(balances.balances, input, quote, swapFeeReserve(networkFee))
+	const feeDisplay = {
+		unit: input.feeAsset,
+		units: input.feeAsset === 'DOT' ? 10 : 6,
+	}
+	const submission = useSubmitExtrinsic({
+		tx: quote?.tx,
+		from: {
+			address: account?.address ?? null,
+			source: account?.source ?? null,
+		},
+		shouldSubmit: ready,
+		tag: 'stablecoin-cross-chain',
+		dappName: SwapDappName,
+		feePaymentOptions: serviceApi.stablecoins.fee.paymentOptions(
+			input.from,
+			input.feeAsset,
+		),
+		estimatedFee: networkFee,
+		feeDisplay,
+		callbackSubmit: () => {
+			setSent(quote)
+			setStage('submitted')
+		},
+		callbackInBlock: () => {
+			void balances.refresh()
+		},
+		callbackFinalized: () => {
+			setStage('finalized')
+			void balances.refresh()
+		},
+		callbackFailure: () => {
+			setStage(undefined)
+			setSent(undefined)
+		},
+	})
+	useEffect(
+		() => () => {
+			const pending = getUid(submission.uid)
+			if (pending && !pending.submitted && !pending.pending)
+				removeUid(submission.uid)
+		},
+		[submission.uid],
+	)
+	useEffect(() => {
+		if (stage !== 'finalized' || !sent) return
+		let stale = false
+		let running = false
+		const check = async () => {
+			if (running) return
+			running = true
+			try {
+				const balance = await serviceApi.stablecoins.query.balance(
+					input.recipient,
+					input.to,
+					input.symbol,
+				)
+				if (
+					!stale &&
+					balance &&
+					balance.free >= sent.destinationBalance + sent.receivedAmount
+				) {
+					setStage('balanceUpdated')
+					void serviceApi.stablecoins.query
+						.balances(input.recipient)
+						.catch(() => undefined)
+				}
+			} finally {
+				running = false
+			}
+		}
+		void check().catch(() => undefined)
+		const poll = setInterval(() => {
+			void check().catch(() => undefined)
+		}, 6000)
+		const timeout = setTimeout(() => setStage('unconfirmed'), 120_000)
+		return () => {
+			stale = true
+			clearInterval(poll)
+			clearTimeout(timeout)
+		}
+	}, [stage, sent, serviceApi])
+	return (
+		<SendForm.Action>
+			<div style={{ width: '100%' }}>
+				{stage && (
+					<ExchangeNotice>
+						{t(`xcmStatus${stage[0].toUpperCase()}${stage.slice(1)}`)}
+					</ExchangeNotice>
+				)}
+				<SubmitTx
+					{...submission}
+					submitText={t('crossChainSend')}
+					valid={ready}
+					noMargin
+					feeDisplay={feeDisplay}
+					feeBalance={
+						balances.getBalance(input.from, input.feeAsset)?.free ?? 0n
+					}
+					hideSigner
+					transparent
+				/>
+			</div>
+		</SendForm.Action>
+	)
+}

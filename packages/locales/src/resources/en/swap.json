@@ -8,6 +8,17 @@
 		"bestOutput": "Automatic · best output before network fees",
 		"chain": "Chain",
 		"conversionFee": "Conversion fee",
+		"crossChain": "Cross-chain",
+		"crossChainDescription": "Send stablecoins between Polkadot Asset Hub and Hydration.",
+		"crossChainSend": "Send Cross-chain",
+		"crossChainAssetsNote": "USDC and USDT issued on Polkadot are supported. HOLLAR and dotUSD have no supported route. Delivery is asynchronous; estimated fees and the amount received may change.",
+		"checkingCrossChain": "Checking balances, fees and destination execution…",
+		"destinationChain": "Destination Chain",
+		"destinationXcmFee": "Destination fee (deducted on arrival)",
+		"estimatedReceived": "Estimated received",
+		"originXcmFee": "Origin XCM fee",
+		"reverseChains": "Reverse chains",
+		"sourceChain": "Source Chain",
 		"enterRecipientAddress": "Enter recipient address...",
 		"exactInput": "Set amount to pay",
 		"exactOutput": "Set amount to receive",
@@ -44,6 +55,10 @@
 		"swapDescription": "Exchange assets on Polkadot Asset Hub.",
 		"transferAssetsDescription": "Transfer assets to another address on the same network.",
 		"youPay": "You pay",
-		"youReceive": "You receive"
+		"youReceive": "You receive",
+		"xcmStatusSubmitted": "Transfer submitted on the source chain. Waiting for finality…",
+		"xcmStatusFinalized": "Finalized on the source chain. Waiting for the destination balance to update…",
+		"xcmStatusBalanceUpdated": "The recipient’s destination balance has increased by the expected amount.",
+		"xcmStatusUnconfirmed": "The source transaction finalized. Delivery has not been confirmed; check the destination balance before sending again."
 	}
 }
