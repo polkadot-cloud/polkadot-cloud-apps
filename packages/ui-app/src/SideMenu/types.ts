@@ -28,12 +28,14 @@ export interface BaseMenuProps {
 	getActivePageForCategory: (category: PageCategory['key']) => string
 	localCategory: PageCategory['key']
 }
-export interface DefaultMenuProps extends BaseMenuProps {
+export interface DefaultMenuProps extends Omit<BaseMenuProps, 'localCategory'> {
+	localCategory?: PageCategory['key']
 	pageCategories: PageCategoryItems
 	pagesConfig: PagesConfigItems
 	renderMain: RenderSideMenuMain
 	title: string
 	enableAdvancedMenu: boolean
+	expandedBackground?: boolean
 }
 
 export interface FloatingMenuProps {
@@ -45,6 +47,7 @@ export interface FloatingMenuProps {
 export interface NavSimpleProps {
 	renderMain: RenderSideMenuMain
 	title: string
+	expandedBackground?: boolean
 }
 export type RenderSideMenuMain = (props: SideMenuMainRenderProps) => ReactNode
 

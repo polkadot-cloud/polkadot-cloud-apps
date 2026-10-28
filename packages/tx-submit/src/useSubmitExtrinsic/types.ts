@@ -2,18 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { SubmittableExtrinsic } from 'dedot'
-import type { PayloadOptions } from 'dedot/types'
 import type { ActiveAccount, ActiveProxy, TxFeeDisplay } from 'types'
+import type { TxFeeOptions } from '../useTxFee/types'
 
-export type TxFeeEstimatorInput = {
-	tx: SubmittableExtrinsic
-	from: string
-	feePaymentOptions?: PayloadOptions
-}
-
-export type TxFeeEstimator = (input: TxFeeEstimatorInput) => Promise<bigint>
-
-export interface UseSubmitExtrinsicProps {
+export interface UseSubmitExtrinsicProps extends TxFeeOptions {
 	tx: SubmittableExtrinsic | undefined
 	tag?: string
 	dappName?: string
@@ -23,8 +15,6 @@ export interface UseSubmitExtrinsicProps {
 		proxy?: ActiveProxy | null
 	}
 	shouldSubmit: boolean
-	feePaymentOptions?: PayloadOptions
-	feeEstimator?: TxFeeEstimator
 	feeDisplay?: TxFeeDisplay
 	callbackSubmit?: () => void
 	callbackInBlock?: () => void

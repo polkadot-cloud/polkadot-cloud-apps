@@ -20,12 +20,13 @@ import { CategoryHeader, Wrapper } from './Wrapper'
 export const DefaultMenu = ({
 	barItems,
 	getActivePageForCategory,
-	localCategory,
+	localCategory = 'stake',
 	pageCategories,
 	pagesConfig,
 	renderMain,
 	title,
 	enableAdvancedMenu,
+	expandedBackground = false,
 }: DefaultMenuProps) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
@@ -56,7 +57,11 @@ export const DefaultMenu = ({
 			}
 			nav={
 				!showAdvancedMenu ? (
-					<NavSimple renderMain={renderMain} title={title} />
+					<NavSimple
+						renderMain={renderMain}
+						title={title}
+						expandedBackground={expandedBackground}
+					/>
 				) : (
 					<Wrapper $minimised={menuMinimised} $advancedMode={showAdvancedMenu}>
 						<section>

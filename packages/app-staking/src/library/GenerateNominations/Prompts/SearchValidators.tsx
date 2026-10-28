@@ -9,11 +9,11 @@ import { usePlugins } from 'hooks/usePlugins'
 import { SearchInput } from 'library/List/SearchInput'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { FooterWrapper, PromptListItem } from 'library/Prompt/Wrappers'
-import { StyledSlider } from 'library/StyledSlider'
 import { fetchSearchValidators } from 'plugin-staking-api'
 import { type FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Validator } from 'types'
+import { Slider } from 'ui-app/Slider'
 import { ButtonPrimary } from 'ui-buttons'
 import { Checkbox } from 'ui-core/list'
 import { SearchList } from 'ui-core/modal'
@@ -163,16 +163,14 @@ export const SearchValidators = ({ callback, nominations }: PromptProps) => {
 
 						{/* Commission Filter */}
 						<div style={{ margin: '1rem 0' }}>
-							<StyledSlider
+							<Slider
 								value={maxCommission}
 								min={0}
 								max={100}
 								step={0.1}
-								onChange={(val) => {
-									if (typeof val === 'number') {
-										setMaxCommission(val)
-									}
-								}}
+								ariaLabel={t('maxCommission', { ns: 'modals' })}
+								formatValue={(value) => `${value}%`}
+								onChange={setMaxCommission}
 							/>
 						</div>
 

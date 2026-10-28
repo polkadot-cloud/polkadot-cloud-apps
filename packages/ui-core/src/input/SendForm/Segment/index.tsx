@@ -2,16 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
-import type { ReactNode } from 'react'
+import { Field } from '../Field'
+import type { SendFormFieldProps } from '../Field/types'
 import classes from './index.module.scss'
 
-export type SendFormSegmentProps = {
-	title: string
-	children: ReactNode
-	className?: string
-	headerContent?: ReactNode
+export type SendFormSegmentProps = SendFormFieldProps & {
 	layer?: 'default' | 'raised' | 'top'
-	responsiveHeader?: boolean
 }
 
 export const Segment = ({
@@ -22,20 +18,15 @@ export const Segment = ({
 	layer = 'default',
 	responsiveHeader = false,
 }: SendFormSegmentProps) => (
-	<div
+	<Field
+		title={title}
+		headerContent={headerContent}
+		responsiveHeader={responsiveHeader}
 		className={classNames(classes.segment, className, {
 			[classes.raisedLayer]: layer === 'raised',
 			[classes.topLayer]: layer === 'top',
 		})}
 	>
-		<div
-			className={classNames(classes.titleRow, {
-				[classes.responsiveTitleRow]: responsiveHeader,
-			})}
-		>
-			<span className={classes.title}>{title}</span>
-			{headerContent}
-		</div>
 		{children}
-	</div>
+	</Field>
 )

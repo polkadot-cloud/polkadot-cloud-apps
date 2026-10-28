@@ -1,5 +1,6 @@
 {
 	"app": {
+		"account": "Cuenta",
 		"accountConnected": "Cuenta Conectada",
 		"accounts": "Cuentas",
 		"active": "Activo",
@@ -129,6 +130,7 @@
 			"commissionErrorExceedsGlobal": "Tasa de comisión excede el máximo global",
 			"commissionErrorExceedsMax": "Tasa de comisión excede el máximo permitido",
 			"commissionErrorInvalidPayee": "Dirección de destinatario de comisión inválida",
+			"conversionUnavailable": "Esta conversión ya no está disponible con la comisión o capacidad cotizadas. Actualiza e inténtalo de nuevo.",
 			"poolErrorBlocked": "El pool está actualmente bloqueado",
 			"poolErrorDestroying": "El pool está siendo destruido",
 			"poolErrorFull": "El pool ha alcanzado el límite máximo de miembros",
@@ -136,6 +138,7 @@
 			"stakingErrorEraConstraint": "Operación no permitida en la era actual",
 			"stakingErrorMaxNominations": "Nominaciones máximas excedidas (16 validadores)",
 			"stakingErrorMinBond": "Monto de vinculación por debajo del requisito mínimo",
+			"swapPriceChanged": "El precio ha cambiado más allá de tu límite. Actualiza la cotización e inténtalo de nuevo.",
 			"technicalErrorAppNotOpen": "Aplicación hardware no abierta",
 			"technicalErrorDeviceBusy": "Dispositivo hardware ocupado",
 			"technicalErrorDeviceDisconnected": "Dispositivo hardware desconectado",
@@ -270,6 +273,7 @@
 		"nextHalving": "Próximo Halving",
 		"nextRewardsIn": "Próximas Recompensas En",
 		"noAccountSelected": "No hay cuenta seleccionada",
+		"noAccounts": "No hay cuentas",
 		"noActiveValidatorsWarning": "Es posible que no obtengas recompensas porque ninguno de tus validadores nominados está activo.",
 		"noFilters": "Sin filtros",
 		"noFree": "No tienes {{unit}} libre para vincular",
@@ -361,7 +365,9 @@
 		"permissionlessClaimingTurnedOff": "La reclamación sin permisos está desactivada.",
 		"permissionlessCompound": "Reinversión sin permisos: Cualquiera puede reinvertir recompensas para este miembro",
 		"permissionlessWithdraw": "Retiro sin permisos: Cualquiera puede retirar recompensas para este miembro",
-		"plugin": { "staking_api": "Staking API" },
+		"plugin": {
+			"staking_api": "Staking API"
+		},
 		"points": "Puntos",
 		"pool": "Pool",
 		"poolClaim": "Reclamación del Pool",

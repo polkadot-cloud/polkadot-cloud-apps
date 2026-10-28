@@ -11,7 +11,11 @@ import { useUi } from 'hooks/useUi'
 import type { NavSimpleProps } from './types'
 import { LogoWrapper, ToggleWrapper, Wrapper } from './Wrapper'
 
-export const NavSimple = ({ renderMain, title }: NavSimpleProps) => {
+export const NavSimple = ({
+	renderMain,
+	title,
+	expandedBackground = false,
+}: NavSimpleProps) => {
 	const { sideMenuMinimised, userSideMenuMinimised, setUserSideMenuMinimised } =
 		useUi()
 
@@ -19,6 +23,7 @@ export const NavSimple = ({ renderMain, title }: NavSimpleProps) => {
 		<>
 			<ToggleWrapper
 				type="button"
+				$inset={expandedBackground && !sideMenuMinimised}
 				onClick={() => setUserSideMenuMinimised(!userSideMenuMinimised)}
 			>
 				<span className="label">
@@ -28,7 +33,10 @@ export const NavSimple = ({ renderMain, title }: NavSimpleProps) => {
 					/>
 				</span>
 			</ToggleWrapper>
-			<Wrapper $minimised={sideMenuMinimised}>
+			<Wrapper
+				$minimised={sideMenuMinimised}
+				$expandedBackground={expandedBackground}
+			>
 				<section>
 					<LogoWrapper $minimised={sideMenuMinimised}>
 						<CloudSVG />

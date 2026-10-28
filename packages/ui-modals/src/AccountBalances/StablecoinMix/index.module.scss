@@ -1,0 +1,30 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.mix {
+	--popover-headline-padding-block-end: 1rem;
+}
+
+.mixBar {
+	display: flex;
+	padding: 1rem var(--popover-menu-item-padding-inline, 1rem);
+}
+
+.mixIcons {
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+
+	> img {
+		position: relative;
+		width: 2rem;
+		height: 2rem;
+		border: 2px solid var(--bg-primary);
+		border-radius: 50%;
+		background: var(--bg-primary);
+
+		&:not(:first-child) {
+			margin-inline-start: -0.5rem;
+		}
+	}
+}

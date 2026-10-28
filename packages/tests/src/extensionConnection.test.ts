@@ -9,6 +9,7 @@ import * as accounts from '../../ui-app/node_modules/@polkadot-cloud/connect-cor
 import * as extensions from '../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
 import * as core from '../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js'
 import { Extension } from '../../ui-app/src/Headers/Popovers/ConnectPopover/Extension'
+import type { ExtensionProps } from '../../ui-app/src/Headers/Popovers/ConnectPopover/types'
 import type { ButtonMonoInvertProps } from '../../ui-buttons/src/types'
 import {
 	extensionAccount as account,
@@ -111,7 +112,11 @@ afterEach(() => {
 
 afterAll(() => vi.unstubAllGlobals())
 
-const renderButton = () => {
+const renderButton = (
+	options: Pick<ExtensionProps, 'openAccountsOnConnect'> = {
+		openAccountsOnConnect: true,
+	},
+) => {
 	act(() =>
 		root.render(
 			createElement(Extension, {
@@ -124,11 +129,25 @@ const renderButton = () => {
 				},
 				last: true,
 				setOpen,
+				...options,
 			}),
 		),
 	)
 	return state.button!
 }
+
+test.each([undefined, false])(
+	'a successful connection only opens Accounts when opted in: %s',
+	async (openAccountsOnConnect) => {
+		await renderButton({ openAccountsOnConnect }).onClick?.()
+		expect(connectedEvent).toHaveBeenCalledExactlyOnceWith(
+			'polkadot',
+			'cloud-signer',
+		)
+		expect(setOpen).toHaveBeenCalledExactlyOnceWith(false)
+		expect(openModal).not.toHaveBeenCalled()
+	},
+)
 
 test.each(['false', 'rejection'])(
 	'failed connection does not run success effects: %s',

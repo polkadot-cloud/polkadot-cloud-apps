@@ -38,7 +38,6 @@ export const SendForm = ({
 				<SendFormUi.Header
 					title={t('sendAssets')}
 					subtitle={t('transferAssetsDescription')}
-					label="Beta"
 				/>
 				<SendFormUi.Card>
 					<SendFormUi.Segment
@@ -81,7 +80,6 @@ export const SendForm = ({
 						feeAssetOptions={selection.availableFeeAssetOptions}
 						feeBalance={transaction.selectedFeeAssetBalance}
 						feeDisplay={transaction.feeDisplay}
-						feeSetupRequired={transaction.feeSetupRequired}
 						onSelect={selection.setSelectedFeeAsset}
 						selectedFeeAsset={selection.selectedFeeAsset}
 						submission={transaction.submission}
