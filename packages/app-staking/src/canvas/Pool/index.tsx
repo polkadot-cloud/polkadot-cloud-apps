@@ -1,18 +1,18 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
+import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { getNetworkKnownPoolIds } from 'consts/util/pools'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { poolRoleIdentities$ } from 'global-bus'
 import { useInvites } from 'hooks/useInvites'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { fetchPoolCandidates } from 'plugin-staking-api'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool, RoleIdentities } from 'types'
+import { CardWrapper } from 'ui-app/Card'
 import { Head, Main } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
 import { Header } from './Header'

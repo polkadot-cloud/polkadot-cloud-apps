@@ -50,13 +50,6 @@
 					"Vincular fundos é o processo de 'bloquear' (ou fazer staking) de {NETWORK_UNIT}. O {NETWORK_UNIT} vinculado será então automaticamente alocado para um ou mais de seus validadores nomeados."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Período de Análise de Descentralização",
-				[
-					"A descentralização de sua nomeação é calculada analisando as recompensas pagas nos últimos 30 dias. Dependendo da rede, isso se traduzirá em um número de Eras.",
-					"30 dias fornece informações suficientes para a agregação ser significativa, e também é curto o suficiente para que mudanças nas nomeações comecem a impactar essa análise após alguns dias."
-				]
-			],
 			"epoch": [
 				"Época",
 				[
@@ -75,15 +68,6 @@
 				"Pontos de Era",
 				[
 					"Pontos de Era são uma medida de quão bem um validador se desempenhou na era atual. Quanto mais Pontos de Era um validador tem, mais recompensas receberá ao final da era."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Geolocalização de Cada Nomeação",
-				[
-					"Cada validador nomeado roda em um data center específico que pode ser geolocalizado pelo seu endereço IP.",
-					"A tabela exibe a última região, país e rede onde cada validador nomeado foi geolocalizado.",
-					"Quando o validador foi localizado em mais de um local durante o período de análise, um sinal ++ será exibido.",
-					"A porcentagem mostrada é a proporção das recompensas pagas a você por este validador no período de análise."
 				]
 			],
 			"halving": [
@@ -164,13 +148,6 @@
 				[
 					"Nomear é o processo de selecionar validadores para os quais você deseja fazer staking de seu {NETWORK_UNIT}. Você pode escolher nomear até 16 validadores para cada uma de suas contas.",
 					"Depois que você nomear seus validadores selecionados, eles se tornam suas nomeações."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Distribuição de Pagamento de Nomeação",
-				[
-					"A descentralização de sua nomeação.",
-					"Os gráficos a seguir exibem a distribuição de recompensas agregadas por região, país e rede IP do validador que pagou a recompensa."
 				]
 			],
 			"nominationPools": [
@@ -290,13 +267,6 @@
 					"Se sua conta já possui saldo bloqueado que cobre o depósito existencial da sua conta, como saldo bloqueado para nomeação, então o painel de staking não bloqueará nenhum saldo livre adicional."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Recompensas por País e Rede",
-				[
-					"Mostra o percentual estimado de recompensas que são geradas de diferentes países e redes IP.",
-					"A análise de descentralização do Polkawatch é calculada agregando recompensas pela Geolocalização IP do Validador. O período de amostra é os últimos 60 dias."
-				]
-			],
 			"selfStake": [
 				"Staking Próprio",
 				[
@@ -312,13 +282,6 @@
 				"Total de Nomeadores",
 				[
 					"Contas que estão fazendo staking na rede, independentemente de estarem ativas ou inativas na sessão atual."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Total de Pagamentos Analisados",
-				[
-					"As recompensas agregadas de {NETWORK_UNIT} pagas pelos validadores nomeados nos últimos 30 dias.",
-					"Esses pagamentos foram usados para calcular a descentralização da sua nomeação."
 				]
 			],
 			"validator": [

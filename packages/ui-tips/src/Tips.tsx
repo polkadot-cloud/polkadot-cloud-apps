@@ -1,8 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useOnResize } from '@w3ux/hooks'
-import { setStateWithRef } from '@w3ux/utils'
+import { setStateWithRef } from '@polkadot-cloud/utils'
+import { useOnResize } from 'hooks/useOnResize'
 import { useEffect, useRef, useState } from 'react'
 import { Items } from './Items'
 import styles from './index.module.scss'

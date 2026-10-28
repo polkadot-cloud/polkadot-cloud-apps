@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Odometer } from '@w3ux/react-odometer'
+import { Odometer } from '@polkadot-cloud/ui/odometer'
 import BigNumber from 'bignumber.js'
 import { useHelp } from 'hooks/useHelp'
 import { Stat } from 'ui-app/Stat'

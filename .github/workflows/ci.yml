@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6.0.10
+      - uses: pnpm/action-setup@v6.1.0
         with:
-          version: 11.1.0
+          version: 12.3.4
       - name: Check License Lines
         uses: kt3k/license_checker@v1.0.6
 
@@ -24,9 +24,9 @@ jobs:
         node-version: [24.x]
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6.0.10
+      - uses: pnpm/action-setup@v6.1.0
         with:
-          version: 11.1.0
+          version: 12.3.4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v7
         with:
@@ -46,6 +46,10 @@ jobs:
       - run: pnpm license:headers
       - run: pnpm build:verify
         working-directory: packages/app-staking
+      - run: pnpm build:verify
+        working-directory: packages/app-nominate
+      - run: pnpm build:verify
+        working-directory: packages/app-validators
       - run: pnpm build:verify
         working-directory: packages/app-swap
       - run: pnpm test

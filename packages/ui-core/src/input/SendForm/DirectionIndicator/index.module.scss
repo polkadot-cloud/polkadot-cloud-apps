@@ -4,6 +4,7 @@
 .directionIndicator {
 	display: flex;
 	justify-content: center;
+	gap: 0.5rem;
 	height: 0;
 	position: relative;
 	z-index: 8;
@@ -13,12 +14,13 @@
 .directionButton {
 	width: 2rem;
 	height: 2rem;
-	background-color: var(--gray-100);
+	background-color: var(--bg-primary);
 	border-radius: 9999px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--gray-600);
+	color: var(--send-form-direction-color, var(--gray-600));
+	box-shadow: var(--send-form-direction-shadow, none);
 	transform: translateY(-50%);
 	pointer-events: auto;
 }
@@ -26,4 +28,39 @@
 .directionIcon {
 	font-size: 1.25rem;
 	line-height: 1.8rem;
+}
+
+.interactiveButton {
+	width: 3.25rem;
+	height: 2.5rem;
+	padding: 0;
+	border: 0;
+	border-radius: 1rem;
+	cursor: pointer;
+
+	.directionIcon {
+		flex-shrink: 0;
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-700);
+		outline-offset: 2px;
+	}
+}
+
+.labeledButton {
+	gap: 0.4rem;
+	width: 8rem;
+	max-width: calc(100% - 4rem);
+	padding: 0 0.5rem;
+	font-family: var(--font-family-semibold);
+	font-size: 1.1rem;
+
+	span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }

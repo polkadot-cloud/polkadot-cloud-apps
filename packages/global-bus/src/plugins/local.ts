@@ -1,27 +1,31 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { localStorageOrDefault } from '@w3ux/utils'
-import { NetworkKey } from 'consts'
-import { DefaultNetwork } from 'consts/networks'
+import { localStorageOrDefault } from '@polkadot-cloud/utils'
 import {
 	CompulsoryPluginsProduction,
 	DisabledPluginsPerNetwork,
 	PluginsList,
 } from 'consts/plugins'
-import { isValidNetwork } from 'consts/util/networks'
-import type { NetworkId, Plugin } from 'types'
+import type { Plugin } from 'types'
+import { getNetwork } from '../networkConfig'
 
 const isProd =
 	(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD === true
 
+// Apply network restrictions without changing the user's saved preferences.
+export const getActivePlugins = (allPlugins: Plugin[]) => {
+	const disabled = DisabledPluginsPerNetwork[getNetwork()] ?? []
+	return allPlugins.filter(
+		(plugin) => PluginsList.includes(plugin) && !disabled.includes(plugin),
+	)
+}
+
 // Get initial plugins from local storage
 export const getAvailablePlugins = () => {
-	const allPlugins = localStorageOrDefault(
-		'plugins',
-		PluginsList,
-		true,
-	) as Plugin[]
+	const allPlugins = (
+		localStorageOrDefault('plugins', PluginsList, true) as Plugin[]
+	).filter((plugin) => PluginsList.includes(plugin))
 	// In production, add compulsory plugins to `localPlugins` if they do not exist
 	if (isProd) {
 		CompulsoryPluginsProduction.forEach((plugin) => {
@@ -31,19 +35,5 @@ export const getAvailablePlugins = () => {
 		})
 	}
 
-	const rawLocalNetwork = localStorage.getItem(NetworkKey)
-	const localNetwork =
-		rawLocalNetwork && isValidNetwork(rawLocalNetwork as NetworkId)
-			? (rawLocalNetwork as NetworkId)
-			: DefaultNetwork
-
-	const networkDisabledPlugins = DisabledPluginsPerNetwork[localNetwork] || []
-
-	// Filter out disabled plugins for this network
-	let activePlugins: Plugin[] = [...allPlugins]
-	activePlugins = activePlugins.filter(
-		(plugin) => !networkDisabledPlugins.includes(plugin),
-	)
-
-	return { allPlugins, activePlugins }
+	return { allPlugins, activePlugins: getActivePlugins(allPlugins) }
 }

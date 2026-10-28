@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
+
 ## [2.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-staking-v2.3.0...app-staking-v2.4.0) (2026-08-09)
 
 

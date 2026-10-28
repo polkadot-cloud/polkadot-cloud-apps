@@ -3,10 +3,10 @@
 
 import { faCalculator } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useActiveValidatorCount, useEraNominatorCount } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useAverageRewardRate } from 'hooks/useAverageRewardRate'
 import { useCurrency } from 'hooks/useCurrency'
@@ -92,7 +92,11 @@ export const useValidatorStats = (): StatPick<
 	const { t } = useTranslation('pages')
 	const { network } = useNetwork()
 	const { unit, units } = getStakingChainData(network)
-	const { activeValidators } = useEraStakers()
+	const {
+		data: activeValidators = 0,
+		loading,
+		error,
+	} = useActiveValidatorCount()
 	const {
 		validatorCount,
 		counterForValidators,
@@ -105,7 +109,8 @@ export const useValidatorStats = (): StatPick<
 			id: 'activeValidators',
 			type: StatType.PIE,
 			label: t('activeValidators'),
-			value: activeValidators,
+			value: error ? '—' : activeValidators,
+			isPreloading: loading,
 			total: validatorCount,
 			unit: '',
 			pieValue: percentageOf(activeValidators, validatorCount),
@@ -199,32 +204,42 @@ export const useNominatorStats = (): StatPick<
 	const { unit, units } = getStakingChainData(network)
 	const { counterForNominators, minNominatorBond, minimumActiveStake } =
 		useStakingMetrics()
-	const { activeNominatorsCount } = useEraStakers()
+	const { data: nominatorCount, loading, error } = useEraNominatorCount()
+	const activeNominatorsCount = nominatorCount ?? 0
 	const minToEarnRewards = BigNumber.max(minNominatorBond, minimumActiveStake)
 
 	return {
-		activeNominators: {
-			id: 'activeNominators',
-			type: StatType.PIE,
-			label: t('activeNominators'),
-			value: activeNominatorsCount,
-			total: counterForNominators,
-			unit: '',
-			pieValue:
-				counterForNominators > 0
-					? percentageOf(activeNominatorsCount, counterForNominators)
-					: 0,
-			tooltip: `${
-				counterForNominators > 0
-					? new BigNumber(
-							percentageOf(activeNominatorsCount, counterForNominators),
-						)
-							.decimalPlaces(2)
-							.toFormat()
-					: '0'
-			}%`,
-			helpKey: 'Active Nominators',
-		},
+		activeNominators: error
+			? {
+					id: 'activeNominators',
+					type: StatType.TEXT,
+					label: t('activeNominators'),
+					value: '—',
+					helpKey: 'Active Nominators',
+				}
+			: {
+					id: 'activeNominators',
+					type: StatType.PIE,
+					label: t('activeNominators'),
+					value: activeNominatorsCount,
+					isPreloading: loading,
+					total: counterForNominators,
+					unit: '',
+					pieValue:
+						counterForNominators > 0
+							? percentageOf(activeNominatorsCount, counterForNominators)
+							: 0,
+					tooltip: `${
+						counterForNominators > 0
+							? new BigNumber(
+									percentageOf(activeNominatorsCount, counterForNominators),
+								)
+									.decimalPlaces(2)
+									.toFormat()
+							: '0'
+					}%`,
+					helpKey: 'Active Nominators',
+				},
 		minimumNominatorBond: {
 			id: 'minimumNominatorBond',
 			type: StatType.NUMBER,

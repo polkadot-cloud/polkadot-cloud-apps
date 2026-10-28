@@ -4,17 +4,27 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useApi } from 'hooks/useApi'
 import { useValidatorStats } from 'hooks/useStats'
-import { CardWrapper } from 'library/Card/Wrappers'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { Stats } from 'library/Stats'
 import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
+import { ButtonSecondary } from 'ui-buttons'
 import { Page } from 'ui-core/base'
 
-export const ValidatorsNode = () => {
+export const ValidatorsNode = ({
+	showShareLink = true,
+	toggleFavorites = true,
+}: {
+	showShareLink?: boolean
+	toggleFavorites?: boolean
+}) => {
 	const { t } = useTranslation('pages')
 	const { isReady } = useApi()
-	const { getValidators } = useValidators()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
+	const { getValidators, validatorsFetched, validatorsError, retryValidators } =
+		useValidators([], true)
 	const validators = getValidators()
 	const { activeValidators, totalValidators, minValidatorBond } =
 		useValidatorStats()
@@ -25,18 +35,26 @@ export const ValidatorsNode = () => {
 			</Stat.Row>
 			<Page.Row>
 				<CardWrapper>
-					{!isReady ? (
+					{validatorsError ? (
+						<div className="item">
+							<h3>{t('errorUnknown', { ns: 'app' })}</h3>
+							<ButtonSecondary
+								text={t('tryAgain', { ns: 'app' })}
+								onClick={retryValidators}
+							/>
+						</div>
+					) : !isReady ? (
 						<div className="item">
 							<h3>{t('connecting')}...</h3>
 						</div>
 					) : (
 						<>
-							{validators.length === 0 && (
+							{validatorsFetched !== 'synced' && (
 								<div className="item">
 									<h3>{t('fetchingValidators')}...</h3>
 								</div>
 							)}
-							{validators.length > 0 && (
+							{validatorsFetched === 'synced' && validators.length > 0 && (
 								<ValidatorList
 									validators={validators}
 									selectable={false}
@@ -49,10 +67,11 @@ export const ValidatorsNode = () => {
 										order: 'ACTIVITY',
 										search: '',
 									}}
-									allowListFormat={false}
-									forceListFormat="col"
+									allowListFormat={validatorDetailsEnabled}
+									forceListFormat={validatorDetailsEnabled ? undefined : 'col'}
 									itemsPerPage={50}
-									toggleFavorites
+									showShareLink={showShareLink}
+									toggleFavorites={toggleFavorites}
 								/>
 							)}
 						</>

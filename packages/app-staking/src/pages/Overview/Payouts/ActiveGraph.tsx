@@ -10,15 +10,12 @@ import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
 import { useThemeValues } from 'hooks/useThemeValues'
 import {
+	splitStakingRewards,
 	usePoolEraRewards,
 	usePoolRewards,
 	useRewards,
 } from 'plugin-staking-api'
-import type {
-	NominatorReward,
-	RewardResult,
-	RewardResults,
-} from 'plugin-staking-api/types'
+import type { RewardResult } from 'plugin-staking-api/types'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AveragePayoutLine, PayoutBar } from 'ui-graphs'
@@ -44,7 +41,10 @@ export const ActiveGraph = ({
 	const { unit, units } = getStakingChainData(network)
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 
-	const { data: nominatorRewardData, loading: rewardsLoading } = useRewards({
+	const {
+		data: { allRewards },
+		loading: rewardsLoading,
+	} = useRewards({
 		network,
 		who: activeAddress || '',
 		fromEra: Math.max(activeEra.index - 1, 0),
@@ -77,20 +77,18 @@ export const ActiveGraph = ({
 		skip: !poolShareEnabled || !activeAddress,
 	})
 
-	const nominatorRewards = nominatorRewardData.allRewards
-	const payouts =
-		nominatorRewards.filter((reward: NominatorReward) => reward.claimed) ?? []
-	const unclaimedPayouts =
-		nominatorRewards.filter((reward: NominatorReward) => !reward.claimed) ?? []
-
-	const poolClaims = poolRewards ?? []
-	const allRewards = (nominatorRewards as RewardResults)
-		.concat(poolClaims)
-		.sort((a, b) => b.timestamp - a.timestamp)
+	const { payouts, unclaimedPayouts } = splitStakingRewards(allRewards)
+	const lastReward = [...allRewards, ...poolRewards].reduce<
+		RewardResult | undefined
+	>(
+		(latest, reward) =>
+			!latest || reward.timestamp > latest.timestamp ? reward : latest,
+		undefined,
+	)
 
 	useEffect(() => {
-		setLastReward(allRewards[0])
-	}, [allRewards.length, allRewards[0]?.timestamp, allRewards[0]?.reward])
+		setLastReward(lastReward)
+	}, [lastReward, setLastReward])
 
 	return (
 		<>
@@ -100,7 +98,7 @@ export const ActiveGraph = ({
 				data={{
 					payouts,
 					unclaimedPayouts,
-					poolClaims,
+					poolClaims: poolRewards,
 					poolShareRewards: poolShareEnabled ? poolEraRewards : undefined,
 				}}
 				nominating={nominating}
@@ -124,7 +122,7 @@ export const ActiveGraph = ({
 					days={days}
 					average={10}
 					height="65px"
-					data={{ payouts, unclaimedPayouts, poolClaims }}
+					data={{ payouts, unclaimedPayouts, poolClaims: poolRewards }}
 					getThemeValue={getThemeValue}
 					unit={unit}
 					units={units}

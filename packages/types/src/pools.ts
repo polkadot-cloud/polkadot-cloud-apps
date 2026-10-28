@@ -34,6 +34,7 @@ export type BondedPool = BondedPoolQuery & {
 
 export interface ActivePool {
 	id: number
+	metadata: string
 	addresses: { stash: string; reward: string }
 	bondedPool: {
 		points: bigint

@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { TooltipArea } from 'ui-core/base'
 import { Graph } from 'ui-core/list'
 import type { VerticalPayoutPerformanceProps } from './types'
@@ -10,7 +10,7 @@ export const VerticalPayoutPerformance = ({
 	amounts,
 	tooltipText,
 }: VerticalPayoutPerformanceProps) => {
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 	const safeAmounts = amounts.slice(-30)
 	const paddedAmounts = Array.from(
 		{ length: Math.max(30 - safeAmounts.length, 0) },

@@ -18,7 +18,10 @@ import { DetailedListSkeleton } from './Skeleton'
 interface ItemShellProps extends ComponentPropsWithoutRef<'div'> {
 	displayFor?: DisplayFor
 	layout: 'card' | 'row'
+	rowVariant?: 'validator' | 'operator'
+	showRetainment?: boolean
 	selected?: boolean
+	statusAccent?: 'success' | 'warning' | 'danger'
 }
 
 const ItemShell = ({
@@ -26,7 +29,10 @@ const ItemShell = ({
 	className,
 	displayFor,
 	layout,
+	rowVariant,
+	showRetainment,
 	selected,
+	statusAccent,
 	...props
 }: ItemShellProps) => (
 	<div
@@ -42,9 +48,16 @@ const ItemShell = ({
 				[classes.card]: displayFor === 'card',
 				[classes.selected]: selected,
 			})}
+			data-status-accent={statusAccent}
 		>
 			{layout === 'row' ? (
-				<div className={classes.barLayout}>{children}</div>
+				<div
+					className={classes.barLayout}
+					data-row-variant={rowVariant}
+					data-retainment={showRetainment}
+				>
+					{children}
+				</div>
 			) : (
 				children
 			)}
@@ -184,40 +197,31 @@ const ListItemDetailLoader = ({
 export type ListItemFormat = 'row' | 'col'
 
 interface ListItemFormatToggleProps {
-	hideOnCompact?: boolean
 	onChange: (format: ListItemFormat) => void
 	value: ListItemFormat
 }
 
 const ListItemFormatToggle = ({
-	hideOnCompact,
 	onChange,
 	value,
-}: ListItemFormatToggleProps) => {
-	return (
-		<div
-			className={classNames(
-				classes.formatToggle,
-				hideOnCompact && classes.hideOnCompact,
-			)}
+}: ListItemFormatToggleProps) => (
+	<div className={classes.formatToggle}>
+		<button
+			type="button"
+			onClick={() => onChange('row')}
+			aria-pressed={value === 'row'}
 		>
-			<button
-				type="button"
-				onClick={() => onChange('row')}
-				aria-pressed={value === 'row'}
-			>
-				<FontAwesomeIcon icon={faBars} />
-			</button>
-			<button
-				type="button"
-				onClick={() => onChange('col')}
-				aria-pressed={value === 'col'}
-			>
-				<FontAwesomeIcon icon={faGripVertical} />
-			</button>
-		</div>
-	)
-}
+			<FontAwesomeIcon icon={faBars} />
+		</button>
+		<button
+			type="button"
+			onClick={() => onChange('col')}
+			aria-pressed={value === 'col'}
+		>
+			<FontAwesomeIcon icon={faGripVertical} />
+		</button>
+	</div>
+)
 
 export const DetailedCard = {
 	Header: withClassName('div', classes.cardHeader),
@@ -240,8 +244,10 @@ export const ListItem = {
 	Retainment: withClassName('section', classes.retainment),
 	RetainmentGrid: withClassName('div', classes.retainmentGrid),
 	Row: ListItemRow,
+	RowHeader: withClassName('span', classes.barHeader),
 	RowIdentity: withClassName('div', classes.barIdentity),
-	RowMetrics: withClassName('div', classes.barStats),
+	RowMetricGroup: withClassName('div', classes.barMetricGroup),
+	RowPerformance: withClassName('section', classes.barPerformance),
 	SectionHeader: withClassName('header', classes.sectionHeader),
 	Skeleton: ListItemSkeleton,
 	StatusDot: ListItemStatusDot,

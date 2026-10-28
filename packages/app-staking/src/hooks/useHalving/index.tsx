@@ -1,12 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useTimeLeft } from '@w3ux/hooks'
-import { secondsFromNow } from '@w3ux/hooks/util'
 import { differenceInDays, fromUnixTime, getUnixTime } from 'date-fns'
+import { useTimeLeft } from 'hooks/useTimeLeft'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatTimeleft } from 'utils'
+import { formatTimeleft, secondsFromNow } from 'utils'
 
 // Calculate next halving date (March 14th every 2 years starting in 2026)
 const getNextHalvingDate = () => {

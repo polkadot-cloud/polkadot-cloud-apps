@@ -5,7 +5,7 @@ import { getStakingChainData } from 'consts/util'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { useNetwork } from 'hooks/useNetwork'
 import { useThemeValues } from 'hooks/useThemeValues'
-import type { NominatorReward } from 'plugin-staking-api/types'
+import type { StakingReward } from 'plugin-staking-api/types'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AveragePayoutLine, PayoutBar } from 'ui-graphs'
@@ -13,7 +13,7 @@ import { AveragePayoutLine, PayoutBar } from 'ui-graphs'
 export const InactiveGraph = ({
 	setLastReward,
 }: {
-	setLastReward: (reward: NominatorReward | undefined) => void
+	setLastReward: (reward: StakingReward | undefined) => void
 }) => {
 	const { i18n, t } = useTranslation()
 	const { network } = useNetwork()

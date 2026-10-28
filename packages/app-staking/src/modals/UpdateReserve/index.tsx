@@ -4,21 +4,19 @@
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
 import { useNetwork } from 'hooks/useNetwork'
-import { StyledSlider } from 'library/StyledSlider'
 import { SliderWrapper } from 'modals/ManagePool/Wrappers'
-import { ModalTitle } from 'ui-app/ModalTitle'
-import { ButtonHelp } from 'ui-buttons'
-import 'rc-slider/assets/index.css'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonPrimaryInvert } from 'ui-buttons'
+import { ModalTitle } from 'ui-app/ModalTitle'
+import { Slider } from 'ui-app/Slider'
+import { ButtonHelp, ButtonPrimaryInvert } from 'ui-buttons'
 import { CardHeader } from 'ui-core/base'
 import { Padding } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
@@ -54,83 +52,87 @@ export const UpdateReserve = () => {
 	const handleChange = (val: BigNumber) => {
 		// deduct ED from reserve amount.
 		val = val.decimalPlaces(3)
-		const actualReserve = BigNumber.max(val.minus(minReserve), 0).toNumber()
-		const actualReservePlanck = unitToPlanck(actualReserve.toString(), units)
+		const actualReserve = BigNumber.max(val.minus(minReserve), 0)
+		const actualReservePlanck = unitToPlanck(actualReserve.toFixed(), units)
 		setSliderReserve(val.decimalPlaces(3).toNumber())
 		setFeeReserveBalance(actualReservePlanck)
 	}
 
 	return (
-		<Padding>
-			<ModalTitle
-				title={t('reserveBalance')}
-				helpKey="Reserve Balance"
-				paddingTop="0.5rem"
-			/>
-			<SliderWrapper style={{ marginTop: '1rem' }}>
-				<p>{t('reserveText', { unit })}</p>
-				<div>
-					<StyledSlider
-						className="no-padding"
+		<>
+			<Padding verticalOnly>
+				<ModalTitle
+					title={t('reserveBalance')}
+					helpKey="Reserve Balance"
+					paddingTop="0.5rem"
+				/>
+			</Padding>
+			<Padding horizontalOnly>
+				<SliderWrapper style={{ margin: '1rem 0' }}>
+					<p>{t('reserveText', { unit })}</p>
+					<Slider
 						min={0}
 						max={maxReserve.toNumber()}
 						value={sliderReserve}
 						step={0.01}
+						ariaLabel={t('reserveBalance')}
+						formatValue={(value) => `${value} ${unit}`}
 						onChange={(val) => {
-							if (typeof val === 'number' && val >= minReserve.toNumber()) {
+							if (val >= minReserve.toNumber()) {
 								handleChange(new BigNumber(val))
 							}
 						}}
 					/>
-				</div>
-				<div className="stats">
-					<CardHeader>
-						<h4>
-							{t('reserveForExistentialDeposit')}
-							<FontAwesomeIcon
-								icon={faLock}
-								transform="shrink-3"
-								style={{ marginLeft: '0.5rem' }}
-							/>
-						</h4>
-						<h2>
-							{minReserve.isZero() ? (
-								<>
-									{t('none')}
-									<ButtonHelp
-										definition="Reserve Balance For Existential Deposit"
-										openHelp={openHelpTooltip}
-										style={{ marginLeft: '0.65rem' }}
-									/>
-								</>
-							) : (
-								`${minReserve.decimalPlaces(4).toString()} ${unit}`
-							)}
-						</h2>
-					</CardHeader>
-					<CardHeader>
-						<h4>{t('reserveForTxFees')}</h4>
-						<h2>
-							{BigNumber.max(
-								new BigNumber(sliderReserve)
-									.minus(minReserve)
-									.decimalPlaces(4)
-									.toString(),
-								0,
-							).toString()}
-							&nbsp;
-							{unit}
-						</h2>
-					</CardHeader>
-				</div>
-				<div className="done">
-					<ButtonPrimaryInvert
-						text={t('done')}
-						onClick={() => closeModal()}
-						disabled={!accountHasSigner(activeAccount)}
-					/>
-				</div>
-			</SliderWrapper>
-		</Padding>
+					<div className="stats">
+						<CardHeader>
+							<h4>
+								{t('reserveForExistentialDeposit')}
+								<FontAwesomeIcon
+									icon={faLock}
+									transform="shrink-3"
+									style={{ marginLeft: '0.5rem' }}
+								/>
+							</h4>
+							<h2>
+								{minReserve.isZero() ? (
+									<>
+										{t('none')}
+										<ButtonHelp
+											definition="Reserve Balance For Existential Deposit"
+											openHelp={openHelpTooltip}
+											style={{ marginLeft: '0.65rem' }}
+										/>
+									</>
+								) : (
+									`${minReserve.decimalPlaces(4).toString()} ${unit}`
+								)}
+							</h2>
+						</CardHeader>
+						<CardHeader>
+							<h4>{t('reserveForTxFees')}</h4>
+							<h2>
+								{BigNumber.max(
+									new BigNumber(sliderReserve)
+										.minus(minReserve)
+										.decimalPlaces(4)
+										.toString(),
+									0,
+								).toString()}
+								&nbsp;
+								{unit}
+							</h2>
+						</CardHeader>
+					</div>
+					<div className="done">
+						<ButtonPrimaryInvert
+							text={t('done')}
+							onClick={() => closeModal()}
+							disabled={!accountHasSigner(activeAccount)}
+							lg
+						/>
+					</div>
+				</SliderWrapper>
+			</Padding>
+		</>
 	)
 }

@@ -3,7 +3,7 @@
 
 import { faCircleDown } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { minDecimalPlaces, planckToUnit } from '@w3ux/utils'
+import { minDecimalPlaces, planckToUnit } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'

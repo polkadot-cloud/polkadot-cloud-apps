@@ -60,6 +60,7 @@ export class PaseoService
 
 		// Initialize service interface with network-specific routing
 		this.interface = {
+			swap: undefined,
 			stablecoins: createEmptyStablecoinsInterface(),
 			query: {
 				accountBalance: {
@@ -95,6 +96,8 @@ export class PaseoService
 				superOfMulti: async (addresses) =>
 					await this.identityManager.superOfMulti(addresses),
 				validatorEntries: async () => await query.validatorEntries(this.apiHub),
+				validatorExists: async (address) =>
+					await query.validatorExists(this.apiHub, address),
 				validatorsMulti: async (addresses) =>
 					await query.validatorsMulti(this.apiHub, addresses),
 			},

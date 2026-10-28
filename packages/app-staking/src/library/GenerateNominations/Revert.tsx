@@ -2,42 +2,27 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useTranslation } from 'react-i18next'
-import { ButtonMenu, ButtonPrimary } from 'ui-buttons'
-import { usePrompt } from 'ui-overlay'
-import { RevertChanges } from './Prompts/RevertChanges'
+import { ButtonSecondary } from 'ui-buttons'
+import { ConfirmAction } from './ConfirmAction'
+import type { RevertProps } from './types'
 
-export const Revert = ({
-	inMenu,
-	disabled,
-	onClick,
-}: {
-	inMenu?: boolean
-	disabled: boolean
-	onClick: () => void
-}) => {
+export const Revert = ({ disabled, onClick }: RevertProps) => {
 	const { t } = useTranslation('modals')
-	const { openPromptWith, closePrompt } = usePrompt()
 
-	const onRevert = () => {
-		onClick()
-		closePrompt()
-	}
-
-	return inMenu ? (
-		<ButtonMenu
-			text={t('revertChanges')}
+	return (
+		<ConfirmAction
+			controlKey="revert_nominations"
 			disabled={disabled}
-			onClick={() => {
-				openPromptWith(<RevertChanges onRevert={onRevert} />)
-			}}
-		/>
-	) : (
-		<ButtonPrimary
-			text={t('revertChanges')}
-			disabled={disabled}
-			onClick={() => {
-				openPromptWith(<RevertChanges onRevert={onRevert} />)
-			}}
-		/>
+			onConfirm={onClick}
+			text={t('revertNominationChanges')}
+		>
+			<ButtonSecondary
+				asLabel
+				className="revert"
+				size="lg"
+				text={t('revertChanges')}
+				disabled={disabled}
+			/>
+		</ConfirmAction>
 	)
 }

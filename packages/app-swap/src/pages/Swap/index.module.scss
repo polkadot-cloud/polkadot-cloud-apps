@@ -1,0 +1,84 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.form {
+	--account-input-active-border: var(--gray-500);
+	--send-form-section-focus-border: var(--send-form-section-border);
+	--balance-input-focus-border: var(--balance-input-border);
+}
+
+.routeValue {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+	min-height: 1.5rem;
+}
+
+.routePath {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+
+	img {
+		display: block;
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+}
+
+.routePlaceholder {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.renewingQuote {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	> :first-child {
+		flex-shrink: 0;
+	}
+
+	> :last-child {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.recipientSetting {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin-top: 1rem;
+	color: var(--text-tertiary);
+	font-size: 1.1rem;
+	line-height: 1.5;
+	cursor: pointer;
+
+	input {
+		width: 1.1rem;
+		height: 1.1rem;
+		flex-shrink: 0;
+		margin: 0;
+		accent-color: var(--accent-700);
+		cursor: pointer;
+	}
+}
+
+.recipientField {
+	margin-top: 1.25rem;
+}

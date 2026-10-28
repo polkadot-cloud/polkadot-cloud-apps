@@ -5,9 +5,9 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useThemeValues } from 'hooks/useThemeValues'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
+import { CardWrapper } from 'ui-app/Card'
 import { MembersList as FetchPageMemberList } from './Lists/FetchPage'
 
 export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
@@ -17,15 +17,12 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 
 	const annuncementBorderColor = getThemeValue('--status-warning')
 
-	const isDepositor = bondedPool.roles.depositor === activeAddress
 	const isRoot = bondedPool.roles.root === activeAddress
 	const isOwner = bondedPool.roles.depositor === activeAddress
 	const isBouncer = bondedPool.roles.bouncer === activeAddress
 
 	const showBlockedPrompt =
 		bondedPool.state === 'Blocked' && (isOwner || isBouncer)
-
-	const memberCount = bondedPool.memberCounter || 0
 
 	return (
 		<>
@@ -73,9 +70,7 @@ export const Members = ({ bondedPool }: { bondedPool: BondedPool }) => {
 				<FetchPageMemberList
 					pagination={true}
 					bondedPool={bondedPool}
-					memberCount={memberCount}
 					itemsPerPage={50}
-					isDepositor={isDepositor}
 					isRoot={isRoot}
 					isOwner={isOwner}
 					isBouncer={isBouncer}

@@ -7,10 +7,15 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DisplayFor } from 'types'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
-import { RetainmentStats } from './RetainmentStats'
-import type { RetainmentStatsData } from './useRetainmentStatsData'
+import {
+	RetainmentStats,
+	type RetainmentStatsData,
+	type RetainmentWindow,
+	RetainmentWindowToggle,
+} from 'ui-app/RetainmentStats'
 
 interface ValidatorCardProps {
+	showRetainment?: boolean
 	actions: ReactNode
 	address: string
 	activitySyncing?: boolean
@@ -21,13 +26,17 @@ interface ValidatorCardProps {
 	identity: ReactNode
 	isActivityPreloading?: boolean
 	isRetainmentPreloading?: boolean
+	onRetainmentWindowChange: (window: RetainmentWindow) => void
 	retainmentStats: RetainmentStatsData
+	retainmentWindow: RetainmentWindow
 	selected?: boolean
 	summary: ReactNode
 	unit: string
+	warnings?: ReactNode
 }
 
 export const ValidatorCard = ({
+	showRetainment = true,
 	actions,
 	address,
 	activitySyncing,
@@ -38,15 +47,22 @@ export const ValidatorCard = ({
 	identity,
 	isActivityPreloading = false,
 	isRetainmentPreloading = false,
+	onRetainmentWindowChange,
 	retainmentStats,
+	retainmentWindow,
 	selected = false,
 	summary,
 	unit,
+	warnings,
 }: ValidatorCardProps) => {
 	const { t } = useTranslation('app')
 
 	return (
-		<DetailedCard.Root displayFor={displayFor} selected={selected}>
+		<DetailedCard.Root
+			displayFor={displayFor}
+			selected={selected}
+			statusAccent={showRetainment ? retainmentStats.statusAccent : undefined}
+		>
 			<DetailedCard.Top>
 				<DetailedCard.Header>
 					{headerStart}
@@ -82,11 +98,22 @@ export const ValidatorCard = ({
 					</ListItem.Graph>
 				</ListItem.Activity>
 			</DetailedCard.Top>
-			<RetainmentStats
-				data={retainmentStats}
-				isPreloading={isRetainmentPreloading}
-				unit={unit}
-			/>
+			{showRetainment && (
+				<RetainmentStats
+					data={retainmentStats}
+					isPreloading={isRetainmentPreloading}
+					unit={unit}
+					windowToggle={
+						<RetainmentWindowToggle
+							alignEnd
+							disabled={isRetainmentPreloading}
+							onChange={onRetainmentWindowChange}
+							value={retainmentWindow}
+						/>
+					}
+				/>
+			)}
+			{warnings}
 		</DetailedCard.Root>
 	)
 }

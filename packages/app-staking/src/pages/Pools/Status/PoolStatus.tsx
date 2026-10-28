@@ -5,8 +5,8 @@ import {
 	faExclamationTriangle,
 	faLock,
 } from '@fortawesome/free-solid-svg-icons'
+import { useNominationStatus } from 'data-gate'
 import { useActivePool } from 'hooks/useActivePool'
-import { useNominationStatus } from 'hooks/useNominationStatus'
 import { useSyncing } from 'hooks/useSyncing'
 import { Stat } from 'library/Stat'
 import { useTranslation } from 'react-i18next'
@@ -14,43 +14,49 @@ import { useTranslation } from 'react-i18next'
 export const PoolStatus = () => {
 	const { t } = useTranslation('pages')
 	const { syncing } = useSyncing(['active-pools'])
-	const { getNominationStatus } = useNominationStatus()
 	const { activePool, activePoolNominations } = useActivePool()
 
 	const poolStash = activePool?.addresses?.stash || ''
-	const { status } = getNominationStatus(poolStash, 'pool')
 	const poolState = activePool?.bondedPool?.state ?? null
 	const poolNominating = !!activePoolNominations?.targets?.length
 
+	// Synced pools without nomination targets do not need a status request.
+	const { status, loading, error } = useNominationStatus(
+		!syncing && !poolNominating ? null : poolStash,
+		{ dependencies: [activePoolNominations] },
+	)
+
 	// Determine pool state icon.
 	let poolStateIcon
-	switch (poolState) {
-		case 'Blocked':
-			poolStateIcon = faLock
-			break
-		case 'Destroying':
-			poolStateIcon = faExclamationTriangle
-			break
-		default:
-			poolStateIcon = undefined
+	if (poolState === 'Blocked') {
+		poolStateIcon = faLock
+	} else if (poolState === 'Destroying') {
+		poolStateIcon = faExclamationTriangle
 	}
 
 	// Determine pool status - left side.
-	const poolStatusLeft =
-		poolState === 'Blocked'
-			? `${t('locked')} / `
-			: poolState === 'Destroying'
-				? `${t('destroying')} / `
-				: ''
+	let poolStatusLeft = ''
+	if (poolState === 'Blocked') {
+		poolStatusLeft = `${t('locked')} / `
+	} else if (poolState === 'Destroying') {
+		poolStatusLeft = `${t('destroying')} / `
+	}
 
 	// Determine pool status - right side.
-	const poolStatusRight = syncing
-		? t('inactivePoolNotNominating')
-		: !poolNominating
-			? t('inactivePoolNotNominating')
-			: status === 'active'
-				? `${t('poolsNominatingAnd')} ${t('earningRewards')}`
-				: t('waitingForActiveNominations')
+	let poolStatusRight: string
+	if (syncing) {
+		poolStatusRight = t('syncing')
+	} else if (!poolNominating) {
+		poolStatusRight = t('inactivePoolNotNominating')
+	} else if (loading) {
+		poolStatusRight = t('syncing')
+	} else if (error) {
+		poolStatusRight = '—'
+	} else if (status === 'active') {
+		poolStatusRight = `${t('poolsNominatingAnd')} ${t('earningRewards')}`
+	} else {
+		poolStatusRight = t('waitingForActiveNominations')
+	}
 
 	return (
 		<Stat

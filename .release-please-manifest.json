@@ -1,6 +1,8 @@
 {
 	"packages/app-swap": "0.2.0",
+	"packages/app-nominate": "0.1.0",
 	"packages/app-staking": "2.4.0",
+	"packages/app-validators": "0.1.0",
 	"packages/assets": "1.6.0",
 	"packages/consts": "1.6.0",
 	"packages/dedot-api": "0.10.0",
@@ -24,7 +26,5 @@
 	"packages/ui-styles": "1.5.0",
 	"packages/ui-tips": "1.4.0",
 	"packages/utils": "1.5.0",
-	"packages/validator-assets": "0.2.0",
-	"packages/vite-shared": "0.2.0",
-	"packages/workers": "0.2.0"
+	"packages/vite-shared": "0.2.0"
 }

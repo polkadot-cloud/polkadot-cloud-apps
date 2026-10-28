@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit, rmCommas } from '@w3ux/utils'
+import { planckToUnit, rmCommas } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 
 export const formatCompactNumber = (value: number, locale?: string) =>

@@ -4,21 +4,31 @@
 import { getStakingChainData } from 'consts/util'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { getValidatorItemWarnings } from 'library/GenerateNominations/utils'
 import { getIdentityDisplay } from 'library/List/Utils'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { useNominationStatusData } from 'library/ListItem/Labels/NominationStatus'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
-import { getRateAfterCommission } from 'library/ValidatorList/retainment'
-import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { useValidatorSelfStake } from 'library/ValidatorList/useValidatorSelfStake'
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
+import { ValidatorWarnings } from 'library/ValidatorList/ValidatorWarnings'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
+import { getRateAfterCommission } from 'utils'
 import type { ItemProps } from './types'
 
 export const DetailedItem = ({
@@ -28,48 +38,95 @@ export const DetailedItem = ({
 	bondFor,
 	displayFor,
 	format,
-	nominationStatus = 'waiting',
+	nominee,
+	isNominationPreloading,
+	nominationError,
 	eraPoints,
 	rate,
 	retainment,
+	warnings,
 	isPreloading = false,
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs, validatorStatus } = validator
+	const retainmentEnabled = useRetainmentStatsEnabled()
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+
+	const { address, validatorStatus, overview } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const { unit, units } = getStakingChainData(network)
-	const { selfStake, selfStakeMax } = useValidatorSelfStake(address, units)
+	const { selfStake, selfStakeMax } = useValidatorSelfStake(overview, units)
+	const nominationStatus =
+		nominee?.status === 'active' || nominee?.status === 'inactive'
+			? nominee.status
+			: 'waiting'
 	const {
 		label: statusLabel,
-		stakedAmount: backingStake,
+		totalActiveBacking,
 		syncing: backingStakePreloading,
 	} = useNominationStatusData({
 		address,
 		bondFor,
 		nominator,
 		status: nominationStatus,
+		activeBacking: nominee?.activeBacking ?? '0',
+		isPreloading: isNominationPreloading,
+		unavailable: nominationError,
 	})
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(retainment?.retainment)
+	const itemWarnings = retainmentEnabled
+		? getValidatorItemWarnings(warnings, retainment)
+		: []
 	const retainmentStats = useRetainmentStatsData({
-		period: retainment?.months[0],
+		period,
 		selfStakeMax,
+		statusAccent: itemWarnings[0]?.severity,
 		unit,
 		units,
 	})
+	const warningBadges = (
+		<ValidatorWarnings warnings={itemWarnings} format={format} />
+	)
 	const outline = displayFor === 'canvas'
 	const rateAfterCommission = getRateAfterCommission(rate, prefs?.commission)
-	const validatorDisplay = getIdentityDisplay(
+	const validatorIdentity = getIdentityDisplay(
 		validatorIdentities[address],
 		validatorSupers[address],
-	).node
+	)
+	const validatorDisplay = validatorIdentity.node
+	const retainmentPeriods = retainment?.months.slice(0, 6) ?? []
+	const retainmentHistoryDisabled =
+		isPreloading || retainmentPeriods.length === 0
+	const showRetainmentHistory =
+		retainmentEnabled && displayFor !== 'canvas' && displayFor !== 'modal'
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		periods: retainmentPeriods,
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
+	const onRetainmentHistory = showRetainmentHistory
+		? openRetainmentHistory
+		: undefined
 
 	if (format === 'row') {
 		return (
 			<ValidatorBar
+				showRetainment={retainmentEnabled}
 				actions={
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
+						onRetainmentHistory={onRetainmentHistory}
+						retainmentHistoryDisabled={retainmentHistoryDisabled}
 						showFavorite={toggleFavorites === true}
 						showMetrics={displayFor !== 'canvas'}
 					/>
@@ -78,15 +135,20 @@ export const DetailedItem = ({
 				eraPoints={eraPoints}
 				isPreloading={isPreloading}
 				isStatusValuePreloading={backingStakePreloading}
+				onRetainmentHistory={onRetainmentHistory}
 				rate={rateAfterCommission}
+				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				statusActive={nominationStatus === 'active'}
 				statusLabel={statusLabel}
-				statusValue={backingStake}
+				statusValue={totalActiveBacking}
 				unit={unit}
-				validator={validator}
+				validator={{ ...validator, prefs }}
+				warnings={warningBadges}
 			/>
 		)
 	}
@@ -110,11 +172,20 @@ export const DetailedItem = ({
 					/>
 				</ListItem.Action>
 			)}
+			{showRetainmentHistory && (
+				<ListItem.Action wide>
+					<RetainmentHistory
+						disabled={retainmentHistoryDisabled}
+						onClick={openRetainmentHistory}
+					/>
+				</ListItem.Action>
+			)}
 		</ListItem.Actions>
 	)
 
 	return (
 		<ValidatorCard
+			showRetainment={retainmentEnabled}
 			actions={cardActions}
 			address={address}
 			blocked={prefs?.blocked === true}
@@ -124,8 +195,12 @@ export const DetailedItem = ({
 			isActivityPreloading={isPreloading}
 			isRetainmentPreloading={isPreloading}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			summary={
 				<ValidatorSummary
+					overview={overview}
+					overviewUnavailable={validator.overviewUnavailable}
 					address={address}
 					ariaLabel={t('nominationSummary')}
 					isRatePreloading={isPreloading}
@@ -136,11 +211,12 @@ export const DetailedItem = ({
 					status={validatorStatus}
 					statusActive={nominationStatus === 'active'}
 					statusLabel={statusLabel}
-					statusValue={backingStake}
+					statusValue={totalActiveBacking}
 					unit={unit}
 				/>
 			}
 			unit={unit}
+			warnings={warningBadges}
 		/>
 	)
 }

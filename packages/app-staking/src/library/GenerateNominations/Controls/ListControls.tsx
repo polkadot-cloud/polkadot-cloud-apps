@@ -1,68 +1,117 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useList } from 'contexts/List'
+import {
+	faCaretDown,
+	faMagnifyingGlass,
+	faPlus,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTheme } from 'hooks/useTheme'
-import { SelectableWrapper } from 'library/List'
 import { useState } from 'react'
-import { ButtonMonoInvert, ButtonPrimaryInvert } from 'ui-buttons'
-import { Popover } from 'ui-core/popover'
+import { useTranslation } from 'react-i18next'
+import { ButtonMenu } from 'ui-buttons'
+import { Tooltip } from 'ui-core/base'
+import classes from './index.module.scss'
+import { MenuPopover } from './MenuPopover'
 import type { ListControlsProps } from './types'
 
 export const ListControls = ({
-	selectHandlers,
 	filterHandlers,
+	disabled = false,
 }: ListControlsProps) => {
-	const provider = useList()
 	const { themeElementRef } = useTheme()
-
-	// Get selected items
-	const { selected, resetSelected } = provider
-
-	// Popover open states
-	const [opens, setOpens] = useState<Record<string, boolean>>({})
+	const { t } = useTranslation('app')
+	const [otherOpen, setOtherOpen] = useState(false)
+	const otherValidators = filterHandlers.filter(
+		({ group }) => group === 'other',
+	)
+	const otherDisabled =
+		disabled || otherValidators.every((handler) => handler.disabled)
 
 	return (
-		<SelectableWrapper>
-			{selected.length > 0 &&
-				Object.entries(selectHandlers).map(([k, a]) => {
-					const open = opens[k] || false
-					const Content = a.popover.node
-					const text = a.popover.text
-					return (
-						<Popover
-							open={open}
-							key={`a_selected_${k}`}
-							portalContainer={themeElementRef.current || undefined}
-							onTriggerClick={() => {
-								setOpens({ ...opens, [k]: true })
-							}}
-							content={
-								<Content
-									text={text}
-									controlKey={k}
-									onClose={() => setOpens({ ...opens, [k]: false })}
-									onRevert={() => {
-										a.popover.callback({ selected, callback: resetSelected })
-										setOpens({ ...opens, [k]: false })
-									}}
-								/>
-							}
+		<>
+			{filterHandlers
+				.filter(({ group }) => group === 'cloud')
+				.map((handler) => {
+					const isDisabled = disabled || handler.disabled
+					return isDisabled && handler.disabledTooltip ? (
+						<Tooltip
+							container={themeElementRef.current || undefined}
+							key={handler.title}
+							side="top"
+							text={handler.disabledTooltip}
 						>
-							<ButtonPrimaryInvert text={a.title} asLabel marginRight />
-						</Popover>
+							{/* Keep the unavailable action focusable so its explanation is accessible. */}
+							<button aria-disabled="true" type="button">
+								<ButtonMenu
+									asLabel
+									disabled
+									iconLeft={handler.icon}
+									text={handler.title}
+								/>
+							</button>
+						</Tooltip>
+					) : (
+						<ButtonMenu
+							text={handler.title}
+							key={handler.title}
+							disabled={isDisabled}
+							onClick={handler.onClick}
+							iconLeft={handler.icon}
+						/>
 					)
 				})}
-			{filterHandlers.map((a) => (
-				<ButtonMonoInvert
-					text={a.title}
-					key={`a_all_${a.title}`}
-					disabled={a?.isDisabled ? a.isDisabled() : false}
-					onClick={() => a.onClick(provider)}
-					iconLeft={a.icon ? a.icon : undefined}
-					marginRight
-				/>
-			))}
-		</SelectableWrapper>
+			{otherValidators.length > 0 && (
+				<MenuPopover
+					align="start"
+					content={
+						<div className={classes.otherValidatorsMenu}>
+							{otherValidators.map((handler) => (
+								<button
+									type="button"
+									className={classes.candidateButton}
+									disabled={disabled || handler.disabled}
+									key={handler.title}
+									onClick={() => {
+										handler.onClick()
+										setOtherOpen(false)
+									}}
+								>
+									{handler.icon && (
+										<FontAwesomeIcon aria-hidden icon={handler.icon} />
+									)}
+									{handler.title}
+								</button>
+							))}
+						</div>
+					}
+					disabled={otherDisabled}
+					onOpenChange={setOtherOpen}
+					open={otherOpen}
+					width="min(260px, calc(100vw - 2rem))"
+				>
+					<ButtonMenu
+						asLabel
+						disabled={otherDisabled}
+						iconLeft={faPlus}
+						iconRight={faCaretDown}
+						text={t('otherValidators')}
+					/>
+				</MenuPopover>
+			)}
+			{filterHandlers
+				.filter(({ group }) => group === 'search')
+				.map((handler) => (
+					<ButtonMenu
+						className="searchButton"
+						key={handler.title}
+						disabled={disabled || handler.disabled}
+						onClick={handler.onClick}
+						iconLeft={handler.icon || faMagnifyingGlass}
+						text={handler.title}
+					/>
+				))}
+		</>
 	)
 }

@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { MaybeString } from '@w3ux/types'
 import type { AnyJson } from './common'
 import type { NetworkId } from './networks'
 
@@ -22,8 +21,8 @@ export type LedgerDeviceModel =
 export type LedgerDeviceFamily = 'nano' | 'touchscreen' | 'unknown'
 
 export interface FeedbackMessage {
-	message: MaybeString
-	helpKey?: MaybeString
+	message: string | null
+	helpKey?: string | null
 }
 
 export type LedgerStatusCode =
@@ -72,7 +71,7 @@ export interface LedgerDeviceAddress {
 }
 
 export interface HandleErrorFeedback {
-	message: MaybeString
-	helpKey?: MaybeString
+	message: string | null
+	helpKey?: string | null
 	code: LedgerStatusCode
 }

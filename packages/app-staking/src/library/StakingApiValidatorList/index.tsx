@@ -4,9 +4,11 @@
 import { ListProvider, useList } from 'contexts/List'
 import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	fetchValidatorAvgRewardRateBatch,
@@ -16,6 +18,7 @@ import {
 import type {
 	ValidatorEraPoints,
 	ValidatorListOrder,
+	ValidatorListVariables,
 } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -31,16 +34,26 @@ import { ListStatus, ResultSummary } from './styles'
 
 const PAGE_SIZE = 50
 const ERA_POINTS_DEPTH = 30
-export const StakingApiValidatorListInner = () => {
+interface StakingApiValidatorListProps {
+	showShareLink?: boolean
+	toggleFavorites?: boolean
+}
+
+export const StakingApiValidatorListInner = ({
+	showShareLink = true,
+	toggleFavorites = true,
+}: StakingApiValidatorListProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const retainmentEnabled = useRetainmentStatsEnabled()
 	const { erasPerDay } = useErasPerDay()
 	const { listFormat, setListFormat } = useList()
 	const [page, setPage] = useState(1)
 	const forceCardLayout = useForceCardLayout()
-	const [config, setConfig] = useState<ValidatorListConfig>(
-		DEFAULT_VALIDATOR_LIST_CONFIG,
-	)
+	const [config, setConfig] = useState<ValidatorListConfig>(() => ({
+		...DEFAULT_VALIDATOR_LIST_CONFIG,
+		order: retainmentEnabled ? DEFAULT_VALIDATOR_LIST_CONFIG.order : 'ACTIVITY',
+	}))
 	const [eraPointsByAddress, setEraPointsByAddress] = useState<
 		Map<string, ValidatorEraPoints[]>
 	>(new Map())
@@ -51,18 +64,22 @@ export const StakingApiValidatorListInner = () => {
 	const [isRateLoading, setIsRateLoading] = useState(false)
 	const effectiveListFormat = forceCardLayout ? 'col' : listFormat
 
-	const variables = useMemo(
+	const variables = useMemo<ValidatorListVariables>(
 		() => ({
 			network,
 			page,
 			pageSize: PAGE_SIZE,
-			order: config.order as ValidatorListOrder,
+			order: retainmentEnabled
+				? (config.order as ValidatorListOrder)
+				: 'ACTIVITY',
+			orderWindow: 'THREE_MONTHS',
+			retainmentWindows: ['ONE_MONTH', 'THREE_MONTHS'],
 			filters: {
 				...config.filters,
 				search: config.search || undefined,
 			},
 		}),
-		[network, page, config],
+		[network, page, config, retainmentEnabled],
 	)
 	const { data, loading, error, refetch } = useValidatorList(variables)
 	const result = data.validatorList
@@ -152,7 +169,16 @@ export const StakingApiValidatorListInner = () => {
 	return (
 		<ListWrapper>
 			<List $flexBasisLarge="50%" $twoColumnMinWidth={1350}>
-				<Controls config={config} disabled={loading} onApply={applyConfig} />
+				<Controls
+					config={config}
+					disabled={loading}
+					onApply={applyConfig}
+					orderOptions={
+						retainmentEnabled
+							? undefined
+							: [{ key: 'ACTIVITY', label: t('activity') }]
+					}
+				/>
 				<FilterHeaderWrapper>
 					<div>
 						<ResultSummary>
@@ -168,11 +194,12 @@ export const StakingApiValidatorListInner = () => {
 						</ResultSummary>
 					</div>
 					<div>
-						<ListItem.FormatToggle
-							hideOnCompact
-							onChange={setListFormat}
-							value={listFormat}
-						/>
+						{!forceCardLayout && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
 					</div>
 				</FilterHeaderWrapper>
 				{!loading && !error && result.validators.length > 0 && (
@@ -205,10 +232,15 @@ export const StakingApiValidatorListInner = () => {
 										validator={validator}
 										format={effectiveListFormat}
 										totalActive={result.totalActive}
-										eraPoints={eraPointsByAddress.get(validator.address) ?? []}
+										eraPoints={
+											eraPointsByAddress.get(validator.address) ??
+											EMPTY_ERA_POINTS
+										}
 										rate={rateByAddress.get(validator.address)}
 										isEraPointsLoading={isEraPointsLoading}
 										isRateLoading={isRateLoading}
+										showShareLink={showShareLink}
+										toggleFavorites={toggleFavorites}
 									/>
 								</MotionItem>
 							))
@@ -224,8 +256,15 @@ export const StakingApiValidatorListInner = () => {
 	)
 }
 
-export const StakingApiValidatorList = () => (
+export const StakingApiValidatorList = (
+	props: StakingApiValidatorListProps,
+) => (
 	<ListProvider initialListFormat="row">
-		<StakingApiValidatorListInner />
+		<NetworkValidatorList {...props} />
 	</ListProvider>
 )
+
+const NetworkValidatorList = (props: StakingApiValidatorListProps) => {
+	const { network } = useNetwork()
+	return <StakingApiValidatorListInner key={network} {...props} />
+}

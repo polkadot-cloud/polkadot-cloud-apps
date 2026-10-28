@@ -1,0 +1,6 @@
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+SPDX-License-Identifier: GPL-3.0-only */
+
+.card:not(:global(.transparent), :global(.warning), :global(.prompt)) {
+	border: 1px solid var(--gray-400);
+}

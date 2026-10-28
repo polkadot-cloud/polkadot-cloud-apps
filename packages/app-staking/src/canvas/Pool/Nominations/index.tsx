@@ -11,14 +11,12 @@ import { NominationsWrapper } from '../Wrappers'
 
 export const Nominations = ({ stash, poolId }: NominationsProps) => {
 	const { t } = useTranslation()
-	const { getValidators } = useValidators()
 	const { poolsNominations } = useBondedPools()
 
 	// Extract validator entries from pool targets.
 	const targets = poolsNominations[poolId]?.targets || []
-	const filteredTargets = getValidators().filter(({ address }) =>
-		targets.includes(address),
-	)
+	const { formatWithPrefs } = useValidators(targets)
+	const filteredTargets = formatWithPrefs(targets)
 
 	return (
 		<NominationsWrapper>

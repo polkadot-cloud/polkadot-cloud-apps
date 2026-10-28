@@ -1,0 +1,186 @@
+/* Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+SPDX-License-Identifier: GPL-3.0-only */
+
+@use "ui-styles/theme/pastel";
+
+.container {
+	padding: 0.85rem;
+}
+
+.heading {
+	margin-bottom: 0.75rem;
+	padding-bottom: 0.6rem;
+	border-bottom: 1px solid color-mix(in srgb, var(--gray-1000) 9%, transparent);
+	color: var(--gray-700);
+	font-family: var(--font-family-semibold);
+	font-size: 0.9rem;
+	line-height: 1.4;
+}
+
+.card {
+	@include pastel.edge;
+
+	background:
+		linear-gradient(
+			125deg,
+			color-mix(in srgb, var(--wash-yellow) 65%, transparent),
+			color-mix(in srgb, var(--wash-blue) 65%, transparent) 55%,
+			color-mix(in srgb, var(--wash-purple) 65%, transparent)
+		),
+		color-mix(in srgb, var(--gray-200) 65%, var(--gray-300));
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	width: 100%;
+	padding: 1.1rem;
+	border: 1px solid transparent;
+	border-radius: 0.65rem;
+	overflow: hidden;
+	isolation: isolate;
+	color: var(--gray-1000);
+	font-family: inherit;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 180ms ease;
+
+	&:is(:hover, :focus-visible):not(:disabled) {
+		--pastel-edge-opacity: var(--edge-hover-opacity);
+
+		.arrow > svg {
+			transform: translateX(0.2rem);
+		}
+	}
+
+	&:is(:hover, :focus-visible, :active):not(:disabled) {
+		background-color: color-mix(in srgb, var(--gray-300) 85%, var(--gray-400));
+	}
+
+	&:disabled {
+		opacity: var(--opacity-disabled);
+		cursor: default;
+	}
+}
+
+.copy {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.45rem;
+	min-width: 0;
+}
+
+.title {
+	color: var(--gray-1000);
+	font-family: var(--font-family-semibold);
+	font-size: 1.3rem;
+	font-weight: 600;
+	line-height: 1.3;
+
+	@supports (background-clip: text) {
+		background: linear-gradient(
+			110deg,
+			color-mix(in srgb, var(--gray-1000) 88%, var(--pastel-green)),
+			color-mix(in srgb, var(--gray-1000) 88%, var(--pastel-blue)) 50%,
+			color-mix(in srgb, var(--gray-1000) 88%, var(--pastel-purple))
+		);
+		background-clip: text;
+		color: transparent;
+	}
+}
+
+.subtitle {
+	color: var(--gray-800);
+	font-size: 1.05rem;
+	line-height: 1.5;
+}
+
+.arrow {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-shrink: 0;
+	align-self: flex-start;
+	align-items: center;
+	justify-content: center;
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-top: 0.2rem;
+	font-size: 1.1rem;
+
+	> svg {
+		transition: transform 180ms ease;
+	}
+}
+
+.candidateList {
+	position: absolute;
+	top: 50%;
+	right: -0.25rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	width: 6.75rem;
+	padding: 0.75rem;
+	border: 2px solid currentcolor;
+	border-radius: 0.6rem;
+	background: var(--pastel-surface);
+	color: var(--gray-900);
+	opacity: 0.09;
+	pointer-events: none;
+	transform: translateY(-50%) rotate(-8deg);
+	mask-image: linear-gradient(90deg, transparent, #000 65%);
+
+	&::before {
+		content: "";
+		width: 2.5rem;
+		height: 0.25rem;
+		margin-bottom: 0.15rem;
+		border-radius: 0.125rem;
+		background: currentcolor;
+	}
+}
+
+.candidateRow {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	height: 0.9rem;
+	padding: 0 0.3rem;
+	border: 1px solid currentcolor;
+	border-radius: 0.2rem;
+
+	&::before,
+	&::after {
+		content: "";
+		border-radius: 0.1rem;
+		background: currentcolor;
+	}
+
+	&::before {
+		width: 0.35rem;
+		height: 0.35rem;
+		flex-shrink: 0;
+	}
+
+	&::after {
+		flex: 1;
+		height: 0.15rem;
+	}
+
+	&:nth-child(even)::after {
+		margin-right: 0.5rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.card,
+	.arrow > svg {
+		transition: none;
+	}
+
+	.card:is(:hover, :focus-visible):not(:disabled) .arrow > svg {
+		transform: none;
+	}
+}

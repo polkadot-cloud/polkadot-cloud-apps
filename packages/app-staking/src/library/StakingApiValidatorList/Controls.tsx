@@ -35,7 +35,7 @@ export const DEFAULT_VALIDATOR_LIST_CONFIG: ValidatorListConfig = {
 		excludeBlocked: true,
 		excludeMissingIdentity: true,
 	},
-	order: 'ACTIVITY',
+	order: 'RETAINMENT_HIGH',
 	search: '',
 }
 
@@ -45,7 +45,7 @@ const CLEARED_VALIDATOR_LIST_CONFIG: ValidatorListConfig = {
 		excludeBlocked: false,
 		excludeMissingIdentity: false,
 	},
-	order: 'ACTIVITY',
+	order: 'RETAINMENT_HIGH',
 	search: '',
 }
 
@@ -92,7 +92,6 @@ export const Controls = ({
 		},
 	]
 	const defaultOrderOptions = [
-		{ key: 'ACTIVITY', label: t('activity') },
 		{
 			key: 'RETAINMENT_HIGH',
 			label: t('highRetainment'),
@@ -101,6 +100,7 @@ export const Controls = ({
 			key: 'RETAINMENT_LOW',
 			label: t('lowRetainment'),
 		},
+		{ key: 'ACTIVITY', label: t('activity') },
 	]
 	const orderOptions = suppliedOrderOptions ?? defaultOrderOptions
 	const nextConfig = { ...draft, search: draft.search.trim() }
@@ -124,7 +124,14 @@ export const Controls = ({
 	}
 
 	const clear = () => {
-		setDraft(CLEARED_VALIDATOR_LIST_CONFIG)
+		setDraft({
+			...CLEARED_VALIDATOR_LIST_CONFIG,
+			order: orderOptions.some(
+				({ key }) => key === CLEARED_VALIDATOR_LIST_CONFIG.order,
+			)
+				? CLEARED_VALIDATOR_LIST_CONFIG.order
+				: (orderOptions[0]?.key ?? config.order),
+		})
 	}
 
 	return (

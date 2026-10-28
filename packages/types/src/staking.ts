@@ -7,10 +7,9 @@ export interface EraRewardPoints {
 	total: number
 	individual: Array<[string, number]>
 }
-export type ErasStakersOverviewEntries = [
-	[number, string],
-	SpStakingPagedExposureMetadata,
-][]
+export type ValidatorOverview = SpStakingPagedExposureMetadata
+export type ValidatorOverviews = ReadonlyMap<string, ValidatorOverview>
+export type ErasStakersOverviewEntries = [[number, string], ValidatorOverview][]
 
 export type ErasStakersPagedEntries = [
 	[number, string, number],
@@ -60,18 +59,4 @@ export interface ExposureValue {
 export interface ExposureOther {
 	who: string
 	value: string
-}
-
-export interface LocalExposuresData {
-	era: string
-	exposures: LocalExposure[]
-}
-
-export interface LocalExposure {
-	k: [string, string]
-	v: {
-		o: [string, string]
-		w: string
-		t: string
-	}
 }

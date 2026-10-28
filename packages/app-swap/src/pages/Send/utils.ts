@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit, unitToPlanck } from '@w3ux/utils'
+import { planckToUnit, unitToPlanck } from '@polkadot-cloud/utils'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 
 export const isSameImportedAccount = (
@@ -31,24 +31,4 @@ export const formatBalance = (
 	}
 
 	return `${planckToUnit(balance.free, balance.decimals)} ${symbol}`
-}
-
-export const maxSendableBalance = (
-	balance: StablecoinBalance | undefined,
-	feeBalance: StablecoinBalance | undefined,
-	fee: bigint,
-): bigint => {
-	if (!balance) {
-		return 0n
-	}
-
-	const feeFromSameAsset =
-		feeBalance?.chain === balance.chain && feeBalance.symbol === balance.symbol
-	const balanceFloor =
-		balance.frozen > balance.existentialDeposit
-			? balance.frozen
-			: balance.existentialDeposit
-	const reserved = balanceFloor + (feeFromSameAsset ? fee : 0n)
-	const max = balance.free - reserved
-	return max > 0n ? max : 0n
 }

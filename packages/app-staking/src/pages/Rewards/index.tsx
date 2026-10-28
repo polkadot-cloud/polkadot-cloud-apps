@@ -12,16 +12,17 @@ import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { PageTabs } from 'library/PageTabs'
+import { PageTitle } from 'library/PageTitle'
 import {
 	fetchPoolEraRewards,
 	fetchPoolRewards,
 	fetchRewards,
+	splitStakingRewards,
 } from 'plugin-staking-api'
-import type { NominatorReward, RewardResults } from 'plugin-staking-api/types'
+import type { RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Page } from 'ui-core/base'
+import { PageTabs } from 'ui-app/PageTabs'
 import { filterAndSortRewards } from 'ui-graphs/util'
 import { Overview } from './Overview'
 import { NominatorPayouts, PoolPayouts } from './PayoutList'
@@ -87,24 +88,14 @@ export const Rewards = () => {
 					: Promise.resolve({ poolEraRewards: [] }),
 			])
 
-		const payouts =
-			allRewards.filter((reward: NominatorReward) => reward.claimed) ?? []
-
-		const unclaimedPayouts =
-			allRewards.filter((reward: NominatorReward) => !reward.claimed) ?? []
-
-		const poolClaims = poolRewards ?? []
+		const { payouts, unclaimedPayouts } = splitStakingRewards(allRewards)
 
 		// Filter zero rewards and order via timestamp, most recent first
-		setPayoutsList(
-			filterAndSortRewards(
-				(allRewards as RewardResults).concat(poolClaims) as RewardResults,
-			),
-		)
+		setPayoutsList(filterAndSortRewards([...allRewards, ...poolRewards]))
 		setPayoutGraphData({
 			payouts,
 			unclaimedPayouts,
-			poolClaims,
+			poolClaims: poolRewards,
 			poolShareRewards: poolShareEnabled ? poolEraRewards : undefined,
 		})
 		setLoading(false)
@@ -175,13 +166,13 @@ export const Rewards = () => {
 
 	return (
 		<Wrapper>
-			<Page.Title title={t('rewards', { ns: 'modals' })}>
+			<PageTitle title={t('rewards', { ns: 'modals' })} showNominationWarnings>
 				<PageTabs
 					tabs={tabs}
 					preloading={apiEnabled && tabsSyncing}
 					preloaderTabs={1}
 				/>
-			</Page.Title>
+			</PageTitle>
 			{activeTab === 0 && (
 				<Overview
 					{...pageProps}

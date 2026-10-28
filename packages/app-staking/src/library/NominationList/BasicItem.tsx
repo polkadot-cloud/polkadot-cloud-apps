@@ -4,7 +4,7 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { CurrentEraPoints } from 'library/List/EraPointsGraph/CurrentEraPoints'
 import { getIdentityDisplay } from 'library/List/Utils'
-import { Quartile } from 'library/ListItem/Labels/Quartile'
+import { ActivityTier } from 'library/ListItem/Labels/ActivityTier'
 import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { CopyAddress } from '../ListItem/Buttons/CopyAddress'
@@ -21,10 +21,15 @@ const Basic = ({
 	toggleFavorites,
 	bondFor,
 	displayFor,
-	nominationStatus,
+	nominee,
+	isNominationPreloading,
+	nominationError,
 }: ItemProps) => {
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs } = validator
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+	const { address } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 	const outline = displayFor === 'canvas'
 
 	return (
@@ -59,14 +64,21 @@ const Basic = ({
 				</div>
 				<div>
 					<LabelRow inline>
-						<Quartile address={address} />
+						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
 					<NominationStatus
 						address={address}
 						bondFor={bondFor}
 						nominator={nominator}
-						status={nominationStatus}
+						status={
+							nominee?.status === 'active' || nominee?.status === 'inactive'
+								? nominee.status
+								: 'waiting'
+						}
+						activeBacking={nominee?.activeBacking ?? '0'}
+						isPreloading={isNominationPreloading}
+						unavailable={nominationError}
 						noMargin
 					/>
 				</div>

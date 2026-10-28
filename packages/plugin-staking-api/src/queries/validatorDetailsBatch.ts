@@ -3,26 +3,24 @@
 
 import { gql } from '@apollo/client'
 import type { ValidatorDetailsBatchData } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { fetchQuery } from './generic'
 
 const QUERY = gql`
+  ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorDetailsBatch(
     $network: String!
     $validators: [String!]!
     $fromEra: Int!
     $rewardRateDepth: Int
     $eraPointsDepth: Int
+    $includeRetainment: Boolean!
   ) {
-    validatorRetainmentBatch(network: $network, validators: $validators) {
+    validatorRetainmentBatch(network: $network, validators: $validators) @include(if: $includeRetainment) {
       validator
       result {
-        months {
-          fromTimestamp
-          netInflow
-          retainmentRate
-          selfStakeChange
-          compoundRate
-        }
+        months { ...ValidatorRetainmentWindowFields }
+        retainment { ...ValidatorRetainmentFields }
       }
     }
     validatorAvgRewardRateBatch(
@@ -56,14 +54,15 @@ const DEFAULT: ValidatorDetailsBatchData = {
 	validatorEraPointsBatch: [],
 }
 
-export const fetchValidatorDetailsBatch = (
+export const fetchValidatorDetailsBatch = async (
 	network: string,
 	validators: string[],
 	fromEra: number,
 	rewardRateDepth?: number,
 	eraPointsDepth?: number,
-) =>
-	fetchQuery<ValidatorDetailsBatchData>(
+	options?: { throwOnError?: boolean; includeRetainment?: boolean },
+) => {
+	const data = await fetchQuery<ValidatorDetailsBatchData>(
 		QUERY,
 		{
 			network,
@@ -71,6 +70,14 @@ export const fetchValidatorDetailsBatch = (
 			fromEra,
 			rewardRateDepth,
 			eraPointsDepth,
+			includeRetainment: options?.includeRetainment ?? true,
 		},
 		DEFAULT,
+		options,
 	)
+
+	return {
+		...data,
+		validatorRetainmentBatch: data.validatorRetainmentBatch ?? [],
+	}
+}

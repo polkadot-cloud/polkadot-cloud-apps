@@ -1,24 +1,26 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
+import type { ValidatorActivityTier } from 'contexts/Validators/types'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { useTranslation } from 'react-i18next'
-import type { ValidatorStatus } from 'types'
+import type { ValidatorOverview, ValidatorStatus } from 'types'
 import { ListItem } from 'ui-app/ListItem'
 import { formatCompactNumber, planckToUnitBn } from 'utils'
+import { ActivityTier } from '../ListItem/Labels/ActivityTier'
 
 interface ValidatorSummaryProps {
+	overview?: ValidatorOverview | null
+	overviewUnavailable?: boolean
 	address: string
+	activityTier?: ValidatorActivityTier | null
 	ariaLabel?: string
 	isRatePreloading?: boolean
 	isStatusValuePreloading?: boolean
 	rate?: number
-	rankSegment?: number
 	selfStake?: BigNumber
 	selfStakeMax: boolean
 	status: ValidatorStatus
@@ -29,45 +31,49 @@ interface ValidatorSummaryProps {
 }
 
 export const useValidatorSummaryData = ({
-	address,
+	overview,
+	overviewUnavailable = false,
 	rate,
-	rankSegment,
 	selfStake,
 	selfStakeMax,
 	status,
+	statusActive,
 	statusLabel: statusLabelOverride,
 	statusValue,
 }: ValidatorSummaryProps) => {
 	const { t, i18n } = useTranslation('app')
-	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { getValidatorRankSegment, getValidatorTotalStake } =
-		useValidatorEntries()
 	const { units } = getStakingChainData(network)
 
-	const validatorStatus = syncing ? 'waiting' : status
+	// API summaries supply their own status; other rows use the list overview.
+	const hasStatusOverride = statusActive !== undefined
+	const syncing =
+		!hasStatusOverride && !overviewUnavailable && overview === undefined
+	const validatorStatus = hasStatusOverride
+		? status
+		: overview
+			? 'active'
+			: 'waiting'
 	const statusLabel =
 		statusLabelOverride ??
-		(syncing
-			? t('syncing')
-			: validatorStatus === 'waiting'
-				? capitalizeFirstLetter(t(validatorStatus) ?? '')
-				: t('listItemActive'))
+		(!hasStatusOverride && overviewUnavailable
+			? '—'
+			: syncing
+				? t('syncing')
+				: validatorStatus === 'waiting'
+					? capitalizeFirstLetter(t(validatorStatus) ?? '')
+					: t('listItemActive'))
 	const totalStake =
 		statusValue !== undefined
 			? statusValue.isGreaterThan(0)
 				? formatCompactNumber(statusValue.toNumber(), i18n.resolvedLanguage)
 				: undefined
-			: !syncing && validatorStatus !== 'waiting'
-				? planckToUnitBn(new BigNumber(getValidatorTotalStake(address)), units)
+			: !hasStatusOverride && overview
+				? planckToUnitBn(new BigNumber(overview.total), units)
 						.integerValue()
 						.toFormat()
 				: undefined
 
-	const quartile = rankSegment ?? getValidatorRankSegment(address)
-	const quartileLabel = ![100, undefined].includes(quartile)
-		? `${t('top')} ${quartile}%`
-		: '—'
 	const rateLabel =
 		typeof rate === 'number' && Number.isFinite(rate)
 			? `${new BigNumber(rate).decimalPlaces(2).toString()}%`
@@ -79,7 +85,6 @@ export const useValidatorSummaryData = ({
 			: '—'
 
 	return {
-		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
@@ -91,8 +96,22 @@ export const useValidatorSummaryData = ({
 
 export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 	const { t } = useTranslation('app')
+
+	return (
+		<ListItem.Summary aria-label={props.ariaLabel ?? t('validatorSummary')}>
+			<ValidatorSummaryMetrics {...props} />
+		</ListItem.Summary>
+	)
+}
+
+export const ValidatorSummaryMetrics = ({
+	compact = false,
+	...props
+}: ValidatorSummaryProps & { compact?: boolean }) => {
+	const { t } = useTranslation('app')
 	const {
-		ariaLabel,
+		activityTier,
+		address,
 		isRatePreloading = false,
 		isStatusValuePreloading = false,
 		selfStake,
@@ -101,7 +120,6 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		unit,
 	} = props
 	const {
-		quartileLabel,
 		rateLabel,
 		selfStakeLabel,
 		selfStakeMax,
@@ -110,8 +128,15 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 		validatorStatus,
 	} = useValidatorSummaryData(props)
 
+	const loader = (
+		<ListItem.DetailLoader
+			height={compact ? '1.2rem' : undefined}
+			width={compact ? '4.5rem' : undefined}
+		/>
+	)
+
 	return (
-		<ListItem.Summary aria-label={ariaLabel ?? t('validatorSummary')}>
+		<>
 			<ListItem.Metric
 				label={
 					<>
@@ -124,15 +149,16 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				}
 				valueProps={{
 					'aria-busy': isStatusValuePreloading,
-					title: statusValue
-						? `${statusValue.toFormat()} ${unit}`
-						: totalStake
-							? `${totalStake} ${unit}`
-							: undefined,
+					title:
+						!compact && statusValue
+							? `${statusValue.toFormat()} ${unit}`
+							: totalStake
+								? `${totalStake} ${unit}`
+								: undefined,
 				}}
 			>
 				{isStatusValuePreloading ? (
-					<ListItem.DetailLoader />
+					loader
 				) : (
 					<>
 						<span>{totalStake ?? '—'}</span>
@@ -141,15 +167,18 @@ export const ValidatorSummary = (props: ValidatorSummaryProps) => {
 				)}
 			</ListItem.Metric>
 			<ListItem.Metric aria-busy={isRatePreloading} label="APY">
-				{isRatePreloading ? <ListItem.DetailLoader /> : rateLabel}
+				{isRatePreloading ? loader : rateLabel}
 			</ListItem.Metric>
-			<ListItem.Metric label={t('performance')}>
-				{quartileLabel}
+			<ListItem.Metric
+				label={t('health')}
+				valueProps={{ style: { overflow: 'hidden' } }}
+			>
+				<ActivityTier address={address} activityTier={activityTier} detailed />
 			</ListItem.Metric>
 			<ListItem.Metric label={t('selfStake')}>
 				<span>{selfStakeLabel}</span>
 				{selfStake !== undefined && !selfStakeMax && <small>{unit}</small>}
 			</ListItem.Metric>
-		</ListItem.Summary>
+		</>
 	)
 }

@@ -134,6 +134,7 @@ export const PoolSharesBar = ({
 					display: false,
 				},
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					font: {
 						size: 10,
 					},
@@ -161,6 +162,7 @@ export const PoolSharesBar = ({
 					},
 				},
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					display: !hideYAxisLabels,
 					font: {
 						size: 10,

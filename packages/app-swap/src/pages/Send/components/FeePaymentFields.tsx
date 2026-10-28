@@ -6,6 +6,7 @@ import { Dropdown } from 'ui-app/Dropdown'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
+import classes from '../Send.module.scss'
 import { formatBalance } from '../utils'
 import type { FeePaymentFieldsProps } from './types'
 
@@ -14,7 +15,6 @@ export const FeePaymentFields = ({
 	feeAssetOptions,
 	feeBalance,
 	feeDisplay,
-	feeSetupRequired,
 	onSelect,
 	selectedFeeAsset,
 	submission,
@@ -27,8 +27,9 @@ export const FeePaymentFields = ({
 		<>
 			<SendForm.Segment
 				title={t('payFeesIn')}
+				className={classes.lastSection}
 				headerContent={
-					<SendForm.Label label={t('available')}>
+					<SendForm.Label label={t('available', { ns: 'app' })}>
 						{balancesLoading
 							? '...'
 							: formatBalance(feeBalance, selectedFeeAsset.value)}
@@ -46,13 +47,6 @@ export const FeePaymentFields = ({
 				<SendForm.Note label={t('networkFee')}>
 					<EstimatedTxFee uid={submission.uid} feeDisplay={feeDisplay} />
 				</SendForm.Note>
-				{feeSetupRequired && (
-					<SendForm.Note label={t('feeToken')} variant="success">
-						{t('setFeeTokenBeforeSending', {
-							symbol: selectedFeeAsset.value,
-						})}
-					</SendForm.Note>
-				)}
 			</SendForm.Notes>
 			<SendForm.Action>
 				<SubmitTx

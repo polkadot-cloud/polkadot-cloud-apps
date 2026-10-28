@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import type { ImportedAccount } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { SendForm } from 'ui-core/input'
-import classes from '../Send.module.scss'
 import type { AccountFieldsProps } from './types'
 
 const accountKey = (prefix: string, account: ImportedAccount | null) =>
@@ -24,28 +23,24 @@ export const AccountFields = ({
 	return (
 		<>
 			<SendForm.Segment title={t('sendFrom')} layer="raised">
-				<div className={classes.accountDropdown}>
-					<AccountDropdown
-						key={accountKey('from', fromAccount)}
-						initialAccount={fromAccount}
-						accounts={accountsWithSigners}
-						onSelect={onFromSelect}
-						placeholder={t('selectSenderAccount')}
-						disabled={!accountsWithSigners.length}
-					/>
-				</div>
+				<AccountDropdown
+					key={accountKey('from', fromAccount)}
+					initialAccount={fromAccount}
+					accounts={accountsWithSigners}
+					onSelect={onFromSelect}
+					placeholder={t('selectSenderAccount')}
+					disabled={!accountsWithSigners.length}
+				/>
 			</SendForm.Segment>
 			<SendForm.DirectionIndicator />
 			<SendForm.Segment title={t('sendTo')} layer="raised">
-				<div className={classes.accountDropdown}>
-					<AccountDropdown
-						key={accountKey('to', toAccount)}
-						initialAccount={toAccount}
-						accounts={accounts}
-						onSelect={onToSelect}
-						placeholder={t('enterRecipientAddress')}
-					/>
-				</div>
+				<AccountDropdown
+					key={accountKey('to', toAccount)}
+					initialAccount={toAccount}
+					accounts={accounts}
+					onSelect={onToSelect}
+					placeholder={t('enterRecipientAddress')}
+				/>
 			</SendForm.Segment>
 		</>
 	)

@@ -7,22 +7,36 @@ import { fetchQuery } from './generic'
 
 const QUERY = gql`
   query GetNominationStatus($network: String!, $who: String!) {
-    getNominationStatus(network: $network, who: $who)
+    getNominationStatus(network: $network, who: $who) {
+      status
+    }
   }
 `
 
 const DEFAULT_DATA: GetNominationStatusData = {
-	getNominationStatus: 'waiting',
+	getNominationStatus: { status: 'waiting' },
 }
 
 export const fetchGetNominationStatus = async (
 	network: string,
 	who: string,
+	signal?: AbortSignal,
 ): Promise<StakerNominationStatus> => {
 	const data = await fetchQuery<GetNominationStatusData>(
 		QUERY,
 		{ network, who },
 		DEFAULT_DATA,
+		{
+			throwOnError: true,
+			// Data gate owns caching and deduplication. Independent query keys must keep separate HTTP
+			// requests so aborting one cannot cancel another.
+			fetchPolicy: 'no-cache',
+			context: { queryDeduplication: false, fetchOptions: { signal } },
+		},
 	)
-	return data.getNominationStatus
+	const status = data.getNominationStatus?.status
+	if (status !== 'active' && status !== 'inactive' && status !== 'waiting') {
+		throw new Error('Staking API returned an invalid nomination status')
+	}
+	return status
 }

@@ -2,24 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
-import {
-	faChevronRight,
-	faExternalLinkAlt,
-} from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { setActiveProxy } from '@polkadot-cloud/connect-proxies'
-import { useOutsideAlerter } from '@w3ux/hooks'
-import { ellipsisFn } from '@w3ux/utils'
-import SubscanSVG from 'assets/brands/subscan.svg?react'
-import { getSubscanBalanceChainId } from 'consts/util'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { useActiveProxy } from 'hooks/useActiveProxy'
 import { useNetwork } from 'hooks/useNetwork'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { type Dispatch, type SetStateAction, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PopoverTab } from 'ui-buttons'
-import { ConnectItem, MenuItemButton } from 'ui-core/popover'
+import { MenuItemButton } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
+import { AccountDetails } from '../../../AccountDetails'
 import { Account } from './Account'
 import classes from './index.module.scss'
 
@@ -82,30 +78,11 @@ export const AccountPopover = ({
 				</MenuItemButton>
 			)}
 
-			<ConnectItem.Container>
-				<h4>Account Details</h4>
-			</ConnectItem.Container>
-			<MenuItemButton
-				style={{ border: 'none' }}
-				disabled={!activeAddress}
-				onClick={() => {
-					setOpen(false)
-					window.open(
-						`https://${getSubscanBalanceChainId(network)}.subscan.io/account/${activeAddress}`,
-						'_blank',
-					)
-				}}
-			>
-				<div>
-					<SubscanSVG width={'1.5rem'} height={'1.5rem'} />
-				</div>
-				<div>
-					<h3>Subscan</h3>
-					<div>
-						<FontAwesomeIcon icon={faExternalLinkAlt} transform="shrink-3" />
-					</div>
-				</div>
-			</MenuItemButton>
+			<AccountDetails
+				address={activeAddress}
+				network={network}
+				onOpen={() => setOpen(false)}
+			/>
 
 			<PopoverTab.Container position="bottom">
 				<PopoverTab.Button

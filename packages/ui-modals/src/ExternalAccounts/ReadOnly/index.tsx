@@ -11,7 +11,7 @@ import {
 	useExternalAccounts,
 	useImportedAccounts,
 } from '@polkadot-cloud/connect'
-import { Polkicon } from '@w3ux/react-polkicon'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { useHelp } from 'hooks/useHelp'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'

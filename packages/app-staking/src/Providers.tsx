@@ -5,7 +5,6 @@ import { ThemedRouter } from 'Themes'
 import { ConnectProvider } from '@polkadot-cloud/connect'
 import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
 import { createProxiesAdaptor } from '@polkadot-cloud/connect-proxies'
-import { withProviders } from '@w3ux/factories'
 import { StakingDappName } from 'consts'
 import { getStakingChainData } from 'consts/util'
 import { EraStakersProvider } from 'contexts/EraStakers'
@@ -14,8 +13,10 @@ import { MigrateProvider } from 'contexts/Migrate'
 import { NominatorSetupsProvider } from 'contexts/NominatorSetups'
 import { BondedPoolsProvider } from 'contexts/Pools/BondedPools'
 import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { DataGateProvider } from 'data-gate'
 import { useNetwork } from 'hooks/useNetwork'
 import { Tooltip } from 'radix-ui'
+import { withProviders } from 'ui-app/util'
 import { OverlayProvider } from 'ui-overlay'
 
 export const Providers = () => {
@@ -35,6 +36,7 @@ export const Providers = () => {
 					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
 				},
 			],
+			DataGateProvider,
 			EraStakersProvider,
 			BondedPoolsProvider,
 			ValidatorsProvider,

@@ -2,12 +2,70 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { SubmittableExtrinsic } from 'dedot'
-import type { ExtrinsicSignatureV4 } from 'dedot/codecs'
-import type { InjectedSigner, PayloadOptions, TxStatus } from 'dedot/types'
+import type { DispatchError, ExtrinsicSignatureV4 } from 'dedot/codecs'
+import type {
+	InjectedSigner,
+	ISubmittableResult,
+	PayloadOptions,
+	TxStatus,
+	Unsub,
+} from 'dedot/types'
 import { onTransactionSubmittedEvent } from 'event-tracking'
-import type { TxStatusHandlers } from 'types'
+import type { TxFailure, TxStatusHandlers } from 'types'
 import { getErrorKeyFromMessage } from './error'
-import { deleteTx, setUidPending, setUidSubmitted, subs } from './index'
+import {
+	deleteTx,
+	getUid,
+	setUidBroadcasted,
+	setUidPending,
+	setUidSubmitted,
+	subs,
+} from './index'
+
+const dispatchFailure = (
+	tx: SubmittableExtrinsic,
+	error?: DispatchError,
+	events: ISubmittableResult['events'] = [],
+): TxFailure | undefined => {
+	// Proxy and non-atomic batch calls can fail inside a successful outer extrinsic.
+	if (!error) {
+		for (const {
+			event: { pallet, palletEvent },
+		} of events) {
+			if (typeof palletEvent === 'string') continue
+			if (pallet === 'Proxy' && palletEvent.name === 'ProxyExecuted') {
+				if (palletEvent.data.result.isErr) error = palletEvent.data.result.err
+			} else if (
+				pallet === 'Utility' &&
+				(palletEvent.name === 'BatchInterrupted' ||
+					palletEvent.name === 'ItemFailed')
+			) {
+				error = palletEvent.data.error
+			}
+			if (error) break
+		}
+	}
+	if (!error) return
+	const metadata =
+		error.type === 'Module'
+			? tx.client.registry.findErrorMeta(error)
+			: undefined
+
+	return {
+		type: 'dispatch',
+		error,
+		module: metadata && { pallet: metadata.pallet, name: metadata.name },
+	}
+}
+
+// A terminal callback may run before send/signAndSend returns its unsubscribe handle.
+const registerSub = (uid: number, unsubscribe: Unsub) => {
+	if (getUid(uid)) {
+		subs[uid] = unsubscribe
+	} else {
+		void unsubscribe().catch(() => {})
+	}
+}
 
 export const addSignAndSend = async (
 	network: string,
@@ -30,9 +88,19 @@ export const addSignAndSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.signAndSend(from, options, async ({ status }) => {
-			handleResult(uid, status, onRest)
-		})
+		const unsubscribe = await tx.signAndSend(
+			from,
+			options,
+			async ({ status, dispatchError, events }) => {
+				handleResult(
+					uid,
+					status,
+					onRest,
+					dispatchFailure(tx, dispatchError, events),
+				)
+			},
+		)
+		registerSub(uid, unsubscribe)
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
@@ -53,9 +121,17 @@ export const addSend = async (
 		// Transaction submitted - register tx event
 		onTransactionSubmittedEvent(network, getTxLabel(tx))
 
-		subs[uid] = await tx.send(async ({ status }) => {
-			handleResult(uid, status, onRest)
-		})
+		const unsubscribe = await tx.send(
+			async ({ status, dispatchError, events }) => {
+				handleResult(
+					uid,
+					status,
+					onRest,
+					dispatchFailure(tx, dispatchError, events),
+				)
+			},
+		)
+		registerSub(uid, unsubscribe)
 	} catch (e) {
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
@@ -71,29 +147,51 @@ export const handleResult = (
 		onInBlock,
 		onFinalized,
 		onFailed,
-	}: {
-		onReady: () => void
-		onInBlock: () => void
-		onFinalized: () => void
-		onFailed: (err: Error) => void
-	},
+	}: Omit<TxStatusHandlers, 'onError'>,
+	failure?: TxFailure,
 ) => {
+	const submission = getUid(uid)
+	if (!submission) return
+	if (failure) {
+		try {
+			onFailed(failure)
+		} finally {
+			deleteTx(uid)
+		}
+		return
+	}
 	if (status.type === 'Broadcasting') {
 		setUidPending(uid, true)
+	}
+	// Inclusion also confirms submission if the node omitted its broadcast status.
+	if (
+		!submission.broadcasted &&
+		(status.type === 'Broadcasting' || status.type === 'BestChainBlockIncluded')
+	) {
+		setUidBroadcasted(uid)
 		onReady()
 	}
 	if (status.type === 'BestChainBlockIncluded') {
-		onInBlock()
-		setUidSubmitted(uid, false)
+		// Keep this attempt registered until finalization while the hook opens the next draft.
 		setUidPending(uid, false)
+		onInBlock()
+	}
+	if (status.type === 'NoLongerInBestChain') {
+		setUidPending(uid, true)
 	}
 	if (status.type === 'Finalized') {
-		onFinalized()
-		deleteTx(uid)
+		try {
+			onFinalized()
+		} finally {
+			deleteTx(uid)
+		}
 	}
-	if (status.type === 'Invalid') {
-		onFailed(Error('Invalid transaction'))
-		deleteTx(uid)
+	if (status.type === 'Invalid' || status.type === 'Drop') {
+		try {
+			onFailed({ type: 'invalid' })
+		} finally {
+			deleteTx(uid)
+		}
 	}
 }
 

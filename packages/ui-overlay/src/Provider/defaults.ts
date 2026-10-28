@@ -13,4 +13,5 @@ export const defaultCanvasConfig: CanvasConfig = {
 	key: '',
 	options: {},
 	scroll: true,
+	variant: 'default',
 }

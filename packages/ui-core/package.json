@@ -24,13 +24,13 @@
 		"@fortawesome/fontawesome-svg-core": "^7.3.1",
 		"@fortawesome/free-solid-svg-icons": "^7.3.1",
 		"@fortawesome/react-fontawesome": "^3.5.0",
-		"@w3ux/react-polkicon": "^4.0.2",
-		"@w3ux/utils": "3.1.1",
+		"@polkadot-cloud/ui": "^1.0.0",
+		"@polkadot-cloud/utils": "^1.0.0",
 		"classnames": "^2.5.1",
 		"motion": "12.23.24",
-		"radix-ui": "^1.6.7",
-		"react": "^19.2.8",
-		"react-dom": "^19.2.8",
+		"radix-ui": "^1.8.1",
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1",
 		"simplebar": "6.3.3",
 		"simplebar-react": "3.3.2",
 		"ui-styles": "workspace:*"
@@ -39,6 +39,6 @@
 		"types": "workspace:*"
 	},
 	"peerDependencies": {
-		"dedot": "^1"
+		"dedot": "^1.4.0"
 	}
 }

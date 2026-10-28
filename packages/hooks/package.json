@@ -10,28 +10,32 @@
 	},
 	"exports": {
 		".": "./src/index.ts",
+		"./*/types": "./src/*/types.ts",
 		"./*": "./src/*/index.ts"
 	},
 	"dependencies": {
-		"@polkadot-cloud/connect": "^1.0.9",
-		"@polkadot-cloud/connect-proxies": "^0.3.0",
-		"@w3ux/utils": "^3.1.1",
-		"@w3ux/validator-assets": "^1.3.3",
+		"@polkadot-cloud/connect": "^2.0.0",
+		"@polkadot-cloud/connect-core": "^2.0.0",
+		"@polkadot-cloud/connect-proxies": "^1.0.0",
+		"@polkadot-cloud/utils": "^1.0.0",
+		"@tanstack/react-query": "^5.104.4",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
+		"data-gate": "workspace:*",
 		"date-fns": "^4.4.0",
-		"dedot": "^1.3.0",
+		"dedot": "^1.4.0",
 		"global-bus": "workspace:*",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.8",
+		"react": "^19.3.1",
+		"react-i18next": "^17.1.0",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"react-router-dom": "^7.18.2",
+		"react-router-dom": "^7.18.4",
 		"types": "workspace:*"
 	},
 	"peerDependencies": {
-		"react-router-dom": "^7.18.2"
+		"react-router-dom": "^7.18.4"
 	}
 }

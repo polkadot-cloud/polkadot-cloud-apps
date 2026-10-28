@@ -1,11 +1,18 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback } from 'react'
 import { createSingletonStore, useSingletonStore } from '../util'
-import type { TooltipHookInterface, TooltipHookState } from './types'
+import type {
+	TooltipActions,
+	TooltipHookInterface,
+	TooltipHookState,
+} from './types'
 
-export type { TooltipHookInterface, TooltipHookState } from './types'
+export type {
+	TooltipActions,
+	TooltipHookInterface,
+	TooltipHookState,
+} from './types'
 
 const defaultTooltipState: TooltipHookState = {
 	open: 0,
@@ -16,39 +23,37 @@ const defaultTooltipState: TooltipHookState = {
 
 const tooltipStore = createSingletonStore<TooltipHookState>(defaultTooltipState)
 
-export const useTooltip = (): TooltipHookInterface => {
-	const state = useSingletonStore(tooltipStore)
-
-	const openTooltip = useCallback(() => {
+const tooltipActions: TooltipActions = {
+	openTooltip: () => {
 		if (tooltipStore.getSnapshot().open) {
 			return
 		}
 		tooltipStore.patchSnapshot({
 			open: 1,
 		})
-	}, [])
+	},
 
-	const closeTooltip = useCallback(() => {
+	closeTooltip: () => {
 		tooltipStore.patchSnapshot({
 			open: 0,
 			show: 0,
 		})
-	}, [])
+	},
 
-	const setTooltipPosition = useCallback((x: number, y: number) => {
+	setTooltipPosition: (x, y) => {
 		tooltipStore.patchSnapshot((current) => ({
 			open: current.open || 1,
 			position: [x, y],
 		}))
-	}, [])
+	},
 
-	const showTooltip = useCallback(() => {
+	showTooltip: () => {
 		tooltipStore.patchSnapshot({
 			show: 1,
 		})
-	}, [])
+	},
 
-	const setTooltipTextAndOpen = useCallback((text: string) => {
+	setTooltipTextAndOpen: (text) => {
 		if (tooltipStore.getSnapshot().open) {
 			return
 		}
@@ -56,17 +61,17 @@ export const useTooltip = (): TooltipHookInterface => {
 			open: 1,
 			text,
 		})
-	}, [])
+	},
+}
+
+// Tooltip triggers only need actions, so they must not subscribe to pointer updates.
+export const useTooltipActions = (): TooltipActions => tooltipActions
+
+export const useTooltip = (): TooltipHookInterface => {
+	const state = useSingletonStore(tooltipStore)
 
 	return {
-		openTooltip,
-		closeTooltip,
-		setTooltipPosition,
-		showTooltip,
-		setTooltipTextAndOpen,
-		open: state.open,
-		show: state.show,
-		position: state.position,
-		text: state.text,
+		...tooltipActions,
+		...state,
 	}
 }

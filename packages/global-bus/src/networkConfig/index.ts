@@ -10,7 +10,12 @@ import {
 } from './local'
 import { _networkConfig } from './private'
 
+let lockedNetwork: NetworkId | undefined
+
 export const networkConfig$ = _networkConfig.asObservable()
+
+export const isNetworkAllowed = (network: NetworkId) =>
+	lockedNetwork === undefined || network === lockedNetwork
 
 export const getNetworkConfig = () => _networkConfig.getValue()
 
@@ -20,6 +25,10 @@ export const setNetworkConfig = (
 	providerType: ProviderType,
 	autoRpc: boolean,
 ) => {
+	if (!isNetworkAllowed(network)) {
+		return false
+	}
+
 	setLocalNetwork(network)
 	setLocalRpcEndpoints(network, rpcEndpoints)
 	setLocalProviderType(providerType)
@@ -30,16 +39,27 @@ export const setNetworkConfig = (
 		providerType,
 		autoRpc,
 	})
+	return true
 }
 
 export const getNetwork = () => getNetworkConfig().network
 
 export const setNetwork = (network: NetworkId) => {
+	if (!isNetworkAllowed(network)) {
+		return false
+	}
+
 	setLocalNetwork(network)
 	_networkConfig.next({
 		...getNetworkConfig(),
 		network,
 	})
+	return true
+}
+
+export const lockNetwork = (network: NetworkId) => {
+	lockedNetwork = network
+	setNetwork(network)
 }
 
 export const getRpcEndpoints = () => getNetworkConfig().rpcEndpoints

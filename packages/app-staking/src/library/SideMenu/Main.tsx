@@ -8,6 +8,7 @@ import { useAccountBalances } from 'hooks/useAccountBalances'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
+import { usePlugins } from 'hooks/usePlugins'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'
@@ -33,10 +34,10 @@ export const Main = ({
 	const navigate = useNavigate()
 	const { syncing } = useSyncing()
 	const { network } = useNetwork()
+	const { pluginEnabled } = usePlugins()
 	const { pathname } = useLocation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { sideMenuMinimised, advancedMode } = useUi()
 	const { getNominations, getStakingLedger } = useBalances()
@@ -45,10 +46,11 @@ export const Main = ({
 	const { balances, nominatorBalance } = useAccountBalances(activeAddress)
 	const { totalUnlockChunks } = balances.nominator
 
+	const { formatWithPrefs } = useValidators(getNominations(activeAddress))
 	const menuMinimised = sideMenuMinimised && !advancedMode
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const fullCommissionNominees = nominated.filter(
-		(nominee) => nominee.prefs.commission === 100,
+		(nominee) => nominee.prefs?.commission === 100,
 	)
 
 	const pages: PageItem[] = getPagesConfig(
@@ -155,6 +157,9 @@ export const Main = ({
 												}}
 												active={
 													hash === pathname || (index === 0 && pageChanged)
+												}
+												disabled={
+													key === 'operators' && !pluginEnabled('staking_api')
 												}
 												faIcon={faIcon}
 												bullet={bullet}

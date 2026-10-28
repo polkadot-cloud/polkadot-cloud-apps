@@ -7,13 +7,18 @@ import type { SelectProps } from '../types'
 
 export const Select = ({ item }: SelectProps) => {
 	const { addToSelected, removeFromSelected, selected } = useList()
-	const isSelected = selected.includes(item)
+	const selectedItems = selected.filter(
+		(selectedItem) =>
+			(selectedItem as SelectProps['item']).address === item.address,
+	)
+	const isSelected = selectedItems.length > 0
 	return (
 		<Checkbox
+			label={item.address}
 			checked={isSelected}
 			onClick={() => {
 				if (isSelected) {
-					removeFromSelected([item])
+					removeFromSelected(selectedItems)
 				} else {
 					addToSelected(item)
 				}

@@ -11,6 +11,13 @@
 	transition: opacity var(--transition-duration);
 	border-radius: 1rem;
 
+	:global(.dark) & {
+		--bg-body: var(--bg-modal);
+		--bg-primary: var(--bg-modal);
+
+		box-shadow: var(--shadow);
+	}
+
 	> button:last-child {
 		border: none;
 	}
@@ -34,8 +41,10 @@
 		background: var(--bg-primary);
 	}
 
-	&:hover {
-		opacity: 0.75;
+	&:is(:hover, :focus-visible):not(:disabled) {
+		background: var(--bg-selected);
+		color: var(--gray-1000);
+		opacity: 1;
 	}
 
 	&:disabled {
@@ -46,6 +55,17 @@
 	&:disabled:hover {
 		opacity: 0.4;
 	}
+
+	&.groupEnd {
+		border-bottom: 0;
+	}
+}
+
+.separator {
+	border: 0;
+	border-top: 1px solid var(--gray-600);
+	margin: 0.3rem 0;
+	width: 100%;
 }
 
 .title {

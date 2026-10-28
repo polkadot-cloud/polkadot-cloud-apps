@@ -32,9 +32,17 @@ export const fetchValidatorAvgRewardRateBatch = (
 	validators: string[],
 	fromEra: number,
 	depth?: number,
+	signal?: AbortSignal,
 ) =>
 	fetchQuery<ValidatorAvgRewardRateBatchData>(
 		QUERY,
 		{ chain, validators, fromEra, depth },
 		DEFAULT,
+		signal
+			? {
+					throwOnError: true,
+					fetchPolicy: 'no-cache',
+					context: { queryDeduplication: false, fetchOptions: { signal } },
+				}
+			: undefined,
 	)

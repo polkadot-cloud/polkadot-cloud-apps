@@ -5,7 +5,12 @@ import { Close as Wrapper } from 'ui-core/canvas'
 import { useOverlay } from 'ui-overlay'
 
 export const CloseCanvas = ({ style }: { style?: React.CSSProperties }) => {
-	const { closeCanvas } = useOverlay().canvas
+	const {
+		closeCanvas,
+		config: { variant },
+	} = useOverlay().canvas
 
-	return <Wrapper onClose={() => closeCanvas()} style={style} />
+	return (
+		<Wrapper onClose={() => closeCanvas()} style={style} variant={variant} />
+	)
 }

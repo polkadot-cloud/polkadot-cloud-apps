@@ -4,9 +4,9 @@
 import type BigNumber from 'bignumber.js'
 import type { Locale } from 'date-fns'
 import type {
-	NominatorReward,
 	PoolReward,
 	RewardResults,
+	StakingReward,
 	ValidatorEraPoints,
 } from 'plugin-staking-api/types'
 
@@ -128,25 +128,11 @@ export interface AveragePayoutLineProps {
 }
 
 export interface GraphPayoutData {
-	payouts: NominatorReward[]
-	unclaimedPayouts: NominatorReward[]
+	payouts: StakingReward[]
+	unclaimedPayouts: StakingReward[]
 	poolClaims: PoolReward[]
 	// Optional per-era pool reward share entries rendered as filled vertical bars using box annotations
 	poolShareRewards?: PoolReward[]
-}
-
-export interface GeoDonutProps {
-	title: string
-	series: {
-		labels: string[]
-		data: number[]
-	}
-	width?: string | number
-	maxHeight?: string | number
-	legendHeight?: number
-	maxLabelLen?: number
-	// Theme props
-	getThemeValue: (key: string) => string
 }
 
 export interface HalvingLineProps {
@@ -169,9 +155,9 @@ export interface FormatRewardsConfig {
 	fromDate: Date
 	days: number
 	units: number
-	payouts: NominatorReward[]
+	payouts: StakingReward[]
 	poolClaims: PoolReward[]
-	unclaimedPayouts: NominatorReward[]
+	unclaimedPayouts: StakingReward[]
 }
 
 export interface DailyPayoutConfig {

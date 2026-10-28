@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
+import { useHasEraBacking } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { useEffect, useState } from 'react'
@@ -22,12 +22,11 @@ export const Stats = ({
 }) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { isNominatorActive } = useEraStakers()
 	const { isReady, serviceApi } = useApi()
+	const { data: isActive } = useHasEraBacking(bondedPool.addresses.stash)
 
 	const Token = getChainIcons(network).token
 	const { unit, units } = getStakingChainData(network)
-	const isActive = isNominatorActive(bondedPool.addresses.stash)
 
 	// Store the pool balance
 	const [poolBalance, setPoolBalance] = useState<BigNumber | null>(null)

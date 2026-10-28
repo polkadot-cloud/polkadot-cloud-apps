@@ -16,7 +16,7 @@ export const SearchField = styled.label`
   display: block;
 
   input {
-    background: var(--gray-200);
+    background: var(--bg-input);
     border: 1px solid var(--gray-500);
     border-radius: 1.75rem;
     color: var(--gray-900);
@@ -88,16 +88,11 @@ export const FilterButton = styled.button`
     border-color: var(--gray-700);
     transform: translateY(-1px);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--gray-900);
-    outline-offset: 2px;
-  }
 `
 
 export const SwitchTrack = styled.span<{ $active: boolean }>`
   background: ${(props) =>
-		props.$active ? 'var(--gray-1000)' : 'var(--gray-600)'};
+		props.$active ? 'var(--gray-1000)' : 'var(--gray-700)'};
   border-radius: 1rem;
   display: flex;
   flex: 0 0 auto;
@@ -107,7 +102,7 @@ export const SwitchTrack = styled.span<{ $active: boolean }>`
   width: 2.1rem;
 
   &::after {
-    background: white;
+    background: var(--gray-100);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
     content: '';
@@ -149,11 +144,6 @@ export const OrderTab = styled.button<{ $active: boolean }>`
 
   &:hover {
     background: var(--bg-primary);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--gray-900);
-    outline-offset: 1px;
   }
 `
 

@@ -4,30 +4,30 @@
 import { ListProvider, useList } from 'contexts/List'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidatorRewardRates } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useErasPerDay } from 'hooks/useErasPerDay'
-import { useNetwork } from 'hooks/useNetwork'
-import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
 import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
 import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
 import {
 	Controls,
 	type ValidatorListConfig,
 } from 'library/StakingApiValidatorList/Controls'
 import { ResultSummary } from 'library/StakingApiValidatorList/styles'
-import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
-import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
 import { useValidatorFilters } from '../../hooks/useValidatorFilters'
 import { Item } from './Item'
+import { injectValidatorListData } from './overview'
 import type { ValidatorListProps } from './types'
+import { useValidatorDetails } from './useValidatorDetails'
 
 const DEFAULT_CONFIG: ValidatorListConfig = {
 	filters: {
@@ -39,34 +39,34 @@ const DEFAULT_CONFIG: ValidatorListConfig = {
 	search: '',
 }
 
-interface ValidatorDetailsCacheEntry {
-	addresses: string[]
-	data: ValidatorDetailsBatchData
-	scopeKey: string
-}
-
 export const ValidatorListInner = ({
 	// Default list values.
 	validators: initialValidators,
 	// Validator list config options.
+	showShareLink = true,
 	toggleFavorites,
 	itemsPerPage,
 	displayFor = 'default',
 	allowListFormat = true,
 	forceListFormat,
+	highlightRetainmentWarnings = false,
 	defaultConfig,
 	BeforeListNode = null,
+	validatorDetails: suppliedValidatorDetails,
+	validatorWarnings,
 	onRemove,
 }: ValidatorListProps) => {
 	const { t } = useTranslation()
 	const { syncing } = useSyncing()
-	const { network } = useNetwork()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
 	const { erasPerDay } = useErasPerDay()
-	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { setModalResize } = useOverlay().modal
-	const { injectValidatorListData } = useValidators()
+	// Filters need records for the full input, even when every visible row is removed.
+	const addresses = initialValidators.map(({ address }) => address)
+	useValidators(addresses)
 	const { isReady, activeEra } = useApi()
-	const { applyConfig } = useValidatorFilters()
+	const { applyConfig, overviews, overviewError } =
+		useValidatorFilters(addresses)
 	const {
 		selectable,
 		listFormat,
@@ -80,27 +80,26 @@ export const ValidatorListInner = ({
 		{ key: 'default', label: t('unordered', { ns: 'app' }) },
 	]
 
-	const validatorsDefault = useMemo(
-		() => injectValidatorListData(initialValidators),
-		[initialValidators, injectValidatorListData],
-	)
-	const validators = useMemo<ValidatorListEntry[]>(
-		() =>
-			showControls
-				? applyConfig(config, [...validatorsDefault])
-				: validatorsDefault,
-		[applyConfig, config, showControls, validatorsDefault],
-	)
+	const validators = useMemo<ValidatorListEntry[]>(() => {
+		const entries = injectValidatorListData(
+			initialValidators,
+			overviews,
+			overviewError,
+		)
+		return showControls ? applyConfig(config, entries) : entries
+	}, [
+		initialValidators,
+		overviews,
+		overviewError,
+		applyConfig,
+		config,
+		showControls,
+	])
 
 	const forceCardLayout = useForceCardLayout()
 	const effectiveListFormat =
 		forceListFormat ??
-		(retainmentStatsEnabled && forceCardLayout ? 'col' : listFormat)
-
-	// Cache API-backed details by the visible validator set and era.
-	const [detailsByKey, setDetailsByKey] = useState<
-		Record<string, ValidatorDetailsCacheEntry>
-	>({})
+		(validatorDetailsEnabled && forceCardLayout ? 'col' : listFormat)
 
 	// Pagination
 	const pageLength: number = itemsPerPage || validators.length
@@ -116,80 +115,16 @@ export const ValidatorListInner = ({
 		[validators, pageStart, pageLength],
 	)
 
-	const pageKey = useMemo(() => {
-		const itemKeys = listItems
-			.map(({ address }, i) => `${i}${address}`)
-			.join(',')
-		return `${itemKeys}|${showControls ? JSON.stringify(config) : ''}`
-	}, [config, listItems, showControls])
-	const detailsScopeKey = useMemo(
-		() =>
-			JSON.stringify({
-				network,
-				era: activeEra.index,
-				rewardRateDepth: erasPerDay,
-			}),
-		[network, activeEra.index, erasPerDay],
+	const internalValidatorDetails = useValidatorDetails(
+		listItems.map(({ address }) => address),
+		validatorDetailsEnabled && suppliedValidatorDetails === undefined,
 	)
-	const scopedDetails = useMemo(
-		() =>
-			Object.values(detailsByKey).filter(
-				({ scopeKey }) => scopeKey === detailsScopeKey,
-			),
-		[detailsByKey, detailsScopeKey],
-	)
-	const detailedAddresses = useMemo(
-		() => new Set(scopedDetails.flatMap(({ addresses }) => addresses)),
-		[scopedDetails],
-	)
-	const pendingDetailedAddresses = useMemo(
-		() =>
-			listItems
-				.map(({ address }) => address)
-				.filter((address) => !detailedAddresses.has(address)),
-		[listItems, detailedAddresses],
-	)
-	const detailsKey = useMemo(
-		() =>
-			JSON.stringify({
-				scopeKey: detailsScopeKey,
-				validators: pendingDetailedAddresses,
-			}),
-		[detailsScopeKey, pendingDetailedAddresses],
-	)
-	const eraPointsByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorEraPointsBatch.map(
-						(entry) => [entry.validator, entry.points] as const,
-					),
-				),
-			),
-		[scopedDetails],
-	)
-	const rateByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorAvgRewardRateBatch.map(
-						(entry) => [entry.validator, entry.rate] as const,
-					),
-				),
-			),
-		[scopedDetails],
-	)
-	const retainmentByAddress = useMemo(
-		() =>
-			new Map(
-				scopedDetails.flatMap(({ data }) =>
-					data.validatorRetainmentBatch.map(
-						(entry) => [entry.validator, entry.result] as const,
-					),
-				),
-			),
-		[scopedDetails],
-	)
+	const {
+		detailedAddresses,
+		eraPointsByAddress,
+		rateByAddress,
+		retainmentByAddress,
+	} = suppliedValidatorDetails ?? internalValidatorDetails
 	// if in modal, handle resize
 	const maybeHandleModalResize = () => {
 		if (displayFor === 'modal') {
@@ -198,39 +133,11 @@ export const ValidatorListInner = ({
 	}
 
 	// Get validator reward rates
-	const { rates } = useValidatorRewardRateBatch(
+	const { data: rates } = useValidatorRewardRates(
 		listItems.map(({ address }) => address),
-		pageKey,
-		retainmentStatsEnabled ? 'none' : 'node',
+		erasPerDay,
+		!validatorDetailsEnabled,
 	)
-
-	const getDetailedData = async (key: string, addresses: string[]) => {
-		if (
-			!retainmentStatsEnabled ||
-			activeEra.index === 0 ||
-			addresses.length === 0 ||
-			detailsByKey[key] !== undefined
-		) {
-			return
-		}
-
-		const results = await fetchValidatorDetailsBatch(
-			network,
-			addresses,
-			Math.max(activeEra.index - 1, 0),
-			erasPerDay,
-			30,
-		)
-		setDetailsByKey((current) => ({
-			...current,
-			[key]: { addresses, data: results, scopeKey: detailsScopeKey },
-		}))
-	}
-
-	// Fetch detailed data only where staking API retainment stats are supported.
-	useEffect(() => {
-		void getDetailedData(detailsKey, pendingDetailedAddresses)
-	}, [detailsKey, retainmentStatsEnabled])
 
 	const setControls = (nextConfig: ValidatorListConfig) => {
 		setConfig(nextConfig)
@@ -240,13 +147,13 @@ export const ValidatorListInner = ({
 	// Handle modal resize on list format change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [effectiveListFormat, validators, page, retainmentStatsEnabled])
+	}, [effectiveListFormat, validators, page, validatorDetailsEnabled])
 
 	return (
 		<ListWrapper>
 			<List
-				$flexBasisLarge={retainmentStatsEnabled ? '50%' : '33.33%'}
-				$twoColumnMinWidth={retainmentStatsEnabled ? 1350 : undefined}
+				$flexBasisLarge={validatorDetailsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={validatorDetailsEnabled ? 1350 : undefined}
 			>
 				{showControls && (
 					<Controls
@@ -271,13 +178,13 @@ export const ValidatorListInner = ({
 							)}
 						</div>
 						<div>
-							{allowListFormat && (
-								<ListItem.FormatToggle
-									hideOnCompact={retainmentStatsEnabled}
-									onChange={setListFormat}
-									value={listFormat}
-								/>
-							)}
+							{allowListFormat &&
+								!(validatorDetailsEnabled && forceCardLayout) && (
+									<ListItem.FormatToggle
+										onChange={setListFormat}
+										value={listFormat}
+									/>
+								)}
 						</div>
 					</FilterHeaderWrapper>
 				)}
@@ -294,18 +201,24 @@ export const ValidatorListInner = ({
 							>
 								<Item
 									validator={validator}
+									warnings={validatorWarnings?.[validator.address]}
+									showShareLink={showShareLink}
 									toggleFavorites={toggleFavorites}
 									displayFor={displayFor}
 									format={effectiveListFormat}
-									eraPoints={eraPointsByAddress.get(validator.address) ?? []}
+									highlightRetainmentWarnings={highlightRetainmentWarnings}
+									eraPoints={
+										eraPointsByAddress.get(validator.address) ??
+										EMPTY_ERA_POINTS
+									}
 									rate={
-										retainmentStatsEnabled
+										validatorDetailsEnabled
 											? rateByAddress.get(validator.address)
-											: rates[pageKey]?.[validator.address]
+											: rates?.[validator.address]
 									}
 									retainment={retainmentByAddress.get(validator.address)}
 									isPreloading={
-										retainmentStatsEnabled &&
+										validatorDetailsEnabled &&
 										activeEra.index > 0 &&
 										!detailedAddresses.has(validator.address)
 									}

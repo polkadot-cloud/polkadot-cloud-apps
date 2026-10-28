@@ -1,0 +1,84 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.identity {
+	align-items: center;
+	display: flex;
+	flex: 1 1 auto;
+	gap: 0.6rem;
+	height: auto !important;
+	min-width: 9rem;
+
+	> div {
+		flex: 1 1 auto;
+		margin: 0;
+		min-width: 0;
+		overflow: visible;
+
+		> div:first-child {
+			background: transparent;
+			border: 0 !important;
+			border-radius: 0;
+			display: grid;
+			height: 2.5rem;
+			max-width: 2.5rem !important;
+			min-width: 2.5rem !important;
+			overflow: visible;
+			place-items: center;
+		}
+	}
+
+	&.identity > div > div:last-child {
+		height: auto;
+		min-width: 0;
+		padding-left: 0.45rem;
+
+		> h4 {
+			color: var(--gray-1000);
+			font-family: var(--font-family-bold);
+			font-size: clamp(0.95rem, 2.4cqi, 1.2rem);
+			height: auto;
+			line-height: 1.2;
+			overflow: hidden;
+			padding: 0;
+			position: static;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 100%;
+		}
+	}
+}
+
+.blocked {
+	background: color-mix(in srgb, var(--status-danger) 8%, transparent);
+	border: 1px solid color-mix(in srgb, var(--status-danger) 22%, transparent);
+	border-radius: 0.55rem;
+	color: var(--status-danger);
+	flex: 0 0 auto;
+	font-family: var(--font-family-semibold);
+	font-size: 0.62rem;
+	letter-spacing: 0.04em;
+	padding: 0.35rem 0.5rem;
+	text-transform: uppercase;
+}
+
+.barIdentity {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+	min-width: 0;
+
+	> .identity {
+		min-width: 0;
+
+		> div > div:first-child {
+			height: 2.25rem;
+			max-width: 2.25rem !important;
+			min-width: 2.25rem !important;
+		}
+
+		> div > div:last-child > h4 {
+			font-size: 1rem;
+		}
+	}
+}

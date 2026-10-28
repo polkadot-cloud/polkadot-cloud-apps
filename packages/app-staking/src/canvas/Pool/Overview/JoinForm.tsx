@@ -3,7 +3,7 @@
 
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { unitToPlanck } from '@w3ux/utils'
+import { unitToPlanck } from '@polkadot-cloud/utils'
 import { getStakingChainData } from 'consts/util'
 import { defaultClaimPermission } from 'global-bus'
 import { useActiveProxy } from 'hooks/useActiveProxy'

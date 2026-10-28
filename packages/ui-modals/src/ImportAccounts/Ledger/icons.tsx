@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { LedgerDeviceModel } from '@polkadot-cloud/connect-ledger'
-import LedgerSquareSVG from '@w3ux/extension-assets/LedgerSquare.svg?react'
 import LedgerFlexWebP from 'assets/brands/ledgerFlex.webp'
 import LedgerNanoWebP from 'assets/brands/ledgerNano.webp'
 import LedgerStaxWebP from 'assets/brands/ledgerStax.webp'
+import LedgerSquareSVG from 'assets/extensions/LedgerSquare.svg?react'
 import type { ComponentType, FunctionComponent, ImgHTMLAttributes } from 'react'
 import { createElement } from 'react'
 

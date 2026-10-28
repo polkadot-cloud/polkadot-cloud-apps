@@ -45,6 +45,15 @@
 				"Para maximizar a variedade e uma mistura descentralizada de validadores, escolha validadores de uma variedade de entidades."
 			]
 		],
+		"managingValidator": [
+			"Gerir o seu validador",
+			"Faça a gestão dos fundos vinculados e do beneficiário do seu validador e consulte as recompensas.",
+			[
+				"Use o painel para gerir os {NETWORK_UNIT} vinculados ao seu validador: adicione fundos, inicie a desvinculação, volte a vincular fundos em processo de desbloqueio e retire-os quando estiverem desbloqueados.",
+				"Também pode alterar o destino das recompensas (beneficiário) do seu validador para escolher para onde serão enviadas as recompensas futuras.",
+				"Visite a página Recompensas para consultar o histórico de pagamentos do seu validador, rever recompensas resgatadas e não resgatadas e ver projeções que incluem recompensas de incentivo para validadores."
+			]
+		],
 		"module": {
 			"cancel": "Cancelar",
 			"close": "Fechar",

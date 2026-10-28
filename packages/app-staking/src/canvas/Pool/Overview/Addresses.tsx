@@ -1,9 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { CardWrapper } from 'library/Card/Wrappers'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Identity } from 'ui-core/base'
 import { Subheading } from 'ui-core/canvas'
 import { formatIdentityValue } from 'utils'

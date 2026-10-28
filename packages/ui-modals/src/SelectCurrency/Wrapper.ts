@@ -28,7 +28,7 @@ export const SearchInput = styled.div`
 
     &::placeholder {
       color: var(--text-tertiary);
-      opacity: 0.7;
+      opacity: 1;
     }
   }
 `

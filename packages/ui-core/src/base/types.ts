@@ -8,6 +8,10 @@ export type RowProps = ComponentBase & {
 	xMargin?: boolean
 }
 
+export type PageRowProps = ComponentBase & {
+	yMargin?: boolean | 'compact'
+}
+
 export type TooltipAreaProps = ComponentBase & {
 	text: string
 	pointer?: boolean
@@ -19,6 +23,6 @@ export type IdentityProps = ComponentBase & {
 	address: string
 	iconSize?: string | number
 	Action?: React.ReactNode
-	label: string
+	label: React.ReactNode
 	value: string
 }

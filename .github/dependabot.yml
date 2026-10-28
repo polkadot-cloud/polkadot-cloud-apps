@@ -51,7 +51,6 @@ updates:
           - '@dedot/*'
       ui:
         patterns:
-          - '@w3ux/*'
           - 'ui-*'
           - 'locales'
           - 'styles'

@@ -1,12 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import { useTranslation } from 'react-i18next'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
 import { Page } from 'ui-core/base'
 import { SendForm as SendFormUi } from 'ui-core/input'
+import classes from '../Send.module.scss'
 import { isSameAddress } from '../utils'
 import { AccountFields } from './AccountFields'
 import { FeePaymentFields } from './FeePaymentFields'
@@ -33,14 +34,17 @@ export const SendForm = ({
 
 	return (
 		<Page.Row>
-			<SendFormUi.Container>
+			<SendFormUi.Container className={classes.form}>
 				<SendFormUi.Header
 					title={t('sendAssets')}
 					subtitle={t('transferAssetsDescription')}
-					label="Beta"
 				/>
 				<SendFormUi.Card>
-					<SendFormUi.Segment title={t('chain')} layer="top">
+					<SendFormUi.Segment
+						title={t('chain')}
+						layer="top"
+						className={classes.firstSection}
+					>
 						<Dropdown
 							options={selection.chainOptions}
 							selected={selection.selectedChain}
@@ -76,7 +80,6 @@ export const SendForm = ({
 						feeAssetOptions={selection.availableFeeAssetOptions}
 						feeBalance={transaction.selectedFeeAssetBalance}
 						feeDisplay={transaction.feeDisplay}
-						feeSetupRequired={transaction.feeSetupRequired}
 						onSelect={selection.setSelectedFeeAsset}
 						selectedFeeAsset={selection.selectedFeeAsset}
 						submission={transaction.submission}

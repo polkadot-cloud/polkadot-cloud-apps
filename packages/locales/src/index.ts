@@ -29,7 +29,7 @@ export const createI18next = (profile: LocaleProfile) => {
 		resources,
 	})
 
-	if (dynamicLoad) {
+	if (lng !== DefaultLocale) {
 		void loadLanguage(lng, i18next, profile).catch(() => undefined)
 	}
 

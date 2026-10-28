@@ -8,10 +8,10 @@ import { useNetwork } from 'hooks/useNetwork'
 import { AnnouncementsList } from 'library/Announcements/AnnouncementsList'
 import type { AnnouncementItem } from 'library/Announcements/types'
 import { Balance } from 'library/Balance'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { NominatorList } from 'library/NominatorList'
 import type { NominatorListItemData } from 'library/NominatorList/types'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { CardHeader, Separator } from 'ui-core/base'
 
 interface IncomingPayoutsProps {

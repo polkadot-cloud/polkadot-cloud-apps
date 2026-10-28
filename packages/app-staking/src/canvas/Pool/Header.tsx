@@ -1,13 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Polkicon } from '@w3ux/react-polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { PerbillMultiplier } from 'consts'
 import { onTabVisitEvent } from 'event-tracking'
-import { PageTabs } from 'library/PageTabs'
 import { useTranslation } from 'react-i18next'
 import type { PoolState } from 'types'
+import { PageTabs } from 'ui-app/PageTabs'
 import { AccountTitle, HeadTags } from 'ui-core/canvas'
 import type { HeaderProps } from './types'
 export const Header = ({

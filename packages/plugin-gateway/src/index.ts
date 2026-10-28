@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export const GATEWAY_BASE_URL = 'https://gateway.polkadot.cloud'
+export const GATEWAY_BASE_URL = 'https://gate.polkadot.cloud'
 
 export interface AccountAddress {
 	address: string

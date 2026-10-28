@@ -9,12 +9,13 @@ export interface MenuPopoverFeatureFlags {
 	helpPrompts?: boolean
 	share?: boolean
 	plugins?: boolean
-	docs?: boolean
 	syncAccounts?: boolean
 	sendModal?: boolean
 }
 
 export interface HeadersProps {
+	showAccount?: boolean
+	openAccountsOnConnect?: boolean
 	NodesLeft?: Record<string, ComponentType>
 	NodesRight?: Record<string, ComponentType>
 	menuPopoverFeatures?: MenuPopoverFeatureFlags

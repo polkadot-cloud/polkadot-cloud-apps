@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { maxBigInt } from '@w3ux/utils'
+import { maxBigInt } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import type { SubmittableExtrinsic } from 'dedot'
 import { useAccountBalances } from 'hooks/useAccountBalances'

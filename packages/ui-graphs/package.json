@@ -14,7 +14,7 @@
 		"./util": "./src/util/index.ts"
 	},
 	"dependencies": {
-		"@w3ux/utils": "^3.1.1",
+		"@polkadot-cloud/utils": "^1.0.0",
 		"bignumber.js": "^11.1.5",
 		"chart.js": "^4.4.9",
 		"chartjs-plugin-annotation": "^3.1.0",
@@ -23,9 +23,9 @@
 		"date-fns": "^4.4.0",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
-		"react": "^19.2.8",
+		"react": "^19.3.1",
 		"react-chartjs-2": "^5.3.1",
-		"styled-components": "^6.5.1",
+		"styled-components": "^6.6.0",
 		"ui-core": "workspace:*",
 		"utils": "workspace:*"
 	},

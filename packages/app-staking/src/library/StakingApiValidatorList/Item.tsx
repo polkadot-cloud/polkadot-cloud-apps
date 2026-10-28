@@ -4,19 +4,20 @@
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import type { ListFormat } from 'contexts/List/types'
+import { getActivityTier } from 'contexts/Validators/Utils'
 import { useNetwork } from 'hooks/useNetwork'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useHardCapSelfStake } from 'hooks/useStakingMetrics'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { FavoriteValidator } from 'library/ListItem/Buttons/FavoriteValidator'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
+import {
+	RetainmentHistory,
+	useOpenRetainmentHistory,
+} from 'library/ListItem/Buttons/RetainmentHistory'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { RowActionsMenu } from 'library/ValidatorList/RowActionsMenu'
-import {
-	getRateAfterCommission,
-	isMaxSelfStake,
-} from 'library/ValidatorList/retainment'
-import { useRetainmentStatsData } from 'library/ValidatorList/useRetainmentStatsData'
 import { ValidatorBar } from 'library/ValidatorList/ValidatorBar'
 import { ValidatorCard } from 'library/ValidatorList/ValidatorCard'
 import { ValidatorSummary } from 'library/ValidatorList/ValidatorSummary'
@@ -27,7 +28,11 @@ import type {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
-import { planckToUnitBn } from 'utils'
+import {
+	useRetainmentStatsData,
+	useRetainmentWindow,
+} from 'ui-app/RetainmentStats'
+import { getRateAfterCommission, isMaxSelfStake, planckToUnitBn } from 'utils'
 
 interface ItemProps {
 	eraPoints: ValidatorEraPoints[]
@@ -35,6 +40,8 @@ interface ItemProps {
 	isEraPointsLoading: boolean
 	isRateLoading: boolean
 	rate?: number
+	showShareLink: boolean
+	toggleFavorites: boolean
 	totalActive: number
 	validator: ValidatorListItem
 }
@@ -52,22 +59,20 @@ const getIdentityDisplay = (validator: ValidatorListItem): ReactNode => {
 	) : null
 }
 
-const getRankSegment = (validator: ValidatorListItem, totalActive: number) =>
-	validator.activityRank && totalActive > 0
-		? Math.min(100, Math.ceil((validator.activityRank / totalActive) * 10) * 10)
-		: undefined
-
 export const Item = ({
 	eraPoints,
 	format,
 	isEraPointsLoading,
 	isRateLoading,
 	rate,
+	showShareLink,
+	toggleFavorites,
 	totalActive,
 	validator,
 }: ItemProps) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
+	const showRetainment = useRetainmentStatsEnabled()
 	const hardCapSelfStake = useHardCapSelfStake()
 	const { unit, units } = getStakingChainData(network)
 	const { address, prefs } = validator
@@ -79,8 +84,13 @@ export const Item = ({
 		: undefined
 	const selfStakeMax = isMaxSelfStake(selfStakePlanck, hardCapSelfStake)
 	const rateAfterCommission = getRateAfterCommission(rate, prefs.commission)
+	const {
+		period,
+		window: retainmentWindow,
+		setWindow: setRetainmentWindow,
+	} = useRetainmentWindow(validator.retainment)
 	const retainmentStats = useRetainmentStatsData({
-		period: validator.retainment ?? undefined,
+		period,
 		selfStakeMax,
 		unit,
 		units,
@@ -90,7 +100,10 @@ export const Item = ({
 	const totalStake = validator.totalStake
 		? planckToUnitBn(new BigNumber(validator.totalStake), units)
 		: undefined
-	const rankSegment = getRankSegment(validator, totalActive)
+	const activityTier =
+		validator.activityRank === null
+			? ('notRated' as const)
+			: (getActivityTier(validator.activityRank, totalActive) ?? null)
 	const validatorStatus = validator.active
 		? ('active' as const)
 		: ('waiting' as const)
@@ -99,18 +112,35 @@ export const Item = ({
 		prefs,
 		validatorStatus,
 	}
+	const retainmentHistoryDisabled =
+		validator.retainment.oneMonth === null &&
+		validator.retainment.threeMonths === null
+	const openRetainmentHistory = useOpenRetainmentHistory({
+		selfStakeMax,
+		unit,
+		units,
+		validator: address,
+		validatorDisplay,
+	})
 
 	if (format === 'row') {
 		return (
 			<ValidatorBar
+				showRetainment={showRetainment}
 				actions={
 					<RowActionsMenu
 						address={address}
 						display={validatorDisplay}
-						showFavorite
+						onRetainmentHistory={
+							showRetainment ? openRetainmentHistory : undefined
+						}
+						retainmentHistoryDisabled={retainmentHistoryDisabled}
+						showFavorite={toggleFavorites}
 						showMetrics
+						showShareLink={showShareLink}
 					/>
 				}
+				activityTier={activityTier}
 				displayFor="default"
 				eraPoints={eraPoints}
 				eraPointsSyncing={false}
@@ -118,9 +148,12 @@ export const Item = ({
 				isEraPointsPreloading={isEraPointsLoading}
 				isRatePreloading={isRateLoading}
 				isRetainmentPreloading={false}
+				onRetainmentHistory={showRetainment ? openRetainmentHistory : undefined}
 				rate={rateAfterCommission}
-				rankSegment={rankSegment}
+				retainmentHistoryDisabled={retainmentHistoryDisabled}
 				retainmentStats={retainmentStats}
+				retainmentWindow={retainmentWindow}
+				onRetainmentWindowChange={setRetainmentWindow}
 				selfStake={selfStake}
 				selfStakeMax={selfStakeMax}
 				statusActive={validator.active}
@@ -137,20 +170,33 @@ export const Item = ({
 			<ListItem.Action>
 				<CopyAddress address={address} />
 			</ListItem.Action>
-			<ListItem.Action>
-				<ShareLink paramKey="v" paramValue={address} />
-			</ListItem.Action>
-			<ListItem.Action>
-				<FavoriteValidator address={address} />
-			</ListItem.Action>
+			{showShareLink && (
+				<ListItem.Action>
+					<ShareLink paramKey="v" paramValue={address} />
+				</ListItem.Action>
+			)}
+			{toggleFavorites && (
+				<ListItem.Action>
+					<FavoriteValidator address={address} />
+				</ListItem.Action>
+			)}
 			<ListItem.Action wide>
 				<Metrics address={address} display={validatorDisplay} />
 			</ListItem.Action>
+			{showRetainment && (
+				<ListItem.Action wide>
+					<RetainmentHistory
+						disabled={retainmentHistoryDisabled}
+						onClick={openRetainmentHistory}
+					/>
+				</ListItem.Action>
+			)}
 		</ListItem.Actions>
 	)
 
 	return (
 		<ValidatorCard
+			showRetainment={showRetainment}
 			actions={actions}
 			address={address}
 			activitySyncing={false}
@@ -160,12 +206,14 @@ export const Item = ({
 			identity={identity}
 			isActivityPreloading={isEraPointsLoading}
 			retainmentStats={retainmentStats}
+			retainmentWindow={retainmentWindow}
+			onRetainmentWindowChange={setRetainmentWindow}
 			summary={
 				<ValidatorSummary
 					address={address}
+					activityTier={activityTier}
 					isRatePreloading={isRateLoading}
 					rate={rateAfterCommission}
-					rankSegment={rankSegment}
 					selfStake={selfStake}
 					selfStakeMax={selfStakeMax}
 					status={validatorStatus}

@@ -156,6 +156,7 @@ export const PayoutBar = ({
 					display: false,
 				},
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					font: {
 						size: 10,
 					},
@@ -165,6 +166,7 @@ export const PayoutBar = ({
 			y: {
 				stacked: true,
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					font: {
 						size: 10,
 					},

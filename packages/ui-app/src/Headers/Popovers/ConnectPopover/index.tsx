@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useExtensions } from '@polkadot-cloud/connect'
-import extensions from '@w3ux/extension-assets'
-import { useOutsideAlerter } from '@w3ux/hooks'
+import extensions, { DisabledExtensions } from 'consts/extensions'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,61 +11,42 @@ import { PopoverTab } from 'ui-buttons'
 import { ConnectItem } from 'ui-core/popover'
 import { Proxies } from './Proxies'
 import { ReadOnly } from './ReadOnly'
-import type { SetOpenProp } from './types'
-import { mobileCheck } from './Utils'
+import type { ConnectPopoverProps } from './types'
 import { Wallets } from './Wallets'
 
-export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
+export const ConnectPopover = ({
+	setOpen,
+	openAccountsOnConnect,
+}: ConnectPopoverProps) => {
 	const { t } = useTranslation()
 	const { extensionsStatus } = useExtensions()
 
 	// Store the active hardware wallet, if selected.
 	const [selectedSection, setSelectedConnectItem] = useState<string>('wallets')
 
+	// Reference to the popover container for detecting outside clicks.
 	const popoverRef = useRef<HTMLDivElement>(null)
 
-	// Whether the app is running on mobile
-	const isMobile = mobileCheck()
-
-	// Whether the app is running in Nova Wallet
-	const inNova = !!window?.walletExtension?.isNovaWallet || false
-
-	// Whether the app is running in a SubWallet Mobile
-	const inSubWallet = !!window.injectedWeb3?.['subwallet-js'] && isMobile
-
-	// NOTE: Deprecated support for these wallets/extensions
-	const deprecated = ['snap', 'polkagate', 'fearless']
-
-	// Format supported extensions as array
+	// Format supported extensions as array, excluding disabled extensions.
 	const extensionsAsArray = Object.entries(extensions)
-		.map(([key, value]) => ({
-			id: key,
+		.filter(([id]) => !DisabledExtensions.includes(id))
+		.map(([id, value]) => ({
+			id,
 			...value,
 		}))
-		.filter(({ id }) => !deprecated.some((d) => id.includes(d)))
 
-	// Determine which web extensions to display. Only display Subwallet Mobile or Nova if in one of
-	// those environments. In Nova Wallet's case, fetch `nova-wallet` metadata and overwrite
-	// `polkadot-js` with it. Otherwise, keep all `web-extension` category items
-	const web = inSubWallet
-		? extensionsAsArray.filter((a) => a.id === 'subwallet-js')
-		: inNova
-			? extensionsAsArray
-					.filter((a) => a.id === 'nova-wallet')
-					.map((a) => ({ ...a, id: 'polkadot-js' }))
-			: // Otherwise, keep all extensions except `polkadot-js`.
-				extensionsAsArray.filter((a) => a.category === 'web-extension')
+	// Determine which web extensions to display.
+	const web = extensionsAsArray.filter((a) => a.category === 'web-extension')
 
+	// Filter installed web extensions from the list of supported extensions.
 	const installed = web.filter((a) => a.id in extensionsStatus)
-	// NOTE: Moving `enkrypt` to last item
-	installed.sort((a, b) =>
-		a.id === 'enkrypt' ? 1 : b.id === 'enkrypt' ? -1 : 0,
-	)
 
 	const installedIds = new Set(installed.map((a) => a.id))
-	const other = web.filter((a) => !installedIds.has(a.id))
+	const other = web.filter(
+		(a) => a.id === 'cloud-signer' && !installedIds.has(a.id),
+	)
 
-	// Close the menu if clicked outside of its container
+	// Close the menu if clicked outside of its container.
 	useOutsideAlerter(popoverRef, () => {
 		setOpen(false)
 	}, ['header-connect'])
@@ -79,7 +60,7 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 		},
 	}
 
-	// Gets framer motion props for a management ui item
+	// Gets framer motion props for a management ui item.
 	const getManageProps = (item: string, initial: 'show' | 'hidden') => ({
 		initial,
 		variants,
@@ -116,6 +97,7 @@ export const ConnectPopover = ({ setOpen }: SetOpenProp) => {
 						other={other}
 						selectedSection={selectedSection}
 						setOpen={setOpen}
+						openAccountsOnConnect={openAccountsOnConnect}
 					/>
 				</ConnectItem.Container>
 			</motion.section>

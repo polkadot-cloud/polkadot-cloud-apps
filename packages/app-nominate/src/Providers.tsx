@@ -1,0 +1,46 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { ConnectProvider } from '@polkadot-cloud/connect'
+import { LedgerAdaptor } from '@polkadot-cloud/connect-ledger'
+import { createProxiesAdaptor } from '@polkadot-cloud/connect-proxies'
+import { NominateDappName } from 'consts'
+import { getStakingChainData } from 'consts/util'
+import { EraStakersProvider } from 'contexts/EraStakers'
+import { FiltersProvider } from 'contexts/Filters'
+import { ValidatorsProvider } from 'contexts/Validators/ValidatorEntries'
+import { DataGateProvider } from 'data-gate'
+import { NominationHealthProvider } from 'hooks/useNominationHealth'
+import { Tooltip } from 'radix-ui'
+import { withProviders } from 'ui-app/util'
+import { OverlayProvider } from 'ui-overlay'
+import { ThemedRouter } from './Themes'
+
+const network = 'polkadot'
+
+export const Providers = () => {
+	const { ss58 } = getStakingChainData(network)
+
+	return withProviders(
+		// Provider order matters: validator state consumes era-staker state.
+		[
+			OverlayProvider,
+			[
+				ConnectProvider,
+				{
+					network,
+					dappName: NominateDappName,
+					ss58,
+					adaptors: [LedgerAdaptor, createProxiesAdaptor(network)],
+				},
+			],
+			DataGateProvider,
+			EraStakersProvider,
+			ValidatorsProvider,
+			FiltersProvider,
+			NominationHealthProvider,
+			Tooltip.Provider,
+		],
+		ThemedRouter,
+	)
+}

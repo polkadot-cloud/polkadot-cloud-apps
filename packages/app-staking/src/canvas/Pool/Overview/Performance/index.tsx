@@ -1,11 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useSize } from '@w3ux/hooks'
 import { getStakingChainData } from 'consts/util'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
+import { useSize } from 'hooks/useSize'
 import { useUi } from 'hooks/useUi'
 import { StatusLabel } from 'library/StatusLabel'
 import { useRef } from 'react'

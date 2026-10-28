@@ -10,12 +10,16 @@ import { Settings } from './Settings'
 import { SideMenuToggle } from './SideMenuToggle'
 import type { HeadersProps } from './types'
 
+export { SettingsMenu } from './Settings'
 export type { HeadersProps, MenuPopoverFeatureFlags } from './types'
+export { Account, Settings, SideMenuToggle }
 
 export const Headers = ({
 	NodesLeft,
 	NodesRight,
 	menuPopoverFeatures,
+	showAccount = true,
+	openAccountsOnConnect,
 }: HeadersProps) => {
 	const { sideMenuMinimised } = useUi()
 
@@ -31,11 +35,13 @@ export const Headers = ({
 				{Object.entries(NodesLeft || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
-				<Account
-					openConnect={openConnect}
-					setOpenConnect={setOpenConnect}
-					sendModal={menuPopoverFeatures?.sendModal}
-				/>
+				{showAccount && (
+					<Account
+						openConnect={openConnect}
+						setOpenConnect={setOpenConnect}
+						sendModal={menuPopoverFeatures?.sendModal}
+					/>
+				)}
 				{Object.entries(NodesRight || {}).map(([key, Component]) => (
 					<Component key={key} />
 				))}
@@ -43,6 +49,7 @@ export const Headers = ({
 				<Settings
 					openConnect={openConnect}
 					setOpenConnect={setOpenConnect}
+					openAccountsOnConnect={openAccountsOnConnect}
 					menuPopoverFeatures={menuPopoverFeatures}
 				/>
 			</section>

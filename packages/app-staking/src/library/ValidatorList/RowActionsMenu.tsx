@@ -5,6 +5,7 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'
 import {
 	faChartLine,
 	faChevronDown,
+	faClockRotateLeft,
 	faCopy,
 	faHeart,
 	faLink,
@@ -27,16 +28,22 @@ interface RowActionsMenuProps {
 	address: string
 	display: ReactNode | null
 	onRemove?: () => void
+	onRetainmentHistory?: () => void
+	retainmentHistoryDisabled?: boolean
 	showFavorite: boolean
 	showMetrics: boolean
+	showShareLink?: boolean
 }
 
 export const RowActionsMenu = ({
 	address,
 	display,
 	onRemove,
+	onRetainmentHistory,
+	retainmentHistoryDisabled = false,
 	showFavorite,
 	showMetrics,
+	showShareLink = true,
 }: RowActionsMenuProps) => {
 	const { t } = useTranslation('app')
 	const { open, openMenu } = useMenu()
@@ -62,12 +69,15 @@ export const RowActionsMenu = ({
 			title: t('copyAddress'),
 			cb: () => void copyToClipboard(address, t('copied')),
 		},
-		{
+	]
+
+	if (showShareLink) {
+		menuItems.push({
 			icon: <FontAwesomeIcon icon={faLink} transform="shrink-3" />,
 			title: t('copyShareLink'),
 			cb: () => void copyToClipboard(shareUrl, t('linkCopied')),
-		},
-	]
+		})
+	}
 
 	if (showFavorite) {
 		menuItems.push({
@@ -116,8 +126,19 @@ export const RowActionsMenu = ({
 		})
 	}
 
+	const detailItems: MenuItem[] = []
+
+	if (onRetainmentHistory) {
+		detailItems.push({
+			disabled: retainmentHistoryDisabled,
+			icon: <FontAwesomeIcon icon={faClockRotateLeft} transform="shrink-3" />,
+			title: t('retainmentHistory'),
+			cb: onRetainmentHistory,
+		})
+	}
+
 	if (showMetrics) {
-		menuItems.push({
+		detailItems.push({
 			icon: <FontAwesomeIcon icon={faChartLine} transform="shrink-3" />,
 			title: t('metrics'),
 			cb: () =>
@@ -131,6 +152,13 @@ export const RowActionsMenu = ({
 				}),
 		})
 	}
+
+	menuItems.push(
+		...detailItems.map((item, index) => ({
+			...item,
+			separatorBefore: index === 0,
+		})),
+	)
 
 	const toggleMenu = (event: ReactMouseEvent<HTMLButtonElement>) => {
 		if (!open) {

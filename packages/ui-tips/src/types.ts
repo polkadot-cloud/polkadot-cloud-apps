@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import type { MaybeString } from '@w3ux/types'
 import type { NetworkId } from 'types'
 
 export interface TipsProps {
@@ -10,7 +9,7 @@ export interface TipsProps {
 	items: TipDisplay[]
 	onPageReset: {
 		network: NetworkId
-		activeAddress: MaybeString
+		activeAddress: string | null
 	}
 	onUpdate?: (currentItem: TipDisplay | undefined) => void
 }

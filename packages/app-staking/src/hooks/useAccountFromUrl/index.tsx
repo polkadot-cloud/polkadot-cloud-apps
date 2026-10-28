@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { extractUrlValue } from '@w3ux/utils'
+import { extractUrlValue } from '@polkadot-cloud/utils'
 import { emitNotification } from 'global-bus'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'

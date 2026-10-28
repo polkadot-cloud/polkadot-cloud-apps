@@ -3,16 +3,18 @@
 
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { Nominations } from 'library/Nominations'
 import { Empty } from 'library/Nominations/Empty'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const ManagePool = () => {
-	const { formatWithPrefs } = useValidators()
 	const { isOwner, isNominator, activePoolNominations, activePool } =
 		useActivePool()
 
+	const { formatWithPrefs } = useValidators(
+		activePoolNominations?.targets ?? [],
+	)
 	const poolNominated = activePoolNominations
 		? formatWithPrefs(activePoolNominations.targets)
 		: []

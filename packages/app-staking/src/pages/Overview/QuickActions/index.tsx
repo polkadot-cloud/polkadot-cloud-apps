@@ -7,9 +7,10 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useActivePool } from 'hooks/useActivePool'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { CardWrapper } from 'library/Card/Wrappers'
+import { useValidators } from 'hooks/useValidators'
 import { Preloader } from 'library/StatusPreloader/Preloader'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { QuickAction } from 'ui-buttons'
 import { CardHeader } from 'ui-core/base'
 import { useOverlay } from 'ui-overlay'
@@ -17,16 +18,22 @@ import { Disconnected } from './Disconnected'
 import { NotStaking } from './NotStaking'
 import { Staking } from './Staking'
 
-export const QuickActions = ({ height }: { height: number }) => {
+interface QuickActionsProps {
+	height: number
+}
+
+export const QuickActions = ({ height }: QuickActionsProps) => {
 	const { t } = useTranslation()
 	const { inPool } = useActivePool()
 	const { isBonding } = useStaking()
 	const { accountSynced } = useSyncing()
 	const { openModal } = useOverlay().modal
 	const { activeAddress } = useActiveAccount()
+	const { isValidator, isLoading } = useValidators()
 
-	const isStaking = inPool || isBonding
-	const syncing = !accountSynced(activeAddress)
+	const accountIsValidator = isValidator(activeAddress)
+	const isStaking = inPool || isBonding || accountIsValidator
+	const syncing = !accountSynced(activeAddress) || isLoading(activeAddress)
 
 	let actionGroup: 'disconnected' | 'notStaking' | 'staking' = 'staking'
 	if (!activeAddress) {
@@ -52,6 +59,7 @@ export const QuickActions = ({ height }: { height: number }) => {
 					{actionGroup === 'notStaking' && <NotStaking />}
 					{actionGroup === 'staking' && (
 						<Staking
+							isValidator={accountIsValidator}
 							bondFor={[
 								...(inPool ? (['pool'] as const) : []),
 								...(isBonding ? (['nominator'] as const) : []),

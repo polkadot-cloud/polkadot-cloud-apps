@@ -9,29 +9,33 @@ import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { Metrics } from 'library/ListItem/Buttons/Metrics'
 import { Remove } from 'library/ListItem/Buttons/Remove'
 import { ShareLink } from 'library/ListItem/Buttons/ShareLink'
+import { ActivityTier } from 'library/ListItem/Labels/ActivityTier'
 import { APY } from 'library/ListItem/Labels/APY'
-import { Quartile } from 'library/ListItem/Labels/Quartile'
 import type { Validator } from 'types'
 import { BasicItem } from 'ui-app/ListItem'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
+import { getRateAfterCommission } from 'utils'
 import { FavoriteValidator } from '../ListItem/Buttons/FavoriteValidator'
 import { Select } from '../ListItem/Buttons/Select'
 import { Blocked } from '../ListItem/Labels/Blocked'
 import { EraStatus } from '../ListItem/Labels/EraStatus'
 import { Identity } from '../ListItem/Labels/Identity'
-import { getRateAfterCommission } from './retainment'
 import type { ItemProps } from './types'
 
 const Basic = ({
 	validator,
+	showShareLink = true,
 	toggleFavorites,
 	displayFor,
 	onRemove,
 	rate,
 }: ItemProps) => {
 	const { selectable, selected } = useList()
-	const { validatorIdentities, validatorSupers } = useValidators()
-	const { address, prefs, validatorStatus } = validator
+	const { validatorIdentities, validatorSupers, getValidatorPrefs } =
+		useValidators([validator.address])
+	const { address, validatorStatus, overview } = validator
+	const resolvedPrefs = getValidatorPrefs(address)
+	const prefs = resolvedPrefs === undefined ? validator.prefs : resolvedPrefs
 
 	const isSelected = !!selected.filter(
 		(item) => (item as Validator).address === validator.address,
@@ -47,7 +51,7 @@ const Basic = ({
 				<div>
 					<HeaderButtonRow>
 						<CopyAddress address={address} />
-						<ShareLink paramKey="v" paramValue={address} />
+						{showShareLink && <ShareLink paramKey="v" paramValue={address} />}
 						{toggleFavorites && <FavoriteValidator address={address} />}
 						{displayFor === 'default' && (
 							<Metrics
@@ -78,10 +82,15 @@ const Basic = ({
 				<div>
 					<LabelRow inline>
 						<APY rate={rateAfterCommission} />
-						<Quartile address={address} />
+						<ActivityTier address={address} />
 						<Blocked prefs={prefs} />
 					</LabelRow>
-					<EraStatus address={address} status={validatorStatus} noMargin />
+					<EraStatus
+						unavailable={validator.overviewUnavailable}
+						overview={overview}
+						status={validatorStatus}
+						noMargin
+					/>
 				</div>
 			</BasicItem.Row>
 		</BasicItem.Root>

@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import {
 	defaultStablecoinBalances,
@@ -24,13 +24,16 @@ const stablecoinBalancesStore = createObservableStore<StablecoinBalancesState>(
 	getStablecoinBalancesState,
 )
 
-export const useStablecoinBalances = (address?: string | null) => {
-	const { serviceApi } = useApi()
-	const balanceState = useSyncExternalStore(
+export const useStablecoinBalancesState = () =>
+	useSyncExternalStore(
 		stablecoinBalancesStore.subscribe,
 		stablecoinBalancesStore.getSnapshot,
 		stablecoinBalancesStore.getSnapshot,
 	)
+
+export const useStablecoinBalances = (address?: string | null) => {
+	const { serviceApi } = useApi()
+	const balanceState = useStablecoinBalancesState()
 	const { balances, status } = address
 		? balanceState[address] || defaultStablecoinBalances
 		: defaultStablecoinBalances

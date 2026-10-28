@@ -50,13 +50,6 @@
 					"Bonding funds is the process of 'locking' (or staking) {NETWORK_UNIT}. Bonded {NETWORK_UNIT} will then be automatically allocated to one or more of your nominated validators."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Decentralization Analytics Period",
-				[
-					"The decentralization of your nomination is calculated by analysing the rewards paid out in the last 30 days. Depending on the network, this will translate into a number of Eras.",
-					"30 days provides enough information for the aggregation to be meaningful, and is also short enough for changes in nominations to start impacting this analysis after a few days."
-				]
-			],
 			"epoch": [
 				"Epoch",
 				[
@@ -75,15 +68,6 @@
 				"Era Points",
 				[
 					"Era Points are a measure of how well a validator has performed in the current era. The more Era Points a validator has, the more rewards they will receive at the end of the era."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Geolocation of Each Nomination",
-				[
-					"Each nominated validator runs at a given data center that can be geolocated by its IP address.",
-					"The table displays the last region, country and network where each nominated validator was geolocated.",
-					"When the validator has been located at more than one location during the analytic period a ++ sign will be displayed.",
-					"The percentage shown is the proportion of rewards paid out to you by this validator in the analytic period."
 				]
 			],
 			"halving": [
@@ -162,13 +146,6 @@
 				[
 					"Nominating is the process of selecting validators you wish to stake your {NETWORK_UNIT} to. You can choose to nominate up to 16 validators for each of your accounts.",
 					"Once you have nominated your selected validators, they become your nominations."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Nomination Payout Distribution",
-				[
-					"The decentralization of your nomination.",
-					"The following charts display the distribution of rewards aggregated by the region, country and IP network of the validator that paid out the reward."
 				]
 			],
 			"nominationPools": [
@@ -286,13 +263,6 @@
 					"If your account already has locked balance that covers your account's existential deposit, such as balance locked for nominating, then staking dashboard will not lock any additional free balance."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Rewards By Country And Network",
-				[
-					"Shows the estimated percentage of rewards that are generated from different countries and IP networks.",
-					"Polkawatch decentralization analytics are computed by aggregating rewards by the IP Geolocation of the Validator. The sample period is the last 60 days."
-				]
-			],
 			"selfStake": [
 				"Self Stake",
 				[
@@ -310,13 +280,6 @@
 				"Total Nominators",
 				[
 					"Accounts who are staking in the network, regardless of whether they are active or inactive in the current session."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Total Payouts Analysed",
-				[
-					"The aggregated {NETWORK_UNIT} rewards paid out by nominated validators in the last 30 days.",
-					"These payouts were used to calculate the decentralization of your nomination."
 				]
 			],
 			"validator": [

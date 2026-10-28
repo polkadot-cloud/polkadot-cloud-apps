@@ -1,12 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { varToUrlHash } from '@w3ux/utils'
+import { varToUrlHash } from '@polkadot-cloud/utils'
 import { isNetworkEnabled } from 'consts/util'
 import {
 	getAutoRpc,
 	getNetwork,
 	getProviderType,
+	isNetworkAllowed,
 	networkConfig$,
 	setNetworkConfig,
 } from 'global-bus'
@@ -29,16 +30,18 @@ export const useNetwork = (): NetworkHookInterface => {
 	)
 
 	const switchNetwork = useCallback(async (name: NetworkId): Promise<void> => {
-		if (!isNetworkEnabled(name)) {
+		if (!isNetworkEnabled(name) || !isNetworkAllowed(name)) {
 			return
 		}
-		setNetworkConfig(
+		const updated = setNetworkConfig(
 			name,
 			await getInitialRpcEndpoints(name),
 			getProviderType(),
 			getAutoRpc(),
 		)
-		varToUrlHash('n', name, false)
+		if (updated) {
+			varToUrlHash('n', name, false)
+		}
 	}, [])
 
 	return {

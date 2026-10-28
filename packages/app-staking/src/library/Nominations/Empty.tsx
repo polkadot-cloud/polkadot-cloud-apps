@@ -43,6 +43,7 @@ export const Empty = ({
 							openCanvas({
 								key: 'ManageNominations',
 								scroll: false,
+								variant: 'card',
 								options: {
 									bondFor,
 									nominator,

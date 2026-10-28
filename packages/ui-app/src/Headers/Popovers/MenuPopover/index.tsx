@@ -1,9 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
-	faBookOpen,
 	faCloud,
 	faCog,
 	faDollarSign,
@@ -20,25 +18,25 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useOutsideAlerter } from '@w3ux/hooks'
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import DiscordSVG from 'assets/brands/discord.svg?react'
 import EnvelopeSVG from 'assets/icons/envelope.svg?react'
-import {
-	PlatformDocsURL,
-	PlatformGitHubURL,
-	PlatformName,
-	PlatformURL,
-} from 'consts'
+import { PlatformName, PlatformURL } from 'consts'
 import { getRelayChainData } from 'consts/util/chains'
 import { useBalances } from 'hooks/useBalances'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
+import { useOutsideAlerter } from 'hooks/useOutsideAlerter'
 import { useShowHelp } from 'hooks/useShowHelp'
 import { useStaking } from 'hooks/useStaking'
 import { useTheme } from 'hooks/useTheme'
 import { useUi } from 'hooks/useUi'
-import { type Dispatch, type SetStateAction, useRef } from 'react'
+import {
+	type Dispatch,
+	type ReactNode,
+	type SetStateAction,
+	useRef,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { MenuItem, MenuItemButton } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
@@ -47,17 +45,18 @@ import { DefaultButton } from './DefaultButton'
 
 export const MenuPopover = ({
 	setOpen,
+	children,
 	features: {
 		network: showNetwork = true,
 		advancedMode: showAdvancedMode = true,
 		helpPrompts: showHelpPrompts = true,
 		share: showShare = true,
 		plugins: showPlugins = true,
-		docs: showDocs = true,
 		syncAccounts: showSyncAccounts = true,
 	} = {},
 }: {
 	setOpen: Dispatch<SetStateAction<boolean>>
+	children?: ReactNode
 	features?: MenuPopoverFeatureFlags
 }) => {
 	const { network } = useNetwork()
@@ -193,6 +192,7 @@ export const MenuPopover = ({
 					</div>
 				</div>
 			</MenuItemButton>
+			{children}
 			{showHelpPrompts && (
 				<MenuItemButton onClick={() => setShowHelp(!showHelp)}>
 					<div>
@@ -264,26 +264,6 @@ export const MenuPopover = ({
 					</div>
 				</button>
 			</MenuItem>
-			{showDocs && (
-				<DefaultButton
-					text={t('docs', { ns: 'app' })}
-					iconLeft={faBookOpen}
-					iconRight={faExternalLinkAlt}
-					onClick={() => {
-						setOpen(false)
-						window.open(`${PlatformDocsURL}/${i18n.language}`, '_blank')
-					}}
-				/>
-			)}
-			<DefaultButton
-				text="GitHub"
-				iconLeft={faGithub}
-				iconRight={faExternalLinkAlt}
-				onClick={() => {
-					setOpen(false)
-					window.open(PlatformGitHubURL, '_blank')
-				}}
-			/>
 			<DefaultButton
 				text={PlatformName}
 				iconLeft={faCloud}

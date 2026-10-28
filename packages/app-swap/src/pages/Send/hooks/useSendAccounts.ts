@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import { isValidAddress } from '@w3ux/util-dedot'
+import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { useEffect, useMemo, useState } from 'react'
 import type { ImportedAccount } from 'types'
 import { isSameImportedAccount } from '../utils'

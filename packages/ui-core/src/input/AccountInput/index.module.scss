@@ -4,7 +4,7 @@
 $container-border-radius: 1.25rem;
 
 .container {
-	background: var(--gray-300);
+	background: var(--account-input-bg, var(--gray-300));
 	border: 1px solid var(--gray-500);
 	position: relative;
 	padding: 0 0.95rem;
@@ -15,6 +15,7 @@ $container-border-radius: 1.25rem;
 	align-items: center;
 	justify-content: space-between;
 	transition: border 0.15s;
+	box-shadow: var(--account-input-shadow, none);
 	gap: 0.75rem;
 	width: 100%;
 
@@ -24,7 +25,11 @@ $container-border-radius: 1.25rem;
 	}
 
 	&:hover {
-		border-color: var(--gray-700);
+		border-color: var(--account-input-active-border, var(--gray-700));
+	}
+
+	&:focus-within:not(:hover) {
+		border-color: var(--account-input-focus-border, var(--gray-500));
 	}
 
 	&.disabled {
@@ -52,19 +57,20 @@ $container-border-radius: 1.25rem;
 		min-height: none;
 		max-height: none;
 	}
-
-	&::placeholder {
-		opacity: 0.65;
-	}
 }
 
 .address {
+	max-width: 100%;
+	overflow: hidden;
 	color: var(--text-tertiary);
 	margin-top: 0.5rem;
 	font-size: 1rem;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .sourceIcon {
+	color: var(--gray-900);
 	margin-top: 0.25rem;
 	margin-right: 0.5rem;
 
@@ -79,6 +85,7 @@ $container-border-radius: 1.25rem;
 	flex-direction: column;
 	align-items: flex-start;
 	flex: 1;
+	min-width: 0;
 }
 
 .innerRight {
@@ -130,14 +137,18 @@ $container-border-radius: 1.25rem;
 }
 
 .listName {
+	max-width: 100%;
+	overflow: hidden;
 	color: var(--gray-1000);
 	font-family: var(--font-family-semibold);
 	font-size: 1.1rem;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .chevron {
+	color: var(--text-tertiary);
 	margin-left: auto;
-	opacity: 0.5;
 	font-size: 1rem;
 }
 

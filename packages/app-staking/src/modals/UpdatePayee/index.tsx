@@ -3,7 +3,7 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { isValidAddress } from '@w3ux/util-dedot'
+import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import type { PayeeConfig, PayeeOption } from 'contexts/NominatorSetups/types'
 import { AccountId32 } from 'dedot/codecs'
 import { useActiveProxy } from 'hooks/useActiveProxy'

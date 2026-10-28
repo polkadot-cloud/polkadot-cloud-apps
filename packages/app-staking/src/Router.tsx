@@ -4,8 +4,8 @@
 import { Overlays } from 'Overlays'
 import { StakingApi } from 'StakingApi'
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
-import { extractUrlValue } from '@w3ux/utils'
+import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
+import { extractUrlValue } from '@polkadot-cloud/utils'
 import { PagesConfig } from 'config'
 import { getUnixTime } from 'date-fns'
 import {
@@ -129,7 +129,7 @@ const RouterInner = () => {
 					<SideMenu enableAdvancedMenu={true} />
 					<Page.Main ref={mainInterfaceRef}>
 						<HelmetProvider>
-							<Headers NodesLeft={{ sync: Sync }} />
+							<Headers openAccountsOnConnect NodesLeft={{ sync: Sync }} />
 							<ErrorBoundary FallbackComponent={ErrorFallbackRoutes}>
 								<Routes>
 									{getPagesConfig(PagesConfig, network, null, advancedMode, {

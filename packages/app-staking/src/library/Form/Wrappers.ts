@@ -66,10 +66,9 @@ export const InputWrapper = styled.div`
           }
 
           &:last-child {
-            color: var(--gray-900);
+            color: var(--text-tertiary);
             padding-left: 0.5rem;
             justify-content: flex-end;
-            opacity: 0.5;
             position: relative;
             max-width: 50%;
 
@@ -108,8 +107,7 @@ export const InputWrapper = styled.div`
     @media (min-width: ${SmallFontSizeMaxWidth + 1}px) {
       display: none;
     }
-    color: var(--gray-900);
-    opacity: 0.5;
+    color: var(--text-tertiary);
     padding: 0 0.5rem;
     margin-top: 0;
   }

@@ -1,89 +1,46 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useCallback } from 'react'
-import { useApi } from '../useApi'
-import { createSingletonStore, useSingletonStore } from '../util'
-import { defaultPoolMemberData } from './defaults'
-import type {
-	FetchedPoolMembers,
-	PoolMembersHookInterface,
-	PoolMembersSync,
-} from './types'
+import { useQuery } from '@tanstack/react-query'
+import { fetchPoolMembers } from 'plugin-staking-api'
+import type { PoolMembers } from 'plugin-staking-api/types'
+import { useNetwork } from '../useNetwork'
+import type { FetchedPoolMembers } from './types'
 
-export { defaultPoolMemberData } from './defaults'
-export type {
-	FetchedPoolMember,
-	FetchedPoolMembers,
-	PoolMembersHookInterface,
-	PoolMembersSync,
-} from './types'
+export type { FetchedPoolMember, FetchedPoolMembers } from './types'
 
-type PoolMembersState = {
-	meta: FetchedPoolMembers
-	fetchedPoolMembersApi: PoolMembersSync
-}
+const normalizeMembers = (data: PoolMembers): FetchedPoolMembers => ({
+	...data,
+	members: data.members.map(({ points, unbondingEras, ...member }) => ({
+		...member,
+		points: BigInt(points),
+		unbondingEras: unbondingEras.map(({ era, amount }) => [
+			era,
+			BigInt(amount),
+		]),
+	})),
+})
 
-const defaultPoolMembersState: PoolMembersState = {
-	meta: defaultPoolMemberData,
-	fetchedPoolMembersApi: 'unsynced',
-}
-
-const poolMembersStore = createSingletonStore<PoolMembersState>(
-	defaultPoolMembersState,
-)
-
-const setFetchedPoolMembersApi = (status: PoolMembersSync) => {
-	poolMembersStore.patchSnapshot({ fetchedPoolMembersApi: status })
-}
-
-const resetPoolMemberData = () => {
-	poolMembersStore.resetSnapshot()
-}
-
-export const usePoolMembers = (): PoolMembersHookInterface => {
-	const { isReady, serviceApi } = useApi()
-	const { meta, fetchedPoolMembersApi } = useSingletonStore(poolMembersStore)
-
-	const fetchPoolMemberData = useCallback(
-		async (addresses: string[]) => {
-			if (!isReady) {
-				return
-			}
-			poolMembersStore.patchSnapshot({ meta: defaultPoolMemberData })
-
-			if (!addresses.length) {
-				return
-			}
-			const [poolMembers, claimPermissions] = await Promise.all([
-				serviceApi.query.poolMembersMulti(addresses),
-				serviceApi.query.claimPermissionsMulti(addresses),
-			])
-
-			poolMembersStore.patchSnapshot({
-				meta: {
-					addresses,
-					poolMembers: poolMembers.map((member, i) => {
-						if (!member) {
-							return undefined
-						}
-						return {
-							...member,
-							address: addresses[i],
-						}
-					}),
-					claimPermissions,
-				},
-			})
+export const usePoolMembers = (
+	poolId: number,
+	page: number,
+	itemsPerPage: number,
+) => {
+	const { network } = useNetwork()
+	return useQuery({
+		queryKey: ['pool-members', network, poolId, page, itemsPerPage],
+		queryFn: async ({ signal }) => {
+			const { poolMembers } = await fetchPoolMembers(
+				network,
+				poolId,
+				itemsPerPage,
+				(page - 1) * itemsPerPage,
+				signal,
+			)
+			return poolMembers
 		},
-		[isReady, serviceApi],
-	)
-
-	return {
-		fetchPoolMemberData,
-		fetchedPoolMembersApi,
-		meta,
-		resetPoolMemberData,
-		setFetchedPoolMembersApi,
-	}
+		select: normalizeMembers,
+		enabled: poolId > 0,
+		retry: false,
+	})
 }

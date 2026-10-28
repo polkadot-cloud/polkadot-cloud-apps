@@ -6,12 +6,7 @@ import { HeaderButton } from 'ui-core/list'
 import { useOverlay } from 'ui-overlay'
 import type { MoreProps } from '../types'
 
-export const PoolMetrics = ({
-	pool,
-	setActiveTab,
-	disabled,
-	outline,
-}: MoreProps) => {
+export const PoolMetrics = ({ pool, disabled, outline }: MoreProps) => {
 	const { t } = useTranslation('tips')
 	const { openCanvas } = useOverlay().canvas
 	const { id } = pool
@@ -26,7 +21,6 @@ export const PoolMetrics = ({
 							providedPool: {
 								id,
 							},
-							onJoinCallback: () => setActiveTab(0),
 						},
 						size: 'xl',
 					})

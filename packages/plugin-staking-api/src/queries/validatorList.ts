@@ -7,14 +7,18 @@ import type {
 	ValidatorListData,
 	ValidatorListVariables,
 } from '../types'
+import { VALIDATOR_RETAINMENT_FIELDS } from './fragments/retainment'
 import { useApiQuery } from './generic'
 
 const QUERY = gql`
+  ${VALIDATOR_RETAINMENT_FIELDS}
   query ValidatorList(
     $network: String!
     $page: Int
     $pageSize: Int
     $order: ValidatorListOrder
+    $orderWindow: RetainmentRankWindow
+    $retainmentWindows: [RetainmentRankWindow!]
     $filters: ValidatorListFilters
   ) {
     validatorList(
@@ -22,6 +26,8 @@ const QUERY = gql`
       page: $page
       pageSize: $pageSize
       order: $order
+      orderWindow: $orderWindow
+      retainmentWindows: $retainmentWindows
       filters: $filters
     ) {
       validators {
@@ -39,13 +45,7 @@ const QUERY = gql`
         selfStake
         totalStake
         activityRank
-        retainment {
-          fromTimestamp
-          netInflow
-          retainmentRate
-          selfStakeChange
-          compoundRate
-        }
+        retainment { ...ValidatorRetainmentFields }
       }
       page
       pageSize

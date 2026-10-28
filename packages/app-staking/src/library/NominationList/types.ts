@@ -4,16 +4,12 @@
 import type { ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
 import type {
+	NomineeStatusEntry,
 	ValidatorEraPoints,
 	ValidatorRetainmentResult,
+	ValidatorWarningType,
 } from 'plugin-staking-api/types'
-import type {
-	BondFor,
-	DisplayFor,
-	MaybeAddress,
-	NominationStatus,
-	Validator,
-} from 'types'
+import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
 export interface NominationListProps {
 	validators: Validator[]
@@ -33,9 +29,12 @@ export interface ItemProps {
 	displayFor: DisplayFor
 	format: ListFormat
 	toggleFavorites?: boolean
-	nominationStatus?: NominationStatus
+	nominee?: NomineeStatusEntry
+	nominationError?: boolean
+	isNominationPreloading?: boolean
 	eraPoints: ValidatorEraPoints[]
 	isPreloading?: boolean
 	rate?: number
 	retainment?: ValidatorRetainmentResult | null
+	warnings?: ValidatorWarningType[]
 }
