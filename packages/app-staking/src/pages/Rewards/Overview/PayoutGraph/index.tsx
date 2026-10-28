@@ -1,10 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useSize } from '@w3ux/hooks'
 import { useActivePool } from 'hooks/useActivePool'
 import { useDateFormat } from 'hooks/useDateFormat'
 import { usePlugins } from 'hooks/usePlugins'
+import { useSize } from 'hooks/useSize'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { useUi } from 'hooks/useUi'

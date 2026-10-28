@@ -5,9 +5,9 @@ import BigNumber from 'bignumber.js'
 import { MaximumPayoutDays } from 'consts'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import type {
-	NominatorReward,
 	PoolReward,
 	RewardResults,
+	StakingReward,
 } from 'plugin-staking-api/types'
 import { daysPassed, planckToUnitBn, startOfUTCDay, subUTCDays } from 'utils'
 import type {
@@ -317,7 +317,7 @@ export const combineRewards = (
  * Get the most recent reward from pool claims and nominator payouts
  */
 export const getLatestReward = (
-	payouts: NominatorReward[],
+	payouts: StakingReward[],
 	poolClaims: PoolReward[],
 ) => {
 	// Get most recent payout

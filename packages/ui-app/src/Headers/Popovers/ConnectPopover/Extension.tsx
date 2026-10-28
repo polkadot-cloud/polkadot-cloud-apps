@@ -1,106 +1,135 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import {
 	faPlugCircleExclamation,
 	faPlugCircleXmark,
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useExtensionAccounts, useExtensions } from '@polkadot-cloud/connect'
-import { ExtensionIcons } from '@w3ux/extension-assets/util'
-import { localStorageOrDefault } from '@w3ux/utils'
+import { getStatus } from '@polkadot-cloud/connect-core'
+import {
+	disconnectExtension,
+	getExtensionConnectionError,
+} from '@polkadot-cloud/connect-core/extensions'
+import { getExtensionIcon } from 'assets'
 import { onExtensionConnectedEvent } from 'event-tracking'
 import { useNetwork } from 'hooks/useNetwork'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonMonoInvert } from 'ui-buttons'
 import { ConnectItem } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import type { ExtensionProps } from './types'
 
-export const Extension = ({ extension, last, setOpen }: ExtensionProps) => {
+export const Extension = ({
+	extension,
+	last,
+	setOpen,
+	openAccountsOnConnect = false,
+}: ExtensionProps) => {
 	const { t } = useTranslation('modals')
 	const { network } = useNetwork()
 	const { openModal } = useOverlay().modal
 	const { connectExtension } = useExtensionAccounts()
-	const { extensionsStatus, extensionCanConnect, extensionInstalled } =
-		useExtensions()
+	const { extensionsStatus } = useExtensions()
 
 	const { id, title, website } = extension
+	const [connecting, setConnecting] = useState(false)
+	const connectingRef = useRef(false)
+	const requestVersion = useRef(0)
 
-	const isInstalled = extensionInstalled(id)
-	const canConnect = extensionCanConnect(id)
-	const connected = extensionsStatus[id] === 'connected'
+	useEffect(() => {
+		connectingRef.current = false
+		setConnecting(false)
+		return () => {
+			requestVersion.current++
+		}
+	}, [id, network])
 
-	// Get the correct icon id for the extension.
-	const iconId =
-		window?.walletExtension?.isNovaWallet && id === 'polkadot-js'
-			? 'nova-wallet'
-			: id
-	const Icon = ExtensionIcons[iconId]
-	const disabled = !isInstalled
+	const status = extensionsStatus[id]
+	const isInstalled = status !== undefined
+	const connected = status === 'connected'
+
+	const Icon = getExtensionIcon(id)
+	const faIcon =
+		status === 'not_authenticated' ? faPlugCircleExclamation : faPlus
 
 	// Handle connect and disconnect from extension.
 	const handleClick = async () => {
-		if (!connected) {
-			if (canConnect) {
-				await connectExtension(id)
-				onExtensionConnectedEvent(network, id)
-				setOpen(false)
-				openModal({ key: 'Accounts' })
-			} else {
-				alert('Unable to connect to the extension.')
-			}
-		} else {
+		if (connectingRef.current || !isInstalled) {
+			return
+		}
+		if (connected) {
 			if (confirm(t('disconnectFromExtension'))) {
-				const updatedAtiveExtensions = (
-					localStorageOrDefault('active_extensions', [], true) as string[]
-				).filter((ext: string) => ext !== id)
-
-				localStorage.setItem(
-					'active_extensions',
-					JSON.stringify(updatedAtiveExtensions),
-				)
+				disconnectExtension(id)
 				location.reload()
 			}
+			return
 		}
-	}
 
-	// Determine icon to be displayed based on extension status
-	let faIcon: IconDefinition
-	switch (extensionsStatus[id]) {
-		case 'not_authenticated':
-			faIcon = faPlugCircleExclamation
-			break
-		default:
-			faIcon = faPlus
+		const version = ++requestVersion.current
+		connectingRef.current = true
+		setConnecting(true)
+		let approved = false
+		let connectionError: unknown
+		try {
+			approved = await connectExtension(id)
+			connectionError = getExtensionConnectionError(id)
+		} catch (error) {
+			// A provider may reject instead of returning a failed connection result.
+			connectionError = error
+		}
+		// Closing the menu or changing networks invalidates its pending UI action.
+		if (version !== requestVersion.current) {
+			return
+		}
+		connectingRef.current = false
+		setConnecting(false)
+		if (!approved || getStatus(id) !== 'connected') {
+			if (
+				id === 'cloud-signer' &&
+				typeof connectionError === 'object' &&
+				connectionError !== null &&
+				'code' in connectionError &&
+				connectionError.code === 'CLOUD_SIGNER_RELOAD_REQUIRED'
+			) {
+				if (confirm(t('extensionReloadRequired', { extension: title }))) {
+					location.reload()
+				}
+				return
+			}
+			alert('Unable to connect to the extension.')
+			return
+		}
+		onExtensionConnectedEvent(network, id)
+		setOpen(false)
+		if (openAccountsOnConnect) openModal({ key: 'Accounts' })
 	}
 
 	return (
 		<ConnectItem.Item last={last}>
-			<div>
-				<ConnectItem.Logo Svg={Icon} />
-			</div>
+			<div>{Icon && <ConnectItem.Logo Svg={Icon} />}</div>
 			<div>
 				<div>
-					<h3 className={`${connected ? ` connected` : ``}`}>{title}</h3>
+					<h3 className={connected ? 'connected' : undefined}>{title}</h3>
 					<ConnectItem.WebUrl url={`https://${website}`} text={website} />
 				</div>
 				<div>
 					<ButtonMonoInvert
 						style={connected ? { color: 'var(--status-danger)' } : undefined}
-						text={
+						text={t(
 							connected
-								? t('disconnect', { ns: 'modals' })
+								? 'disconnect'
 								: isInstalled
-									? t('connect', { ns: 'modals' })
-									: t('notInstalled', { ns: 'modals' })
-						}
-						onClick={() => handleClick()}
+									? 'connect'
+									: 'notInstalled',
+						)}
+						onClick={handleClick}
 						iconRight={
 							connected ? undefined : isInstalled ? faIcon : faPlugCircleXmark
 						}
-						disabled={disabled}
+						disabled={!isInstalled || connecting}
 					/>
 				</div>
 			</div>

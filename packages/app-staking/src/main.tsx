@@ -8,7 +8,6 @@ import { version } from '../package.json'
 // Network styles
 import 'ui-styles/accents/default.scss'
 import 'ui-styles/accents/paseo.scss'
-import 'ui-styles/accents/westend.scss'
 
 // App styles
 import 'ui-styles/fonts/font.scss'
@@ -16,11 +15,12 @@ import 'ui-styles/theme/index.scss'
 import 'ui-styles/theme/theme.scss'
 
 // Package styles
-import '@w3ux/react-odometer/index.css'
+import '@polkadot-cloud/ui/odometer/index.css'
 import 'simplebar/dist/simplebar.min.css'
 
 // Global services
 import { initDedotService } from 'dedot-api'
+import { clearDisabledExtensionsLocal } from 'ui-app/util'
 
 const rootElement = document.getElementById('root')
 if (!rootElement) {
@@ -35,6 +35,9 @@ if (
 ) {
 	localStorage.removeItem('lng_resources')
 }
+
+// Prevent reconnecting to disabled extensions from a saved session
+clearDisabledExtensionsLocal()
 
 // Initialise global api service
 initDedotService({

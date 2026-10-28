@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useValidators as useValidatorEntries } from 'contexts/Validators/ValidatorEntries'
 import { useBalances } from 'hooks/useBalances'
 import { useStaking } from 'hooks/useStaking'
 import { useNominatorStats } from 'hooks/useStats'
 import { useSyncing } from 'hooks/useSyncing'
+import { useValidators } from 'hooks/useValidators'
 import { BondManager } from 'library/BondManager'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { Nominations } from 'library/Nominations'
 import { Empty } from 'library/Nominations/Empty'
 import { Stats } from 'library/Stats'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
 import { Page } from 'ui-core/base'
 import { Status } from './Status'
@@ -22,12 +23,13 @@ export const Active = () => {
 	const { t } = useTranslation()
 	const { syncing, accountSynced } = useSyncing()
 	const { isBonding } = useStaking()
+	const { isValidator } = useValidators()
 	const { getNominations } = useBalances()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { activeNominators, minimumNominatorBond, minimumActiveStake } =
 		useNominatorStats()
 
+	const { formatWithPrefs } = useValidatorEntries(getNominations(activeAddress))
 	const nominated = formatWithPrefs(getNominations(activeAddress))
 	const ROW_HEIGHT = 220
 
@@ -55,7 +57,7 @@ export const Active = () => {
 					<Status height={ROW_HEIGHT} />
 				</Page.RowSection>
 			</Page.Row>
-			{isBonding && (
+			{isBonding && !isValidator(activeAddress) && (
 				<Page.Row>
 					<CardWrapper>
 						{nominated?.length || syncing ? (

@@ -45,6 +45,15 @@
 				"Um Vielfalt und eine dezentralisierte Mischung von Validatoren zu maximieren, wähle Validatoren von verschiedenen Entitäten."
 			]
 		],
+		"managingValidator": [
+			"Deinen Validator verwalten",
+			"Verwalte den Bond und den Zahlungsempfänger deines Validators und sieh dir seine Belohnungen an.",
+			[
+				"Verwalte die an deinen Validator gebundenen {NETWORK_UNIT} im Dashboard: Erhöhe deinen Bond, starte die Entbindung, binde noch in der Entsperrphase befindliche Mittel erneut und hebe sie ab, sobald sie entsperrt sind.",
+				"Du kannst auch das Belohnungsziel (den Zahlungsempfänger) deines Validators ändern, um festzulegen, wohin zukünftige Belohnungen gesendet werden.",
+				"Auf der Seite Belohnungen kannst du den Auszahlungsverlauf deines Validators, beanspruchte und noch nicht beanspruchte Belohnungen sowie Prognosen einschließlich Validator-Anreizbelohnungen ansehen."
+			]
+		],
 		"module": {
 			"cancel": "Abbrechen",
 			"close": "Schließen",

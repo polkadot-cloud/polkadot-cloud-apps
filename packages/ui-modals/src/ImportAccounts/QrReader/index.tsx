@@ -5,7 +5,7 @@ import {
 	QrScanSignature,
 	useVaultAccounts,
 } from '@polkadot-cloud/connect-vault'
-import { formatAccountSs58, isValidAddress } from '@w3ux/util-dedot'
+import { formatAccountSs58, isValidAddress } from '@polkadot-cloud/util-dedot'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { QrReaderProps } from './types'

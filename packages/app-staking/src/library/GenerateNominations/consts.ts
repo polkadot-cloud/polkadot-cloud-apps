@@ -1,0 +1,36 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import type { ValidatorWarningType } from 'plugin-staking-api/types'
+
+// Map each validator warning code to its message, highest severity first.
+export const ValidatorWarningDefinitions: {
+	type: ValidatorWarningType
+	messageKey: string
+	labelKey: string
+	severity: 'danger' | 'warning'
+	showOnPage?: boolean
+	readMoreUrl?: string
+}[] = [
+	{
+		type: 'ZUG_VALIDATOR',
+		messageKey: 'zugValidatorWarning',
+		labelKey: 'zugValidatorWarningLabel',
+		severity: 'danger',
+	},
+	{
+		type: 'LOW_HISTORICAL_BACKING',
+		messageKey: 'lowHistoricalBackingWarning',
+		labelKey: 'lowHistoricalBackingWarningLabel',
+		severity: 'warning',
+		showOnPage: true,
+		readMoreUrl:
+			'https://polkadot.cloud/blog/en/low-backing-validator-warnings',
+	},
+	{
+		type: 'HETZNER',
+		messageKey: 'hetznerValidatorWarning',
+		labelKey: 'hetznerValidatorWarningLabel',
+		severity: 'warning',
+	},
+]

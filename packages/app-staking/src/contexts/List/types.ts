@@ -25,4 +25,5 @@ export interface ListContextInterface {
 export interface ListProviderProps {
 	selectable?: boolean
 	children: ReactNode
+	initialListFormat?: ListFormat
 }

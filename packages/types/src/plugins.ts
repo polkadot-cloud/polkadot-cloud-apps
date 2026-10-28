@@ -2,4 +2,4 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 // Available plugin keys
-export type Plugin = 'staking_api' | 'polkawatch'
+export type Plugin = 'staking_api'

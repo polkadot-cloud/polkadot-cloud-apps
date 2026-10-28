@@ -25,6 +25,7 @@ import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
 import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
 import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
+import { createSwapInterface } from '../swap'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
 import type { DedotServiceConfig } from '../types'
@@ -69,6 +70,7 @@ export class PolkadotService
 		const stablecoinsEnabled =
 			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
 		this.interface = {
+			swap: this.features.swap ? createSwapInterface(this.apiHub) : undefined,
 			stablecoins: stablecoinsEnabled
 				? createStablecoinsInterface(
 						this.apiHub,
@@ -110,6 +112,8 @@ export class PolkadotService
 				superOfMulti: async (addresses) =>
 					await this.identityManager.superOfMulti(addresses),
 				validatorEntries: async () => await query.validatorEntries(this.apiHub),
+				validatorExists: async (address) =>
+					await query.validatorExists(this.apiHub, address),
 				validatorsMulti: async (addresses) =>
 					await query.validatorsMulti(this.apiHub, addresses),
 			},

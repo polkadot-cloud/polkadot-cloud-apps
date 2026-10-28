@@ -8,6 +8,7 @@ import classes from './index.module.scss'
 
 export const Button = ({
 	text,
+	active,
 	status,
 	grow = true,
 	className,
@@ -35,6 +36,7 @@ export const Button = ({
 			className={allClasses}
 			style={style}
 			disabled={disabled}
+			aria-pressed={active}
 			{...onMouseHandlers({ onClick, onMouseOver, onMouseMove, onMouseOut })}
 		>
 			{text}

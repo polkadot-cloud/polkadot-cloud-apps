@@ -11,9 +11,10 @@ const QUERY = gql`
 			poolId
 			totalMembers
 			members {
-      	poolId
+				poolId
 				address
 				points
+				claimPermission
 				unbondingEras {
 					era
 					amount
@@ -36,9 +37,15 @@ export const fetchPoolMembers = (
 	poolId: number,
 	limit?: number,
 	offset?: number,
+	signal?: AbortSignal,
 ) =>
 	fetchQuery<PoolMembersData>(
 		QUERY,
 		{ network, poolId, limit, offset },
 		DEFAULT,
+		{
+			throwOnError: true,
+			fetchPolicy: 'no-cache',
+			context: { fetchOptions: { signal }, queryDeduplication: false },
+		},
 	)

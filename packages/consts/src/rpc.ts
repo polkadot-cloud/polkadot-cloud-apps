@@ -2,8 +2,31 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { ChainId, RpcEndpoints } from 'types'
+import { PolkadotCloudRpcPeopleUrl, PolkadotCloudRpcStatemintUrl } from '.'
 
 export type RpcChainId = ChainId | 'hydration'
+
+const proxyPath = import.meta.env?.CLOUD_RPC_PROXY_PATH
+// Production uses origin access; development requires the authenticated Vite proxy.
+const cloudRpcEnabled = import.meta.env?.PROD === true || !!proxyPath
+
+// Browsers cannot add WebSocket auth headers. Vite supplies a local proxy path when a dev token is
+// configured, and adds the Authorization header on the server.
+const getCloudRpcEndpoint = (endpoint: string): string => {
+	if (!proxyPath || typeof window === 'undefined') return endpoint
+
+	const url = new URL(
+		`${proxyPath}${new URL(endpoint).pathname}`,
+		window.location.origin,
+	)
+	url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+	return url.href
+}
+
+export const DefaultRpcProviderByChain: Partial<Record<RpcChainId, string>> =
+	cloudRpcEnabled
+		? { statemint: 'Polkadot Cloud', 'people-polkadot': 'Polkadot Cloud' }
+		: {}
 
 export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	polkadot: {
@@ -24,14 +47,6 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		OnFinality: 'wss://kusama.api.onfinality.io/public-ws',
 		Stakeworld: 'wss://ksm-rpc.stakeworld.io',
 	},
-	westend: {
-		// Dwellir: 'wss://westend-rpc.dwellir.com',
-		// IBP1: 'wss://rpc.ibp.network/westend',
-		// IBP2: 'wss://rpc.dotters.network/westend',
-		LuckyFriday: 'wss://rpc-westend.luckyfriday.io',
-		OnFinality: 'wss://westend.api.onfinality.io/public-ws',
-		Stakeworld: 'wss://wnd-rpc.stakeworld.io',
-	},
 	paseo: {
 		IBP1: 'wss://rpc.ibp.network/paseo',
 		IBP2: 'wss://paseo.dotters.network',
@@ -40,12 +55,16 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		StakeWorld: 'wss://pas-rpc.stakeworld.io',
 	},
 	'people-polkadot': {
+		...(cloudRpcEnabled
+			? { 'Polkadot Cloud': getCloudRpcEndpoint(PolkadotCloudRpcPeopleUrl) }
+			: {}),
 		PolkadotPeople: 'wss://polkadot-people-rpc.polkadot.io',
 		LuckyFriday: 'wss://rpc-people-polkadot.luckyfriday.io',
 		RadiumBlock: 'wss://people-polkadot.public.curie.radiumblock.co/ws',
 		// IBP1: 'wss://sys.ibp.network/people-polkadot',
 		// IBP2: 'wss://people-polkadot.dotters.network',
 		'Sys Dotters': 'wss://sys.dotters.network/people-polkadot',
+		Rotko: 'wss://people-polkadot.rotko.net',
 	},
 	'people-kusama': {
 		Parity: 'wss://kusama-people-rpc.polkadot.io',
@@ -53,16 +72,17 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 		// IBP1: 'wss://sys.ibp.network/people-kusama',
 		// IBP2: 'wss://people-kusama.dotters.network',
 		LuckyFriday: 'wss://rpc-people-kusama.luckyfriday.io',
-	},
-	'people-westend': {
-		// IBP1: 'wss://sys.ibp.network/people-westend',
-		// IBP2: 'wss://people-westend.dotters.network',
+		Rotko: 'wss://people-kusama.rotko.net',
 	},
 	'people-paseo': {
 		IBP2: 'wss://people-paseo.dotters.network',
 		Amforc: 'wss://people-paseo.rpc.amforc.com',
+		Rotko: 'wss://people-paseo.rotko.net',
 	},
 	statemint: {
+		...(cloudRpcEnabled
+			? { 'Polkadot Cloud': getCloudRpcEndpoint(PolkadotCloudRpcStatemintUrl) }
+			: {}),
 		DeServe: 'wss://asset-hub.polkadot.rpc.deserve.network',
 		// LuckyFriday: 'wss://rpc-asset-hub-polkadot.luckyfriday.io',
 		// Parity: 'wss://polkadot-asset-hub-rpc.polkadot.io',
@@ -74,15 +94,9 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	statemine: {
 		LuckyFriday: 'wss://rpc-asset-hub-kusama.luckyfriday.io',
 		Parity: 'wss://kusama-asset-hub-rpc.polkadot.io',
+		Rotko: 'wss://asset-hub-kusama.rotko.net',
 		// IBP1: 'wss://sys.ibp.network/asset-hub-kusama',
 		// IBP2: 'wss://asset-hub-kusama.dotters.network',
-	},
-	westmint: {
-		Parity: 'wss://westend-asset-hub-rpc.polkadot.io',
-		// Dwellir: 'wss://asset-hub-westend-rpc.dwellir.com',
-		// IBP1: 'wss://sys.ibp.network/asset-hub-westend',
-		// IBP2: 'wss://asset-hub-westend.dotters.network',
-		'Permanence DAO EU': 'wss://asset-hub-westend.rpc.permanence.io',
 	},
 	paseomint: {
 		IBP1: 'wss://sys.ibp.network/asset-hub-paseo',
@@ -94,6 +108,7 @@ export const RpcEndpointsByChain: Record<RpcChainId, RpcEndpoints> = {
 	hydration: {
 		Dwellir: 'wss://hydration-rpc.n.dwellir.com',
 		Subway: 'wss://subway.sin.hydration.cloud',
+		Rotko: 'wss://hydration.rotko.net',
 	},
 }
 

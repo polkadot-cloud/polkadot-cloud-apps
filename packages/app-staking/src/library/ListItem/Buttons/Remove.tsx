@@ -49,7 +49,7 @@ export const Remove = ({
 				<span>
 					<FontAwesomeIcon
 						icon={faXmark}
-						transform="grow-4"
+						transform="shrink-2"
 						className={controlKey}
 					/>
 				</span>

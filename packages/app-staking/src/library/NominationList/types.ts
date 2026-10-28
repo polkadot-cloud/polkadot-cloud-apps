@@ -1,15 +1,15 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import type { ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
-import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type {
-	BondFor,
-	DisplayFor,
-	MaybeAddress,
-	NominationStatus,
-	Validator,
-} from 'types'
+	NomineeStatusEntry,
+	ValidatorEraPoints,
+	ValidatorRetainmentResult,
+	ValidatorWarningType,
+} from 'plugin-staking-api/types'
+import type { BondFor, DisplayFor, MaybeAddress, Validator } from 'types'
 
 export interface NominationListProps {
 	validators: Validator[]
@@ -27,8 +27,14 @@ export interface ItemProps {
 	nominator: MaybeAddress
 	bondFor: BondFor
 	displayFor: DisplayFor
+	format: ListFormat
 	toggleFavorites?: boolean
-	nominationStatus?: NominationStatus
+	nominee?: NomineeStatusEntry
+	nominationError?: boolean
+	isNominationPreloading?: boolean
 	eraPoints: ValidatorEraPoints[]
+	isPreloading?: boolean
 	rate?: number
+	retainment?: ValidatorRetainmentResult | null
+	warnings?: ValidatorWarningType[]
 }

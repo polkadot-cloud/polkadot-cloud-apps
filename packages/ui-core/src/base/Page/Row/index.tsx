@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import classNames from 'classnames'
-import type { RowProps } from '../../types'
+import type { PageRowProps } from '../../types'
 import classes from './index.module.scss'
 
 /**
@@ -10,9 +10,10 @@ import classes from './index.module.scss'
  * @summary Used to separate page content based on rows. Commonly used with `RowPrimary` and
  * `RowSecondary`.
  */
-export const Row = ({ children, style, yMargin }: RowProps) => {
+export const Row = ({ children, style, yMargin }: PageRowProps) => {
 	const buttonClasses = classNames(classes.row, 'pagePadding', {
-		[classes.yMargin]: yMargin,
+		[classes.yMargin]: yMargin === true,
+		[classes.compactYMargin]: yMargin === 'compact',
 	})
 
 	return (

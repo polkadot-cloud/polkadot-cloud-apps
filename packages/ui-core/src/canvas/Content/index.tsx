@@ -3,16 +3,22 @@
 
 import classNames from 'classnames'
 import type { ComponentBase } from 'types'
+import type { CanvasVariant } from '../types'
 import classes from './index.module.scss'
 
 export const Content = ({
 	children,
 	style,
 	size,
-}: ComponentBase & { size?: 'lg' | 'xl' }) => {
+	variant = 'default',
+}: ComponentBase & {
+	size?: 'lg' | 'xl'
+	variant?: CanvasVariant
+}) => {
 	const allClasses = classNames(classes.content, {
 		[classes.lg]: size === 'lg',
 		[classes.xl]: size === 'xl',
+		[classes.card]: variant === 'card',
 	})
 	return (
 		<div className={allClasses} style={style}>

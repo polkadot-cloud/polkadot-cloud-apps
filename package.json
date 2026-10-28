@@ -5,49 +5,33 @@
 	"license": "GPL-3.0-only",
 	"scripts": {
 		"clear": "pnpm -r --if-present clear && rm -rf build dist tsconfig.tsbuildinfo node_modules",
+		"dev:nominate": "cd packages/app-nominate && pnpm dev",
 		"dev:staking": "cd packages/app-staking && pnpm dev",
 		"dev:swap": "cd packages/app-swap && pnpm dev",
+		"dev:validators": "cd packages/app-validators && pnpm dev",
 		"check": "pnpm -r --if-present run check && stylelint '**/*.{css,scss}' --allow-empty-input",
 		"lint": "pnpm -r --if-present run lint && stylelint '**/*.{css,scss}' --fix --allow-empty-input",
 		"test": "pnpm -r --if-present test",
 		"license:headers": "npx @kt3k/license-checker -q"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.5",
+		"@biomejs/biome": "2.5.15",
 		"@kt3k/license-checker": "3.2.2",
 		"@types/chroma-js": "^3.1.2",
-		"@types/react": "^19.2.17",
-		"@types/react-dom": "^19.2.3",
+		"@types/react": "^19.2.18",
+		"@types/react-dom": "^19.2.7",
 		"@types/react-helmet": "^6.1.11",
-		"@vitejs/plugin-react": "^6.0.4",
-		"@w3ux/types": "^2.4.2",
-		"globals": "^17.8.0",
-		"postcss": "^8.5.23",
+		"@vitejs/plugin-react": "^6.1.2",
+		"globals": "^17.13.0",
+		"postcss": "^8.5.31",
 		"postcss-scss": "^4.0.9",
-		"prettier": "^3.9.5",
-		"prettier-plugin-organize-imports": "^4.1.0",
-		"sass": "^1.102.0",
-		"stylelint": "^17.14.1",
+		"prettier": "^3.9.10",
+		"sass": "^1.105.2",
+		"stylelint": "^17.16.0",
 		"stylelint-config-standard-scss": "^17.0.0",
-		"stylelint-order": "^8.1.1",
-		"typescript": "^6.0.3",
-		"vite": "8.1.5"
+		"stylelint-order": "^8.1.2",
+		"typescript": "^7.0.2",
+		"vite": "8.3.4"
 	},
-	"pnpm": {
-		"ignoredBuiltDependencies": [
-			"unrs-resolver"
-		],
-		"onlyBuiltDependencies": [
-			"@parcel/watcher",
-			"bufferutil",
-			"esbuild",
-			"keccak",
-			"node-hid",
-			"sharp",
-			"unrs-resolver",
-			"usb",
-			"utf-8-validate"
-		]
-	},
-	"packageManager": "pnpm@11.1.0"
+	"packageManager": "pnpm@12.3.4"
 }

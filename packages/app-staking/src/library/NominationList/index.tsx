@@ -2,27 +2,38 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import type { ValidatorListEntry } from 'contexts/Validators/types'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { ListProvider, useList } from 'contexts/List'
+import {
+	useNomineeStatuses,
+	useValidatorOverviews,
+	useValidatorRewardRates,
+} from 'data-gate'
 import { useApi } from 'hooks/useApi'
+import { useErasPerDay } from 'hooks/useErasPerDay'
 import { useNetwork } from 'hooks/useNetwork'
-import { useNominationStatus } from 'hooks/useNominationStatus'
-import { usePlugins } from 'hooks/usePlugins'
-import { useSyncing } from 'hooks/useSyncing'
-import { useValidatorRewardRateBatch } from 'hooks/useValidatorRewardRateBatch'
-import { List, Wrapper as ListWrapper } from 'library/List'
-import { MotionContainer } from 'library/List/MotionContainer'
-import { motion } from 'motion/react'
-import { fetchValidatorEraPointsBatch } from 'plugin-staking-api'
-import type { ValidatorEraPointsBatch } from 'plugin-staking-api/types'
-import { useEffect, useRef, useState } from 'react'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
+import { useValidatorDetailsEnabled } from 'hooks/useValidatorDetailsEnabled'
+import { useValidatorWarnings } from 'hooks/useValidatorWarnings'
+import { FilterHeaderWrapper, List, Wrapper as ListWrapper } from 'library/List'
+import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
+import { EMPTY_ERA_POINTS } from 'library/List/Utils'
+import { useForceCardLayout } from 'library/List/useForceCardLayout'
+import { fetchValidatorDetailsBatch } from 'plugin-staking-api'
+import type { ValidatorDetailsBatchData } from 'plugin-staking-api/types'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { NominationStatus } from 'types'
+import styled from 'styled-components'
+import { ListItem } from 'ui-app/ListItem'
 import { useOverlay } from 'ui-overlay'
+import { injectValidatorListData } from '../ValidatorList/overview'
 import { Item } from './Item'
 import type { NominationListProps } from './types'
 
-export const NominationList = ({
+const ListFormatHeader = styled(FilterHeaderWrapper)`
+  margin-top: 0.75rem;
+`
+
+export const NominationListInner = ({
 	// Default list values.
 	nominator: initialNominator,
 	validators: initialValidators,
@@ -32,77 +43,104 @@ export const NominationList = ({
 	displayFor = 'default',
 }: NominationListProps) => {
 	const { t } = useTranslation('app')
-	const { syncing } = useSyncing()
 	const { network } = useNetwork()
-	const { pluginEnabled } = usePlugins()
-	const { isReady, activeEra } = useApi()
+	const { erasPerDay } = useErasPerDay()
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
+	const validatorDetailsEnabled = useValidatorDetailsEnabled()
+	const { listFormat, setListFormat } = useList()
+	const { activeEra } = useApi()
 	const { activeAddress } = useActiveAccount()
 	const { setModalResize } = useOverlay().modal
-	const { injectValidatorListData } = useValidators()
-	const { getNominationSetStatus, getPoolNominationStatus } =
-		useNominationStatus()
-
-	// Determine the nominator of the list. Fallback to activeAddress if not provided
+	const targets = initialValidators.map(({ address }) => address)
+	const { data: overviews, error: overviewError } =
+		useValidatorOverviews(targets)
 	const nominator = initialNominator || activeAddress
-
-	// Store the current nomination status of validator records relative to the supplied nominator
-	const nominationStatus = useRef<Record<string, NominationStatus>>({})
-
-	// Get nomination status relative to supplied nominator
-	const processNominationStatus = () => {
-		if (bondFor === 'pool') {
-			nominationStatus.current = initialValidators.reduce(
-				(acc: Record<string, NominationStatus>, { address }) => {
-					acc[address] = getPoolNominationStatus(nominator, address)
-					return acc
-				},
-				{},
-			)
-		} else {
-			// get all active account's nominations
-			const nominationStatuses = getNominationSetStatus(nominator, 'nominator')
-
-			// find the nominator status within the returned nominations
-			nominationStatus.current = Object.fromEntries(
-				initialValidators.map(({ address }) => [
-					address,
-					nominationStatuses[address],
-				]),
-			)
-		}
-	}
-
-	// Injects status into supplied initial validators
-	const prepareInitialValidators = () => {
-		processNominationStatus()
-		const statusToIndex = {
-			active: 2,
-			inactive: 1,
-			waiting: 0,
-		}
-		return injectValidatorListData(initialValidators).sort(
-			(a, b) =>
-				statusToIndex[nominationStatus.current[b.address]] -
-				statusToIndex[nominationStatus.current[a.address]],
-		)
-	}
-
-	// Manipulated list (custom ordering, filtering) of validators
-	const [validators, setValidators] = useState<ValidatorListEntry[]>(() =>
-		prepareInitialValidators(),
+	const {
+		data: nominees,
+		loading: nominationsPreloading,
+		error: nominationError,
+	} = useNomineeStatuses(nominator, targets)
+	const nomineesByAddress = useMemo(
+		() => new Map(nominees?.map((entry) => [entry.address, entry])),
+		[nominees],
 	)
+	// Sorting and both card layouts use the same source-selected snapshot.
+	const validators = useMemo(() => {
+		const rank = (address: string) => {
+			const status = nomineesByAddress.get(address)?.status
+			return status === 'active' ? 2 : status === 'inactive' ? 1 : 0
+		}
+		return injectValidatorListData(
+			initialValidators,
+			overviews,
+			overviewError,
+		).sort((a, b) => rank(b.address) - rank(a.address))
+	}, [initialValidators, nomineesByAddress, overviews, overviewError])
 
-	// Store whether the list has been fetched initially
-	const [fetched, setFetched] = useState<boolean>(false)
+	const forceCardLayout = useForceCardLayout()
+	const effectiveListFormat =
+		validatorDetailsEnabled && forceCardLayout ? 'col' : listFormat
 
-	// Store performance data, keyed by address
-	const [performances, setPerformances] = useState<ValidatorEraPointsBatch[]>(
-		[],
+	// Store all API-backed detailed card data by request key.
+	const [detailsByKey, setDetailsByKey] = useState<
+		Record<string, ValidatorDetailsBatchData>
+	>({})
+
+	const addresses = useMemo(
+		() => validators.map(({ address }) => address),
+		[validators],
 	)
-
-	// A unique key for the current page of items
-	const pageKey = JSON.stringify(
-		validators.map(({ address }, i) => `${i}${address}`),
+	const { warnings } = useValidatorWarnings(
+		network,
+		addresses,
+		retainmentStatsEnabled,
+		nominator,
+		activeEra.index,
+	)
+	const pageKey = useMemo(
+		() => JSON.stringify(addresses.map((address, i) => `${i}${address}`)),
+		[addresses],
+	)
+	const detailsKey = useMemo(
+		() =>
+			JSON.stringify({
+				network,
+				era: activeEra.index,
+				rewardRateDepth: erasPerDay,
+				includeRetainment: retainmentStatsEnabled,
+				validators: addresses,
+			}),
+		[network, activeEra.index, erasPerDay, addresses, retainmentStatsEnabled],
+	)
+	const details = detailsByKey[detailsKey]
+	const detailsPreloading =
+		validatorDetailsEnabled && validators.length > 0 && details === undefined
+	const performanceByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorEraPointsBatch ?? []).map(
+					(entry) => [entry.validator, entry.points] as const,
+				),
+			),
+		[details],
+	)
+	const rateByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorAvgRewardRateBatch ?? []).map(
+					(entry) => [entry.validator, entry.rate] as const,
+				),
+			),
+		[details],
+	)
+	const retainmentByAddress = useMemo(
+		() =>
+			new Map(
+				(details?.validatorRetainmentBatch ?? []).map(
+					(entry) => [entry.validator, entry.result] as const,
+				),
+			),
+		[details],
 	)
 
 	// If in modal, handle resize
@@ -113,75 +151,66 @@ export const NominationList = ({
 	}
 
 	// Get validator reward rates
-	const { rates } = useValidatorRewardRateBatch(
-		validators.map(({ address }) => address),
-		pageKey,
+	const { data: rates } = useValidatorRewardRates(
+		addresses,
+		erasPerDay,
+		!validatorDetailsEnabled,
 	)
 
-	// Handle list bootstrapping
-	const setupValidatorList = () => {
-		setValidators(prepareInitialValidators())
-		setFetched(true)
-	}
-
-	// Fetch performance data
-	const getPerformanceData = async (key: string) => {
-		if (!pluginEnabled('staking_api')) {
+	// Fetch all data needed by supported detailed nomination cards in one GraphQL operation.
+	const getDetailedData = async (key: string) => {
+		if (
+			!validatorDetailsEnabled ||
+			activeEra.index === 0 ||
+			addresses.length === 0 ||
+			detailsByKey[key] !== undefined
+		) {
 			return
 		}
-		const results = await fetchValidatorEraPointsBatch(
+		const results = await fetchValidatorDetailsBatch(
 			network,
-			validators.map(({ address }) => address),
+			addresses,
 			Math.max(activeEra.index - 1, 0),
+			erasPerDay,
 			30,
+			{ includeRetainment: retainmentStatsEnabled },
 		)
-		// Update performance if key still matches current page key
-		if (key === pageKey) {
-			setPerformances(results.validatorEraPointsBatch)
-		}
+		setDetailsByKey((current) => ({ ...current, [key]: results }))
 	}
 
-	// Reset list when list changes
+	// Fetch detailed card data when the visible validator set changes.
 	useEffect(() => {
-		setFetched(false)
-	}, [initialValidators, nominator])
+		getDetailedData(detailsKey)
+	}, [detailsKey, validatorDetailsEnabled])
 
-	// Fetch performance queries when list changes
-	useEffect(() => {
-		getPerformanceData(pageKey)
-	}, [pageKey, pluginEnabled('staking_api')])
-
-	// Configure list when network is ready to fetch
-	useEffect(() => {
-		if (isReady && activeEra.index > 0) {
-			setupValidatorList()
-		}
-	}, [isReady, activeEra.index, syncing, fetched])
-
-	// Handle modal resize on list format change
+	// Handle modal resize on list format or content change
 	useEffect(() => {
 		maybeHandleModalResize()
-	}, [validators])
+	}, [effectiveListFormat, pageKey, validatorDetailsEnabled])
 
 	return (
 		<ListWrapper>
-			<List $flexBasisLarge={'33.33%'}>
+			<List
+				$flexBasisLarge={validatorDetailsEnabled ? '50%' : '33.33%'}
+				$twoColumnMinWidth={validatorDetailsEnabled ? 1350 : undefined}
+			>
+				<ListFormatHeader>
+					<div />
+					<div>
+						{!(validatorDetailsEnabled && forceCardLayout) && (
+							<ListItem.FormatToggle
+								onChange={setListFormat}
+								value={listFormat}
+							/>
+						)}
+					</div>
+				</ListFormatHeader>
 				<MotionContainer>
 					{validators.length ? (
 						validators.map((validator) => (
-							<motion.div
+							<MotionItem
 								key={`nomination_${validator.address}`}
-								className={`item col`}
-								variants={{
-									hidden: {
-										y: 15,
-										opacity: 0,
-									},
-									show: {
-										y: 0,
-										opacity: 1,
-									},
-								}}
+								className={`item ${effectiveListFormat === 'row' ? 'row' : 'col'}`}
 							>
 								<Item
 									validator={validator}
@@ -189,15 +218,24 @@ export const NominationList = ({
 									toggleFavorites={toggleFavorites}
 									bondFor={bondFor}
 									displayFor={displayFor}
+									format={effectiveListFormat}
 									eraPoints={
-										performances.find(
-											(entry) => entry.validator === validator.address,
-										)?.points || []
+										performanceByAddress.get(validator.address) ||
+										EMPTY_ERA_POINTS
 									}
-									rate={rates[pageKey]?.[validator.address]}
-									nominationStatus={nominationStatus.current[validator.address]}
+									isPreloading={detailsPreloading}
+									rate={
+										validatorDetailsEnabled
+											? rateByAddress.get(validator.address)
+											: rates?.[validator.address]
+									}
+									retainment={retainmentByAddress.get(validator.address)}
+									warnings={warnings[validator.address]}
+									nominee={nomineesByAddress.get(validator.address)}
+									nominationError={!!nominationError}
+									isNominationPreloading={nominationsPreloading}
 								/>
-							</motion.div>
+							</MotionItem>
 						))
 					) : (
 						<h4 style={{ marginTop: '1rem' }}>{t('noValidators')}</h4>
@@ -207,3 +245,9 @@ export const NominationList = ({
 		</ListWrapper>
 	)
 }
+
+export const NominationList = (props: NominationListProps) => (
+	<ListProvider>
+		<NominationListInner {...props} />
+	</ListProvider>
+)

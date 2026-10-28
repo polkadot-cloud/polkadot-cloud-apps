@@ -29,6 +29,10 @@
 		font-size: 1.3rem;
 		margin-top: 0.5rem;
 
+		:global(.dark) & {
+			background: var(--bg-input);
+		}
+
 		&:focus {
 			border-color: var(--gray-700);
 		}

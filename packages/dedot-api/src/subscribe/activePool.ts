@@ -3,6 +3,7 @@
 
 import type { DedotClient } from 'dedot'
 import type { Unsub } from 'dedot/types'
+import { hexToString } from 'dedot/utils'
 import {
 	removeActivePool,
 	removePoolRoleIdentities,
@@ -51,8 +52,12 @@ export class ActivePoolQuery<T extends StakingChain> {
 					fn: this.api.query.staking.nominators,
 					args: [stash],
 				},
+				{
+					fn: this.api.query.nominationPools.metadata,
+					args: [this.poolId],
+				},
 			],
-			async ([bondedPool, rewardPool, rewardAccount, nominators]) => {
+			async ([bondedPool, rewardPool, rewardAccount, nominators, metadata]) => {
 				if (bondedPool && rewardPool) {
 					const { targets, submittedIn } = nominators || {
 						targets: [],
@@ -71,6 +76,7 @@ export class ActivePoolQuery<T extends StakingChain> {
 
 					const activePool: ActivePool = {
 						id: this.poolId,
+						metadata: hexToString(metadata),
 						addresses: { stash, reward },
 						bondedPool: {
 							points: bondedPool.points,

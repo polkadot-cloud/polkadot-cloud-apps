@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
+import type { ValidatorEraPoints } from 'plugin-staking-api/types'
 import type { IdentityOf, SuperIdentity } from 'types'
 import type { IdentityDisplay } from './types'
+
+export const EMPTY_ERA_POINTS: ValidatorEraPoints[] = []
 
 export const getIdentityDisplay = (
 	_identity?: IdentityOf,

@@ -9,19 +9,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { SelectItems } from 'library/SelectItems'
 import { SelectItem } from 'library/SelectItems/Item'
-import type { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Validator } from 'types'
+import type { MethodsProps } from './types'
 
 export const Methods = ({
 	setMethod,
 	setNominations,
 	setFetching,
-}: {
-	setMethod: Dispatch<SetStateAction<string | null>>
-	setNominations: Dispatch<SetStateAction<Validator[]>>
-	setFetching: Dispatch<SetStateAction<boolean>>
-}) => {
+}: MethodsProps) => {
 	const { t } = useTranslation('app')
 
 	// accumulate generation methods

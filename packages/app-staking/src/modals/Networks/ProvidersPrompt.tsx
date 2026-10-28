@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { capitalizeFirstLetter } from '@w3ux/utils'
+import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import { SystemChainList } from 'consts/networks'
 import { getStakingChainData } from 'consts/util/chains'
 import { getRpcEndpoints, setRpcEndpoints } from 'global-bus'

@@ -130,7 +130,7 @@ export const List = styled.div<ListProps>`
       &.col {
         flex-grow: 1;
         flex-basis: 100%;
-        @media (min-width: 875px) {
+        @media (min-width: ${(props) => props.$twoColumnMinWidth ?? 875}px) {
           flex-basis: 50%;
           max-width: 50%;
         }

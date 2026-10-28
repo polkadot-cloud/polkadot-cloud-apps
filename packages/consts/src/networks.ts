@@ -7,9 +7,6 @@ import { RpcEndpointsByChain } from './rpc'
 // The default network to use when no network is specified
 export const DefaultNetwork: NetworkId = 'polkadot'
 
-// Networks that are disabled in production
-export const ProductionDisabledNetworks: NetworkId[] = ['westend']
-
 // All supported networks
 export const NetworkList: Networks = {
 	polkadot: {
@@ -54,28 +51,6 @@ export const NetworkList: Networks = {
 			stakingChain: 'statemine',
 			subscanBalanceChainId: 'assethub-kusama',
 			supportOperators: true,
-		},
-	},
-	westend: {
-		name: 'westend',
-		endpoints: {
-			getLightClient: async () => await import('@dedot/chain-specs/westend2'),
-			rpc: RpcEndpointsByChain.westend,
-		},
-		unit: 'WND',
-		units: 12,
-		ss58: 42,
-		defaultFeeReserve: 100000000000n,
-		consts: {
-			expectedBlockTime: 6000n,
-			epochDuration: 600n,
-		},
-		meta: {
-			hubChain: 'westmint',
-			stakingChain: 'westmint',
-			peopleChain: 'people-westend',
-			subscanBalanceChainId: 'assethub-westend',
-			supportOperators: false,
 		},
 	},
 	paseo: {
@@ -130,19 +105,6 @@ export const SystemChainList: Record<string, SystemChain> = {
 		},
 		relayChain: 'kusama',
 	},
-	'people-westend': {
-		name: 'people-westend',
-		ss58: 42,
-		units: 12,
-		unit: 'WND',
-		defaultFeeReserve: 100000000000n,
-		endpoints: {
-			getLightClient: async () =>
-				await import('@dedot/chain-specs/westend2_people'),
-			rpc: RpcEndpointsByChain['people-westend'],
-		},
-		relayChain: 'westend',
-	},
 	statemint: {
 		name: 'statemint',
 		ss58: 0,
@@ -168,19 +130,6 @@ export const SystemChainList: Record<string, SystemChain> = {
 			rpc: RpcEndpointsByChain.statemine,
 		},
 		relayChain: 'kusama',
-	},
-	westmint: {
-		name: 'westmint',
-		ss58: 42,
-		units: 12,
-		unit: 'WND',
-		defaultFeeReserve: 100000000000n,
-		endpoints: {
-			getLightClient: async () =>
-				await import('@dedot/chain-specs/westend2_asset_hub'),
-			rpc: RpcEndpointsByChain.westmint,
-		},
-		relayChain: 'westend',
 	},
 	'people-paseo': {
 		name: 'people-paseo',

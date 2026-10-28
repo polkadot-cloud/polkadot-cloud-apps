@@ -1,0 +1,71 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.summaryGrid > div,
+.retainmentGrid > div,
+.barMetricGroup > div {
+	min-width: 0;
+
+	> span {
+		color: var(--text-tertiary);
+		font-family: var(--font-family-semibold);
+		line-height: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	> strong {
+		align-items: baseline;
+		display: flex;
+		line-height: 1.1;
+		max-width: 100%;
+		min-width: 0;
+		white-space: nowrap;
+	}
+}
+
+.summaryGrid > div,
+.barMetricGroup > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	> strong {
+		color: var(--gray-1000);
+		font-family: var(--font-family-mono);
+		font-variant-numeric: tabular-nums;
+		font-weight: 600;
+
+		> span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		> small {
+			color: var(--text-tertiary);
+			flex: 0 0 auto;
+			font-family: var(--font-family-semibold);
+			font-weight: normal;
+			letter-spacing: 0;
+		}
+	}
+
+	> span {
+		align-items: center;
+		display: flex;
+	}
+}
+
+.statusDot {
+	background: var(--text-tertiary);
+	border-radius: 50%;
+	flex: 0 0 0.45rem;
+	height: 0.45rem;
+	width: 0.45rem;
+
+	&[data-active='true'] {
+		background: var(--status-success);
+	}
+}

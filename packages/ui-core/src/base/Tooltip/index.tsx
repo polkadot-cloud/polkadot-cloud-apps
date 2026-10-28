@@ -11,6 +11,7 @@ export const Tooltip = ({
 	container,
 	text,
 	onTriggerClick,
+	align = undefined,
 	side = undefined,
 	onPointerDownOutside,
 	handleOpenChange,
@@ -20,7 +21,8 @@ export const Tooltip = ({
 }: {
 	children: ReactNode
 	container?: HTMLDivElement
-	text: string
+	text: ReactNode
+	align?: 'start' | 'center' | 'end'
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	onTriggerClick?: (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void
 	onPointerDownOutside?: (e: Event) => void
@@ -57,6 +59,7 @@ export const Tooltip = ({
 			</RadixTooltip.Trigger>
 			<RadixTooltip.Portal container={container}>
 				<RadixTooltip.Content
+					align={align}
 					className={contentClasses}
 					sideOffset={5}
 					side={side}

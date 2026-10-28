@@ -5,7 +5,9 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   display: flex;
-  flex-flow: column wrap;
+  /* Keep the page in one column: wrapping repeatedly measures the container-query
+     cards when the sticky title changes height during scrolling. */
+  flex-flow: column nowrap;
 `
 
 export const Spacer = styled.div`

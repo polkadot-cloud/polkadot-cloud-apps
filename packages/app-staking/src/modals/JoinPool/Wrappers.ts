@@ -3,6 +3,23 @@
 
 import styled from 'styled-components'
 
+export const ModalActionWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  right: 4rem;
+  z-index: 2;
+
+  > button {
+    opacity: 0.6;
+    transition: opacity var(--transition-duration) ease-in-out;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+`
+
 export const HeaderWrapper = styled.div`
   width: 100%;
   display: flex;

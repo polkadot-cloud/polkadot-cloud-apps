@@ -1,9 +1,9 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { pageFromUri } from '@w3ux/utils'
+import { pageFromUri } from '@polkadot-cloud/utils'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
+import { useNominationWarnings } from 'hooks/useNominationWarnings'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { useLocation } from 'react-router-dom'
@@ -13,8 +13,12 @@ export const Sync = () => {
 	const { uids } = useTxMeta()
 	const { syncing } = useSyncing()
 	const { pathname } = useLocation()
-	const { getValidators } = useValidators()
 	const { bondedPools } = useBondedPools()
+	const { isLoading: warningsLoading } = useNominationWarnings()
+	const transactionActive = uids.some(
+		({ submitted, broadcasted, pending }) =>
+			(submitted && !broadcasted) || pending,
+	)
 
 	// Keep syncing if on pools page and still fetching bonded pools or pool members
 	const onPoolsSyncing = () => {
@@ -26,22 +30,8 @@ export const Sync = () => {
 		return false
 	}
 
-	// Keep syncing if on validators page and still fetching
-	const onValidatorsSyncing = () => {
-		if (
-			pageFromUri(pathname, 'overview') === 'validators' &&
-			!getValidators().length
-		) {
-			return true
-		}
-		return false
-	}
-
 	const isSyncing =
-		syncing ||
-		onPoolsSyncing() ||
-		onValidatorsSyncing() ||
-		uids.filter(({ submitted }) => submitted).length > 0
+		syncing || warningsLoading || onPoolsSyncing() || transactionActive
 
 	return isSyncing ? (
 		<span style={{ marginRight: '1rem' }}>

@@ -1,12 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
+import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { useApi } from 'hooks/useApi'
 import { useSyncing } from 'hooks/useSyncing'
 import type { ReactNode } from 'react'
 import { createContext, useState } from 'react'
-import { migrateLocalStorageKeys } from 'utils'
 import { version } from '../../../package.json'
 
 export const MigrateContext = createContext<null>(null)
@@ -23,19 +22,9 @@ export const MigrateProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffectIgnoreInitial(() => {
 		if (isReady && !syncing && !done) {
-			// Carry out migrations if local version is different to current version
+			// Global migrations have already run before service initialization. Keep the app version
+			// lifecycle here so app-specific cache refreshes and reloads remain intact.
 			if (localAppVersion !== version) {
-				// Added in 2.2.2
-				migrateLocalStorageKeys()
-
-				// Added in 2.1.3
-				localStorage.removeItem('polkadotRpcEndpoints')
-				localStorage.removeItem('kusamaRpcEndpoints')
-				localStorage.removeItem('westendRpcEndpoints')
-
-				// Finally
-				//
-				// Update local version to current app version
 				localStorage.setItem('app_version', version)
 				setDone(true)
 

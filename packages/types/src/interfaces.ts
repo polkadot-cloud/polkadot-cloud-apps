@@ -29,8 +29,10 @@ import type {
 	ErasStakersOverviewEntries,
 	ErasStakersPagedEntries,
 } from './staking'
+import type { SwapInterface } from './swap'
 
 export interface ServiceInterface {
+	swap?: SwapInterface
 	stablecoins: {
 		query: {
 			balances: (address: string) => Promise<StablecoinBalance[]>
@@ -86,7 +88,7 @@ export interface ServiceInterface {
 		) => Promise<ErasStakersOverviewEntries>
 		erasStakersPagedEntries: (
 			era: number,
-			validator: string,
+			validator?: string,
 		) => Promise<ErasStakersPagedEntries>
 		identityOfMulti: (addresses: string[]) => Promise<IdentityOf[]>
 		nominatorsMulti: (addresses: string[]) => Promise<NominatorsMultiQuery>
@@ -96,6 +98,7 @@ export interface ServiceInterface {
 		poolMetadataMulti: (ids: number[]) => Promise<HexString[]>
 		superOfMulti: (addresses: string[]) => Promise<SuperOf[]>
 		validatorEntries: () => Promise<[string, PalletStakingValidatorPrefs][]>
+		validatorExists: (address: string) => Promise<boolean>
 		validatorsMulti: (
 			addresses: string[],
 		) => Promise<PalletStakingValidatorPrefs[]>

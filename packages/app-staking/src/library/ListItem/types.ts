@@ -7,6 +7,7 @@ import type {
 	BondFor,
 	MaybeAddress,
 	NominationStatus,
+	ValidatorOverview,
 	ValidatorPrefs,
 	ValidatorStatus,
 } from 'types'
@@ -29,16 +30,17 @@ export type MetricsProps = Outline & {
 
 export type MoreProps = Outline & {
 	pool: BondedPool
-	setActiveTab: (t: number) => void
 	disabled: boolean
 	outline?: boolean
 }
 export interface BlockedProps {
-	prefs: ValidatorPrefs
+	prefs: ValidatorPrefs | null
 }
 
 export interface IdentityProps {
 	address: string
+	display?: ReactNode
+	size?: 'default' | 'large'
 }
 
 export interface PoolIdentityProps {
@@ -65,7 +67,8 @@ export interface ParaValidatorProps {
 }
 
 export interface EraStatusProps {
-	address: string
+	unavailable?: boolean
+	overview?: ValidatorOverview | null
 	noMargin: boolean
 	status: ValidatorStatus
 }

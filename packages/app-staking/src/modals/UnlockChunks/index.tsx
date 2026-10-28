@@ -3,7 +3,7 @@
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { useLedger } from '@polkadot-cloud/connect-ledger'
-import { setStateWithRef } from '@w3ux/utils'
+import { setStateWithRef } from '@polkadot-cloud/utils'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useEffect, useRef, useState } from 'react'

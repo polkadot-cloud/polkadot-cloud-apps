@@ -5,7 +5,7 @@ import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
 import { TooltipArea } from 'ui-core/base'
@@ -15,7 +15,7 @@ import { planckToUnitBn } from 'utils'
 export const PoolBonded = ({ pool }: { pool: BondedPool }) => {
 	const { t } = useTranslation('app')
 	const { network } = useNetwork()
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 	const { units } = getStakingChainData(network)
 
 	const tooltipText = t('bonded')

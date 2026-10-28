@@ -7,6 +7,7 @@ export const defaultStakingMetrics: StakingMetrics = {
 	totalIssuance: 0n,
 	minimumActiveStake: 0n,
 	counterForValidators: 0,
+	hardCapSelfStake: undefined,
 	maxValidatorsCount: undefined,
 	validatorCount: 0,
 	lastReward: undefined,

@@ -1,8 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
+
 .multiButton {
-	background: var(--gray-1000);
+	@include pastel.primary-button;
+
 	transition: transform var(--transition-duration);
 	border-radius: 1.5rem;
 	display: flex;
@@ -10,16 +13,20 @@
 
 	&.disabled {
 		background: var(--gray-700);
+
+		&::before {
+			display: none;
+		}
 	}
 
 	> span {
-		border-right: 1px solid var(--gray-100);
+		border-right: 1px solid var(--button-text);
 		opacity: 0.2;
 		margin: 0 0.2rem;
 	}
 
 	> button {
-		color: var(--gray-100);
+		color: var(--button-text);
 		border-radius: var(--btn-lg-radius);
 
 		&.sm {

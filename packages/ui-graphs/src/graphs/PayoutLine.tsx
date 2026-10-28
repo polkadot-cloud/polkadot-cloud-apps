@@ -69,6 +69,7 @@ export const PayoutLine = ({
 					display: false,
 				},
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					font: {
 						size: 10,
 					},
@@ -81,6 +82,7 @@ export const PayoutLine = ({
 			},
 			y: {
 				ticks: {
+					color: getThemeValue('--text-tertiary'),
 					font: {
 						size: 10,
 					},

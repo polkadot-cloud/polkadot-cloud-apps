@@ -10,6 +10,7 @@ export type GraphProps = ComponentBase & {
 }
 
 export type CheckboxProps = ComponentBase & {
+	label?: string
 	onClick: () => void
 	checked: boolean
 }

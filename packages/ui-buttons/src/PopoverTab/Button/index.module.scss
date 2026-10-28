@@ -17,8 +17,9 @@
 		opacity: 0.5;
 	}
 
-	&:hover {
-		background: var(--bg-body);
+	&:hover,
+	&[aria-pressed="true"] {
+		background: var(--gray-400);
 
 		&:disabled {
 			background: var(--btn-popover-tab-bg);

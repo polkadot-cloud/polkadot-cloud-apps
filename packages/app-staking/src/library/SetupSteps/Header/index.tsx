@@ -10,6 +10,7 @@ import type { HeaderProps } from '../types'
 import { Wrapper } from './Wrapper'
 
 export const Header = ({
+	action,
 	title,
 	complete,
 	thisSection,
@@ -29,6 +30,7 @@ export const Header = ({
 		<Wrapper>
 			<section>
 				<h2>{title}</h2>
+				{action}
 			</section>
 			<section>
 				{complete && (

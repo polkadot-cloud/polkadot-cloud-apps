@@ -1,0 +1,70 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.modal {
+	display: flex;
+	flex-direction: column;
+	min-height: 70dvh;
+}
+
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	flex: 1;
+	min-height: 0;
+	margin-top: 1.5rem;
+	border-top: 1px solid var(--gray-400);
+}
+
+.balancesPane {
+	min-width: 0;
+	align-self: start;
+	padding: 1.25rem 0 1.5rem;
+}
+
+.mobileSelector {
+	--account-input-bg: var(--bg-primary);
+	--account-input-shadow: var(--shadow-alt);
+
+	display: none;
+	padding: 0 1.5rem 1rem;
+}
+
+.balanceViews {
+	--popover-menu-item-padding-inline: 1.25rem;
+}
+
+.selectedAccount {
+	min-width: 0;
+	padding: 0 1rem 1rem;
+}
+
+.accountName {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+
+	.sourceIcon {
+		flex-shrink: 0;
+		margin: 0;
+	}
+}
+
+.empty {
+	padding: 1.25rem;
+	color: var(--text-tertiary);
+}
+
+@media (width <= 700px) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.selectedAccount {
+		display: none;
+	}
+
+	.mobileSelector {
+		display: block;
+	}
+}

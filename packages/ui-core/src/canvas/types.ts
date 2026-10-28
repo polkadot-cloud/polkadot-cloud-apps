@@ -4,4 +4,9 @@
 import type { HTMLMotionProps } from 'motion/react'
 import type { ComponentBase } from 'types'
 
-export type ScrollProps = ComponentBase & HTMLMotionProps<'div'>
+export type CanvasVariant = 'default' | 'card'
+
+export type ScrollProps = ComponentBase &
+	HTMLMotionProps<'div'> & {
+		variant?: CanvasVariant
+	}

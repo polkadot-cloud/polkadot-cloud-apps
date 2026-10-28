@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { planckToUnit } from '@w3ux/utils'
+import { planckToUnit } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { getPoolMembership } from 'global-bus'
@@ -67,8 +67,6 @@ export const RewardTrend = () => {
 	if (rewardTrend) {
 		const { reward, change } = rewardTrend
 		value = reward
-		// A flat (0%) change is neutral — use Ticker's grey/undefined direction
-		// rather than falsely showing a red downward arrow.
 		const percent = Number(change.percent)
 		direction = percent === 0 ? undefined : percent > 0 ? 'up' : 'down'
 		changePercent = new BigNumber(change.percent).toFormat(2)

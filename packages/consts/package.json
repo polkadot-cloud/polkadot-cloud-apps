@@ -1,6 +1,6 @@
 {
 	"name": "consts",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"exports": {
@@ -15,13 +15,12 @@
 	},
 	"dependencies": {
 		"@dedot/chain-specs": "^0.10.0",
-		"@polkadot-cloud/connect-proxies": "^0.3.0",
-		"@polkawatch/ddp-client": "^3.0.1",
+		"@polkadot-cloud/connect-proxies": "^1.0.0",
 		"@substrate/connect-known-chains": "^1.10.2",
 		"assets": "workspace:*"
 	},
 	"devDependencies": {
 		"types": "workspace:*",
-		"vite": "8.1.5"
+		"vite": "8.3.4"
 	}
 }

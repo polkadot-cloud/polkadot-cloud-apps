@@ -13,12 +13,12 @@ import { useMenu } from 'hooks/useMenu'
 import { ClaimPermission } from 'library/ListItem/Labels/ClaimPermission'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { PoolMemberBonded } from 'library/ListItem/Labels/PoolMemberBonded'
-import { Wrapper } from 'library/ListItem/Wrappers'
 import { motion } from 'motion/react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AnyJson } from 'types'
+import { BasicItem } from 'ui-app/ListItem'
 import { MenuList } from 'ui-app/Menu'
 import { HeaderButtonRow, LabelRow, Separator } from 'ui-core/list'
 import { usePrompt } from 'ui-overlay'
@@ -29,7 +29,6 @@ import type { MemberProps } from './types'
 export const Member = ({
 	member,
 	bondedPool,
-	isDepositor,
 	isRoot,
 	isOwner,
 	isBouncer,
@@ -43,9 +42,11 @@ export const Member = ({
 	const memberRef = useRef<HTMLDivElement | null>(null)
 
 	const state = bondedPool.state
+	// The depositor restriction applies to this member, not the connected account.
+	const isMemberDepositor = member.address === bondedPool.roles.depositor
 	const canUnbondBlocked =
 		state === 'Blocked' && (isOwner || isBouncer || isRoot)
-	const canUnbondDestroying = state === 'Destroying' && !isDepositor
+	const canUnbondDestroying = state === 'Destroying' && !isMemberDepositor
 
 	const menuItems: AnyJson[] = []
 
@@ -76,7 +77,7 @@ export const Member = ({
 		if (Object.values(unbondingEras).length) {
 			let canWithdraw = false
 			for (const [era] of unbondingEras) {
-				if (activeEra.index > era) {
+				if (activeEra.index >= era) {
 					canWithdraw = true
 				}
 			}
@@ -122,34 +123,34 @@ export const Member = ({
 				},
 			}}
 		>
-			<Wrapper className="member">
-				<div className="inner canvas">
-					<div className="row top">
-						<Identity address={member.address} />
-						<div>
-							<HeaderButtonRow>
-								{menuItems.length > 0 && (
-									<button
-										type="button"
-										className="label"
-										disabled={!member}
-										onClick={(ev) => toggleMenu(ev)}
-									>
-										<FontAwesomeIcon icon={faBars} transform="shrink-3" />
-									</button>
-								)}
-							</HeaderButtonRow>
-						</div>
+			<BasicItem.Root kind="member" canvas>
+				<BasicItem.Row position="top">
+					<Identity address={member.address} display={null} />
+					<div>
+						<HeaderButtonRow>
+							{menuItems.length > 0 && (
+								<button
+									type="button"
+									className="label"
+									disabled={!member}
+									onClick={(ev) => toggleMenu(ev)}
+								>
+									<FontAwesomeIcon icon={faBars} transform="shrink-3" />
+								</button>
+							)}
+						</HeaderButtonRow>
 					</div>
-					<Separator />
-					<div className="row bottom">
-						<PoolMemberBonded member={member} />
+				</BasicItem.Row>
+				<Separator />
+				<BasicItem.Row position="bottom">
+					<PoolMemberBonded member={member} />
+					{member.claimPermission !== null && (
 						<LabelRow>
 							<ClaimPermission claimPermission={member.claimPermission} />
 						</LabelRow>
-					</div>
-				</div>
-			</Wrapper>
+					)}
+				</BasicItem.Row>
+			</BasicItem.Root>
 		</motion.div>
 	)
 }

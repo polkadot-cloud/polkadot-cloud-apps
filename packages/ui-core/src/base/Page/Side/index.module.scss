@@ -12,11 +12,7 @@
 }
 
 .bar {
-	background: linear-gradient(
-		to bottom,
-		var(--gray-1000),
-		color-mix(in srgb, var(--gray-1000) 95%, black)
-	);
+	background: var(--pastel-dark-wash) #2b2b2b;
 	width: $side-bar-width;
 	height: inherit;
 	display: flex;
@@ -32,7 +28,7 @@
 	}
 
 	:global(.dark) & {
-		background: linear-gradient(to bottom, var(--gray-400), var(--bg-list));
+		background: var(--pastel-wash) var(--gray-200);
 		border-right: 1px solid var(--gray-500);
 	}
 }

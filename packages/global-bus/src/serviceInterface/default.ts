@@ -4,6 +4,7 @@
 import type { ServiceInterface } from 'types'
 
 export const defaultServiceInterface: ServiceInterface = {
+	swap: undefined,
 	stablecoins: {
 		query: {
 			balances: async () => [],
@@ -38,6 +39,7 @@ export const defaultServiceInterface: ServiceInterface = {
 		poolMetadataMulti: async () => [],
 		superOfMulti: async () => [],
 		validatorEntries: async () => [],
+		validatorExists: async () => false,
 		validatorsMulti: async () => [],
 	},
 	runtimeApi: {

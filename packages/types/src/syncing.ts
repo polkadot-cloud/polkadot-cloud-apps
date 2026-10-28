@@ -7,6 +7,7 @@ export type SyncId =
 	| 'bonded-pools'
 	| 'active-pools'
 	| 'active-proxy'
+	| 'staking-ledgers'
 
 export type SyncStatus = 'syncing' | 'complete'
 

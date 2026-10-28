@@ -1,16 +1,30 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { maxBigInt } from '@w3ux/utils'
+import { maxBigInt } from '@polkadot-cloud/utils'
 import type {
 	AccountBalance,
 	AccountBalances,
 	NominatorBalances,
 	PoolBalances,
 	PoolMembership,
+	StablecoinBalance,
 	StakingLedger,
 	UnlockChunk,
 } from 'types'
+
+// Maximum asset transfer after reserving frozen funds, its minimum balance, and same-asset fees.
+export const maxSendableBalance = (
+	balance: StablecoinBalance | undefined,
+	feeBalance: StablecoinBalance | undefined,
+	fee: bigint,
+): bigint => {
+	if (!balance) return 0n
+	const feeFromSameAsset =
+		feeBalance?.chain === balance.chain && feeBalance.symbol === balance.symbol
+	const floor = maxBigInt(balance.frozen, balance.existentialDeposit)
+	return maxBigInt(balance.free - floor - (feeFromSameAsset ? fee : 0n), 0n)
+}
 
 // Resolves a stored fee reserve against the default, guarding malformed input.
 // Returns the larger of the stored reserve and the default; falls back to the

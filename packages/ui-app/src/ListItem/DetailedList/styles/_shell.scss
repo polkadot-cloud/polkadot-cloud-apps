@@ -1,0 +1,86 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.item {
+	width: calc(100% - 1.8rem);
+
+	> .surface {
+		align-items: stretch;
+		background:
+			linear-gradient(
+				125deg,
+				color-mix(in srgb, var(--wash-yellow) 50%, transparent),
+				color-mix(in srgb, var(--wash-blue) 50%, transparent) 55%,
+				color-mix(in srgb, var(--wash-purple) 50%, transparent)
+			)
+			var(--bg-list-item);
+		border: 0;
+		border-radius: 0.5rem;
+		position: relative;
+		transition: border var(--transition-duration) ease;
+		width: 100%;
+
+		&.card {
+			border: 1.25px solid var(--bg-list-item);
+			box-shadow: none;
+		}
+
+		:global(.dark) & {
+			border-color: var(--gray-400);
+		}
+
+		&.selected {
+			border-color: var(--gray-1000);
+		}
+
+		&[data-status-accent]::before {
+			border-radius: 0.5rem 0 0 0.5rem;
+			content: '';
+			inset: 0 auto 0 0;
+			pointer-events: none;
+			position: absolute;
+			width: var(--status-accent-width, 3px);
+			z-index: 1;
+		}
+
+		&[data-status-accent='success']::before {
+			background: var(--status-success);
+		}
+
+		&[data-status-accent='warning']::before {
+			background: var(--status-warning);
+		}
+
+		&[data-status-accent='danger']::before {
+			background: var(--status-danger);
+		}
+	}
+
+	&.card {
+		container: list-item-card / inline-size;
+		margin: 0.9rem;
+
+		> .surface {
+			box-shadow: 0 5px 8px -7px rgb(0 0 0 / 45%);
+			display: flex;
+			flex-flow: column nowrap;
+			overflow: hidden;
+		}
+	}
+
+	&.bar {
+		container: list-item-bar / inline-size;
+		margin: 0.45rem 0.9rem;
+
+		> .surface {
+			box-shadow: 0 4px 8px -7px rgb(0 0 0 / 45%);
+			display: grid;
+			min-height: 5.5rem;
+			overflow: visible;
+		}
+	}
+
+	:global(.dark) & > .surface {
+		box-shadow: inset 0 0 0 1px var(--gray-400), var(--shadow-alt);
+	}
+}

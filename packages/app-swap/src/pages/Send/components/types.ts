@@ -29,7 +29,6 @@ export type FeePaymentFieldsProps = {
 	feeAssetOptions: DropdownOption<FeeAssetSymbol>[]
 	feeBalance: StablecoinBalance | undefined
 	feeDisplay: TxFeeDisplay
-	feeSetupRequired: boolean
 	onSelect: (option: DropdownOption<FeeAssetSymbol>) => void
 	selectedFeeAsset: DropdownOption<FeeAssetSymbol>
 	submission: UseSubmitExtrinsic

@@ -4,7 +4,7 @@
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
-import { CardWrapper } from 'library/Card/Wrappers'
+import { CardWrapper } from 'ui-app/Card'
 import { Separator } from 'ui-core/base'
 import { NewNominator } from './NewNominator'
 import { NominationStatus } from './NominationStatus'

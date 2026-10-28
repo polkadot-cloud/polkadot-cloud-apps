@@ -3,7 +3,6 @@
 
 export * from './chains'
 export * from './networks'
-export * from './plugins'
 export * from './pools'
 export * from './proxies'
 export * from './rpc'

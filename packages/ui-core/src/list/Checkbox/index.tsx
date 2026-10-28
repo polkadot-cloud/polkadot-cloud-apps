@@ -7,13 +7,15 @@ import classNames from 'classnames'
 import type { CheckboxProps } from '../types'
 import classes from './index.module.scss'
 
-export const Checkbox = ({ style, onClick, checked }: CheckboxProps) => {
+export const Checkbox = ({ style, onClick, checked, label }: CheckboxProps) => {
 	const allClasses = classNames(classes.checkbox, {
 		[classes.checked]: checked,
 	})
 
 	return (
 		<button
+			aria-pressed={checked}
+			aria-label={label}
 			type="button"
 			className={allClasses}
 			style={style}

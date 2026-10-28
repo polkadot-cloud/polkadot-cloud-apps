@@ -6,6 +6,12 @@ export const StakingDappName = 'Polkadot Cloud Staking'
 export const StakingProductionURL = 'https://staking.polkadot.cloud'
 export const PlatformDocsURL = 'https://docs.staking.polkadot.cloud'
 
+// Validators
+export const ValidatorsDappName = 'Polkadot Cloud Validators'
+
+// Nominate
+export const NominateDappName = 'Polkadot Cloud Nomination Manager'
+
 // Swap
 export const SwapDappName = 'Polkadot Cloud Swap'
 
@@ -19,7 +25,11 @@ export const PlatformGitHubURL =
 	'https://github.com/polkadot-cloud/polkadot-cloud-apps'
 export const DiscordSupportURL = 'https://discord.gg/QY7CSSJm3D'
 export const AssetHubPolkadotSubscanURL = 'https://assethub-polkadot.subscan.io'
-export const ManualSigners = ['ledger', 'vault', 'wallet_connect']
+export const ManualSigners = ['ledger', 'vault']
+
+// RPC
+export const PolkadotCloudRpcStatemintUrl = 'wss://rpc.polkadot.cloud/statemint'
+export const PolkadotCloudRpcPeopleUrl = 'wss://rpc.polkadot.cloud/people'
 
 // Element Thresholds
 export const SideMenuHiddenWidth = 250
@@ -54,6 +64,5 @@ export const ActiveProxiesKey = 'activeProxies'
 export const ActivePagesKey = 'activePages'
 
 export const rpcEndpointKey = (network: string) => `${network}RpcEndpoints`
-export const rpcHealthCacheKey = (network: string) => `${network}RpcHealth`
 export const ledgerDeviceGroupsKey = (network: string) =>
 	`${network}LedgerDeviceGroups`

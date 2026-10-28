@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { CardWrapper } from 'library/Card/Wrappers'
+import { CardWrapper } from 'ui-app/Card'
 import { Separator } from 'ui-core/base'
 import { Preloader } from './Preloader'
 

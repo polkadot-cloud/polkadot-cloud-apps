@@ -1,0 +1,94 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.cardTop {
+	background: transparent;
+	border-bottom: 1px solid var(--gray-500);
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: column;
+	min-width: 0;
+	width: 100%;
+}
+
+.cardHeader {
+	align-items: center;
+	display: flex;
+	flex: 0 0 auto;
+	gap: 0.45rem;
+	min-height: 3.75rem;
+	overflow: visible;
+	padding: 0.55rem 1rem 0.6rem;
+}
+
+.activity,
+.retainment {
+	align-items: stretch;
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: column;
+}
+
+.sectionHeader {
+	align-items: center;
+	display: flex;
+	flex: 0 0 auto;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-bottom: 0.8rem;
+	min-width: 0;
+	width: 100%;
+
+	> strong {
+		color: var(--gray-900);
+		font-family: var(--font-family-bold);
+		font-size: 1.15rem;
+	}
+}
+
+.activity {
+	height: 11rem;
+	padding: 0.75rem 1.1rem 0.85rem;
+}
+
+.retainment {
+	min-height: 9rem;
+	padding: 0.75rem 1rem 1.25rem;
+}
+
+.month {
+	color: var(--gray-900);
+	font-family: var(--font-family-semibold);
+	font-size: 0.85rem;
+	line-height: 1;
+	padding: 0.45rem 0;
+	white-space: nowrap;
+}
+
+@container list-item-card (max-width: 31rem) {
+	.cardHeader {
+		align-content: center;
+		flex-wrap: wrap;
+		padding-bottom: 1rem;
+	}
+
+	.activity {
+		height: 10rem;
+	}
+
+	.retainment {
+		min-height: 14rem;
+	}
+}
+
+@container list-item-card (max-width: 21rem) {
+	.cardHeader,
+	.activity,
+	.retainment {
+		padding-inline: 0.9rem;
+	}
+
+	.retainment {
+		min-height: 0;
+	}
+}

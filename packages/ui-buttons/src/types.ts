@@ -5,7 +5,6 @@ import type {
 	IconDefinition,
 	IconProp,
 } from '@fortawesome/fontawesome-svg-core'
-import type { MaybeString } from '@w3ux/types'
 import type { FunctionComponent, MouseEvent, SVGProps } from 'react'
 import type {
 	ComponentBase,
@@ -77,7 +76,7 @@ export type ButtonHelpProps = ComponentBaseWithClassName &
 		background?: 'primary' | 'secondary' | 'none'
 		outline?: boolean
 		openHelp?: (
-			definition: MaybeString,
+			definition: string | null,
 			anchor: HTMLButtonElement | null,
 		) => void
 		definition?: string
@@ -121,6 +120,7 @@ export type ButtonPrimaryInvertProps = ComponentBaseWithClassName &
 export type ButtonSecondaryProps = ComponentBaseWithClassName &
 	ButtonIconProps &
 	ButtonCommonProps & {
+		asLabel?: boolean
 		size?: ButtonSize
 		text: string
 		variant?: 'warning' | 'danger'
@@ -131,6 +131,7 @@ export type ButtonSecondaryProps = ComponentBaseWithClassName &
 export type ButtonSubmitProps = ComponentBaseWithClassName &
 	ButtonIconProps &
 	ButtonCommonProps & {
+		asLabel?: boolean
 		text: string
 		lg?: boolean
 		pulse?: boolean
@@ -233,6 +234,7 @@ export type ButtonAccountLabelProps = ComponentBaseWithClassName & {
 export type ButtonAccountStandaloneProps = ComponentBaseWithClassName &
 	OnMouseHandlersProps & {
 		label: string
+		showChevron?: boolean
 		marginLeft?: boolean
 		marginRight?: boolean
 		marginX?: boolean
@@ -249,6 +251,7 @@ export type ButtonModalProps = ComponentBaseWithClassName &
 export type ButtonPopoverTabProps = ComponentBaseWithClassName &
 	OnMouseHandlersProps & {
 		text: string
+		active?: boolean
 		status?: 'warning' | 'danger'
 		disabled?: boolean
 		grow?: boolean

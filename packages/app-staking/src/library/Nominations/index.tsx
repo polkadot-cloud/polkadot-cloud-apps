@@ -7,6 +7,7 @@ import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useActivePool } from 'hooks/useActivePool'
 import { useBalances } from 'hooks/useBalances'
 import { useHelp } from 'hooks/useHelp'
+import { useRetainmentStatsEnabled } from 'hooks/useRetainmentStatsEnabled'
 import { useStaking } from 'hooks/useStaking'
 import { useSyncing } from 'hooks/useSyncing'
 import { ListStatusHeader } from 'library/List'
@@ -39,14 +40,19 @@ export const Nominations = ({
 	const { isBonding } = useStaking()
 	const { openHelpTooltip } = useHelp()
 	const { getNominations } = useBalances()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { syncing } = useSyncing(['era-stakers'])
+	const retainmentStatsEnabled = useRetainmentStatsEnabled()
 	const { isReadOnlyAccount } = useImportedAccounts()
 
 	// Determine if pool or nominator.
 	const isPool = bondFor === 'pool'
 
+	const { formatWithPrefs } = useValidators(
+		isPool
+			? (activePoolNominations?.targets ?? [])
+			: getNominations(activeAddress),
+	)
 	// Derive nominations from `bondFor` type.
 	const nominated =
 		bondFor === 'nominator'
@@ -118,6 +124,7 @@ export const Nominations = ({
 								openCanvas({
 									key: 'ManageNominations',
 									scroll: false,
+									variant: 'card',
 									options: {
 										bondFor,
 										nominator,
@@ -129,7 +136,7 @@ export const Nominations = ({
 					</ButtonRow>
 				)}
 			</CardHeader>
-			{!isPool && syncing ? (
+			{!isPool && syncing && !retainmentStatsEnabled ? (
 				<ListStatusHeader>{`${t('syncing')}...`}</ListStatusHeader>
 			) : !nominator ? (
 				<ListStatusHeader>{t('notNominating')}.</ListStatusHeader>

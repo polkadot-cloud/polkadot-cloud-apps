@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { rmCommas } from '@w3ux/utils'
+import { rmCommas } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { useTokenPrices } from 'hooks/useTokenPrices'
 import { formatFiatCurrency } from 'locales/util'

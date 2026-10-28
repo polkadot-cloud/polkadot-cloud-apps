@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+@use "ui-styles/theme/pastel";
 @use "ui-styles/theme/variables" as *;
 
 .container {
@@ -44,8 +45,10 @@
 	padding: 0.4rem;
 
 	.inner {
-		background: var(--btn-quick-action-bg);
-		border: 1px solid var(--accent-300);
+		@include pastel.edge;
+
+		background: var(--pastel-surface) var(--btn-quick-action-bg);
+		border: 1px solid transparent;
 		border-radius: 0.7rem;
 		display: flex;
 		flex-direction: column;
@@ -57,7 +60,35 @@
 		flex: 1;
 		padding-top: 0.5rem;
 
+		:global(.light) & {
+			background-image: linear-gradient(
+				125deg,
+				color-mix(in srgb, var(--wash-yellow) 75%, rgb(200 200 200 / 6%)),
+				color-mix(in srgb, var(--wash-blue) 75%, rgb(200 200 200 / 7%)) 55%,
+				color-mix(in srgb, var(--wash-purple) 75%, rgb(200 200 200 / 6%))
+			);
+		}
+
+		:global(.dark) & {
+			--btn-quick-action-bg: var(--gray-300);
+			--edge-opacity: 0.16;
+			--edge-hover-opacity: 0.3;
+
+			background-image: linear-gradient(
+				125deg,
+				color-mix(in srgb, var(--wash-yellow) 40%, transparent),
+				color-mix(in srgb, var(--wash-blue) 40%, transparent) 55%,
+				color-mix(in srgb, var(--wash-purple) 40%, transparent)
+			);
+
+			&.disabled {
+				--pastel-edge-opacity: 0.08;
+			}
+		}
+
 		&.disabled {
+			--pastel-edge-opacity: 0.15;
+
 			cursor: default;
 
 			> * {
@@ -71,7 +102,6 @@
 
 		> .icon {
 			svg {
-				filter: drop-shadow(3px 3px 2px var(--gray-600));
 				color: var(--gray-900);
 				transition: all 0.3s;
 			}
@@ -89,8 +119,10 @@
 		}
 
 		&.active {
-			&:hover {
-				background: var(--gray-400);
+			&:is(:hover, :focus-visible) {
+				--pastel-edge-opacity: var(--edge-hover-opacity);
+
+				background-color: var(--bg-selected);
 
 				> .icon > svg {
 					color: var(--accent-700);

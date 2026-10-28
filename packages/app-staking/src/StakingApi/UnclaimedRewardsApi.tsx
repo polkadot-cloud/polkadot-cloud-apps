@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useEffectIgnoreInitial } from '@w3ux/hooks'
+import { useEffectIgnoreInitial } from '@polkadot-cloud/hooks'
 import { useApi } from 'hooks/useApi'
 import { defaultUnclaimedRewards, usePayouts } from 'hooks/usePayouts'
 import { useUnclaimedRewards } from 'plugin-staking-api'

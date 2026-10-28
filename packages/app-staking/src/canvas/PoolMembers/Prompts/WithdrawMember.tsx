@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount } from '@polkadot-cloud/connect'
-import { Polkicon } from '@w3ux/react-polkicon'
-import { ellipsisFn } from '@w3ux/utils'
+import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useActiveProxy } from 'hooks/useActiveProxy'
@@ -48,7 +48,7 @@ export const WithdrawMember = ({
 	let totalWithdrawUnit = new BigNumber(0)
 
 	unbondingEras.forEach(([era, amount]) => {
-		if (activeEra.index > Number(era)) {
+		if (activeEra.index >= era) {
 			totalWithdrawUnit = totalWithdrawUnit.plus(new BigNumber(amount))
 		}
 	})

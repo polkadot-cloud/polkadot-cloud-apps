@@ -3,7 +3,7 @@
 
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTooltip } from 'hooks/useTooltip'
+import { useTooltipActions } from 'hooks/useTooltip'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { Label } from 'ui-core/list'
@@ -12,7 +12,7 @@ import type { BlockedProps } from '../types'
 export const Blocked = ({ prefs }: BlockedProps) => {
 	const { t } = useTranslation('app')
 	const blocked = prefs?.blocked ?? null
-	const { setTooltipTextAndOpen } = useTooltip()
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	const tooltipText = t('blockingNominations')
 

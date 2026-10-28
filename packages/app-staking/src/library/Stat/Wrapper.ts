@@ -6,6 +6,13 @@ import styled from 'styled-components'
 export const Wrapper = styled.div<{ $isAddress?: boolean }>`
   width: 100%;
   padding: 0.15rem 0.25rem;
+
+  &.dimmed {
+    h4, .content .text, .content h2 {
+      color: var(--text-tertiary);
+    }
+  }
+
   h4 {
     font-family: var(--font-family-semibold);
     display: flex;

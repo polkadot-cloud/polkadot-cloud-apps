@@ -1,7 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { extractUrlValue } from '@w3ux/utils'
+import { extractUrlValue } from '@polkadot-cloud/utils'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
 import { emitNotification } from 'global-bus'
 import { useApi } from 'hooks/useApi'

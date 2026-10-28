@@ -2,6 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { decodeAddress, encodeAddress } from 'dedot/utils'
+import type { ImportedAccount } from 'types'
+
+export const compareAccounts = (a: ImportedAccount, b: ImportedAccount) =>
+	(a.name?.trim() || a.address).localeCompare(
+		b.name?.trim() || b.address,
+		undefined,
+		{ sensitivity: 'base' },
+	) ||
+	a.address.localeCompare(b.address) ||
+	a.source.localeCompare(b.source)
 
 /**
  * @name formatAccountSs58

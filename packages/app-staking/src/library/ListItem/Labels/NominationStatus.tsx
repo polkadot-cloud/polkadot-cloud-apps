@@ -3,48 +3,37 @@
 
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useEraStakers } from 'contexts/EraStakers'
 import { useNetwork } from 'hooks/useNetwork'
-import { useSyncing } from 'hooks/useSyncing'
 import { BondStatus } from 'library/BondStatus'
 import { useTranslation } from 'react-i18next'
-import { planckToUnitBn } from 'utils'
+import { formatCompactNumber, planckToUnitBn } from 'utils'
 import type { NominationStatusProps } from '../types'
 
-export const NominationStatus = ({
-	address,
-	nominator,
-	bondFor,
-	noMargin = false,
+type NominationStatusDataProps = Pick<
+	NominationStatusProps,
+	'address' | 'asIncoming' | 'bondFor' | 'nominator' | 'status'
+> & {
+	activeBacking?: string
+	isPreloading?: boolean
+	unavailable?: boolean
+}
+
+export const useNominationStatusData = ({
 	asIncoming = false,
 	status,
-}: NominationStatusProps) => {
-	const { t } = useTranslation('app')
+	activeBacking,
+	isPreloading = false,
+	unavailable = false,
+}: NominationStatusDataProps) => {
+	const { t, i18n } = useTranslation('app')
 	const { network } = useNetwork()
-	const {
-		getActiveValidator,
-		eraStakers: { activeAccountOwnStake },
-	} = useEraStakers()
-	const { syncing } = useSyncing(['era-stakers'])
 	const { unit, units } = getStakingChainData(network)
-
-	let stakedAmount = new BigNumber(0)
-	if (bondFor === 'nominator') {
-		// bonded amount within the validator.
-		stakedAmount =
-			status === 'active'
-				? new BigNumber(
-						activeAccountOwnStake?.find((own) => own.address === address)
-							?.value ?? 0,
-					)
-				: new BigNumber(0)
-	} else {
-		const staker = getActiveValidator(address)
-		const exists = (staker?.others || []).find(({ who }) => who === nominator)
-		if (exists) {
-			stakedAmount = planckToUnitBn(new BigNumber(exists.value), units)
-		}
-	}
+	// Lists supply backing from their selected source; rendering a label never starts a data fetch.
+	const syncing = !asIncoming && isPreloading
+	const totalActiveBacking = planckToUnitBn(
+		new BigNumber(activeBacking ?? '0'),
+		units,
+	)
 
 	let statusTKey
 	if (status === 'active') {
@@ -59,18 +48,52 @@ export const NominationStatus = ({
 		statusTKey = 'waiting'
 	}
 
+	return {
+		label: unavailable ? '—' : syncing ? `${t('syncing')}...` : t(statusTKey),
+		totalActiveBacking,
+		syncing,
+		unit,
+		value:
+			!unavailable && totalActiveBacking.isGreaterThan(0)
+				? syncing
+					? '...'
+					: `${formatCompactNumber(totalActiveBacking.toNumber(), i18n.resolvedLanguage)} ${unit}`
+				: undefined,
+	}
+}
+
+export const NominationStatus = ({
+	address,
+	nominator,
+	bondFor,
+	noMargin = false,
+	asIncoming = false,
+	status,
+	activeBacking,
+	isPreloading,
+	unavailable,
+}: NominationStatusProps &
+	Pick<
+		NominationStatusDataProps,
+		'activeBacking' | 'isPreloading' | 'unavailable'
+	>) => {
+	const { label, value } = useNominationStatusData({
+		address,
+		asIncoming,
+		bondFor,
+		nominator,
+		status,
+		activeBacking,
+		isPreloading,
+		unavailable,
+	})
+
 	return (
 		<BondStatus
 			status={status || 'waiting'}
 			noMargin={noMargin}
-			label={t(statusTKey)}
-			value={
-				stakedAmount.isGreaterThan(0)
-					? syncing
-						? '...'
-						: `${stakedAmount.toFormat()} ${unit}`
-					: undefined
-			}
+			label={label}
+			value={value}
 		/>
 	)
 }

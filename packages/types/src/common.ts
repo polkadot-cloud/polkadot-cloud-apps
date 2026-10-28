@@ -22,6 +22,8 @@ export type PageCategoryItems = PageCategory[]
 export interface PageItem {
 	category: number
 	key: string
+	// Translation namespace for the page title and navigation label; defaults to app.
+	titleNamespace?: string
 	uri: string
 	hash: string
 	Entry: FC<PageProps>
@@ -43,3 +45,25 @@ interface PageProp {
 export type BulletType = 'success' | 'accent' | 'warning' | 'danger'
 
 export type NavSection = 'stake' | 'validators' | 'pools'
+
+export interface TimeLeftFormatted {
+	days: [number, string]
+	hours: [number, string]
+	minutes: [number, string]
+	seconds?: [number, string]
+}
+
+export interface TimeLeftRaw {
+	days: number
+	hours: number
+	minutes: number
+	seconds?: number
+}
+
+export interface TimeleftDuration {
+	days: number
+	hours: number
+	minutes: number
+	seconds: number
+	lastMinute: boolean
+}

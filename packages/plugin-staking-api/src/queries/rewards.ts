@@ -26,6 +26,8 @@ const QUERY = gql`
       timestamp
       validator
       type
+      page
+      chainId
     }
   }
 `
@@ -34,14 +36,18 @@ const DEFAULT: AllRewardsData = {
 	allRewards: [],
 }
 
-export const useRewards = (variables: {
+export const useRewards = ({
+	skip,
+	...variables
+}: {
 	network: string
 	who: string
 	fromEra: number
 	limit?: number
 	offset?: number
+	skip?: boolean
 }): QueryReturn<AllRewardsData> =>
-	useApiQuery<AllRewardsData>(QUERY, variables, DEFAULT)
+	useApiQuery<AllRewardsData>(QUERY, variables, DEFAULT, { skip })
 
 export const fetchRewards = (
 	network: string,

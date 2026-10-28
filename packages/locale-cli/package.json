@@ -1,6 +1,6 @@
 {
 	"name": "locale-cli",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"bin": {
@@ -16,13 +16,13 @@
 	"dependencies": {
 		"commander": "^15.0.0",
 		"consts": "workspace:*",
-		"dotenv": "^17.4.2",
-		"openai": "^7.0.0"
+		"dotenv": "^18.0.8",
+		"openai": "^7.38.0"
 	},
 	"devDependencies": {
-		"@types/node": "^26.1.2",
-		"tsx": "^4.23.1",
-		"typescript": "^6.0.3",
-		"vite": "8.1.5"
+		"@types/node": "^26.6.5",
+		"tsx": "^4.23.13",
+		"typescript": "^7.0.2",
+		"vite": "8.3.4"
 	}
 }

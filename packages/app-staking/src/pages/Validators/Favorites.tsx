@@ -3,10 +3,10 @@
 
 import { useApi } from 'hooks/useApi'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { ListStatusHeader } from 'library/List'
 import { ValidatorList } from 'library/ValidatorList'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Page } from 'ui-core/base'
 
 export const ValidatorFavorites = () => {
@@ -25,13 +25,8 @@ export const ValidatorFavorites = () => {
 					isReady &&
 					(favoritesList.length > 0 ? (
 						<ValidatorList
-							bondFor="nominator"
 							validators={favoritesList}
-							title={t('favoriteValidators')}
 							selectable={false}
-							allowListFormat={false}
-							allowFilters
-							allowMoreCols
 							toggleFavorites
 						/>
 					) : (

@@ -32,6 +32,16 @@ export interface IdentityCacheData {
 	identityCache: IdentityCache[]
 }
 
+export interface ValidatorDiscovery {
+	address: string
+	countryCode: string | null
+	cloudProvider: string | null
+}
+
+export interface ValidatorDiscoveryData {
+	getValidatorDiscovery: ValidatorDiscovery[]
+}
+
 export interface IdentityCache {
 	address: string
 	display: string | null
@@ -39,18 +49,174 @@ export interface IdentityCache {
 	superValue: string | null
 }
 
-export interface AllRewardsData {
-	allRewards: NominatorReward[]
+export type RetainmentRankWindow = 'ONE_MONTH' | 'THREE_MONTHS'
+
+export type ValidatorListOrder =
+	| 'ACTIVITY'
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
+
+export interface ValidatorListFilters {
+	excludeBlocked?: boolean
+	excludeMissingIdentity?: boolean
+	activeOnly?: boolean
+	search?: string
 }
 
-export interface NominatorReward {
+export interface ValidatorListVariables extends Record<string, unknown> {
+	network: string
+	page?: number
+	pageSize?: number
+	order?: ValidatorListOrder
+	orderWindow?: RetainmentRankWindow | null
+	retainmentWindows?: RetainmentRankWindow[] | null
+	filters?: ValidatorListFilters
+}
+
+export interface ValidatorListData {
+	validatorList: ValidatorListResult
+}
+
+export interface ValidatorListResult {
+	validators: ValidatorListItem[]
+	page: number
+	pageSize: number
+	total: number
+	totalPages: number
+	hasNextPage: boolean
+	activityEra: number | null
+	totalActive: number
+}
+
+export interface ValidatorListItem {
+	address: string
+	prefs: {
+		commission: number
+		blocked: boolean
+	}
+	identity: Omit<IdentityCache, 'address'> | null
+	active: boolean
+	selfStake: string | null
+	totalStake: string | null
+	activityRank: number | null
+	retainment: ValidatorRetainment
+}
+
+export type OperatorListOrder =
+	| 'RETAINMENT_HIGH'
+	| 'RETAINMENT_LOW'
+	| 'VALIDATOR_COUNT'
+	| 'AVERAGE_SELF_STAKE_HIGH'
+	| 'AVERAGE_SELF_STAKE_LOW'
+
+export interface OperatorListVariables extends Record<string, unknown> {
+	network: string
+	page?: number
+	pageSize?: number
+	order?: OperatorListOrder
+	orderWindow?: RetainmentRankWindow | null
+	retainmentWindows?: RetainmentRankWindow[] | null
+	filters?: OperatorListFilters
+}
+
+export interface OperatorListFilters {
+	search?: string
+}
+
+export interface OperatorListData {
+	operatorList: OperatorListResult
+}
+
+export interface OperatorListResult {
+	operators: OperatorListItem[]
+	page: number
+	pageSize: number
+	total: number
+	totalPages: number
+	hasNextPage: boolean
+}
+
+export interface OperatorListItem {
+	identity: {
+		address: string
+		display: string | null
+	}
+	validators: string[]
+	validatorCount: number
+	activeValidatorCount: number
+	combinedSelfStake: string
+	retainRank1m: number | null
+	retainRank3m: number | null
+	retainment: OperatorRetainment
+}
+
+export interface OperatorStatsVariables extends Record<string, unknown> {
+	network: string
+}
+
+export interface OperatorStatsData {
+	operatorStats: OperatorStatsResult
+}
+
+export interface OperatorStatsResult {
+	totalOperators: number
+	activeOperators: number
+	operatorValidatorCoverage: number
+}
+
+export type ValidatorCandidateStrategy =
+	| 'ACTIVE'
+	| 'CLOUD'
+	| 'HIGH_RETAINER'
+	| 'HIGH_COMPOUNDER'
+
+export type ValidatorCandidate = Pick<ValidatorListItem, 'address' | 'prefs'>
+
+export interface ValidatorCandidateBatchVariables
+	extends Record<string, unknown> {
+	network: string
+	strategies: ValidatorCandidateStrategy[]
+	active?: boolean
+	excludeAddresses?: string[]
+	topPercent?: number
+}
+
+export interface OptimalValidatorBatchVariables
+	extends Record<string, unknown> {
+	network: string
+	active?: boolean
+	excludeAddresses?: string[]
+}
+
+export interface OptimalValidatorBatchData {
+	fetchOptimalValidatorBatch: ValidatorCandidate[]
+}
+
+export interface AllRewardsData {
+	allRewards: StakingReward[]
+}
+
+interface StakingRewardFields {
 	era: number
 	reward: string
 	claimed: boolean
 	timestamp: number
 	validator: string
-	type: string
+	page: number | null
+	chainId: number | null
 }
+
+export interface NominatorReward extends StakingRewardFields {
+	type: 'nominator'
+}
+
+export interface ValidatorIncentiveReward extends StakingRewardFields {
+	type: 'validator-incentive'
+	page: number
+	chainId: number
+}
+
+export type StakingReward = NominatorReward | ValidatorIncentiveReward
 
 export interface UnclaimedRewardsData {
 	unclaimedRewards: UnclaimedRewards
@@ -82,6 +248,10 @@ export interface CombinedPoolRewardsResult {
 
 export interface PoolEraRewardsData {
 	poolEraRewards: PoolReward[]
+}
+
+export interface EraActiveNominatorCountData {
+	eraActiveNominatorCount: number
 }
 
 export interface EraTotalNominatorsData {
@@ -183,6 +353,57 @@ export interface ValidatorAvgRewardRateBatch {
 	rate: number
 }
 
+export interface ValidatorRetainmentBatch {
+	validator: string
+	result: ValidatorRetainmentResult | null
+}
+
+export interface ValidatorRetainmentResult {
+	months: ValidatorRetainmentWindow[]
+	retainment: ValidatorRetainment
+}
+
+export interface ValidatorRetainmentData {
+	validatorRetainment: ValidatorRetainmentResult | null
+}
+
+export interface RetainmentWindows<Window> {
+	oneMonth: Window | null
+	threeMonths: Window | null
+}
+
+export interface GraphRetainmentWindow {
+	month: number
+	year: number
+	windowMonths: number
+	includedMonthCount: number
+	fromEra: number
+	toEra: number
+	fromTimestamp: number
+	toTimestamp: number
+	graphRewards: string
+	netInflow: string
+	retained: string
+	retainmentRate: number | null
+}
+
+export interface ValidatorRetainmentWindow extends GraphRetainmentWindow {
+	validatorRewards: string
+	selfStakeChange: string
+	compounded: string
+	compoundRate: number | null
+}
+
+export type OperatorRetainmentWindow = GraphRetainmentWindow
+export type ValidatorRetainment = RetainmentWindows<ValidatorRetainmentWindow>
+export type OperatorRetainment = RetainmentWindows<OperatorRetainmentWindow>
+
+export interface ValidatorDetailsBatchData
+	extends ValidatorAvgRewardRateBatchData,
+		ValidatorEraPointsBatchData {
+	validatorRetainmentBatch: ValidatorRetainmentBatch[]
+}
+
 export interface PoolReward {
 	reward: string
 	timestamp: number
@@ -222,16 +443,23 @@ export interface PoolMembers {
 export interface PoolMember {
 	poolId: number
 	address: string
-	points: bigint
+	points: string
+	claimPermission: PoolMemberClaimPermission | null
 	unbondingEras: {
 		era: number
 		amount: string
 	}[]
 }
 
-export interface PayoutsAndClaims extends Array<NominatorReward | PoolReward> {}
+export type PoolMemberClaimPermission =
+	| 'Permissioned'
+	| 'PermissionlessCompound'
+	| 'PermissionlessWithdraw'
+	| 'PermissionlessAll'
 
-export type RewardResult = NominatorReward | PoolReward
+export interface PayoutsAndClaims extends Array<StakingReward | PoolReward> {}
+
+export type RewardResult = StakingReward | PoolReward
 export interface RewardResults extends Array<RewardResult> {}
 
 export interface AverageRewardRateResult {
@@ -248,27 +476,6 @@ export interface ValidatorStatsData {
 export interface ValidatorStats {
 	averageRewardRate: AverageRewardRateResult
 	activeValidatorRanks: ValidatorRanksResult
-}
-
-export interface RpcEndpointHealthData {
-	rpcEndpointHealth: RpcEndpointChainHealth
-}
-
-export interface RpcEndpointChainHealth {
-	chains: {
-		chain: string
-		endpoints: {
-			label: string
-			url: string
-		}[]
-	}[]
-}
-
-export interface RpcHealthLabels {
-	chains: {
-		chain: string
-		endpoints: string[]
-	}[]
 }
 
 export interface SearchValidatorsData {
@@ -300,22 +507,53 @@ export interface SearchValidators {
 	}[]
 }
 
+export interface GetNomineesStatusData {
+	getNomineesStatus: { statuses: NomineeStatusEntry[] }
+}
+
+export interface GetNomineesInEraData {
+	getNomineesInEra: string[]
+}
+
 export interface GetActiveStakerWithNomineesData {
 	isActiveStaker: {
 		active: boolean
 	}
 	getNomineesStatus: {
-		statuses: {
-			address: string
-			status: string
-		}[]
+		statuses: NomineeStatusEntry[]
 	}
 }
 export interface ActiveStatusWithNominees {
 	active: boolean
-	statuses: {
-		address: string
-		status: string
+	statuses: NomineeStatusEntry[]
+}
+
+export interface NomineeStatusEntry {
+	address: string
+	status: string
+	// The supplied nominator's active stake backing this validator, in planck.
+	activeBacking: string
+}
+
+export type StakerNominationStatus = 'active' | 'inactive' | 'waiting'
+
+export interface GetNominationStatusData {
+	getNominationStatus: {
+		status: StakerNominationStatus
+	}
+}
+
+export type ValidatorWarningType =
+	| 'ZUG_VALIDATOR'
+	| 'HETZNER'
+	| 'LOW_HISTORICAL_BACKING'
+
+export type ValidatorWarnings = Record<string, ValidatorWarningType[]>
+
+export interface GetValidatorWarningsData {
+	getValidatorWarnings: {
+		candidate: string
+		warnings: ValidatorWarningType[]
 	}[]
 }
 

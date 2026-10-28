@@ -9,12 +9,16 @@ import type { StakingChain } from '../types'
 export const erasStakersPagedEntries = async <T extends StakingChain>(
 	api: DedotClient<T>,
 	era: number,
-	validator: string,
+	validator?: string,
 ): Promise<ErasStakersPagedEntries> => {
-	const result = await api.query.staking.erasStakersPaged.entries(
-		era,
-		new AccountId32(validator),
-	)
+	// An era prefix reads all pages in one scan; validator-specific queries can still narrow it.
+	const result =
+		validator === undefined
+			? await api.query.staking.erasStakersPaged.entries(era)
+			: await api.query.staking.erasStakersPaged.entries(
+					era,
+					new AccountId32(validator),
+				)
 
 	return result.map(([key, value]) => [
 		[key[0], key[1].address(api.consts.system.ss58Prefix), key[2]],

@@ -1,0 +1,34 @@
+diff --git a/cjs/extrinsic/extensions/ExtraSignedExtension.js b/cjs/extrinsic/extensions/ExtraSignedExtension.js
+index 16f966ead3be3bec380ce6e55f8b8d4d380bb5e1..5330e6f5f6a3a0b0ed446a8f55ce5d22f4a7272e 100644
+--- a/cjs/extrinsic/extensions/ExtraSignedExtension.js
++++ b/cjs/extrinsic/extensions/ExtraSignedExtension.js
+@@ -60,7 +60,11 @@ class ExtraSignedExtension extends SignedExtension_js_1.SignedExtension {
+         return $.Tuple($Call, this.$Data, this.$AdditionalSigned);
+     }
+     get #signedExtensionDefs() {
+-        return this.registry.metadata.extrinsic.signedExtensions;
++        const { signedExtensions, signedExtensionsByVersion } = this.registry.metadata.extrinsic;
++        // Match PortableRegistry.$Extra(): version 4 transactions use extension version 0.
++        const indexes = signedExtensionsByVersion.get(0);
++        (0, utils_1.assert)(indexes, 'No signed extensions found for extension version 0');
++        return indexes.map((index) => signedExtensions[index]);
+     }
+     #getSignedExtensions() {
+         return this.#signedExtensionDefs.map((extDef) => {
+diff --git a/extrinsic/extensions/ExtraSignedExtension.js b/extrinsic/extensions/ExtraSignedExtension.js
+index 8e86c32b1c8147bd38d01f3c80b627e67d4d47d0..0260024373d08c3767c6e70165ea103cc3a39d9c 100644
+--- a/extrinsic/extensions/ExtraSignedExtension.js
++++ b/extrinsic/extensions/ExtraSignedExtension.js
+@@ -34,7 +34,11 @@ export class ExtraSignedExtension extends SignedExtension {
+         return $.Tuple($Call, this.$Data, this.$AdditionalSigned);
+     }
+     get #signedExtensionDefs() {
+-        return this.registry.metadata.extrinsic.signedExtensions;
++        const { signedExtensions, signedExtensionsByVersion } = this.registry.metadata.extrinsic;
++        // Match PortableRegistry.$Extra(): version 4 transactions use extension version 0.
++        const indexes = signedExtensionsByVersion.get(0);
++        assert(indexes, 'No signed extensions found for extension version 0');
++        return indexes.map((index) => signedExtensions[index]);
+     }
+     #getSignedExtensions() {
+         return this.#signedExtensionDefs.map((extDef) => {

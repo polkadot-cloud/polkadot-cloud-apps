@@ -15,6 +15,7 @@ export interface FooterProps {
 }
 
 export interface HeaderProps {
+	action?: ReactNode
 	title?: string
 	complete?: boolean | null
 	thisSection: number

@@ -1,8 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { createSafeContext, useEffectIgnoreInitial } from '@w3ux/hooks'
-import { setStateWithRef } from '@w3ux/utils'
+import {
+	createSafeContext,
+	useEffectIgnoreInitial,
+} from '@polkadot-cloud/hooks'
+import { setStateWithRef } from '@polkadot-cloud/utils'
 import type { ReactNode, RefObject } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
@@ -169,14 +172,17 @@ export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 	const [canvasStatus, setCanvasStatus] = useState<CanvasStatus>('closed')
 
 	// Store config options of the canvas
-	const [canvasConfig, setCanvasConfig] = useState<CanvasConfig>({
-		key: '',
-		scroll: true,
-		options: {},
-	})
+	const [canvasConfig, setCanvasConfig] =
+		useState<CanvasConfig>(defaultCanvasConfig)
 
 	// Open the canvas
-	const openCanvas = ({ key, size, scroll = true, options }: CanvasConfig) => {
+	const openCanvas = ({
+		key,
+		size,
+		scroll = true,
+		options,
+		variant = 'default',
+	}: CanvasConfig) => {
 		document.body.classList.add('disableBodyScroll')
 		setCanvasStatus('open')
 		setOpenOverlayInstances('inc', 'canvas')
@@ -185,6 +191,7 @@ export const OverlayProvider = ({ children }: { children: ReactNode }) => {
 			size,
 			scroll,
 			options: options || {},
+			variant,
 		})
 	}
 

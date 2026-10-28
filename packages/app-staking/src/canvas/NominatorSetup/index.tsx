@@ -4,9 +4,9 @@
 import { Bond } from 'canvas/NominatorSetup/Bond'
 import { Payee } from 'canvas/NominatorSetup/Payee'
 import { Summary } from 'canvas/NominatorSetup/Summary'
-import { CardWrapper } from 'library/Card/Wrappers'
 import { Nominate } from 'library/SetupSteps/Nominate'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from 'ui-app/Card'
 import { Head, Main, Title } from 'ui-core/canvas'
 import { CloseCanvas } from 'ui-overlay'
 

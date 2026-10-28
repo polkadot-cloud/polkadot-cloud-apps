@@ -1,15 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useTimeLeft } from '@w3ux/hooks'
-import { secondsFromNow } from '@w3ux/hooks/util'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import { useApi } from 'hooks/useApi'
 import { useEraTimeLeft } from 'hooks/useEraTimeLeft'
 import { useNetwork } from 'hooks/useNetwork'
+import { useTimeLeft } from 'hooks/useTimeLeft'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatTimeleft } from 'utils'
+import { formatTimeleft, secondsFromNow } from 'utils'
 import type { UseNextRewardsReturn } from './types'
 
 export const useNextRewards = (): UseNextRewardsReturn => {

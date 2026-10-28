@@ -3,12 +3,10 @@
 
 import { faBars, faGripVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ellipsisFn } from '@w3ux/utils'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { ListProvider, useList } from 'contexts/List'
 import { useBondedPools } from 'contexts/Pools/BondedPools'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { formatDistance, fromUnixTime } from 'date-fns'
 import { useApi } from 'hooks/useApi'
 import { useDateFormat } from 'hooks/useDateFormat'
@@ -20,12 +18,12 @@ import { Pagination } from 'library/List/Pagination'
 import { Identity } from 'library/ListItem/Labels/Identity'
 import { PoolIdentity } from 'library/ListItem/Labels/PoolIdentity'
 import { motion } from 'motion/react'
-import { isPoolReward, isPoolShareReward } from 'plugin-staking-api'
-import type {
-	NominatorReward,
-	PoolReward,
-	RewardResults,
-} from 'plugin-staking-api/types'
+import {
+	isPoolReward,
+	isPoolShareReward,
+	isValidatorIncentiveReward,
+} from 'plugin-staking-api'
+import type { RewardResults } from 'plugin-staking-api/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BondedPool } from 'types'
@@ -47,7 +45,6 @@ export const PayoutList = ({
 	const { isReady, activeEra } = useApi()
 	const { network } = useNetwork()
 	const { bondedPools } = useBondedPools()
-	const { getValidators } = useValidators()
 	const { getThemeValue } = useThemeValues()
 	const dateFormat = useDateFormat(i18n.resolvedLanguage)
 	const {
@@ -97,8 +94,6 @@ export const PayoutList = ({
 			: `${t('noRecentPayouts')}.`
 		: null
 
-	const allValidators = getValidators()
-
 	return (
 		<ListWrapper>
 			<Header>
@@ -140,42 +135,32 @@ export const PayoutList = ({
 					</ListStatusWrapper>
 				) : (
 					<MotionContainer>
-						{listPayouts.map((p) => {
-							const poolReward = isPoolReward(p)
-							const record = poolReward
-								? (p as PoolReward)
-								: (p as NominatorReward)
-
-							const label = poolReward
-								? isPoolShareReward(p)
-									? t('share', { ns: 'app' })
-									: t('poolClaim', { ns: 'app' })
-								: t('payout', { ns: 'app' })
-
-							const labelClass = isPoolShareReward(p)
+						{listPayouts.map((record) => {
+							const poolReward = isPoolReward(record)
+							const poolShare = isPoolShareReward(record)
+							const label = t(
+								poolShare
+									? 'share'
+									: poolReward
+										? 'poolClaim'
+										: isValidatorIncentiveReward(record)
+											? 'validatorIncentiveReward'
+											: 'payout',
+								{ ns: 'app' },
+							)
+							const labelClass = poolShare
 								? 'share'
 								: poolReward
 									? 'claim'
 									: 'reward'
 
-							let batchIndex
 							let pool: BondedPool | undefined
 							let keyId: string
 							if (poolReward) {
-								const item = p as PoolReward
-								const poolIndex = bondedPools.findIndex(
-									({ id }) => id === item.poolId,
-								)
-								pool = poolIndex >= 0 ? bondedPools[poolIndex] : undefined
-								batchIndex = Math.max(poolIndex, 0)
-								keyId = `pool_${item.source ?? 'claim'}_${item.poolId}_${item.timestamp}`
+								pool = bondedPools.find(({ id }) => id === record.poolId)
+								keyId = `pool_${record.source ?? 'claim'}_${record.poolId}_${record.timestamp}`
 							} else {
-								const item = p as NominatorReward
-								const validatorIndex = allValidators.findIndex(
-									(v) => v.address === item.validator,
-								)
-								batchIndex = Math.max(validatorIndex, 0)
-								keyId = `nom_${item.validator}_${item.era}_${item.timestamp}`
+								keyId = `staking_${record.type}_${record.chainId}_${record.validator}_${record.era}_${record.page}_${record.timestamp}`
 							}
 
 							return (
@@ -194,9 +179,7 @@ export const PayoutList = ({
 									}}
 								>
 									<ItemWrapper>
-										<div
-											className={`inner${isPoolShareReward(p) ? ' share' : ''}`}
-										>
+										<div className={`inner${poolShare ? ' share' : ''}`}>
 											<div className="row">
 												<div>
 													<div>
@@ -218,15 +201,9 @@ export const PayoutList = ({
 												<div>
 													<div>
 														{!poolReward ? (
-															<NominatorIdentity
-																batchIndex={batchIndex}
-																address={(record as NominatorReward).validator}
-															/>
+															<Identity address={record.validator} />
 														) : (
-															<PoolClaim
-																pool={pool}
-																poolId={(record as PoolReward).poolId}
-															/>
+															<PoolClaim pool={pool} poolId={record.poolId} />
 														)}
 														{label === t('slashed') && (
 															<h4>{t('deductedFromBond')}</h4>
@@ -284,19 +261,6 @@ const EndBadge = ({ children }: { children: string }) => (
 		</ListEndBadge>
 	</motion.div>
 )
-
-export const NominatorIdentity = ({
-	batchIndex,
-	address,
-}: {
-	batchIndex: number
-	address: string
-}) =>
-	batchIndex > 0 ? (
-		<Identity address={address} />
-	) : (
-		<div>{ellipsisFn(address)}</div>
-	)
 
 export const PoolClaim = ({
 	pool,

@@ -48,13 +48,6 @@
 					"Fonları bağlamak, {NETWORK_UNIT}'i 'kilitleme' (veya stake etme) işlemidir. Bağlanan {NETWORK_UNIT} daha sonra otomatik olarak nominasyon yaptığınız bir veya daha fazla validatöre tahsis edilir."
 				]
 			],
-			"decentralizationAnalyticsPeriod": [
-				"Merkeziyetsizlik Analiz Dönemi",
-				[
-					"Nominasyonunuzun merkeziyetsizliği, son 30 günde yapılan ödemeler analiz edilerek hesaplanır. Ağa bağlı olarak bu, belirli sayıda Era'ya karşılık gelir.",
-					"30 gün, derlemenin anlamlı olması için yeterli bilgi sağlar ve aynı zamanda nominasyonlardaki değişikliklerin birkaç gün içinde bu analizi etkilemeye başlaması için yeterince kısadır."
-				]
-			],
 			"epoch": [
 				"Epoch",
 				[
@@ -73,15 +66,6 @@
 				"Era Puanları",
 				[
 					"Era Puanları, bir validatörün mevcut Era'da ne kadar iyi performans gösterdiğinin bir ölçüsüdür. Bir validatörün Era Puanı ne kadar fazlaysa, Era'nın sonunda o kadar fazla ödül alır."
-				]
-			],
-			"geolocationOfEachNomination": [
-				"Her Nominasyonun Coğrafi Konumu",
-				[
-					"Nominasyon yapılan her validatör, IP adresine göre coğrafi olarak konumlandırılabilen belirli bir veri merkezinde çalışır.",
-					"Tablo, nominasyon yapılan her validatörün coğrafi olarak konumlandırıldığı son bölgeyi, ülkeyi ve ağı gösterir.",
-					"Validatör, analiz döneminde birden fazla konumda bulunduğunda bir ++ işareti görüntülenir.",
-					"Gösterilen yüzde, bu validatörün analiz döneminde size ödediği ödüllerin oranıdır."
 				]
 			],
 			"halving": [
@@ -160,13 +144,6 @@
 				[
 					"Nominasyon yapma, {NETWORK_UNIT}'inizi stake etmek istediğiniz validatörleri seçme işlemidir. Her hesabınız için en fazla 16 validatöre nominasyon yapmayı seçebilirsiniz.",
 					"Seçtiğiniz validatörlere nominasyon yaptığınızda, bunlar nominasyonlarınız haline gelir."
-				]
-			],
-			"nominationPayoutDistribution": [
-				"Nominasyon Ödeme Dağılımı",
-				[
-					"Nominasyonunuzun merkeziyetsizliği.",
-					"Aşağıdaki grafikler, ödülü ödeyen validatörün bölgesine, ülkesine ve IP ağına göre derlenen ödül dağılımını gösterir."
 				]
 			],
 			"nominationPools": [
@@ -284,13 +261,6 @@
 					"Hesabınızda zaten hesabınızın varoluşsal mevduatını karşılayan kilitli bir bakiye varsa (örneğin nominasyon için kilitlenmiş bakiye), staking dashboard ek serbest bakiye kilitlemez."
 				]
 			],
-			"rewardsByCountryAndNetwork": [
-				"Ülke ve Ağa Göre Ödüller",
-				[
-					"Farklı ülkelerden ve IP ağlarından üretilen ödüllerin tahmini yüzdesini gösterir.",
-					"Polkawatch merkeziyetsizlik analitiği, ödülleri Validatörün IP Coğrafi Konumuna göre derleyerek hesaplanır. Örnekleme dönemi son 60 gündür."
-				]
-			],
 			"selfStake": [
 				"Öz Stake",
 				[
@@ -308,13 +278,6 @@
 				"Toplam Nominatör",
 				[
 					"Mevcut oturumda aktif veya pasif olmalarından bağımsız olarak ağda stake yapan hesaplar."
-				]
-			],
-			"totalPayoutsAnalysed": [
-				"Analiz Edilen Toplam Ödemeler",
-				[
-					"Nominasyon yapılan validatörler tarafından son 30 günde ödenen derlenmiş {NETWORK_UNIT} ödülleri.",
-					"Bu ödemeler, nominasyonunuzun merkeziyetsizliğini hesaplamak için kullanıldı."
 				]
 			],
 			"validator": [

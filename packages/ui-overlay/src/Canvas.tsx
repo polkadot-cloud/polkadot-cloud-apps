@@ -24,7 +24,7 @@ export const Canvas = ({
 		canvas: {
 			status,
 			setCanvasStatus,
-			config: { key, size },
+			config: { key, size, variant = 'default' },
 		},
 	} = useOverlay()
 
@@ -73,12 +73,13 @@ export const Canvas = ({
 	return status === 'closed' ? null : (
 		<Container
 			ref={scope}
+			variant={variant}
 			initial={{
 				opacity: 0,
 			}}
 		>
-			<Scroll>
-				<Content size={size}>
+			<Scroll variant={variant}>
+				<Content size={size} variant={variant}>
 					<ErrorBoundary FallbackComponent={Fallback}>
 						<Suspense fallback={<OverlayPreload type="canvas" />}>
 							{ActiveCanvas && <ActiveCanvas />}

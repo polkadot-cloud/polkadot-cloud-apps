@@ -5,7 +5,6 @@ import { faEnvelopeOpenText, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount } from '@polkadot-cloud/connect'
 import { StakingProductionURL } from 'consts'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useBalances } from 'hooks/useBalances'
 import { useNetwork } from 'hooks/useNetwork'
 import { useTranslation } from 'react-i18next'
@@ -16,11 +15,12 @@ import { Padding, Support } from 'ui-core/modal'
 export const Invite = () => {
 	const { network } = useNetwork()
 	const { t } = useTranslation()
-	const { formatWithPrefs } = useValidators()
 	const { activeAddress } = useActiveAccount()
 	const { getPoolMembership, getNominations } = useBalances()
 
-	const nominated = formatWithPrefs(getNominations(activeAddress))
+	const nominated = getNominations(activeAddress).map((address) => ({
+		address,
+	}))
 	const { membership } = getPoolMembership(activeAddress)
 	const poolId = membership?.poolId || 0
 

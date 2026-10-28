@@ -1,14 +1,26 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { planckToUnit, rmCommas } from '@w3ux/utils'
+import { planckToUnit, rmCommas } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 
+export const formatCompactNumber = (value: number, locale?: string) =>
+	value.toLocaleString(locale, {
+		notation: 'compact',
+		maximumFractionDigits: 1,
+	})
+
 // Return `planckToUnit` as a BigNumber
-export const planckToUnitBn = (val: BigNumber, units: number): BigNumber =>
-	new BigNumber(
-		planckToUnit(val.decimalPlaces(0).toFormat({ groupSeparator: '' }), units),
+export const planckToUnitBn = (val: BigNumber, units: number): BigNumber => {
+	const result = new BigNumber(
+		planckToUnit(
+			val.abs().decimalPlaces(0).toFormat({ groupSeparator: '' }),
+			units,
+		),
 	)
+
+	return val.isNegative() ? result.negated() : result
+}
 
 // Converts a string to a BigNumber
 export const stringToBn = (value: string): BigNumber =>

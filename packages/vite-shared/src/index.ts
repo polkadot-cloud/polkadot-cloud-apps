@@ -6,6 +6,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
 
+export { cloudRpcPlugin } from './cloudRpc.ts'
+
 const faviconDir = fileURLToPath(new URL('../public/favicons', import.meta.url))
 
 const contentTypes: Record<string, string> = {
@@ -77,38 +79,23 @@ export const sharedFaviconPlugins = (): Plugin[] => [
 	buildSharedFavicons(),
 ]
 
-export const simpleAnalyticsPlugin = (): Plugin => ({
-	name: 'simple-analytics',
+type UmamiPluginOptions = {
+	websiteId: string
+}
+
+export const umamiPlugin = ({ websiteId }: UmamiPluginOptions): Plugin => ({
+	name: 'umami',
 	apply: (_, { command, mode }) => command === 'build' && mode === 'production',
 	transformIndexHtml() {
 		return [
 			{
 				tag: 'script',
-				children: `window.sa_event =
-  window.sa_event ||
-  ((...args) => {
-    if (window.sa_event.q) {
-      window.sa_event.q.push(args)
-    } else {
-      window.sa_event.q = [args]
-    }
-  })`,
-				injectTo: 'head',
-			},
-			{
-				tag: 'script',
 				attrs: {
 					defer: true,
-					referrerpolicy: 'no-referrer-when-downgrade',
-					src: 'https://apisa.polkadot.cloud/latest.js',
+					src: 'https://ua.polkadot.cloud/script.js',
+					'data-website-id': websiteId,
 				},
-				injectTo: 'body',
-			},
-			{
-				tag: 'noscript',
-				children:
-					'<img src="https://apisa.polkadot.cloud/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" />',
-				injectTo: 'body',
+				injectTo: 'head',
 			},
 		]
 	},

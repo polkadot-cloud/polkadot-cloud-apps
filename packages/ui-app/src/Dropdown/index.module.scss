@@ -16,13 +16,23 @@
 }
 
 .trigger {
-	background-color: var(--gray-100);
+	background-color: var(--dropdown-trigger-bg, var(--gray-100));
 	border-radius: 0.75rem;
 	box-shadow: var(--shadow-alt);
-	border: 1px solid var(--shade-200);
+	border: 1px solid var(--dropdown-trigger-border, var(--shade-200));
+
+	:global(.dark) & {
+		background-color: var(--dropdown-trigger-bg, var(--bg-input));
+		border-color: var(--dropdown-trigger-border, var(--gray-500));
+	}
 
 	&:hover {
-		border-color: var(--gray-500);
+		border-color: var(--dropdown-trigger-active-border, var(--gray-500));
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--dropdown-trigger-active-border, transparent);
+		outline-offset: 2px;
 	}
 }
 
@@ -53,7 +63,7 @@
 }
 
 .chevron {
-	color: var(--gray-600);
+	color: var(--text-tertiary);
 	font-size: 1.25rem;
 	line-height: 1.8rem;
 }
@@ -69,6 +79,12 @@
 	border-radius: 0.75rem;
 	box-shadow: var(--shadow-alt);
 	overflow: hidden;
+}
+
+:global(.dark) .menu {
+	background-color: var(--bg-modal);
+	border-color: var(--gray-500);
+	box-shadow: var(--shadow);
 }
 
 .menuTopLayer {
@@ -93,7 +109,12 @@
 	font-weight: 700;
 }
 
+:global(.dark) .option:hover,
+:global(.dark) .optionActive {
+	background-color: var(--bg-selected);
+}
+
 .check {
-	color: var(--status-success);
+	color: var(--gray-600);
 	font-size: 0.95rem;
 }

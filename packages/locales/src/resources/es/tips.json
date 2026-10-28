@@ -5,9 +5,9 @@
 			"Conecta tus cuentas para comenzar a usar Polkadot Cloud Staking.",
 			[
 				"Conecta tus cuentas para comenzar a usar Polkadot Cloud Staking.",
-				"Las cuentas se acceden a través de extensiones web, que actúan como billeteras. Tu billetera se usa para firmar las transacciones que envías dentro del dashboard.",
-				"Conecta tus billeteras desde el botón Conectar en la parte superior derecha del dashboard, y selecciona la cuenta con la que deseas hacer staking para continuar.",
-				"Cloud Staking soporta una amplia gama de extensiones y billeteras."
+				"Las cuentas se acceden a través de extensiones web, que actúan como carteras. Tu cartera se usa para firmar las transacciones que envías dentro del dashboard.",
+				"Conecta tus carteras desde el botón Conectar en la parte superior derecha del dashboard, y selecciona la cuenta con la que deseas hacer staking para continuar.",
+				"Cloud Staking soporta una amplia gama de extensiones y carteras."
 			]
 		],
 		"howToStake": [
@@ -25,7 +25,7 @@
 			"Unirse a otro Pool",
 			"Cambia a una cuenta diferente para unirte a otro Pool.",
 			[
-				"Solo se puede unir a un Pool por cuenta en {NETWORK_NAME}. Para unirte a más Pools, primero cambia a otra cuenta."
+				"Solo puedes unirte a un Pool por cuenta en {NETWORK_NAME}. Para unirte a más Pools, primero cambia a otra cuenta."
 			]
 		],
 		"keepPoolNominating": [
@@ -43,6 +43,15 @@
 			[
 				"Asegúrate de revisar el rendimiento de tus nominaciones regularmente.",
 				"Para maximizar la variedad y una mezcla descentralizada de validadores, elige validadores de diferentes entidades."
+			]
+		],
+		"managingValidator": [
+			"Gestionar tu validador",
+			"Gestiona los fondos vinculados y el beneficiario de tu validador, y consulta sus recompensas.",
+			[
+				"Usa el panel para gestionar los {NETWORK_UNIT} vinculados a tu validador: añade fondos, inicia su desvinculación, vuelve a vincular los fondos en proceso de desbloqueo y retíralos cuando estén desbloqueados.",
+				"También puedes cambiar el destino de las recompensas (beneficiario) de tu validador para elegir dónde se enviarán las recompensas futuras.",
+				"Visita la página Recompensas para consultar el historial de pagos de tu validador, revisar las recompensas reclamadas y no reclamadas y ver proyecciones que incluyen recompensas de incentivo para validadores."
 			]
 		],
 		"module": {

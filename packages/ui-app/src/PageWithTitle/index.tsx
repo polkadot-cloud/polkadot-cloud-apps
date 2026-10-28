@@ -8,13 +8,13 @@ import type { PageWithTitleProps } from './types'
 
 export const PageWithTitle = (props: PageWithTitleProps) => {
 	const { t } = useTranslation()
-	const { Entry, key } = props.page
+	const { Entry, key, titleNamespace = 'app' } = props.page
 	const appTitle = props.appTitle ?? t('title', { ns: 'app' })
 
 	return (
 		<Page.Container>
 			<Helmet>
-				<title>{`${t(key, { ns: 'app' })} | ${appTitle}`}</title>
+				<title>{`${t(key, { ns: titleNamespace })} | ${appTitle}`}</title>
 			</Helmet>
 			<Entry page={props.page} />
 		</Page.Container>

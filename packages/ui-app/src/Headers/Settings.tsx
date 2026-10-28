@@ -3,7 +3,7 @@
 
 import { faCog, faPlug } from '@fortawesome/free-solid-svg-icons'
 import { useTheme } from 'hooks/useTheme'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { ButtonHeader } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import { ConnectPopover } from './Popovers/ConnectPopover'
@@ -11,23 +11,58 @@ import { MenuPopover } from './Popovers/MenuPopover'
 import type { ToggleConnectProps } from './Popovers/types'
 import type { MenuPopoverFeatureFlags } from './types'
 
+export const SettingsMenu = ({
+	menuPopoverFeatures,
+	children,
+}: {
+	menuPopoverFeatures?: MenuPopoverFeatureFlags
+	children?: ReactNode
+}) => {
+	const { themeElementRef } = useTheme()
+	const [openSettings, setOpenSettings] = useState<boolean>(false)
+
+	return (
+		<Popover
+			open={openSettings}
+			portalContainer={themeElementRef.current || undefined}
+			content={
+				<MenuPopover setOpen={setOpenSettings} features={menuPopoverFeatures}>
+					{children}
+				</MenuPopover>
+			}
+			onTriggerClick={() => {
+				setOpenSettings(!openSettings)
+			}}
+		>
+			<ButtonHeader className="header-settings" icon={faCog} />
+		</Popover>
+	)
+}
+
 export const Settings = ({
 	openConnect,
 	setOpenConnect,
+	openAccountsOnConnect,
 	menuPopoverFeatures,
+	children,
 }: ToggleConnectProps & {
+	openAccountsOnConnect?: boolean
 	menuPopoverFeatures?: MenuPopoverFeatureFlags
+	children?: ReactNode
 }) => {
 	const { themeElementRef } = useTheme()
-
-	const [openSettings, setOpenSettings] = useState<boolean>(false)
 
 	return (
 		<>
 			<Popover
 				open={openConnect}
 				portalContainer={themeElementRef.current || undefined}
-				content={<ConnectPopover setOpen={setOpenConnect} />}
+				content={
+					<ConnectPopover
+						setOpen={setOpenConnect}
+						openAccountsOnConnect={openAccountsOnConnect}
+					/>
+				}
 				onTriggerClick={() => {
 					setOpenConnect(!openConnect)
 				}}
@@ -35,21 +70,9 @@ export const Settings = ({
 			>
 				<ButtonHeader className="header-connect" icon={faPlug} />
 			</Popover>
-			<Popover
-				open={openSettings}
-				portalContainer={themeElementRef.current || undefined}
-				content={
-					<MenuPopover
-						setOpen={setOpenSettings}
-						features={menuPopoverFeatures}
-					/>
-				}
-				onTriggerClick={() => {
-					setOpenSettings(!openSettings)
-				}}
-			>
-				<ButtonHeader className="header-settings" icon={faCog} />
-			</Popover>
+			<SettingsMenu menuPopoverFeatures={menuPopoverFeatures}>
+				{children}
+			</SettingsMenu>
 		</>
 	)
 }

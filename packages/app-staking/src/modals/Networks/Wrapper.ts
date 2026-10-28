@@ -18,7 +18,15 @@ export const Wrapper = styled.div`
 `
 
 export const ContentWrapper = styled.div`
+  --network-button-background: var(--gray-400);
+  --network-button-hover-background: var(--gray-500);
+
   width: 100%;
+
+  .light & {
+    --network-button-background: var(--gray-300);
+    --network-button-hover-background: var(--gray-400);
+  }
 
   > h4 {
     border-bottom: 1px solid var(--gray-500);
@@ -49,7 +57,7 @@ export const ContentWrapper = styled.div`
 `
 
 export const NetworkButton = styled.button<{ $connected: boolean }>`
-  background: var(--gray-400);
+  background: var(--network-button-background);
   border: 1px solid var(--status-success-transparent);
   padding: 1rem;
   cursor: pointer;
@@ -88,7 +96,7 @@ export const NetworkButton = styled.button<{ $connected: boolean }>`
     justify-content: flex-end;
   }
   &:hover {
-    background: var(--gray-500);
+    background: var(--network-button-hover-background);
   }
   .icon {
     margin-right: 0.5rem;
@@ -106,7 +114,7 @@ export const NetworkButton = styled.button<{ $connected: boolean }>`
   &:disabled {
     cursor: default;
     &:hover {
-      background: var(--gray-400);
+      background: var(--network-button-background);
     }
   }
 `
@@ -150,7 +158,7 @@ export const ConnectionsWrapper = styled.div`
 `
 
 export const ConnectionButton = styled.button<{ $connected: boolean }>`
-  background: var(--gray-400);
+  background: var(--network-button-background);
   border: 1px solid var(--status-success-transparent);
   position: relative;
   padding: 1rem 0.75rem;
@@ -168,7 +176,7 @@ export const ConnectionButton = styled.button<{ $connected: boolean }>`
   width: 100%;
 
   &:hover {
-    background: var(--gray-500);
+    background: var(--network-button-hover-background);
   }
 
   > h3 {
@@ -185,7 +193,7 @@ export const ConnectionButton = styled.button<{ $connected: boolean }>`
   &:disabled {
     cursor: default;
     &:hover {
-      background: var(--gray-400);
+      background: var(--network-button-background);
     }
     &.off {
       h3 {

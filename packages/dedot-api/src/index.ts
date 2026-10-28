@@ -3,12 +3,14 @@
 
 import { createProxiesLifecycle } from '@polkadot-cloud/connect-proxies'
 import {
+	lockNetwork,
 	networkConfig$,
 	setNetworkConfig,
 	setServiceInterface,
 } from 'global-bus'
 import { getInitialNetworkConfig } from 'global-bus/util'
 import { pairwise, startWith } from 'rxjs'
+import { runMigrations } from 'utils'
 import { onNetworkReset } from './reset'
 import { getDefaultService } from './start'
 import type { DedotServiceConfig, ServiceClass } from './types'
@@ -22,8 +24,19 @@ const proxiesLifecycle = createProxiesLifecycle()
 
 // Start service for the current network
 export const initDedotService = async (features: DedotServiceConfig = {}) => {
+	const { network: fixedNetwork, ...serviceFeatures } = features
+
+	// Apply global storage migrations before reading the initial RPC configuration.
+	runMigrations()
+
+	// Fixed-network apps must override URL and persisted network state before React renders or the
+	// asynchronous RPC configuration is resolved.
+	if (fixedNetwork) {
+		lockNetwork(fixedNetwork)
+	}
+
 	// Populate network config with sanitized RPC endpoints
-	const config = await getInitialNetworkConfig()
+	const config = await getInitialNetworkConfig(fixedNetwork)
 	setNetworkConfig(
 		config.network,
 		config.rpcEndpoints,
@@ -48,18 +61,6 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 
 			const { network, ...rest } = cur
 			// Type narrow services and apis
-			if (network === 'westend') {
-				const { Service, apis, ids, providerRelay, providerPeople } =
-					await getDefaultService(network, rest)
-				service = new Service(
-					cur,
-					ids,
-					...apis,
-					providerRelay,
-					providerPeople,
-					features,
-				)
-			}
 			if (network === 'kusama') {
 				const { Service, apis, ids, providerRelay, providerPeople } =
 					await getDefaultService(network, rest)
@@ -69,7 +70,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 			if (network === 'polkadot') {
@@ -81,7 +82,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 			if (network === 'paseo') {
@@ -93,7 +94,7 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 					...apis,
 					providerRelay,
 					providerPeople,
-					features,
+					serviceFeatures,
 				)
 			}
 

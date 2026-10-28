@@ -5,7 +5,7 @@ export type ValidatorStatus = 'waiting' | 'active'
 
 export interface Validator {
 	address: string
-	prefs: ValidatorPrefs
+	prefs: ValidatorPrefs | null
 }
 
 export interface ValidatorPrefs {

@@ -2,15 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import BigNumber from 'bignumber.js'
-import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import {
 	eraRewardPoints$,
 	getEraRewardPoints,
 	getValidatorEraPoints,
 } from 'global-bus'
 import { useApi } from 'hooks/useApi'
-import { useTooltip } from 'hooks/useTooltip'
-import { useEffect, useState } from 'react'
+import { useTooltipActions } from 'hooks/useTooltip'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TooltipArea } from 'ui-core/base'
 import { Graph } from 'ui-core/list'
@@ -18,18 +17,17 @@ import type { CurrentEraPointsProps } from '../types'
 import { normaliseEraPoints } from '../Utils'
 import { Inner } from './Inner'
 
+const getEraHigh = (individual: [string, number][]) =>
+	individual.reduce((high, [, points]) => (points > high ? points : high), 0)
+
 export const CurrentEraPoints = ({
 	address,
 	displayFor,
+	stretch = false,
 }: CurrentEraPointsProps) => {
 	const { t } = useTranslation()
 	const { isReady, activeEra } = useApi()
-	const { validatorsFetched } = useValidators()
-	const { setTooltipTextAndOpen } = useTooltip()
-
-	// Get an era high value from era individuals data
-	const getEraHigh = (individual: [string, number][]) =>
-		individual.reduce((high, [, points]) => (points > high ? points : high), 0)
+	const { setTooltipTextAndOpen } = useTooltipActions()
 
 	// Store era reward points for the current address
 	const [eraPoints, setEraPoints] = useState<BigNumber>(
@@ -42,14 +40,14 @@ export const CurrentEraPoints = ({
 	)
 
 	// Normalise era point data for graph
-	const normalisedPoints = normaliseEraPoints(
-		{
-			[String(activeEra.index)]: eraPoints,
-		},
-		new BigNumber(eraHigh),
-	)
-	const normalisedPoint = Object.values(normalisedPoints)[0]
-	const syncing = !isReady || !validatorsFetched || eraHigh <= 1
+	const graphPoints = useMemo(() => {
+		const normalisedPoints = normaliseEraPoints(
+			{ [String(activeEra.index)]: eraPoints },
+			new BigNumber(eraHigh),
+		)
+		return Array(7).fill(Object.values(normalisedPoints)[0])
+	}, [activeEra.index, eraPoints, eraHigh])
+	const syncing = !isReady || eraHigh <= 1
 	const tooltipText = t('eraRewardPoints', {
 		ns: 'app',
 		points: eraPoints.toFormat(),
@@ -67,7 +65,7 @@ export const CurrentEraPoints = ({
 		return () => {
 			subEraRewardPoints.unsubscribe()
 		}
-	}, [])
+	}, [address])
 
 	return (
 		<Graph
@@ -80,9 +78,10 @@ export const CurrentEraPoints = ({
 						onMouseMove={() => setTooltipTextAndOpen(tooltipText)}
 					/>
 					<Inner
-						points={Array(7).fill(normalisedPoint)}
+						points={graphPoints}
 						syncing={syncing}
 						displayFor={displayFor}
+						stretch={stretch}
 					/>
 				</>
 			}
