@@ -106,7 +106,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@dedot/api@1.4.0': 39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02
+  '@dedot/api@1.4.0': 08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93
   '@dedot/merkleized-metadata@1.4.0': bb034bc8f29d45fd93d827dfc9e53ac35ac83839ad763f082dbed12fd92039f9
 
 importers:
@@ -5545,7 +5545,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.6
 
-  '@dedot/api@1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)':
+  '@dedot/api@1.4.0(patch_hash=08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93)':
     dependencies:
       '@dedot/codecs': 1.4.0
       '@dedot/providers': 1.4.0
@@ -5570,7 +5570,7 @@ snapshots:
 
   '@dedot/cli@1.4.0(typescript@7.0.2)':
     dependencies:
-      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
+      '@dedot/api': 1.4.0(patch_hash=08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93)
       '@dedot/codecs': 1.4.0
       '@dedot/codegen': 1.4.0(typescript@7.0.2)
       '@dedot/wasm': 0.1.0
@@ -5590,7 +5590,7 @@ snapshots:
 
   '@dedot/codegen@1.4.0(typescript@7.0.2)':
     dependencies:
-      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
+      '@dedot/api': 1.4.0(patch_hash=08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93)
       '@dedot/codecs': 1.4.0
       '@dedot/contracts': 1.4.0(typescript@7.0.2)
       '@dedot/providers': 1.4.0
@@ -5608,7 +5608,7 @@ snapshots:
 
   '@dedot/contracts@1.4.0(typescript@7.0.2)':
     dependencies:
-      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
+      '@dedot/api': 1.4.0(patch_hash=08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93)
       '@dedot/codecs': 1.4.0
       '@dedot/types': 1.4.0
       '@dedot/utils': 1.4.0
@@ -7454,7 +7454,7 @@ snapshots:
 
   dedot@1.4.0(typescript@7.0.2):
     dependencies:
-      '@dedot/api': 1.4.0(patch_hash=39ee249402907025183d06703e3510c845c8f78cbf4fb6effaa6d7f2475caa02)
+      '@dedot/api': 1.4.0(patch_hash=08c9565e2e397439a9cd0ed6feb6955f4c845bff7c56d8e092af69229e5a6e93)
       '@dedot/cli': 1.4.0(typescript@7.0.2)
       '@dedot/codecs': 1.4.0
       '@dedot/contracts': 1.4.0(typescript@7.0.2)
