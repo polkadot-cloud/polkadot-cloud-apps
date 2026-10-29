@@ -8,7 +8,10 @@ export type RpcChainId = ChainId | 'hydration'
 
 const proxyPath = import.meta.env?.CLOUD_RPC_PROXY_PATH
 // Production uses origin access; development requires the authenticated Vite proxy.
-const cloudRpcEnabled = import.meta.env?.PROD === true || !!proxyPath
+// const cloudRpcEnabled = import.meta.env?.PROD === true || !!proxyPath
+
+// TEMP: Disable cloud RPC 
+const cloudRpcEnabled = false
 
 // Browsers cannot add WebSocket auth headers. Vite supplies a local proxy path when a dev token is
 // configured, and adds the Authorization header on the server.
