@@ -4,10 +4,32 @@ SPDX-License-Identifier: GPL-3.0-only */
 @use "sass:list";
 
 /* Cool neutrals shared with Cloud Signer, ordered from surface to text. */
-$gray-light: (#fff, #f7f8fa, #f0f1f3, #e9ebef, #dcdfe5, #c0c5cf, #7b808c, #626672, #51545d, #2b2b2b);
+$gray-light: (
+	#fff,
+	#f7f8fa,
+	#f0f1f3,
+	#e9ebef,
+	#dcdfe5,
+	#c0c5cf,
+	#7b808c,
+	#626672,
+	#51545d,
+	#2b2b2b
+);
 
 /* Keep the canvas dark; lift each surface tier before moving into borders and text. */
-$gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac1ce, #cdd3dd, #eceef3);
+$gray-dark: (
+	#17181c,
+	#26282e,
+	#30333b,
+	#363b44,
+	#444b58,
+	#687386,
+	#a8b0bf,
+	#bac1ce,
+	#cdd3dd,
+	#eceef3
+);
 
 /* general styles */
 :root {
@@ -20,12 +42,29 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--pastel-dark-green: #29362f;
 	--pastel-dark-blue: #2a3343;
 	--pastel-dark-purple: #363041;
-	--pastel-stops: var(--pastel-yellow) 0%, var(--pastel-green) 24%, var(--pastel-blue) 49%, var(--pastel-purple) 76%, var(--pastel-yellow) 100%;
-	--pastel-dark-wash:
-		radial-gradient(ellipse at 0% 0%, var(--pastel-dark-yellow), transparent 65%),
-		radial-gradient(ellipse at 100% 10%, var(--pastel-dark-purple), transparent 65%),
-		radial-gradient(ellipse at 25% 100%, var(--pastel-dark-blue), transparent 70%),
-		radial-gradient(ellipse at 100% 100%, var(--pastel-dark-green), transparent 55%);
+	--pastel-stops: var(--pastel-yellow) 0%, var(--pastel-green) 24%, var(
+		--pastel-blue
+	) 49%, var(--pastel-purple) 76%, var(--pastel-yellow) 100%;
+	--pastel-dark-wash: radial-gradient(
+		ellipse at 0% 0%,
+		var(--pastel-dark-yellow),
+		transparent 65%
+	),
+	radial-gradient(
+		ellipse at 100% 10%,
+		var(--pastel-dark-purple),
+		transparent 65%
+	),
+	radial-gradient(
+		ellipse at 25% 100%,
+		var(--pastel-dark-blue),
+		transparent 70%
+	),
+	radial-gradient(
+		ellipse at 100% 100%,
+		var(--pastel-dark-green),
+		transparent 55%
+	);
 	--btn-sm-radius: 0.75rem;
 	--btn-sm-padding: 0.45rem 1rem;
 	--btn-sm-spacing: 0.125rem;
@@ -43,7 +82,11 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 /* light theme colors */
 .light {
 	--nomination-menu-color: color-mix(in srgb, var(--gray-200), var(--gray-300));
-	--nomination-standalone-menu-color: color-mix(in srgb, #ececec 50%, var(--gray-400));
+	--nomination-standalone-menu-color: color-mix(
+		in srgb,
+		#ececec 50%,
+		var(--gray-400)
+	);
 	--nomination-popover-highlight: var(--gray-100);
 	--selection: #e4eef8;
 	--wash-yellow: rgb(227 212 152 / 6%);
@@ -58,10 +101,9 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 	--button-edge-opacity: 0.28;
 	--button-hover-edge-opacity: 0.5;
 	--bg-selected: #f5f7fa;
-	--pastel-shadow:
-		-8px 12px 28px -18px rgb(168 197 223 / 30%),
-		8px 12px 28px -18px rgb(199 180 220 / 30%),
-		0 8px 20px -12px rgb(30 35 50 / 12%);
+	--pastel-shadow: -8px 12px 28px -18px rgb(168 197 223 / 30%),
+	8px 12px 28px -18px rgb(199 180 220 / 30%),
+	0 8px 20px -12px rgb(30 35 50 / 12%);
 
 	/* Backgrounds */
 	--bg-body: #f9fafb;
@@ -219,8 +261,12 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 		rgb(199 180 220 / 8%) 75%,
 		transparent 100%
 	);
-	--shadow: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 6px rgb(0 0 0 / 10%), 0 12px 28px -16px rgb(0 0 0 / 32%);
-	--shadow-alt: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 8px -4px rgb(0 0 0 / 28%);
+	--shadow: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 6px rgb(
+		0 0 0 / 10%
+	), 0 12px 28px -16px rgb(0 0 0 / 32%);
+	--shadow-alt: inset 0 1px 0 rgb(255 255 255 / 2%), 0 2px 8px -4px rgb(
+		0 0 0 / 28%
+	);
 
 	color-scheme: dark;
 
@@ -233,12 +279,24 @@ $gray-dark: (#17181c, #26282e, #30333b, #363b44, #444b58, #687386, #a8b0bf, #bac
 /* Resolve these where the mode tokens live, including overlay theme roots. */
 .light,
 .dark {
-	--nomination-menu-surface: color-mix(in srgb, var(--nomination-menu-color) 75%, var(--bg-primary));
+	--nomination-menu-surface: color-mix(
+		in srgb,
+		var(--nomination-menu-color) 75%,
+		var(--bg-primary)
+	);
 	--nomination-standalone-menu-surface: var(--nomination-standalone-menu-color);
-	--pastel-wash:
-		radial-gradient(ellipse at 0% 0%, var(--wash-yellow), transparent 65%),
-		radial-gradient(ellipse at 100% 10%, var(--wash-purple), transparent 65%),
-		radial-gradient(ellipse at 25% 100%, var(--wash-blue), transparent 70%),
-		radial-gradient(ellipse at 100% 100%, var(--wash-green), transparent 55%);
-	--pastel-surface: linear-gradient(125deg, var(--wash-yellow), var(--wash-blue) 55%, var(--wash-purple));
+	--pastel-wash: radial-gradient(
+		ellipse at 0% 0%,
+		var(--wash-yellow),
+		transparent 65%
+	),
+	radial-gradient(ellipse at 100% 10%, var(--wash-purple), transparent 65%),
+	radial-gradient(ellipse at 25% 100%, var(--wash-blue), transparent 70%),
+	radial-gradient(ellipse at 100% 100%, var(--wash-green), transparent 55%);
+	--pastel-surface: linear-gradient(
+		125deg,
+		var(--wash-yellow),
+		var(--wash-blue) 55%,
+		var(--wash-purple)
+	);
 }

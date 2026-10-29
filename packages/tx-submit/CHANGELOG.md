@@ -2,28 +2,26 @@
 
 ## Unreleased
 
-* Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
+- Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.2.0...tx-submit-v0.3.0) (2026-10-28)
 
-
 ### Features
 
-* Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
-* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
-* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
-* prepare swap interface and shared transaction hooks ([#3887](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3887)) ([62ad126](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/62ad126fd87f50d423375fb96f4731760ca647a1))
-* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
-* **refactor:** Remove legacy extensions  ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
-* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+- Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
+- Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+- init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+- prepare swap interface and shared transaction hooks ([#3887](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3887)) ([62ad126](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/62ad126fd87f50d423375fb96f4731760ca647a1))
+- **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+- **refactor:** Remove legacy extensions ([#3765](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3765)) ([f87da39](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f87da3998a957ae06fb030ac711cefb674b22500))
+- **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
 
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tx-submit-v0.1.0...tx-submit-v0.2.0) (2026-08-09)
 
-
 ### Features
 
-* bootstrap stablecoins app ([#3638](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3638)) ([abeaa5b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/abeaa5b553e9a88c557af60d3ad8c37d8a9373cb))
-* **refactor:** Add `network` to transaction UIDs ([#3690](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3690)) ([4b1f8e5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4b1f8e54b5f2a54d3bee10ecea2b14b5b6dba2f8))
-* **refactor:** Init `tx-submit` package ([#3652](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3652)) ([52f42dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/52f42dd598ef7241c981e2ec4289c6db38f4cc05))
-* **refactor:** simplify extrinsic submission flow ([#3698](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3698)) ([9d53aa8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/9d53aa8c266ec7cf439ca4e2140c1451f4ff8be9))
-* **refactor:** Use ledger signer from `connect-ledger` ([#3653](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3653)) ([cd0af66](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cd0af66fd7f7662565a6876517ebbd0fd39805c4))
+- bootstrap stablecoins app ([#3638](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3638)) ([abeaa5b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/abeaa5b553e9a88c557af60d3ad8c37d8a9373cb))
+- **refactor:** Add `network` to transaction UIDs ([#3690](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3690)) ([4b1f8e5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4b1f8e54b5f2a54d3bee10ecea2b14b5b6dba2f8))
+- **refactor:** Init `tx-submit` package ([#3652](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3652)) ([52f42dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/52f42dd598ef7241c981e2ec4289c6db38f4cc05))
+- **refactor:** simplify extrinsic submission flow ([#3698](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3698)) ([9d53aa8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/9d53aa8c266ec7cf439ca4e2140c1451f4ff8be9))
+- **refactor:** Use ledger signer from `connect-ledger` ([#3653](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3653)) ([cd0af66](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cd0af66fd7f7662565a6876517ebbd0fd39805c4))

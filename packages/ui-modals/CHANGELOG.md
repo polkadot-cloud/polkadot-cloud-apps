@@ -2,25 +2,23 @@
 
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-modals-v0.2.0...ui-modals-v0.3.0) (2026-10-28)
 
-
 ### Features
 
-* add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
-* Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
-* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
-* **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
-* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
-* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
-* **ux:** input guards, loading states, footer price & confirmation toasts ([#3613](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3613)) ([7db254b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7db254b736b817932ccf58c26651240086e074e6))
-* **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
-* **ux:** Refine validator health labels and retainment history ([#3790](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3790)) ([572b2b4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/572b2b4212522330d295b5d0f7b383fc62a9bd38))
-* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+- add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
+- Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
+- Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+- **refactor:** Apply retainment schema updates ([#3792](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3792)) ([3105699](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/310569991497544d62f6e1ee27493b35b1ec0634))
+- **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+- **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+- **ux:** input guards, loading states, footer price & confirmation toasts ([#3613](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3613)) ([7db254b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7db254b736b817932ccf58c26651240086e074e6))
+- **ux:** Introduce pastel light & charcoal dark theming ([#3835](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3835)) ([b7ca991](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b7ca9915fc7a0803693985f210f5ea9cc1c30652))
+- **ux:** Refine validator health labels and retainment history ([#3790](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3790)) ([572b2b4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/572b2b4212522330d295b5d0f7b383fc62a9bd38))
+- **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
 
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-modals-v0.1.0...ui-modals-v0.2.0) (2026-08-09)
 
-
 ### Features
 
-* bootstrap stablecoins app ([#3638](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3638)) ([abeaa5b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/abeaa5b553e9a88c557af60d3ad8c37d8a9373cb))
-* **refactor:** Init `ui-modals`, mv `Accounts` modal ([#3616](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3616)) ([ed170be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ed170be36e996fcabe57f0cdc410db5abf79e186))
-* **refactor:** Move key modals to `ui-modals` ([#3618](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3618)) ([341b053](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/341b053a87659d7683adc201d5ee9fc28c24aa91))
+- bootstrap stablecoins app ([#3638](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3638)) ([abeaa5b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/abeaa5b553e9a88c557af60d3ad8c37d8a9373cb))
+- **refactor:** Init `ui-modals`, mv `Accounts` modal ([#3616](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3616)) ([ed170be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ed170be36e996fcabe57f0cdc410db5abf79e186))
+- **refactor:** Move key modals to `ui-modals` ([#3618](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3618)) ([341b053](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/341b053a87659d7683adc201d5ee9fc28c24aa91))

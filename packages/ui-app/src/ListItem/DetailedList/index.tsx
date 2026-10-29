@@ -73,19 +73,15 @@ const DetailedCardRoot = (props: ItemRootProps) => (
 
 type ClassedElement = 'button' | 'div' | 'header' | 'section' | 'span' | 'time'
 
-const withClassName = <T extends ClassedElement>(
+const renderClassedElement = <T extends ClassedElement>(
 	tag: T,
 	baseClassName: string,
-) => {
-	const Component = ({ className, ...props }: ComponentPropsWithoutRef<T>) =>
-		createElement(tag, {
-			...props,
-			className: classNames(baseClassName, className),
-		})
-
-	Component.displayName = baseClassName
-	return Component
-}
+	{ className, ...props }: ComponentPropsWithoutRef<T>,
+) =>
+	createElement(tag, {
+		...props,
+		className: classNames(baseClassName, className),
+	})
 
 const ListItemRow = (props: ItemRootProps) => (
 	<ItemShell layout="row" {...props} />
@@ -224,32 +220,48 @@ const ListItemFormatToggle = ({
 )
 
 export const DetailedCard = {
-	Header: withClassName('div', classes.cardHeader),
+	Header: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.cardHeader, props),
 	Root: DetailedCardRoot,
-	Top: withClassName('div', classes.cardTop),
+	Top: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.cardTop, props),
 }
 
 export const ListItem = {
 	Action: ListItemAction,
-	Actions: withClassName('div', classes.actions),
-	Activity: withClassName('section', classes.activity),
-	Blocked: withClassName('span', classes.blocked),
+	Actions: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.actions, props),
+	Activity: (props: ComponentPropsWithoutRef<'section'>) =>
+		renderClassedElement('section', classes.activity, props),
+	Blocked: (props: ComponentPropsWithoutRef<'span'>) =>
+		renderClassedElement('span', classes.blocked, props),
 	DetailLoader: ListItemDetailLoader,
 	FormatToggle: ListItemFormatToggle,
 	Graph: ListItemGraph,
-	Identity: withClassName('div', classes.identity),
-	MenuTrigger: withClassName('button', classes.menuTrigger),
+	Identity: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.identity, props),
+	MenuTrigger: (props: ComponentPropsWithoutRef<'button'>) =>
+		renderClassedElement('button', classes.menuTrigger, props),
 	Metric: ListItemMetric,
-	Month: withClassName('time', classes.month),
-	Retainment: withClassName('section', classes.retainment),
-	RetainmentGrid: withClassName('div', classes.retainmentGrid),
+	Month: (props: ComponentPropsWithoutRef<'time'>) =>
+		renderClassedElement('time', classes.month, props),
+	Retainment: (props: ComponentPropsWithoutRef<'section'>) =>
+		renderClassedElement('section', classes.retainment, props),
+	RetainmentGrid: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.retainmentGrid, props),
 	Row: ListItemRow,
-	RowHeader: withClassName('span', classes.barHeader),
-	RowIdentity: withClassName('div', classes.barIdentity),
-	RowMetricGroup: withClassName('div', classes.barMetricGroup),
-	RowPerformance: withClassName('section', classes.barPerformance),
-	SectionHeader: withClassName('header', classes.sectionHeader),
+	RowHeader: (props: ComponentPropsWithoutRef<'span'>) =>
+		renderClassedElement('span', classes.barHeader, props),
+	RowIdentity: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.barIdentity, props),
+	RowMetricGroup: (props: ComponentPropsWithoutRef<'div'>) =>
+		renderClassedElement('div', classes.barMetricGroup, props),
+	RowPerformance: (props: ComponentPropsWithoutRef<'section'>) =>
+		renderClassedElement('section', classes.barPerformance, props),
+	SectionHeader: (props: ComponentPropsWithoutRef<'header'>) =>
+		renderClassedElement('header', classes.sectionHeader, props),
 	Skeleton: ListItemSkeleton,
 	StatusDot: ListItemStatusDot,
-	Summary: withClassName('section', classes.summaryGrid),
+	Summary: (props: ComponentPropsWithoutRef<'section'>) =>
+		renderClassedElement('section', classes.summaryGrid, props),
 }

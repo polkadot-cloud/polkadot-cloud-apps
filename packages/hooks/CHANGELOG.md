@@ -2,58 +2,56 @@
 
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.2.0...hooks-v0.3.0) (2026-10-28)
 
-
 ### Features
 
-* add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
-* Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
-* Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
-* Add validator warnings and optimize nomination UI ([#3794](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3794)) ([582e733](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/582e733902b086f4e7a90d913e0dd0db5965b7d4))
-* Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
-* Implement low backing warnings ([#3871](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3871)) ([c9011f5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9011f59c3b8f44cfb2ad4a5d13e9d04212cfcfa))
-* init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
-* **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
-* **refactor:** Init `data-gate` with nomination status use case ([#3810](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3810)) ([d9af5f0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d9af5f028a881d4ba51bea811b4e551c8df5bd13))
-* **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
-* **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
-* **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
-* **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
-* Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
+- add shared account balances modal ([#3885](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3885)) ([c49bde8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c49bde8535f55f45ca2e000cc30e3beef2a12ad9))
+- Add standalone `app-validators` package ([#3745](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3745)) ([deed964](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/deed964b872a849bd83375c87b8be80fdfe5434a))
+- Add swap page to `app-swap` with swap tx submission ([#3883](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3883)) ([c9ef113](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9ef113c8d800ce65a6ac50db4cbd5ca7be025bc))
+- Add validator warnings and optimize nomination UI ([#3794](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3794)) ([582e733](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/582e733902b086f4e7a90d913e0dd0db5965b7d4))
+- Connect flow edge case fixes ([#3840](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3840)) ([4a137c9](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4a137c96ae27d1a40de24c41ae952f2fef7524d4))
+- Implement low backing warnings ([#3871](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3871)) ([c9011f5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c9011f59c3b8f44cfb2ad4a5d13e9d04212cfcfa))
+- init `app-nominate` ([#3763](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3763)) ([897545b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/897545b5a09ab3a5975a15817c02853267b0e7c8))
+- **refactor:** Bump and refresh connect packages, handle ledger errors ([#3841](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3841)) ([2231631](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2231631c101bac7801b93d02c214e4d8e1bab767))
+- **refactor:** Init `data-gate` with nomination status use case ([#3810](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3810)) ([d9af5f0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d9af5f028a881d4ba51bea811b4e551c8df5bd13))
+- **refactor:** Move `ValidatorEntries` to `data-gate` ([#3816](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3816)) ([6c17103](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6c17103f724049017ade855b39577cf9a31814d9))
+- **refactor:** Rremove w3ux dependencies ([#3832](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3832)) ([a868b21](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/a868b21083b94de8a2a2410b428c28177978c362))
+- **ux:** Add nomination retainment warnings ([#3760](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3760)) ([31c978e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/31c978e865d8db367cd1b409640db007c1816a4f))
+- **ux:** Retainment history modal ([#3786](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3786)) ([e878847](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e878847975e2301ad39476a2f61c2951bc8ac57c))
+- Validating accounts category, revise hook setup ([#3788](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3788)) ([1d611b0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1d611b0e41691e670a7523489a9c5df4efe853bd))
 
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.1.0...hooks-v0.2.0) (2026-08-09)
 
-
 ### Features
 
-* add `app-stablecoins` skeleton [2] ([#3687](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3687)) ([5b7868b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5b7868b64a4fa7c2d03166d259848349cc82976c))
-* Add `useDefaultCategories` hook ([#3650](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3650)) ([7c15d83](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c15d83afc877818f597ec49d735708cea0e674b))
-* Add stablecoin service layer ([#3697](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3697)) ([e931ab6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e931ab691680692b2331cd90a083235cbf5d86a6))
-* **fix:** derive effective unbond duration from chain state for unbonding displays ([#3624](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3624)) ([089a9c5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/089a9c56d4c32656af788b488e5a26026b83234a))
-* **locales:** add Russian (ru) language support ([#3594](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3594)) ([299b4ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/299b4cab28f24ca9636e85fb4bc167b065587d54))
-* **refactor:** `ActiveStaker`, `UI`, `PoolMembers` contexts to standalone hooks  ([#3557](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3557)) ([7f35f18](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7f35f182dd1a96372598907afb2f5c129b30c129))
-* **refactor:** `Invites`, `FavoritePools`, `PoolSetups` contexts to standalone hooks  ([#3552](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3552)) ([32acbc0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/32acbc043c2d6a09893045c11e80461a6da47b82))
-* **refactor:** `Operators`, `Help`, `Tooltip` contexts to standalone hooks  ([#3556](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3556)) ([381eee8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/381eee8222b7967138f7e22c18461165848b314e))
-* **refactor:** `Staking`, `Payouts`, `FavoriteValidators` contexts to standalone hooks  ([#3554](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3554)) ([386a5be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/386a5bee9aa3da1e10871f3f39d56eb1efb0d778))
-* **refactor:** Abstract key library and context components ([#3617](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3617)) ([6fee099](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6fee099114c1bdcd5a7887d7e14b5f8125bf7d3c))
-* **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
-* **refactor:** Init `ui-modals`, mv `Accounts` modal ([#3616](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3616)) ([ed170be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ed170be36e996fcabe57f0cdc410db5abf79e186))
-* **refactor:** Move `usePageFromHash` hook ([#3655](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3655)) ([1e6a6e6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1e6a6e6d8a688516c09a5cb5ae49fd7984636d92))
-* **refactor:** Move `useTheme` to `hooks` ([#3619](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3619)) ([8a4f72a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8a4f72aef00df6af7b4535617c6a61bfd4652e77))
-* **refactor:** Move hooks batch from `app` to `hooks` package ([#3558](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3558)) ([7f592ae](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7f592aedec8d030cbc767716a3c51159cfdfcdb2))
-* **refactor:** Move ThemeValues to `hooks` ([#3620](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3620)) ([e070e76](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e070e76b141d80e1b4524b87d5eca7a98a1214cb))
-* **refactor:** Move worker to standalone package ([#3563](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3563)) ([ff533dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ff533dd9feb198bec105e2c0719d69d76bd46364))
-* **refactor:** Sunset Westend support ([#3733](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3733)) ([830362c](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/830362cacf610858d27a8d8f3e3dd3161345a37b))
-* Use direct nomination status query ([#3718](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3718)) ([c6ab077](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c6ab0771238896c1d40bd7e30bcdc45da66101e4))
-* **ux:** add useFitText hook to fit side menu labels on one line ([#3717](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3717)) ([aecd4ec](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/aecd4ec94b81d7607a116fc7a4421c3b4a43f996))
-* **ux:** Revise balance inputs, add `BalanceInputMulti` ([#3695](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3695)) ([cb62237](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cb62237a18b0c93246c5843bc728dfa98aa940de))
-* Validator Retainment UI - Phase 1 ([#3732](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3732)) ([dd6d864](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd6d86471113e0faaac021cc4ddc6e799f2fc23c))
+- add `app-stablecoins` skeleton [2] ([#3687](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3687)) ([5b7868b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/5b7868b64a4fa7c2d03166d259848349cc82976c))
+- Add `useDefaultCategories` hook ([#3650](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3650)) ([7c15d83](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7c15d83afc877818f597ec49d735708cea0e674b))
+- Add stablecoin service layer ([#3697](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3697)) ([e931ab6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e931ab691680692b2331cd90a083235cbf5d86a6))
+- **fix:** derive effective unbond duration from chain state for unbonding displays ([#3624](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3624)) ([089a9c5](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/089a9c56d4c32656af788b488e5a26026b83234a))
+- **locales:** add Russian (ru) language support ([#3594](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3594)) ([299b4ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/299b4cab28f24ca9636e85fb4bc167b065587d54))
+- **refactor:** `ActiveStaker`, `UI`, `PoolMembers` contexts to standalone hooks ([#3557](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3557)) ([7f35f18](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7f35f182dd1a96372598907afb2f5c129b30c129))
+- **refactor:** `Invites`, `FavoritePools`, `PoolSetups` contexts to standalone hooks ([#3552](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3552)) ([32acbc0](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/32acbc043c2d6a09893045c11e80461a6da47b82))
+- **refactor:** `Operators`, `Help`, `Tooltip` contexts to standalone hooks ([#3556](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3556)) ([381eee8](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/381eee8222b7967138f7e22c18461165848b314e))
+- **refactor:** `Staking`, `Payouts`, `FavoriteValidators` contexts to standalone hooks ([#3554](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3554)) ([386a5be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/386a5bee9aa3da1e10871f3f39d56eb1efb0d778))
+- **refactor:** Abstract key library and context components ([#3617](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3617)) ([6fee099](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6fee099114c1bdcd5a7887d7e14b5f8125bf7d3c))
+- **refactor:** init `app-staking` ([#3614](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3614)) ([b2bc71e](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b2bc71e96eae2a99f15e815654c3dba88da6a830))
+- **refactor:** Init `ui-modals`, mv `Accounts` modal ([#3616](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3616)) ([ed170be](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ed170be36e996fcabe57f0cdc410db5abf79e186))
+- **refactor:** Move `usePageFromHash` hook ([#3655](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3655)) ([1e6a6e6](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/1e6a6e6d8a688516c09a5cb5ae49fd7984636d92))
+- **refactor:** Move `useTheme` to `hooks` ([#3619](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3619)) ([8a4f72a](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8a4f72aef00df6af7b4535617c6a61bfd4652e77))
+- **refactor:** Move hooks batch from `app` to `hooks` package ([#3558](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3558)) ([7f592ae](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/7f592aedec8d030cbc767716a3c51159cfdfcdb2))
+- **refactor:** Move ThemeValues to `hooks` ([#3620](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3620)) ([e070e76](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/e070e76b141d80e1b4524b87d5eca7a98a1214cb))
+- **refactor:** Move worker to standalone package ([#3563](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3563)) ([ff533dd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ff533dd9feb198bec105e2c0719d69d76bd46364))
+- **refactor:** Sunset Westend support ([#3733](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3733)) ([830362c](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/830362cacf610858d27a8d8f3e3dd3161345a37b))
+- Use direct nomination status query ([#3718](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3718)) ([c6ab077](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/c6ab0771238896c1d40bd7e30bcdc45da66101e4))
+- **ux:** add useFitText hook to fit side menu labels on one line ([#3717](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3717)) ([aecd4ec](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/aecd4ec94b81d7607a116fc7a4421c3b4a43f996))
+- **ux:** Revise balance inputs, add `BalanceInputMulti` ([#3695](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3695)) ([cb62237](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/cb62237a18b0c93246c5843bc728dfa98aa940de))
+- Validator Retainment UI - Phase 1 ([#3732](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3732)) ([dd6d864](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/dd6d86471113e0faaac021cc4ddc6e799f2fc23c))
 
 
 ### Bug Fixes
 
-* **balances:** read back stored fee reserve and guard malformed localStorage ([#3564](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3564)) ([2f0e839](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2f0e8397b685402cf0acdd027f36fca8b6f09ba1))
+- **balances:** read back stored fee reserve and guard malformed localStorage ([#3564](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3564)) ([2f0e839](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/2f0e8397b685402cf0acdd027f36fca8b6f09ba1))
 
 
 ### Performance Improvements
 
-* **api:** extract useStakingMetrics to stop per-block re-render cascade ([#3568](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3568)) ([8c084aa](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8c084aada2000e1ba07fb99057edd1da8b27e151))
+- **api:** extract useStakingMetrics to stop per-block re-render cascade ([#3568](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3568)) ([8c084aa](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/8c084aada2000e1ba07fb99057edd1da8b27e151))

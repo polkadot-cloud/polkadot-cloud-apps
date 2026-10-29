@@ -9,8 +9,8 @@
 		"dev:staking": "cd packages/app-staking && pnpm dev",
 		"dev:swap": "cd packages/app-swap && pnpm dev",
 		"dev:validators": "cd packages/app-validators && pnpm dev",
-		"check": "pnpm -r --if-present run check && stylelint '**/*.{css,scss}' --allow-empty-input",
-		"lint": "pnpm -r --if-present run lint && stylelint '**/*.{css,scss}' --fix --allow-empty-input",
+		"check": "biome check packages && stylelint '**/*.{css,scss}' --allow-empty-input",
+		"lint": "biome check --write packages && stylelint '**/*.{css,scss}' --fix --allow-empty-input",
 		"test": "pnpm -r --if-present test",
 		"license:headers": "npx @kt3k/license-checker -q"
 	},
