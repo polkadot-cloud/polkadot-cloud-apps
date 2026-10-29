@@ -15,6 +15,74 @@ index 16f966ead3be3bec380ce6e55f8b8d4d380bb5e1..5330e6f5f6a3a0b0ed446a8f55ce5d22
      }
      #getSignedExtensions() {
          return this.#signedExtensionDefs.map((extDef) => {
+diff --git a/cjs/json-rpc/group/ChainHead/ChainHead.js b/cjs/json-rpc/group/ChainHead/ChainHead.js
+index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a578140a7d 100644
+--- a/cjs/json-rpc/group/ChainHead/ChainHead.js
++++ b/cjs/json-rpc/group/ChainHead/ChainHead.js
+@@ -159,10 +159,17 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+             this.#unsub && this.#unsub().catch(utils_1.noop); // ensure unfollowed
+             const SIGNAL_THRESHOLD = this.#__unsafe__isSmoldot() ? 2 : 1;
+             let signals = 0;
+-            this.#unsub = await this.send('follow', true, (event, subscription) => {
++            // Follow is a subscription, not an operation whose first argument is a subscription ID.
++            // It has its own recovery path and must not enter the generic request-retry queue.
++            this.#unsub = await super.send('follow', true, (event, subscription) => {
+                 this.#followResponseQueue
+                     .enqueue(async () => {
+                     await this.#onFollowEvent(event, subscription);
++                    if (event.event === 'stop') {
++                        // A stop before initialized is not a successful follow. Wait for its replacement.
++                        this.#recovering.promise.then(defer.resolve, defer.reject);
++                        return;
++                    }
+                     if (signals >= SIGNAL_THRESHOLD)
+                         return;
+                     signals += 1;
+@@ -241,7 +248,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+                 await this.#updateBlockNumbersAndParents(finalizedBlockHashes, prevPinnedBlocks);
+                 // Handle first initialization or reconnection
+                 if (!lastFinalizedHash) {
+-                    this.emit('finalizedBlock', await this.finalizedBlock());
++                    // Initialization must not wait on the recovery promise that it is completing.
++                    this.emit('finalizedBlock', this.findBlock(this.#finalizedHash));
+                 }
+                 else {
+                     await this.#handleMissingBlocks(finalizedBlockHashes, lastFinalizedHash, prevPinnedBlocks);
+@@ -366,13 +374,13 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+                 // 1. First thing, set up the #recovering promise
+                 // So any requests/operations coming to the chainHead should be put on waiting
+                 // for the #recovering promise to resolve
+-                this.#recovering = (0, utils_1.deferred)();
++                const recovering = this.#recovering = (0, utils_1.deferred)();
+                 // 2. Attempt to re-follow the chainHead
+                 this.#doFollow()
+                     .then(() => {
+                     // 3. Resolve the recovering promise
+                     // This means to continue all pending requests while the chainHead started recovering mode at step 1.
+-                    this.#recovering?.resolve();
++                    recovering.resolve();
+                     // 4. Recover stale operations
+                     // 4.1. Operations that's going on & waiting to receiving its operationId
+                     //     will eventually get an `limitedReached` error for using a stale followSubscriptionId
+@@ -388,7 +396,7 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+                     .catch((e) => {
+                     console.error(e);
+                     // TODO we should retry a few attempts
+-                    this.#recovering?.reject(new error_js_1.ChainHeadError('Cannot recover from stop event!'));
++                    recovering.reject(new error_js_1.ChainHeadError('Cannot recover from stop event!'));
+                     Object.values(this.#handlers).forEach(({ defer, operationId }) => {
+                         defer.reject(new error_js_1.ChainHeadError('Cannot recover from stop event!'));
+                         delete this.#handlers[operationId];
+@@ -397,7 +405,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+                     .finally(() => {
+                     // cleaning up
+                     (0, utils_1.waitFor)().then(() => {
+-                        this.#recovering = undefined;
++                        if (this.#recovering === recovering)
++                            this.#recovering = undefined;
+                     });
+                 });
+                 break;
 diff --git a/extrinsic/extensions/ExtraSignedExtension.js b/extrinsic/extensions/ExtraSignedExtension.js
 index 8e86c32b1c8147bd38d01f3c80b627e67d4d47d0..0260024373d08c3767c6e70165ea103cc3a39d9c 100644
 --- a/extrinsic/extensions/ExtraSignedExtension.js
@@ -32,3 +100,71 @@ index 8e86c32b1c8147bd38d01f3c80b627e67d4d47d0..0260024373d08c3767c6e70165ea103c
      }
      #getSignedExtensions() {
          return this.#signedExtensionDefs.map((extDef) => {
+diff --git a/json-rpc/group/ChainHead/ChainHead.js b/json-rpc/group/ChainHead/ChainHead.js
+index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22dea51fe3fa 100644
+--- a/json-rpc/group/ChainHead/ChainHead.js
++++ b/json-rpc/group/ChainHead/ChainHead.js
+@@ -156,10 +156,17 @@ export class ChainHead extends JsonRpcGroup {
+             this.#unsub && this.#unsub().catch(noop); // ensure unfollowed
+             const SIGNAL_THRESHOLD = this.#__unsafe__isSmoldot() ? 2 : 1;
+             let signals = 0;
+-            this.#unsub = await this.send('follow', true, (event, subscription) => {
++            // Follow is a subscription, not an operation whose first argument is a subscription ID.
++            // It has its own recovery path and must not enter the generic request-retry queue.
++            this.#unsub = await super.send('follow', true, (event, subscription) => {
+                 this.#followResponseQueue
+                     .enqueue(async () => {
+                     await this.#onFollowEvent(event, subscription);
++                    if (event.event === 'stop') {
++                        // A stop before initialized is not a successful follow. Wait for its replacement.
++                        this.#recovering.promise.then(defer.resolve, defer.reject);
++                        return;
++                    }
+                     if (signals >= SIGNAL_THRESHOLD)
+                         return;
+                     signals += 1;
+@@ -238,7 +245,8 @@ export class ChainHead extends JsonRpcGroup {
+                 await this.#updateBlockNumbersAndParents(finalizedBlockHashes, prevPinnedBlocks);
+                 // Handle first initialization or reconnection
+                 if (!lastFinalizedHash) {
+-                    this.emit('finalizedBlock', await this.finalizedBlock());
++                    // Initialization must not wait on the recovery promise that it is completing.
++                    this.emit('finalizedBlock', this.findBlock(this.#finalizedHash));
+                 }
+                 else {
+                     await this.#handleMissingBlocks(finalizedBlockHashes, lastFinalizedHash, prevPinnedBlocks);
+@@ -363,13 +371,13 @@ export class ChainHead extends JsonRpcGroup {
+                 // 1. First thing, set up the #recovering promise
+                 // So any requests/operations coming to the chainHead should be put on waiting
+                 // for the #recovering promise to resolve
+-                this.#recovering = deferred();
++                const recovering = this.#recovering = deferred();
+                 // 2. Attempt to re-follow the chainHead
+                 this.#doFollow()
+                     .then(() => {
+                     // 3. Resolve the recovering promise
+                     // This means to continue all pending requests while the chainHead started recovering mode at step 1.
+-                    this.#recovering?.resolve();
++                    recovering.resolve();
+                     // 4. Recover stale operations
+                     // 4.1. Operations that's going on & waiting to receiving its operationId
+                     //     will eventually get an `limitedReached` error for using a stale followSubscriptionId
+@@ -385,7 +393,7 @@ export class ChainHead extends JsonRpcGroup {
+                     .catch((e) => {
+                     console.error(e);
+                     // TODO we should retry a few attempts
+-                    this.#recovering?.reject(new ChainHeadError('Cannot recover from stop event!'));
++                    recovering.reject(new ChainHeadError('Cannot recover from stop event!'));
+                     Object.values(this.#handlers).forEach(({ defer, operationId }) => {
+                         defer.reject(new ChainHeadError('Cannot recover from stop event!'));
+                         delete this.#handlers[operationId];
+@@ -394,7 +402,8 @@ export class ChainHead extends JsonRpcGroup {
+                     .finally(() => {
+                     // cleaning up
+                     waitFor().then(() => {
+-                        this.#recovering = undefined;
++                        if (this.#recovering === recovering)
++                            this.#recovering = undefined;
+                     });
+                 });
+                 break;
