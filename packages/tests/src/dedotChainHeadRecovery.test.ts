@@ -72,6 +72,16 @@ const createFixture = (ChainHeadClass: typeof ChainHead) => {
 			},
 		),
 		chainHead_v1_header: vi.fn(async () => header),
+		chainHead_v1_body:
+			vi.fn<
+				(
+					subscriptionId: string,
+					hash: string,
+				) => Promise<{
+					result: 'started'
+					operationId: string
+				}>
+			>(),
 	}
 	const head = new ChainHeadClass(
 		{ rpc, provider: {} } as unknown as ConstructorParameters<
@@ -119,6 +129,65 @@ describe.each([
 			await following
 			expect(await head.finalizedHash()).toBe(blockHash)
 			await head.unfollow()
+		},
+	)
+
+	test.each([1, 2])(
+		'replays a disconnected operation only once after %i early stops',
+		async (stopCount) => {
+			const { head, rpc, subscriptions, acknowledge } = createFixture(
+				build.ChainHead,
+			)
+			const following = head.follow()
+			await vi.waitFor(() => expect(subscriptions).toHaveLength(1))
+			acknowledge(0)
+			subscriptions[0].notify(initialized)
+			await following
+
+			const replies: ReturnType<
+				typeof deferred<{ result: 'started'; operationId: string }>
+			>[] = []
+			rpc.chainHead_v1_body
+				.mockImplementation(() => {
+					const reply = deferred<{ result: 'started'; operationId: string }>()
+					replies.push(reply)
+					return reply.promise
+				})
+				.mockRejectedValueOnce(new build.NetworkDisconnectedError())
+			const pendingBody = head.send('body', 'sub-1', blockHash)
+			await setImmediate()
+
+			const recovering = head.follow(true)
+			for (let index = 1; index <= stopCount; index++) {
+				await vi.waitFor(() =>
+					expect(subscriptions.length).toBeGreaterThan(index),
+				)
+				acknowledge(index)
+				subscriptions[index].notify({ event: 'stop' })
+			}
+			await vi.waitFor(() => expect(subscriptions).toHaveLength(stopCount + 2))
+			acknowledge(stopCount + 1)
+			subscriptions[stopCount + 1].notify(initialized)
+			await recovering
+			// Keep the response pending while all superseded follow attempts settle.
+			await setImmediate()
+
+			try {
+				expect(replies).toHaveLength(1)
+				expect(rpc.chainHead_v1_body.mock.calls).toEqual([
+					['sub-1', blockHash],
+					[`sub-${stopCount + 2}`, blockHash],
+				])
+			} finally {
+				replies.forEach((reply, index) => {
+					reply.resolve({ result: 'started', operationId: `body-${index}` })
+				})
+				await expect(pendingBody).resolves.toEqual({
+					result: 'started',
+					operationId: 'body-0',
+				})
+				await head.unfollow()
+			}
 		},
 	)
 

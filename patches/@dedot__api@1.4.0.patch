@@ -16,10 +16,15 @@ index 16f966ead3be3bec380ce6e55f8b8d4d380bb5e1..5330e6f5f6a3a0b0ed446a8f55ce5d22
      #getSignedExtensions() {
          return this.#signedExtensionDefs.map((extDef) => {
 diff --git a/cjs/json-rpc/group/ChainHead/ChainHead.js b/cjs/json-rpc/group/ChainHead/ChainHead.js
-index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a578140a7d 100644
+index b233765d43ba0ae0027115eea3c7d336a3e14122..01fada19846d8f9b71d4c6483168b9b8ddb2114c 100644
 --- a/cjs/json-rpc/group/ChainHead/ChainHead.js
 +++ b/cjs/json-rpc/group/ChainHead/ChainHead.js
-@@ -159,10 +159,17 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+@@ -155,14 +155,23 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+     }
+     async #doFollow() {
+         const defer = (0, utils_1.deferred)();
++        let superseded = false;
+         try {
              this.#unsub && this.#unsub().catch(utils_1.noop); // ensure unfollowed
              const SIGNAL_THRESHOLD = this.#__unsafe__isSmoldot() ? 2 : 1;
              let signals = 0;
@@ -31,6 +36,7 @@ index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a5
                      .enqueue(async () => {
                      await this.#onFollowEvent(event, subscription);
 +                    if (event.event === 'stop') {
++                        superseded = true;
 +                        // A stop before initialized is not a successful follow. Wait for its replacement.
 +                        this.#recovering.promise.then(defer.resolve, defer.reject);
 +                        return;
@@ -38,7 +44,18 @@ index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a5
                      if (signals >= SIGNAL_THRESHOLD)
                          return;
                      signals += 1;
-@@ -241,7 +248,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+@@ -181,8 +190,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+         }
+         // Wait for follow to complete, then retry pending requests
+         await defer.promise;
+-        // Retry pending requests if any (from previous disconnection)
+-        if (this.#pendingRequests.size > 0) {
++        // Only the replacement follow may drain pending requests after an early stop.
++        if (!superseded && this.#pendingRequests.size > 0) {
+             this.#retryPendingRequests();
+         }
+     }
+@@ -241,7 +250,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
                  await this.#updateBlockNumbersAndParents(finalizedBlockHashes, prevPinnedBlocks);
                  // Handle first initialization or reconnection
                  if (!lastFinalizedHash) {
@@ -48,7 +65,7 @@ index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a5
                  }
                  else {
                      await this.#handleMissingBlocks(finalizedBlockHashes, lastFinalizedHash, prevPinnedBlocks);
-@@ -366,13 +374,13 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+@@ -366,13 +376,13 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
                  // 1. First thing, set up the #recovering promise
                  // So any requests/operations coming to the chainHead should be put on waiting
                  // for the #recovering promise to resolve
@@ -64,7 +81,7 @@ index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a5
                      // 4. Recover stale operations
                      // 4.1. Operations that's going on & waiting to receiving its operationId
                      //     will eventually get an `limitedReached` error for using a stale followSubscriptionId
-@@ -388,7 +396,7 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+@@ -388,7 +398,7 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
                      .catch((e) => {
                      console.error(e);
                      // TODO we should retry a few attempts
@@ -73,7 +90,7 @@ index b233765d43ba0ae0027115eea3c7d336a3e14122..ef077a75b3f186bf8187a1fb3e2803a5
                      Object.values(this.#handlers).forEach(({ defer, operationId }) => {
                          defer.reject(new error_js_1.ChainHeadError('Cannot recover from stop event!'));
                          delete this.#handlers[operationId];
-@@ -397,7 +405,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
+@@ -397,7 +407,8 @@ class ChainHead extends JsonRpcGroup_js_1.JsonRpcGroup {
                      .finally(() => {
                      // cleaning up
                      (0, utils_1.waitFor)().then(() => {
@@ -101,10 +118,15 @@ index 8e86c32b1c8147bd38d01f3c80b627e67d4d47d0..0260024373d08c3767c6e70165ea103c
      #getSignedExtensions() {
          return this.#signedExtensionDefs.map((extDef) => {
 diff --git a/json-rpc/group/ChainHead/ChainHead.js b/json-rpc/group/ChainHead/ChainHead.js
-index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22dea51fe3fa 100644
+index 649d4e0805840d07438922cf6307c3f9c1f89921..ecd23f0a6e0aa3d414e8f98a4bc03b07a51abd7d 100644
 --- a/json-rpc/group/ChainHead/ChainHead.js
 +++ b/json-rpc/group/ChainHead/ChainHead.js
-@@ -156,10 +156,17 @@ export class ChainHead extends JsonRpcGroup {
+@@ -152,14 +152,23 @@ export class ChainHead extends JsonRpcGroup {
+     }
+     async #doFollow() {
+         const defer = deferred();
++        let superseded = false;
+         try {
              this.#unsub && this.#unsub().catch(noop); // ensure unfollowed
              const SIGNAL_THRESHOLD = this.#__unsafe__isSmoldot() ? 2 : 1;
              let signals = 0;
@@ -116,6 +138,7 @@ index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22de
                      .enqueue(async () => {
                      await this.#onFollowEvent(event, subscription);
 +                    if (event.event === 'stop') {
++                        superseded = true;
 +                        // A stop before initialized is not a successful follow. Wait for its replacement.
 +                        this.#recovering.promise.then(defer.resolve, defer.reject);
 +                        return;
@@ -123,7 +146,18 @@ index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22de
                      if (signals >= SIGNAL_THRESHOLD)
                          return;
                      signals += 1;
-@@ -238,7 +245,8 @@ export class ChainHead extends JsonRpcGroup {
+@@ -178,8 +187,8 @@ export class ChainHead extends JsonRpcGroup {
+         }
+         // Wait for follow to complete, then retry pending requests
+         await defer.promise;
+-        // Retry pending requests if any (from previous disconnection)
+-        if (this.#pendingRequests.size > 0) {
++        // Only the replacement follow may drain pending requests after an early stop.
++        if (!superseded && this.#pendingRequests.size > 0) {
+             this.#retryPendingRequests();
+         }
+     }
+@@ -238,7 +247,8 @@ export class ChainHead extends JsonRpcGroup {
                  await this.#updateBlockNumbersAndParents(finalizedBlockHashes, prevPinnedBlocks);
                  // Handle first initialization or reconnection
                  if (!lastFinalizedHash) {
@@ -133,7 +167,7 @@ index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22de
                  }
                  else {
                      await this.#handleMissingBlocks(finalizedBlockHashes, lastFinalizedHash, prevPinnedBlocks);
-@@ -363,13 +371,13 @@ export class ChainHead extends JsonRpcGroup {
+@@ -363,13 +373,13 @@ export class ChainHead extends JsonRpcGroup {
                  // 1. First thing, set up the #recovering promise
                  // So any requests/operations coming to the chainHead should be put on waiting
                  // for the #recovering promise to resolve
@@ -149,7 +183,7 @@ index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22de
                      // 4. Recover stale operations
                      // 4.1. Operations that's going on & waiting to receiving its operationId
                      //     will eventually get an `limitedReached` error for using a stale followSubscriptionId
-@@ -385,7 +393,7 @@ export class ChainHead extends JsonRpcGroup {
+@@ -385,7 +395,7 @@ export class ChainHead extends JsonRpcGroup {
                      .catch((e) => {
                      console.error(e);
                      // TODO we should retry a few attempts
@@ -158,7 +192,7 @@ index 649d4e0805840d07438922cf6307c3f9c1f89921..885d2a2159985bac5fc026f9e44e22de
                      Object.values(this.#handlers).forEach(({ defer, operationId }) => {
                          defer.reject(new ChainHeadError('Cannot recover from stop event!'));
                          delete this.#handlers[operationId];
-@@ -394,7 +402,8 @@ export class ChainHead extends JsonRpcGroup {
+@@ -394,7 +404,8 @@ export class ChainHead extends JsonRpcGroup {
                      .finally(() => {
                      // cleaning up
                      waitFor().then(() => {
