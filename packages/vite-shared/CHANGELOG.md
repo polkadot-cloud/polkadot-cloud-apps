@@ -2,16 +2,14 @@
 
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/vite-shared-v0.2.0...vite-shared-v0.3.0) (2026-10-28)
 
-
 ### Features
 
-* implement overviews in focused queries ([#3818](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3818)) ([ad540ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ad540ca58d23cec44abba07e81acd2e1cf8c4c71))
-* Support cloud rpc auth token ([#3817](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3817)) ([1590005](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/15900052faac815912e3a51fe3f79968b040bb16))
+- implement overviews in focused queries ([#3818](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3818)) ([ad540ca](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/ad540ca58d23cec44abba07e81acd2e1cf8c4c71))
+- Support cloud rpc auth token ([#3817](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3817)) ([1590005](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/15900052faac815912e3a51fe3f79968b040bb16))
 
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/vite-shared-v0.1.0...vite-shared-v0.2.0) (2026-08-09)
 
-
 ### Features
 
-* Add simple analytics vite plugin to apps, rm `SAEnabled` flag ([#3715](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3715)) ([86e44d4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/86e44d47d34ed245a0121daf7bcf619e7acf1ccd))
-* **refactor:** Shared favicons via `vite-shared` package ([#3646](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3646)) ([b9d470b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b9d470bad181aabca9e36a32bcbe2a6615eaf722))
+- Add simple analytics vite plugin to apps, rm `SAEnabled` flag ([#3715](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3715)) ([86e44d4](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/86e44d47d34ed245a0121daf7bcf619e7acf1ccd))
+- **refactor:** Shared favicons via `vite-shared` package ([#3646](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3646)) ([b9d470b](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b9d470bad181aabca9e36a32bcbe2a6615eaf722))
