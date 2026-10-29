@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
 	"root": true,
 	"vcs": {
 		"enabled": true,
@@ -8,7 +8,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/dist", "!**/build", "!**/node_modules", "!**/*.svg"]
+		"includes": [
+			"**",
+			"!**/dist",
+			"!**/build",
+			"!**/node_modules",
+			"!**/*.svg",
+			"!**/*.scss"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -19,7 +26,8 @@
 		"rules": {
 			"preset": "recommended",
 			"complexity": {
-				"noStaticOnlyClass": "off"
+				"noStaticOnlyClass": "off",
+				"useMathMinMax": "off"
 			},
 			"correctness": {
 				"noUnusedImports": {

@@ -37,6 +37,7 @@ import {
 	setServiceInterface,
 } from '../../global-bus/src/serviceInterface'
 import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
+import { HookProbe } from './HookProbe'
 
 const { apiQuery, storage } = vi.hoisted(() => {
 	const storage = new Map<string, string>()
@@ -590,7 +591,7 @@ test.each([true, false])(
 		const options = nominationStatusOptions(input, 'stash')
 		client.setQueryData(options.queryKey, 'active')
 		let result!: ReturnType<typeof useNominationStatus>
-		const Consumer = () => {
+		const probe = () => {
 			result = useNominationStatus('stash')
 			return null
 		}
@@ -598,7 +599,11 @@ test.each([true, false])(
 			createElement(
 				DataGateContext.Provider,
 				{ value: input },
-				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+				createElement(
+					QueryClientProvider,
+					{ client },
+					createElement(HookProbe, { callback: probe }),
+				),
 			),
 		)
 		expect(result.status).toBe('active')
@@ -665,7 +670,7 @@ test('the public data-point hook masks disabled snapshots and exposes refetch wi
 	const options = dataPointOptions(definition)
 	client.setQueryData(options.queryKey, 10)
 	let result!: ReturnType<typeof useDataPoint<number>>
-	const Consumer = () => {
+	const probe = () => {
 		result = useDataPoint(definition)
 		return null
 	}
@@ -674,7 +679,11 @@ test('the public data-point hook masks disabled snapshots and exposes refetch wi
 			createElement(
 				DataGateContext.Provider,
 				{ value: input },
-				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+				createElement(
+					QueryClientProvider,
+					{ client },
+					createElement(HookProbe, { callback: probe }),
+				),
 			),
 		)
 	render()
@@ -723,7 +732,7 @@ test.each(
 				: input.node.query.erasStakersPagedEntries
 		failingRead.mockRejectedValueOnce(new Error('offline'))
 		let result!: ReturnType<typeof read>
-		const Consumer = () => {
+		const probe = () => {
 			result = read()
 			return null
 		}
@@ -735,7 +744,7 @@ test.each(
 					createElement(
 						QueryClientProvider,
 						{ client },
-						createElement(Consumer),
+						createElement(HookProbe, { callback: probe }),
 					),
 				),
 			)
@@ -826,7 +835,7 @@ test.each(['polkadot', 'kusama'] as const)(
 		input.era = 0
 		const client = createClient()
 		let result!: ReturnType<typeof useValidatorRecords>
-		const Consumer = () => {
+		const probe = () => {
 			result = useValidatorRecords(['missing', 'validator'])
 			return null
 		}
@@ -838,7 +847,7 @@ test.each(['polkadot', 'kusama'] as const)(
 					createElement(
 						QueryClientProvider,
 						{ client },
-						createElement(Consumer),
+						createElement(HookProbe, { callback: probe }),
 					),
 				),
 			)
@@ -894,7 +903,7 @@ test('validator records with all-node demand still resolve explicitly requested 
 	input.node.query.superOfMulti.mockResolvedValue([])
 	const client = createClient()
 	let result!: ReturnType<typeof useValidatorRecords>
-	const Consumer = () => {
+	const probe = () => {
 		result = useValidatorRecords(['missing'], true)
 		return null
 	}
@@ -902,7 +911,11 @@ test('validator records with all-node demand still resolve explicitly requested 
 		createElement(
 			DataGateContext.Provider,
 			{ value: input },
-			createElement(QueryClientProvider, { client }, createElement(Consumer)),
+			createElement(
+				QueryClientProvider,
+				{ client },
+				createElement(HookProbe, { callback: probe }),
+			),
 		),
 	)
 	expect((await result.refetch()).data?.prefs).toEqual({
@@ -943,7 +956,7 @@ test('mounting items from a loaded node list keeps the shared records query and 
 	const client = createClient()
 	let addresses: string[] = []
 	let result!: ReturnType<typeof useValidatorRecords>
-	const Consumer = () => {
+	const probe = () => {
 		result = useValidatorRecords(addresses, true)
 		return null
 	}
@@ -952,7 +965,11 @@ test('mounting items from a loaded node list keeps the shared records query and 
 			createElement(
 				DataGateContext.Provider,
 				{ value: input },
-				createElement(QueryClientProvider, { client }, createElement(Consumer)),
+				createElement(
+					QueryClientProvider,
+					{ client },
+					createElement(HookProbe, { callback: probe }),
+				),
 			),
 		)
 	render()
@@ -978,7 +995,7 @@ const renderValidatorPrefs = async (
 		'../../data-gate/src/validatorPrefs'
 	)
 	let result!: ReturnType<typeof useValidatorPrefs>
-	const Consumer = () => {
+	const probe = () => {
 		result = useValidatorPrefs(addresses)
 		return null
 	}
@@ -986,7 +1003,11 @@ const renderValidatorPrefs = async (
 		createElement(
 			DataGateContext.Provider,
 			{ value: input },
-			createElement(QueryClientProvider, { client }, createElement(Consumer)),
+			createElement(
+				QueryClientProvider,
+				{ client },
+				createElement(HookProbe, { callback: probe }),
+			),
 		),
 	)
 	return result
@@ -1163,11 +1184,11 @@ test.each([true, false])(
 		const client = createClient()
 		let records!: ReturnType<typeof useValidatorRecords>
 		let prefs!: ReturnType<typeof useValidatorPrefs>
-		const Records = () => {
+		const readRecords = () => {
 			records = useValidatorRecords(['validator', 'missing'])
 			return null
 		}
-		const Prefs = () => {
+		const readPrefs = () => {
 			prefs = useValidatorPrefs(['missing', 'validator', 'validator'])
 			return null
 		}
@@ -1179,8 +1200,12 @@ test.each([true, false])(
 					createElement(
 						QueryClientProvider,
 						{ client },
-						createElement(preferencesFirst ? Prefs : Records),
-						createElement(preferencesFirst ? Records : Prefs),
+						createElement(HookProbe, {
+							callback: preferencesFirst ? readPrefs : readRecords,
+						}),
+						createElement(HookProbe, {
+							callback: preferencesFirst ? readRecords : readPrefs,
+						}),
 					),
 				),
 			)
