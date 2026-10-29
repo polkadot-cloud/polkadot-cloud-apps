@@ -1,6 +1,6 @@
 {
 	"name": "locales",
-	"version": "1.7.0",
+	"version": "1.8.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"exports": {
@@ -21,11 +21,11 @@
 		"consts": "workspace:*",
 		"date-fns": "^4.4.0",
 		"event-tracking": "workspace:*",
-		"i18next": "^26.5.2",
-		"react-i18next": "^17.1.0",
+		"i18next": "^26.5.11",
+		"react-i18next": "^17.1.9",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"vite": "8.3.4"
+		"vite": "8.3.5"
 	}
 }

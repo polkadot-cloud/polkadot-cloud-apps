@@ -1,6 +1,6 @@
 {
 	"name": "ui-graphs",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"scripts": {
@@ -16,7 +16,7 @@
 	"dependencies": {
 		"@polkadot-cloud/utils": "^1.0.0",
 		"bignumber.js": "^11.1.5",
-		"chart.js": "^4.4.9",
+		"chart.js": "^4.6.1",
 		"chartjs-plugin-annotation": "^3.1.0",
 		"chroma-js": "^3.2.0",
 		"consts": "workspace:*",

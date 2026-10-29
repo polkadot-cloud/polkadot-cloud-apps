@@ -1,6 +1,6 @@
 {
 	"name": "ui-modals",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"scripts": {
@@ -30,12 +30,13 @@
 		"assets": "workspace:*",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
+		"global-bus": "workspace:*",
 		"hooks": "workspace:*",
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
 		"react": "^19.3.1",
 		"react-dom": "^19.3.1",
-		"react-i18next": "^17.1.0",
+		"react-i18next": "^17.1.9",
 		"styled-components": "^6.6.0",
 		"types": "workspace:*",
 		"ui-app": "workspace:*",
