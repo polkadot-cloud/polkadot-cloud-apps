@@ -4,6 +4,13 @@
 
 - Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
+## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-nominate-v0.2.0...app-nominate-v0.3.0) (2026-10-31)
+
+
+### Features
+
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+
 ## [0.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-nominate-v0.1.0...app-nominate-v0.2.0) (2026-10-28)
 
 ### Features

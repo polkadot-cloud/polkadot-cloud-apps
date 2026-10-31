@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.7.0...ui-overlay-v1.8.0) (2026-10-31)
+
+
+### Features
+
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-overlay-v1.6.0...ui-overlay-v1.7.0) (2026-10-28)
 
 ### Features
