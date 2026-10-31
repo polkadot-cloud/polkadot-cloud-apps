@@ -1,5 +1,46 @@
 {
 	"modals": {
+		"cloudApps": {
+			"close": "Close app explorer",
+			"title": "Explore the Cloud",
+			"description": "Your tools for exploring, staking, and staying connected to Polkadot.",
+			"newTab": "Each destination opens in a new tab.",
+			"validators": {
+				"category": "Discover",
+				"title": "Validators",
+				"description": "Explore validators and find your next nominations."
+			},
+			"nominate": {
+				"category": "Curate",
+				"title": "Nominate",
+				"description": "Fine-tune your nominations with a focused workspace."
+			},
+			"staking": {
+				"category": "Participate",
+				"title": "Staking",
+				"description": "Stake DOT, join a pool, and manage your rewards."
+			},
+			"signer": {
+				"category": "Sign",
+				"title": "Cloud Signer",
+				"description": "Your dedicated companion for signing transactions."
+			},
+			"companion": {
+				"category": "Stay connected",
+				"title": "Staking Companion",
+				"description": "Keep your staking in view, wherever you go."
+			},
+			"aboutValidators": {
+				"category": "Learn",
+				"title": "About validators",
+				"description": "Get to know Polkadot Cloud's validators."
+			},
+			"home": {
+				"category": "The bigger picture",
+				"title": "Welcome to Polkadot Cloud",
+				"description": "Explore the platform and everything we're building."
+			}
+		},
 		"aboveExisting": "Above Existing",
 		"aboveGlobalMax": "Above Global Max",
 		"aboveMax": "Above Max",

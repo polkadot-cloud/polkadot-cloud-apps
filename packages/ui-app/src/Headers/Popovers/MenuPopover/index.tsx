@@ -5,13 +5,13 @@ import {
 	faCloud,
 	faCog,
 	faDollarSign,
-	faExternalLinkAlt,
 	faGlobe,
 	faInfo,
 	faMoon,
 	faPuzzlePiece,
 	faQrcode,
 	faShare,
+	faTableCellsLarge,
 	faToggleOff,
 	faToggleOn,
 	faWifi,
@@ -21,7 +21,7 @@ import { useActiveAccount } from '@polkadot-cloud/connect'
 import { capitalizeFirstLetter } from '@polkadot-cloud/utils'
 import DiscordSVG from 'assets/brands/discord.svg?react'
 import EnvelopeSVG from 'assets/icons/envelope.svg?react'
-import { PlatformName, PlatformURL } from 'consts'
+import { PlatformName } from 'consts'
 import { getRelayChainData } from 'consts/util/chains'
 import { useBalances } from 'hooks/useBalances'
 import { useCurrency } from 'hooks/useCurrency'
@@ -267,11 +267,11 @@ export const MenuPopover = ({
 			<DefaultButton
 				text={PlatformName}
 				iconLeft={faCloud}
-				iconRight={faExternalLinkAlt}
+				iconRight={faTableCellsLarge}
 				accent
 				onClick={() => {
 					setOpen(false)
-					window.open(PlatformURL, '_blank')
+					openModal({ key: 'CloudApps', size: 'lg' })
 				}}
 			/>
 		</div>
