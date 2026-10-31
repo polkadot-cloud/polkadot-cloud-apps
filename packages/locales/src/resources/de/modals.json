@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Polkadot Cloud entdecken",
-			"description": "Deine Tools zum Entdecken, Staken, Tauschen und Vernetzen im Polkadot-Ökosystem.",
-			"sections": {
-				"appsAndTools": "Apps & Tools",
-				"platform": "Plattform"
-			},
-			"validators": {
-				"category": "Entdecken",
-				"description": "Entdecke Validatoren und finde Kandidaten für deine nächsten Nominierungen."
-			},
-			"nominate": {
-				"category": "Zusammenstellen",
-				"description": "Passe deine Nominierungen in einem übersichtlichen Arbeitsbereich an."
-			},
-			"staking": {
-				"category": "Mitmachen",
-				"title": "Staking",
-				"description": "Stake DOT, tritt einem Pool bei und verwalte deine Belohnungen."
-			},
-			"swap": {
-				"category": "Tauschen",
-				"title": "Cloud Swap",
-				"description": "Tausche Token auf Polkadot."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "Dein Begleiter zum Signieren von Transaktionen."
-			},
-			"companion": {
-				"category": "In Verbindung bleiben",
-				"title": "Staking Companion",
-				"description": "Behalte dein Staking auf iOS und Android im Blick."
-			},
-			"aboutValidators": {
-				"category": "Lernen",
-				"title": "Cloud-Validatoren",
-				"description": "Erfahre mehr über die Validatoren von Polkadot Cloud."
-			},
-			"accountability": {
-				"category": "Transparenz",
-				"title": "Rechenschaft",
-				"description": "Verfolge die Fortschritte und Zusagen von Polkadot Cloud."
-			},
-			"blog": {
-				"category": "Lesen",
-				"title": "Blog",
-				"description": "Lies die neuesten Beiträge von Polkadot Cloud."
-			},
-			"home": {
-				"category": "Das große Ganze",
-				"title": "Willkommen bei Polkadot Cloud",
-				"description": "Entdecke die Plattform und alles, woran wir arbeiten."
-			}
-		},
 		"aboveExisting": "Über dem Vorhandenen",
 		"aboveGlobalMax": "Über dem globalen Maximum",
 		"aboveMax": "Über dem Maximum",
@@ -118,6 +63,58 @@
 		"claimReward2": "Das Abheben von Belohnungen überweist sie sofort auf dein Konto als verfügbares Guthaben.",
 		"claimsOnBehalf": "Eine Auszahlung einzufordern bedeutet, im Namen aller Nominierer zu handeln, die den Validator für die Ära unterstützen, für die du eine Auszahlung anordnen. Aus diesem Grund sind Transaktionsgebühren normalerweise höher, und die meisten Nominierer verlassen sich darauf, dass der Validator dies für sie tut.",
 		"close": "Schließen",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Lernen",
+				"description": "Erfahre mehr über die Validatoren von Polkadot Cloud.",
+				"title": "Cloud-Validatoren"
+			},
+			"accountability": {
+				"category": "Transparenz",
+				"description": "Verfolge die Fortschritte und Zusagen von Polkadot Cloud.",
+				"title": "Rechenschaft"
+			},
+			"blog": {
+				"category": "Lesen",
+				"description": "Lies die neuesten Beiträge von Polkadot Cloud.",
+				"title": "Blog"
+			},
+			"companion": {
+				"category": "In Verbindung bleiben",
+				"description": "Behalte dein Staking auf iOS und Android im Blick.",
+				"title": "Staking Companion"
+			},
+			"description": "Deine Tools zum Entdecken, Staken, Tauschen und Vernetzen im Polkadot-Ökosystem.",
+			"home": {
+				"category": "Das große Ganze",
+				"description": "Entdecke die Plattform und alles, woran wir arbeiten.",
+				"title": "Willkommen bei Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "Zusammenstellen",
+				"description": "Passe deine Nominierungen in einem übersichtlichen Arbeitsbereich an."
+			},
+			"sections": { "appsAndTools": "Apps & Tools", "platform": "Plattform" },
+			"signer": {
+				"description": "Dein Begleiter zum Signieren von Transaktionen.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Mitmachen",
+				"description": "Stake DOT, tritt einem Pool bei und verwalte deine Belohnungen.",
+				"title": "Staking"
+			},
+			"swap": {
+				"category": "Tauschen",
+				"description": "Tausche Token auf Polkadot.",
+				"title": "Cloud Swap"
+			},
+			"title": "Polkadot Cloud entdecken",
+			"validators": {
+				"category": "Entdecken",
+				"description": "Entdecke Validatoren und finde Kandidaten für deine nächsten Nominierungen."
+			}
+		},
 		"commission": "Provision",
 		"commissionRate": "Provisionsrate",
 		"compound": "Zusammenrechnen",

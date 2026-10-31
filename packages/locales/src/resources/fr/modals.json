@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Explorer Polkadot Cloud",
-			"description": "Vos outils pour explorer Polkadot, faire du staking, échanger des tokens et garder le lien avec l’écosystème.",
-			"sections": {
-				"appsAndTools": "Applications et outils",
-				"platform": "Plateforme"
-			},
-			"validators": {
-				"category": "Découvrir",
-				"description": "Explorez les validateurs et choisissez vos prochaines nominations."
-			},
-			"nominate": {
-				"category": "Sélectionner",
-				"description": "Affinez vos nominations dans un espace de travail dédié."
-			},
-			"staking": {
-				"category": "Participer",
-				"title": "Staking",
-				"description": "Stakez des DOT, rejoignez un pool et gérez vos récompenses."
-			},
-			"swap": {
-				"category": "Échanger",
-				"title": "Cloud Swap",
-				"description": "Échangez des tokens sur Polkadot."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "Votre compagnon dédié à la signature de transactions."
-			},
-			"companion": {
-				"category": "Rester connecté",
-				"title": "Staking Companion",
-				"description": "Gardez un œil sur votre staking sur iOS et Android."
-			},
-			"aboutValidators": {
-				"category": "Apprendre",
-				"title": "Validateurs Cloud",
-				"description": "Découvrez les validateurs de Polkadot Cloud."
-			},
-			"accountability": {
-				"category": "Transparence",
-				"title": "Responsabilité",
-				"description": "Suivez les avancées et les engagements de Polkadot Cloud."
-			},
-			"blog": {
-				"category": "Lire",
-				"title": "Blog",
-				"description": "Lisez les dernières publications de Polkadot Cloud."
-			},
-			"home": {
-				"category": "Vue d’ensemble",
-				"title": "Bienvenue sur Polkadot Cloud",
-				"description": "Explorez la plateforme et tout ce que nous construisons."
-			}
-		},
 		"aboveExisting": "Au-dessus de la valeur existante",
 		"aboveGlobalMax": "Au-dessus du maximum global",
 		"aboveMax": "Au-dessus du maximum",
@@ -118,6 +63,61 @@
 		"claimReward2": "Le retrait des récompenses les transférera immédiatement sur votre compte en tant que solde disponible.",
 		"claimsOnBehalf": "Réclamer un paiement le fait au nom de chaque nominateur soutenant le validateur pour l'ère concernée. Pour cette raison, les frais de transaction sont généralement plus élevés, et la plupart des nominateurs comptent sur le validateur pour réclamer en leur nom.",
 		"close": "Fermer",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Apprendre",
+				"description": "Découvrez les validateurs de Polkadot Cloud.",
+				"title": "Validateurs Cloud"
+			},
+			"accountability": {
+				"category": "Transparence",
+				"description": "Suivez les avancées et les engagements de Polkadot Cloud.",
+				"title": "Responsabilité"
+			},
+			"blog": {
+				"category": "Lire",
+				"description": "Lisez les dernières publications de Polkadot Cloud.",
+				"title": "Blog"
+			},
+			"companion": {
+				"category": "Rester connecté",
+				"description": "Gardez un œil sur votre staking sur iOS et Android.",
+				"title": "Staking Companion"
+			},
+			"description": "Vos outils pour explorer Polkadot, faire du staking, échanger des tokens et garder le lien avec l’écosystème.",
+			"home": {
+				"category": "Vue d’ensemble",
+				"description": "Explorez la plateforme et tout ce que nous construisons.",
+				"title": "Bienvenue sur Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "Sélectionner",
+				"description": "Affinez vos nominations dans un espace de travail dédié."
+			},
+			"sections": {
+				"appsAndTools": "Applications et outils",
+				"platform": "Plateforme"
+			},
+			"signer": {
+				"description": "Votre compagnon dédié à la signature de transactions.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Participer",
+				"description": "Stakez des DOT, rejoignez un pool et gérez vos récompenses.",
+				"title": "Staking"
+			},
+			"swap": {
+				"category": "Échanger",
+				"description": "Échangez des tokens sur Polkadot.",
+				"title": "Cloud Swap"
+			},
+			"title": "Explorer Polkadot Cloud",
+			"validators": {
+				"category": "Découvrir",
+				"description": "Explorez les validateurs et choisissez vos prochaines nominations."
+			}
+		},
 		"commission": "Commission",
 		"commissionRate": "Taux de commission",
 		"compound": "Capitaliser",

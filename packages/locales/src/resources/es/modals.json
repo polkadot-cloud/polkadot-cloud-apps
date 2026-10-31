@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Explora Polkadot Cloud",
-			"description": "Tus herramientas para explorar, hacer staking, intercambiar tokens y conectar con Polkadot.",
-			"sections": {
-				"appsAndTools": "Aplicaciones y herramientas",
-				"platform": "Plataforma"
-			},
-			"validators": {
-				"category": "Descubrir",
-				"description": "Explora validadores y encuentra tus próximas nominaciones."
-			},
-			"nominate": {
-				"category": "Seleccionar",
-				"description": "Ajusta tus nominaciones en un espacio de trabajo dedicado."
-			},
-			"staking": {
-				"category": "Participar",
-				"title": "Staking",
-				"description": "Haz staking de DOT, únete a un pool y gestiona tus recompensas."
-			},
-			"swap": {
-				"category": "Intercambiar",
-				"title": "Cloud Swap",
-				"description": "Intercambia tokens en Polkadot."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "Tu compañero para firmar transacciones."
-			},
-			"companion": {
-				"category": "Sigue conectado",
-				"title": "Staking Companion",
-				"description": "Supervisa tu staking en iOS y Android."
-			},
-			"aboutValidators": {
-				"category": "Aprender",
-				"title": "Validadores Cloud",
-				"description": "Conoce a los validadores de Polkadot Cloud."
-			},
-			"accountability": {
-				"category": "Transparencia",
-				"title": "Rendición de cuentas",
-				"description": "Sigue el progreso y los compromisos de Polkadot Cloud."
-			},
-			"blog": {
-				"category": "Leer",
-				"title": "Blog",
-				"description": "Lee las novedades de Polkadot Cloud."
-			},
-			"home": {
-				"category": "Visión general",
-				"title": "Bienvenido a Polkadot Cloud",
-				"description": "Explora la plataforma y todo lo que estamos creando."
-			}
-		},
 		"aboveExisting": "Por encima del Existente",
 		"aboveGlobalMax": "Por encima del Máximo Global",
 		"aboveMax": "Por encima del Máximo",
@@ -118,6 +63,61 @@
 		"claimReward2": "Retirar recompensas las transferirá inmediatamente a tu cuenta como saldo libre.",
 		"claimsOnBehalf": "Reclamar un pago reclama en nombre de cada nominador que respalda al validador para la era que estás reclamando. Por esta razón, las tarifas de transacción suelen ser más altas, y la mayoría de los nominadores confían en que el validador reclame en su nombre.",
 		"close": "Cerrar",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Aprender",
+				"description": "Conoce a los validadores de Polkadot Cloud.",
+				"title": "Validadores Cloud"
+			},
+			"accountability": {
+				"category": "Transparencia",
+				"description": "Sigue el progreso y los compromisos de Polkadot Cloud.",
+				"title": "Rendición de cuentas"
+			},
+			"blog": {
+				"category": "Leer",
+				"description": "Lee las novedades de Polkadot Cloud.",
+				"title": "Blog"
+			},
+			"companion": {
+				"category": "Sigue conectado",
+				"description": "Supervisa tu staking en iOS y Android.",
+				"title": "Staking Companion"
+			},
+			"description": "Tus herramientas para explorar, hacer staking, intercambiar tokens y conectar con Polkadot.",
+			"home": {
+				"category": "Visión general",
+				"description": "Explora la plataforma y todo lo que estamos creando.",
+				"title": "Bienvenido a Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "Seleccionar",
+				"description": "Ajusta tus nominaciones en un espacio de trabajo dedicado."
+			},
+			"sections": {
+				"appsAndTools": "Aplicaciones y herramientas",
+				"platform": "Plataforma"
+			},
+			"signer": {
+				"description": "Tu compañero para firmar transacciones.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Participar",
+				"description": "Haz staking de DOT, únete a un pool y gestiona tus recompensas.",
+				"title": "Staking"
+			},
+			"swap": {
+				"category": "Intercambiar",
+				"description": "Intercambia tokens en Polkadot.",
+				"title": "Cloud Swap"
+			},
+			"title": "Explora Polkadot Cloud",
+			"validators": {
+				"category": "Descubrir",
+				"description": "Explora validadores y encuentra tus próximas nominaciones."
+			}
+		},
 		"commission": "Comisión",
 		"commissionRate": "Tasa de Comisión",
 		"compound": "Reinvertir",

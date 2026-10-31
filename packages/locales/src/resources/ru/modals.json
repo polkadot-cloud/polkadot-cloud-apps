@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Откройте Polkadot Cloud",
-			"description": "Инструменты для знакомства с Polkadot, стейкинга, обмена токенов и связи с экосистемой.",
-			"sections": {
-				"appsAndTools": "Приложения и инструменты",
-				"platform": "Платформа"
-			},
-			"validators": {
-				"category": "Обзор",
-				"description": "Изучайте валидаторов и выбирайте кандидатов для номинаций."
-			},
-			"nominate": {
-				"category": "Подбор",
-				"description": "Настраивайте номинации в удобном рабочем пространстве."
-			},
-			"staking": {
-				"category": "Участие",
-				"title": "Стейкинг",
-				"description": "Отправляйте DOT в стейкинг, вступайте в пул и управляйте наградами."
-			},
-			"swap": {
-				"category": "Обмен",
-				"title": "Cloud Swap",
-				"description": "Обменивайте токены в Polkadot."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "Ваш помощник для подписания транзакций."
-			},
-			"companion": {
-				"category": "Всегда на связи",
-				"title": "Staking Companion",
-				"description": "Следите за стейкингом на iOS и Android."
-			},
-			"aboutValidators": {
-				"category": "Знакомство",
-				"title": "Валидаторы Cloud",
-				"description": "Познакомьтесь с валидаторами Polkadot Cloud."
-			},
-			"accountability": {
-				"category": "Прозрачность",
-				"title": "Отчётность",
-				"description": "Следите за прогрессом и обязательствами Polkadot Cloud."
-			},
-			"blog": {
-				"category": "Читать",
-				"title": "Блог",
-				"description": "Читайте свежие публикации Polkadot Cloud."
-			},
-			"home": {
-				"category": "Общая картина",
-				"title": "Добро пожаловать в Polkadot Cloud",
-				"description": "Узнайте больше о платформе и обо всём, что мы создаём."
-			}
-		},
 		"aboveExisting": "Выше текущего",
 		"aboveGlobalMax": "Выше глобального максимума",
 		"aboveMax": "Выше максимума",
@@ -121,6 +66,61 @@
 		"claimReward2": "Вывод вознаграждений немедленно переведёт их на ваш аккаунт как доступный баланс.",
 		"claimsOnBehalf": "Получение выплаты выполняется от имени каждого номинатора, поддерживающего валидатора за эру, за которую вы получаете выплату. По этой причине комиссии за транзакцию обычно выше, и большинство номинаторов полагаются на то, что валидатор получит выплату от их имени.",
 		"close": "Закрыть",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Знакомство",
+				"description": "Познакомьтесь с валидаторами Polkadot Cloud.",
+				"title": "Валидаторы Cloud"
+			},
+			"accountability": {
+				"category": "Прозрачность",
+				"description": "Следите за прогрессом и обязательствами Polkadot Cloud.",
+				"title": "Отчётность"
+			},
+			"blog": {
+				"category": "Читать",
+				"description": "Читайте свежие публикации Polkadot Cloud.",
+				"title": "Блог"
+			},
+			"companion": {
+				"category": "Всегда на связи",
+				"description": "Следите за стейкингом на iOS и Android.",
+				"title": "Staking Companion"
+			},
+			"description": "Инструменты для знакомства с Polkadot, стейкинга, обмена токенов и связи с экосистемой.",
+			"home": {
+				"category": "Общая картина",
+				"description": "Узнайте больше о платформе и обо всём, что мы создаём.",
+				"title": "Добро пожаловать в Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "Подбор",
+				"description": "Настраивайте номинации в удобном рабочем пространстве."
+			},
+			"sections": {
+				"appsAndTools": "Приложения и инструменты",
+				"platform": "Платформа"
+			},
+			"signer": {
+				"description": "Ваш помощник для подписания транзакций.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Участие",
+				"description": "Отправляйте DOT в стейкинг, вступайте в пул и управляйте наградами.",
+				"title": "Стейкинг"
+			},
+			"swap": {
+				"category": "Обмен",
+				"description": "Обменивайте токены в Polkadot.",
+				"title": "Cloud Swap"
+			},
+			"title": "Откройте Polkadot Cloud",
+			"validators": {
+				"category": "Обзор",
+				"description": "Изучайте валидаторов и выбирайте кандидатов для номинаций."
+			}
+		},
 		"commission": "Комиссия",
 		"commissionRate": "Ставка комиссии",
 		"compound": "Реинвестировать",

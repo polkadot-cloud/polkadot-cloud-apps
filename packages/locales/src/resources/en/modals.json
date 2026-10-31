@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Explore Polkadot Cloud",
-			"description": "Your tools for exploring, staking, swapping, and staying connected to Polkadot.",
-			"sections": {
-				"appsAndTools": "Apps & tools",
-				"platform": "Platform"
-			},
-			"validators": {
-				"category": "Discover",
-				"description": "Explore validators and find your next nominations."
-			},
-			"nominate": {
-				"category": "Curate",
-				"description": "Fine-tune your nominations with a focused workspace."
-			},
-			"staking": {
-				"category": "Participate",
-				"title": "Staking",
-				"description": "Stake DOT, join a pool, and manage your rewards."
-			},
-			"swap": {
-				"category": "Exchange",
-				"title": "Cloud Swap",
-				"description": "Swap tokens on Polkadot."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "Your dedicated companion for signing transactions."
-			},
-			"companion": {
-				"category": "Stay connected",
-				"title": "Staking Companion",
-				"description": "Keep your staking in view on iOS and Android."
-			},
-			"aboutValidators": {
-				"category": "Learn",
-				"title": "Cloud Validators",
-				"description": "Get to know Polkadot Cloud's validators."
-			},
-			"accountability": {
-				"category": "Transparency",
-				"title": "Accountability",
-				"description": "Follow Polkadot Cloud's progress and commitments."
-			},
-			"blog": {
-				"category": "Read",
-				"title": "Blog",
-				"description": "Read the latest from Polkadot Cloud."
-			},
-			"home": {
-				"category": "The bigger picture",
-				"title": "Welcome to Polkadot Cloud",
-				"description": "Explore the platform and everything we're building."
-			}
-		},
 		"aboveExisting": "Above Existing",
 		"aboveGlobalMax": "Above Global Max",
 		"aboveMax": "Above Max",
@@ -118,6 +63,58 @@
 		"claimReward2": "Withdrawing rewards will immediately transfer them to your account as free balance.",
 		"claimsOnBehalf": "Claiming a payout claims on behalf of every nominator backing the validator for the era you are claiming for. For this reason transaction fees are usually higher, and most nominators rely on the validator to claim on their behalf.",
 		"close": "Close",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Learn",
+				"description": "Get to know Polkadot Cloud's validators.",
+				"title": "Cloud Validators"
+			},
+			"accountability": {
+				"category": "Transparency",
+				"description": "Follow Polkadot Cloud's progress and commitments.",
+				"title": "Accountability"
+			},
+			"blog": {
+				"category": "Read",
+				"description": "Read the latest from Polkadot Cloud.",
+				"title": "Blog"
+			},
+			"companion": {
+				"category": "Stay connected",
+				"description": "Keep your staking in view on iOS and Android.",
+				"title": "Staking Companion"
+			},
+			"description": "Your tools for exploring, staking, swapping, and staying connected to Polkadot.",
+			"home": {
+				"category": "The bigger picture",
+				"description": "Explore the platform and everything we're building.",
+				"title": "Welcome to Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "Curate",
+				"description": "Fine-tune your nominations with a focused workspace."
+			},
+			"sections": { "appsAndTools": "Apps & tools", "platform": "Platform" },
+			"signer": {
+				"description": "Your dedicated companion for signing transactions.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Participate",
+				"description": "Stake DOT, join a pool, and manage your rewards.",
+				"title": "Staking"
+			},
+			"swap": {
+				"category": "Exchange",
+				"description": "Swap tokens on Polkadot.",
+				"title": "Cloud Swap"
+			},
+			"title": "Explore Polkadot Cloud",
+			"validators": {
+				"category": "Discover",
+				"description": "Explore validators and find your next nominations."
+			}
+		},
 		"commission": "Commission",
 		"commissionRate": "Commission Rate",
 		"compound": "Compound",

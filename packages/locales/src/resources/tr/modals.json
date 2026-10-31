@@ -1,60 +1,5 @@
 {
 	"modals": {
-		"cloudApps": {
-			"title": "Polkadot Cloud'u keşfedin",
-			"description": "Polkadot'u keşfetmek, stake etmek, token takas etmek ve ekosistemle bağlantıda kalmak için araçlarınız.",
-			"sections": {
-				"appsAndTools": "Uygulamalar ve araçlar",
-				"platform": "Platform"
-			},
-			"validators": {
-				"category": "Keşfedin",
-				"description": "Validatörleri keşfedin ve sonraki nominasyonlarınızı belirleyin."
-			},
-			"nominate": {
-				"category": "Seçin",
-				"description": "Nominasyonlarınızı odaklanmış bir çalışma alanında düzenleyin."
-			},
-			"staking": {
-				"category": "Katılın",
-				"title": "Staking",
-				"description": "DOT stake edin, bir havuza katılın ve ödüllerinizi yönetin."
-			},
-			"swap": {
-				"category": "Takas",
-				"title": "Cloud Swap",
-				"description": "Polkadot'ta token takas edin."
-			},
-			"signer": {
-				"title": "Cloud Signer",
-				"description": "İşlemleri imzalamak için size eşlik eden araç."
-			},
-			"companion": {
-				"category": "Bağlantıda kalın",
-				"title": "Staking Companion",
-				"description": "iOS ve Android'de staking'inizi takip edin."
-			},
-			"aboutValidators": {
-				"category": "Öğrenin",
-				"title": "Cloud Validatörleri",
-				"description": "Polkadot Cloud validatörlerini tanıyın."
-			},
-			"accountability": {
-				"category": "Şeffaflık",
-				"title": "Hesap verebilirlik",
-				"description": "Polkadot Cloud'un ilerlemesini ve taahhütlerini takip edin."
-			},
-			"blog": {
-				"category": "Okuyun",
-				"title": "Blog",
-				"description": "Polkadot Cloud'un son yazılarını okuyun."
-			},
-			"home": {
-				"category": "Büyük resim",
-				"title": "Polkadot Cloud'a hoş geldiniz",
-				"description": "Platformu ve geliştirdiğimiz her şeyi keşfedin."
-			}
-		},
 		"aboveExisting": "Mevcudun Üzerinde",
 		"aboveGlobalMax": "Global Maksimumun Üzerinde",
 		"aboveMax": "Maksimumun Üzerinde",
@@ -118,6 +63,61 @@
 		"claimReward2": "Ödülleri çekmek, onları anında serbest bakiye olarak hesabınıza aktaracaktır.",
 		"claimsOnBehalf": "Bir ödemeyi talep etmek, talep ettiğiniz Era için validatörü destekleyen her nominatör adına talepte bulunur. Bu nedenle işlem ücretleri genellikle daha yüksektir ve çoğu nominatör, talebin kendi adlarına yapılması için validatöre güvenir.",
 		"close": "Kapat",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "Öğrenin",
+				"description": "Polkadot Cloud validatörlerini tanıyın.",
+				"title": "Cloud Validatörleri"
+			},
+			"accountability": {
+				"category": "Şeffaflık",
+				"description": "Polkadot Cloud'un ilerlemesini ve taahhütlerini takip edin.",
+				"title": "Hesap verebilirlik"
+			},
+			"blog": {
+				"category": "Okuyun",
+				"description": "Polkadot Cloud'un son yazılarını okuyun.",
+				"title": "Blog"
+			},
+			"companion": {
+				"category": "Bağlantıda kalın",
+				"description": "iOS ve Android'de staking'inizi takip edin.",
+				"title": "Staking Companion"
+			},
+			"description": "Polkadot'u keşfetmek, stake etmek, token takas etmek ve ekosistemle bağlantıda kalmak için araçlarınız.",
+			"home": {
+				"category": "Büyük resim",
+				"description": "Platformu ve geliştirdiğimiz her şeyi keşfedin.",
+				"title": "Polkadot Cloud'a hoş geldiniz"
+			},
+			"nominate": {
+				"category": "Seçin",
+				"description": "Nominasyonlarınızı odaklanmış bir çalışma alanında düzenleyin."
+			},
+			"sections": {
+				"appsAndTools": "Uygulamalar ve araçlar",
+				"platform": "Platform"
+			},
+			"signer": {
+				"description": "İşlemleri imzalamak için size eşlik eden araç.",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "Katılın",
+				"description": "DOT stake edin, bir havuza katılın ve ödüllerinizi yönetin.",
+				"title": "Staking"
+			},
+			"swap": {
+				"category": "Takas",
+				"description": "Polkadot'ta token takas edin.",
+				"title": "Cloud Swap"
+			},
+			"title": "Polkadot Cloud'u keşfedin",
+			"validators": {
+				"category": "Keşfedin",
+				"description": "Validatörleri keşfedin ve sonraki nominasyonlarınızı belirleyin."
+			}
+		},
 		"commission": "Komisyon",
 		"commissionRate": "Komisyon Oranı",
 		"compound": "Bileşik",

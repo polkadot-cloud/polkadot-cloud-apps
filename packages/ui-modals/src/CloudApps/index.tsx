@@ -220,20 +220,17 @@ export const CloudApps = () => {
 										rel="noopener noreferrer"
 									>
 										{graphic && (
-											<div className={classes.artwork} aria-hidden="true">
-												<div
-													className={classes.icon}
-													style={{ fill: `url(#${iconGradientId})` }}
-												>
-													{graphic}
-												</div>
+											<div
+												className={classes.artwork}
+												aria-hidden="true"
+												style={{ fill: `url(#${iconGradientId})` }}
+											>
+												{graphic}
 											</div>
 										)}
-										<div className={classes.copy}>
-											<span className={classes.category}>{t(categoryKey)}</span>
-											<h4>{t(titleKey)}</h4>
-											<p>{t(`cloudApps.${id}.description`)}</p>
-										</div>
+										<span className={classes.category}>{t(categoryKey)}</span>
+										<h4>{t(titleKey)}</h4>
+										<p>{t(`cloudApps.${id}.description`)}</p>
 										<span className={classes.externalLink} aria-hidden="true">
 											↗
 										</span>

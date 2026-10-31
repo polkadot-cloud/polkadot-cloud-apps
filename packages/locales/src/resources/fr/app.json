@@ -365,9 +365,7 @@
 		"permissionlessClaimingTurnedOff": "La réclamation sans permission est désactivée.",
 		"permissionlessCompound": "Capitalisation sans permission : quiconque peut capitaliser les récompenses pour ce membre",
 		"permissionlessWithdraw": "Retrait sans permission : quiconque peut retirer les récompenses pour ce membre",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "Points",
 		"pool": "Pool",
 		"poolClaim": "Réclamation du pool",
