@@ -271,7 +271,7 @@ export const MenuPopover = ({
 				accent
 				onClick={() => {
 					setOpen(false)
-					openModal({ key: 'CloudApps', size: 'lg' })
+					openModal({ key: 'CloudApps', size: 'xl' })
 				}}
 			/>
 		</div>

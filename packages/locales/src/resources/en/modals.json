@@ -1,10 +1,8 @@
 {
 	"modals": {
 		"cloudApps": {
-			"close": "Close app explorer",
-			"title": "Explore the Cloud",
+			"title": "Explore Polkadot Cloud",
 			"description": "Your tools for exploring, staking, and staying connected to Polkadot.",
-			"newTab": "Each destination opens in a new tab.",
 			"validators": {
 				"category": "Discover",
 				"title": "Validators",
@@ -20,6 +18,11 @@
 				"title": "Staking",
 				"description": "Stake DOT, join a pool, and manage your rewards."
 			},
+			"swap": {
+				"category": "Exchange",
+				"title": "Cloud Swap",
+				"description": "Swap tokens on Polkadot."
+			},
 			"signer": {
 				"category": "Sign",
 				"title": "Cloud Signer",
@@ -34,6 +37,16 @@
 				"category": "Learn",
 				"title": "About validators",
 				"description": "Get to know Polkadot Cloud's validators."
+			},
+			"accountability": {
+				"category": "Transparency",
+				"title": "Accountability",
+				"description": "Follow Polkadot Cloud's progress and commitments."
+			},
+			"blog": {
+				"category": "Read",
+				"title": "Blog",
+				"description": "Read the latest from Polkadot Cloud."
 			},
 			"home": {
 				"category": "The bigger picture",

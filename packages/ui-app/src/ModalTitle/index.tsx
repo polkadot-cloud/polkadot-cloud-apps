@@ -4,15 +4,17 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
-import type { FunctionComponent, SVGProps } from 'react'
+import type { CSSProperties, FunctionComponent, SVGProps } from 'react'
 import { ButtonHelp } from 'ui-buttons'
 import { Header, Title as Wrapper } from 'ui-core/modal'
 import { Close } from 'ui-overlay'
 
 interface ModalTitleProps {
 	title?: string
+	titleStyle?: CSSProperties
 	icon?: IconProp
-	Svg?: FunctionComponent<SVGProps<unknown>>
+	Svg?: FunctionComponent<SVGProps<SVGSVGElement>>
+	svgSize?: string
 	fixed?: boolean
 	helpKey?: string
 	paddingTop?: string
@@ -22,16 +24,18 @@ interface ModalTitleProps {
 export const ModalTitle = ({
 	helpKey,
 	title,
+	titleStyle,
 	icon,
 	fixed,
 	Svg,
+	svgSize = '1.5rem',
 	paddingTop,
 	paddingLeft,
 }: ModalTitleProps) => {
 	const { openHelpTooltip } = useHelp()
 
 	const graphic = Svg ? (
-		<Svg style={{ width: '1.5rem', height: '1.5rem' }} />
+		<Svg style={{ width: svgSize, height: svgSize }} />
 	) : icon ? (
 		<FontAwesomeIcon transform="grow-3" icon={icon} />
 	) : null
@@ -48,7 +52,7 @@ export const ModalTitle = ({
 				<div>
 					{graphic}
 					{title && (
-						<Wrapper>
+						<Wrapper style={titleStyle}>
 							{title}
 							{helpKey ? (
 								<ButtonHelp

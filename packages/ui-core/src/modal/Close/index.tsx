@@ -7,7 +7,7 @@ import classes from './index.module.scss'
 
 export const Close = ({ onClose }: { onClose: () => void }) => (
 	<div className={classes.close}>
-		<button type="button" onClick={() => onClose()}>
+		<button type="button" aria-label="Close" onClick={() => onClose()}>
 			<FontAwesomeIcon icon={faXmark} />
 		</button>
 	</div>

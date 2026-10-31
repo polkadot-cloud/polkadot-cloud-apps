@@ -1,36 +1,87 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import {
+	faArrowsRotate,
+	faChartSimple,
+	faCheckToSlot,
+	faCoins,
+	faInfo,
+	faMobileScreenButton,
+	faPenToSquare,
+	faServer,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
+import CloudOutlineSVG from 'assets/icons/cloudOutline.svg?react'
 import { PlatformURL } from 'consts'
 import { type KeyboardEvent, useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOverlay } from 'ui-overlay'
+import { ModalTitle } from 'ui-app/ModalTitle'
+import { Padding } from 'ui-core/modal'
 import classes from './index.module.scss'
 
 const apps = [
-	{ id: 'validators', href: 'https://validators.polkadot.cloud' },
-	{ id: 'nominate', href: 'https://nominate.polkadot.cloud' },
-	{ id: 'staking', href: 'https://staking.polkadot.cloud' },
-	{ id: 'signer', href: `${PlatformURL}/signer` },
-	{ id: 'companion', href: `${PlatformURL}/app` },
-	{ id: 'aboutValidators', href: `${PlatformURL}/validators` },
-	{ id: 'home', href: PlatformURL },
+	{
+		id: 'validators',
+		href: 'https://validators.polkadot.cloud',
+		graphic: <FontAwesomeIcon icon={faServer} />,
+	},
+	{
+		id: 'nominate',
+		href: 'https://nominate.polkadot.cloud',
+		graphic: <FontAwesomeIcon icon={faCheckToSlot} />,
+	},
+	{
+		id: 'staking',
+		href: 'https://staking.polkadot.cloud',
+		graphic: <FontAwesomeIcon icon={faCoins} />,
+	},
+	{
+		id: 'signer',
+		href: `${PlatformURL}/signer`,
+		graphic: <CloudOutlineSVG />,
+	},
+	{
+		id: 'companion',
+		href: `${PlatformURL}/app`,
+		graphic: <FontAwesomeIcon icon={faMobileScreenButton} />,
+	},
+	{
+		id: 'swap',
+		href: 'https://swap.polkadot.cloud',
+		graphic: <FontAwesomeIcon icon={faArrowsRotate} />,
+	},
+	{
+		id: 'aboutValidators',
+		href: `${PlatformURL}/validators`,
+		graphic: <FontAwesomeIcon icon={faInfo} />,
+	},
+	{
+		id: 'accountability',
+		href: `${PlatformURL}/accountability`,
+		graphic: <FontAwesomeIcon icon={faChartSimple} />,
+	},
+	{
+		id: 'blog',
+		href: `${PlatformURL}/blog`,
+		graphic: <FontAwesomeIcon icon={faPenToSquare} />,
+	},
+	{ id: 'home', href: PlatformURL, graphic: null },
 ] as const
 
 export const CloudApps = () => {
 	const { t } = useTranslation('modals')
-	const { closeModal } = useOverlay().modal
-	const titleId = useId()
 	const descriptionId = useId()
 	const dialogRef = useRef<HTMLDivElement>(null)
-	const closeRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {
 		const trigger = document.activeElement
 		const settingsButton =
 			document.querySelector<HTMLButtonElement>('.header-settings')
-		closeRef.current?.focus({ preventScroll: true })
+		dialogRef.current
+			?.querySelector<HTMLButtonElement>('button')
+			?.focus({ preventScroll: true })
 		return () => {
 			const returnFocus =
 				trigger instanceof HTMLElement &&
@@ -64,64 +115,53 @@ export const CloudApps = () => {
 			className={classes.directory}
 			role="dialog"
 			aria-modal="true"
-			aria-labelledby={titleId}
+			aria-label={t('cloudApps.title')}
 			aria-describedby={descriptionId}
 			onKeyDown={trapFocus}
 		>
-			<button
-				ref={closeRef}
-				type="button"
-				className={classes.close}
-				aria-label={t('cloudApps.close')}
-				onClick={closeModal}
-			>
-				<span aria-hidden="true">×</span>
-			</button>
-			<header className={classes.heading}>
-				<div className={classes.wordmark}>
-					<CloudSVG aria-hidden="true" />
-					<span>Polkadot Cloud</span>
-				</div>
-				<h1 id={titleId}>{t('cloudApps.title')}</h1>
-				<p id={descriptionId}>{t('cloudApps.description')}</p>
-			</header>
-			<div className={classes.grid}>
-				{apps.map(({ id, href }) => (
-					<a
-						key={id}
-						className={`${classes.card} ${classes[id]}`}
-						href={href}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<div className={classes.artwork} aria-hidden="true">
-							<div className={classes.orbit} />
-							<div className={classes.sculpture}>
-								<span />
-								<span />
-								<span />
-								<span />
-								<span />
+			<ModalTitle
+				title={t('cloudApps.title')}
+				Svg={CloudSVG}
+				svgSize="clamp(2.1rem, 4vw, 2.8rem)"
+				titleStyle={{
+					fontFamily: '"DM Serif Display", serif',
+					fontSize: 'clamp(2.1rem, 4vw, 2.8rem)',
+					fontWeight: 400,
+					lineHeight: 1.2,
+				}}
+			/>
+			<Padding>
+				<p id={descriptionId} className={classes.description}>
+					{t('cloudApps.description')}
+				</p>
+				<div className={classes.grid}>
+					{apps.map(({ id, href, graphic }) => (
+						<a
+							key={id}
+							className={`${classes.card} ${classes[id]}`}
+							href={href}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{graphic && (
+								<div className={classes.artwork} aria-hidden="true">
+									<div className={classes.icon}>{graphic}</div>
+								</div>
+							)}
+							<div className={classes.copy}>
+								<span className={classes.category}>
+									{t(`cloudApps.${id}.category`)}
+								</span>
+								<h2>{t(`cloudApps.${id}.title`)}</h2>
+								<p>{t(`cloudApps.${id}.description`)}</p>
 							</div>
-							<span className={classes.spark} />
-						</div>
-						<div className={classes.copy}>
-							<span className={classes.category}>
-								{t(`cloudApps.${id}.category`)}
+							<span className={classes.externalLink} aria-hidden="true">
+								↗
 							</span>
-							<h2>{t(`cloudApps.${id}.title`)}</h2>
-							<p>{t(`cloudApps.${id}.description`)}</p>
-							<span className={classes.address}>
-								{href.replace('https://', '')}
-							</span>
-						</div>
-						<span className={classes.arrow} aria-hidden="true">
-							↗
-						</span>
-					</a>
-				))}
-			</div>
-			<p className={classes.footnote}>{t('cloudApps.newTab')}</p>
+						</a>
+					))}
+				</div>
+			</Padding>
 		</div>
 	)
 }
