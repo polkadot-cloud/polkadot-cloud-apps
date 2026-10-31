@@ -63,6 +63,61 @@
 		"claimReward2": "報酬を引き出すと、ただちに利用可能残高としてアカウントに送金されます。",
 		"claimsOnBehalf": "支払いの受け取りは、受け取り対象のエラについてバリデータを支持するすべてのノミネーターに代わって行われます。このため通常はトランザクション手数料が高くなり、ほとんどのノミネーターはバリデータによる代理での受け取りに頼っています。",
 		"close": "閉じる",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "学ぶ",
+				"description": "Polkadot Cloud のバリデータをご紹介します。",
+				"title": "Cloud バリデータ"
+			},
+			"accountability": {
+				"category": "透明性",
+				"description": "Polkadot Cloud の進捗と取り組みを確認できます。",
+				"title": "説明責任"
+			},
+			"blog": {
+				"category": "読む",
+				"description": "Polkadot Cloud の最新記事をお読みください。",
+				"title": "ブログ"
+			},
+			"companion": {
+				"category": "つながる",
+				"description": "iOS と Android でステーキングの状況を確認できます。",
+				"title": "Staking Companion"
+			},
+			"description": "Polkadot の探索、ステーキング、トークン交換、エコシステムとのつながりを支えるツール。",
+			"home": {
+				"category": "全体像",
+				"description": "プラットフォームと私たちの取り組みをご覧ください。",
+				"title": "Polkadot Cloud へようこそ"
+			},
+			"nominate": {
+				"category": "選定",
+				"description": "専用のワークスペースでノミネート先を細かく調整できます。"
+			},
+			"sections": {
+				"appsAndTools": "アプリとツール",
+				"platform": "プラットフォーム"
+			},
+			"signer": {
+				"description": "トランザクションの署名をサポートする専用ツール。",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "参加",
+				"description": "DOT のステーキング、プールへの参加、報酬の管理ができます。",
+				"title": "ステーキング"
+			},
+			"swap": {
+				"category": "交換",
+				"description": "Polkadot でトークンを交換できます。",
+				"title": "Cloud Swap"
+			},
+			"title": "Polkadot Cloud を探索",
+			"validators": {
+				"category": "探す",
+				"description": "バリデータを調べて、次のノミネート先を見つけましょう。"
+			}
+		},
 		"commission": "コミッション",
 		"commissionRate": "コミッションレート",
 		"compound": "再投資",

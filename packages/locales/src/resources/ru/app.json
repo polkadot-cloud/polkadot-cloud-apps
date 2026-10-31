@@ -372,9 +372,7 @@
 		"permissionlessClaimingTurnedOff": "Получение без разрешения отключено.",
 		"permissionlessCompound": "Реинвестирование без разрешения: кто угодно может реинвестировать вознаграждения для этого участника",
 		"permissionlessWithdraw": "Вывод без разрешения: кто угодно может выводить вознаграждения для этого участника",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "Очки",
 		"pool": "Пул",
 		"poolClaim": "Получение из пула",

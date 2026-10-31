@@ -363,9 +363,7 @@
 		"permissionlessClaimingTurnedOff": "Genehmigungsfreies Beanspruchen ist deaktiviert.",
 		"permissionlessCompound": "Automatisches Compounding ohne Genehmigung: Jeder kann Belohnungen für dieses Mitglied reinvestieren",
 		"permissionlessWithdraw": "Erlaubnisfreies Abheben: Jeder kann Belohnungen für dieses Mitglied abheben",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "Punkte",
 		"pool": "Pool",
 		"poolClaim": "Pool-Anspruch",

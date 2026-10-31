@@ -40,9 +40,13 @@ export const FloatingMenu = ({
 		<Page.Side.Floating open={sideMenuOpen} minimised={false}>
 			<Wrapper ref={ref} $minimised={false}>
 				<section>
-					<LogoWrapper $minimised={false} $advancedMode={showAdvancedMode}>
-						<CloudSVG />
-						<h3>{title}</h3>
+					<LogoWrapper
+						$minimised={false}
+						$advancedMode={showAdvancedMode}
+						onOpen={() => setSideMenu(false)}
+					>
+						<CloudSVG aria-hidden="true" />
+						<span>{title}</span>
 					</LogoWrapper>
 					{renderMain({
 						activeCategory: null,

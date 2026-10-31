@@ -362,9 +362,7 @@
 		"permissionlessClaimingTurnedOff": "권한이 없는 청구가 비활성화되었습니다.",
 		"permissionlessCompound": "권한이 없는 복리: 누구나 이 멤버의 보상을 복리로 계산할 수 있습니다",
 		"permissionlessWithdraw": "권한이 없는 인출: 누구나 이 멤버의 보상을 인출할 수 있습니다",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "포인트",
 		"pool": "풀",
 		"poolClaim": "풀 청구",

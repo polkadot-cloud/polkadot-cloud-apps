@@ -60,6 +60,58 @@
 		"claimReward2": "提取收益将立即将其作为余额转入帐户",
 		"claimsOnBehalf": "代表所有提名同一验证人的提名人申领收益。交易费通常更高,大多数提名人都依赖验证人代表他们进行收益申领",
 		"close": "关闭",
+		"cloudApps": {
+			"aboutValidators": {
+				"category": "了解",
+				"description": "了解 Polkadot Cloud 的验证人。",
+				"title": "Cloud 验证人"
+			},
+			"accountability": {
+				"category": "透明度",
+				"description": "了解 Polkadot Cloud 的进展与承诺履行情况。",
+				"title": "责任履行"
+			},
+			"blog": {
+				"category": "阅读",
+				"description": "阅读 Polkadot Cloud 的最新文章。",
+				"title": "博客"
+			},
+			"companion": {
+				"category": "保持连接",
+				"description": "在 iOS 和 Android 上掌握您的质押情况。",
+				"title": "Staking Companion"
+			},
+			"description": "探索 Polkadot、参与质押、兑换代币并与生态保持联系的工具。",
+			"home": {
+				"category": "平台全貌",
+				"description": "探索平台及我们正在构建的一切。",
+				"title": "欢迎来到 Polkadot Cloud"
+			},
+			"nominate": {
+				"category": "精选",
+				"description": "在专注的工作空间中调整您的提名。"
+			},
+			"sections": { "appsAndTools": "应用与工具", "platform": "平台" },
+			"signer": {
+				"description": "专为交易签名打造的助手。",
+				"title": "Cloud Signer"
+			},
+			"staking": {
+				"category": "参与",
+				"description": "质押 DOT、加入质押池并管理您的奖励。",
+				"title": "质押"
+			},
+			"swap": {
+				"category": "兑换",
+				"description": "在 Polkadot 上兑换代币。",
+				"title": "Cloud Swap"
+			},
+			"title": "探索 Polkadot Cloud",
+			"validators": {
+				"category": "发现",
+				"description": "探索验证人，寻找下次提名的合适人选。"
+			}
+		},
 		"commission": "佣金",
 		"commissionRate": "佣金值率",
 		"compound": "复利",
