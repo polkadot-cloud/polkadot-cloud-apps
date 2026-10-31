@@ -3,6 +3,10 @@
 		"cloudApps": {
 			"title": "Explore Polkadot Cloud",
 			"description": "Your tools for exploring, staking, and staying connected to Polkadot.",
+			"sections": {
+				"appsAndTools": "Apps & tools",
+				"platform": "Platform"
+			},
 			"validators": {
 				"category": "Discover",
 				"title": "Validators",
@@ -35,7 +39,7 @@
 			},
 			"aboutValidators": {
 				"category": "Learn",
-				"title": "About validators",
+				"title": "Cloud Validators",
 				"description": "Get to know Polkadot Cloud's validators."
 			},
 			"accountability": {

@@ -10,15 +10,14 @@ import {
 	PlatformDisclaimerURL,
 	PlatformDocsURL,
 	PlatformGitHubURL,
-	PlatformName,
 	PlatformPrivacyURL,
-	PlatformURL,
 } from 'consts'
 import { blockNumber$ } from 'global-bus'
 import { usePlugins } from 'hooks/usePlugins'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Page } from 'ui-core/base'
+import { CloudAppsButton } from '../CloudAppsButton'
 import classes from './index.module.scss'
 import { Status } from './Status'
 import { TokenPrice } from './TokenPrice'
@@ -41,16 +40,10 @@ export const MainFooter = ({ showDocs = true }: { showDocs?: boolean }) => {
 	return (
 		<Page.Footer>
 			<div className={`${classes.wrapper} pagePadding containerWidth`}>
-				<a
-					className={classes.brand}
-					href={PlatformURL}
-					target="_blank"
-					rel="noreferrer"
-					aria-label={PlatformName}
-				>
-					<CloudIconSVG className={classes.icon} />
+				<CloudAppsButton className={classes.brand}>
+					<CloudIconSVG className={classes.icon} aria-hidden="true" />
 					<span className={classes.cloudLabel}>Cloud</span>
-				</a>
+				</CloudAppsButton>
 				<div className={classes.summary}>
 					<section>
 						<Status />

@@ -6,6 +6,7 @@ import {
 	faChartSimple,
 	faCheckToSlot,
 	faCoins,
+	faFileSignature,
 	faInfo,
 	faMobileScreenButton,
 	faPenToSquare,
@@ -13,7 +14,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
-import CloudOutlineSVG from 'assets/icons/cloudOutline.svg?react'
 import { PlatformURL } from 'consts'
 import { type KeyboardEvent, useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,58 +21,69 @@ import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding } from 'ui-core/modal'
 import classes from './index.module.scss'
 
-const apps = [
+const appSections = [
 	{
-		id: 'validators',
-		href: 'https://validators.polkadot.cloud',
-		graphic: <FontAwesomeIcon icon={faServer} />,
+		id: 'appsAndTools',
+		apps: [
+			{
+				id: 'staking',
+				href: 'https://staking.polkadot.cloud',
+				graphic: <FontAwesomeIcon icon={faCoins} />,
+			},
+			{
+				id: 'validators',
+				href: 'https://validators.polkadot.cloud',
+				graphic: <FontAwesomeIcon icon={faServer} />,
+			},
+			{
+				id: 'nominate',
+				href: 'https://nominate.polkadot.cloud',
+				graphic: <FontAwesomeIcon icon={faCheckToSlot} />,
+			},
+			{
+				id: 'swap',
+				href: 'https://swap.polkadot.cloud',
+				graphic: <FontAwesomeIcon icon={faArrowsRotate} />,
+			},
+			{
+				id: 'signer',
+				href: `${PlatformURL}/signer`,
+				graphic: <FontAwesomeIcon icon={faFileSignature} />,
+			},
+			{
+				id: 'companion',
+				href: `${PlatformURL}/app`,
+				graphic: <FontAwesomeIcon icon={faMobileScreenButton} />,
+			},
+		],
 	},
 	{
-		id: 'nominate',
-		href: 'https://nominate.polkadot.cloud',
-		graphic: <FontAwesomeIcon icon={faCheckToSlot} />,
+		id: 'platform',
+		apps: [
+			{
+				id: 'aboutValidators',
+				href: `${PlatformURL}/validators`,
+				graphic: <FontAwesomeIcon icon={faInfo} />,
+			},
+			{
+				id: 'accountability',
+				href: `${PlatformURL}/accountability`,
+				graphic: <FontAwesomeIcon icon={faChartSimple} />,
+			},
+			{
+				id: 'blog',
+				href: `${PlatformURL}/blog`,
+				graphic: <FontAwesomeIcon icon={faPenToSquare} />,
+			},
+			{ id: 'home', href: PlatformURL, graphic: null },
+		],
 	},
-	{
-		id: 'staking',
-		href: 'https://staking.polkadot.cloud',
-		graphic: <FontAwesomeIcon icon={faCoins} />,
-	},
-	{
-		id: 'signer',
-		href: `${PlatformURL}/signer`,
-		graphic: <CloudOutlineSVG />,
-	},
-	{
-		id: 'companion',
-		href: `${PlatformURL}/app`,
-		graphic: <FontAwesomeIcon icon={faMobileScreenButton} />,
-	},
-	{
-		id: 'swap',
-		href: 'https://swap.polkadot.cloud',
-		graphic: <FontAwesomeIcon icon={faArrowsRotate} />,
-	},
-	{
-		id: 'aboutValidators',
-		href: `${PlatformURL}/validators`,
-		graphic: <FontAwesomeIcon icon={faInfo} />,
-	},
-	{
-		id: 'accountability',
-		href: `${PlatformURL}/accountability`,
-		graphic: <FontAwesomeIcon icon={faChartSimple} />,
-	},
-	{
-		id: 'blog',
-		href: `${PlatformURL}/blog`,
-		graphic: <FontAwesomeIcon icon={faPenToSquare} />,
-	},
-	{ id: 'home', href: PlatformURL, graphic: null },
 ] as const
 
 export const CloudApps = () => {
 	const { t } = useTranslation('modals')
 	const descriptionId = useId()
+	const iconGradientId = useId()
 	const dialogRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -119,13 +130,38 @@ export const CloudApps = () => {
 			aria-describedby={descriptionId}
 			onKeyDown={trapFocus}
 		>
+			<svg
+				className={classes.iconDefinitions}
+				width="0"
+				height="0"
+				aria-hidden="true"
+				focusable="false"
+			>
+				<defs>
+					<linearGradient
+						id={iconGradientId}
+						x1="0%"
+						y1="0%"
+						x2="100%"
+						y2="100%"
+					>
+						<stop offset="0%" stopColor="var(--accent-800)" stopOpacity="0.3" />
+						<stop
+							offset="50%"
+							stopColor="var(--accent-800)"
+							stopOpacity="0.65"
+						/>
+						<stop offset="100%" stopColor="var(--accent-800)" />
+					</linearGradient>
+				</defs>
+			</svg>
 			<ModalTitle
 				title={t('cloudApps.title')}
 				Svg={CloudSVG}
-				svgSize="clamp(2.1rem, 4vw, 2.8rem)"
+				svgSize="clamp(1.9rem, 3.5vw, 2.5rem)"
 				titleStyle={{
 					fontFamily: '"DM Serif Display", serif',
-					fontSize: 'clamp(2.1rem, 4vw, 2.8rem)',
+					fontSize: 'clamp(1.9rem, 3.5vw, 2.5rem)',
 					fontWeight: 400,
 					lineHeight: 1.2,
 				}}
@@ -134,33 +170,56 @@ export const CloudApps = () => {
 				<p id={descriptionId} className={classes.description}>
 					{t('cloudApps.description')}
 				</p>
-				<div className={classes.grid}>
-					{apps.map(({ id, href, graphic }) => (
-						<a
-							key={id}
-							className={`${classes.card} ${classes[id]}`}
-							href={href}
-							target="_blank"
-							rel="noopener noreferrer"
+				{appSections.map(({ id: sectionId, apps }) => (
+					<section
+						key={sectionId}
+						className={classes.section}
+						aria-labelledby={`${descriptionId}-${sectionId}`}
+					>
+						<h3
+							id={`${descriptionId}-${sectionId}`}
+							className={classes.sectionTitle}
 						>
-							{graphic && (
-								<div className={classes.artwork} aria-hidden="true">
-									<div className={classes.icon}>{graphic}</div>
-								</div>
-							)}
-							<div className={classes.copy}>
-								<span className={classes.category}>
-									{t(`cloudApps.${id}.category`)}
-								</span>
-								<h2>{t(`cloudApps.${id}.title`)}</h2>
-								<p>{t(`cloudApps.${id}.description`)}</p>
-							</div>
-							<span className={classes.externalLink} aria-hidden="true">
-								↗
-							</span>
-						</a>
-					))}
-				</div>
+							{t(`cloudApps.sections.${sectionId}`)}
+						</h3>
+						<div className={classes.grid}>
+							{apps.map(({ id, href, graphic }) => (
+								<a
+									key={id}
+									className={
+										id === 'home'
+											? `${classes.card} ${classes.home}`
+											: classes.card
+									}
+									href={href}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									{graphic && (
+										<div className={classes.artwork} aria-hidden="true">
+											<div
+												className={classes.icon}
+												style={{ fill: `url(#${iconGradientId})` }}
+											>
+												{graphic}
+											</div>
+										</div>
+									)}
+									<div className={classes.copy}>
+										<span className={classes.category}>
+											{t(`cloudApps.${id}.category`)}
+										</span>
+										<h4>{t(`cloudApps.${id}.title`)}</h4>
+										<p>{t(`cloudApps.${id}.description`)}</p>
+									</div>
+									<span className={classes.externalLink} aria-hidden="true">
+										↗
+									</span>
+								</a>
+							))}
+						</div>
+					</section>
+				))}
 			</Padding>
 		</div>
 	)

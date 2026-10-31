@@ -36,7 +36,7 @@ export const AdvancedMenu = ({
 	return (
 		<>
 			<BarLogoWrapper>
-				<CloudSVG />
+				<CloudSVG aria-hidden="true" />
 			</BarLogoWrapper>
 			<BarIconsWrapper>
 				{barItems.map(({ faIcon, iconTransform, key }, index) => (
