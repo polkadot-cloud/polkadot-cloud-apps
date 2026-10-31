@@ -1,5 +1,60 @@
 {
 	"modals": {
+		"cloudApps": {
+			"title": "Polkadot Cloud 살펴보기",
+			"description": "Polkadot 탐색과 스테이킹, 토큰 교환, 생태계와의 연결을 위한 도구입니다.",
+			"sections": {
+				"appsAndTools": "앱 및 도구",
+				"platform": "플랫폼"
+			},
+			"validators": {
+				"category": "탐색",
+				"description": "검증자를 살펴보고 다음 지명 대상을 찾아보세요."
+			},
+			"nominate": {
+				"category": "선별",
+				"description": "전용 작업 공간에서 지명 설정을 세밀하게 조정하세요."
+			},
+			"staking": {
+				"category": "참여",
+				"title": "스테이킹",
+				"description": "DOT를 스테이킹하고 풀에 참여하며 보상을 관리하세요."
+			},
+			"swap": {
+				"category": "교환",
+				"title": "Cloud Swap",
+				"description": "Polkadot에서 토큰을 교환하세요."
+			},
+			"signer": {
+				"title": "Cloud Signer",
+				"description": "트랜잭션 서명을 위한 전용 도구입니다."
+			},
+			"companion": {
+				"category": "연결 유지",
+				"title": "Staking Companion",
+				"description": "iOS와 Android에서 스테이킹 현황을 확인하세요."
+			},
+			"aboutValidators": {
+				"category": "알아보기",
+				"title": "Cloud 검증자",
+				"description": "Polkadot Cloud의 검증자를 알아보세요."
+			},
+			"accountability": {
+				"category": "투명성",
+				"title": "책임 이행",
+				"description": "Polkadot Cloud의 진행 상황과 약속 이행을 확인하세요."
+			},
+			"blog": {
+				"category": "읽기",
+				"title": "블로그",
+				"description": "Polkadot Cloud의 최신 소식을 읽어보세요."
+			},
+			"home": {
+				"category": "플랫폼 전체 보기",
+				"title": "Polkadot Cloud에 오신 것을 환영합니다",
+				"description": "플랫폼과 저희가 만들어 가는 모든 것을 살펴보세요."
+			}
+		},
 		"aboveExisting": "기존 금액 초과",
 		"aboveGlobalMax": "전역 최대값 초과",
 		"aboveMax": "최대값 초과",

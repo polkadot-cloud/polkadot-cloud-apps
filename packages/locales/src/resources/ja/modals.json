@@ -1,5 +1,60 @@
 {
 	"modals": {
+		"cloudApps": {
+			"title": "Polkadot Cloud を探索",
+			"description": "Polkadot の探索、ステーキング、トークン交換、エコシステムとのつながりを支えるツール。",
+			"sections": {
+				"appsAndTools": "アプリとツール",
+				"platform": "プラットフォーム"
+			},
+			"validators": {
+				"category": "探す",
+				"description": "バリデータを調べて、次のノミネート先を見つけましょう。"
+			},
+			"nominate": {
+				"category": "選定",
+				"description": "専用のワークスペースでノミネート先を細かく調整できます。"
+			},
+			"staking": {
+				"category": "参加",
+				"title": "ステーキング",
+				"description": "DOT のステーキング、プールへの参加、報酬の管理ができます。"
+			},
+			"swap": {
+				"category": "交換",
+				"title": "Cloud Swap",
+				"description": "Polkadot でトークンを交換できます。"
+			},
+			"signer": {
+				"title": "Cloud Signer",
+				"description": "トランザクションの署名をサポートする専用ツール。"
+			},
+			"companion": {
+				"category": "つながる",
+				"title": "Staking Companion",
+				"description": "iOS と Android でステーキングの状況を確認できます。"
+			},
+			"aboutValidators": {
+				"category": "学ぶ",
+				"title": "Cloud バリデータ",
+				"description": "Polkadot Cloud のバリデータをご紹介します。"
+			},
+			"accountability": {
+				"category": "透明性",
+				"title": "説明責任",
+				"description": "Polkadot Cloud の進捗と取り組みを確認できます。"
+			},
+			"blog": {
+				"category": "読む",
+				"title": "ブログ",
+				"description": "Polkadot Cloud の最新記事をお読みください。"
+			},
+			"home": {
+				"category": "全体像",
+				"title": "Polkadot Cloud へようこそ",
+				"description": "プラットフォームと私たちの取り組みをご覧ください。"
+			}
+		},
 		"aboveExisting": "既存値を上回る",
 		"aboveGlobalMax": "グローバル上限を上回る",
 		"aboveMax": "上限を上回る",

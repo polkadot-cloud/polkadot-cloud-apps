@@ -15,13 +15,27 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudSVG from 'assets/icons/cloud.svg?react'
 import { PlatformURL } from 'consts'
-import { type KeyboardEvent, useEffect, useId, useRef } from 'react'
+import {
+	type KeyboardEvent,
+	type ReactNode,
+	useEffect,
+	useId,
+	useRef,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalTitle } from 'ui-app/ModalTitle'
 import { Padding } from 'ui-core/modal'
 import classes from './index.module.scss'
 
-const appSections = [
+interface CloudApp {
+	id: string
+	href: string
+	graphic: ReactNode
+	titleKey?: string
+	categoryKey?: string
+}
+
+const appSections: { id: string; apps: CloudApp[] }[] = [
 	{
 		id: 'appsAndTools',
 		apps: [
@@ -32,11 +46,13 @@ const appSections = [
 			},
 			{
 				id: 'validators',
+				titleKey: 'app:validators',
 				href: 'https://validators.polkadot.cloud',
 				graphic: <FontAwesomeIcon icon={faServer} />,
 			},
 			{
 				id: 'nominate',
+				titleKey: 'app:nominate',
 				href: 'https://nominate.polkadot.cloud',
 				graphic: <FontAwesomeIcon icon={faCheckToSlot} />,
 			},
@@ -47,6 +63,7 @@ const appSections = [
 			},
 			{
 				id: 'signer',
+				categoryKey: 'app:sign',
 				href: `${PlatformURL}/signer`,
 				graphic: <FontAwesomeIcon icon={faFileSignature} />,
 			},
@@ -78,7 +95,7 @@ const appSections = [
 			{ id: 'home', href: PlatformURL, graphic: null },
 		],
 	},
-] as const
+]
 
 export const CloudApps = () => {
 	const { t } = useTranslation('modals')
@@ -183,40 +200,46 @@ export const CloudApps = () => {
 							{t(`cloudApps.sections.${sectionId}`)}
 						</h3>
 						<div className={classes.grid}>
-							{apps.map(({ id, href, graphic }) => (
-								<a
-									key={id}
-									className={
-										id === 'home'
-											? `${classes.card} ${classes.home}`
-											: classes.card
-									}
-									href={href}
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									{graphic && (
-										<div className={classes.artwork} aria-hidden="true">
-											<div
-												className={classes.icon}
-												style={{ fill: `url(#${iconGradientId})` }}
-											>
-												{graphic}
+							{apps.map(
+								({
+									id,
+									href,
+									graphic,
+									titleKey = `cloudApps.${id}.title`,
+									categoryKey = `cloudApps.${id}.category`,
+								}) => (
+									<a
+										key={id}
+										className={
+											id === 'home'
+												? `${classes.card} ${classes.home}`
+												: classes.card
+										}
+										href={href}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										{graphic && (
+											<div className={classes.artwork} aria-hidden="true">
+												<div
+													className={classes.icon}
+													style={{ fill: `url(#${iconGradientId})` }}
+												>
+													{graphic}
+												</div>
 											</div>
+										)}
+										<div className={classes.copy}>
+											<span className={classes.category}>{t(categoryKey)}</span>
+											<h4>{t(titleKey)}</h4>
+											<p>{t(`cloudApps.${id}.description`)}</p>
 										</div>
-									)}
-									<div className={classes.copy}>
-										<span className={classes.category}>
-											{t(`cloudApps.${id}.category`)}
+										<span className={classes.externalLink} aria-hidden="true">
+											↗
 										</span>
-										<h4>{t(`cloudApps.${id}.title`)}</h4>
-										<p>{t(`cloudApps.${id}.description`)}</p>
-									</div>
-									<span className={classes.externalLink} aria-hidden="true">
-										↗
-									</span>
-								</a>
-							))}
+									</a>
+								),
+							)}
 						</div>
 					</section>
 				))}

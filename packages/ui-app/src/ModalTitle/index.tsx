@@ -5,6 +5,7 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHelp } from 'hooks/useHelp'
 import type { CSSProperties, FunctionComponent, SVGProps } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ButtonHelp } from 'ui-buttons'
 import { Header, Title as Wrapper } from 'ui-core/modal'
 import { Close } from 'ui-overlay'
@@ -32,6 +33,7 @@ export const ModalTitle = ({
 	paddingTop,
 	paddingLeft,
 }: ModalTitleProps) => {
+	const { t } = useTranslation('modals')
 	const { openHelpTooltip } = useHelp()
 
 	const graphic = Svg ? (
@@ -47,7 +49,7 @@ export const ModalTitle = ({
 
 	return (
 		<>
-			<Close />
+			<Close label={t('close')} />
 			<Header fixed={fixed} style={style}>
 				<div>
 					{graphic}

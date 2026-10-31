@@ -2,19 +2,17 @@
 	"modals": {
 		"cloudApps": {
 			"title": "Explore Polkadot Cloud",
-			"description": "Your tools for exploring, staking, and staying connected to Polkadot.",
+			"description": "Your tools for exploring, staking, swapping, and staying connected to Polkadot.",
 			"sections": {
 				"appsAndTools": "Apps & tools",
 				"platform": "Platform"
 			},
 			"validators": {
 				"category": "Discover",
-				"title": "Validators",
 				"description": "Explore validators and find your next nominations."
 			},
 			"nominate": {
 				"category": "Curate",
-				"title": "Nominate",
 				"description": "Fine-tune your nominations with a focused workspace."
 			},
 			"staking": {
@@ -28,14 +26,13 @@
 				"description": "Swap tokens on Polkadot."
 			},
 			"signer": {
-				"category": "Sign",
 				"title": "Cloud Signer",
 				"description": "Your dedicated companion for signing transactions."
 			},
 			"companion": {
 				"category": "Stay connected",
 				"title": "Staking Companion",
-				"description": "Keep your staking in view, wherever you go."
+				"description": "Keep your staking in view on iOS and Android."
 			},
 			"aboutValidators": {
 				"category": "Learn",

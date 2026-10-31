@@ -1,5 +1,60 @@
 {
 	"modals": {
+		"cloudApps": {
+			"title": "Conheça o Polkadot Cloud",
+			"description": "Suas ferramentas para explorar, fazer staking, trocar tokens e se conectar ao Polkadot.",
+			"sections": {
+				"appsAndTools": "Aplicativos e ferramentas",
+				"platform": "Plataforma"
+			},
+			"validators": {
+				"category": "Explorar",
+				"description": "Explore validadores e encontre suas próximas nomeações."
+			},
+			"nominate": {
+				"category": "Selecionar",
+				"description": "Ajuste suas nomeações em um espaço de trabalho focado."
+			},
+			"staking": {
+				"category": "Participar",
+				"title": "Staking",
+				"description": "Faça staking de DOT, participe de um pool e gerencie suas recompensas."
+			},
+			"swap": {
+				"category": "Trocar",
+				"title": "Cloud Swap",
+				"description": "Troque tokens no Polkadot."
+			},
+			"signer": {
+				"title": "Cloud Signer",
+				"description": "Seu parceiro dedicado para assinar transações."
+			},
+			"companion": {
+				"category": "Mantenha-se conectado",
+				"title": "Staking Companion",
+				"description": "Acompanhe seu staking no iOS e no Android."
+			},
+			"aboutValidators": {
+				"category": "Aprender",
+				"title": "Validadores Cloud",
+				"description": "Conheça os validadores do Polkadot Cloud."
+			},
+			"accountability": {
+				"category": "Transparência",
+				"title": "Prestação de contas",
+				"description": "Acompanhe o progresso e os compromissos do Polkadot Cloud."
+			},
+			"blog": {
+				"category": "Ler",
+				"title": "Blog",
+				"description": "Leia as novidades do Polkadot Cloud."
+			},
+			"home": {
+				"category": "Visão geral",
+				"title": "Boas-vindas ao Polkadot Cloud",
+				"description": "Explore a plataforma e tudo o que estamos construindo."
+			}
+		},
 		"aboveExisting": "Acima do Existente",
 		"aboveGlobalMax": "Acima do Máximo Global",
 		"aboveMax": "Acima do Máximo",

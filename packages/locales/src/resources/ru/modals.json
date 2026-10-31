@@ -1,5 +1,60 @@
 {
 	"modals": {
+		"cloudApps": {
+			"title": "Откройте Polkadot Cloud",
+			"description": "Инструменты для знакомства с Polkadot, стейкинга, обмена токенов и связи с экосистемой.",
+			"sections": {
+				"appsAndTools": "Приложения и инструменты",
+				"platform": "Платформа"
+			},
+			"validators": {
+				"category": "Обзор",
+				"description": "Изучайте валидаторов и выбирайте кандидатов для номинаций."
+			},
+			"nominate": {
+				"category": "Подбор",
+				"description": "Настраивайте номинации в удобном рабочем пространстве."
+			},
+			"staking": {
+				"category": "Участие",
+				"title": "Стейкинг",
+				"description": "Отправляйте DOT в стейкинг, вступайте в пул и управляйте наградами."
+			},
+			"swap": {
+				"category": "Обмен",
+				"title": "Cloud Swap",
+				"description": "Обменивайте токены в Polkadot."
+			},
+			"signer": {
+				"title": "Cloud Signer",
+				"description": "Ваш помощник для подписания транзакций."
+			},
+			"companion": {
+				"category": "Всегда на связи",
+				"title": "Staking Companion",
+				"description": "Следите за стейкингом на iOS и Android."
+			},
+			"aboutValidators": {
+				"category": "Знакомство",
+				"title": "Валидаторы Cloud",
+				"description": "Познакомьтесь с валидаторами Polkadot Cloud."
+			},
+			"accountability": {
+				"category": "Прозрачность",
+				"title": "Отчётность",
+				"description": "Следите за прогрессом и обязательствами Polkadot Cloud."
+			},
+			"blog": {
+				"category": "Читать",
+				"title": "Блог",
+				"description": "Читайте свежие публикации Polkadot Cloud."
+			},
+			"home": {
+				"category": "Общая картина",
+				"title": "Добро пожаловать в Polkadot Cloud",
+				"description": "Узнайте больше о платформе и обо всём, что мы создаём."
+			}
+		},
 		"aboveExisting": "Выше текущего",
 		"aboveGlobalMax": "Выше глобального максимума",
 		"aboveMax": "Выше максимума",
