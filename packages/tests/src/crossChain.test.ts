@@ -10,7 +10,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import {
 	canFundTransfer,
 	parseTransferAmount,
-} from '../../app-swap/src/pages/CrossChain/utils'
+} from '../../app-swap/src/pages/Bridge/utils'
 import {
 	findAssetInfo,
 	getSupportedDestinations,

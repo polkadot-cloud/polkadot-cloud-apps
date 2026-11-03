@@ -6,7 +6,7 @@ import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { useCrossChainTransfer } from '../../app-swap/src/pages/CrossChain/useCrossChainTransfer'
+import { useCrossChainTransfer } from '../../app-swap/src/pages/Bridge/useCrossChainTransfer'
 
 const api = vi.hoisted(() => ({
 	stablecoins: {

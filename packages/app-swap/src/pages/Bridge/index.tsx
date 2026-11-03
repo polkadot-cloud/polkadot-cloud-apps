@@ -50,7 +50,7 @@ const feeTokens = (['DOT', 'USDC', 'USDT'] as const).map((value) => ({
 const displayFee = (fee?: CrossChainFee) =>
 	fee ? `${planckToUnit(fee.amount, fee.decimals)} ${fee.symbol}` : '—'
 
-export const CrossChain = () => {
+export const Bridge = () => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
 	const { getTxSubmission } = useTxMeta()
@@ -145,7 +145,7 @@ export const CrossChain = () => {
 		<Page.Row>
 			<SendForm.Container className={formClasses.form}>
 				<SendForm.Header
-					title={t('crossChain')}
+					title={t('bridge')}
 					subtitle={t('crossChainDescription')}
 				/>
 				<SendForm.Card>
@@ -265,7 +265,6 @@ export const CrossChain = () => {
 								? `${planckToUnit(quote.receivedAmount, 6)} ${symbol}`
 								: '—'}
 						</SendForm.Note>
-						<ExchangeNotice>{t('crossChainAssetsNote')}</ExchangeNotice>
 						{loading && (
 							<ExchangeNotice>{t('checkingCrossChain')}</ExchangeNotice>
 						)}

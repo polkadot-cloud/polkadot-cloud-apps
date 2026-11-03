@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
+	faArrowRightArrowLeft,
 	faArrowsRotate,
 	faPaperPlane,
-	faRoute,
 } from '@fortawesome/free-solid-svg-icons'
 import type { PageItem } from 'types'
-import { CrossChain } from './CrossChain'
+import { Bridge } from './Bridge'
 import { Send } from './Send'
 import { Swap } from './Swap'
 
@@ -21,11 +21,11 @@ export const pages: PageItem[] = [
 	},
 	{ key: 'send', hash: '/send', Entry: Send, faIcon: faPaperPlane },
 	{
-		key: 'crossChain',
+		key: 'bridge',
 		titleNamespace: 'swap',
 		hash: '/cross-chain',
-		Entry: CrossChain,
-		faIcon: faRoute,
+		Entry: Bridge,
+		faIcon: faArrowRightArrowLeft,
 	},
 ].map((page) => ({
 	...page,
