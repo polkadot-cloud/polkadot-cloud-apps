@@ -10,10 +10,12 @@ import {
 	Native,
 	type TXcmFeeBase,
 } from '@paraspell/sdk-dedot'
+import { CrossChainAssets, isCrossChainAsset } from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
 import type { GenericSubstrateApi } from 'dedot/types'
 import type {
+	CrossChainAsset,
 	CrossChainTransfer,
 	CrossChainTransferInput,
 	StablecoinChainId,
@@ -25,12 +27,21 @@ const chainNames = {
 	hydration: 'Hydration',
 } as const
 
+const currencyFor = (chain: StablecoinChainId, symbol: CrossChainAsset) => {
+	if (chain === 'statemint' && symbol === 'DOT')
+		return { symbol: Native('DOT') }
+	const id = getStablecoinAssetConfig(chain, symbol)?.assetId
+	if (id === undefined)
+		throw new Error(`Unsupported cross-chain asset: ${symbol}`)
+	return { id }
+}
+
 // Registry spellings (e.g. USDt) differ from the symbols used by app balances.
 const normalizeFee = (
 	{ fee: amount, asset }: TXcmFeeBase,
 	chain: StablecoinChainId,
 ) => {
-	const symbol = (['DOT', 'USDC', 'USDT'] as const).find((symbol) => {
+	const symbol = CrossChainAssets.find((symbol) => {
 		const id = getStablecoinAssetConfig(chain, symbol)?.assetId
 		return chain === 'statemint' && symbol === 'DOT'
 			? asset.isNative && asset.symbol === 'DOT'
@@ -51,32 +62,21 @@ export const prepareCrossChainTransfer = async (
 	if (
 		from === to ||
 		amount <= 0n ||
-		!['DOT', 'USDC', 'USDT'].includes(symbol)
+		!isCrossChainAsset(symbol) ||
+		!isCrossChainAsset(feeAsset)
 	) {
 		throw new Error('Invalid cross-chain transfer')
 	}
 	const origin = chainNames[from]
 	const destination = chainNames[to]
-	const assetId = getStablecoinAssetConfig(from, symbol)?.assetId
-	if (assetId === undefined && !(from === 'statemint' && symbol === 'DOT')) {
-		throw new Error('Unsupported cross-chain asset')
-	}
-	const currency =
-		assetId === undefined ? { symbol: Native('DOT') } : { id: assetId }
+	const currency = currencyFor(from, symbol)
+	const feeCurrency = currencyFor(from, feeAsset)
 	const asset = findAssetInfo(origin, currency, destination)
 	if (
 		!asset ||
 		!getSupportedDestinations(origin, currency).includes(destination)
 	) {
 		throw new Error(`No supported ${symbol} route between these chains`)
-	}
-	const feeId = getStablecoinAssetConfig(from, feeAsset)?.assetId
-	const feeCurrency =
-		from === 'statemint' && feeAsset === 'DOT'
-			? { symbol: Native('DOT') }
-			: { id: feeId! }
-	if ('id' in feeCurrency && feeCurrency.id === undefined) {
-		throw new Error('Unsupported fee asset')
 	}
 	const builder = Builder({
 		abstractDecimals: false,

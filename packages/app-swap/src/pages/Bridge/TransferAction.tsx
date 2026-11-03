@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { SwapDappName } from 'consts'
+import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useCrossChainDeliveryStage } from 'hooks/useCrossChainDelivery'
@@ -54,7 +55,7 @@ export const TransferAction = ({
 		canFundTransfer(balances.balances, input, quote, swapFeeReserve(networkFee))
 	const feeDisplay = {
 		unit: input.feeAsset,
-		units: input.feeAsset === 'DOT' ? 10 : 6,
+		units: getStablecoinAssetConfig(input.from, input.feeAsset)!.decimals,
 	}
 	const submission = useSubmitExtrinsic({
 		tx: quote?.tx,

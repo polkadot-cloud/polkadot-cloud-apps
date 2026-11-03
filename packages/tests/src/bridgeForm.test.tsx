@@ -3,12 +3,12 @@
 // @vitest-environment jsdom
 
 import { encodeAddress } from 'dedot/utils'
+import { Tooltip } from 'radix-ui'
 import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { CrossChainTransferInput, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Bridge } from '../../app-swap/src/pages/Bridge'
-import { Tooltip } from '../../ui-core/node_modules/radix-ui/dist/index.mjs'
 
 const mocked = vi.hoisted(() => ({
 	refresh: vi.fn(),
@@ -71,7 +71,7 @@ vi.mock('../../ui-core/src/input', async () => {
 	const { SendForm } = await import('../../ui-core/src/input/SendForm')
 	return { SendForm }
 })
-vi.mock('../../app-swap/node_modules/react-i18next/dist/es/index.js', () => ({
+vi.mock('react-i18next', () => ({
 	useTranslation: () => ({ t: (key: string) => key }),
 }))
 

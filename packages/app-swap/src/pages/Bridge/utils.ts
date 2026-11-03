@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type {
+	CrossChainAsset,
 	CrossChainTransfer,
 	CrossChainTransferInput,
 	StablecoinBalance,
 } from 'types'
+import { maxSendableBalance } from 'utils'
 
 // Reject invalid input and excess precision instead of rounding a user's transfer.
 export const parseTransferAmount = (
@@ -28,7 +30,7 @@ export const canFundTransfer = (
 	quote: CrossChainTransfer,
 	networkFee: bigint,
 ): boolean => {
-	const spends = new Map<string, bigint>([[input.symbol, input.amount]])
+	const spends = new Map([[input.symbol, input.amount]])
 	for (const [symbol, amount] of [
 		[input.feeAsset, networkFee],
 		[
@@ -42,11 +44,28 @@ export const canFundTransfer = (
 		const balance = balances.find(
 			(item) => item.chain === input.from && item.symbol === symbol,
 		)
-		if (!balance) return false
-		const floor =
-			balance.frozen > balance.existentialDeposit
-				? balance.frozen
-				: balance.existentialDeposit
-		return balance.free - floor >= amount
+		return !!balance && maxSendableBalance(balance, undefined, 0n) >= amount
 	})
+}
+
+export const maxTransferAmount = (
+	balances: StablecoinBalance[],
+	input: CrossChainTransferInput,
+	quote: CrossChainTransfer | undefined,
+	networkFee: bigint,
+): bigint => {
+	const getBalance = (symbol: CrossChainAsset) =>
+		balances.find(
+			(balance) => balance.chain === input.from && balance.symbol === symbol,
+		)
+	const available = maxSendableBalance(
+		getBalance(input.symbol),
+		getBalance(input.feeAsset),
+		networkFee,
+	)
+	const originReserve =
+		quote?.originFee.symbol === input.symbol && !quote.originFeeFromAmount
+			? quote.originFee.amount
+			: 0n
+	return available > originReserve ? available - originReserve : 0n
 }

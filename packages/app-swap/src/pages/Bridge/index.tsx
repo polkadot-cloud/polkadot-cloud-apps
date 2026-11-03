@@ -3,7 +3,8 @@
 
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { planckToUnit } from '@polkadot-cloud/utils'
-import { getFeeTokenIcon, getStablecoinAssetConfig } from 'consts/stablecoins'
+import { crossChainDestination } from 'consts/crossChain'
+import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTheme, useTxMeta } from 'hooks'
 import { useCrossChainTransfer } from 'hooks/useCrossChainTransfer'
 import { useEffect, useMemo, useState } from 'react'
@@ -11,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import type { TxFeeEstimator } from 'tx-submit/types'
 import type {
 	CrossChainAsset,
-	CrossChainFee,
 	CrossChainTransferInput,
 	ImportedAccount,
 	StablecoinChainId,
@@ -19,36 +19,25 @@ import type {
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
-import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { ButtonSecondary } from 'ui-buttons'
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { maxSendableBalance } from 'utils'
+import { chainOptions, findOption } from '../../library/AssetTransfer/options'
 import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { useHydrationFeeSetup } from '../Send/hooks/useHydrationFeeSetup'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
 import settingClasses from '../Swap/index.module.scss'
+import { feeTokenOptions, tokenOptions } from './options'
 import { TransferAction } from './TransferAction'
-import { canFundTransfer, parseTransferAmount } from './utils'
-
-const chains = [
-	{ value: 'statemint', label: 'Polkadot Asset Hub' },
-	{ value: 'hydration', label: 'Hydration' },
-] satisfies { value: StablecoinChainId; label: string }[]
-const tokens = (['USDC', 'USDT', 'DOT'] as const).map((value) => ({
-	value,
-	label: value,
-	icon: getFeeTokenIcon(value),
-}))
-const feeTokens = (['DOT', 'USDC', 'USDT'] as const).map((value) => ({
-	value,
-	label: value,
-	icon: getFeeTokenIcon(value),
-}))
-const displayFee = (fee?: CrossChainFee) =>
-	fee ? `${planckToUnit(fee.amount, fee.decimals)} ${fee.symbol}` : '—'
+import { TransferSummary } from './TransferSummary'
+import {
+	canFundTransfer,
+	maxTransferAmount,
+	parseTransferAmount,
+} from './utils'
 
 export const Bridge = () => {
 	const { t } = useTranslation('swap')
@@ -59,7 +48,7 @@ export const Bridge = () => {
 	const account = accounts.fromAccount
 	const balances = useStablecoinBalances(account?.address)
 	const [from, setFrom] = useState<StablecoinChainId>('statemint')
-	const to = from === 'statemint' ? 'hydration' : 'statemint'
+	const to = crossChainDestination(from)
 	const [symbol, setSymbol] = useState<CrossChainAsset>('USDC')
 	const [feeAsset, setFeeAsset] =
 		useState<CrossChainTransferInput['feeAsset']>('USDC')
@@ -71,7 +60,6 @@ export const Bridge = () => {
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
 	const decimals = getStablecoinAssetConfig(from, symbol)!.decimals
-	const destinationDecimals = getStablecoinAssetConfig(to, symbol)!.decimals
 	const parsed = parseTransferAmount(amount, decimals)
 	const input: CrossChainTransferInput = {
 		from,
@@ -124,17 +112,12 @@ export const Bridge = () => {
 		networkFee !== undefined &&
 		canFundTransfer(balances.balances, input, quote, swapFeeReserve(networkFee))
 	const feeBalance = balances.getBalance(from, feeAsset)
-	const originReserve =
-		quote?.originFee.symbol === symbol && !quote.originFeeFromAmount
-			? quote.originFee.amount
-			: 0n
-	const available = maxSendableBalance(
-		balances.getBalance(from, symbol),
-		feeBalance,
+	const maxAvailable = maxTransferAmount(
+		balances.balances,
+		input,
+		quote,
 		networkFee === undefined ? 0n : swapFeeReserve(networkFee),
 	)
-	const maxAvailable =
-		available > originReserve ? available - originReserve : 0n
 	const setupFee = getTxSubmission(setup.submission.uid)?.fee ?? 0n
 	const setupFunded =
 		setupFee > 0n &&
@@ -158,8 +141,8 @@ export const Bridge = () => {
 						className={formClasses.firstSection}
 					>
 						<Dropdown
-							options={chains}
-							selected={chains.find((chain) => chain.value === from)!}
+							options={chainOptions}
+							selected={findOption(chainOptions, from)}
 							onSelect={(chain) => selectFrom(chain.value)}
 							variant="full"
 						/>
@@ -172,12 +155,10 @@ export const Bridge = () => {
 					/>
 					<SendForm.Segment title={t('destinationChain')} layer="raised">
 						<Dropdown
-							options={chains}
-							selected={chains.find((chain) => chain.value === to)!}
+							options={chainOptions}
+							selected={findOption(chainOptions, to)}
 							onSelect={(chain) =>
-								selectFrom(
-									chain.value === 'statemint' ? 'hydration' : 'statemint',
-								)
+								selectFrom(crossChainDestination(chain.value))
 							}
 							variant="full"
 						/>
@@ -219,8 +200,8 @@ export const Bridge = () => {
 						maxDecimals={decimals}
 						allowMax={!!quote && !expired}
 						syncing={balances.loading}
-						options={tokens}
-						selected={tokens.find((token) => token.value === symbol)!}
+						options={tokenOptions}
+						selected={findOption(tokenOptions, symbol)}
 						onSelect={(token) => {
 							setSymbol(token.value)
 							setAmount('')
@@ -232,44 +213,18 @@ export const Bridge = () => {
 						className={formClasses.lastSection}
 					>
 						<Dropdown
-							options={feeTokens}
-							selected={feeTokens.find((token) => token.value === feeAsset)!}
+							options={feeTokenOptions}
+							selected={findOption(feeTokenOptions, feeAsset)}
 							onSelect={(token) => setFeeAsset(token.value)}
 							variant="full"
 						/>
 					</SendForm.Segment>
-					<SendForm.Notes>
-						<SendForm.Note label={t('route')} variant="muted">
-							{chains.find((chain) => chain.value === from)!.label} →{' '}
-							{chains.find((chain) => chain.value === to)!.label}
-						</SendForm.Note>
-						<SendForm.Note label={t('networkFee')}>
-							{setup.needsSetup ? (
-								<EstimatedTxFee
-									uid={setup.submission.uid}
-									feeDisplay={feeDisplay}
-								/>
-							) : networkFee !== undefined ? (
-								displayFee({
-									amount: networkFee,
-									symbol: feeAsset,
-									decimals: feeDecimals,
-								})
-							) : (
-								'—'
-							)}
-						</SendForm.Note>
-						<SendForm.Note label={t('originXcmFee')}>
-							{displayFee(quote?.originFee)}
-						</SendForm.Note>
-						<SendForm.Note label={t('destinationXcmFee')}>
-							{displayFee(quote?.destinationFee)}
-						</SendForm.Note>
-						<SendForm.Note label={t('estimatedReceived')} variant="success">
-							{quote
-								? `${planckToUnit(quote.receivedAmount, destinationDecimals)} ${symbol}`
-								: '—'}
-						</SendForm.Note>
+					<TransferSummary
+						input={input}
+						quote={quote}
+						networkFee={networkFee}
+						feeSetupUid={setup.needsSetup ? setup.submission.uid : undefined}
+					>
 						{loading && (
 							<ExchangeNotice>{t('checkingCrossChain')}</ExchangeNotice>
 						)}
@@ -298,7 +253,7 @@ export const Bridge = () => {
 								{t('insufficientBalance')}
 							</ExchangeNotice>
 						)}
-					</SendForm.Notes>
+					</TransferSummary>
 					{setup.needsSetup ? (
 						<SendForm.Action>
 							<SubmitTx

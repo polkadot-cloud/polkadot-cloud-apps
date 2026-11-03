@@ -1,13 +1,14 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { CrossChainQuoteDebounceMs } from 'consts/crossChain'
 import { useEffect, useMemo, useState } from 'react'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { useApi } from '../useApi'
 import { useQuoteExpired } from '../useQuoteExpired'
 
 type PreparedTransfer = {
-	request: object
+	request: CrossChainTransferInput
 	quote?: CrossChainTransfer
 	networkFee?: bigint
 	error?: string
@@ -19,6 +20,7 @@ export const useCrossChainTransfer = (
 	enabled: boolean,
 ) => {
 	const { serviceApi } = useApi()
+	const xcm = serviceApi.stablecoins.xcm
 	const [state, setState] = useState<PreparedTransfer>()
 	const [refreshId, setRefreshId] = useState(0)
 	const key = `${input.from}:${input.to}:${input.symbol}:${input.amount}:${input.sender}:${input.recipient}:${input.feeAsset}`
@@ -27,11 +29,12 @@ export const useCrossChainTransfer = (
 		[key, serviceApi, enabled, refreshId],
 	)
 	useEffect(() => {
-		if (!enabled || !serviceApi.stablecoins.xcm) return
+		if (!enabled || !xcm) return
 		let stale = false
 		const timer = setTimeout(async () => {
 			try {
-				const quote = await serviceApi.stablecoins.xcm!.prepare(request)
+				const quote = await xcm.prepare(request)
+				if (stale) return
 				const networkFee = await serviceApi.stablecoins.fee.estimate({
 					chain: request.from,
 					symbol: request.feeAsset,
@@ -53,7 +56,7 @@ export const useCrossChainTransfer = (
 								: 'Unable to prepare cross-chain transfer',
 					})
 			}
-		}, 400)
+		}, CrossChainQuoteDebounceMs)
 		return () => {
 			stale = true
 			clearTimeout(timer)
@@ -64,7 +67,7 @@ export const useCrossChainTransfer = (
 	return {
 		...current,
 		expired,
-		loading: enabled && !!serviceApi.stablecoins.xcm && !current,
+		loading: enabled && !!xcm && !current,
 		refresh: () => setRefreshId((value) => value + 1),
 		key,
 	}

@@ -12,7 +12,7 @@ import { describe, expect, test, vi } from 'vitest'
 import {
 	getFeeAssetOptions,
 	getTokenOptions,
-} from '../../app-swap/src/pages/Send/options'
+} from '../../app-swap/src/library/AssetTransfer/options'
 import { formatBalance, toPlanck } from '../../app-swap/src/pages/Send/utils'
 import dotUsdSvg from '../../assets/src/token/dotusd.svg'
 import { createAssetHubStablecoinAdapter } from '../../dedot-api/src/stablecoins/assetHub'

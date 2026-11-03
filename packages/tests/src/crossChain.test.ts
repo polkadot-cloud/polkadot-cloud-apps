@@ -1,6 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import {
+	findAssetInfo,
+	getSupportedDestinations,
+	Native,
+	type TXcmFeeBase,
+} from '@paraspell/sdk-dedot'
 import type {
 	CrossChainTransfer,
 	CrossChainTransferInput,
@@ -9,24 +15,16 @@ import type {
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import {
 	canFundTransfer,
+	maxTransferAmount,
 	parseTransferAmount,
 } from '../../app-swap/src/pages/Bridge/utils'
-import {
-	findAssetInfo,
-	getSupportedDestinations,
-	Native,
-	type TXcmFeeBase,
-} from '../../dedot-api/node_modules/@paraspell/sdk-dedot'
 import { prepareCrossChainTransfer } from '../../dedot-api/src/xcm'
 
 const mocked = vi.hoisted(() => ({ Builder: vi.fn() }))
-vi.mock(
-	'../../dedot-api/node_modules/@paraspell/sdk-dedot',
-	async (original) => ({
-		...(await original<object>()),
-		Builder: mocked.Builder,
-	}),
-)
+vi.mock('@paraspell/sdk-dedot', async (original) => ({
+	...(await original<object>()),
+	Builder: mocked.Builder,
+}))
 
 const input: CrossChainTransferInput = {
 	from: 'statemint',
@@ -251,6 +249,7 @@ describe('Cross-chain preflight', () => {
 			{ to: 'statemint' },
 			{ symbol: 'HOLLAR' },
 			{ symbol: 'dotUSD' },
+			{ feeAsset: 'HOLLAR' },
 			{ amount: 0n },
 			{ amount: -1n },
 		]) {
@@ -300,6 +299,9 @@ describe('Cross-chain amounts and funding', () => {
 				existentialDeposit: 100_000_000n,
 			}
 			expect(canFundTransfer([balance], transfer, quote, fee)).toBe(true)
+			expect(maxTransferAmount([balance], transfer, quote, fee)).toBe(
+				transfer.amount,
+			)
 			expect(
 				canFundTransfer(
 					[{ ...balance, free: balance.free - 1n }],

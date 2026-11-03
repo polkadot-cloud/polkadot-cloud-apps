@@ -81,6 +81,7 @@ test('a late simulation cannot replace a transfer after the destination changes'
 	expect(result.quote?.receivedAmount).toBe(2_000_000n)
 	await act(async () => resolve(quote(1_000_000n)))
 	expect(result.quote?.receivedAmount).toBe(2_000_000n)
+	expect(api.stablecoins.fee.estimate).toHaveBeenCalledOnce()
 })
 
 test('expired simulations require refresh and fee estimation failures never become signable', async () => {

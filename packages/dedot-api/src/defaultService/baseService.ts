@@ -29,10 +29,7 @@ import type {
 	StakingChain,
 } from '../types'
 import { IdentityManager } from './identityManager'
-import {
-	type StablecoinBalanceSubscriber,
-	SubscriptionManager,
-} from './subscriptionManager'
+import { SubscriptionManager } from './subscriptionManager'
 
 // Base service utility that handles common initialization and management
 export class BaseService<
@@ -93,10 +90,7 @@ export class BaseService<
 	}
 
 	// Initialize the service with common setup logic
-	async start(
-		serviceInterface: ServiceInterface,
-		subscribeStablecoinBalances?: StablecoinBalanceSubscriber,
-	) {
+	async start(serviceInterface: ServiceInterface) {
 		// Initialize chain specs
 		this.hubChainSpec = new ChainSpecs(this.apiHub)
 
@@ -129,7 +123,6 @@ export class BaseService<
 			this.ids,
 			{ poolsPalletId: this.stakingConsts.poolsPalletId },
 			serviceInterface,
-			subscribeStablecoinBalances,
 			this.features,
 		)
 

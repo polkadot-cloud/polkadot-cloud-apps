@@ -67,7 +67,7 @@ vi.mock('../../app-swap/src/library/Swap', () => ({
 		createElement('div', { role: 'status' }, children),
 	swapFeeReserve: (fee: bigint) => fee,
 }))
-vi.mock('../../app-swap/node_modules/react-i18next/dist/es/index.js', () => ({
+vi.mock('react-i18next', () => ({
 	useTranslation: () => ({ t: (key: string) => key }),
 }))
 
@@ -252,6 +252,21 @@ test('source failure releases the subscription and enables retrying', async () =
 	expect(spinning()).toBe(false)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	expect(handlers().shouldSubmit).toBe(true)
+})
+
+test('subscription cleanup errors cannot leave a failed transfer pending', async () => {
+	await render()
+	await act(async () => handlers().callbackSubmit!())
+	listeners[0].unsubscribe.mockImplementationOnce(() => {
+		throw new Error('Cleanup failed')
+	})
+	await act(async () => {
+		expect(() => handlers().callbackFailure!()).toThrow('Cleanup failed')
+	})
+	expect(spinning()).toBe(false)
+	expect(handlers().shouldSubmit).toBe(true)
+	await act(async () => handlers().callbackFailure!())
+	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 })
 
 test.each([false, true])(

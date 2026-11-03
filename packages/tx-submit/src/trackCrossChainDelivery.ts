@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { CrossChainDeliveryTimeoutMs } from 'consts/crossChain'
 import { createCrossChainDeliveryState } from 'global-bus'
 import type {
 	CrossChainDeliveryStage,
@@ -29,8 +30,11 @@ export const trackCrossChainDelivery = (
 		if (finished) return
 		finished = true
 		clearTimeout(timeout)
-		unsubscribe()
-		delivery.setStage(nextStage)
+		try {
+			unsubscribe()
+		} finally {
+			delivery.setStage(nextStage)
+		}
 		if (nextStage === 'balanceUpdated') {
 			void serviceApi.stablecoins.query
 				.balances(recipient)
@@ -74,7 +78,10 @@ export const trackCrossChainDelivery = (
 				finish('unconfirmed')
 			} else {
 				delivery.setStage('finalized')
-				timeout = setTimeout(() => finish('unconfirmed'), 120_000)
+				timeout = setTimeout(
+					() => finish('unconfirmed'),
+					CrossChainDeliveryTimeoutMs,
+				)
 			}
 		},
 		failed: () => finish(undefined),

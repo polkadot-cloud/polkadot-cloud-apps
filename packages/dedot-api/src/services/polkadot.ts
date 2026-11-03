@@ -18,7 +18,6 @@ import type {
 	SystemChainId,
 } from 'types'
 import { BaseService } from '../defaultService/baseService'
-import type { StablecoinBalanceSubscriber } from '../defaultService/subscriptionManager'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
@@ -233,19 +232,6 @@ export class PolkadotService
 		return this.apiHydrationPromise
 	}
 
-	private subscribeHydrationStablecoinBalances: StablecoinBalanceSubscriber = (
-		address,
-		onBalance,
-		onError,
-	) => {
-		return this.interface.stablecoins.subscribe.balances(
-			address,
-			'hydration',
-			onBalance,
-			onError,
-		)
-	}
-
 	getSigningApi = (specName: string) => {
 		if (this.apiHydration?.runtimeVersion.specName === specName) {
 			return this.apiHydration as unknown as DedotClient<HydrationApi>
@@ -254,12 +240,7 @@ export class PolkadotService
 	}
 
 	async start() {
-		await super.start(
-			this.interface,
-			this.features.stablecoins.hydration
-				? this.subscribeHydrationStablecoinBalances
-				: undefined,
-		)
+		await super.start(this.interface)
 	}
 
 	async unsubscribe() {

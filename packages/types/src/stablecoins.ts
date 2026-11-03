@@ -75,7 +75,7 @@ export type CrossChainTransferInput = {
 
 export type CrossChainFee = {
 	amount: bigint
-	symbol: string
+	symbol: CrossChainAsset
 	decimals: number
 }
 

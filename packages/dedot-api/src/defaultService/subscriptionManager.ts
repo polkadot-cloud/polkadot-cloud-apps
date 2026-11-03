@@ -27,7 +27,7 @@ import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
 import type {
 	NetworkId,
 	ServiceInterface,
-	StablecoinBalance,
+	StablecoinChainId,
 	SystemChainId,
 } from 'types'
 import { AccountBalanceQuery } from '../subscribe/accountBalance'
@@ -55,12 +55,6 @@ import {
 	getAccountKey,
 } from '../util'
 import type { AccountBalances } from './types'
-
-export type StablecoinBalanceSubscriber = (
-	address: string,
-	onBalance: (balance: StablecoinBalance) => void,
-	onError: (error: unknown) => void,
-) => () => void
 
 // Manages all subscriptions for a default service
 export class SubscriptionManager<
@@ -107,11 +101,40 @@ export class SubscriptionManager<
 		private ids: [NetworkId, SystemChainId, SystemChainId],
 		private stakingConsts: { poolsPalletId: Uint8Array },
 		private serviceInterface: ServiceInterface,
-		private subscribeStablecoinBalances:
-			| StablecoinBalanceSubscriber
-			| undefined,
 		private features: DedotServiceFeatures,
 	) {}
+
+	private subscribeAccountStablecoins(address: string) {
+		const chains: StablecoinChainId[] = []
+		if (this.features.stablecoins.assetHub && this.ids[2] === 'statemint')
+			chains.push('statemint')
+		if (this.features.stablecoins.hydration) chains.push('hydration')
+		if (!chains.length) return
+
+		let disposed = false
+		const unsubscribers: (() => void)[] = []
+		this.subStablecoinBalances[address] = () => {
+			disposed = true
+			for (const unsubscribe of unsubscribers.splice(0)) unsubscribe()
+		}
+		const { query, subscribe } = this.serviceInterface.stablecoins
+		void query
+			.balances(address)
+			.catch(() => undefined)
+			.then(() => {
+				if (disposed) return
+				for (const chain of chains) {
+					unsubscribers.push(
+						subscribe.balances(
+							address,
+							chain,
+							(balance) => setStablecoinBalance(address, balance),
+							() => setStablecoinBalancesSubscriptionError(address),
+						),
+					)
+				}
+			})
+	}
 
 	// Initialize default service subscriptions
 	initialize() {
@@ -183,53 +206,7 @@ export class SubscriptionManager<
 							this.ids[2],
 							address,
 						)
-						if (
-							this.features.stablecoins.assetHub ||
-							this.features.stablecoins.hydration
-						) {
-							let disposed = false
-							let unsubscribeAssetHub: (() => void) | undefined
-							let unsubscribeChainSubscription: (() => void) | undefined
-							this.subStablecoinBalances[address] = () => {
-								disposed = true
-								unsubscribeAssetHub?.()
-								unsubscribeChainSubscription?.()
-							}
-							void this.serviceInterface.stablecoins.query
-								.balances(address)
-								.catch(() => undefined)
-								.then(() => {
-									if (disposed) {
-										return
-									}
-
-									const onBalance = (balance: StablecoinBalance) =>
-										setStablecoinBalance(address, balance)
-									const onError = () =>
-										setStablecoinBalancesSubscriptionError(address)
-
-									if (
-										this.features.stablecoins.assetHub &&
-										this.ids[2] === 'statemint'
-									) {
-										unsubscribeAssetHub =
-											this.serviceInterface.stablecoins.subscribe.balances(
-												address,
-												'statemint',
-												onBalance,
-												onError,
-											)
-									}
-									unsubscribeChainSubscription = this.features.stablecoins
-										.hydration
-										? this.subscribeStablecoinBalances?.(
-												address,
-												onBalance,
-												onError,
-											)
-										: undefined
-								})
-						}
+						this.subscribeAccountStablecoins(address)
 
 						if (this.features.staking) {
 							this.startStakingLedgerSync(address)
