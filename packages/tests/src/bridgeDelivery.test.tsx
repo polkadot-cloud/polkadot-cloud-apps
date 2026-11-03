@@ -11,9 +11,9 @@ import type {
 	StablecoinBalance,
 } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { trackCrossChainDelivery } from '../../app-swap/src/library/BridgeDelivery'
 import { Sync } from '../../app-swap/src/library/Sync'
 import { TransferAction } from '../../app-swap/src/pages/Bridge/TransferAction'
+import { trackCrossChainDelivery } from '../../tx-submit/src/trackCrossChainDelivery'
 import type { UseSubmitExtrinsicProps } from '../../tx-submit/src/useSubmitExtrinsic/types'
 
 const mocked = vi.hoisted(() => ({
@@ -46,7 +46,10 @@ vi.mock('../../hooks/src/useSyncing', () => ({
 vi.mock('../../hooks/src/useTxMeta', () => ({
 	useTxMeta: () => ({ uids: [] }),
 }))
-vi.mock('../../tx-submit/src/index', () => ({
+vi.mock('../../tx-submit/src/index', async () => ({
+	trackCrossChainDelivery: (
+		await import('../../tx-submit/src/trackCrossChainDelivery')
+	).trackCrossChainDelivery,
 	useSubmitExtrinsic: (props: UseSubmitExtrinsicProps) => {
 		mocked.handlers.push(props)
 		return { uid: 0 }

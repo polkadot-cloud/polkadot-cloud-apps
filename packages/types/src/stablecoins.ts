@@ -91,6 +91,12 @@ export type CrossChainTransfer = {
 	fetchedAt: number
 }
 
+export type CrossChainDeliveryStage =
+	| 'submitted'
+	| 'finalized'
+	| 'balanceUpdated'
+	| 'unconfirmed'
+
 // Fee asset selection and signing options for a transaction on a supported chain.
 export type StablecoinFeePayment = {
 	chain: StablecoinChainId

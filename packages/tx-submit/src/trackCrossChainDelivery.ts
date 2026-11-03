@@ -1,33 +1,13 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useSyncExternalStore } from 'react'
-import { BehaviorSubject } from 'rxjs'
+import { createCrossChainDeliveryState } from 'global-bus'
 import type {
+	CrossChainDeliveryStage,
 	CrossChainTransfer,
 	CrossChainTransferInput,
 	ServiceInterface,
 } from 'types'
-import { createObservableStore } from 'utils'
-
-type DeliveryStage =
-	| 'submitted'
-	| 'finalized'
-	| 'balanceUpdated'
-	| 'unconfirmed'
-	| undefined
-
-const pendingDeliveries = new BehaviorSubject(0)
-const pendingStore = createObservableStore(pendingDeliveries, () =>
-	pendingDeliveries.getValue(),
-)
-
-export const useCrossChainDeliveryPending = () =>
-	useSyncExternalStore(
-		pendingStore.subscribe,
-		pendingStore.getSnapshot,
-		pendingStore.getSnapshot,
-	) > 0
 
 // Tracking belongs to the submitted transfer, so changing or unmounting the form cannot stop it.
 export const trackCrossChainDelivery = (
@@ -37,23 +17,20 @@ export const trackCrossChainDelivery = (
 ) => {
 	const { recipient, to, symbol } = input
 	const expectedBalance = quote.destinationBalance + quote.receivedAmount
-	const stage = new BehaviorSubject<DeliveryStage>('submitted')
-	const store = createObservableStore(stage, () => stage.getValue())
+	const delivery = createCrossChainDeliveryState()
 	let received = false
 	let finalized = false
 	let finished = false
 	let subscriptionFailed = false
 	let unsubscribe = () => {}
 	let timeout: ReturnType<typeof setTimeout> | undefined
-	pendingDeliveries.next(pendingDeliveries.getValue() + 1)
 
-	const finish = (nextStage: DeliveryStage) => {
+	const finish = (nextStage: CrossChainDeliveryStage | undefined) => {
 		if (finished) return
 		finished = true
 		clearTimeout(timeout)
 		unsubscribe()
-		stage.next(nextStage)
-		pendingDeliveries.next(pendingDeliveries.getValue() - 1)
+		delivery.setStage(nextStage)
 		if (nextStage === 'balanceUpdated') {
 			void serviceApi.stablecoins.query
 				.balances(recipient)
@@ -87,7 +64,7 @@ export const trackCrossChainDelivery = (
 	}
 
 	return {
-		...store,
+		state: delivery.state,
 		finalized: () => {
 			if (finished || finalized) return
 			finalized = true
@@ -96,22 +73,10 @@ export const trackCrossChainDelivery = (
 			} else if (subscriptionFailed) {
 				finish('unconfirmed')
 			} else {
-				stage.next('finalized')
+				delivery.setStage('finalized')
 				timeout = setTimeout(() => finish('unconfirmed'), 120_000)
 			}
 		},
 		failed: () => finish(undefined),
 	}
 }
-
-const subscribeEmpty = () => () => {}
-const getEmptyStage = () => undefined
-
-export const useCrossChainDeliveryStage = (
-	delivery?: ReturnType<typeof trackCrossChainDelivery>,
-) =>
-	useSyncExternalStore(
-		delivery?.subscribe ?? subscribeEmpty,
-		delivery?.getSnapshot ?? getEmptyStage,
-		delivery?.getSnapshot ?? getEmptyStage,
-	)

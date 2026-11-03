@@ -4,9 +4,10 @@
 import { SwapDappName } from 'consts'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
+import { useCrossChainDeliveryStage } from 'hooks/useCrossChainDelivery'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSubmitExtrinsic } from 'tx-submit'
+import { trackCrossChainDelivery, useSubmitExtrinsic } from 'tx-submit'
 import type {
 	CrossChainTransfer,
 	CrossChainTransferInput,
@@ -14,10 +15,6 @@ import type {
 } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
-import {
-	trackCrossChainDelivery,
-	useCrossChainDeliveryStage,
-} from '../../library/BridgeDelivery'
 import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { canFundTransfer } from './utils'
 
@@ -41,7 +38,7 @@ export const TransferAction = ({
 	const [delivery, setDelivery] =
 		useState<ReturnType<typeof trackCrossChainDelivery>>()
 	const activeDelivery = useRef(delivery)
-	const stage = useCrossChainDeliveryStage(delivery)
+	const stage = useCrossChainDeliveryStage(delivery?.state)
 	const signing = uids.some(
 		(item) =>
 			item.from === account?.address && item.submitted && !item.broadcasted,

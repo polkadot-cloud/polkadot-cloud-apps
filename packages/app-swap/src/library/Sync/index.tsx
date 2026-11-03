@@ -1,10 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useCrossChainDeliveryPending } from 'hooks/useCrossChainDelivery'
 import { useSyncing } from 'hooks/useSyncing'
 import { useTxMeta } from 'hooks/useTxMeta'
 import { Spinner } from 'ui-core/base'
-import { useCrossChainDeliveryPending } from '../BridgeDelivery'
 
 export const Sync = () => {
 	const { syncing } = useSyncing(['initialization'])
