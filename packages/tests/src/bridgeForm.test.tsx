@@ -8,6 +8,7 @@ import type { CrossChainTransferInput, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Bridge } from '../../app-swap/src/pages/Bridge'
 import { encodeAddress } from '../../dedot-api/node_modules/dedot/utils'
+import { Tooltip } from '../../ui-core/node_modules/radix-ui/dist/index.mjs'
 
 const mocked = vi.hoisted(() => ({
 	refresh: vi.fn(),
@@ -27,6 +28,7 @@ const balance: StablecoinBalance = {
 }
 vi.mock('../../hooks/src/index', () => ({
 	useApi: () => ({ serviceApi: {} }),
+	useTheme: () => ({ themeElementRef: { current: null } }),
 	useTxMeta: () => ({ getTxSubmission: () => undefined }),
 	useStablecoinBalances: () => ({
 		balances: [balance],
@@ -111,7 +113,9 @@ afterEach(async () => {
 })
 
 test('DOT selection preserves ten-decimal amounts, formats received DOT, and max-fills after fees and minimum balance', async () => {
-	await act(async () => root.render(createElement(Bridge)))
+	await act(async () =>
+		root.render(createElement(Tooltip.Provider, null, createElement(Bridge))),
+	)
 	await selectDot(2)
 	await selectDot(3)
 	expect(container.textContent).toContain('0.9980000001 DOT')

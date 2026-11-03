@@ -4,7 +4,7 @@
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { planckToUnit } from '@polkadot-cloud/utils'
 import { getFeeTokenIcon, getStablecoinAssetConfig } from 'consts/stablecoins'
-import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
+import { useApi, useStablecoinBalances, useTheme, useTxMeta } from 'hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TxFeeEstimator } from 'tx-submit/types'
@@ -52,6 +52,7 @@ const displayFee = (fee?: CrossChainFee) =>
 
 export const Bridge = () => {
 	const { t } = useTranslation('swap')
+	const { themeElementRef } = useTheme()
 	const { serviceApi } = useApi()
 	const { getTxSubmission } = useTxMeta()
 	const accounts = useSendAccounts()
@@ -166,6 +167,8 @@ export const Bridge = () => {
 					<SendForm.DirectionIndicator
 						onReverse={() => selectFrom(to)}
 						label={t('reverseChains')}
+						tooltip={t('reverseChains')}
+						tooltipContainer={themeElementRef.current || undefined}
 					/>
 					<SendForm.Segment title={t('destinationChain')} layer="raised">
 						<Dropdown

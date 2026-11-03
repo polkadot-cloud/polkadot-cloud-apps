@@ -46,7 +46,7 @@
 		"youPay": "지불 금액",
 		"youReceive": "받는 금액",
 		"bridge": "브리지",
-		"crossChainDescription": "Polkadot Asset Hub와 Hydration 간에 DOT와 스테이블코인을 보내세요.",
+		"crossChainDescription": "체인 간에 DOT와 스테이블코인을 보내세요.",
 		"crossChainSend": "크로스체인 전송",
 		"checkingCrossChain": "잔액, 수수료 및 대상 체인 실행 확인 중…",
 		"destinationChain": "대상 체인",

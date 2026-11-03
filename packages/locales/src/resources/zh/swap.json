@@ -46,7 +46,7 @@
 		"youPay": "支付",
 		"youReceive": "接收",
 		"bridge": "跨链桥",
-		"crossChainDescription": "在 Polkadot Asset Hub 和 Hydration 之间发送 DOT 和稳定币。",
+		"crossChainDescription": "跨链发送 DOT 和稳定币。",
 		"crossChainSend": "跨链发送",
 		"checkingCrossChain": "正在检查余额、费用和目标链执行情况…",
 		"destinationChain": "目标链",

@@ -46,7 +46,7 @@
 		"youPay": "Вы платите",
 		"youReceive": "Вы получаете",
 		"bridge": "Мост",
-		"crossChainDescription": "Отправляйте DOT и стейблкоины между Polkadot Asset Hub и Hydration.",
+		"crossChainDescription": "Отправляйте DOT и стейблкоины между сетями.",
 		"crossChainSend": "Отправить между сетями",
 		"checkingCrossChain": "Проверка балансов, комиссий и выполнения в сети назначения…",
 		"destinationChain": "Сеть назначения",
