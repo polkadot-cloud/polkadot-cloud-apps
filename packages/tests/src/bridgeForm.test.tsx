@@ -77,11 +77,11 @@ let root: Root
 let container: HTMLDivElement
 const click = (button: HTMLButtonElement) => act(async () => button.click())
 const selectDot = async (dropdown: number) => {
+	const trigger =
+		container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[dropdown]
+	await click(trigger)
 	await click(
-		container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[dropdown],
-	)
-	await click(
-		[...container.querySelectorAll('button')].find(
+		[...trigger.parentElement!.querySelectorAll('button')].find(
 			(button) => button.textContent === 'DOT',
 		)!,
 	)
