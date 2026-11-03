@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
+import { encodeAddress } from 'dedot/utils'
 import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { CrossChainTransferInput, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Bridge } from '../../app-swap/src/pages/Bridge'
-import { encodeAddress } from '../../dedot-api/node_modules/dedot/utils'
 import { Tooltip } from '../../ui-core/node_modules/radix-ui/dist/index.mjs'
 
 const mocked = vi.hoisted(() => ({

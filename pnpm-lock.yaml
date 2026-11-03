@@ -1029,6 +1029,9 @@ importers:
       '@types/jsdom':
         specifier: ^30.0.0
         version: 30.0.0
+      dedot:
+        specifier: ^1.4.0
+        version: 1.4.0(typescript@7.0.2)
       jsdom:
         specifier: 30.1.3
         version: 30.1.3(@noble/hashes@1.8.0)
