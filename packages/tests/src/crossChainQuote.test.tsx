@@ -6,7 +6,7 @@ import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { useCrossChainTransfer } from '../../app-swap/src/pages/Bridge/useCrossChainTransfer'
+import { useCrossChainTransfer } from '../../hooks/src/useCrossChainTransfer'
 
 const api = vi.hoisted(() => ({
 	stablecoins: {
@@ -14,7 +14,7 @@ const api = vi.hoisted(() => ({
 		fee: { estimate: vi.fn(), paymentOptions: vi.fn() },
 	},
 }))
-vi.mock('../../hooks/src/index', () => ({
+vi.mock('../../hooks/src/useApi', () => ({
 	useApi: () => ({ serviceApi: api }),
 }))
 

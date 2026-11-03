@@ -1,10 +1,10 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { useApi } from 'hooks'
-import { useQuoteExpired } from 'hooks/useQuoteExpired'
 import { useEffect, useMemo, useState } from 'react'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
+import { useApi } from '../useApi'
+import { useQuoteExpired } from '../useQuoteExpired'
 
 type PreparedTransfer = {
 	request: object

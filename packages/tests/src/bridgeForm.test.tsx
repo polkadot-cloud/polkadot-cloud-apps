@@ -50,7 +50,7 @@ vi.mock('../../app-swap/src/pages/Send/hooks/useSendAccounts', () => ({
 vi.mock('../../app-swap/src/pages/Send/hooks/useHydrationFeeSetup', () => ({
 	useHydrationFeeSetup: () => ({ ready: true, submission: {} }),
 }))
-vi.mock('../../app-swap/src/pages/Bridge/useCrossChainTransfer', () => ({
+vi.mock('../../hooks/src/useCrossChainTransfer', () => ({
 	useCrossChainTransfer: (...args: unknown[]) => mocked.prepare(...args),
 }))
 vi.mock('../../app-swap/src/pages/Bridge/TransferAction', () => ({
