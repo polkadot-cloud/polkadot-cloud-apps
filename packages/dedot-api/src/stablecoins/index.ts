@@ -18,6 +18,7 @@ import {
 	type HydrationStablecoinAdapter,
 } from './hydration'
 import type { StablecoinAdapter } from './shared'
+import { createStablecoinSubscriptions } from './subscriptions'
 
 type StablecoinAdapters = {
 	statemint: StablecoinAdapter
@@ -85,6 +86,7 @@ export const createStablecoinsInterface = (
 	}
 
 	return {
+		subscribe: createStablecoinSubscriptions(apiHub, getHydrationApi, features),
 		...(features.assetHub &&
 			features.hydration && {
 				xcm: {

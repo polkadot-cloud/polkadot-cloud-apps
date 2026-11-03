@@ -24,7 +24,6 @@ import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
 import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
-import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { createSwapInterface } from '../swap'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
@@ -239,16 +238,12 @@ export class PolkadotService
 		onBalance,
 		onError,
 	) => {
-		const subscription = new HydrationStablecoinBalancesQuery(
-			this.getHydrationApi,
+		return this.interface.stablecoins.subscribe.balances(
 			address,
+			'hydration',
 			onBalance,
 			onError,
 		)
-
-		return () => {
-			subscription.unsubscribe()
-		}
 	}
 
 	getSigningApi = (specName: string) => {

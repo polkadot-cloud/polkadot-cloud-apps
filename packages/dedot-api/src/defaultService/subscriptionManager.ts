@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import {
 	getActiveAddress,
 	importedAccounts$,
@@ -33,7 +32,6 @@ import type {
 } from 'types'
 import { AccountBalanceQuery } from '../subscribe/accountBalance'
 import { ActivePoolQuery } from '../subscribe/activePool'
-import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { BondedQuery } from '../subscribe/bonded'
 import { EraRewardPointsQuery } from '../subscribe/eraRewardPoints'
 import { PoolMembershipQuery } from '../subscribe/poolMembership'
@@ -190,13 +188,11 @@ export class SubscriptionManager<
 							this.features.stablecoins.hydration
 						) {
 							let disposed = false
-							let assetHubSubscription:
-								| AssetHubStablecoinBalancesQuery
-								| undefined
+							let unsubscribeAssetHub: (() => void) | undefined
 							let unsubscribeChainSubscription: (() => void) | undefined
 							this.subStablecoinBalances[address] = () => {
 								disposed = true
-								assetHubSubscription?.unsubscribe()
+								unsubscribeAssetHub?.()
 								unsubscribeChainSubscription?.()
 							}
 							void this.serviceInterface.stablecoins.query
@@ -216,13 +212,13 @@ export class SubscriptionManager<
 										this.features.stablecoins.assetHub &&
 										this.ids[2] === 'statemint'
 									) {
-										assetHubSubscription = new AssetHubStablecoinBalancesQuery(
-											this
-												.apiHub as unknown as DedotClient<PolkadotAssetHubApi>,
-											address,
-											onBalance,
-											onError,
-										)
+										unsubscribeAssetHub =
+											this.serviceInterface.stablecoins.subscribe.balances(
+												address,
+												'statemint',
+												onBalance,
+												onError,
+											)
 									}
 									unsubscribeChainSubscription = this.features.stablecoins
 										.hydration

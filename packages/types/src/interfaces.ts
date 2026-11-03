@@ -36,6 +36,14 @@ import type { SwapInterface } from './swap'
 export interface ServiceInterface {
 	swap?: SwapInterface
 	stablecoins: {
+		subscribe: {
+			balances: (
+				address: string,
+				chain: StablecoinChainId,
+				onBalance: (balance: StablecoinBalance) => void,
+				onError: (error: unknown) => void,
+			) => () => void
+		}
 		xcm?: {
 			prepare: (input: CrossChainTransferInput) => Promise<CrossChainTransfer>
 		}

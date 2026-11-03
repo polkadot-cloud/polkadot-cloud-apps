@@ -4,7 +4,7 @@
 import { SwapDappName } from 'consts'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit'
 import type {
@@ -14,6 +14,10 @@ import type {
 } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
+import {
+	trackCrossChainDelivery,
+	useCrossChainDeliveryStage,
+} from '../../library/BridgeDelivery'
 import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { canFundTransfer } from './utils'
 
@@ -34,10 +38,10 @@ export const TransferAction = ({
 	const { serviceApi } = useApi()
 	const { uids } = useTxMeta()
 	const balances = useStablecoinBalances(account?.address)
-	const [stage, setStage] = useState<
-		'submitted' | 'finalized' | 'balanceUpdated' | 'unconfirmed' | undefined
-	>()
-	const [sent, setSent] = useState<CrossChainTransfer>()
+	const [delivery, setDelivery] =
+		useState<ReturnType<typeof trackCrossChainDelivery>>()
+	const activeDelivery = useRef(delivery)
+	const stage = useCrossChainDeliveryStage(delivery)
 	const signing = uids.some(
 		(item) =>
 			item.from === account?.address && item.submitted && !item.broadcasted,
@@ -71,19 +75,20 @@ export const TransferAction = ({
 		estimatedFee: networkFee,
 		feeDisplay,
 		callbackSubmit: () => {
-			setSent(quote)
-			setStage('submitted')
+			if (!quote) return
+			const pending = trackCrossChainDelivery(serviceApi, input, quote)
+			activeDelivery.current = pending
+			setDelivery(pending)
 		},
 		callbackInBlock: () => {
 			void balances.refresh()
 		},
 		callbackFinalized: () => {
-			setStage('finalized')
+			activeDelivery.current?.finalized()
 			void balances.refresh()
 		},
 		callbackFailure: () => {
-			setStage(undefined)
-			setSent(undefined)
+			activeDelivery.current?.failed()
 		},
 	})
 	useEffect(
@@ -94,44 +99,6 @@ export const TransferAction = ({
 		},
 		[submission.uid],
 	)
-	useEffect(() => {
-		if (stage !== 'finalized' || !sent) return
-		let stale = false
-		let running = false
-		const check = async () => {
-			if (running) return
-			running = true
-			try {
-				const balance = await serviceApi.stablecoins.query.balance(
-					input.recipient,
-					input.to,
-					input.symbol,
-				)
-				if (
-					!stale &&
-					balance &&
-					balance.free >= sent.destinationBalance + sent.receivedAmount
-				) {
-					setStage('balanceUpdated')
-					void serviceApi.stablecoins.query
-						.balances(input.recipient)
-						.catch(() => undefined)
-				}
-			} finally {
-				running = false
-			}
-		}
-		void check().catch(() => undefined)
-		const poll = setInterval(() => {
-			void check().catch(() => undefined)
-		}, 6000)
-		const timeout = setTimeout(() => setStage('unconfirmed'), 120_000)
-		return () => {
-			stale = true
-			clearInterval(poll)
-			clearTimeout(timeout)
-		}
-	}, [stage, sent, serviceApi])
 	return (
 		<SendForm.Action>
 			<div style={{ width: '100%' }}>
