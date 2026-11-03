@@ -8,10 +8,17 @@ import type {
 } from 'types'
 
 // Reject invalid input and excess precision instead of rounding a user's transfer.
-export const parseTransferAmount = (amount: string): bigint => {
-	if (!/^\d+(\.\d{1,6})?$/.test(amount)) return 0n
+export const parseTransferAmount = (
+	amount: string,
+	decimals: number,
+): bigint => {
+	if (!/^\d+(\.\d+)?$/.test(amount)) return 0n
 	const [whole, fraction = ''] = amount.split('.')
-	return BigInt(whole) * 1_000_000n + BigInt(fraction.padEnd(6, '0'))
+	if (fraction.length > decimals) return 0n
+	return (
+		BigInt(whole) * 10n ** BigInt(decimals) +
+		BigInt(fraction.padEnd(decimals, '0'))
+	)
 }
 
 // Accumulate fees by asset before checking balances, including when the sent asset pays fees.

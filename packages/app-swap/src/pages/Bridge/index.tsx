@@ -37,7 +37,7 @@ const chains = [
 	{ value: 'statemint', label: 'Polkadot Asset Hub' },
 	{ value: 'hydration', label: 'Hydration' },
 ] satisfies { value: StablecoinChainId; label: string }[]
-const tokens = (['USDC', 'USDT'] as const).map((value) => ({
+const tokens = (['USDC', 'USDT', 'DOT'] as const).map((value) => ({
 	value,
 	label: value,
 	icon: getFeeTokenIcon(value),
@@ -69,7 +69,9 @@ export const Bridge = () => {
 	const recipient = customRecipient
 		? (recipientAccount?.address ?? '')
 		: (account?.address ?? '')
-	const parsed = parseTransferAmount(amount)
+	const decimals = getStablecoinAssetConfig(from, symbol)!.decimals
+	const destinationDecimals = getStablecoinAssetConfig(to, symbol)!.decimals
+	const parsed = parseTransferAmount(amount, decimals)
 	const input: CrossChainTransferInput = {
 		from,
 		to,
@@ -210,8 +212,8 @@ export const Bridge = () => {
 						label={t('assetToSend')}
 						value={amount}
 						onChange={setAmount}
-						maxAvailable={planckToUnit(maxAvailable, 6)}
-						maxDecimals={6}
+						maxAvailable={planckToUnit(maxAvailable, decimals)}
+						maxDecimals={decimals}
 						allowMax={!!quote && !expired}
 						syncing={balances.loading}
 						options={tokens}
@@ -262,7 +264,7 @@ export const Bridge = () => {
 						</SendForm.Note>
 						<SendForm.Note label={t('estimatedReceived')} variant="success">
 							{quote
-								? `${planckToUnit(quote.receivedAmount, 6)} ${symbol}`
+								? `${planckToUnit(quote.receivedAmount, destinationDecimals)} ${symbol}`
 								: '—'}
 						</SendForm.Note>
 						{loading && (

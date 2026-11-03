@@ -46,7 +46,7 @@
 		"youPay": "Ödeyeceğiniz",
 		"youReceive": "Alacağınız",
 		"bridge": "Köprü",
-		"crossChainDescription": "Polkadot Asset Hub ve Hydration arasında sabit coin gönderin.",
+		"crossChainDescription": "Polkadot Asset Hub ve Hydration arasında DOT ve sabit coin gönderin.",
 		"crossChainSend": "Zincirler arası gönder",
 		"checkingCrossChain": "Bakiyeler, ücretler ve hedefteki yürütme kontrol ediliyor…",
 		"destinationChain": "Hedef zincir",

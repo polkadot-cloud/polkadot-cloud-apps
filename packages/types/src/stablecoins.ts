@@ -60,8 +60,8 @@ export type AssetTransferInput = {
 // Retained for consumers of the original stablecoin service API.
 export type StablecoinTransferInput = AssetTransferInput
 
-// Polkadot-native stablecoins registered on both Asset Hub and Hydration.
-export type CrossChainAsset = 'USDC' | 'USDT'
+// Polkadot-native assets registered on both Asset Hub and Hydration.
+export type CrossChainAsset = 'DOT' | 'USDC' | 'USDT'
 
 export type CrossChainTransferInput = {
 	from: StablecoinChainId
@@ -70,7 +70,7 @@ export type CrossChainTransferInput = {
 	amount: bigint
 	sender: string
 	recipient: string
-	feeAsset: 'DOT' | CrossChainAsset
+	feeAsset: CrossChainAsset
 }
 
 export type CrossChainFee = {

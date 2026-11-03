@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Add `stablecoins.xcm.prepare` using the Dedot ParaSpell SDK and existing service clients for Asset Hub and Hydration.
+- Add `stablecoins.xcm.prepare` for DOT, USDC and USDT using the Dedot ParaSpell SDK and existing service clients for Asset Hub and Hydration.
 
 ## [0.11.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/dedot-api-v0.10.0...dedot-api-v0.11.0) (2026-10-28)
 

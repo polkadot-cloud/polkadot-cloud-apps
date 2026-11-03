@@ -46,7 +46,7 @@
 		"youPay": "Você paga",
 		"youReceive": "Você recebe",
 		"bridge": "Ponte",
-		"crossChainDescription": "Envie stablecoins entre Polkadot Asset Hub e Hydration.",
+		"crossChainDescription": "Envie DOT e stablecoins entre Polkadot Asset Hub e Hydration.",
 		"crossChainSend": "Enviar entre cadeias",
 		"checkingCrossChain": "Verificando saldos, taxas e execução no destino…",
 		"destinationChain": "Cadeia de destino",

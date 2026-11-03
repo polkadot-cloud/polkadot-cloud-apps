@@ -48,14 +48,21 @@ export const prepareCrossChainTransfer = async (
 	input: CrossChainTransferInput,
 ): Promise<CrossChainTransfer> => {
 	const { from, to, symbol, amount, sender, recipient, feeAsset } = input
-	if (from === to || amount <= 0n || !['USDC', 'USDT'].includes(symbol)) {
+	if (
+		from === to ||
+		amount <= 0n ||
+		!['DOT', 'USDC', 'USDT'].includes(symbol)
+	) {
 		throw new Error('Invalid cross-chain transfer')
 	}
 	const origin = chainNames[from]
 	const destination = chainNames[to]
 	const assetId = getStablecoinAssetConfig(from, symbol)?.assetId
-	if (assetId === undefined) throw new Error('Unsupported cross-chain asset')
-	const currency = { id: assetId }
+	if (assetId === undefined && !(from === 'statemint' && symbol === 'DOT')) {
+		throw new Error('Unsupported cross-chain asset')
+	}
+	const currency =
+		assetId === undefined ? { symbol: Native('DOT') } : { id: assetId }
 	const asset = findAssetInfo(origin, currency, destination)
 	if (
 		!asset ||

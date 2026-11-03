@@ -14,6 +14,8 @@ import {
 import {
 	findAssetInfo,
 	getSupportedDestinations,
+	Native,
+	type TXcmFeeBase,
 } from '../../dedot-api/node_modules/@paraspell/sdk-dedot'
 import { prepareCrossChainTransfer } from '../../dedot-api/src/xcm'
 
@@ -41,7 +43,11 @@ const info = () => ({
 		xcmFee: {
 			sufficient: true,
 			fee: 1000n,
-			asset: { assetId: '1337', symbol: 'USDC', decimals: 6 },
+			asset: {
+				assetId: '1337',
+				symbol: 'USDC',
+				decimals: 6,
+			} as TXcmFeeBase['asset'],
 		},
 	},
 	destination: {
@@ -52,7 +58,11 @@ const info = () => ({
 		},
 		xcmFee: {
 			fee: 1000n,
-			asset: { assetId: '22', symbol: 'USDC', decimals: 6 },
+			asset: {
+				assetId: '22',
+				symbol: 'USDC',
+				decimals: 6,
+			} as TXcmFeeBase['asset'],
 		},
 	},
 })
@@ -83,6 +93,24 @@ beforeEach(() => {
 
 describe('Cross-chain preflight', () => {
 	test.each([
+		[
+			'statemint',
+			'hydration',
+			'DOT',
+			'AssetHubPolkadot',
+			'Hydration',
+			undefined,
+			5,
+		],
+		[
+			'hydration',
+			'statemint',
+			'DOT',
+			'Hydration',
+			'AssetHubPolkadot',
+			5,
+			undefined,
+		],
 		[
 			'statemint',
 			'hydration',
@@ -122,26 +150,30 @@ describe('Cross-chain preflight', () => {
 	] as const)(
 		'prepares %s → %s %s using the installed registry',
 		async (from, to, symbol, origin, destination, id, destId) => {
-			const asset = findAssetInfo(origin, { id }, destination)!
+			const currency = id === undefined ? { symbol: Native('DOT') } : { id }
+			const destCurrency =
+				destId === undefined ? { symbol: Native('DOT') } : { id: destId }
+			const asset = findAssetInfo(origin, currency, destination)!
+			const destAsset = findAssetInfo(destination, destCurrency, origin)!
 			expect(asset).toBeTruthy()
-			expect(getSupportedDestinations(origin, { id })).toContain(destination)
+			expect(destAsset).toBeTruthy()
+			expect(getSupportedDestinations(origin, currency)).toContain(destination)
+			const amount = symbol === 'DOT' ? 20_000_000_001n : 2_000_000n
+			const receivedAmount = symbol === 'DOT' ? 19_980_000_001n : 1_998_000n
 			const quoteInfo = info()
 			quoteInfo.origin.xcmFee.asset = {
-				assetId: String(id),
+				...asset,
 				symbol: symbol === 'USDT' ? 'USDt' : symbol,
-				decimals: 6,
 			}
-			quoteInfo.destination.xcmFee.asset = {
-				assetId: String(destId),
-				symbol,
-				decimals: 6,
-			}
+			quoteInfo.destination.xcmFee.asset = destAsset
+			quoteInfo.destination.receivedCurrency.receivedAmount = receivedAmount
 			builder.getTransferInfo.mockResolvedValue(quoteInfo)
 			const result = await prepareCrossChainTransfer(hub, hydration, {
 				...input,
 				from,
 				to,
 				symbol,
+				amount,
 				feeAsset: symbol,
 			})
 			expect(mocked.Builder).toHaveBeenCalledWith({
@@ -150,16 +182,48 @@ describe('Cross-chain preflight', () => {
 			})
 			expect(builder.currency).toHaveBeenCalledWith({
 				location: asset.location,
-				amount: 2_000_000n,
+				amount,
 			})
-			expect(builder.feeAsset).toHaveBeenCalledWith({ id })
+			expect(builder.feeAsset).toHaveBeenCalledWith(currency)
 			expect(builder.recipient).toHaveBeenCalledWith('recipient')
 			expect(builder.sender).toHaveBeenCalledWith('sender')
 			expect(result.originFee.symbol).toBe(symbol)
 			expect(result.destinationFee.symbol).toBe(symbol)
-			expect(result.receivedAmount).toBe(1_998_000n)
+			expect(result.originFee.decimals).toBe(symbol === 'DOT' ? 10 : 6)
+			expect(result.destinationFee.decimals).toBe(symbol === 'DOT' ? 10 : 6)
+			expect(result.receivedAmount).toBe(receivedAmount)
 			expect(result.originFeeFromAmount).toBe(from === 'statemint')
 			expect(builder.disconnect).toHaveBeenCalledOnce()
+		},
+	)
+	test.each([
+		['statemint', 'hydration', 1337, 22],
+		['hydration', 'statemint', 22, 1337],
+	] as const)(
+		'bridges DOT from %s to %s while paying fees in USDC',
+		async (from, to, feeId, destFeeId) => {
+			const quoteInfo = info()
+			quoteInfo.origin.xcmFee.asset.assetId = String(feeId)
+			quoteInfo.destination.xcmFee.asset.assetId = String(destFeeId)
+			quoteInfo.destination.receivedCurrency.receivedAmount = 19_980_000_001n
+			builder.getTransferInfo.mockResolvedValue(quoteInfo)
+			const result = await prepareCrossChainTransfer(hub, hydration, {
+				...input,
+				from,
+				to,
+				symbol: 'DOT',
+				amount: 20_000_000_001n,
+			})
+			expect(builder.currency).toHaveBeenCalledWith({
+				location: { parents: 1, interior: { Here: null } },
+				amount: 20_000_000_001n,
+			})
+			expect(builder.feeAsset).toHaveBeenCalledWith({ id: feeId })
+			expect(result.originFee.symbol).toBe('USDC')
+			expect(result.originFee.decimals).toBe(6)
+			expect(result.destinationFee.symbol).toBe('USDC')
+			expect(result.originFeeFromAmount).toBe(false)
+			expect(result.receivedAmount).toBe(19_980_000_001n)
 		},
 	)
 	test.each(['balance', 'destination', 'simulation', 'rpc'] as const)(
@@ -202,6 +266,50 @@ describe('Cross-chain preflight', () => {
 })
 
 describe('Cross-chain amounts and funding', () => {
+	test.each(['statemint', 'hydration'] as const)(
+		'reserves DOT fees and frozen funds when bridging from %s',
+		(from) => {
+			const transfer: CrossChainTransferInput = {
+				...input,
+				from,
+				to: from === 'statemint' ? 'hydration' : 'statemint',
+				symbol: 'DOT',
+				feeAsset: 'DOT',
+				amount: 10_000_000_001n,
+			}
+			const quote: CrossChainTransfer = {
+				tx,
+				originFee: { symbol: 'DOT', amount: 1_000_000n, decimals: 10 },
+				originFeeFromAmount: from === 'statemint',
+				destinationFee: { symbol: 'DOT', amount: 1_000_000n, decimals: 10 },
+				receivedAmount: 9_998_000_001n,
+				destinationBalance: 0n,
+				fetchedAt: Date.now(),
+			}
+			const fee = 2_000_000n
+			const frozen = 300_000_000n
+			const originReserve = quote.originFeeFromAmount
+				? 0n
+				: quote.originFee.amount
+			const balance: StablecoinBalance = {
+				chain: from,
+				symbol: 'DOT',
+				decimals: 10,
+				free: transfer.amount + frozen + fee + originReserve,
+				frozen,
+				existentialDeposit: 100_000_000n,
+			}
+			expect(canFundTransfer([balance], transfer, quote, fee)).toBe(true)
+			expect(
+				canFundTransfer(
+					[{ ...balance, free: balance.free - 1n }],
+					transfer,
+					quote,
+					fee,
+				),
+			).toBe(false)
+		},
+	)
 	test.each([
 		['0.000001', 1n],
 		['1.234567', 1_234_567n],
@@ -212,8 +320,21 @@ describe('Cross-chain amounts and funding', () => {
 		['NaN', 0n],
 		['', 0n],
 	] as const)('parses %s exactly without rounding', (amount, expected) => {
-		expect(parseTransferAmount(amount)).toBe(expected)
+		expect(parseTransferAmount(amount, 6)).toBe(expected)
 	})
+	test.each([
+		['0.0000000001', 1n],
+		['1.2345678901', 12_345_678_901n],
+		['9007199254740993.0000000001', 90_071_992_547_409_930_000_000_001n],
+		['1.00000000001', 0n],
+		['-1', 0n],
+		['1e10', 0n],
+	] as const)(
+		'parses DOT amount %s at ten-decimal precision',
+		(amount, expected) => {
+			expect(parseTransferAmount(amount, 10)).toBe(expected)
+		},
+	)
 	test('combines transfer and fee debits, respects frozen funds, and avoids charging deducted fees twice', async () => {
 		const quote = await prepareCrossChainTransfer(hub, hydration, input)
 		const balance: StablecoinBalance = {

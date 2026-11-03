@@ -9,7 +9,7 @@
 		"chain": "Chain",
 		"conversionFee": "Conversion fee",
 		"bridge": "Bridge",
-		"crossChainDescription": "Send stablecoins between Polkadot Asset Hub and Hydration.",
+		"crossChainDescription": "Send DOT and stablecoins between Polkadot Asset Hub and Hydration.",
 		"crossChainSend": "Send Cross-chain",
 		"checkingCrossChain": "Checking balances, fees and destination execution…",
 		"destinationChain": "Destination Chain",

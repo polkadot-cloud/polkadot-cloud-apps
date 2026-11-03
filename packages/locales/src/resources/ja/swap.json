@@ -46,7 +46,7 @@
 		"youPay": "支払額",
 		"youReceive": "受取額",
 		"bridge": "ブリッジ",
-		"crossChainDescription": "Polkadot Asset HubとHydration間でステーブルコインを送信します。",
+		"crossChainDescription": "Polkadot Asset HubとHydration間でDOTとステーブルコインを送信します。",
 		"crossChainSend": "クロスチェーン送信",
 		"checkingCrossChain": "残高、手数料、送信先での実行を確認中…",
 		"destinationChain": "送信先チェーン",
