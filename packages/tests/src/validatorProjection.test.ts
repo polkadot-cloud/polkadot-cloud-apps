@@ -11,6 +11,7 @@ import { createElement } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { useValidatorRewardProjection } from '../../app-staking/src/hooks/useValidatorRewardProjection'
 import { getValidatorRewardProjection } from '../../app-staking/src/hooks/useValidatorRewardProjection/util'
+import { HookProbe } from './HookProbe'
 
 const { state, rewardsQuery, defaults } = vi.hoisted(() => {
 	const defaults = {
@@ -94,11 +95,11 @@ beforeEach(() => {
 
 const readProjection = () => {
 	let projection: ReturnType<typeof useValidatorRewardProjection> | undefined
-	const Probe = () => {
+	const probe = () => {
 		projection = useValidatorRewardProjection()
 		return null
 	}
-	renderToStaticMarkup(createElement(Probe))
+	renderToStaticMarkup(createElement(HookProbe, { callback: probe }))
 	return projection!
 }
 

@@ -362,9 +362,7 @@
 		"permissionlessClaimingTurnedOff": "許可不要の受け取りは無効になっています。",
 		"permissionlessCompound": "許可不要の再投資: 誰でもこのメンバーの報酬を再投資できます",
 		"permissionlessWithdraw": "許可不要の引き出し: 誰でもこのメンバーの報酬を引き出せます",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "ポイント",
 		"pool": "プール",
 		"poolClaim": "プールの受け取り",

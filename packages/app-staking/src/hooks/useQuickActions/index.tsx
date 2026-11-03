@@ -33,6 +33,42 @@ import type { BondFor } from 'types'
 import type { ButtonQuickActionProps } from 'ui-buttons/types'
 import { useOverlay } from 'ui-overlay'
 
+const AccountsIcon = () => <FontAwesomeIcon transform="grow-2" icon={faUser} />
+const LedgerIcon = () => (
+	<LedgerSquareSVG style={{ width: '1.5rem', height: '1.5rem' }} />
+)
+const VaultIcon = () => (
+	<PolkadotVaultSVG
+		style={{ width: '1.5rem', height: '1.5rem', fill: 'var(--gray-1000)' }}
+	/>
+)
+const EmailIcon = () => <FontAwesomeIcon transform="grow-2" icon={faEnvelope} />
+const DiscordIcon = () => (
+	<FontAwesomeIcon transform="grow-2" icon={faDiscord} />
+)
+const SendIcon = () => (
+	<FontAwesomeIcon transform="grow-1" icon={faPaperPlane} />
+)
+const JoinPoolIcon = () => <FontAwesomeIcon transform="grow-1" icon={faUsers} />
+const NominateIcon = () => (
+	<FontAwesomeIcon transform="grow-1" icon={faChartLine} />
+)
+const WithdrawIcon = () => (
+	<FontAwesomeIcon transform="grow-2" icon={faCircleDown} />
+)
+const CompoundIcon = () => <FontAwesomeIcon transform="grow-2" icon={faCoins} />
+const PayeeIcon = () => (
+	<FontAwesomeIcon transform="grow-2" icon={faArrowDown} />
+)
+const UnstakeIcon = () => (
+	<FontAwesomeIcon transform="grow-2" icon={faCircleXmark} />
+)
+const BondIcon = () => <FontAwesomeIcon transform="grow-2" icon={faAdd} />
+const UnbondIcon = () => <FontAwesomeIcon transform="grow-2" icon={faMinus} />
+const ManageNominationsIcon = () => (
+	<FontAwesomeIcon transform="grow-2" icon={faCog} />
+)
+
 export const useQuickActions = () => {
 	const { t } = useTranslation()
 	const { advancedMode } = useUi()
@@ -63,7 +99,7 @@ export const useQuickActions = () => {
 				openModal({ key: 'Accounts' })
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faUser} />,
+			Icon: AccountsIcon,
 			label: t('accounts', { ns: 'app' }),
 		},
 		ledger: {
@@ -75,9 +111,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: false,
-			Icon: () => (
-				<LedgerSquareSVG style={{ width: '1.5rem', height: '1.5rem' }} />
-			),
+			Icon: LedgerIcon,
 			label: 'Ledger',
 		},
 		vault: {
@@ -89,15 +123,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: false,
-			Icon: () => (
-				<PolkadotVaultSVG
-					style={{
-						width: '1.5rem',
-						height: '1.5rem',
-						fill: 'var(--gray-1000)',
-					}}
-				/>
-			),
+			Icon: VaultIcon,
 			label: 'Vault',
 		},
 		email: {
@@ -105,7 +131,7 @@ export const useQuickActions = () => {
 				window.open(`mailto:${PlatformSupportEmail}`, '_blank')
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faEnvelope} />,
+			Icon: EmailIcon,
 			label: t('email', { ns: 'app' }),
 		},
 		discord: {
@@ -113,7 +139,7 @@ export const useQuickActions = () => {
 				window.open(DiscordSupportURL, '_blank')
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faDiscord} />,
+			Icon: DiscordIcon,
 			label: 'Discord',
 		},
 		send: {
@@ -125,7 +151,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-1" icon={faPaperPlane} />,
+			Icon: SendIcon,
 			label: t('send', { ns: 'app' }),
 		},
 		joinPool: {
@@ -143,7 +169,7 @@ export const useQuickActions = () => {
 				}
 			},
 			disabled: !activeAddress,
-			Icon: () => <FontAwesomeIcon transform="grow-1" icon={faUsers} />,
+			Icon: JoinPoolIcon,
 			label: t('joinPool', { ns: 'modals' }),
 		},
 		nominate: {
@@ -165,7 +191,7 @@ export const useQuickActions = () => {
 				}
 			},
 			disabled: !hasEnoughToNominate,
-			Icon: () => <FontAwesomeIcon transform="grow-1" icon={faChartLine} />,
+			Icon: NominateIcon,
 			label: t('nominate', { ns: 'app' }),
 		},
 		withdrawPoolRewards: {
@@ -177,7 +203,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: pendingRewards === 0n,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCircleDown} />,
+			Icon: WithdrawIcon,
 			label: t('withdraw', { ns: 'pages' }),
 		},
 		compoundPoolRewards: {
@@ -189,7 +215,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: pendingRewards === 0n,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCoins} />,
+			Icon: CompoundIcon,
 			label: t('compound', { ns: 'pages' }),
 		},
 		claimNominatorPayouts: {
@@ -200,7 +226,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: BigInt(unclaimedRewards.total) === 0n,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCircleDown} />,
+			Icon: WithdrawIcon,
 			label: t('claim', { ns: 'modals' }),
 		},
 		updatePayee: {
@@ -208,7 +234,7 @@ export const useQuickActions = () => {
 				openModal({ key: 'UpdatePayee', size: 'sm' })
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faArrowDown} />,
+			Icon: PayeeIcon,
 			label: t('payee.label', { ns: 'app' }),
 		},
 		nominatorUnstake: {
@@ -219,7 +245,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCircleXmark} />,
+			Icon: UnstakeIcon,
 			label: t('stop', { ns: 'pages' }),
 		},
 		leavePool: {
@@ -230,7 +256,7 @@ export const useQuickActions = () => {
 				})
 			},
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCircleXmark} />,
+			Icon: UnstakeIcon,
 			label: t('stop', { ns: 'pages' }),
 		},
 	}
@@ -246,7 +272,7 @@ export const useQuickActions = () => {
 			})
 		},
 		disabled: false,
-		Icon: () => <FontAwesomeIcon transform="grow-2" icon={faAdd} />,
+		Icon: BondIcon,
 		label: t('bond', { ns: 'pages' }),
 	})
 
@@ -261,7 +287,7 @@ export const useQuickActions = () => {
 			})
 		},
 		disabled: false,
-		Icon: () => <FontAwesomeIcon transform="grow-2" icon={faMinus} />,
+		Icon: UnbondIcon,
 		label: t('unbond', { ns: 'pages' }),
 	})
 
@@ -297,7 +323,7 @@ export const useQuickActions = () => {
 					},
 				}),
 			disabled: false,
-			Icon: () => <FontAwesomeIcon transform="grow-2" icon={faCog} />,
+			Icon: ManageNominationsIcon,
 			label: t('manageNominations', { ns: 'modals' }),
 		}
 	}

@@ -17,7 +17,10 @@ SPDX-License-Identifier: GPL-3.0-only */
 
 		@supports (mask-composite: exclude) {
 			padding: 1px;
-			background: linear-gradient(var(--pastel-angle, 125deg), var(--pastel-stops));
+			background: linear-gradient(
+				var(--pastel-angle, 125deg),
+				var(--pastel-stops)
+			);
 			box-shadow: none;
 			mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
 			mask-composite: exclude;

@@ -363,9 +363,7 @@
 		"permissionlessClaimingTurnedOff": "İzinsiz talep etme kapalı.",
 		"permissionlessCompound": "İzinsiz Bileşik: Herkes bu üye için ödülleri bileşik hale getirebilir",
 		"permissionlessWithdraw": "İzinsiz Çekme: Herkes bu üye için ödülleri çekebilir",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "Puanlar",
 		"pool": "Havuz",
 		"poolClaim": "Havuz Talebi",

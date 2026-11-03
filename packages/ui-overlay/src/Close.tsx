@@ -4,8 +4,8 @@
 import { Close as Wrapper } from 'ui-core/modal'
 import { useOverlay } from 'ui-overlay'
 
-export const Close = () => {
+export const Close = ({ label }: { label?: string }) => {
 	const { closeModal } = useOverlay().modal
 
-	return <Wrapper onClose={() => closeModal()} />
+	return <Wrapper label={label} onClose={() => closeModal()} />
 }

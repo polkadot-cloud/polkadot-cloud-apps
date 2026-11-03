@@ -6,6 +6,7 @@ import { AccountStatus } from 'library/AccountStatus'
 import { NominationHealthSetting } from 'library/ManageNominations/NominationHealthSetting'
 import { Sync } from 'library/Sync'
 import { useState } from 'react'
+import { CloudAppsButton } from 'ui-app/CloudAppsButton'
 import { Account, type MenuPopoverFeatureFlags, Settings } from 'ui-app/Headers'
 import { Header } from 'ui-core/base'
 import classes from './Headers.module.scss'
@@ -26,10 +27,10 @@ export const Headers = () => {
 	return (
 		<Header standalone>
 			<section className={classes.identity}>
-				<div className={classes.brand}>
+				<CloudAppsButton className={classes.brand}>
 					<CloudSVG aria-hidden="true" />
 					<span>Cloud</span>
-				</div>
+				</CloudAppsButton>
 				<AccountStatus />
 			</section>
 			<section className={classes.controls}>
