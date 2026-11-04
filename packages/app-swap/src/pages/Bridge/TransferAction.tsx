@@ -8,8 +8,7 @@ import {
 } from 'consts/stablecoins'
 import { emitNotification, getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
-import { useCrossChainDeliveryStage } from 'hooks/useCrossChainDelivery'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { trackCrossChainDelivery, useSubmitExtrinsic } from 'tx-submit'
 import type {
@@ -19,7 +18,7 @@ import type {
 } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
-import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
+import { swapFeeReserve } from '../../library/Swap'
 import { canFundTransfer } from './utils'
 
 export const TransferAction = ({
@@ -41,10 +40,8 @@ export const TransferAction = ({
 	const { serviceApi } = useApi()
 	const { uids } = useTxMeta()
 	const balances = useStablecoinBalances(account?.address)
-	const [delivery, setDelivery] =
-		useState<ReturnType<typeof trackCrossChainDelivery>>()
-	const activeDelivery = useRef(delivery)
-	const stage = useCrossChainDeliveryStage(delivery?.state)
+	const activeDelivery =
+		useRef<ReturnType<typeof trackCrossChainDelivery>>(undefined)
 	const signing = uids.some(
 		(item) =>
 			item.from === account?.address && item.submitted && !item.broadcasted,
@@ -54,7 +51,6 @@ export const TransferAction = ({
 		!!quote &&
 		!!account &&
 		networkFee !== undefined &&
-		!stage &&
 		!signing &&
 		!balances.loading &&
 		canFundTransfer(balances.balances, input, quote, swapFeeReserve(networkFee))
@@ -79,16 +75,25 @@ export const TransferAction = ({
 		feeDisplay,
 		callbackSubmit: () => {
 			if (!quote) return
-			const pending = trackCrossChainDelivery(serviceApi, input, quote, () =>
-				emitNotification({
-					title: t('crossChainComplete'),
-					subtitle: t('crossChainCompleteOn', {
-						chain: getStablecoinChainLabel(input.to),
-					}),
-				}),
+			activeDelivery.current = trackCrossChainDelivery(
+				serviceApi,
+				input,
+				quote,
+				{
+					onDelivered: () =>
+						emitNotification({
+							title: t('crossChainComplete'),
+							subtitle: t('crossChainCompleteOn', {
+								chain: getStablecoinChainLabel(input.to),
+							}),
+						}),
+					onUnconfirmed: () =>
+						emitNotification({
+							title: t('crossChainUnconfirmed'),
+							subtitle: t('xcmStatusUnconfirmed'),
+						}),
+				},
 			)
-			activeDelivery.current = pending
-			setDelivery(pending)
 			onSubmitted()
 		},
 		callbackInBlock: () => {
@@ -112,23 +117,16 @@ export const TransferAction = ({
 	)
 	return (
 		<SendForm.Action>
-			<div style={{ width: '100%' }}>
-				{stage === 'unconfirmed' && (
-					<ExchangeNotice>{t('xcmStatusUnconfirmed')}</ExchangeNotice>
-				)}
-				<SubmitTx
-					{...submission}
-					submitText={t('crossChainSend')}
-					valid={ready}
-					noMargin
-					feeDisplay={feeDisplay}
-					feeBalance={
-						balances.getBalance(input.from, input.feeAsset)?.free ?? 0n
-					}
-					hideSigner
-					transparent
-				/>
-			</div>
+			<SubmitTx
+				{...submission}
+				submitText={t('crossChainSend')}
+				valid={ready}
+				noMargin
+				feeDisplay={feeDisplay}
+				feeBalance={balances.getBalance(input.from, input.feeAsset)?.free ?? 0n}
+				hideSigner
+				transparent
+			/>
 		</SendForm.Action>
 	)
 }

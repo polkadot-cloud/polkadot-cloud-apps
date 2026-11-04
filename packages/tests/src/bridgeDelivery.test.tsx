@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { act, createElement, Fragment, type ReactNode } from 'react'
+import { act, createElement, Fragment, type ReactNode, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type {
 	CrossChainTransfer,
@@ -113,25 +113,42 @@ let root: Root
 let container: HTMLDivElement
 const handlers = () => mocked.handlers.at(-1)!
 const spinning = () => !!container.querySelector('[data-spinner]')
+const Form = ({
+	showAction,
+	currentInput,
+}: {
+	showAction: boolean
+	currentInput: CrossChainTransferInput
+}) => {
+	const [submitted, setSubmitted] = useState(false)
+	return createElement(
+		Fragment,
+		null,
+		createElement(Sync),
+		showAction &&
+			createElement(TransferAction, {
+				key: `${currentInput.recipient}:${submitted}`,
+				input: submitted ? { ...currentInput, amount: 0n } : currentInput,
+				account: { address: 'sender', source: 'extension', name: 'Sender' },
+				quote: submitted ? undefined : quote,
+				networkFee: submitted ? undefined : 1000n,
+				valid: !submitted,
+				onSubmitted: () => {
+					mocked.onSubmitted()
+					setSubmitted(true)
+				},
+			}),
+	)
+}
 const render = (showAction = true, currentInput = input) =>
 	act(async () =>
-		root.render(
-			createElement(
-				Fragment,
-				null,
-				createElement(Sync),
-				showAction &&
-					createElement(TransferAction, {
-						input: currentInput,
-						account: { address: 'sender', source: 'extension', name: 'Sender' },
-						quote,
-						networkFee: 1000n,
-						valid: true,
-						onSubmitted: mocked.onSubmitted,
-					}),
-			),
-		),
+		root.render(createElement(Form, { showAction, currentInput })),
 	)
+const submit = async () => {
+	const submitted = handlers()
+	await act(async () => submitted.callbackSubmit!())
+	return submitted
+}
 const advance = (milliseconds: number) =>
 	act(async () => vi.advanceTimersByTimeAsync(milliseconds))
 
@@ -176,7 +193,7 @@ afterEach(async () => {
 test('the spinner waits past source inclusion and finality for the subscribed destination balance', async () => {
 	await render()
 	expect(spinning()).toBe(false)
-	await act(async () => handlers().callbackSubmit!())
+	const submitted = await submit()
 	expect(mocked.onSubmitted).toHaveBeenCalledOnce()
 	expect(mocked.serviceApi.stablecoins.subscribe.balances).toHaveBeenCalledWith(
 		'external-recipient',
@@ -187,9 +204,9 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 	expect(spinning()).toBe(true)
 	expect(handlers().shouldSubmit).toBe(false)
 	expect(container.querySelector('[role="status"]')).toBeNull()
-	await act(async () => handlers().callbackInBlock!())
+	await act(async () => submitted.callbackInBlock!())
 	expect(spinning()).toBe(true)
-	await act(async () => handlers().callbackFinalized!())
+	await act(async () => submitted.callbackFinalized!())
 	expect(handlers().shouldSubmit).toBe(false)
 	expect(container.querySelector('[role="status"]')).toBeNull()
 	expect(_notifications.getValue()).toHaveLength(0)
@@ -220,13 +237,13 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 
 test('receipt before source finality is remembered without completing the transfer early', async () => {
 	await render()
-	await act(async () => handlers().callbackSubmit!())
+	const submitted = await submit()
 	await act(async () => listeners[0].onBalance(destinationBalance))
 	expect(handlers().shouldSubmit).toBe(false)
 	expect(container.querySelector('[role="status"]')).toBeNull()
 	expect(spinning()).toBe(true)
 	expect(_notifications.getValue()).toHaveLength(0)
-	await act(async () => handlers().callbackFinalized!())
+	await act(async () => submitted.callbackFinalized!())
 	expect(spinning()).toBe(false)
 	expect(container.querySelector('[role="status"]')).toBeNull()
 	expect(_notifications.getValue()).toHaveLength(1)
@@ -234,8 +251,7 @@ test('receipt before source finality is remembered without completing the transf
 
 test('delivery tracking retains the submitted recipient and survives the form unmounting', async () => {
 	await render()
-	await act(async () => handlers().callbackSubmit!())
-	const submitted = handlers()
+	const submitted = await submit()
 	await render(true, { ...input, recipient: 'different-recipient' })
 	expect(
 		mocked.serviceApi.stablecoins.subscribe.balances,
@@ -259,61 +275,77 @@ test('delivery tracking retains the submitted recipient and survives the form un
 	])
 })
 
-test('a delivery timeout stops the spinner, releases the subscription, and ignores late updates', async () => {
+test('a delivery timeout notifies after navigation, stops the spinner, and ignores late updates', async () => {
 	await render()
-	await act(async () => handlers().callbackSubmit!())
-	await act(async () => handlers().callbackFinalized!())
+	const submitted = await submit()
+	await render(false)
+	await act(async () => submitted.callbackFinalized!())
 	await advance(119_999)
 	expect(spinning()).toBe(true)
 	await advance(1)
 	expect(spinning()).toBe(false)
-	expect(container.textContent).toContain('xcmStatusUnconfirmed')
+	expect(_notifications.getValue()).toMatchObject([
+		{ title: 'crossChainUnconfirmed', subtitle: 'xcmStatusUnconfirmed' },
+	])
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	await act(async () => listeners[0].onBalance(destinationBalance))
-	expect(container.textContent).toContain('xcmStatusUnconfirmed')
+	expect(container.querySelector('[role="status"]')).toBeNull()
 	expect(mocked.serviceApi.stablecoins.query.balances).not.toHaveBeenCalled()
-	expect(_notifications.getValue()).toHaveLength(0)
+	expect(_notifications.getValue()).toHaveLength(1)
 })
 
-test('source failure releases the subscription and enables retrying', async () => {
+test('source failure releases the subscription after the form has reset', async () => {
 	await render()
-	await act(async () => handlers().callbackSubmit!())
+	const submitted = await submit()
 	expect(handlers().shouldSubmit).toBe(false)
-	await act(async () => handlers().callbackFailure!())
+	await act(async () => submitted.callbackFailure!())
 	expect(spinning()).toBe(false)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
-	expect(handlers().shouldSubmit).toBe(true)
+	expect(handlers().shouldSubmit).toBe(false)
 	expect(_notifications.getValue()).toHaveLength(0)
 })
 
-test('subscription cleanup errors cannot leave a failed transfer pending', async () => {
-	await render()
-	await act(async () => handlers().callbackSubmit!())
-	listeners[0].unsubscribe.mockImplementationOnce(() => {
-		throw new Error('Cleanup failed')
-	})
-	await act(async () => {
-		expect(() => handlers().callbackFailure!()).toThrow('Cleanup failed')
-	})
-	expect(spinning()).toBe(false)
-	expect(handlers().shouldSubmit).toBe(true)
-	await act(async () => handlers().callbackFailure!())
-	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
-})
+test.each(['delivered', 'failed'] as const)(
+	'subscription cleanup errors cannot interrupt a %s transfer',
+	async (outcome) => {
+		await render()
+		const submitted = await submit()
+		listeners[0].unsubscribe.mockImplementationOnce(() => {
+			throw new Error('Cleanup failed')
+		})
+		await act(async () => {
+			if (outcome === 'delivered') {
+				submitted.callbackFinalized!()
+				listeners[0].onBalance(destinationBalance)
+			} else {
+				submitted.callbackFailure!()
+			}
+		})
+		expect(spinning()).toBe(false)
+		expect(_notifications.getValue()).toHaveLength(
+			outcome === 'delivered' ? 1 : 0,
+		)
+		await act(async () => submitted.callbackFailure!())
+		expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
+	},
+)
 
 test.each([false, true])(
 	'a subscription error becomes unconfirmed after source finality (already finalized: %s)',
 	async (finalized) => {
 		await render()
-		await act(async () => handlers().callbackSubmit!())
-		if (finalized) await act(async () => handlers().callbackFinalized!())
+		const submitted = await submit()
+		await render(false)
+		if (finalized) await act(async () => submitted.callbackFinalized!())
 		await act(async () => listeners[0].onError(new Error('Disconnected')))
 		if (!finalized) {
 			expect(spinning()).toBe(true)
-			await act(async () => handlers().callbackFinalized!())
+			await act(async () => submitted.callbackFinalized!())
 		}
 		expect(spinning()).toBe(false)
-		expect(container.textContent).toContain('xcmStatusUnconfirmed')
+		expect(_notifications.getValue()).toMatchObject([
+			{ title: 'crossChainUnconfirmed', subtitle: 'xcmStatusUnconfirmed' },
+		])
 		expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	},
 )

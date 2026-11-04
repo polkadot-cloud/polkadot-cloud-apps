@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "Transfer {{chain}} ağına ulaştı.",
 		"crossChainDescription": "Zincirler arasında DOT ve sabit coin gönderin.",
 		"crossChainSend": "Zincirler arası gönder",
+		"crossChainUnconfirmed": "Zincirler arası teslimat doğrulanmadı",
 		"destinationChain": "Hedef zincir",
 		"destinationXcmFee": "Hedef ücreti (varışta düşülür)",
 		"enterRecipientAddress": "Alıcı adresini girin...",

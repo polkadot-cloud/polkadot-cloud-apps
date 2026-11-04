@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "Перевод поступил в сеть {{chain}}.",
 		"crossChainDescription": "Отправляйте DOT и стейблкоины между сетями.",
 		"crossChainSend": "Отправить между сетями",
+		"crossChainUnconfirmed": "Межсетевая доставка не подтверждена",
 		"destinationChain": "Сеть назначения",
 		"destinationXcmFee": "Комиссия назначения (вычитается при получении)",
 		"enterRecipientAddress": "Введите адрес получателя...",

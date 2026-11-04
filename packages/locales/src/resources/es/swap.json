@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "La transferencia ha llegado a {{chain}}.",
 		"crossChainDescription": "Envía DOT y stablecoins entre cadenas.",
 		"crossChainSend": "Enviar entre cadenas",
+		"crossChainUnconfirmed": "Entrega entre cadenas sin confirmar",
 		"destinationChain": "Cadena de destino",
 		"destinationXcmFee": "Comisión de destino (descontada al llegar)",
 		"enterRecipientAddress": "Introduce la dirección del destinatario...",

@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "{{chain}} への転送が完了しました。",
 		"crossChainDescription": "チェーン間でDOTとステーブルコインを送信します。",
 		"crossChainSend": "クロスチェーン送信",
+		"crossChainUnconfirmed": "クロスチェーン転送の到着未確認",
 		"destinationChain": "送信先チェーン",
 		"destinationXcmFee": "送信先手数料（到着時に差し引き）",
 		"enterRecipientAddress": "受取人のアドレスを入力...",

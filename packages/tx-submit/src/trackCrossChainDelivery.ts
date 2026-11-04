@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { CrossChainDeliveryTimeoutMs } from 'consts/crossChain'
-import { createCrossChainDeliveryState } from 'global-bus'
+import {
+	addPendingCrossChainDelivery,
+	removePendingCrossChainDelivery,
+} from 'global-bus'
 import type {
-	CrossChainDeliveryStage,
 	CrossChainTransfer,
 	CrossChainTransferInput,
 	ServiceInterface,
@@ -15,11 +17,17 @@ export const trackCrossChainDelivery = (
 	serviceApi: ServiceInterface,
 	input: CrossChainTransferInput,
 	quote: CrossChainTransfer,
-	onDelivered?: () => void,
+	{
+		onDelivered,
+		onUnconfirmed,
+	}: {
+		onDelivered?: () => void
+		onUnconfirmed?: () => void
+	} = {},
 ) => {
 	const { recipient, to, symbol } = input
 	const expectedBalance = quote.destinationBalance + quote.receivedAmount
-	const delivery = createCrossChainDeliveryState()
+	const deliveryId = addPendingCrossChainDelivery()
 	let received = false
 	let finalized = false
 	let finished = false
@@ -27,20 +35,23 @@ export const trackCrossChainDelivery = (
 	let unsubscribe = () => {}
 	let timeout: ReturnType<typeof setTimeout> | undefined
 
-	const finish = (nextStage: CrossChainDeliveryStage | undefined) => {
+	const finish = (outcome?: 'delivered' | 'unconfirmed') => {
 		if (finished) return
 		finished = true
 		clearTimeout(timeout)
 		try {
 			unsubscribe()
-		} finally {
-			delivery.setStage(nextStage)
+		} catch {
+			// Cleanup must not interrupt terminal callbacks or transaction notifications.
 		}
-		if (nextStage === 'balanceUpdated') {
+		removePendingCrossChainDelivery(deliveryId)
+		if (outcome === 'delivered') {
 			onDelivered?.()
 			void serviceApi.stablecoins.query
 				.balances(recipient)
 				.catch(() => undefined)
+		} else if (outcome === 'unconfirmed') {
+			onUnconfirmed?.()
 		}
 	}
 	const onError = () => {
@@ -61,7 +72,7 @@ export const trackCrossChainDelivery = (
 				)
 					return
 				received = true
-				if (finalized) finish('balanceUpdated')
+				if (finalized) finish('delivered')
 			},
 			onError,
 		)
@@ -70,22 +81,20 @@ export const trackCrossChainDelivery = (
 	}
 
 	return {
-		state: delivery.state,
 		finalized: () => {
 			if (finished || finalized) return
 			finalized = true
 			if (received) {
-				finish('balanceUpdated')
+				finish('delivered')
 			} else if (subscriptionFailed) {
 				finish('unconfirmed')
 			} else {
-				delivery.setStage('finalized')
 				timeout = setTimeout(
 					() => finish('unconfirmed'),
 					CrossChainDeliveryTimeoutMs,
 				)
 			}
 		},
-		failed: () => finish(undefined),
+		failed: () => finish(),
 	}
 }

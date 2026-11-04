@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "{{chain}}에 전송이 도착했습니다.",
 		"crossChainDescription": "체인 간에 DOT와 스테이블코인을 보내세요.",
 		"crossChainSend": "크로스체인 전송",
+		"crossChainUnconfirmed": "크로스체인 전송 도착 미확인",
 		"destinationChain": "대상 체인",
 		"destinationXcmFee": "대상 수수료 (도착 시 차감)",
 		"enterRecipientAddress": "받는 주소를 입력하세요...",

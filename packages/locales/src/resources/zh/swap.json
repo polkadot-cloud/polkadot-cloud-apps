@@ -14,6 +14,7 @@
 		"crossChainCompleteOn": "转账已到达 {{chain}}。",
 		"crossChainDescription": "跨链发送 DOT 和稳定币。",
 		"crossChainSend": "跨链发送",
+		"crossChainUnconfirmed": "跨链到账尚未确认",
 		"destinationChain": "目标链",
 		"destinationXcmFee": "目标链费用（到账时扣除）",
 		"enterRecipientAddress": "输入接收地址...",
