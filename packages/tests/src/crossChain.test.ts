@@ -78,8 +78,11 @@ const builder = {
 	build: vi.fn(),
 	disconnect: vi.fn(),
 }
-const hub = {} as Parameters<typeof prepareCrossChainTransfer>[0]
-const hydration = {} as Parameters<typeof prepareCrossChainTransfer>[1]
+type Apis = Parameters<typeof prepareCrossChainTransfer>[0]
+const hub = {} as Apis['statemint']
+const hydration = {} as Apis['hydration']
+const people = {} as Apis['people-polkadot']
+const apis = { statemint: hub, hydration, 'people-polkadot': people }
 beforeEach(() => {
 	vi.clearAllMocks()
 	mocked.Builder.mockReturnValue(builder)
@@ -91,6 +94,24 @@ beforeEach(() => {
 
 describe('Cross-chain preflight', () => {
 	test.each([
+		[
+			'statemint',
+			'people-polkadot',
+			'DOT',
+			'AssetHubPolkadot',
+			'PeoplePolkadot',
+			undefined,
+			undefined,
+		],
+		[
+			'people-polkadot',
+			'statemint',
+			'DOT',
+			'PeoplePolkadot',
+			'AssetHubPolkadot',
+			undefined,
+			undefined,
+		],
 		[
 			'statemint',
 			'hydration',
@@ -166,7 +187,7 @@ describe('Cross-chain preflight', () => {
 			quoteInfo.destination.xcmFee.asset = destAsset
 			quoteInfo.destination.receivedCurrency.receivedAmount = receivedAmount
 			builder.getTransferInfo.mockResolvedValue(quoteInfo)
-			const result = await prepareCrossChainTransfer(hub, hydration, {
+			const result = await prepareCrossChainTransfer(apis, {
 				...input,
 				from,
 				to,
@@ -176,7 +197,11 @@ describe('Cross-chain preflight', () => {
 			})
 			expect(mocked.Builder).toHaveBeenCalledWith({
 				abstractDecimals: false,
-				apiOverrides: { AssetHubPolkadot: hub, Hydration: hydration },
+				apiOverrides: {
+					AssetHubPolkadot: hub,
+					Hydration: hydration,
+					PeoplePolkadot: people,
+				},
 			})
 			expect(builder.currency).toHaveBeenCalledWith({
 				location: asset.location,
@@ -205,7 +230,7 @@ describe('Cross-chain preflight', () => {
 			quoteInfo.destination.xcmFee.asset.assetId = String(destFeeId)
 			quoteInfo.destination.receivedCurrency.receivedAmount = 19_980_000_001n
 			builder.getTransferInfo.mockResolvedValue(quoteInfo)
-			const result = await prepareCrossChainTransfer(hub, hydration, {
+			const result = await prepareCrossChainTransfer(apis, {
 				...input,
 				from,
 				to,
@@ -237,9 +262,7 @@ describe('Cross-chain preflight', () => {
 			builder.getTransferInfo.mockResolvedValue(quoteInfo)
 			if (failure === 'rpc')
 				builder.getTransferInfo.mockRejectedValue(new Error('RPC unavailable'))
-			await expect(
-				prepareCrossChainTransfer(hub, hydration, input),
-			).rejects.toThrow()
+			await expect(prepareCrossChainTransfer(apis, input)).rejects.toThrow()
 			expect(builder.build).not.toHaveBeenCalled()
 			expect(builder.disconnect).toHaveBeenCalledOnce()
 		},
@@ -247,6 +270,20 @@ describe('Cross-chain preflight', () => {
 	test('rejects same-chain, unsupported-token and nonpositive transfers', async () => {
 		for (const changes of [
 			{ to: 'statemint' },
+			{ to: 'people-polkadot' },
+			{ to: 'people-polkadot', symbol: 'DOT', feeAsset: 'USDC' },
+			{
+				from: 'people-polkadot',
+				to: 'hydration',
+				symbol: 'DOT',
+				feeAsset: 'DOT',
+			},
+			{
+				from: 'hydration',
+				to: 'people-polkadot',
+				symbol: 'DOT',
+				feeAsset: 'DOT',
+			},
 			{ symbol: 'HOLLAR' },
 			{ symbol: 'dotUSD' },
 			{ feeAsset: 'HOLLAR' },
@@ -254,7 +291,7 @@ describe('Cross-chain preflight', () => {
 			{ amount: -1n },
 		]) {
 			await expect(
-				prepareCrossChainTransfer(hub, hydration, {
+				prepareCrossChainTransfer(apis, {
 					...input,
 					...changes,
 				} as CrossChainTransferInput),
@@ -265,7 +302,7 @@ describe('Cross-chain preflight', () => {
 })
 
 describe('Cross-chain amounts and funding', () => {
-	test.each(['statemint', 'hydration'] as const)(
+	test.each(['statemint', 'hydration', 'people-polkadot'] as const)(
 		'reserves DOT fees and frozen funds when bridging from %s',
 		(from) => {
 			const transfer: CrossChainTransferInput = {
@@ -337,7 +374,7 @@ describe('Cross-chain amounts and funding', () => {
 		},
 	)
 	test('combines transfer and fee debits, respects frozen funds, and avoids charging deducted fees twice', async () => {
-		const quote = await prepareCrossChainTransfer(hub, hydration, input)
+		const quote = await prepareCrossChainTransfer(apis, input)
 		const balance: StablecoinBalance = {
 			chain: 'statemint',
 			symbol: 'USDC',

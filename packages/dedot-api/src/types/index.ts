@@ -26,6 +26,7 @@ export type DedotServiceConfig = {
 	stablecoins?: {
 		assetHub?: boolean
 		hydration?: boolean
+		people?: boolean
 	}
 }
 
@@ -36,6 +37,7 @@ export type DedotServiceFeatures = {
 	stablecoins: {
 		assetHub: boolean
 		hydration: boolean
+		people: boolean
 	}
 }
 

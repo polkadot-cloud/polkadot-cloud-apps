@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import type { CrossChainAsset, StablecoinChainId } from 'types'
+import { getStablecoinAssetConfig } from './stablecoins'
 
 export const CrossChainAssets: readonly CrossChainAsset[] = [
 	'DOT',
@@ -12,9 +13,24 @@ export const CrossChainAssets: readonly CrossChainAsset[] = [
 export const isCrossChainAsset = (symbol: string): symbol is CrossChainAsset =>
 	CrossChainAssets.some((asset) => asset === symbol)
 
-export const crossChainDestination = (
+// People transfers use the supported system-chain route through Polkadot Hub.
+export const CrossChainDestinations: Record<
+	StablecoinChainId,
+	readonly StablecoinChainId[]
+> = {
+	statemint: ['hydration', 'people-polkadot'],
+	hydration: ['statemint'],
+	'people-polkadot': ['statemint'],
+}
+
+export const isCrossChainAssetSupported = (
 	from: StablecoinChainId,
-): StablecoinChainId => (from === 'statemint' ? 'hydration' : 'statemint')
+	to: StablecoinChainId,
+	symbol: CrossChainAsset,
+) =>
+	CrossChainDestinations[from].includes(to) &&
+	!!getStablecoinAssetConfig(from, symbol) &&
+	!!getStablecoinAssetConfig(to, symbol)
 
 // Wait for the user to pause editing before simulating a new transfer.
 export const CrossChainQuoteDebounceMs = 400

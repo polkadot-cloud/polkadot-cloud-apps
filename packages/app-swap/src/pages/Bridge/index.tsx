@@ -3,7 +3,7 @@
 
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { planckToUnit } from '@polkadot-cloud/utils'
-import { crossChainDestination } from 'consts/crossChain'
+import { CrossChainDestinations } from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTheme, useTxMeta } from 'hooks'
 import { useCrossChainTransfer } from 'hooks/useCrossChainTransfer'
@@ -30,7 +30,7 @@ import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { useHydrationFeeSetup } from '../Send/hooks/useHydrationFeeSetup'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import { feeTokenOptions, tokenOptions } from './options'
+import { getBridgeFeeTokenOptions, getBridgeTokenOptions } from './options'
 import { TransferAction } from './TransferAction'
 import { TransferSummary } from './TransferSummary'
 import {
@@ -48,11 +48,16 @@ export const Bridge = () => {
 	const account = accounts.fromAccount
 	const balances = useStablecoinBalances(account?.address)
 	const [from, setFrom] = useState<StablecoinChainId>('statemint')
-	const to = crossChainDestination(from)
+	const [to, setTo] = useState<StablecoinChainId>('hydration')
 	const [symbol, setSymbol] = useState<CrossChainAsset>('USDC')
 	const [feeAsset, setFeeAsset] =
 		useState<CrossChainTransferInput['feeAsset']>('USDC')
 	const [amount, setAmount] = useState('')
+	const tokenOptions = getBridgeTokenOptions(from, to)
+	const feeTokenOptions = getBridgeFeeTokenOptions(from, to)
+	const destinationOptions = chainOptions.filter(({ value }) =>
+		CrossChainDestinations[from].includes(value),
+	)
 	const [customRecipient, setCustomRecipient] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
@@ -123,8 +128,18 @@ export const Bridge = () => {
 	const setupFunded =
 		setupFee > 0n &&
 		maxSendableBalance(feeBalance, undefined, 0n) >= swapFeeReserve(setupFee)
-	const selectFrom = (chain: StablecoinChainId) => {
-		setFrom(chain)
+	const selectRoute = (
+		source: StablecoinChainId,
+		destination: StablecoinChainId,
+	) => {
+		setFrom(source)
+		setTo(destination)
+		setSymbol(
+			findOption(getBridgeTokenOptions(source, destination), symbol).value,
+		)
+		setFeeAsset(
+			findOption(getBridgeFeeTokenOptions(source, destination), feeAsset).value,
+		)
 		setAmount('')
 	}
 
@@ -146,23 +161,28 @@ export const Bridge = () => {
 						<Dropdown
 							options={chainOptions}
 							selected={findOption(chainOptions, from)}
-							onSelect={(chain) => selectFrom(chain.value)}
+							onSelect={({ value }) =>
+								selectRoute(
+									value,
+									CrossChainDestinations[value].includes(to)
+										? to
+										: CrossChainDestinations[value][0],
+								)
+							}
 							variant="full"
 						/>
 					</SendForm.Segment>
 					<SendForm.DirectionIndicator
-						onReverse={() => selectFrom(to)}
+						onReverse={() => selectRoute(to, from)}
 						label={t('reverseChains')}
 						tooltip={t('reverseChains')}
 						tooltipContainer={themeElementRef.current || undefined}
 					/>
 					<SendForm.Segment title={t('destinationChain')} layer="raised">
 						<Dropdown
-							options={chainOptions}
-							selected={findOption(chainOptions, to)}
-							onSelect={(chain) =>
-								selectFrom(crossChainDestination(chain.value))
-							}
+							options={destinationOptions}
+							selected={findOption(destinationOptions, to)}
+							onSelect={({ value }) => selectRoute(from, value)}
 							variant="full"
 						/>
 					</SendForm.Segment>

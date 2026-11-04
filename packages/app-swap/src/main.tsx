@@ -31,6 +31,7 @@ initDedotService({
 	nominationPools: false,
 	staking: false,
 	swap: true,
+	stablecoins: { people: true },
 })
 
 createRoot(rootElement).render(<App />)

@@ -3,6 +3,7 @@
 
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
+import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
 import type { DedotClient } from 'dedot'
 import {
 	getStablecoinBalances,
@@ -17,12 +18,14 @@ import {
 	createHydrationStablecoinAdapter,
 	type HydrationStablecoinAdapter,
 } from './hydration'
+import { createPeopleStablecoinAdapter } from './people'
 import type { StablecoinAdapter } from './shared'
 import { createStablecoinSubscriptions } from './subscriptions'
 
 type StablecoinAdapters = {
 	statemint: StablecoinAdapter
 	hydration: HydrationStablecoinAdapter
+	'people-polkadot': StablecoinAdapter
 }
 
 type BalanceRequest = {
@@ -31,10 +34,11 @@ type BalanceRequest = {
 }
 
 // Creates the stablecoin service interface for balances, transfers, fee assets, and fee estimates
-// across Asset Hub and Hydration.
+// across the supported transfer chains.
 export const createStablecoinsInterface = (
 	apiHub: DedotClient<PolkadotAssetHubApi>,
 	getHydrationApi: () => Promise<DedotClient<HydrationApi>>,
+	getPeopleApi: () => Promise<DedotClient<PolkadotPeopleApi>>,
 	features: DedotServiceFeatures['stablecoins'],
 ): ServiceInterface['stablecoins'] => {
 	const adapters: Partial<StablecoinAdapters> = {
@@ -43,6 +47,9 @@ export const createStablecoinsInterface = (
 		}),
 		...(features.hydration && {
 			hydration: createHydrationStablecoinAdapter(getHydrationApi),
+		}),
+		...(features.people && {
+			'people-polkadot': createPeopleStablecoinAdapter(getPeopleApi),
 		}),
 	}
 	const balanceRequests = new Map<string, BalanceRequest>()
@@ -86,15 +93,33 @@ export const createStablecoinsInterface = (
 	}
 
 	return {
-		subscribe: createStablecoinSubscriptions(apiHub, getHydrationApi, features),
+		subscribe: createStablecoinSubscriptions(
+			apiHub,
+			getHydrationApi,
+			getPeopleApi,
+			features,
+		),
 		...(features.assetHub &&
-			features.hydration && {
+			(features.hydration || features.people) && {
 				xcm: {
 					prepare: async (input) => {
+						if (!adapters[input.from] || !adapters[input.to]) {
+							throw new Error(
+								'Cross-chain transfers unavailable for these chains',
+							)
+						}
 						const { prepareCrossChainTransfer } = await import('../xcm')
+						const chains = [input.from, input.to]
 						return prepareCrossChainTransfer(
-							apiHub,
-							await getHydrationApi(),
+							{
+								statemint: apiHub,
+								hydration: chains.includes('hydration')
+									? await getHydrationApi()
+									: undefined,
+								'people-polkadot': chains.includes('people-polkadot')
+									? await getPeopleApi()
+									: undefined,
+							},
 							input,
 						)
 					},

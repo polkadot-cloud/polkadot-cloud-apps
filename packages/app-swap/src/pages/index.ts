@@ -23,7 +23,7 @@ export const pages: PageItem[] = [
 	{
 		key: 'bridge',
 		titleNamespace: 'swap',
-		hash: '/cross-chain',
+		hash: '/bridge',
 		Entry: Bridge,
 		faIcon: faArrowRightArrowLeft,
 	},

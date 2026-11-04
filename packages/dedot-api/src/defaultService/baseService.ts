@@ -77,11 +77,13 @@ export class BaseService<
 			stablecoins: {
 				assetHub: features.stablecoins?.assetHub ?? true,
 				hydration: features.stablecoins?.hydration ?? true,
+				people: features.stablecoins?.people ?? false,
 			},
 		}
 		this.apiStatus = {
 			hub: new ApiStatus(this.apiHub, ids[2], networkConfig),
 		}
+		this.identityManager = new IdentityManager(this.providerPeople, this.ids[0])
 	}
 
 	// Standard getLiveApi implementation used by all services. Currently only supporting hub api.
@@ -126,9 +128,6 @@ export class BaseService<
 			this.features,
 		)
 
-		// Initialize identity manager
-		this.identityManager = new IdentityManager(this.providerPeople, this.ids[0])
-
 		// Set up the active era subscription
 		this.subscriptionManager.setActiveEraSubscription(this.activeEra.activeEra$)
 
@@ -148,9 +147,7 @@ export class BaseService<
 
 		try {
 			await Promise.all([
-				this.identityManager.api
-					? this.identityManager.api.disconnect()
-					: Promise.resolve(),
+				this.identityManager.disconnect(),
 				this.apiHub.disconnect(),
 			])
 		} catch {

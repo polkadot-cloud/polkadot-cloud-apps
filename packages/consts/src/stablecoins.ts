@@ -104,6 +104,12 @@ const StablecoinConfigs: Record<StablecoinChainId, StablecoinChainConfig> = {
 			},
 		}),
 	},
+	'people-polkadot': {
+		label: 'Polkadot People',
+		assets: withFeeTokenMetadata({
+			DOT: { existentialDeposit: 1_000_000_000n },
+		}),
+	},
 }
 
 // All chains configured for stablecoin operations.

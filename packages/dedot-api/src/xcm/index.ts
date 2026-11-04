@@ -3,6 +3,7 @@
 
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
+import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
 import {
 	Builder,
 	findAssetInfo,
@@ -10,7 +11,11 @@ import {
 	Native,
 	type TXcmFeeBase,
 } from '@paraspell/sdk-dedot'
-import { CrossChainAssets, isCrossChainAsset } from 'consts/crossChain'
+import {
+	CrossChainAssets,
+	isCrossChainAsset,
+	isCrossChainAssetSupported,
+} from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
 import type { GenericSubstrateApi } from 'dedot/types'
@@ -25,10 +30,17 @@ import { asTx } from '../util'
 const chainNames = {
 	statemint: 'AssetHubPolkadot',
 	hydration: 'Hydration',
+	'people-polkadot': 'PeoplePolkadot',
 } as const
 
+type CrossChainApis = {
+	statemint: DedotClient<PolkadotAssetHubApi>
+	hydration?: DedotClient<HydrationApi>
+	'people-polkadot'?: DedotClient<PolkadotPeopleApi>
+}
+
 const currencyFor = (chain: StablecoinChainId, symbol: CrossChainAsset) => {
-	if (chain === 'statemint' && symbol === 'DOT')
+	if (chain !== 'hydration' && symbol === 'DOT')
 		return { symbol: Native('DOT') }
 	const id = getStablecoinAssetConfig(chain, symbol)?.assetId
 	if (id === undefined)
@@ -43,7 +55,7 @@ const normalizeFee = (
 ) => {
 	const symbol = CrossChainAssets.find((symbol) => {
 		const id = getStablecoinAssetConfig(chain, symbol)?.assetId
-		return chain === 'statemint' && symbol === 'DOT'
+		return chain !== 'hydration' && symbol === 'DOT'
 			? asset.isNative && asset.symbol === 'DOT'
 			: id !== undefined && asset.assetId === String(id)
 	})
@@ -54,8 +66,7 @@ const normalizeFee = (
 
 // Reuse service-owned APIs. ParaSpell disconnect() releases only its own clients.
 export const prepareCrossChainTransfer = async (
-	assetHub: DedotClient<PolkadotAssetHubApi>,
-	hydration: DedotClient<HydrationApi>,
+	apis: CrossChainApis,
 	input: CrossChainTransferInput,
 ): Promise<CrossChainTransfer> => {
 	const { from, to, symbol, amount, sender, recipient, feeAsset } = input
@@ -63,9 +74,14 @@ export const prepareCrossChainTransfer = async (
 		from === to ||
 		amount <= 0n ||
 		!isCrossChainAsset(symbol) ||
-		!isCrossChainAsset(feeAsset)
+		!isCrossChainAsset(feeAsset) ||
+		!isCrossChainAssetSupported(from, to, symbol) ||
+		!isCrossChainAssetSupported(from, to, feeAsset)
 	) {
 		throw new Error('Invalid cross-chain transfer')
+	}
+	if (!apis[from] || !apis[to]) {
+		throw new Error('Cross-chain clients unavailable for these chains')
 	}
 	const origin = chainNames[from]
 	const destination = chainNames[to]
@@ -80,10 +96,14 @@ export const prepareCrossChainTransfer = async (
 	}
 	const builder = Builder({
 		abstractDecimals: false,
-		apiOverrides: {
-			AssetHubPolkadot: assetHub as unknown as DedotClient<GenericSubstrateApi>,
-			Hydration: hydration as unknown as DedotClient<GenericSubstrateApi>,
-		},
+		apiOverrides: Object.fromEntries(
+			Object.entries(apis)
+				.filter(([, api]) => !!api)
+				.map(([chain, api]) => [
+					chainNames[chain as StablecoinChainId],
+					api as unknown as DedotClient<GenericSubstrateApi>,
+				]),
+		),
 	})
 		.from(origin)
 		.to(destination)

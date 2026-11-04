@@ -3,10 +3,12 @@
 
 import type { HydrationApi } from '@dedot/chaintypes/hydration'
 import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
+import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
 import type { DedotClient } from 'dedot'
 import type { ServiceInterface, StablecoinBalance } from 'types'
 import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
+import { PeopleBalancesQuery } from '../subscribe/peopleBalances'
 import type { DedotServiceFeatures } from '../types'
 
 type Listener = {
@@ -38,12 +40,38 @@ const notifyBalance = (listener: Listener, balance: StablecoinBalance) => {
 export const createStablecoinSubscriptions = (
 	apiHub: DedotClient<PolkadotAssetHubApi>,
 	getHydrationApi: () => Promise<DedotClient<HydrationApi>>,
+	getPeopleApi: () => Promise<DedotClient<PolkadotPeopleApi>>,
 	features: DedotServiceFeatures['stablecoins'],
 ): ServiceInterface['stablecoins']['subscribe'] => {
 	const subscriptions = new Map<string, SharedSubscription>()
+	const factories = {
+		statemint: features.assetHub
+			? (address: string, { onBalance, onError }: Listener) =>
+					new AssetHubStablecoinBalancesQuery(
+						apiHub,
+						address,
+						onBalance,
+						onError,
+					)
+			: undefined,
+		hydration: features.hydration
+			? (address: string, { onBalance, onError }: Listener) =>
+					new HydrationStablecoinBalancesQuery(
+						getHydrationApi,
+						address,
+						onBalance,
+						onError,
+					)
+			: undefined,
+		'people-polkadot': features.people
+			? (address: string, { onBalance, onError }: Listener) =>
+					new PeopleBalancesQuery(getPeopleApi, address, onBalance, onError)
+			: undefined,
+	}
 	return {
 		balances: (address, chain, onBalance, onError) => {
-			if (!(chain === 'statemint' ? features.assetHub : features.hydration)) {
+			const createSubscription = factories[chain]
+			if (!createSubscription) {
 				onError(new Error(`Balance subscriptions unavailable for ${chain}`))
 				return () => {}
 			}
@@ -72,20 +100,10 @@ export const createStablecoinSubscriptions = (
 					for (const subscriber of entry.listeners)
 						notifyError(subscriber, error)
 				}
-				const subscription =
-					chain === 'statemint'
-						? new AssetHubStablecoinBalancesQuery(
-								apiHub,
-								address,
-								emitBalance,
-								emitError,
-							)
-						: new HydrationStablecoinBalancesQuery(
-								getHydrationApi,
-								address,
-								emitBalance,
-								emitError,
-							)
+				const subscription = createSubscription(address, {
+					onBalance: emitBalance,
+					onError: emitError,
+				})
 				entry.unsubscribe = () => subscription.unsubscribe()
 			}
 			const active = shared

@@ -9,7 +9,89 @@ type HubApi = Parameters<typeof createStablecoinSubscriptions>[0]
 type HydrationApi = Awaited<
 	ReturnType<Parameters<typeof createStablecoinSubscriptions>[1]>
 >
-const features = { assetHub: true, hydration: true }
+const features = { assetHub: true, hydration: true, people: true }
+type PeopleApi = Awaited<
+	ReturnType<Parameters<typeof createStablecoinSubscriptions>[2]>
+>
+
+test('People DOT balances and delivery watchers share a live native balance subscription', async () => {
+	let update!: (info: { data: { free: bigint; frozen: bigint } }) => void
+	const unsubscribe = vi.fn()
+	const account = vi.fn(async (_address, callback) => {
+		update = callback
+		callback({ data: { free: 10_000_000_000n, frozen: 1_000_000_000n } })
+		return unsubscribe
+	})
+	const getPeopleApi = vi.fn(
+		async () => ({ query: { system: { account } } }) as unknown as PeopleApi,
+	)
+	const subscribe = createStablecoinSubscriptions(
+		{} as HubApi,
+		vi.fn(),
+		getPeopleApi,
+		features,
+	)
+	const onBalance = vi.fn()
+	const onDeliveredBalance = vi.fn()
+	const onError = vi.fn()
+	const release = subscribe.balances(
+		'recipient',
+		'people-polkadot',
+		onBalance,
+		onError,
+	)
+	await Promise.resolve()
+	await Promise.resolve()
+	const releaseWatcher = subscribe.balances(
+		'recipient',
+		'people-polkadot',
+		onDeliveredBalance,
+		onError,
+	)
+	expect(account).toHaveBeenCalledOnce()
+	expect(getPeopleApi).toHaveBeenCalledOnce()
+	expect(onDeliveredBalance).toHaveBeenCalledWith({
+		chain: 'people-polkadot',
+		symbol: 'DOT',
+		free: 10_000_000_000n,
+		frozen: 1_000_000_000n,
+		decimals: 10,
+		existentialDeposit: 1_000_000_000n,
+	})
+	release()
+	expect(unsubscribe).not.toHaveBeenCalled()
+	update({ data: { free: 20_000_000_000n, frozen: 0n } })
+	expect(onDeliveredBalance).toHaveBeenLastCalledWith(
+		expect.objectContaining({ free: 20_000_000_000n }),
+	)
+	releaseWatcher()
+	expect(unsubscribe).toHaveBeenCalledOnce()
+	expect(onError).not.toHaveBeenCalled()
+})
+
+test('unsubscribing before People connects prevents a late storage subscription', async () => {
+	let resolve!: (api: PeopleApi) => void
+	const account = vi.fn()
+	const subscribe = createStablecoinSubscriptions(
+		{} as HubApi,
+		vi.fn(),
+		() =>
+			new Promise<PeopleApi>((done) => {
+				resolve = done
+			}),
+		features,
+	)
+	const release = subscribe.balances(
+		'recipient',
+		'people-polkadot',
+		vi.fn(),
+		vi.fn(),
+	)
+	release()
+	resolve({ query: { system: { account } } } as unknown as PeopleApi)
+	await Promise.resolve()
+	expect(account).not.toHaveBeenCalled()
+})
 
 test('imported accounts and delivery watchers share Asset Hub subscriptions until the last consumer leaves', async () => {
 	let updateNative!: (info: { data: { free: bigint; frozen: bigint } }) => void
@@ -28,6 +110,7 @@ test('imported accounts and delivery watchers share Asset Hub subscriptions unti
 		{
 			query: { system: { account: native }, assets: { account: asset } },
 		} as unknown as HubApi,
+		vi.fn(),
 		vi.fn(),
 		features,
 	)
@@ -84,6 +167,7 @@ test('an external Hydration recipient uses a temporary live Tokens subscription'
 	const subscribe = createStablecoinSubscriptions(
 		{} as HubApi,
 		getApi,
+		vi.fn(),
 		features,
 	)
 	const onBalance = vi.fn<(balance: StablecoinBalance) => void>()
@@ -135,6 +219,7 @@ test('cleanup before the Hydration API is ready prevents a late subscription fro
 			new Promise<HydrationApi>((done) => {
 				resolve = done
 			}),
+		vi.fn(),
 		features,
 	)
 	const release = subscribe.balances('external', 'hydration', vi.fn(), vi.fn())
@@ -161,6 +246,7 @@ test('late subscription handles are released when the last consumer has already 
 			({
 				query: { tokens: { accounts: { multi } } },
 			}) as unknown as HydrationApi,
+		vi.fn(),
 		features,
 	)
 	const release = subscribe.balances('external', 'hydration', vi.fn(), vi.fn())

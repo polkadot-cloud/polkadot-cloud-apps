@@ -3,7 +3,7 @@
 
 import { getPeopleChainId } from 'consts/util/chains'
 import { DedotClient, type SmoldotProvider, type WsProvider } from 'dedot'
-import { getApiStatus, setApiStatus } from 'global-bus'
+import { setApiStatus } from 'global-bus'
 import type { IdentityOf, NetworkId, SuperOf, SystemChainId } from 'types'
 import { query } from '../query'
 import type { PeopleChain } from '../types'
@@ -16,7 +16,7 @@ export class IdentityManager<PeopleApi extends PeopleChain> {
 	public network: NetworkId
 	private queue: QueueItem[] = []
 	private isProcessingQueue = false
-	private isConnecting = false
+	private connection?: Promise<DedotClient<PeopleApi>>
 
 	constructor(provider: WsProvider | SmoldotProvider, network: NetworkId) {
 		this.provider = provider
@@ -53,37 +53,41 @@ export class IdentityManager<PeopleApi extends PeopleChain> {
 
 	// Lazy connect to the people chain API. Should be called before any queries
 	lazyConnect = async () => {
-		if (!this.api && !this.isConnecting) {
-			this.isConnecting = true
-
-			try {
-				const peopleChainId = getPeopleChainId(this.network) as SystemChainId
-				const apiStatus = getApiStatus(peopleChainId)
-
-				if (apiStatus === 'disconnected') {
-					setApiStatus(peopleChainId, 'connecting')
-					this.api = await DedotClient.new<PeopleApi>(this.provider)
+		if (!this.connection) {
+			const peopleChainId = getPeopleChainId(this.network) as SystemChainId
+			setApiStatus(peopleChainId, 'connecting')
+			this.connection = DedotClient.new<PeopleApi>({
+				provider: this.provider,
+				cacheMetadata: true,
+			})
+				.then((api) => {
+					this.api = api
 					setApiStatus(peopleChainId, 'ready')
-				}
-			} catch (error) {
-				// If connection fails, reject all queued promises
-				const currentQueue = [...this.queue]
-				this.queue = []
+					return api
+				})
+				.catch((error) => {
+					this.connection = undefined
+					setApiStatus(peopleChainId, 'disconnected')
+					// If connection fails, reject all queued promises
+					const currentQueue = [...this.queue]
+					this.queue = []
 
-				for (const item of currentQueue) {
-					item.reject(error)
-				}
+					for (const item of currentQueue) {
+						item.reject(error)
+					}
 
-				throw error
-			} finally {
-				this.isConnecting = false
-			}
+					throw error
+				})
 		}
 
-		// Process queue if API is ready (either just connected or was already connected)
-		if (this.api) {
-			this.processQueue()
-		}
+		const api = await this.connection
+		void this.processQueue()
+		return api
+	}
+
+	disconnect = async () => {
+		const api = await this.connection?.catch(() => undefined)
+		await api?.disconnect()
 	}
 
 	// Process all queued operations
