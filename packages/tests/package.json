@@ -15,7 +15,7 @@
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"@paraspell/sdk-dedot": "14.4.4",
+		"@paraspell/sdk-dedot": "14.5.0",
 		"@tanstack/react-query": "^5.105.1",
 		"@types/jsdom": "^30.0.0",
 		"dedot": "^1.4.0",
