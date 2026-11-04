@@ -23,7 +23,7 @@
 		"@types/react-helmet": "^6.1.11",
 		"@vitejs/plugin-react": "^6.1.2",
 		"globals": "^17.13.0",
-		"postcss": "^8.5.31",
+		"postcss": "^8.5.32",
 		"postcss-scss": "^4.0.9",
 		"prettier": "^3.9.10",
 		"sass": "^1.106.1",
