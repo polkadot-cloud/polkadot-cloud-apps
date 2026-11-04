@@ -62,6 +62,11 @@ export type AssetHubSwapQuote = AssetHubSwapRequest & {
 
 export type AssetHubExchange = {
 	market: (address?: string) => Promise<AssetHubMarket>
+	subscribeMarket: (
+		address: string | undefined,
+		onUpdate: (market: AssetHubMarket) => void,
+		onError: (error: unknown) => void,
+	) => () => void
 	quotes: (
 		market: AssetHubMarket,
 		request: AssetHubSwapRequest,

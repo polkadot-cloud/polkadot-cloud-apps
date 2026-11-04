@@ -366,6 +366,38 @@ export const createAssetHubExchange = (
 
 	return {
 		market,
+		subscribeMarket: (address, onUpdate, onError) => {
+			let cancelled = false
+			let running = false
+			let pending = false
+			const update = async () => {
+				if (cancelled) return
+				if (running) {
+					pending = true
+					return
+				}
+				running = true
+				try {
+					const snapshot = await market(address)
+					if (!cancelled) onUpdate(snapshot)
+				} catch (error) {
+					if (!cancelled) onError(error)
+				} finally {
+					running = false
+					// Coalesce finalized blocks received during a read, then catch up.
+					if (pending && !cancelled) {
+						pending = false
+						void update()
+					}
+				}
+			}
+			// Dedot delivers the current finalized block immediately, then new blocks.
+			const unsubscribe = api.block.finalized(() => void update())
+			return () => {
+				cancelled = true
+				unsubscribe()
+			}
+		},
 		quotes,
 		swap,
 		addLiquidity: (pool, dot, asset, address, bps) => {

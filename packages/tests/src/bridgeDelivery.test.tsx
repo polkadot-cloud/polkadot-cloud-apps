@@ -74,8 +74,6 @@ vi.mock('../../ui-core/src/base', () => ({
 	Spinner: () => createElement('span', { 'data-spinner': true }),
 }))
 vi.mock('../../app-swap/src/library/Swap', () => ({
-	ExchangeNotice: ({ children }: { children: ReactNode }) =>
-		createElement('div', { role: 'status' }, children),
 	swapFeeReserve: (fee: bigint) => fee,
 }))
 vi.mock('react-i18next', () => ({

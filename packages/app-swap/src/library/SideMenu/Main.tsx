@@ -19,7 +19,10 @@ export const Main = () => {
 					key={page.key}
 					name={t(page.key, { ns: page.titleNamespace ?? 'app' })}
 					to={page.hash}
-					active={pathname === page.hash}
+					active={
+						pathname === page.hash ||
+						(page.hash !== '/' && pathname.startsWith(`${page.hash}/`))
+					}
 					faIcon={page.faIcon}
 					minimised={sideMenuMinimised}
 				/>

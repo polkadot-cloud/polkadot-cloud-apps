@@ -45,7 +45,9 @@ export const Router = () => (
 							{pages.map((page) => (
 								<Route
 									key={page.key}
-									path={page.hash}
+									path={
+										page.key === 'liquidity' ? '/liquidity/:asset?' : page.hash
+									}
 									element={
 										<PageWithTitle page={page} appTitle={SwapDappName} />
 									}

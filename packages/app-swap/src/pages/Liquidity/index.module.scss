@@ -1,0 +1,100 @@
+.notice {
+	margin: 0;
+	padding: 0.8rem 1rem;
+	color: var(--text-tertiary);
+	font-family: var(--font-family-default);
+	font-size: 1.1rem;
+	font-weight: 500;
+	line-height: 1.4rem;
+	overflow-wrap: anywhere;
+}
+
+.layout {
+	width: 100%;
+	max-width: 76rem;
+	margin: 0 auto;
+}
+
+.tableWrap {
+	overflow-x: auto;
+	margin-top: 1rem;
+	border: 1px solid var(--gray-500);
+	border-radius: 1rem;
+}
+
+.tableCaption {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	color: var(--gray-1000);
+	text-align: left;
+
+	th,
+	td {
+		padding: 1rem;
+		border-bottom: 1px solid var(--gray-400);
+		line-height: 1.6;
+	}
+
+	thead th {
+		color: var(--text-tertiary);
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+
+	tbody th {
+		font-weight: 500;
+	}
+
+	small {
+		display: block;
+		color: var(--text-tertiary);
+	}
+}
+
+.poolScreen {
+	max-width: 600px;
+	padding-top: 5.5rem;
+
+	> header {
+		margin-top: 0;
+	}
+}
+
+.breadcrumb {
+	margin: 0 0 1rem;
+	color: var(--text-tertiary);
+	font-size: 1rem;
+
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	a {
+		color: var(--accent-700);
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&:focus-visible {
+			border-radius: 0.2rem;
+			outline: 2px solid var(--accent-700);
+			outline-offset: 3px;
+		}
+	}
+}

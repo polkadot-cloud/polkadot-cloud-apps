@@ -275,6 +275,8 @@ describe('Liquidity amounts and execution bounds', () => {
 })
 
 const fakeApi = () => {
+	const listeners = new Set<() => void>()
+	const unsubscribe = vi.fn()
 	const tx = (name: string) =>
 		vi.fn(
 			(...args: unknown[]) =>
@@ -292,7 +294,15 @@ const fakeApi = () => {
 	)
 	const client = {
 		block: {
-			finalized: vi.fn(async () => ({ hash: '0x5678', number: 2 })),
+			finalized: vi.fn((callback?: () => void) => {
+				if (!callback) return Promise.resolve({ hash: '0x5678', number: 2 })
+				listeners.add(callback)
+				callback()
+				return () => {
+					listeners.delete(callback)
+					unsubscribe()
+				}
+			}),
 		},
 		registry: { metadata: { pallets: [] } },
 		at: vi.fn(async () => ({
@@ -348,6 +358,10 @@ const fakeApi = () => {
 	}
 	return {
 		client,
+		finalize: () => {
+			for (const listener of listeners) listener()
+		},
+		unsubscribe,
 		exchange: createAssetHubExchange(
 			client as unknown as DedotClient<PolkadotAssetHubApi>,
 		),
@@ -355,6 +369,92 @@ const fakeApi = () => {
 		exactOut,
 	}
 }
+
+describe('Asset Hub market subscriptions', () => {
+	test('updates pool reserves and account LP balances when a block finalizes', async () => {
+		const { client, exchange, finalize, unsubscribe } = fakeApi()
+		const onUpdate = vi.fn()
+		const onError = vi.fn()
+		const stop = exchange.subscribeMarket('sender', onUpdate, onError)
+		await vi.waitFor(() => expect(onUpdate).toHaveBeenCalledOnce())
+		const at = await client.at()
+		at.query.poolAssets.account.mockResolvedValue({
+			balance: 50_000n,
+			status: 'Liquid',
+		})
+		at.call.assetConversionApi.getReserves.mockResolvedValue([2_000n, 3_000n])
+		client.at.mockResolvedValueOnce(at)
+		finalize()
+		await vi.waitFor(() => expect(onUpdate).toHaveBeenCalledTimes(2))
+		expect(onUpdate.mock.lastCall?.[0].pools[0]).toMatchObject({
+			reserveDot: 2_000n,
+			reserveAsset: 3_000n,
+			lpBalance: 50_000n,
+		})
+		expect(at.query.poolAssets.account).toHaveBeenCalledWith([86, 'sender'])
+		expect(onError).not.toHaveBeenCalled()
+		stop()
+		expect(unsubscribe).toHaveBeenCalledOnce()
+		finalize()
+		expect(onUpdate).toHaveBeenCalledTimes(2)
+	})
+
+	test('coalesces blocks received during a read and catches up without overlapping requests', async () => {
+		const { client, exchange, finalize } = fakeApi()
+		const at = await client.at()
+		let resolve!: (value: typeof at) => void
+		client.at.mockClear().mockReturnValueOnce(
+			new Promise((done) => {
+				resolve = done
+			}),
+		)
+		const onUpdate = vi.fn()
+		const stop = exchange.subscribeMarket(undefined, onUpdate, vi.fn())
+		await vi.waitFor(() => expect(client.at).toHaveBeenCalledOnce())
+		finalize()
+		finalize()
+		expect(client.at).toHaveBeenCalledOnce()
+		resolve(at)
+		await vi.waitFor(() => expect(onUpdate).toHaveBeenCalledTimes(2))
+		expect(client.at).toHaveBeenCalledTimes(2)
+		stop()
+	})
+
+	test('ignores an in-flight snapshot after unsubscribing', async () => {
+		const { client, exchange, finalize, unsubscribe } = fakeApi()
+		const at = await client.at()
+		let resolve!: (value: typeof at) => void
+		client.at.mockClear().mockReturnValueOnce(
+			new Promise((done) => {
+				resolve = done
+			}),
+		)
+		const onUpdate = vi.fn()
+		const stop = exchange.subscribeMarket('sender', onUpdate, vi.fn())
+		await vi.waitFor(() => expect(client.at).toHaveBeenCalledOnce())
+		finalize()
+		stop()
+		resolve(at)
+		await new Promise((done) => setTimeout(done, 0))
+		expect(onUpdate).not.toHaveBeenCalled()
+		expect(client.at).toHaveBeenCalledOnce()
+		expect(unsubscribe).toHaveBeenCalledOnce()
+	})
+
+	test('reports a failed snapshot and recovers on the next finalized block', async () => {
+		const { client, exchange, finalize } = fakeApi()
+		const error = new Error('Temporarily unavailable')
+		client.at.mockRejectedValueOnce(error)
+		const onUpdate = vi.fn()
+		const onError = vi.fn()
+		const stop = exchange.subscribeMarket('sender', onUpdate, onError)
+		await vi.waitFor(() => expect(onError).toHaveBeenCalledWith(error))
+		finalize()
+		await vi.waitFor(() => expect(onUpdate).toHaveBeenCalledOnce())
+		expect(onError).toHaveBeenCalledOnce()
+		stop()
+	})
+})
 
 describe('Asset Hub route construction', () => {
 	afterEach(() => vi.restoreAllMocks())

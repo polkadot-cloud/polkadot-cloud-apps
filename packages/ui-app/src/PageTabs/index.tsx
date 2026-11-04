@@ -36,6 +36,7 @@ export const PageTabs = ({
 							<ButtonTab
 								className={tabClassName}
 								active={!!active}
+								aria-pressed={!!active}
 								key={`page_tab_${title}`}
 								onClick={() => onClick()}
 								title={title}

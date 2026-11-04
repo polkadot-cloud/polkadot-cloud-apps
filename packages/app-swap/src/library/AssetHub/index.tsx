@@ -1,12 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faCircleExclamation,
-	faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import classNames from 'classnames'
 import { SwapDappName } from 'consts'
 import { AssetHubTokens, assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
@@ -14,7 +8,6 @@ import type { SubmittableExtrinsic } from 'dedot'
 import { canFundExchange } from 'dedot-api/assetHub/math'
 import { getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
-import type { ReactNode } from 'react'
 import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSubmitExtrinsic } from 'tx-submit'
@@ -24,6 +17,7 @@ import { Dropdown } from 'ui-app/Dropdown'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { ButtonSecondary } from 'ui-buttons'
 import { SendForm } from 'ui-core/input'
+import { ExchangeNotice } from '../ExchangeNotice'
 import classes from './index.module.scss'
 
 export const tokenOptions = AssetHubTokens.map((value) => ({
@@ -42,106 +36,64 @@ export const formatUnits = (value: bigint, decimals: number) => {
 export const tokenAmount = (amount: bigint, token: AssetHubToken) =>
 	formatUnits(amount, assetHubDecimals(token))
 export const percentage = (permill: number) => `${permill / 10_000}%`
-export const useNow = () => {
-	const [now, setNow] = useState(Date.now())
-	useEffect(() => {
-		const timer = setInterval(() => setNow(Date.now()), 1_000)
-		return () => clearInterval(timer)
-	}, [])
-	return now
-}
 export const messageOf = (error: unknown) =>
 	error instanceof Error ? error.message : 'Unable to read Asset Hub state'
-
-export const ExchangeNotice = ({
-	children,
-	status = 'warning',
-	action,
-	className,
-}: {
-	children: ReactNode
-	status?: 'warning' | 'danger'
-	action?: ReactNode
-	className?: string
-}) => (
-	<div
-		role={status === 'danger' ? 'alert' : 'status'}
-		className={classNames(classes.transactionNotice, className, {
-			[classes.dangerNotice]: status === 'danger',
-			[classes.warningNotice]: status === 'warning',
-		})}
-	>
-		<FontAwesomeIcon
-			icon={status === 'danger' ? faCircleExclamation : faTriangleExclamation}
-			className={classes.noticeIcon}
-			aria-hidden
-		/>
-		<span className={classes.noticeCopy}>{children}</span>
-		{action && <div className={classes.noticeAction}>{action}</div>}
-	</div>
-)
 
 export const useAssetHubMarket = (address?: string) => {
 	const { serviceApi } = useApi()
 	const exchange = serviceApi.assetHub
-	const [revision, setRevision] = useState(0)
 	const [state, setState] = useState<{
 		exchange: typeof exchange
 		address?: string
 		data?: AssetHubMarket
 		error?: string
 	}>({ exchange: undefined })
-	const refresh = useCallback(() => setRevision((value) => value + 1), [])
 	useEffect(() => {
 		if (!exchange) return
 		let cancelled = false
-		let running = false
-		const fetch = async () => {
-			if (running) return
-			running = true
-			try {
-				const data = await exchange.market(address)
-				if (!cancelled) setState({ exchange, address, data })
-			} catch (error) {
-				if (!cancelled)
-					setState((previous) => ({
-						...(previous.exchange === exchange && previous.address === address
-							? previous
-							: { exchange, address }),
-						error: messageOf(error),
-					}))
-			} finally {
-				running = false
-			}
+		const onError = (error: unknown) => {
+			if (!cancelled)
+				setState((previous) => ({
+					...(previous.exchange === exchange && previous.address === address
+						? previous
+						: { exchange, address }),
+					error: messageOf(error),
+				}))
 		}
-		void fetch()
-		const timer = setInterval(fetch, 15_000)
+		let unsubscribe: (() => void) | undefined
+		try {
+			unsubscribe = exchange.subscribeMarket(
+				address,
+				(data) => {
+					if (!cancelled) setState({ exchange, address, data })
+				},
+				onError,
+			)
+		} catch (error) {
+			onError(error)
+		}
 		return () => {
 			cancelled = true
-			clearInterval(timer)
+			unsubscribe?.()
 		}
-	}, [exchange, address, revision])
+	}, [exchange, address])
 	const current =
 		state.exchange === exchange && state.address === address ? state : undefined
-	return { exchange, market: current?.data, error: current?.error, refresh }
+	return { exchange, market: current?.data, error: current?.error }
 }
 
 export const AccountField = ({
 	account,
 	accounts,
 	onSelect,
-	className,
-	children,
 }: {
 	account: ImportedAccount | null
 	accounts: ImportedAccount[]
 	onSelect: (account: ImportedAccount | null) => void
-	className?: string
-	children?: ReactNode
 }) => {
 	const { t } = useTranslation('swap')
 	return (
-		<SendForm.Segment title={t('account')} layer="raised" className={className}>
+		<SendForm.Segment title={t('account')} layer="raised">
 			<div className={classes.accountDropdown}>
 				<AccountDropdown
 					key={`${account?.address}:${account?.source}`}
@@ -154,7 +106,6 @@ export const AccountField = ({
 					disabled={!accounts.length}
 				/>
 			</div>
-			{children}
 		</SendForm.Segment>
 	)
 }
@@ -162,11 +113,9 @@ export const AccountField = ({
 export const SlippageField = ({
 	value,
 	onChange,
-	disabled = false,
 }: {
 	value: number
 	onChange: (value: number) => void
-	disabled?: boolean
 }) => {
 	const { t } = useTranslation('swap')
 	return (
@@ -174,7 +123,6 @@ export const SlippageField = ({
 			{t('slippage')}
 			<select
 				value={value}
-				disabled={disabled}
 				onChange={(event) => onChange(Number(event.target.value))}
 			>
 				{[10, 50, 100, 300, 500].map((bps) => (
@@ -189,40 +137,29 @@ export const SlippageField = ({
 
 type TransactionActionProps = {
 	tx?: SubmittableExtrinsic
-	estimatedFee?: bigint
-	submissionKey?: string
 	account: ImportedAccount | null
 	feeAsset: AssetHubToken
 	spends: Partial<Record<AssetHubToken, bigint>>
 	valid: boolean
 	label: string
 	onComplete: () => void
-	children?: ReactNode
-	notesClassName?: string
-	beforeSubmit?: ReactNode
 }
 
-// Background quotes share a submission id until the user changes the request.
-// Other exchange forms continue to allocate an id for each call.
 export const TransactionAction = (props: TransactionActionProps) => (
 	<TransactionActionInner
-		key={`${props.account?.address}:${props.account?.source}:${props.feeAsset}:${props.submissionKey ?? props.tx?.toHex()}`}
+		key={`${props.account?.address}:${props.account?.source}:${props.feeAsset}:${props.tx?.toHex()}`}
 		{...props}
 	/>
 )
 
 const TransactionActionInner = ({
 	tx,
-	estimatedFee,
 	account,
 	feeAsset,
 	spends,
 	valid,
 	label,
 	onComplete,
-	children,
-	notesClassName,
-	beforeSubmit,
 }: TransactionActionProps) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -235,8 +172,7 @@ const TransactionActionInner = ({
 			item.from === account?.address &&
 			(item.submitted || item.pending),
 	)
-	const [localFee, setFee] = useState<bigint>()
-	const fee = estimatedFee ?? localFee
+	const [fee, setFee] = useState<bigint>()
 	const [error, setError] = useState<string>()
 	const [retry, setRetry] = useState(0)
 	const payload = useMemo(
@@ -249,7 +185,7 @@ const TransactionActionInner = ({
 	)
 	const txHex = tx?.toHex()
 	useEffect(() => {
-		if (!tx || !account || estimatedFee !== undefined) return
+		if (!tx || !account) return
 		setFee(undefined)
 		setError(undefined)
 		let stale = false
@@ -270,15 +206,7 @@ const TransactionActionInner = ({
 		return () => {
 			stale = true
 		}
-	}, [
-		txHex,
-		account?.address,
-		payload,
-		feeAsset,
-		serviceApi,
-		retry,
-		estimatedFee,
-	])
+	}, [txHex, account?.address, payload, feeAsset, serviceApi, retry])
 	const feeEstimator = useCallback(async () => {
 		if (fee === undefined) throw new Error('Fee not ready')
 		return fee
@@ -311,7 +239,6 @@ const TransactionActionInner = ({
 		dappName: SwapDappName,
 		feePaymentOptions: payload,
 		feeEstimator,
-		estimatedFee,
 		feeDisplay,
 		callbackInBlock: () => {
 			void balances.refresh()
@@ -328,7 +255,7 @@ const TransactionActionInner = ({
 	)
 	return (
 		<>
-			<SendForm.Notes className={notesClassName}>
+			<SendForm.Notes>
 				<SendForm.Note label={t('networkFee')}>
 					{error
 						? '—'
@@ -338,7 +265,6 @@ const TransactionActionInner = ({
 								: '—'
 							: `${tokenAmount(fee, feeAsset)} ${feeAsset}`}
 				</SendForm.Note>
-				{children}
 				{error && (
 					<ExchangeNotice
 						status="danger"
@@ -362,19 +288,16 @@ const TransactionActionInner = ({
 				)}
 			</SendForm.Notes>
 			<SendForm.Action>
-				<div className={classes.transactionActions}>
-					{beforeSubmit}
-					<SubmitTx
-						{...submission}
-						submitText={label}
-						valid={ready}
-						noMargin
-						feeDisplay={feeDisplay}
-						feeBalance={feeBalance?.free ?? 0n}
-						hideSigner
-						transparent
-					/>
-				</div>
+				<SubmitTx
+					{...submission}
+					submitText={label}
+					valid={ready}
+					noMargin
+					feeDisplay={feeDisplay}
+					feeBalance={feeBalance?.free ?? 0n}
+					hideSigner
+					transparent
+				/>
 			</SendForm.Action>
 		</>
 	)
@@ -383,24 +306,19 @@ const TransactionActionInner = ({
 export const FeeField = ({
 	value,
 	onChange,
-	className,
-	children,
 }: {
 	value: AssetHubToken
 	onChange: (token: AssetHubToken) => void
-	className?: string
-	children?: ReactNode
 }) => {
 	const { t } = useTranslation('swap')
 	return (
-		<SendForm.Segment title={t('payFeesIn')} className={className}>
+		<SendForm.Segment title={t('payFeesIn')}>
 			<Dropdown
 				options={tokenOptions}
 				selected={tokenOptions.find((option) => option.value === value)!}
 				onSelect={(option) => onChange(option.value)}
 				variant="full"
 			/>
-			{children}
 		</SendForm.Segment>
 	)
 }

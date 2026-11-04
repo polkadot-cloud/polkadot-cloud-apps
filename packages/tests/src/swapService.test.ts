@@ -49,6 +49,7 @@ test.each([
 					if (network === 'polkadot' && assetHub) {
 						expect(service.interface.assetHub).toEqual({
 							market: expect.any(Function),
+							subscribeMarket: expect.any(Function),
 							quotes: expect.any(Function),
 							swap: expect.any(Function),
 							addLiquidity: expect.any(Function),

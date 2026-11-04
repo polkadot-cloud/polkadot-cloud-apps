@@ -1,11 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	faCircleExclamation,
-	faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { planckToUnit } from '@polkadot-cloud/utils'
 import { SwapDappName } from 'consts'
 import { getFeeTokenIcon } from 'consts/stablecoins'
@@ -21,6 +16,7 @@ import type { ImportedAccount, SwapToken } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
 import { canFundExchange, ceilDiv } from 'utils'
+import { ExchangeNotice } from '../ExchangeNotice'
 import { QuoteNotes } from '../QuoteSummary'
 import classes from './index.module.scss'
 
@@ -34,30 +30,6 @@ export const tokenAmount = (amount: bigint, token: SwapToken) =>
 export const percentage = (permill: number) => `${permill / 10_000}%`
 // Leave the same 10% fee margin in max-fill amounts and submission funding checks.
 export const swapFeeReserve = (fee: bigint) => ceilDiv(fee * 110n, 100n)
-export const ExchangeNotice = ({
-	children,
-	status = 'warning',
-	action,
-	padded = false,
-}: {
-	children: ReactNode
-	status?: 'warning' | 'danger'
-	action?: ReactNode
-	padded?: boolean
-}) => (
-	<div
-		role={status === 'danger' ? 'alert' : 'status'}
-		className={classes.notice}
-		data-padded={padded || undefined}
-	>
-		<FontAwesomeIcon
-			icon={status === 'danger' ? faCircleExclamation : faTriangleExclamation}
-			aria-hidden
-		/>
-		<span>{children}</span>
-		{action}
-	</div>
-)
 
 type TransactionActionProps = {
 	tx?: SubmittableExtrinsic

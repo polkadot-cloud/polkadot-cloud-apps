@@ -18,9 +18,9 @@ import { Page, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { maxSendableBalance, slippageLimit } from 'utils'
 import transferClasses from '../../library/AssetTransfer/index.module.scss'
+import { ExchangeNotice } from '../../library/ExchangeNotice'
 import { QuoteLoading, QuoteRoute } from '../../library/QuoteSummary'
 import {
-	ExchangeNotice,
 	percentage,
 	swapFeeReserve,
 	TransactionAction,
