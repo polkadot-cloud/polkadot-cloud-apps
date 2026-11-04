@@ -62,10 +62,12 @@ export const TransferSummary = ({
 			<SendForm.Note label={t('destinationXcmFee')}>
 				{displayFee(quote?.destinationFee)}
 			</SendForm.Note>
-			<SendForm.Note label={t('estimatedReceived')} variant="success">
-				{quote
-					? `${planckToUnit(quote.receivedAmount, destinationDecimals)} ${symbol}`
-					: '—'}
+			<SendForm.Note label={t('estimatedReceived')}>
+				<strong>
+					{quote
+						? `${planckToUnit(quote.receivedAmount, destinationDecimals)} ${symbol}`
+						: '—'}
+				</strong>
 			</SendForm.Note>
 			{children}
 		</SendForm.Notes>

@@ -241,7 +241,7 @@ export const Bridge = () => {
 								{error}
 							</ExchangeNotice>
 						)}
-						{expired && (
+						{expired && !loading && (
 							<ExchangeNotice
 								action={<ButtonSecondary text={t('retry')} onClick={refresh} />}
 							>

@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { CrossChainQuoteDebounceMs } from 'consts/crossChain'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { useApi } from '../useApi'
 import { useQuoteExpired } from '../useQuoteExpired'
 
 type PreparedTransfer = {
 	request: CrossChainTransferInput
+	loading: boolean
 	quote?: CrossChainTransfer
 	networkFee?: bigint
 	error?: string
@@ -22,16 +23,24 @@ export const useCrossChainTransfer = (
 	const { serviceApi } = useApi()
 	const xcm = serviceApi.stablecoins.xcm
 	const [state, setState] = useState<PreparedTransfer>()
-	const [refreshId, setRefreshId] = useState(0)
+	const fetchRef = useRef<() => Promise<void>>(undefined)
+	const refresh = useCallback(() => {
+		void fetchRef.current?.()
+	}, [])
 	const key = `${input.from}:${input.to}:${input.symbol}:${input.amount}:${input.sender}:${input.recipient}:${input.feeAsset}`
-	const request = useMemo(
-		() => ({ ...input }),
-		[key, serviceApi, enabled, refreshId],
-	)
+	const request = useMemo(() => ({ ...input }), [key, serviceApi, enabled])
 	useEffect(() => {
 		if (!enabled || !xcm) return
 		let stale = false
-		const timer = setTimeout(async () => {
+		let running = false
+		const fetch = async () => {
+			if (running) return
+			running = true
+			setState((previous) => ({
+				...(previous?.request === request ? previous : { request }),
+				loading: true,
+				error: undefined,
+			}))
 			try {
 				const quote = await xcm.prepare(request)
 				if (stale) return
@@ -45,30 +54,39 @@ export const useCrossChainTransfer = (
 						request.feeAsset,
 					),
 				})
-				if (!stale) setState({ request, quote, networkFee })
+				if (!stale) setState({ request, quote, networkFee, loading: false })
 			} catch (error) {
 				if (!stale)
 					setState({
 						request,
+						loading: false,
 						error:
 							error instanceof Error
 								? error.message
 								: 'Unable to prepare cross-chain transfer',
 					})
+			} finally {
+				running = false
 			}
-		}, CrossChainQuoteDebounceMs)
+		}
+		fetchRef.current = fetch
+		const timer = setTimeout(fetch, CrossChainQuoteDebounceMs)
 		return () => {
 			stale = true
+			fetchRef.current = undefined
 			clearTimeout(timer)
 		}
 	}, [request])
 	const current = enabled && state?.request === request ? state : undefined
 	const expired = useQuoteExpired(current?.quote?.fetchedAt)
+	useEffect(() => {
+		if (expired) refresh()
+	}, [expired, refresh])
 	return {
 		...current,
 		expired,
-		loading: enabled && !!xcm && !current,
-		refresh: () => setRefreshId((value) => value + 1),
+		loading: current?.loading ?? (enabled && !!xcm),
+		refresh,
 		key,
 	}
 }
