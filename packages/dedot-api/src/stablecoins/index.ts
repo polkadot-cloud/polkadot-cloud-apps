@@ -14,19 +14,9 @@ import {
 import type { ServiceInterface, StablecoinBalance } from 'types'
 import type { DedotServiceFeatures } from '../types'
 import { createAssetHubStablecoinAdapter } from './assetHub'
-import {
-	createHydrationStablecoinAdapter,
-	type HydrationStablecoinAdapter,
-} from './hydration'
+import { createHydrationStablecoinAdapter } from './hydration'
 import { createPeopleStablecoinAdapter } from './people'
-import type { StablecoinAdapter } from './shared'
 import { createStablecoinSubscriptions } from './subscriptions'
-
-type StablecoinAdapters = {
-	statemint: StablecoinAdapter
-	hydration: HydrationStablecoinAdapter
-	'people-polkadot': StablecoinAdapter
-}
 
 type BalanceRequest = {
 	promise: Promise<StablecoinBalance[]>
@@ -41,7 +31,7 @@ export const createStablecoinsInterface = (
 	getPeopleApi: () => Promise<DedotClient<PolkadotPeopleApi>>,
 	features: DedotServiceFeatures['stablecoins'],
 ): ServiceInterface['stablecoins'] => {
-	const adapters: Partial<StablecoinAdapters> = {
+	const adapters = {
 		...(features.assetHub && {
 			statemint: createAssetHubStablecoinAdapter(apiHub),
 		}),

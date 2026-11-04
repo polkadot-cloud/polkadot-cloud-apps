@@ -30,22 +30,8 @@ const BALANCE_OF_SELECTOR = '0x70a08231'
 const FIXED_U128_DIVISOR = 1_000_000_000_000_000_000n
 
 // Applies a FixedU128 multiplier to a bigint value and rounds up fee estimates.
-const multiplyFixedU128 = (value: bigint, multiplier: bigint): bigint => {
-	return ceilDiv(value * multiplier, FIXED_U128_DIVISOR)
-}
-
-// Reads a Hydration token balance from the Tokens pallet.
-const fetchHydrationTokenBalance = async (
-	api: DedotClient<HydrationApi>,
-	address: string,
-	assetId: number,
-): Promise<BalancePair> => {
-	const info = await api.query.tokens.accounts([address, assetId])
-	return {
-		free: info.free,
-		frozen: info.frozen,
-	}
-}
+const multiplyFixedU128 = (value: bigint, multiplier: bigint): bigint =>
+	ceilDiv(value * multiplier, FIXED_U128_DIVISOR)
 
 // Converts a Substrate address into the EVM address format expected by eth_call.
 const toEvmAddress = (address: string): string => {
@@ -131,9 +117,7 @@ export const createHydrationStablecoinAdapter = (
 	},
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('hydration', symbol)
-		if (!config) {
-			return zeroBalance('hydration', symbol)
-		}
+		if (!config) return undefined
 
 		try {
 			const api = await getApi()
@@ -150,7 +134,7 @@ export const createHydrationStablecoinAdapter = (
 			return toStablecoinBalance(
 				'hydration',
 				symbol,
-				await fetchHydrationTokenBalance(api, address, config.assetId),
+				await api.query.tokens.accounts([address, config.assetId]),
 			)
 		} catch {
 			return zeroBalance('hydration', symbol)

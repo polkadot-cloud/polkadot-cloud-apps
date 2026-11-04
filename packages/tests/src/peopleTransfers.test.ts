@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
-import { DedotClient } from 'dedot'
+import { DedotClient, type SubmittableExtrinsic } from 'dedot'
 import { act, createElement } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, expect, test, vi } from 'vitest'
@@ -67,9 +67,7 @@ test('People exposes only DOT and builds native keep-alive sends with native fee
 		])
 	}
 	const paymentInfo = vi.fn().mockResolvedValue({ partialFee: 1_000_000n })
-	const tx = { paymentInfo } as unknown as Awaited<
-		ReturnType<ReturnType<typeof createPeopleStablecoinAdapter>['transfer']>
-	>
+	const tx = { paymentInfo } as unknown as SubmittableExtrinsic
 	const transferKeepAlive = vi.fn().mockReturnValue(tx)
 	const account = vi
 		.fn()
@@ -104,7 +102,7 @@ test('People exposes only DOT and builds native keep-alive sends with native fee
 	const fee = await adapter.estimateFee({
 		chain: 'people-polkadot',
 		symbol: 'DOT',
-		tx: tx!,
+		tx,
 		from: 'sender',
 	})
 	expect(fee).toBe(1_000_000n)
@@ -154,6 +152,7 @@ test('simultaneous identity and transfer requests await the same People client a
 	)
 	const service = createService()
 	const identity = service.interface.query.identityOfMulti(['sender'])
+	const superOf = service.interface.query.superOfMulti(['sender'])
 	const balance = service.interface.stablecoins.query.balance(
 		'sender',
 		'people-polkadot',
@@ -173,6 +172,7 @@ test('simultaneous identity and transfer requests await the same People client a
 			},
 			identity: {
 				identityOf: { multi: vi.fn().mockResolvedValue([undefined]) },
+				superOf: { multi: vi.fn().mockResolvedValue([]) },
 			},
 		},
 		call: { metadata: { metadataAtVersion } },
@@ -185,6 +185,7 @@ test('simultaneous identity and transfer requests await the same People client a
 	})
 	resolve(people)
 	expect(await identity).toEqual([undefined])
+	expect(await superOf).toEqual([])
 	expect(await balance).toMatchObject({
 		chain: 'people-polkadot',
 		free: 10_000_000_000n,
@@ -224,7 +225,7 @@ test('a failed People connection rejects both consumers and can be retried', asy
 
 test('disabling People leaves its balance service and connection unused', async () => {
 	const connect = vi.spyOn(DedotClient, 'new')
-	const service = createService(false)
+	const service = createService(false, true)
 	expect(
 		await service.interface.stablecoins.query.balance(
 			'sender',
@@ -232,6 +233,14 @@ test('disabling People leaves its balance service and connection unused', async 
 			'DOT',
 		),
 	).toBeUndefined()
+	const onError = vi.fn()
+	const unsubscribe = service.interface.stablecoins.subscribe.balances(
+		'sender', 'people-polkadot', vi.fn(), onError,
+	)
+	expect(onError).toHaveBeenCalledWith(expect.objectContaining({
+		message: 'Balance subscriptions unavailable for people-polkadot',
+	}))
+	unsubscribe()
 	expect(connect).not.toHaveBeenCalled()
 })
 
