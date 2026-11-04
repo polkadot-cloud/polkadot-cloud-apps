@@ -129,7 +129,6 @@ export const prepareCrossChainTransfer = async (
 			destinationFee: normalizeFee(info.destination.xcmFee, to),
 			receivedAmount: received.receivedAmount,
 			destinationBalance: received.balance,
-			fetchedAt: Date.now(),
 		}
 	} finally {
 		await builder.disconnect()

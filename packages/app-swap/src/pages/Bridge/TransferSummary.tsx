@@ -40,10 +40,7 @@ export const TransferSummary = ({
 	const destinationDecimals = getStablecoinAssetConfig(to, symbol)!.decimals
 	return (
 		<QuoteNotes>
-			<QuoteRoute
-				loading={loading}
-				loadingText={t(quote ? 'renewingQuote' : 'checkingCrossChain')}
-			>
+			<QuoteRoute loading={loading} loadingText={t('checkingCrossChain')}>
 				{quote &&
 					`${getStablecoinChainLabel(from)} → ${getStablecoinChainLabel(to)}`}
 			</QuoteRoute>

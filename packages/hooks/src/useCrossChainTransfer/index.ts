@@ -5,7 +5,6 @@ import { CrossChainQuoteDebounceMs } from 'consts/crossChain'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { useApi } from '../useApi'
-import { useQuoteExpired } from '../useQuoteExpired'
 
 type PreparedTransfer = {
 	request: CrossChainTransferInput
@@ -23,10 +22,9 @@ export const useCrossChainTransfer = (
 	const { serviceApi } = useApi()
 	const xcm = serviceApi.stablecoins.xcm
 	const [state, setState] = useState<PreparedTransfer>()
-	const fetchRef = useRef<() => Promise<void>>(undefined)
-	const refresh = useCallback(() => {
-		void fetchRef.current?.()
-	}, [])
+	const fetchRef =
+		useRef<() => Promise<CrossChainTransfer | undefined>>(undefined)
+	const refresh = useCallback(async () => fetchRef.current?.(), [])
 	const key = `${input.from}:${input.to}:${input.symbol}:${input.amount}:${input.sender}:${input.recipient}:${input.feeAsset}`
 	const request = useMemo(() => ({ ...input }), [key, serviceApi, enabled])
 	useEffect(() => {
@@ -54,7 +52,10 @@ export const useCrossChainTransfer = (
 						request.feeAsset,
 					),
 				})
-				if (!stale) setState({ request, quote, networkFee, loading: false })
+				if (!stale) {
+					setState({ request, quote, networkFee, loading: false })
+					return quote
+				}
 			} catch (error) {
 				if (!stale)
 					setState({
@@ -78,13 +79,8 @@ export const useCrossChainTransfer = (
 		}
 	}, [request])
 	const current = enabled && state?.request === request ? state : undefined
-	const expired = useQuoteExpired(current?.quote?.fetchedAt)
-	useEffect(() => {
-		if (expired) refresh()
-	}, [expired, refresh])
 	return {
 		...current,
-		expired,
 		loading: current?.loading ?? (enabled && !!xcm),
 		refresh,
 		key,

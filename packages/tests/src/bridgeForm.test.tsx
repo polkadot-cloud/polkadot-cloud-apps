@@ -225,7 +225,7 @@ test('an idle form and unrelated balance syncing do not keep the route loader ac
 	).toBe(true)
 })
 
-test('renewal replaces the route value with the shared loader and retains fee and received values', async () => {
+test('revalidation uses the shared route loader and retains fee and received values', async () => {
 	await render()
 	const route = container.querySelector('[role="group"][aria-label="route"]')!
 	const notes = route.parentElement!
@@ -237,7 +237,7 @@ test('renewal replaces the route value with the shared loader and retains fee an
 		route,
 	)
 	expect(route.querySelector('[role="status"]')!.textContent).toBe(
-		'renewingQuote',
+		'checkingCrossChain',
 	)
 	expect(route.textContent).not.toContain('Hydration')
 	expect([...notes.children].slice(1).map((row) => row.textContent)).toEqual(

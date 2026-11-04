@@ -283,7 +283,6 @@ describe('Cross-chain amounts and funding', () => {
 				destinationFee: { symbol: 'DOT', amount: 1_000_000n, decimals: 10 },
 				receivedAmount: 9_998_000_001n,
 				destinationBalance: 0n,
-				fetchedAt: Date.now(),
 			}
 			const fee = 2_000_000n
 			const frozen = 300_000_000n

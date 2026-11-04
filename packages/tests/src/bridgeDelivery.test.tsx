@@ -22,6 +22,8 @@ const mocked = vi.hoisted(() => ({
 	handlers: [] as UseSubmitExtrinsicProps[],
 	refresh: vi.fn(),
 	onSubmitted: vi.fn(),
+	revalidate: vi.fn(),
+	sign: vi.fn(),
 }))
 vi.mock('../../hooks/src/index', () => ({
 	useApi: () => ({ serviceApi: mocked.serviceApi }),
@@ -54,10 +56,17 @@ vi.mock('../../tx-submit/src/index', async () => ({
 	).trackCrossChainDelivery,
 	useSubmitExtrinsic: (props: UseSubmitExtrinsicProps) => {
 		mocked.handlers.push(props)
-		return { uid: 0 }
+		return { uid: 0, onSubmit: () => mocked.sign(props) }
 	},
 }))
-vi.mock('../../ui-app/src/SubmitTx', () => ({ SubmitTx: () => null }))
+vi.mock('../../ui-app/src/SubmitTx', () => ({
+	SubmitTx: ({ onSubmit, valid }: { onSubmit: () => void; valid: boolean }) =>
+		createElement(
+			'button',
+			{ type: 'button', onClick: onSubmit, disabled: !valid },
+			'Send',
+		),
+}))
 vi.mock('../../ui-core/src/input', () => ({
 	SendForm: { Action: ({ children }: { children: ReactNode }) => children },
 }))
@@ -92,7 +101,6 @@ const quote = {
 	destinationFee: { amount: 1000n, symbol: 'USDC', decimals: 6 },
 	receivedAmount: 1_998_000n,
 	destinationBalance: 1_000_000n,
-	fetchedAt: 0,
 } as CrossChainTransfer
 const destinationBalance: StablecoinBalance = {
 	chain: 'hydration',
@@ -121,6 +129,8 @@ const Form = ({
 	currentInput: CrossChainTransferInput
 }) => {
 	const [submitted, setSubmitted] = useState(false)
+	const [prepared, setPrepared] = useState({ quote, networkFee: 1000n })
+	const [checking, setChecking] = useState(false)
 	return createElement(
 		Fragment,
 		null,
@@ -130,9 +140,19 @@ const Form = ({
 				key: `${currentInput.recipient}:${submitted}`,
 				input: submitted ? { ...currentInput, amount: 0n } : currentInput,
 				account: { address: 'sender', source: 'extension', name: 'Sender' },
-				quote: submitted ? undefined : quote,
-				networkFee: submitted ? undefined : 1000n,
-				valid: !submitted,
+				quote: submitted ? undefined : prepared.quote,
+				networkFee: submitted ? undefined : prepared.networkFee,
+				valid: !submitted && !checking,
+				revalidate: async () => {
+					setChecking(true)
+					try {
+						const next = await mocked.revalidate()
+						if (next) setPrepared(next)
+						return next?.quote
+					} finally {
+						setChecking(false)
+					}
+				},
 				onSubmitted: () => {
 					mocked.onSubmitted()
 					setSubmitted(true)
@@ -156,6 +176,7 @@ beforeEach(() => {
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.useFakeTimers()
 	vi.clearAllMocks()
+	mocked.revalidate.mockResolvedValue({ quote, networkFee: 1000n })
 	mocked.handlers.length = 0
 	_notifications.next([])
 	listeners = []
@@ -189,6 +210,92 @@ afterEach(async () => {
 	_notifications.next([])
 	vi.unstubAllGlobals()
 })
+
+test('submission revalidates once before signing and tracks the freshly checked destination balance', async () => {
+	let resolve!: (value: {
+		quote: CrossChainTransfer
+		networkFee: bigint
+	}) => void
+	mocked.revalidate.mockReturnValueOnce(
+		new Promise((done) => {
+			resolve = done
+		}),
+	)
+	await render()
+	const button = container.querySelector('button')!
+	await act(async () => {
+		button.click()
+		button.click()
+	})
+	expect(mocked.revalidate).toHaveBeenCalledOnce()
+	expect(mocked.sign).not.toHaveBeenCalled()
+	expect(button.disabled).toBe(true)
+	const freshQuote = {
+		...quote,
+		tx: {} as CrossChainTransfer['tx'],
+		destinationBalance: 9_000_000n,
+	}
+	await act(async () => resolve({ quote: freshQuote, networkFee: 2000n }))
+	expect(mocked.sign).toHaveBeenCalledOnce()
+	const signed: UseSubmitExtrinsicProps = mocked.sign.mock.calls[0][0]
+	expect(signed.tx).toBe(freshQuote.tx)
+	expect(signed.estimatedFee).toBe(2000n)
+	await act(async () => {
+		signed.callbackSubmit!()
+		signed.callbackFinalized!()
+		listeners[0].onBalance(destinationBalance)
+	})
+	expect(spinning()).toBe(true)
+	expect(_notifications.getValue()).toHaveLength(0)
+	await act(async () =>
+		listeners[0].onBalance({
+			...destinationBalance,
+			free: freshQuote.destinationBalance + freshQuote.receivedAmount,
+		}),
+	)
+	expect(spinning()).toBe(false)
+	expect(_notifications.getValue()).toHaveLength(1)
+})
+
+test.each(['preflight', 'funding'] as const)(
+	'failed %s revalidation never requests a signature',
+	async (failure) => {
+		mocked.revalidate.mockResolvedValueOnce(
+			failure === 'preflight'
+				? undefined
+				: { quote: { ...quote }, networkFee: 100_000_000n },
+		)
+		await render()
+		await act(async () => container.querySelector('button')!.click())
+		expect(mocked.revalidate).toHaveBeenCalledOnce()
+		expect(mocked.sign).not.toHaveBeenCalled()
+		expect(mocked.onSubmitted).not.toHaveBeenCalled()
+		expect(listeners).toHaveLength(0)
+	},
+)
+
+test.each(['recipient change', 'navigation'] as const)(
+	'a late preflight after %s never opens the wallet',
+	async (change) => {
+		let resolve!: (value: {
+			quote: CrossChainTransfer
+			networkFee: bigint
+		}) => void
+		mocked.revalidate.mockReturnValueOnce(
+			new Promise((done) => {
+				resolve = done
+			}),
+		)
+		await render()
+		await act(async () => container.querySelector('button')!.click())
+		if (change === 'navigation') await render(false)
+		else await render(true, { ...input, recipient: 'new-recipient' })
+		await act(async () => resolve({ quote: { ...quote }, networkFee: 1000n }))
+		expect(mocked.sign).not.toHaveBeenCalled()
+		expect(mocked.onSubmitted).not.toHaveBeenCalled()
+		expect(listeners).toHaveLength(0)
+	},
+)
 
 test('the spinner waits past source inclusion and finality for the subscribed destination balance', async () => {
 	await render()

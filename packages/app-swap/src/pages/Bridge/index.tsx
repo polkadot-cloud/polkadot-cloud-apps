@@ -101,7 +101,7 @@ export const Bridge = () => {
 	const recipientValid = isValidAddress(recipient)
 	const validInput = !!account && recipientValid && parsed > 0n
 	const enabled = validInput && setup.ready && !setup.needsSetup
-	const { quote, networkFee, error, expired, loading, refresh, key } =
+	const { quote, networkFee, error, loading, refresh, key } =
 		useCrossChainTransfer(input, enabled)
 	const requestKey = `${key}:${account?.source}`
 	const currentRequestKey = useRef(requestKey)
@@ -209,7 +209,7 @@ export const Bridge = () => {
 						onChange={setAmount}
 						maxAvailable={planckToUnit(maxAvailable, decimals)}
 						maxDecimals={decimals}
-						allowMax={!!quote && !expired}
+						allowMax={!!quote && !loading}
 						syncing={balances.loading}
 						options={tokenOptions}
 						selected={findOption(tokenOptions, symbol)}
@@ -250,13 +250,6 @@ export const Bridge = () => {
 								{error}
 							</ExchangeNotice>
 						)}
-						{expired && !loading && (
-							<ExchangeNotice
-								action={<ButtonSecondary text={t('retry')} onClick={refresh} />}
-							>
-								{t('quoteExpired')}
-							</ExchangeNotice>
-						)}
 						{quote && !funded && !balances.loading && (
 							<ExchangeNotice status="danger">
 								{t('insufficientBalance')}
@@ -283,7 +276,8 @@ export const Bridge = () => {
 							account={account}
 							quote={quote}
 							networkFee={networkFee}
-							valid={enabled && !expired}
+							valid={enabled && !loading}
+							revalidate={refresh}
 							onSubmitted={() => {
 								// A wallet may broadcast after the user has already changed the form.
 								if (currentRequestKey.current !== requestKey) return

@@ -48,7 +48,6 @@ const quote = (amount: bigint) =>
 	({
 		receivedAmount: amount,
 		tx: {},
-		fetchedAt: Date.now(),
 	}) as CrossChainTransfer
 
 beforeEach(() => {
@@ -84,7 +83,20 @@ test('a late simulation cannot replace a transfer after the destination changes'
 	expect(api.stablecoins.fee.estimate).toHaveBeenCalledOnce()
 })
 
-test('expiry automatically renews the quote and fee while retaining the last values', async () => {
+test('an unchanged bridge transfer never expires or prepares again on a timer', async () => {
+	api.stablecoins.xcm.prepare.mockImplementation(async () => quote(1_000_000n))
+	await render()
+	await advance(400)
+	const previous = result.quote
+	await advance(300_000)
+	await render()
+	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledOnce()
+	expect(api.stablecoins.fee.estimate).toHaveBeenCalledOnce()
+	expect(result.quote).toBe(previous)
+	expect(result.loading).toBe(false)
+})
+
+test('explicit revalidation returns the fresh transfer after its fee is checked, without overlapping requests', async () => {
 	api.stablecoins.xcm.prepare.mockImplementation(async () => quote(1_000_000n))
 	await render()
 	await advance(400)
@@ -101,9 +113,11 @@ test('expiry automatically renews the quote and fee while retaining the last val
 			resolveFee = resolve
 		}),
 	)
-	await advance(30_001)
+	let pending!: Promise<CrossChainTransfer | undefined>
+	await act(async () => {
+		pending = result.refresh()
+	})
 	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledTimes(2)
-	expect(result.expired).toBe(true)
 	expect(result.loading).toBe(true)
 	expect(result.quote).toBe(previous)
 	expect(result.networkFee).toBe(10n)
@@ -115,18 +129,16 @@ test('expiry automatically renews the quote and fee while retaining the last val
 	await act(async () => resolveQuote(quote(2_000_000n)))
 	expect(result.quote).toBe(previous)
 	expect(result.loading).toBe(true)
-	expect(result.expired).toBe(true)
 	await act(async () => resolveFee(20n))
 	expect(result.quote?.receivedAmount).toBe(2_000_000n)
 	expect(result.networkFee).toBe(20n)
 	expect(result.loading).toBe(false)
-	expect(result.expired).toBe(false)
+	expect(await pending).toBe(result.quote)
 	await advance(30_001)
-	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledTimes(3)
-	expect(result.expired).toBe(false)
+	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledTimes(2)
 })
 
-test('a failed automatic renewal blocks submission and can be retried without a request loop', async () => {
+test('failed revalidation invalidates the transaction and can be retried without a request loop', async () => {
 	api.stablecoins.xcm.prepare.mockImplementation(async () => quote(1_000_000n))
 	await render()
 	await advance(400)
@@ -134,7 +146,7 @@ test('a failed automatic renewal blocks submission and can be retried without a 
 	api.stablecoins.fee.estimate.mockRejectedValueOnce(
 		new Error('Fee unavailable'),
 	)
-	await advance(30_001)
+	await act(async () => expect(await result.refresh()).toBeUndefined())
 	expect(result.error).toBe('Fee unavailable')
 	expect(result.quote).toBeUndefined()
 	expect(result.networkFee).toBeUndefined()
@@ -143,8 +155,29 @@ test('a failed automatic renewal blocks submission and can be retried without a 
 	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledTimes(2)
 	await act(async () => result.refresh())
 	expect(result.error).toBeUndefined()
-	expect(result.expired).toBe(false)
 	expect(result.quote).toBeDefined()
+})
+
+test('revalidation returns no transaction if the form changes while it is running', async () => {
+	api.stablecoins.xcm.prepare.mockResolvedValue(quote(1_000_000n))
+	await render()
+	await advance(400)
+	let resolve!: (value: CrossChainTransfer) => void
+	api.stablecoins.xcm.prepare.mockReturnValueOnce(
+		new Promise<CrossChainTransfer>((done) => {
+			resolve = done
+		}),
+	)
+	let pending!: Promise<CrossChainTransfer | undefined>
+	await act(async () => {
+		pending = result.refresh()
+	})
+	await render({ ...original, recipient: 'new-recipient' })
+	await advance(400)
+	const current = result.quote
+	await act(async () => resolve(quote(2_000_000n)))
+	expect(await pending).toBeUndefined()
+	expect(result.quote).toBe(current)
 })
 
 test('disabling preparation while fee currency changes immediately invalidates the quote', async () => {

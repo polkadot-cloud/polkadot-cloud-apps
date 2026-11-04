@@ -88,7 +88,6 @@ export type CrossChainTransfer = {
 	destinationFee: CrossChainFee
 	receivedAmount: bigint
 	destinationBalance: bigint
-	fetchedAt: number
 }
 
 // Fee asset selection and signing options for a transaction on a supported chain.
