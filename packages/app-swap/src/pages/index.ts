@@ -4,7 +4,7 @@
 import {
 	faArrowRightArrowLeft,
 	faArrowsRotate,
-	faDroplet,
+	faDollarSign,
 	faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons'
 import type { PageItem } from 'types'
@@ -34,7 +34,7 @@ export const pages: PageItem[] = [
 		titleNamespace: 'swap',
 		hash: '/liquidity',
 		Entry: Liquidity,
-		faIcon: faDroplet,
+		faIcon: faDollarSign,
 	},
 ].map((page) => ({
 	...page,
