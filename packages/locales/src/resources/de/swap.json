@@ -10,6 +10,8 @@
 		"chain": "Blockchain",
 		"checkingCrossChain": "Guthaben, Gebühren und Ausführung am Ziel werden geprüft…",
 		"conversionFee": "Umtauschgebühr",
+		"crossChainComplete": "Cross-Chain-Transfer abgeschlossen",
+		"crossChainCompleteOn": "Der Transfer ist auf {{chain}} angekommen.",
 		"crossChainDescription": "DOT und Stablecoins zwischen Chains senden.",
 		"crossChainSend": "Chainübergreifend senden",
 		"destinationChain": "Ziel-Chain",
@@ -53,9 +55,6 @@
 		"swapAssets": "Assets tauschen",
 		"swapDescription": "Assets auf Polkadot Asset Hub tauschen.",
 		"transferAssetsDescription": "Assets an eine andere Adresse im selben Netzwerk übertragen.",
-		"xcmStatusBalanceUpdated": "Das Zielguthaben des Empfängers ist um den erwarteten Betrag gestiegen.",
-		"xcmStatusFinalized": "Auf der Ursprungs-Chain finalisiert. Warten auf die Aktualisierung des Zielguthabens…",
-		"xcmStatusSubmitted": "Transfer auf der Ursprungs-Chain übermittelt. Warten auf Finalität…",
 		"xcmStatusUnconfirmed": "Die Ursprungstransaktion wurde finalisiert. Die Zustellung ist noch nicht bestätigt; prüfe das Zielguthaben vor einem erneuten Transfer.",
 		"youPay": "Du zahlst",
 		"youReceive": "Du erhältst"

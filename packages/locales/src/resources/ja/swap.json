@@ -10,6 +10,8 @@
 		"chain": "チェーン",
 		"checkingCrossChain": "残高、手数料、送信先での実行を確認中…",
 		"conversionFee": "交換手数料",
+		"crossChainComplete": "クロスチェーン転送完了",
+		"crossChainCompleteOn": "{{chain}} への転送が完了しました。",
 		"crossChainDescription": "チェーン間でDOTとステーブルコインを送信します。",
 		"crossChainSend": "クロスチェーン送信",
 		"destinationChain": "送信先チェーン",
@@ -53,9 +55,6 @@
 		"swapAssets": "アセットを交換",
 		"swapDescription": "Polkadot Asset Hubで資産を交換します。",
 		"transferAssetsDescription": "同じネットワーク上の別のアドレスにアセットを送金します。",
-		"xcmStatusBalanceUpdated": "受取人の送信先残高が予想額分増加しました。",
-		"xcmStatusFinalized": "送信元チェーンでファイナライズ済みです。送信先残高の更新を待っています…",
-		"xcmStatusSubmitted": "送信元チェーンに送信済みです。ファイナライズを待っています…",
 		"xcmStatusUnconfirmed": "送信元の取引はファイナライズ済みです。到着は未確認です。再送信する前に送信先の残高を確認してください。",
 		"youPay": "支払額",
 		"youReceive": "受取額"

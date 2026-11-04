@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { SwapDappName } from 'consts'
-import { getStablecoinAssetConfig } from 'consts/stablecoins'
-import { getUid, removeUid } from 'global-bus'
+import {
+	getStablecoinAssetConfig,
+	getStablecoinChainLabel,
+} from 'consts/stablecoins'
+import { emitNotification, getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
 import { useCrossChainDeliveryStage } from 'hooks/useCrossChainDelivery'
 import { useEffect, useRef, useState } from 'react'
@@ -74,7 +77,14 @@ export const TransferAction = ({
 		feeDisplay,
 		callbackSubmit: () => {
 			if (!quote) return
-			const pending = trackCrossChainDelivery(serviceApi, input, quote)
+			const pending = trackCrossChainDelivery(serviceApi, input, quote, () =>
+				emitNotification({
+					title: t('crossChainComplete'),
+					subtitle: t('crossChainCompleteOn', {
+						chain: getStablecoinChainLabel(input.to),
+					}),
+				}),
+			)
 			activeDelivery.current = pending
 			setDelivery(pending)
 		},
@@ -100,10 +110,8 @@ export const TransferAction = ({
 	return (
 		<SendForm.Action>
 			<div style={{ width: '100%' }}>
-				{stage && (
-					<ExchangeNotice>
-						{t(`xcmStatus${stage[0].toUpperCase()}${stage.slice(1)}`)}
-					</ExchangeNotice>
+				{stage === 'unconfirmed' && (
+					<ExchangeNotice>{t('xcmStatusUnconfirmed')}</ExchangeNotice>
 				)}
 				<SubmitTx
 					{...submission}

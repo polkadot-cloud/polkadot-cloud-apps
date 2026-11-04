@@ -13,6 +13,7 @@ import type {
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Sync } from '../../app-swap/src/library/Sync'
 import { TransferAction } from '../../app-swap/src/pages/Bridge/TransferAction'
+import { _notifications } from '../../global-bus/src/notifications/private'
 import { trackCrossChainDelivery } from '../../tx-submit/src/trackCrossChainDelivery'
 import type { UseSubmitExtrinsicProps } from '../../tx-submit/src/useSubmitExtrinsic/types'
 
@@ -68,7 +69,10 @@ vi.mock('../../app-swap/src/library/Swap', () => ({
 	swapFeeReserve: (fee: bigint) => fee,
 }))
 vi.mock('react-i18next', () => ({
-	useTranslation: () => ({ t: (key: string) => key }),
+	useTranslation: () => ({
+		t: (key: string, options?: { chain?: string }) =>
+			options?.chain ? `${key}:${options.chain}` : key,
+	}),
 }))
 
 const input: CrossChainTransferInput = {
@@ -134,6 +138,7 @@ beforeEach(() => {
 	vi.useFakeTimers()
 	vi.clearAllMocks()
 	mocked.handlers.length = 0
+	_notifications.next([])
 	listeners = []
 	deliveries = []
 	mocked.serviceApi = {
@@ -162,6 +167,7 @@ afterEach(async () => {
 		root.unmount()
 	})
 	vi.useRealTimers()
+	_notifications.next([])
 	vi.unstubAllGlobals()
 })
 
@@ -176,10 +182,14 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 		expect.any(Function),
 	)
 	expect(spinning()).toBe(true)
+	expect(handlers().shouldSubmit).toBe(false)
+	expect(container.querySelector('[role="status"]')).toBeNull()
 	await act(async () => handlers().callbackInBlock!())
 	expect(spinning()).toBe(true)
 	await act(async () => handlers().callbackFinalized!())
-	expect(container.textContent).toContain('xcmStatusFinalized')
+	expect(handlers().shouldSubmit).toBe(false)
+	expect(container.querySelector('[role="status"]')).toBeNull()
+	expect(_notifications.getValue()).toHaveLength(0)
 	await advance(18_000)
 	expect(mocked.serviceApi.stablecoins.query.balance).not.toHaveBeenCalled()
 	await act(async () => {
@@ -190,7 +200,15 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 	expect(spinning()).toBe(true)
 	await act(async () => listeners[0].onBalance(destinationBalance))
 	expect(spinning()).toBe(false)
-	expect(container.textContent).toContain('xcmStatusBalanceUpdated')
+	expect(container.querySelector('[role="status"]')).toBeNull()
+	expect(_notifications.getValue()).toMatchObject([
+		{
+			title: 'crossChainComplete',
+			subtitle: 'crossChainCompleteOn:Hydration',
+		},
+	])
+	await act(async () => listeners[0].onBalance(destinationBalance))
+	expect(_notifications.getValue()).toHaveLength(1)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	expect(mocked.serviceApi.stablecoins.query.balances).toHaveBeenCalledWith(
 		'external-recipient',
@@ -201,11 +219,14 @@ test('receipt before source finality is remembered without completing the transf
 	await render()
 	await act(async () => handlers().callbackSubmit!())
 	await act(async () => listeners[0].onBalance(destinationBalance))
-	expect(container.textContent).toContain('xcmStatusSubmitted')
+	expect(handlers().shouldSubmit).toBe(false)
+	expect(container.querySelector('[role="status"]')).toBeNull()
 	expect(spinning()).toBe(true)
+	expect(_notifications.getValue()).toHaveLength(0)
 	await act(async () => handlers().callbackFinalized!())
 	expect(spinning()).toBe(false)
-	expect(container.textContent).toContain('xcmStatusBalanceUpdated')
+	expect(container.querySelector('[role="status"]')).toBeNull()
+	expect(_notifications.getValue()).toHaveLength(1)
 })
 
 test('delivery tracking retains the submitted recipient and survives the form unmounting', async () => {
@@ -227,6 +248,12 @@ test('delivery tracking retains the submitted recipient and survives the form un
 		'external-recipient',
 	)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
+	expect(_notifications.getValue()).toMatchObject([
+		{
+			title: 'crossChainComplete',
+			subtitle: 'crossChainCompleteOn:Hydration',
+		},
+	])
 })
 
 test('a delivery timeout stops the spinner, releases the subscription, and ignores late updates', async () => {
@@ -242,6 +269,7 @@ test('a delivery timeout stops the spinner, releases the subscription, and ignor
 	await act(async () => listeners[0].onBalance(destinationBalance))
 	expect(container.textContent).toContain('xcmStatusUnconfirmed')
 	expect(mocked.serviceApi.stablecoins.query.balances).not.toHaveBeenCalled()
+	expect(_notifications.getValue()).toHaveLength(0)
 })
 
 test('source failure releases the subscription and enables retrying', async () => {
@@ -252,6 +280,7 @@ test('source failure releases the subscription and enables retrying', async () =
 	expect(spinning()).toBe(false)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	expect(handlers().shouldSubmit).toBe(true)
+	expect(_notifications.getValue()).toHaveLength(0)
 })
 
 test('subscription cleanup errors cannot leave a failed transfer pending', async () => {

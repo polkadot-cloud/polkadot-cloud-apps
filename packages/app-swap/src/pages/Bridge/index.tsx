@@ -24,12 +24,12 @@ import { ButtonSecondary } from 'ui-buttons'
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { maxSendableBalance } from 'utils'
+import transferClasses from '../../library/AssetTransfer/index.module.scss'
 import { chainOptions, findOption } from '../../library/AssetTransfer/options'
 import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { useHydrationFeeSetup } from '../Send/hooks/useHydrationFeeSetup'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import settingClasses from '../Swap/index.module.scss'
 import { feeTokenOptions, tokenOptions } from './options'
 import { TransferAction } from './TransferAction'
 import { TransferSummary } from './TransferSummary'
@@ -99,12 +99,8 @@ export const Bridge = () => {
 		void balances.refresh()
 	}, [balances.refresh])
 	const recipientValid = isValidAddress(recipient)
-	const enabled =
-		!!account &&
-		recipientValid &&
-		parsed > 0n &&
-		setup.ready &&
-		!setup.needsSetup
+	const validInput = !!account && recipientValid && parsed > 0n
+	const enabled = validInput && setup.ready && !setup.needsSetup
 	const { quote, networkFee, error, expired, loading, refresh, key } =
 		useCrossChainTransfer(input, enabled)
 	const funded =
@@ -129,7 +125,9 @@ export const Bridge = () => {
 
 	return (
 		<Page.Row>
-			<SendForm.Container className={formClasses.form}>
+			<SendForm.Container
+				className={`${formClasses.form} ${transferClasses.form}`}
+			>
 				<SendForm.Header
 					title={t('bridge')}
 					subtitle={t('crossChainDescription')}
@@ -171,9 +169,13 @@ export const Bridge = () => {
 							onSelect={accounts.setFromAccount}
 							allowCustomAccounts={false}
 							disabled={!accounts.accountsWithSigners.length}
-							placeholder={t('selectSenderAccount')}
+							placeholder={
+								accounts.accountsWithSigners.length
+									? t('selectSenderAccount')
+									: t('noAccounts', { ns: 'app' })
+							}
 						/>
-						<label className={settingClasses.recipientSetting}>
+						<label className={transferClasses.recipientSetting}>
 							<input
 								type="checkbox"
 								checked={customRecipient}
@@ -182,14 +184,18 @@ export const Bridge = () => {
 							{t('sendToAnotherAddress')}
 						</label>
 						{customRecipient && (
-							<div className={settingClasses.recipientField}>
+							<SendForm.Field
+								title={t('sendTo')}
+								className={transferClasses.recipientField}
+							>
 								<AccountDropdown
+									key={`${recipientAccount?.address}:${recipientAccount?.source}`}
 									initialAccount={recipientAccount}
 									accounts={accounts.accounts}
 									onSelect={setRecipientAccount}
 									placeholder={t('enterRecipientAddress')}
 								/>
-							</div>
+							</SendForm.Field>
 						)}
 					</SendForm.Segment>
 					<BalanceInputMulti
@@ -224,10 +230,8 @@ export const Bridge = () => {
 						quote={quote}
 						networkFee={networkFee}
 						feeSetupUid={setup.needsSetup ? setup.submission.uid : undefined}
+						loading={loading || (validInput && setup.status === 'loading')}
 					>
-						{loading && (
-							<ExchangeNotice>{t('checkingCrossChain')}</ExchangeNotice>
-						)}
 						{setup.status === 'error' && (
 							<ExchangeNotice status="danger">
 								{t('feeUnavailable')}

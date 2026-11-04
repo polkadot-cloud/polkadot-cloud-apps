@@ -15,6 +15,7 @@ export const trackCrossChainDelivery = (
 	serviceApi: ServiceInterface,
 	input: CrossChainTransferInput,
 	quote: CrossChainTransfer,
+	onDelivered?: () => void,
 ) => {
 	const { recipient, to, symbol } = input
 	const expectedBalance = quote.destinationBalance + quote.receivedAmount
@@ -36,6 +37,7 @@ export const trackCrossChainDelivery = (
 			delivery.setStage(nextStage)
 		}
 		if (nextStage === 'balanceUpdated') {
+			onDelivered?.()
 			void serviceApi.stablecoins.query
 				.balances(recipient)
 				.catch(() => undefined)

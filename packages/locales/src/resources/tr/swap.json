@@ -10,6 +10,8 @@
 		"chain": "Zincir",
 		"checkingCrossChain": "Bakiyeler, ücretler ve hedefteki yürütme kontrol ediliyor…",
 		"conversionFee": "Dönüşüm ücreti",
+		"crossChainComplete": "Zincirler arası transfer tamamlandı",
+		"crossChainCompleteOn": "Transfer {{chain}} ağına ulaştı.",
 		"crossChainDescription": "Zincirler arasında DOT ve sabit coin gönderin.",
 		"crossChainSend": "Zincirler arası gönder",
 		"destinationChain": "Hedef zincir",
@@ -53,9 +55,6 @@
 		"swapAssets": "Varlıkları Takas Et",
 		"swapDescription": "Polkadot Asset Hub üzerinde varlık takas edin.",
 		"transferAssetsDescription": "Varlıkları aynı ağdaki başka bir adrese aktarın.",
-		"xcmStatusBalanceUpdated": "Alıcının hedef zincirdeki bakiyesi beklenen tutar kadar arttı.",
-		"xcmStatusFinalized": "Kaynak zincirde kesinleşti. Hedef bakiyenin güncellenmesi bekleniyor…",
-		"xcmStatusSubmitted": "Transfer kaynak zincirde gönderildi. Kesinleşmesi bekleniyor…",
 		"xcmStatusUnconfirmed": "Kaynak işlem kesinleşti. Teslimat henüz doğrulanmadı; tekrar göndermeden önce hedef bakiyeyi kontrol edin.",
 		"youPay": "Ödeyeceğiniz",
 		"youReceive": "Alacağınız"

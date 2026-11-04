@@ -15,6 +15,7 @@ import type {
 } from 'types'
 import { EstimatedTxFee } from 'ui-app/EstimatedTxFee'
 import { SendForm } from 'ui-core/input'
+import { QuoteNotes, QuoteRoute } from '../../library/QuoteSummary'
 
 const displayFee = (fee?: CrossChainFee) =>
 	fee ? `${planckToUnit(fee.amount, fee.decimals)} ${fee.symbol}` : '—'
@@ -24,22 +25,28 @@ export const TransferSummary = ({
 	quote,
 	networkFee,
 	feeSetupUid,
+	loading,
 	children,
 }: {
 	input: CrossChainTransferInput
 	quote?: CrossChainTransfer
 	networkFee?: bigint
 	feeSetupUid?: number
+	loading: boolean
 	children?: ReactNode
 }) => {
 	const { t } = useTranslation('swap')
 	const feeDecimals = getStablecoinAssetConfig(from, feeAsset)!.decimals
 	const destinationDecimals = getStablecoinAssetConfig(to, symbol)!.decimals
 	return (
-		<SendForm.Notes>
-			<SendForm.Note label={t('route')} variant="muted">
-				{getStablecoinChainLabel(from)} → {getStablecoinChainLabel(to)}
-			</SendForm.Note>
+		<QuoteNotes>
+			<QuoteRoute
+				loading={loading}
+				loadingText={t(quote ? 'renewingQuote' : 'checkingCrossChain')}
+			>
+				{quote &&
+					`${getStablecoinChainLabel(from)} → ${getStablecoinChainLabel(to)}`}
+			</QuoteRoute>
 			<SendForm.Note label={t('networkFee')}>
 				{feeSetupUid !== undefined ? (
 					<EstimatedTxFee
@@ -70,6 +77,6 @@ export const TransferSummary = ({
 				</strong>
 			</SendForm.Note>
 			{children}
-		</SendForm.Notes>
+		</QuoteNotes>
 	)
 }

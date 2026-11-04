@@ -10,6 +10,8 @@
 		"chain": "链",
 		"checkingCrossChain": "正在检查余额、费用和目标链执行情况…",
 		"conversionFee": "兑换手续费",
+		"crossChainComplete": "跨链转账已完成",
+		"crossChainCompleteOn": "转账已到达 {{chain}}。",
 		"crossChainDescription": "跨链发送 DOT 和稳定币。",
 		"crossChainSend": "跨链发送",
 		"destinationChain": "目标链",
@@ -53,9 +55,6 @@
 		"swapAssets": "兑换资产",
 		"swapDescription": "在 Polkadot Asset Hub 上兑换资产。",
 		"transferAssetsDescription": "将资产转账到同一网络中的其他地址。",
-		"xcmStatusBalanceUpdated": "收款人的目标链余额已增加预期金额。",
-		"xcmStatusFinalized": "来源链已最终确认，等待目标链余额更新…",
-		"xcmStatusSubmitted": "转账已在来源链提交，等待最终确认…",
 		"xcmStatusUnconfirmed": "来源链交易已最终确认，尚未确认到账；再次发送前请检查目标链余额。",
 		"youPay": "支付",
 		"youReceive": "接收"

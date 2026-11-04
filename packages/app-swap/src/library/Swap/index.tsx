@@ -21,6 +21,7 @@ import type { ImportedAccount, SwapToken } from 'types'
 import { SubmitTx } from 'ui-app/SubmitTx'
 import { SendForm } from 'ui-core/input'
 import { canFundExchange, ceilDiv } from 'utils'
+import { QuoteNotes } from '../QuoteSummary'
 import classes from './index.module.scss'
 
 export const tokenOptions = SwapTokens.map((value) => ({
@@ -77,7 +78,7 @@ export const TransactionAction = ({
 	...props
 }: TransactionActionProps) => (
 	<>
-		<SendForm.Notes className={classes.notes}>{children}</SendForm.Notes>
+		<QuoteNotes>{children}</QuoteNotes>
 		<TransactionActionInner key={props.submissionKey} {...props} />
 	</>
 )

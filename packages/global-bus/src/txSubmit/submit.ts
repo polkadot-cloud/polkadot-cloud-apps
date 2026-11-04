@@ -102,6 +102,7 @@ export const addSignAndSend = async (
 		)
 		registerSub(uid, unsubscribe)
 	} catch (e) {
+		console.error('Transaction signing or submission failed:', e)
 		handleError(String(e), onError)
 		setUidSubmitted(uid, false)
 		setUidPending(uid, false)
