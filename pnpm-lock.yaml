@@ -229,7 +229,7 @@ importers:
         version: 3.0.0(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -386,7 +386,7 @@ importers:
         version: 3.0.0(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -546,7 +546,7 @@ importers:
         version: 3.0.0(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -664,7 +664,7 @@ importers:
         version: 3.0.0(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -904,7 +904,7 @@ importers:
         version: 19.3.1
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -959,11 +959,11 @@ importers:
         specifier: workspace:*
         version: link:../event-tracking
       i18next:
-        specifier: ^26.5.11
-        version: 26.5.11(typescript@7.0.2)
+        specifier: ^26.7.0
+        version: 26.7.0(typescript@7.0.2)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       utils:
         specifier: workspace:*
         version: link:../utils
@@ -1049,7 +1049,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       types:
         specifier: workspace:*
         version: link:../types
@@ -1100,7 +1100,7 @@ importers:
         version: 19.3.1
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       styled-components:
         specifier: ^6.6.0
         version: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1212,7 +1212,7 @@ importers:
         version: 3.0.0(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       react-router-dom:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1459,7 +1459,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       styled-components:
         specifier: ^6.6.0
         version: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1553,7 +1553,7 @@ importers:
         version: 19.3.1
       react-i18next:
         specifier: ^17.1.10
-        version: 17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
+        version: 17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
       ui-buttons:
         specifier: workspace:*
         version: link:../ui-buttons
@@ -1589,8 +1589,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(typescript@7.0.2)
       i18next:
-        specifier: ^26.5.11
-        version: 26.5.11(typescript@7.0.2)
+        specifier: ^26.7.0
+        version: 26.7.0(typescript@7.0.2)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -4156,8 +4156,8 @@ packages:
   i18next-browser-languagedetector@8.2.4:
     resolution: {integrity: sha512-n6zWTCD8plrPN6gotXNXf0qdM2cORZqZ6ypJA4aIXZkEa45Ds2BVlrZfFItD+XQWP3yAgWxV+euldyN+2utk0Q==}
 
-  i18next@26.5.11:
-    resolution: {integrity: sha512-Wc0klBPKxqZ2tL2qdAnF8xvvnWgr1IMGSY2ikTiAvaFVbz7xiFARtkoU4RidBDw1SyziGROp0qxu6qnJ7l2Wug==}
+  i18next@26.7.0:
+    resolution: {integrity: sha512-ooLIKg1z3/iTQ4fjeQKB2FkMoYhplTCB4djrlTYLg9b32sycFcqovQIXfM7NYVMtmSwQ4I67uf4/JRSeO/Cvog==}
     peerDependencies:
       typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
@@ -7760,7 +7760,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  i18next@26.5.11(typescript@7.0.2):
+  i18next@26.7.0(typescript@7.0.2):
     optionalDependencies:
       typescript: 7.0.2
 
@@ -8246,11 +8246,11 @@ snapshots:
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
 
-  react-i18next@17.1.10(i18next@26.5.11(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2):
+  react-i18next@17.1.10(i18next@26.7.0(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2):
     dependencies:
       '@babel/runtime': 7.29.7
       html-parse-stringify: 4.0.1
-      i18next: 26.5.11(typescript@7.0.2)
+      i18next: 26.7.0(typescript@7.0.2)
       react: 19.3.1
       use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
