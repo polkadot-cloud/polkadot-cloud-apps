@@ -235,11 +235,16 @@ test('disabling People leaves its balance service and connection unused', async 
 	).toBeUndefined()
 	const onError = vi.fn()
 	const unsubscribe = service.interface.stablecoins.subscribe.balances(
-		'sender', 'people-polkadot', vi.fn(), onError,
+		'sender',
+		'people-polkadot',
+		vi.fn(),
+		onError,
 	)
-	expect(onError).toHaveBeenCalledWith(expect.objectContaining({
-		message: 'Balance subscriptions unavailable for people-polkadot',
-	}))
+	expect(onError).toHaveBeenCalledWith(
+		expect.objectContaining({
+			message: 'Balance subscriptions unavailable for people-polkadot',
+		}),
+	)
 	unsubscribe()
 	expect(connect).not.toHaveBeenCalled()
 })

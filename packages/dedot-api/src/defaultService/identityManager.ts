@@ -27,7 +27,7 @@ export class IdentityManager<PeopleApi extends PeopleChain> {
 	}
 
 	// Lazy connect to the people chain API. Should be called before any queries
-	lazyConnect = async () => {
+	lazyConnect = () => {
 		if (!this.connection) {
 			const peopleChainId = getPeopleChainId(this.network) as SystemChainId
 			setApiStatus(peopleChainId, 'connecting')
