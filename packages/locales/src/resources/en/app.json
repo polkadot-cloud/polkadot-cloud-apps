@@ -236,6 +236,7 @@
 		"ledgerWillBeReset": "Your Ledger address list will be reset, and any imported accounts will be removed from the dashboard.",
 		"legalDisclosures": "Legal Disclosures",
 		"linkCopied": "Link Copied",
+		"liquidity": "Liquidity",
 		"listItemActive": "Active",
 		"loadingValidatorDetails": "Loading Validator Details",
 		"locked": "Locked",
@@ -363,9 +364,7 @@
 		"permissionlessClaimingTurnedOff": "Permissionless claiming is turned off.",
 		"permissionlessCompound": "Permissionless Compounding: Anyone can compound rewards for this member",
 		"permissionlessWithdraw": "Permissionless Withdrawing: Anyone can withdraw rewards for this member",
-		"plugin": {
-			"staking_api": "Staking API"
-		},
+		"plugin": { "staking_api": "Staking API" },
 		"points": "Points",
 		"pool": "Pool",
 		"poolClaim": "Pool Claim",
@@ -438,6 +437,7 @@
 		"successfullyFetchedAddress": "Successfully Fetched Address",
 		"support": "Support",
 		"supportChannels": "Support Channels",
+		"swap": "Swap",
 		"switchAccount": "Switch Account",
 		"syncAccounts": "Sync Accounts",
 		"syncing": "Syncing",
@@ -526,8 +526,6 @@
 		"yourPayouts": "Your Payouts",
 		"zugValidatorWarningLabel": "Zug validator",
 		"zugValidatorWarning_one": "Your nomination list includes {{count}} Zug validator. Zug is closing validator operations on March 31, 2027. Remove this validator from your nominations.",
-		"zugValidatorWarning_other": "Your nomination list includes {{count}} Zug validators. Zug is closing validator operations on March 31, 2027. Remove these validators from your nominations.",
-		"swap": "Swap",
-		"liquidity": "Liquidity"
+		"zugValidatorWarning_other": "Your nomination list includes {{count}} Zug validators. Zug is closing validator operations on March 31, 2027. Remove these validators from your nominations."
 	}
 }

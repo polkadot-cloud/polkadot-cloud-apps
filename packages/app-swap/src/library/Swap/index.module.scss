@@ -42,28 +42,3 @@
 	display: grid;
 	gap: 0.75rem;
 }
-
-.notes {
-	> * {
-		min-height: 1.5rem;
-	}
-
-	> :nth-child(-n + 5) {
-		min-height: 2rem;
-		padding-block: 0.25rem;
-	}
-
-	> :nth-child(-n + 4) {
-		position: relative;
-
-		&::after {
-			position: absolute;
-			right: 0;
-			bottom: -0.375rem;
-			left: 0;
-			border-bottom: 1px solid var(--gray-400);
-			content: '';
-			pointer-events: none;
-		}
-	}
-}

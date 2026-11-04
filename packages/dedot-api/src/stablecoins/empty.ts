@@ -7,6 +7,7 @@ import type { ServiceInterface } from 'types'
 // Creates an empty stablecoin interface for networks without stablecoin support.
 export const createEmptyStablecoinsInterface =
 	(): ServiceInterface['stablecoins'] => ({
+		subscribe: { balances: () => () => {} },
 		query: {
 			balances: async (address) => {
 				const requestId = setStablecoinBalancesSyncing(address)

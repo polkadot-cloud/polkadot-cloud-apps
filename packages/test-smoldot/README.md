@@ -45,6 +45,7 @@ SEED_PHRASE="your twelve word seed phrase here" RECIPIENT_ADDRESS="destination a
 ## Expected Output
 
 ### Success Case
+
 ```
 🚀 Starting smoldot light client test...
 
@@ -69,6 +70,7 @@ SEED_PHRASE="your twelve word seed phrase here" RECIPIENT_ADDRESS="destination a
 ```
 
 ### Error Case
+
 The script will log detailed error information to help identify where in the signing process the issue occurs.
 
 ## Architecture

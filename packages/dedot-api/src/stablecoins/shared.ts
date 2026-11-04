@@ -10,6 +10,10 @@ import type {
 	StablecoinBalance,
 	StablecoinFeeEstimateInput,
 } from 'types'
+import type {
+	BalanceCallback,
+	ErrorCallback,
+} from '../subscribe/stablecoinBalances'
 
 // Minimal free/frozen balance shape shared by all stablecoin balance sources.
 export type BalancePair = {
@@ -20,6 +24,11 @@ export type BalancePair = {
 // Common interface implemented by each chain-specific stablecoin adapter.
 export type StablecoinAdapter = {
 	feeAssets: FeeAssetSymbol[]
+	subscribe: (
+		address: string,
+		onBalance: BalanceCallback,
+		onError: ErrorCallback,
+	) => () => void
 	balance: (
 		address: string,
 		symbol: FeeAssetSymbol,
@@ -29,26 +38,6 @@ export type StablecoinAdapter = {
 	) => Promise<SubmittableExtrinsic | undefined>
 	paymentOptions: (symbol: FeeAssetSymbol) => PayloadOptions | undefined
 	estimateFee: (input: StablecoinFeeEstimateInput) => Promise<bigint>
-}
-
-// Builds an empty balance for a configured stablecoin when a lookup fails.
-export const zeroBalance = (
-	chain: StablecoinBalance['chain'],
-	symbol: FeeAssetSymbol,
-): StablecoinBalance | undefined => {
-	const config = getStablecoinAssetConfig(chain, symbol)
-	if (!config) {
-		return undefined
-	}
-
-	return {
-		chain,
-		symbol,
-		free: 0n,
-		frozen: 0n,
-		existentialDeposit: config.existentialDeposit,
-		decimals: config.decimals,
-	}
 }
 
 // Adds stablecoin metadata to a raw free/frozen balance pair.
@@ -71,3 +60,9 @@ export const toStablecoinBalance = (
 		decimals: config.decimals,
 	}
 }
+
+// Builds an empty balance for a configured stablecoin when a lookup fails.
+export const zeroBalance = (
+	chain: StablecoinBalance['chain'],
+	symbol: FeeAssetSymbol,
+) => toStablecoinBalance(chain, symbol, { free: 0n, frozen: 0n })

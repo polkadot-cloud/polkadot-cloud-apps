@@ -15,6 +15,10 @@ export const Sync = () => {
 	const { pathname } = useLocation()
 	const { bondedPools } = useBondedPools()
 	const { isLoading: warningsLoading } = useNominationWarnings()
+	const transactionActive = uids.some(
+		({ submitted, broadcasted, pending }) =>
+			(submitted && !broadcasted) || pending,
+	)
 
 	// Keep syncing if on pools page and still fetching bonded pools or pool members
 	const onPoolsSyncing = () => {
@@ -27,10 +31,7 @@ export const Sync = () => {
 	}
 
 	const isSyncing =
-		syncing ||
-		warningsLoading ||
-		onPoolsSyncing() ||
-		uids.filter(({ submitted }) => submitted).length > 0
+		syncing || warningsLoading || onPoolsSyncing() || transactionActive
 
 	return isSyncing ? (
 		<span style={{ marginRight: '1rem' }}>

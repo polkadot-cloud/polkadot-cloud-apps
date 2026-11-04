@@ -13,7 +13,7 @@ import {
 	findOption,
 	getFeeAssetOptions,
 	getTokenOptions,
-} from '../options'
+} from '../../../library/AssetTransfer/options'
 import type {
 	SendSelection,
 	SendSelectionAction,

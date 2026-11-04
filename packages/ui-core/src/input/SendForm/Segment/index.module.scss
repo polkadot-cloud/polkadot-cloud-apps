@@ -24,6 +24,11 @@
 	&:focus-within {
 		box-shadow: inset 0 0 0 1px var(--send-form-section-focus-border, transparent);
 	}
+
+	&:has([aria-expanded="true"]) {
+		// Let the menu stack above the direction control without raising the section background.
+		z-index: auto;
+	}
 }
 
 .raisedLayer {

@@ -8,6 +8,7 @@ import {
 	SideMenuMinimisedWidth,
 } from 'consts'
 import styled from 'styled-components'
+import { CloudAppsButton } from '../CloudAppsButton'
 import type { MinimisedProps } from './types'
 
 export const Wrapper = styled.div<
@@ -94,7 +95,7 @@ export const CategoryHeader = styled.h3`
 
 `
 
-export const LogoWrapper = styled.div<MinimisedProps>`
+export const LogoWrapper = styled(CloudAppsButton)<MinimisedProps>`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -113,7 +114,7 @@ export const LogoWrapper = styled.div<MinimisedProps>`
     height: ${(props) => (props.$minimised ? '2.25rem' : '1.75rem')};
   }
 
-  > h3 {
+  > span {
     font-family: 'DM Serif Display', serif;
     color: var(--gray-1000);
     margin-left: 0.75rem;
@@ -121,6 +122,8 @@ export const LogoWrapper = styled.div<MinimisedProps>`
     display: flex;
     align-items: center;
     font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.6rem;
   }
 
   &:hover {
@@ -207,7 +210,7 @@ export const BulletWrapper = styled.div`
   }
 `
 
-export const BarLogoWrapper = styled.div`
+export const BarLogoWrapper = styled(CloudAppsButton)`
   width: calc(100% - 2rem);
   display: flex;
   justify-content: center;
@@ -218,6 +221,10 @@ export const BarLogoWrapper = styled.div`
 
   &:hover {
     transform: scale(1.05);
+  }
+
+  &:focus-visible {
+    outline-color: white;
   }
 
   > svg {

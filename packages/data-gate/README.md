@@ -12,7 +12,7 @@ or pool stash's overall nomination status through one source-neutral hook:
 import { useNominationStatus } from 'data-gate'
 
 const { status, loading, error, refetch } = useNominationStatus(stash, {
-  dependencies: [nominations],
+	dependencies: [nominations],
 })
 ```
 
@@ -38,7 +38,7 @@ needed:
 ```tsx
 import { DataGateProvider } from 'data-gate'
 
-<DataGateProvider>{children}</DataGateProvider>
+;<DataGateProvider>{children}</DataGateProvider>
 ```
 
 - **Staking API:** one request, without waiting for node readiness, validator
@@ -61,12 +61,12 @@ Each data point declares its options with `dataPointOptions` in `src/query.ts`.
 The shared `DataPointConfig<T>` in `src/types.ts` gives both sources the same
 result type and a small configuration API:
 
-| Field | Purpose |
-| --- | --- |
-| `key` | Data point name and inputs, before data gate adds network and source. |
-| Source `queryFn` | Fetch with `{ network, signal }`, or use `skipToken` for missing input. |
-| Source `subscribe` | Subscribe with `{ network, signal, next, error }`; return an unsubscribe function or a promise of one. May also use `skipToken`. |
-| Source `enabled` | Optional readiness condition; defaults to `true`. |
+| Field                          | Purpose                                                                                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`                          | Data point name and inputs, before data gate adds network and source.                                                                     |
+| Source `queryFn`               | Fetch with `{ network, signal }`, or use `skipToken` for missing input.                                                                   |
+| Source `subscribe`             | Subscribe with `{ network, signal, next, error }`; return an unsubscribe function or a promise of one. May also use `skipToken`.          |
+| Source `enabled`               | Optional readiness condition; defaults to `true`.                                                                                         |
 | Fetch source `refreshInterval` | Optional refresh/freshness interval in milliseconds; only applies when that source is selected. Subscriptions use live emissions instead. |
 
 Consumers import named hooks such as `useNomineeStatuses(stash, targets)` from
@@ -100,18 +100,21 @@ import { dataPointOptions } from '../query'
 import { fetchApiBalance, fetchNodeBalance } from './sources'
 
 export const useBalance = (address: string) => {
-  const { node, ready } = useDataGate()
+	const { node, ready } = useDataGate()
 
-  return useQuery(dataPointOptions({
-    key: ['balance', address],
-    node: {
-      enabled: ready,
-      queryFn: ({ signal }) => fetchNodeBalance(node, address, signal),
-    },
-    stakingApi: {
-      queryFn: ({ network, signal }) => fetchApiBalance(network, address, signal),
-    },
-  }))
+	return useQuery(
+		dataPointOptions({
+			key: ['balance', address],
+			node: {
+				enabled: ready,
+				queryFn: ({ signal }) => fetchNodeBalance(node, address, signal),
+			},
+			stakingApi: {
+				queryFn: ({ network, signal }) =>
+					fetchApiBalance(network, address, signal),
+			},
+		}),
+	)
 }
 ```
 
@@ -129,32 +132,34 @@ import { dataPointOptions } from '../query'
 import { subscribeApiBalance, subscribeNodeBalance } from './sources'
 
 export const useBalance = (address: string) => {
-  const { node, ready } = useDataGate()
+	const { node, ready } = useDataGate()
 
-  return useQuery(dataPointOptions({
-    key: ['balance', address],
-    node: {
-      enabled: ready,
-      subscribe: ({ signal, next, error }) =>
-        subscribeNodeBalance(node, address, { signal, next, error }),
-    },
-    stakingApi: {
-      subscribe: ({ network, signal, next, error }) =>
-        subscribeApiBalance(network, address, { signal, next, error }),
-    },
-  }))
+	return useQuery(
+		dataPointOptions({
+			key: ['balance', address],
+			node: {
+				enabled: ready,
+				subscribe: ({ signal, next, error }) =>
+					subscribeNodeBalance(node, address, { signal, next, error }),
+			},
+			stakingApi: {
+				subscribe: ({ network, signal, next, error }) =>
+					subscribeApiBalance(network, address, { signal, next, error }),
+			},
+		}),
+	)
 }
 ```
 
 Only the selected source runs: `stakingApi` when its plugin is enabled, otherwise
 `node`. All four combinations are supported:
 
-| Node source | Staking API source |
-| --- | --- |
+| Node source          | Staking API source   |
+| -------------------- | -------------------- |
 | `queryFn` (one-shot) | `queryFn` (one-shot) |
-| `subscribe` (live) | `subscribe` (live) |
-| `subscribe` (live) | `queryFn` (one-shot) |
-| `queryFn` (one-shot) | `subscribe` (live) |
+| `subscribe` (live)   | `subscribe` (live)   |
+| `subscribe` (live)   | `queryFn` (one-shot) |
+| `queryFn` (one-shot) | `subscribe` (live)   |
 
 For a live node and one-shot API, combine `node.subscribe` from the second example
 with `stakingApi.queryFn` from the first. For the reverse, combine `node.queryFn`
@@ -193,10 +198,10 @@ Applications import these unified queries directly from `data-gate`:
 
 ```tsx
 import {
-  useEraNominatorCount,
-  useNomineeStatuses,
-  useHasEraBacking,
-  useValidatorRewardRates,
+	useEraNominatorCount,
+	useNomineeStatuses,
+	useHasEraBacking,
+	useValidatorRewardRates,
 } from 'data-gate'
 
 const count = useEraNominatorCount()
@@ -208,11 +213,11 @@ const rates = useValidatorRewardRates(validators, erasPerDay)
 All four hooks return `{ data, loading, error, refetch }`. An unresolved `data`
 value is `undefined`; a resolved `0`, `false`, or empty collection is valid data.
 
-| Hook | Resolved `data` |
-| --- | --- |
-| `useEraNominatorCount(enabled?)` | Number of unique nominator stashes across the active era's validators. |
-| `useNomineeStatuses(stash, targets)` | Entries with `address`, `status`, and `activeBacking` as a decimal string in planck. Target order and duplicates do not change the cache key. |
-| `useHasEraBacking(stash)` | Whether the stash has stake backing any validator in the active era, including nominees removed from its current targets. |
+| Hook                                                        | Resolved `data`                                                                                                                                                                                            |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useEraNominatorCount(enabled?)`                            | Number of unique nominator stashes across the active era's validators.                                                                                                                                     |
+| `useNomineeStatuses(stash, targets)`                        | Entries with `address`, `status`, and `activeBacking` as a decimal string in planck. Target order and duplicates do not change the cache key.                                                              |
+| `useHasEraBacking(stash)`                                   | Whether the stash has stake backing any validator in the active era, including nominees removed from its current targets.                                                                                  |
 | `useValidatorRewardRates(validators, erasPerDay, enabled?)` | Validator-address-to-reward-rate map. Node rates annualize the previous era's rewards before commission; API mode calls the batch average-rate endpoint with `fromEra = era - 1` and `depth = erasPerDay`. |
 
 The first three hooks require an active era (`era > 0`) in both source modes.

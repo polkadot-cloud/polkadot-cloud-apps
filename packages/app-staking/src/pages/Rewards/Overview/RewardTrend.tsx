@@ -67,7 +67,8 @@ export const RewardTrend = () => {
 	if (rewardTrend) {
 		const { reward, change } = rewardTrend
 		value = reward
-		direction = Number(change.percent) > 0 ? 'up' : 'down'
+		const percent = Number(change.percent)
+		direction = percent === 0 ? undefined : percent > 0 ? 'up' : 'down'
 		changePercent = new BigNumber(change.percent).toFormat(2)
 	}
 

@@ -5,9 +5,15 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classes from './index.module.scss'
 
-export const Close = ({ onClose }: { onClose: () => void }) => (
+export const Close = ({
+	onClose,
+	label = 'Close',
+}: {
+	onClose: () => void
+	label?: string
+}) => (
 	<div className={classes.close}>
-		<button type="button" onClick={() => onClose()}>
+		<button type="button" aria-label={label} onClick={() => onClose()}>
 			<FontAwesomeIcon icon={faXmark} />
 		</button>
 	</div>

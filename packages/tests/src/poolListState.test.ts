@@ -11,6 +11,7 @@ import {
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { usePoolFilters } from '../../app-staking/src/hooks/usePoolFilters'
 import { PoolList as ActualPoolList } from '../../app-staking/src/library/PoolList'
+import { HookProbe } from './HookProbe'
 
 const { state, useEraStakers } = vi.hoisted(() => ({
 	state: {
@@ -88,11 +89,11 @@ const nominations = (targets = ['validator']): Nominator => ({
 const ids = (pools: BondedPool[]) => pools.map(({ id }) => id)
 const filters = (active = true) => {
 	let result!: ReturnType<typeof usePoolFilters>
-	const Consumer = () => {
+	const probe = () => {
 		result = usePoolFilters(state.bondedPools, active)
 		return null
 	}
-	renderToStaticMarkup(createElement(Consumer))
+	renderToStaticMarkup(createElement(HookProbe, { callback: probe }))
 	return result
 }
 

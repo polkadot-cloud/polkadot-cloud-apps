@@ -52,6 +52,8 @@ export const useSubmitExtrinsic = ({
 	feeDisplay,
 	callbackSubmit,
 	callbackInBlock,
+	callbackFinalized,
+	callbackFailure,
 }: UseSubmitExtrinsicProps): UseSubmitExtrinsic => {
 	const { t } = useTranslation('app')
 	const { serviceApi } = useApi()
@@ -329,6 +331,7 @@ export const useSubmitExtrinsic = ({
 
 	const onFinalized = () => {
 		renewSubmission()
+		callbackFinalized?.()
 		emitNotification({
 			title: t('finalized'),
 			subtitle: t('transactionSuccessful'),
@@ -337,6 +340,7 @@ export const useSubmitExtrinsic = ({
 
 	const onFailed = (failure: TxFailure) => {
 		renewSubmission()
+		callbackFailure?.()
 		emitNotification({
 			title: t('failed'),
 			subtitle: t(getTxFailureKey(failure), { unit: feeDisplay?.unit || unit }),
@@ -345,6 +349,7 @@ export const useSubmitExtrinsic = ({
 
 	const onError = (type?: string, details?: string) => {
 		setUidSubmitted(uid, false)
+		callbackFailure?.()
 
 		if (type === 'ledger') {
 			handleResetLedgerTask()

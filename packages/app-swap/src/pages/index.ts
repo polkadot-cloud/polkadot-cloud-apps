@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import {
+	faArrowRightArrowLeft,
 	faArrowsRotate,
 	faDroplet,
 	faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons'
 import type { PageItem } from 'types'
+import { Bridge } from './Bridge'
 import { Liquidity } from './Liquidity'
 import { Send } from './Send'
 import { Swap } from './Swap'
@@ -20,6 +22,13 @@ export const pages: PageItem[] = [
 		faIcon: faArrowsRotate,
 	},
 	{ key: 'send', hash: '/send', Entry: Send, faIcon: faPaperPlane },
+	{
+		key: 'bridge',
+		titleNamespace: 'swap',
+		hash: '/bridge',
+		Entry: Bridge,
+		faIcon: faArrowRightArrowLeft,
+	},
 	{
 		key: 'liquidity',
 		titleNamespace: 'swap',

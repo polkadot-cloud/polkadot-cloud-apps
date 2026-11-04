@@ -19,13 +19,11 @@ import type {
 } from 'types'
 import { createAssetHubExchange } from '../assetHub'
 import { BaseService } from '../defaultService/baseService'
-import type { StablecoinBalanceSubscriber } from '../defaultService/subscriptionManager'
 import type { DefaultServiceClass } from '../defaultService/types'
 import { query } from '../query'
 import { runtimeApi } from '../runtimeApi'
 import { createStablecoinsInterface } from '../stablecoins'
 import { createEmptyStablecoinsInterface } from '../stablecoins/empty'
-import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { createSwapInterface } from '../swap'
 import { tx } from '../tx'
 import { createPool } from '../tx/createPool'
@@ -68,8 +66,9 @@ export class PolkadotService
 		)
 
 		// Initialize service interface with network-specific routing
-		const stablecoinsEnabled =
-			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
+		const stablecoinsEnabled = Object.values(this.features.stablecoins).some(
+			Boolean,
+		)
 		this.interface = {
 			assetHub: this.features.stablecoins.assetHub
 				? createAssetHubExchange(this.apiHub)
@@ -79,6 +78,7 @@ export class PolkadotService
 				? createStablecoinsInterface(
 						this.apiHub,
 						this.getHydrationApi,
+						this.getPeopleApi,
 						this.features.stablecoins,
 					)
 				: createEmptyStablecoinsInterface(),
@@ -238,37 +238,20 @@ export class PolkadotService
 		return this.apiHydrationPromise
 	}
 
-	private subscribeHydrationStablecoinBalances: StablecoinBalanceSubscriber = (
-		address,
-		onBalance,
-		onError,
-	) => {
-		const subscription = new HydrationStablecoinBalancesQuery(
-			this.getHydrationApi,
-			address,
-			onBalance,
-			onError,
-		)
-
-		return () => {
-			subscription.unsubscribe()
-		}
-	}
+	getPeopleApi = () => this.identityManager.lazyConnect()
 
 	getSigningApi = (specName: string) => {
+		if (this.identityManager.api?.runtimeVersion.specName === specName) {
+			return this.identityManager.api
+		}
 		if (this.apiHydration?.runtimeVersion.specName === specName) {
-			return this.apiHydration as unknown as DedotClient<HydrationApi>
+			return this.apiHydration
 		}
 		return this.apiHub
 	}
 
 	async start() {
-		await super.start(
-			this.interface,
-			this.features.stablecoins.hydration
-				? this.subscribeHydrationStablecoinBalances
-				: undefined,
-		)
+		await super.start(this.interface)
 	}
 
 	async unsubscribe() {

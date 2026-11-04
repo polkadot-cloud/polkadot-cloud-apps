@@ -29,10 +29,7 @@ import type {
 	StakingChain,
 } from '../types'
 import { IdentityManager } from './identityManager'
-import {
-	type StablecoinBalanceSubscriber,
-	SubscriptionManager,
-} from './subscriptionManager'
+import { SubscriptionManager } from './subscriptionManager'
 
 // Base service utility that handles common initialization and management
 export class BaseService<
@@ -80,11 +77,13 @@ export class BaseService<
 			stablecoins: {
 				assetHub: features.stablecoins?.assetHub ?? true,
 				hydration: features.stablecoins?.hydration ?? true,
+				people: features.stablecoins?.people ?? false,
 			},
 		}
 		this.apiStatus = {
 			hub: new ApiStatus(this.apiHub, ids[2], networkConfig),
 		}
+		this.identityManager = new IdentityManager(this.providerPeople, this.ids[0])
 	}
 
 	// Standard getLiveApi implementation used by all services. Currently only supporting hub api.
@@ -93,10 +92,7 @@ export class BaseService<
 	}
 
 	// Initialize the service with common setup logic
-	async start(
-		serviceInterface: ServiceInterface,
-		subscribeStablecoinBalances?: StablecoinBalanceSubscriber,
-	) {
+	async start(serviceInterface: ServiceInterface) {
 		// Initialize chain specs
 		this.hubChainSpec = new ChainSpecs(this.apiHub)
 
@@ -129,12 +125,8 @@ export class BaseService<
 			this.ids,
 			{ poolsPalletId: this.stakingConsts.poolsPalletId },
 			serviceInterface,
-			subscribeStablecoinBalances,
 			this.features,
 		)
-
-		// Initialize identity manager
-		this.identityManager = new IdentityManager(this.providerPeople, this.ids[0])
 
 		// Set up the active era subscription
 		this.subscriptionManager.setActiveEraSubscription(this.activeEra.activeEra$)
@@ -155,9 +147,7 @@ export class BaseService<
 
 		try {
 			await Promise.all([
-				this.identityManager.api
-					? this.identityManager.api.disconnect()
-					: Promise.resolve(),
+				this.identityManager.disconnect(),
 				this.apiHub.disconnect(),
 			])
 		} catch {

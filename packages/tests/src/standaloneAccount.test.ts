@@ -6,6 +6,7 @@ import { beforeEach, expect, test, vi } from 'vitest'
 import { createElement } from '../../app-staking/node_modules/react/index.js'
 import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
 import { useStandaloneAccount } from '../../app-staking/src/pages/Nominate/useStandaloneAccount'
+import { HookProbe } from './HookProbe'
 
 const { state } = vi.hoisted(() => ({
 	state: {
@@ -55,11 +56,11 @@ vi.mock('../../global-bus/src/index', () => ({
 
 const readAccount = () => {
 	let account: ReturnType<typeof useStandaloneAccount> | undefined
-	const Probe = () => {
+	const probe = () => {
 		account = useStandaloneAccount()
 		return null
 	}
-	renderToStaticMarkup(createElement(Probe))
+	renderToStaticMarkup(createElement(HookProbe, { callback: probe }))
 	return account!
 }
 

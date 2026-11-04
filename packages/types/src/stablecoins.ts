@@ -4,8 +4,8 @@
 import type { SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 
-// Chains supported by stablecoin services; statemint identifies Polkadot Asset Hub.
-export type StablecoinChainId = 'statemint' | 'hydration'
+// Chains supported by asset transfer services; statemint identifies Polkadot Asset Hub.
+export type StablecoinChainId = 'statemint' | 'hydration' | 'people-polkadot'
 
 // Stablecoin symbols supported across Asset Hub and Hydration.
 export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR' | 'dotUSD'
@@ -59,6 +59,36 @@ export type AssetTransferInput = {
 
 // Retained for consumers of the original stablecoin service API.
 export type StablecoinTransferInput = AssetTransferInput
+
+// Assets available on supported cross-chain routes.
+export type CrossChainAsset = 'DOT' | 'USDC' | 'USDT'
+
+export type CrossChainTransferInput = {
+	from: StablecoinChainId
+	to: StablecoinChainId
+	symbol: CrossChainAsset
+	amount: bigint
+	sender: string
+	recipient: string
+	feeAsset: CrossChainAsset
+}
+
+export type CrossChainFee = {
+	amount: bigint
+	symbol: CrossChainAsset
+	decimals: number
+}
+
+// A successfully simulated transfer; amounts and fees are in base units.
+export type CrossChainTransfer = {
+	tx: SubmittableExtrinsic
+	originFee: CrossChainFee
+	// Asset Hub can deduct its XCM execution fee from the transferred asset.
+	originFeeFromAmount: boolean
+	destinationFee: CrossChainFee
+	receivedAmount: bigint
+	destinationBalance: bigint
+}
 
 // Fee asset selection and signing options for a transaction on a supported chain.
 export type StablecoinFeePayment = {

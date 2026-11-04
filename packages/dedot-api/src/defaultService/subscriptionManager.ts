@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
 import {
 	getActiveAddress,
 	importedAccounts$,
@@ -28,12 +27,11 @@ import { combineLatest, pairwise, type Subscription, startWith } from 'rxjs'
 import type {
 	NetworkId,
 	ServiceInterface,
-	StablecoinBalance,
+	StablecoinChainId,
 	SystemChainId,
 } from 'types'
 import { AccountBalanceQuery } from '../subscribe/accountBalance'
 import { ActivePoolQuery } from '../subscribe/activePool'
-import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { BondedQuery } from '../subscribe/bonded'
 import { EraRewardPointsQuery } from '../subscribe/eraRewardPoints'
 import { PoolMembershipQuery } from '../subscribe/poolMembership'
@@ -57,12 +55,6 @@ import {
 	getAccountKey,
 } from '../util'
 import type { AccountBalances } from './types'
-
-export type StablecoinBalanceSubscriber = (
-	address: string,
-	onBalance: (balance: StablecoinBalance) => void,
-	onError: (error: unknown) => void,
-) => () => void
 
 // Manages all subscriptions for a default service
 export class SubscriptionManager<
@@ -109,11 +101,42 @@ export class SubscriptionManager<
 		private ids: [NetworkId, SystemChainId, SystemChainId],
 		private stakingConsts: { poolsPalletId: Uint8Array },
 		private serviceInterface: ServiceInterface,
-		private subscribeStablecoinBalances:
-			| StablecoinBalanceSubscriber
-			| undefined,
 		private features: DedotServiceFeatures,
 	) {}
+
+	private subscribeAccountStablecoins(address: string) {
+		const chains: StablecoinChainId[] = []
+		if (this.features.stablecoins.assetHub && this.ids[2] === 'statemint')
+			chains.push('statemint')
+		if (this.features.stablecoins.hydration) chains.push('hydration')
+		if (this.features.stablecoins.people && this.ids[1] === 'people-polkadot')
+			chains.push('people-polkadot')
+		if (!chains.length) return
+
+		let disposed = false
+		const unsubscribers: (() => void)[] = []
+		this.subStablecoinBalances[address] = () => {
+			disposed = true
+			for (const unsubscribe of unsubscribers.splice(0)) unsubscribe()
+		}
+		const { query, subscribe } = this.serviceInterface.stablecoins
+		void query
+			.balances(address)
+			.catch(() => undefined)
+			.then(() => {
+				if (disposed) return
+				for (const chain of chains) {
+					unsubscribers.push(
+						subscribe.balances(
+							address,
+							chain,
+							(balance) => setStablecoinBalance(address, balance),
+							() => setStablecoinBalancesSubscriptionError(address),
+						),
+					)
+				}
+			})
+	}
 
 	// Initialize default service subscriptions
 	initialize() {
@@ -151,10 +174,7 @@ export class SubscriptionManager<
 						this.finishStakingLedgerSync(address)
 						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
-						if (
-							this.features.stablecoins.assetHub ||
-							this.features.stablecoins.hydration
-						) {
+						if (Object.values(this.features.stablecoins).some(Boolean)) {
 							this.subStablecoinBalances[address]?.()
 							delete this.subStablecoinBalances[address]
 							removeStablecoinBalances(address)
@@ -185,55 +205,7 @@ export class SubscriptionManager<
 							this.ids[2],
 							address,
 						)
-						if (
-							this.features.stablecoins.assetHub ||
-							this.features.stablecoins.hydration
-						) {
-							let disposed = false
-							let assetHubSubscription:
-								| AssetHubStablecoinBalancesQuery
-								| undefined
-							let unsubscribeChainSubscription: (() => void) | undefined
-							this.subStablecoinBalances[address] = () => {
-								disposed = true
-								assetHubSubscription?.unsubscribe()
-								unsubscribeChainSubscription?.()
-							}
-							void this.serviceInterface.stablecoins.query
-								.balances(address)
-								.catch(() => undefined)
-								.then(() => {
-									if (disposed) {
-										return
-									}
-
-									const onBalance = (balance: StablecoinBalance) =>
-										setStablecoinBalance(address, balance)
-									const onError = () =>
-										setStablecoinBalancesSubscriptionError(address)
-
-									if (
-										this.features.stablecoins.assetHub &&
-										this.ids[2] === 'statemint'
-									) {
-										assetHubSubscription = new AssetHubStablecoinBalancesQuery(
-											this
-												.apiHub as unknown as DedotClient<PolkadotAssetHubApi>,
-											address,
-											onBalance,
-											onError,
-										)
-									}
-									unsubscribeChainSubscription = this.features.stablecoins
-										.hydration
-										? this.subscribeStablecoinBalances?.(
-												address,
-												onBalance,
-												onError,
-											)
-										: undefined
-								})
-						}
+						this.subscribeAccountStablecoins(address)
 
 						if (this.features.staking) {
 							this.startStakingLedgerSync(address)

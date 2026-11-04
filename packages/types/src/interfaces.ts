@@ -21,6 +21,8 @@ import type { NominatorsMultiQuery } from './nominate'
 import type { BondedPoolQuery, ClaimPermission, PoolRoles } from './pools'
 import type {
 	AssetTransferInput,
+	CrossChainTransfer,
+	CrossChainTransferInput,
 	FeeAssetSymbol,
 	StablecoinBalance,
 	StablecoinChainId,
@@ -36,6 +38,17 @@ export interface ServiceInterface {
 	assetHub?: AssetHubExchange
 	swap?: SwapInterface
 	stablecoins: {
+		subscribe: {
+			balances: (
+				address: string,
+				chain: StablecoinChainId,
+				onBalance: (balance: StablecoinBalance) => void,
+				onError: (error: unknown) => void,
+			) => () => void
+		}
+		xcm?: {
+			prepare: (input: CrossChainTransferInput) => Promise<CrossChainTransfer>
+		}
 		query: {
 			balances: (address: string) => Promise<StablecoinBalance[]>
 			balance: (

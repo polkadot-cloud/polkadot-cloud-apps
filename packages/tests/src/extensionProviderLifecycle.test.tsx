@@ -12,6 +12,7 @@ import {
 import { reconnectExtensions } from '../../ui-app/node_modules/@polkadot-cloud/connect-core/extensions/index.js'
 import { addExtensionToLocal } from '../../ui-app/node_modules/@polkadot-cloud/connect-core/index.js'
 import { createExtensionWallet, extensionId } from './extensionWallet'
+import { HookProbe } from './HookProbe'
 
 vi.hoisted(() => {
 	vi.stubGlobal('localStorage', window.localStorage)
@@ -25,7 +26,7 @@ test('the installed providers expose a refreshed signer to getAccount after reco
 	Reflect.set(window, 'injectedWeb3', injectedWeb3)
 	addExtensionToLocal(extensionId)
 	let imported!: ReturnType<typeof useImportedAccounts>
-	const Probe = () => {
+	const probe = () => {
 		imported = useImportedAccounts()
 		return null
 	}
@@ -36,7 +37,7 @@ test('the installed providers expose a refreshed signer to getAccount after reco
 		await act(async () =>
 			root.render(
 				<ConnectProvider dappName="Lifecycle test" network="polkadot" ss58={0}>
-					<Probe />
+					<HookProbe callback={probe} />
 				</ConnectProvider>,
 			),
 		)

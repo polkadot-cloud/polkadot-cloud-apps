@@ -32,6 +32,7 @@ const SelectLanguage = lazyNamed(
 	() => import('ui-modals/SelectLanguage'),
 	'SelectLanguage',
 )
+const CloudApps = lazyNamed(() => import('ui-modals/CloudApps'), 'CloudApps')
 
 export const Overlays = () => (
 	<Overlay
@@ -39,6 +40,7 @@ export const Overlays = () => (
 		externalOverlayStatus="closed"
 		canvas={{ OperatorValidators, ValidatorMetrics }}
 		modals={{
+			CloudApps,
 			DiscordSupport,
 			MailSupport,
 			RetainmentHistory,
