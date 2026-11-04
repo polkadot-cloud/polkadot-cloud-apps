@@ -28,12 +28,14 @@ export const TransferAction = ({
 	quote,
 	networkFee,
 	valid,
+	onSubmitted,
 }: {
 	input: CrossChainTransferInput
 	account: ImportedAccount | null
 	quote?: CrossChainTransfer
 	networkFee?: bigint
 	valid: boolean
+	onSubmitted: () => void
 }) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
@@ -87,6 +89,7 @@ export const TransferAction = ({
 			)
 			activeDelivery.current = pending
 			setDelivery(pending)
+			onSubmitted()
 		},
 		callbackInBlock: () => {
 			void balances.refresh()

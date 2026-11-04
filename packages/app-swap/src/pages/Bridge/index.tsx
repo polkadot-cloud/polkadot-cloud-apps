@@ -7,7 +7,7 @@ import { crossChainDestination } from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTheme, useTxMeta } from 'hooks'
 import { useCrossChainTransfer } from 'hooks/useCrossChainTransfer'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TxFeeEstimator } from 'tx-submit/types'
 import type {
@@ -103,6 +103,11 @@ export const Bridge = () => {
 	const enabled = validInput && setup.ready && !setup.needsSetup
 	const { quote, networkFee, error, expired, loading, refresh, key } =
 		useCrossChainTransfer(input, enabled)
+	const requestKey = `${key}:${account?.source}`
+	const currentRequestKey = useRef(requestKey)
+	useEffect(() => {
+		currentRequestKey.current = requestKey
+	}, [requestKey])
 	const funded =
 		!!quote &&
 		networkFee !== undefined &&
@@ -273,12 +278,17 @@ export const Bridge = () => {
 						</SendForm.Action>
 					) : (
 						<TransferAction
-							key={`${key}:${account?.source}`}
+							key={requestKey}
 							input={input}
 							account={account}
 							quote={quote}
 							networkFee={networkFee}
 							valid={enabled && !expired}
+							onSubmitted={() => {
+								// A wallet may broadcast after the user has already changed the form.
+								if (currentRequestKey.current !== requestKey) return
+								setAmount('')
+							}}
 						/>
 					)}
 				</SendForm.Card>

@@ -21,6 +21,7 @@ const mocked = vi.hoisted(() => ({
 	serviceApi: undefined as unknown as ServiceInterface,
 	handlers: [] as UseSubmitExtrinsicProps[],
 	refresh: vi.fn(),
+	onSubmitted: vi.fn(),
 }))
 vi.mock('../../hooks/src/index', () => ({
 	useApi: () => ({ serviceApi: mocked.serviceApi }),
@@ -126,6 +127,7 @@ const render = (showAction = true, currentInput = input) =>
 						quote,
 						networkFee: 1000n,
 						valid: true,
+						onSubmitted: mocked.onSubmitted,
 					}),
 			),
 		),
@@ -175,6 +177,7 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 	await render()
 	expect(spinning()).toBe(false)
 	await act(async () => handlers().callbackSubmit!())
+	expect(mocked.onSubmitted).toHaveBeenCalledOnce()
 	expect(mocked.serviceApi.stablecoins.subscribe.balances).toHaveBeenCalledWith(
 		'external-recipient',
 		'hydration',

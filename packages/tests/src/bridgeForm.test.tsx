@@ -15,6 +15,7 @@ const mocked = vi.hoisted(() => ({
 	prepare: vi.fn(),
 	balancesLoading: false,
 	feeCurrencyLoading: false,
+	submissions: [] as (() => void)[],
 }))
 const account = {
 	address: encodeAddress(new Uint8Array(32).fill(1)),
@@ -60,7 +61,10 @@ vi.mock('../../hooks/src/useCrossChainTransfer', () => ({
 	useCrossChainTransfer: (...args: unknown[]) => mocked.prepare(...args),
 }))
 vi.mock('../../app-swap/src/pages/Bridge/TransferAction', () => ({
-	TransferAction: () => null,
+	TransferAction: ({ onSubmitted }: { onSubmitted: () => void }) => {
+		mocked.submissions.push(onSubmitted)
+		return null
+	},
 }))
 vi.mock('../../ui-app/src/AccountDropdown', () => ({
 	AccountDropdown: () => null,
@@ -116,6 +120,7 @@ beforeEach(() => {
 	vi.clearAllMocks()
 	mocked.balancesLoading = false
 	mocked.feeCurrencyLoading = false
+	mocked.submissions.length = 0
 	mocked.prepare.mockImplementation((input: CrossChainTransferInput) => ({
 		quote: {
 			originFee: { amount: 1_000_000n, symbol: 'DOT', decimals: 10 },
@@ -125,6 +130,7 @@ beforeEach(() => {
 			receivedAmount: 9_980_000_001n,
 		},
 		networkFee: 2_000_000n,
+		key: `${input.from}:${input.to}:${input.symbol}:${input.amount}:${input.sender}:${input.recipient}:${input.feeAsset}`,
 	}))
 	container = document.createElement('div')
 	document.body.append(container)
@@ -243,3 +249,40 @@ test('renewal replaces the route value with the shared loader and retains fee an
 	expect(route.querySelector('[role="status"]')).toBeNull()
 	expect(route.textContent).toContain('Polkadot Hub → Hydration')
 })
+
+test('broadcasting clears the entered amount and disables quote preparation immediately', async () => {
+	await render()
+	await enterAmount('1.234567')
+	await act(async () => mocked.submissions.at(-1)!())
+	expect(
+		container.querySelector<HTMLInputElement>('[aria-label="amountToSend"]')!
+			.value,
+	).toBe('')
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({ amount: 0n }),
+		false,
+	)
+})
+
+test.each(['amount', 'asset'])(
+	'a late broadcast cannot clear a new draft after the %s changes',
+	async (change) => {
+		await render()
+		await enterAmount('1')
+		const onSubmitted = mocked.submissions.at(-1)!
+		if (change === 'asset') await selectDot(2)
+		await enterAmount(change === 'amount' ? '2' : '1')
+		await act(async () => onSubmitted())
+		expect(
+			container.querySelector<HTMLInputElement>('[aria-label="amountToSend"]')!
+				.value,
+		).toBe(change === 'amount' ? '2' : '1')
+		expect(mocked.prepare).toHaveBeenLastCalledWith(
+			expect.objectContaining({
+				symbol: change === 'asset' ? 'DOT' : 'USDC',
+				amount: change === 'asset' ? 10_000_000_000n : 2_000_000n,
+			}),
+			true,
+		)
+	},
+)
