@@ -18,6 +18,7 @@ import {
 	type HydrationStablecoinAdapter,
 } from './hydration'
 import type { StablecoinAdapter } from './shared'
+import { createStablecoinSubscriptions } from './subscriptions'
 
 type StablecoinAdapters = {
 	statemint: StablecoinAdapter
@@ -85,6 +86,20 @@ export const createStablecoinsInterface = (
 	}
 
 	return {
+		subscribe: createStablecoinSubscriptions(apiHub, getHydrationApi, features),
+		...(features.assetHub &&
+			features.hydration && {
+				xcm: {
+					prepare: async (input) => {
+						const { prepareCrossChainTransfer } = await import('../xcm')
+						return prepareCrossChainTransfer(
+							apiHub,
+							await getHydrationApi(),
+							input,
+						)
+					},
+				},
+			}),
 		query: {
 			balances: queryBalances,
 			balance: async (address, chain, symbol) =>

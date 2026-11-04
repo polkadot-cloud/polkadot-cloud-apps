@@ -18,6 +18,8 @@ export interface UseSubmitExtrinsicProps extends TxFeeOptions {
 	feeDisplay?: TxFeeDisplay
 	callbackSubmit?: () => void
 	callbackInBlock?: () => void
+	callbackFinalized?: () => void
+	callbackFailure?: () => void
 }
 
 export interface UseSubmitExtrinsic {

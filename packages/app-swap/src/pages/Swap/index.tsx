@@ -14,9 +14,11 @@ import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
 import { ButtonSecondary } from 'ui-buttons'
-import { Page, Spinner, Tooltip } from 'ui-core/base'
+import { Page, Tooltip } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { maxSendableBalance, slippageLimit } from 'utils'
+import transferClasses from '../../library/AssetTransfer/index.module.scss'
+import { QuoteLoading, QuoteRoute } from '../../library/QuoteSummary'
 import {
 	ExchangeNotice,
 	percentage,
@@ -131,7 +133,9 @@ export const Swap = () => {
 	}
 	return (
 		<Page.Row>
-			<SendForm.Container className={`${formClasses.form} ${classes.form}`}>
+			<SendForm.Container
+				className={`${formClasses.form} ${transferClasses.form}`}
+			>
 				<SendForm.Header
 					title={t('swapAssets')}
 					subtitle={t('swapDescription')}
@@ -155,7 +159,7 @@ export const Swap = () => {
 							}
 							disabled={!accounts.accountsWithSigners.length}
 						/>
-						<label className={classes.recipientSetting}>
+						<label className={transferClasses.recipientSetting}>
 							<input
 								type="checkbox"
 								checked={recipientEnabled}
@@ -166,7 +170,7 @@ export const Swap = () => {
 						{recipientEnabled && (
 							<SendForm.Field
 								title={t('sendTo')}
-								className={classes.recipientField}
+								className={transferClasses.recipientField}
 							>
 								<AccountDropdown
 									key={`${recipientAccount?.address}:${recipientAccount?.source}`}
@@ -259,45 +263,27 @@ export const Swap = () => {
 							setAmount('')
 						}}
 					>
-						<SendForm.Note
-							label={t('route')}
-							variant="muted"
-							role="group"
-							aria-label={t('route')}
-							aria-description={t(
-								mode === 'exactIn' ? 'bestOutput' : 'bestInput',
-							)}
+						<QuoteRoute
+							loading={routeLoading}
+							description={t(mode === 'exactIn' ? 'bestOutput' : 'bestInput')}
 						>
-							<div className={classes.routeValue} aria-live="polite">
-								{quote ? (
-									<ol className={classes.routePath} aria-label={t('route')}>
-										{quote.path.map((token, index) => (
-											<li key={token}>
-												{index > 0 && <span aria-hidden>→</span>}
-												<Tooltip
-													text={token}
-													container={themeElementRef.current || undefined}
-													side="top"
-												>
-													<img src={getFeeTokenIcon(token)} alt={token} />
-												</Tooltip>
-											</li>
-										))}
-									</ol>
-								) : (
-									<>
-										{routeLoading && (
-											<div aria-hidden>
-												<Spinner style={{ width: '1rem' }} />
-											</div>
-										)}
-										<span className={classes.routePlaceholder}>
-											{routeLoading ? t('fetchingQuote') : '—'}
-										</span>
-									</>
-								)}
-							</div>
-						</SendForm.Note>
+							{quote && (
+								<ol className={classes.routePath} aria-label={t('route')}>
+									{quote.path.map((token, index) => (
+										<li key={token}>
+											{index > 0 && <span aria-hidden>→</span>}
+											<Tooltip
+												text={token}
+												container={themeElementRef.current || undefined}
+												side="top"
+											>
+												<img src={getFeeTokenIcon(token)} alt={token} />
+											</Tooltip>
+										</li>
+									))}
+								</ol>
+							)}
+						</QuoteRoute>
 						<SendForm.Note
 							label={t(mode === 'exactIn' ? 'minimumReceived' : 'maximumSpent')}
 						>
@@ -319,12 +305,7 @@ export const Swap = () => {
 						<SendForm.Note
 							label={
 								quote && loading ? (
-									<span className={classes.renewingQuote} role="status">
-										<span aria-hidden>
-											<Spinner style={{ width: '1rem' }} />
-										</span>
-										<span>{t('renewingQuote')}</span>
-									</span>
+									<QuoteLoading>{t('renewingQuote')}</QuoteLoading>
 								) : (
 									t('priceImpact')
 								)
