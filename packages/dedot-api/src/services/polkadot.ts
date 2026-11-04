@@ -241,7 +241,7 @@ export class PolkadotService
 			return this.identityManager.api
 		}
 		if (this.apiHydration?.runtimeVersion.specName === specName) {
-			return this.apiHydration as unknown as DedotClient<HydrationApi>
+			return this.apiHydration
 		}
 		return this.apiHub
 	}

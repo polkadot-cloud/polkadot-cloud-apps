@@ -3,6 +3,7 @@
 
 import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
 import type { DedotClient } from 'dedot'
+import { PeopleBalancesQuery } from '../subscribe/peopleBalances'
 import { asTx } from '../util'
 import { type StablecoinAdapter, toStablecoinBalance } from './shared'
 
@@ -11,6 +12,15 @@ export const createPeopleStablecoinAdapter = (
 	getApi: () => Promise<DedotClient<PolkadotPeopleApi>>,
 ): StablecoinAdapter => ({
 	feeAssets: ['DOT'],
+	subscribe: (address, onBalance, onError) => {
+		const subscription = new PeopleBalancesQuery(
+			getApi,
+			address,
+			onBalance,
+			onError,
+		)
+		return () => subscription.unsubscribe()
+	},
 	balance: async (address, symbol) => {
 		if (symbol !== 'DOT') return undefined
 		const api = await getApi()

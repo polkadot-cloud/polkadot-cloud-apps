@@ -11,11 +11,7 @@ import {
 	Native,
 	type TXcmFeeBase,
 } from '@paraspell/sdk-dedot'
-import {
-	CrossChainAssets,
-	isCrossChainAsset,
-	isCrossChainAssetSupported,
-} from 'consts/crossChain'
+import { CrossChainAssets, isCrossChainAssetSupported } from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
 import type { GenericSubstrateApi } from 'dedot/types'
@@ -71,10 +67,7 @@ export const prepareCrossChainTransfer = async (
 ): Promise<CrossChainTransfer> => {
 	const { from, to, symbol, amount, sender, recipient, feeAsset } = input
 	if (
-		from === to ||
 		amount <= 0n ||
-		!isCrossChainAsset(symbol) ||
-		!isCrossChainAsset(feeAsset) ||
 		!isCrossChainAssetSupported(from, to, symbol) ||
 		!isCrossChainAssetSupported(from, to, feeAsset)
 	) {

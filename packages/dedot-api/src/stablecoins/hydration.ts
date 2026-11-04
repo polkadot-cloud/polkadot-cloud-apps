@@ -10,6 +10,7 @@ import type { DedotClient, SubmittableExtrinsic } from 'dedot'
 import { decodeAddress, u8aToHex } from 'dedot/utils'
 import type { FeeAssetSymbol } from 'types'
 import { ceilDiv } from 'utils'
+import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
 import { asTx } from '../util'
 import type { BalancePair, StablecoinAdapter } from './shared'
 import { toStablecoinBalance, zeroBalance } from './shared'
@@ -119,6 +120,15 @@ export const createHydrationStablecoinAdapter = (
 	getApi: () => Promise<DedotClient<HydrationApi>>,
 ): HydrationStablecoinAdapter => ({
 	feeAssets: getStablecoinFeeAssets('hydration'),
+	subscribe: (address, onBalance, onError) => {
+		const subscription = new HydrationStablecoinBalancesQuery(
+			getApi,
+			address,
+			onBalance,
+			onError,
+		)
+		return () => subscription.unsubscribe()
+	},
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('hydration', symbol)
 		if (!config) {

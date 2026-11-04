@@ -16,7 +16,7 @@ export const isCrossChainAsset = (symbol: string): symbol is CrossChainAsset =>
 // People transfers use the supported system-chain route through Polkadot Hub.
 export const CrossChainDestinations: Record<
 	StablecoinChainId,
-	readonly StablecoinChainId[]
+	readonly [StablecoinChainId, ...StablecoinChainId[]]
 > = {
 	statemint: ['hydration', 'people-polkadot'],
 	hydration: ['statemint'],
@@ -26,8 +26,9 @@ export const CrossChainDestinations: Record<
 export const isCrossChainAssetSupported = (
 	from: StablecoinChainId,
 	to: StablecoinChainId,
-	symbol: CrossChainAsset,
-) =>
+	symbol: string,
+): symbol is CrossChainAsset =>
+	isCrossChainAsset(symbol) &&
 	CrossChainDestinations[from].includes(to) &&
 	!!getStablecoinAssetConfig(from, symbol) &&
 	!!getStablecoinAssetConfig(to, symbol)

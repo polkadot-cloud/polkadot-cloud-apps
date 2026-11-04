@@ -1,15 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { HydrationApi } from '@dedot/chaintypes/hydration'
-import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
-import type { PolkadotPeopleApi } from '@dedot/chaintypes/polkadot-people'
-import type { DedotClient } from 'dedot'
-import type { ServiceInterface, StablecoinBalance } from 'types'
-import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
-import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
-import { PeopleBalancesQuery } from '../subscribe/peopleBalances'
-import type { DedotServiceFeatures } from '../types'
+import type {
+	ServiceInterface,
+	StablecoinBalance,
+	StablecoinChainId,
+} from 'types'
+import type { StablecoinAdapter } from './shared'
 
 type Listener = {
 	onBalance: (balance: StablecoinBalance) => void
@@ -38,40 +35,13 @@ const notifyBalance = (listener: Listener, balance: StablecoinBalance) => {
 
 // Imported accounts and temporary delivery watchers share the same storage subscriptions.
 export const createStablecoinSubscriptions = (
-	apiHub: DedotClient<PolkadotAssetHubApi>,
-	getHydrationApi: () => Promise<DedotClient<HydrationApi>>,
-	getPeopleApi: () => Promise<DedotClient<PolkadotPeopleApi>>,
-	features: DedotServiceFeatures['stablecoins'],
+	adapters: Partial<Record<StablecoinChainId, StablecoinAdapter>>,
 ): ServiceInterface['stablecoins']['subscribe'] => {
 	const subscriptions = new Map<string, SharedSubscription>()
-	const factories = {
-		statemint: features.assetHub
-			? (address: string, { onBalance, onError }: Listener) =>
-					new AssetHubStablecoinBalancesQuery(
-						apiHub,
-						address,
-						onBalance,
-						onError,
-					)
-			: undefined,
-		hydration: features.hydration
-			? (address: string, { onBalance, onError }: Listener) =>
-					new HydrationStablecoinBalancesQuery(
-						getHydrationApi,
-						address,
-						onBalance,
-						onError,
-					)
-			: undefined,
-		'people-polkadot': features.people
-			? (address: string, { onBalance, onError }: Listener) =>
-					new PeopleBalancesQuery(getPeopleApi, address, onBalance, onError)
-			: undefined,
-	}
 	return {
 		balances: (address, chain, onBalance, onError) => {
-			const createSubscription = factories[chain]
-			if (!createSubscription) {
+			const adapter = adapters[chain]
+			if (!adapter) {
 				onError(new Error(`Balance subscriptions unavailable for ${chain}`))
 				return () => {}
 			}
@@ -100,11 +70,7 @@ export const createStablecoinSubscriptions = (
 					for (const subscriber of entry.listeners)
 						notifyError(subscriber, error)
 				}
-				const subscription = createSubscription(address, {
-					onBalance: emitBalance,
-					onError: emitError,
-				})
-				entry.unsubscribe = () => subscription.unsubscribe()
+				entry.unsubscribe = adapter.subscribe(address, emitBalance, emitError)
 			}
 			const active = shared
 			return () => {

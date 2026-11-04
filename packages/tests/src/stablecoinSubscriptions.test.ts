@@ -3,15 +3,17 @@
 
 import type { StablecoinBalance } from 'types'
 import { expect, test, vi } from 'vitest'
+import { createAssetHubStablecoinAdapter } from '../../dedot-api/src/stablecoins/assetHub'
+import { createHydrationStablecoinAdapter } from '../../dedot-api/src/stablecoins/hydration'
+import { createPeopleStablecoinAdapter } from '../../dedot-api/src/stablecoins/people'
 import { createStablecoinSubscriptions } from '../../dedot-api/src/stablecoins/subscriptions'
 
-type HubApi = Parameters<typeof createStablecoinSubscriptions>[0]
+type HubApi = Parameters<typeof createAssetHubStablecoinAdapter>[0]
 type HydrationApi = Awaited<
-	ReturnType<Parameters<typeof createStablecoinSubscriptions>[1]>
+	ReturnType<Parameters<typeof createHydrationStablecoinAdapter>[0]>
 >
-const features = { assetHub: true, hydration: true, people: true }
 type PeopleApi = Awaited<
-	ReturnType<Parameters<typeof createStablecoinSubscriptions>[2]>
+	ReturnType<Parameters<typeof createPeopleStablecoinAdapter>[0]>
 >
 
 test('People DOT balances and delivery watchers share a live native balance subscription', async () => {
@@ -25,12 +27,9 @@ test('People DOT balances and delivery watchers share a live native balance subs
 	const getPeopleApi = vi.fn(
 		async () => ({ query: { system: { account } } }) as unknown as PeopleApi,
 	)
-	const subscribe = createStablecoinSubscriptions(
-		{} as HubApi,
-		vi.fn(),
-		getPeopleApi,
-		features,
-	)
+	const subscribe = createStablecoinSubscriptions({
+		'people-polkadot': createPeopleStablecoinAdapter(getPeopleApi),
+	})
 	const onBalance = vi.fn()
 	const onDeliveredBalance = vi.fn()
 	const onError = vi.fn()
@@ -72,15 +71,14 @@ test('People DOT balances and delivery watchers share a live native balance subs
 test('unsubscribing before People connects prevents a late storage subscription', async () => {
 	let resolve!: (api: PeopleApi) => void
 	const account = vi.fn()
-	const subscribe = createStablecoinSubscriptions(
-		{} as HubApi,
-		vi.fn(),
-		() =>
-			new Promise<PeopleApi>((done) => {
-				resolve = done
-			}),
-		features,
-	)
+	const subscribe = createStablecoinSubscriptions({
+		'people-polkadot': createPeopleStablecoinAdapter(
+			() =>
+				new Promise<PeopleApi>((done) => {
+					resolve = done
+				}),
+		),
+	})
 	const release = subscribe.balances(
 		'recipient',
 		'people-polkadot',
@@ -106,14 +104,11 @@ test('imported accounts and delivery watchers share Asset Hub subscriptions unti
 		callback(undefined)
 		return unsubs[++assetIndex]
 	})
-	const subscribe = createStablecoinSubscriptions(
-		{
+	const subscribe = createStablecoinSubscriptions({
+		statemint: createAssetHubStablecoinAdapter({
 			query: { system: { account: native }, assets: { account: asset } },
-		} as unknown as HubApi,
-		vi.fn(),
-		vi.fn(),
-		features,
-	)
+		} as unknown as HubApi),
+	})
 	const imported = vi.fn()
 	const recipient = vi.fn()
 	const onError = vi.fn()
@@ -164,12 +159,9 @@ test('an external Hydration recipient uses a temporary live Tokens subscription'
 				query: { tokens: { accounts: { multi } } },
 			}) as unknown as HydrationApi,
 	)
-	const subscribe = createStablecoinSubscriptions(
-		{} as HubApi,
-		getApi,
-		vi.fn(),
-		features,
-	)
+	const subscribe = createStablecoinSubscriptions({
+		hydration: createHydrationStablecoinAdapter(getApi),
+	})
 	const onBalance = vi.fn<(balance: StablecoinBalance) => void>()
 	const release = subscribe.balances(
 		'external',
@@ -213,15 +205,14 @@ test('an external Hydration recipient uses a temporary live Tokens subscription'
 test('cleanup before the Hydration API is ready prevents a late subscription from being created', async () => {
 	let resolve!: (api: HydrationApi) => void
 	const multi = vi.fn()
-	const subscribe = createStablecoinSubscriptions(
-		{} as HubApi,
-		() =>
-			new Promise<HydrationApi>((done) => {
-				resolve = done
-			}),
-		vi.fn(),
-		features,
-	)
+	const subscribe = createStablecoinSubscriptions({
+		hydration: createHydrationStablecoinAdapter(
+			() =>
+				new Promise<HydrationApi>((done) => {
+					resolve = done
+				}),
+		),
+	})
 	const release = subscribe.balances('external', 'hydration', vi.fn(), vi.fn())
 	release()
 	resolve({
@@ -240,15 +231,14 @@ test('late subscription handles are released when the last consumer has already 
 				resolve = done
 			}),
 	)
-	const subscribe = createStablecoinSubscriptions(
-		{} as HubApi,
-		async () =>
-			({
-				query: { tokens: { accounts: { multi } } },
-			}) as unknown as HydrationApi,
-		vi.fn(),
-		features,
-	)
+	const subscribe = createStablecoinSubscriptions({
+		hydration: createHydrationStablecoinAdapter(
+			async () =>
+				({
+					query: { tokens: { accounts: { multi } } },
+				}) as unknown as HydrationApi,
+		),
+	})
 	const release = subscribe.balances('external', 'hydration', vi.fn(), vi.fn())
 	await Promise.resolve()
 	release()

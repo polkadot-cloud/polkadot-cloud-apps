@@ -174,11 +174,7 @@ export class SubscriptionManager<
 						this.finishStakingLedgerSync(address)
 						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
-						if (
-							this.features.stablecoins.assetHub ||
-							this.features.stablecoins.hydration ||
-							this.features.stablecoins.people
-						) {
+						if (Object.values(this.features.stablecoins).some(Boolean)) {
 							this.subStablecoinBalances[address]?.()
 							delete this.subStablecoinBalances[address]
 							removeStablecoinBalances(address)

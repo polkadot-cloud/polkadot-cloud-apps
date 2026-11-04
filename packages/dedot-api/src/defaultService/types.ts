@@ -4,11 +4,9 @@
 import type { DedotClient, SmoldotProvider, WsProvider } from 'dedot'
 import type { Subscription } from 'rxjs'
 import type {
-	IdentityOf,
 	NetworkConfig,
 	NetworkId,
 	ServiceInterface,
-	SuperOf,
 	SystemChainId,
 } from 'types'
 import type { StakingConsts } from '../consts/staking'
@@ -91,20 +89,3 @@ export type AccountBalances<
 	people: Record<string, AccountBalanceQuery<PeopleApi>>
 	hub: Record<string, AccountBalanceQuery<HubApi>>
 }
-
-// Identity manager queue interface for pending queries
-export interface IdentityQueueItem {
-	type: 'identityOfMulti'
-	addresses: string[]
-	resolve: (result: IdentityOf[]) => void
-	reject: (error: unknown) => void
-}
-
-export interface SuperQueueItem {
-	type: 'superOfMulti'
-	addresses: string[]
-	resolve: (result: SuperOf[]) => void
-	reject: (error: unknown) => void
-}
-
-export type QueueItem = IdentityQueueItem | SuperQueueItem

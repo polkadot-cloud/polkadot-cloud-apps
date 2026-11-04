@@ -9,6 +9,7 @@ import {
 	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
+import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { asTx } from '../util'
 import type { BalancePair, StablecoinAdapter } from './shared'
 import { toStablecoinBalance, zeroBalance } from './shared'
@@ -47,6 +48,15 @@ export const createAssetHubStablecoinAdapter = (
 	api: DedotClient<PolkadotAssetHubApi>,
 ): StablecoinAdapter => ({
 	feeAssets: getStablecoinFeeAssets('statemint'),
+	subscribe: (address, onBalance, onError) => {
+		const subscription = new AssetHubStablecoinBalancesQuery(
+			api,
+			address,
+			onBalance,
+			onError,
+		)
+		return () => subscription.unsubscribe()
+	},
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('statemint', symbol)
 		if (!config) {

@@ -93,12 +93,7 @@ export const createStablecoinsInterface = (
 	}
 
 	return {
-		subscribe: createStablecoinSubscriptions(
-			apiHub,
-			getHydrationApi,
-			getPeopleApi,
-			features,
-		),
+		subscribe: createStablecoinSubscriptions(adapters),
 		...(features.assetHub &&
 			(features.hydration || features.people) && {
 				xcm: {
@@ -128,13 +123,13 @@ export const createStablecoinsInterface = (
 		query: {
 			balances: queryBalances,
 			balance: async (address, chain, symbol) =>
-				await adapters[chain]?.balance(address, symbol),
+				adapters[chain]?.balance(address, symbol),
 			hydrationFeeCurrency: (address) =>
 				adapters.hydration?.hydrationFeeCurrency(address) ??
 				Promise.resolve(undefined),
 		},
 		tx: {
-			transfer: async (input) => await adapters[input.chain]?.transfer(input),
+			transfer: async (input) => adapters[input.chain]?.transfer(input),
 			setHydrationFeeCurrency: (symbol) =>
 				adapters.hydration?.setHydrationFeeCurrency(symbol) ??
 				Promise.resolve(undefined),
