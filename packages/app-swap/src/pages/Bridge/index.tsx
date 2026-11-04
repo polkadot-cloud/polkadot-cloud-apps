@@ -277,7 +277,6 @@ export const Bridge = () => {
 							quote={quote}
 							networkFee={networkFee}
 							valid={enabled && !loading}
-							revalidate={refresh}
 							onSubmitted={() => {
 								// A wallet may broadcast after the user has already changed the form.
 								if (currentRequestKey.current !== requestKey) return

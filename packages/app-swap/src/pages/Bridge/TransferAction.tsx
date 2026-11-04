@@ -8,7 +8,7 @@ import {
 } from 'consts/stablecoins'
 import { emitNotification, getUid, removeUid } from 'global-bus'
 import { useApi, useStablecoinBalances, useTxMeta } from 'hooks'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { trackCrossChainDelivery, useSubmitExtrinsic } from 'tx-submit'
 import type {
@@ -27,7 +27,6 @@ export const TransferAction = ({
 	quote,
 	networkFee,
 	valid,
-	revalidate,
 	onSubmitted,
 }: {
 	input: CrossChainTransferInput
@@ -35,16 +34,12 @@ export const TransferAction = ({
 	quote?: CrossChainTransfer
 	networkFee?: bigint
 	valid: boolean
-	revalidate: () => Promise<CrossChainTransfer | undefined>
 	onSubmitted: () => void
 }) => {
 	const { t } = useTranslation('swap')
 	const { serviceApi } = useApi()
 	const { uids } = useTxMeta()
 	const balances = useStablecoinBalances(account?.address)
-	const mounted = useRef(true)
-	const checking = useRef(false)
-	const [checkedQuote, setCheckedQuote] = useState<CrossChainTransfer>()
 	const activeDelivery =
 		useRef<ReturnType<typeof trackCrossChainDelivery>>(undefined)
 	const signing = uids.some(
@@ -112,28 +107,6 @@ export const TransferAction = ({
 			activeDelivery.current?.failed()
 		},
 	})
-	// Submit only after React has applied the newly checked transaction and fee.
-	useEffect(() => {
-		if (!checkedQuote || checkedQuote !== quote) return
-		setCheckedQuote(undefined)
-		if (ready) submission.onSubmit()
-	}, [checkedQuote, quote, ready, submission.onSubmit])
-	useEffect(() => {
-		mounted.current = true
-		return () => {
-			mounted.current = false
-		}
-	}, [])
-	const onSubmit = async () => {
-		if (!ready || checking.current || checkedQuote) return
-		checking.current = true
-		try {
-			const checked = await revalidate()
-			if (mounted.current && checked) setCheckedQuote(checked)
-		} finally {
-			checking.current = false
-		}
-	}
 	useEffect(
 		() => () => {
 			const pending = getUid(submission.uid)
@@ -146,9 +119,8 @@ export const TransferAction = ({
 		<SendForm.Action>
 			<SubmitTx
 				{...submission}
-				onSubmit={onSubmit}
 				submitText={t('crossChainSend')}
-				valid={ready && !checkedQuote}
+				valid={ready}
 				noMargin
 				feeDisplay={feeDisplay}
 				feeBalance={balances.getBalance(input.from, input.feeAsset)?.free ?? 0n}
