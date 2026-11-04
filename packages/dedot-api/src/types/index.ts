@@ -23,10 +23,7 @@ export type DedotServiceConfig = {
 	nominationPools?: boolean
 	staking?: boolean
 	swap?: boolean
-	stablecoins?: {
-		assetHub?: boolean
-		hydration?: boolean
-	}
+	stablecoins?: Partial<DedotServiceFeatures['stablecoins']>
 }
 
 export type DedotServiceFeatures = {
@@ -36,6 +33,7 @@ export type DedotServiceFeatures = {
 	stablecoins: {
 		assetHub: boolean
 		hydration: boolean
+		people: boolean
 	}
 }
 

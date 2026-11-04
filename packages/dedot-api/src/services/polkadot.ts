@@ -65,14 +65,16 @@ export class PolkadotService
 		)
 
 		// Initialize service interface with network-specific routing
-		const stablecoinsEnabled =
-			this.features.stablecoins.assetHub || this.features.stablecoins.hydration
+		const stablecoinsEnabled = Object.values(this.features.stablecoins).some(
+			Boolean,
+		)
 		this.interface = {
 			swap: this.features.swap ? createSwapInterface(this.apiHub) : undefined,
 			stablecoins: stablecoinsEnabled
 				? createStablecoinsInterface(
 						this.apiHub,
 						this.getHydrationApi,
+						this.getPeopleApi,
 						this.features.stablecoins,
 					)
 				: createEmptyStablecoinsInterface(),
@@ -232,9 +234,14 @@ export class PolkadotService
 		return this.apiHydrationPromise
 	}
 
+	getPeopleApi = () => this.identityManager.lazyConnect()
+
 	getSigningApi = (specName: string) => {
+		if (this.identityManager.api?.runtimeVersion.specName === specName) {
+			return this.identityManager.api
+		}
 		if (this.apiHydration?.runtimeVersion.specName === specName) {
-			return this.apiHydration as unknown as DedotClient<HydrationApi>
+			return this.apiHydration
 		}
 		return this.apiHub
 	}

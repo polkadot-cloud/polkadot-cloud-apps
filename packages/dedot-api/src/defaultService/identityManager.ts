@@ -3,122 +3,55 @@
 
 import { getPeopleChainId } from 'consts/util/chains'
 import { DedotClient, type SmoldotProvider, type WsProvider } from 'dedot'
-import { getApiStatus, setApiStatus } from 'global-bus'
+import { setApiStatus } from 'global-bus'
 import type { IdentityOf, NetworkId, SuperOf, SystemChainId } from 'types'
 import { query } from '../query'
 import type { PeopleChain } from '../types'
-import type { QueueItem } from './types'
 
 // Manages lazy identity connection and people chain interactions
 export class IdentityManager<PeopleApi extends PeopleChain> {
 	api?: DedotClient<PeopleApi>
-	public provider: WsProvider | SmoldotProvider
-	public network: NetworkId
-	private queue: QueueItem[] = []
-	private isProcessingQueue = false
-	private isConnecting = false
+	private connection?: Promise<DedotClient<PeopleApi>>
 
-	constructor(provider: WsProvider | SmoldotProvider, network: NetworkId) {
-		this.provider = provider
-		this.network = network
-	}
+	constructor(
+		public provider: WsProvider | SmoldotProvider,
+		public network: NetworkId,
+	) {}
 
-	identityOfMulti = async (addresses: string[]): Promise<IdentityOf[]> => {
-		return new Promise<IdentityOf[]>((resolve, reject) => {
-			this.queue.push({
-				type: 'identityOfMulti',
-				addresses,
-				resolve,
-				reject,
-			})
-
-			// Handle potential connection errors
-			this.lazyConnect().catch(reject)
-		})
-	}
+	identityOfMulti = async (addresses: string[]): Promise<IdentityOf[]> =>
+		query.identityOfMulti(await this.lazyConnect(), addresses)
 
 	superOfMulti = async (addresses: string[]): Promise<SuperOf[]> => {
-		return new Promise<SuperOf[]>((resolve, reject) => {
-			this.queue.push({
-				type: 'superOfMulti',
-				addresses,
-				resolve,
-				reject,
-			})
-
-			// Handle potential connection errors
-			this.lazyConnect().catch(reject)
-		})
+		const api = await this.lazyConnect()
+		return query.superOfMulti(api, addresses, api.consts.system.ss58Prefix)
 	}
 
 	// Lazy connect to the people chain API. Should be called before any queries
-	lazyConnect = async () => {
-		if (!this.api && !this.isConnecting) {
-			this.isConnecting = true
-
-			try {
-				const peopleChainId = getPeopleChainId(this.network) as SystemChainId
-				const apiStatus = getApiStatus(peopleChainId)
-
-				if (apiStatus === 'disconnected') {
-					setApiStatus(peopleChainId, 'connecting')
-					this.api = await DedotClient.new<PeopleApi>(this.provider)
+	lazyConnect = () => {
+		if (!this.connection) {
+			const peopleChainId = getPeopleChainId(this.network) as SystemChainId
+			setApiStatus(peopleChainId, 'connecting')
+			this.connection = DedotClient.new<PeopleApi>({
+				provider: this.provider,
+				cacheMetadata: true,
+			})
+				.then((api) => {
+					this.api = api
 					setApiStatus(peopleChainId, 'ready')
-				}
-			} catch (error) {
-				// If connection fails, reject all queued promises
-				const currentQueue = [...this.queue]
-				this.queue = []
-
-				for (const item of currentQueue) {
-					item.reject(error)
-				}
-
-				throw error
-			} finally {
-				this.isConnecting = false
-			}
+					return api
+				})
+				.catch((error) => {
+					this.connection = undefined
+					setApiStatus(peopleChainId, 'disconnected')
+					throw error
+				})
 		}
 
-		// Process queue if API is ready (either just connected or was already connected)
-		if (this.api) {
-			this.processQueue()
-		}
+		return this.connection
 	}
 
-	// Process all queued operations
-	private processQueue = async () => {
-		if (this.isProcessingQueue || !this.api) {
-			return
-		}
-
-		this.isProcessingQueue = true
-
-		// Keep processing until the queue is empty
-		while (this.queue.length > 0) {
-			// Process all items currently in the queue
-			const currentQueue = [...this.queue]
-			this.queue = []
-
-			for (const item of currentQueue) {
-				try {
-					if (item.type === 'identityOfMulti') {
-						const result = await query.identityOfMulti(this.api, item.addresses)
-						item.resolve(result)
-					} else if (item.type === 'superOfMulti') {
-						const result = await query.superOfMulti(
-							this.api,
-							item.addresses,
-							this.api.consts.system.ss58Prefix,
-						)
-						item.resolve(result)
-					}
-				} catch (error) {
-					item.reject(error)
-				}
-			}
-		}
-
-		this.isProcessingQueue = false
+	disconnect = async () => {
+		const api = await this.connection?.catch(() => undefined)
+		await api?.disconnect()
 	}
 }

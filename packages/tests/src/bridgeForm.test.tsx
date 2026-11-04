@@ -104,16 +104,17 @@ const enterAmount = (value: string) =>
 		)!.set!.call(amount, value)
 		amount.dispatchEvent(new Event('input', { bubbles: true }))
 	})
-const selectDot = async (dropdown: number) => {
+const selectOption = async (dropdown: number, label: string) => {
 	const trigger =
 		container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[dropdown]
 	await click(trigger)
 	await click(
 		[...trigger.parentElement!.querySelectorAll('button')].find(
-			(button) => button.textContent === 'DOT',
+			(button) => button.textContent === label,
 		)!,
 	)
 }
+const selectDot = (dropdown: number) => selectOption(dropdown, 'DOT')
 
 beforeEach(() => {
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -140,6 +141,68 @@ afterEach(async () => {
 	await act(async () => root.unmount())
 	container.remove()
 	vi.unstubAllGlobals()
+})
+
+test('People routes switch assets and fees to DOT, preserve precision, and reverse through Hub', async () => {
+	await render()
+	await enterAmount('1')
+	await selectOption(1, 'Polkadot People')
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({
+			from: 'statemint',
+			to: 'people-polkadot',
+			symbol: 'DOT',
+			feeAsset: 'DOT',
+			amount: 0n,
+		}),
+		false,
+	)
+	await enterAmount('1.2345678901')
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({ amount: 12_345_678_901n }),
+		true,
+	)
+	await click(
+		container.querySelector<HTMLButtonElement>('[aria-label="reverseChains"]')!,
+	)
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({
+			from: 'people-polkadot',
+			to: 'statemint',
+			symbol: 'DOT',
+			feeAsset: 'DOT',
+			amount: 0n,
+		}),
+		false,
+	)
+	const trigger =
+		container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[1]
+	await click(trigger)
+	expect(trigger.parentElement!.textContent).not.toContain('Hydration')
+	expect(trigger.parentElement!.textContent).not.toContain('Polkadot People')
+})
+
+test('changing the source to People replaces an unsupported Hydration destination with Hub', async () => {
+	await render()
+	await selectOption(0, 'Polkadot People')
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({
+			from: 'people-polkadot',
+			to: 'statemint',
+			symbol: 'DOT',
+			feeAsset: 'DOT',
+		}),
+		false,
+	)
+	await selectOption(0, 'Hydration')
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		expect.objectContaining({
+			from: 'hydration',
+			to: 'statemint',
+			symbol: 'DOT',
+		}),
+		false,
+	)
 })
 
 test('DOT selection preserves ten-decimal amounts, formats received DOT, and max-fills after fees and minimum balance', async () => {

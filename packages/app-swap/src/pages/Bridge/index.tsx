@@ -3,19 +3,13 @@
 
 import { isValidAddress } from '@polkadot-cloud/util-dedot'
 import { planckToUnit } from '@polkadot-cloud/utils'
-import { crossChainDestination } from 'consts/crossChain'
 import { getStablecoinAssetConfig } from 'consts/stablecoins'
 import { useApi, useStablecoinBalances, useTheme, useTxMeta } from 'hooks'
 import { useCrossChainTransfer } from 'hooks/useCrossChainTransfer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TxFeeEstimator } from 'tx-submit/types'
-import type {
-	CrossChainAsset,
-	CrossChainTransferInput,
-	ImportedAccount,
-	StablecoinChainId,
-} from 'types'
+import type { CrossChainTransferInput, ImportedAccount } from 'types'
 import { AccountDropdown } from 'ui-app/AccountDropdown'
 import { BalanceInputMulti } from 'ui-app/BalanceInput'
 import { Dropdown } from 'ui-app/Dropdown'
@@ -30,9 +24,9 @@ import { ExchangeNotice, swapFeeReserve } from '../../library/Swap'
 import { useHydrationFeeSetup } from '../Send/hooks/useHydrationFeeSetup'
 import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import formClasses from '../Send/Send.module.scss'
-import { feeTokenOptions, tokenOptions } from './options'
 import { TransferAction } from './TransferAction'
 import { TransferSummary } from './TransferSummary'
+import { useBridgeSelection } from './useBridgeSelection'
 import {
 	canFundTransfer,
 	maxTransferAmount,
@@ -47,12 +41,22 @@ export const Bridge = () => {
 	const accounts = useSendAccounts()
 	const account = accounts.fromAccount
 	const balances = useStablecoinBalances(account?.address)
-	const [from, setFrom] = useState<StablecoinChainId>('statemint')
-	const to = crossChainDestination(from)
-	const [symbol, setSymbol] = useState<CrossChainAsset>('USDC')
-	const [feeAsset, setFeeAsset] =
-		useState<CrossChainTransferInput['feeAsset']>('USDC')
-	const [amount, setAmount] = useState('')
+	const {
+		from,
+		to,
+		symbol,
+		feeAsset,
+		amount,
+		tokenOptions,
+		feeTokenOptions,
+		destinationOptions,
+		selectFrom,
+		selectTo,
+		reverse,
+		setAmount,
+		setSymbol,
+		setFeeAsset,
+	} = useBridgeSelection()
 	const [customRecipient, setCustomRecipient] = useState(false)
 	const [recipientAccount, setRecipientAccount] =
 		useState<ImportedAccount | null>(null)
@@ -123,10 +127,6 @@ export const Bridge = () => {
 	const setupFunded =
 		setupFee > 0n &&
 		maxSendableBalance(feeBalance, undefined, 0n) >= swapFeeReserve(setupFee)
-	const selectFrom = (chain: StablecoinChainId) => {
-		setFrom(chain)
-		setAmount('')
-	}
 
 	return (
 		<Page.Row>
@@ -146,23 +146,21 @@ export const Bridge = () => {
 						<Dropdown
 							options={chainOptions}
 							selected={findOption(chainOptions, from)}
-							onSelect={(chain) => selectFrom(chain.value)}
+							onSelect={({ value }) => selectFrom(value)}
 							variant="full"
 						/>
 					</SendForm.Segment>
 					<SendForm.DirectionIndicator
-						onReverse={() => selectFrom(to)}
+						onReverse={reverse}
 						label={t('reverseChains')}
 						tooltip={t('reverseChains')}
 						tooltipContainer={themeElementRef.current || undefined}
 					/>
 					<SendForm.Segment title={t('destinationChain')} layer="raised">
 						<Dropdown
-							options={chainOptions}
-							selected={findOption(chainOptions, to)}
-							onSelect={(chain) =>
-								selectFrom(crossChainDestination(chain.value))
-							}
+							options={destinationOptions}
+							selected={findOption(destinationOptions, to)}
+							onSelect={({ value }) => selectTo(value)}
 							variant="full"
 						/>
 					</SendForm.Segment>
@@ -213,10 +211,7 @@ export const Bridge = () => {
 						syncing={balances.loading}
 						options={tokenOptions}
 						selected={findOption(tokenOptions, symbol)}
-						onSelect={(token) => {
-							setSymbol(token.value)
-							setAmount('')
-						}}
+						onSelect={(token) => setSymbol(token.value)}
 						ariaLabel={t('amountToSend')}
 					/>
 					<SendForm.Segment

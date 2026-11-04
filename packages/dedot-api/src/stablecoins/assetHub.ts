@@ -9,21 +9,10 @@ import {
 	getStablecoinFeeAssets,
 } from 'consts/stablecoins'
 import type { DedotClient } from 'dedot'
+import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
 import { asTx } from '../util'
 import type { BalancePair, StablecoinAdapter } from './shared'
 import { toStablecoinBalance, zeroBalance } from './shared'
-
-// Reads the native Asset Hub account balance from the System pallet.
-const fetchAssetHubNativeBalance = async (
-	api: DedotClient<PolkadotAssetHubApi>,
-	address: string,
-): Promise<BalancePair> => {
-	const info = await api.query.system.account(address)
-	return {
-		free: info.data.free,
-		frozen: info.data.frozen,
-	}
-}
 
 // Reads a non-native Asset Hub asset balance from the Assets pallet.
 const fetchAssetHubAssetBalance = async (
@@ -47,18 +36,25 @@ export const createAssetHubStablecoinAdapter = (
 	api: DedotClient<PolkadotAssetHubApi>,
 ): StablecoinAdapter => ({
 	feeAssets: getStablecoinFeeAssets('statemint'),
+	subscribe: (address, onBalance, onError) => {
+		const subscription = new AssetHubStablecoinBalancesQuery(
+			api,
+			address,
+			onBalance,
+			onError,
+		)
+		return () => subscription.unsubscribe()
+	},
 	balance: async (address, symbol) => {
 		const config = getStablecoinAssetConfig('statemint', symbol)
-		if (!config) {
-			return zeroBalance('statemint', symbol)
-		}
+		if (!config) return undefined
 
 		try {
 			if (symbol === 'DOT') {
 				return toStablecoinBalance(
 					'statemint',
 					symbol,
-					await fetchAssetHubNativeBalance(api, address),
+					(await api.query.system.account(address)).data,
 				)
 			}
 			if (config.assetId === undefined) {
@@ -88,10 +84,6 @@ export const createAssetHubStablecoinAdapter = (
 		)
 	},
 	paymentOptions: (symbol) => {
-		if (symbol === 'DOT') {
-			return undefined
-		}
-
 		const config = getStablecoinAssetConfig('statemint', symbol)
 		if (config?.assetId === undefined) {
 			return undefined
@@ -103,10 +95,6 @@ export const createAssetHubStablecoinAdapter = (
 	},
 	estimateFee: async ({ symbol, tx, from, payloadOptions }) => {
 		const { partialFee: nativeFee } = await tx.paymentInfo(from, payloadOptions)
-
-		if (symbol === 'DOT') {
-			return nativeFee
-		}
 
 		const config = getStablecoinAssetConfig('statemint', symbol)
 		if (config?.assetId === undefined) {

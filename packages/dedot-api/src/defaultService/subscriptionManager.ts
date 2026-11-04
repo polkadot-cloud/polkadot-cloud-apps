@@ -109,6 +109,8 @@ export class SubscriptionManager<
 		if (this.features.stablecoins.assetHub && this.ids[2] === 'statemint')
 			chains.push('statemint')
 		if (this.features.stablecoins.hydration) chains.push('hydration')
+		if (this.features.stablecoins.people && this.ids[1] === 'people-polkadot')
+			chains.push('people-polkadot')
 		if (!chains.length) return
 
 		let disposed = false
@@ -172,10 +174,7 @@ export class SubscriptionManager<
 						this.finishStakingLedgerSync(address)
 						this.subPoolMemberships[address]?.unsubscribe()
 						delete this.subPoolMemberships[address]
-						if (
-							this.features.stablecoins.assetHub ||
-							this.features.stablecoins.hydration
-						) {
+						if (Object.values(this.features.stablecoins).some(Boolean)) {
 							this.subStablecoinBalances[address]?.()
 							delete this.subStablecoinBalances[address]
 							removeStablecoinBalances(address)

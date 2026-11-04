@@ -4,8 +4,8 @@
 import type { SubmittableExtrinsic } from 'dedot'
 import type { PayloadOptions } from 'dedot/types'
 
-// Chains supported by stablecoin services; statemint identifies Polkadot Asset Hub.
-export type StablecoinChainId = 'statemint' | 'hydration'
+// Chains supported by asset transfer services; statemint identifies Polkadot Asset Hub.
+export type StablecoinChainId = 'statemint' | 'hydration' | 'people-polkadot'
 
 // Stablecoin symbols supported across Asset Hub and Hydration.
 export type StablecoinSymbol = 'USDC' | 'USDT' | 'HOLLAR' | 'dotUSD'
@@ -60,7 +60,7 @@ export type AssetTransferInput = {
 // Retained for consumers of the original stablecoin service API.
 export type StablecoinTransferInput = AssetTransferInput
 
-// Polkadot-native assets registered on both Asset Hub and Hydration.
+// Assets available on supported cross-chain routes.
 export type CrossChainAsset = 'DOT' | 'USDC' | 'USDT'
 
 export type CrossChainTransferInput = {

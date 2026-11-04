@@ -1,13 +1,12 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { HydrationApi } from '@dedot/chaintypes/hydration'
-import type { PolkadotAssetHubApi } from '@dedot/chaintypes/polkadot-asset-hub'
-import type { DedotClient } from 'dedot'
-import type { ServiceInterface, StablecoinBalance } from 'types'
-import { AssetHubStablecoinBalancesQuery } from '../subscribe/assetHubStablecoinBalances'
-import { HydrationStablecoinBalancesQuery } from '../subscribe/hydrationStablecoinBalances'
-import type { DedotServiceFeatures } from '../types'
+import type {
+	ServiceInterface,
+	StablecoinBalance,
+	StablecoinChainId,
+} from 'types'
+import type { StablecoinAdapter } from './shared'
 
 type Listener = {
 	onBalance: (balance: StablecoinBalance) => void
@@ -36,14 +35,13 @@ const notifyBalance = (listener: Listener, balance: StablecoinBalance) => {
 
 // Imported accounts and temporary delivery watchers share the same storage subscriptions.
 export const createStablecoinSubscriptions = (
-	apiHub: DedotClient<PolkadotAssetHubApi>,
-	getHydrationApi: () => Promise<DedotClient<HydrationApi>>,
-	features: DedotServiceFeatures['stablecoins'],
+	adapters: Partial<Record<StablecoinChainId, StablecoinAdapter>>,
 ): ServiceInterface['stablecoins']['subscribe'] => {
 	const subscriptions = new Map<string, SharedSubscription>()
 	return {
 		balances: (address, chain, onBalance, onError) => {
-			if (!(chain === 'statemint' ? features.assetHub : features.hydration)) {
+			const adapter = adapters[chain]
+			if (!adapter) {
 				onError(new Error(`Balance subscriptions unavailable for ${chain}`))
 				return () => {}
 			}
@@ -72,21 +70,7 @@ export const createStablecoinSubscriptions = (
 					for (const subscriber of entry.listeners)
 						notifyError(subscriber, error)
 				}
-				const subscription =
-					chain === 'statemint'
-						? new AssetHubStablecoinBalancesQuery(
-								apiHub,
-								address,
-								emitBalance,
-								emitError,
-							)
-						: new HydrationStablecoinBalancesQuery(
-								getHydrationApi,
-								address,
-								emitBalance,
-								emitError,
-							)
-				entry.unsubscribe = () => subscription.unsubscribe()
+				entry.unsubscribe = adapter.subscribe(address, emitBalance, emitError)
 			}
 			const active = shared
 			return () => {
