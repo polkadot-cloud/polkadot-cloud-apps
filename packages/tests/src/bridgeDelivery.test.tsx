@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
+import { encodeAddress } from 'dedot/utils'
 import { act, createElement, Fragment, type ReactNode, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type {
@@ -115,6 +116,7 @@ type BalanceListener = {
 	unsubscribe: ReturnType<typeof vi.fn>
 }
 let listeners: BalanceListener[]
+let recipientSequence = 0
 let deliveries: ReturnType<typeof trackCrossChainDelivery>[]
 let root: Root
 let container: HTMLDivElement
@@ -163,6 +165,7 @@ beforeEach(() => {
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.useFakeTimers()
 	vi.clearAllMocks()
+	input.recipient = encodeAddress(new Uint8Array(32).fill(++recipientSequence))
 	mocked.handlers.length = 0
 	_notifications.next([])
 	listeners = []
@@ -231,7 +234,7 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 	const submitted = await submit()
 	expect(mocked.onSubmitted).toHaveBeenCalledOnce()
 	expect(mocked.serviceApi.stablecoins.subscribe.balances).toHaveBeenCalledWith(
-		'external-recipient',
+		input.recipient,
 		'hydration',
 		expect.any(Function),
 		expect.any(Function),
@@ -266,7 +269,7 @@ test('the spinner waits past source inclusion and finality for the subscribed de
 	expect(_notifications.getValue()).toHaveLength(1)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	expect(mocked.serviceApi.stablecoins.query.balances).toHaveBeenCalledWith(
-		'external-recipient',
+		input.recipient,
 	)
 })
 
@@ -299,7 +302,7 @@ test('delivery tracking retains the submitted recipient and survives the form un
 	await act(async () => listeners[0].onBalance(destinationBalance))
 	expect(spinning()).toBe(false)
 	expect(mocked.serviceApi.stablecoins.query.balances).toHaveBeenCalledWith(
-		'external-recipient',
+		input.recipient,
 	)
 	expect(listeners[0].unsubscribe).toHaveBeenCalledOnce()
 	expect(_notifications.getValue()).toMatchObject([

@@ -11,6 +11,7 @@ import type {
 	CrossChainTransferInput,
 	ServiceInterface,
 } from 'types'
+import { reserveCrossChainReceipt } from './crossChainDeliveryBalances'
 
 // Tracking belongs to the submitted transfer, so changing or unmounting the form cannot stop it.
 export const trackCrossChainDelivery = (
@@ -26,7 +27,6 @@ export const trackCrossChainDelivery = (
 	} = {},
 ) => {
 	const { recipient, to, symbol } = input
-	const expectedBalance = quote.destinationBalance + quote.receivedAmount
 	const deliveryId = addPendingCrossChainDelivery()
 	let received = false
 	let finalized = false
@@ -45,6 +45,8 @@ export const trackCrossChainDelivery = (
 			// Cleanup must not interrupt terminal callbacks or transaction notifications.
 		}
 		removePendingCrossChainDelivery(deliveryId)
+		if (outcome === undefined) receipt.cancel()
+		else receipt.stop()
 		if (outcome === 'delivered') {
 			onDelivered?.()
 			void serviceApi.stablecoins.query
@@ -59,20 +61,18 @@ export const trackCrossChainDelivery = (
 		subscriptionFailed = true
 		if (finalized) finish('unconfirmed')
 	}
+	const receipt = reserveCrossChainReceipt(input, quote, () => {
+		received = true
+		if (finalized) finish('delivered')
+	})
 	try {
 		unsubscribe = serviceApi.stablecoins.subscribe.balances(
 			recipient,
 			to,
 			(balance) => {
-				if (
-					finished ||
-					balance.chain !== to ||
-					balance.symbol !== symbol ||
-					balance.free < expectedBalance
-				)
+				if (finished || balance.chain !== to || balance.symbol !== symbol)
 					return
-				received = true
-				if (finalized) finish('delivered')
+				receipt.update(balance.free)
 			},
 			onError,
 		)
