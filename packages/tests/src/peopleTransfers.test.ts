@@ -224,6 +224,35 @@ test('a failed People connection rejects both consumers and can be retried', asy
 	expect(connect).toHaveBeenCalledTimes(2)
 })
 
+test('Hydration consumers share one pending client with metadata caching enabled', async () => {
+	type HydrationApi = Awaited<ReturnType<PolkadotService['getHydrationApi']>>
+	let resolve!: (api: HydrationApi) => void
+	const connect = vi.spyOn(DedotClient, 'new').mockImplementation(
+		() =>
+			new Promise<HydrationApi>((done) => {
+				resolve = done
+			}) as ReturnType<typeof DedotClient.new>,
+	)
+	const service = createService(true, true, true)
+	const first = service.getHydrationApi()
+	const second = service.getHydrationApi()
+	expect(second).toBe(first)
+	expect(connect).toHaveBeenCalledOnce()
+	expect(connect).toHaveBeenCalledWith({
+		provider: expect.any(Object),
+		cacheMetadata: true,
+	})
+	const hydration = {
+		runtimeVersion: { specName: 'hydradx' },
+	} as HydrationApi
+	resolve(hydration)
+	expect(await first).toBe(hydration)
+	expect(await second).toBe(hydration)
+	expect(await service.getHydrationApi()).toBe(hydration)
+	expect(service.getSigningApi('hydradx')).toBe(hydration)
+	expect(connect).toHaveBeenCalledOnce()
+})
+
 test('disabling People leaves its balance service and connection unused', async () => {
 	const connect = vi.spyOn(DedotClient, 'new')
 	const service = createService(false, true)
