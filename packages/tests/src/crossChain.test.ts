@@ -234,6 +234,9 @@ describe('Cross-chain preflight', () => {
 			expect(result.destinationFee.decimals).toBe(symbol === 'DOT' ? 10 : 6)
 			expect(result.receivedAmount).toBe(receivedAmount)
 			expect(result.originFeeFromAmount).toBe(from === 'statemint')
+			expect(builder.getTransferInfo).toHaveBeenCalledOnce()
+			expect(builder.verifyEdOnDestination).not.toHaveBeenCalled()
+			expect(builder.dryRun).toHaveBeenCalledOnce()
 			expect(builder.disconnect).toHaveBeenCalledOnce()
 		},
 	)
@@ -274,7 +277,7 @@ describe('Cross-chain preflight', () => {
 			if (failure === 'balance')
 				quoteInfo.origin.selectedCurrency.sufficient = false
 			if (failure === 'destination')
-				builder.verifyEdOnDestination.mockResolvedValue(false)
+				quoteInfo.destination.receivedCurrency.sufficient = false
 			if (failure === 'simulation')
 				builder.dryRun.mockResolvedValue({ success: false })
 			builder.getTransferInfo.mockResolvedValue(quoteInfo)

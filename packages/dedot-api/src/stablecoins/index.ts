@@ -95,15 +95,15 @@ export const createStablecoinsInterface = (
 						}
 						const { prepareCrossChainTransfer } = await import('../xcm')
 						const chains = [input.from, input.to]
+						const [hydration, people] = await Promise.all([
+							chains.includes('hydration') ? getHydrationApi() : undefined,
+							chains.includes('people-polkadot') ? getPeopleApi() : undefined,
+						])
 						return prepareCrossChainTransfer(
 							{
 								statemint: apiHub,
-								hydration: chains.includes('hydration')
-									? await getHydrationApi()
-									: undefined,
-								'people-polkadot': chains.includes('people-polkadot')
-									? await getPeopleApi()
-									: undefined,
+								hydration,
+								'people-polkadot': people,
 							},
 							input,
 						)
