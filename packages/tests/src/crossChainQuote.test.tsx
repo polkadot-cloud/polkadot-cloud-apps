@@ -191,3 +191,19 @@ test('disabling preparation while fee currency changes immediately invalidates t
 	await advance(30_001)
 	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledOnce()
 })
+
+test('changing the route releases a stalled revalidation', async () => {
+	api.stablecoins.xcm.prepare.mockResolvedValue(quote(1_000_000n))
+	await render()
+	await advance(400)
+	api.stablecoins.xcm.prepare.mockReturnValueOnce(new Promise(() => {}))
+	let pending!: Promise<CrossChainTransfer | undefined>
+	await act(async () => {
+		pending = result.refresh()
+	})
+	expect(result.loading).toBe(true)
+	await render(original, false)
+	expect(await pending).toBeUndefined()
+	expect(result.loading).toBe(false)
+	expect(vi.getTimerCount()).toBe(0)
+})

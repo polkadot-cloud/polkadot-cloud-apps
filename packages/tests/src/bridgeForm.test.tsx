@@ -178,28 +178,73 @@ test('People routes switch assets and fees to DOT, preserve precision, and rever
 	const trigger =
 		container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[1]
 	await click(trigger)
-	expect(trigger.parentElement!.textContent).not.toContain('Hydration')
+	expect(trigger.parentElement!.textContent).toContain('Hydration')
 	expect(trigger.parentElement!.textContent).not.toContain('Polkadot People')
 })
 
-test('changing the source to People replaces an unsupported Hydration destination with Hub', async () => {
+test('People and Hydration preserve the destination, offer only DOT, and reverse in both directions', async () => {
 	await render()
+	await enterAmount('1')
 	await selectOption(0, 'Polkadot People')
 	expect(mocked.prepare).toHaveBeenLastCalledWith(
 		expect.objectContaining({
 			from: 'people-polkadot',
-			to: 'statemint',
+			to: 'hydration',
 			symbol: 'DOT',
 			feeAsset: 'DOT',
+			amount: 0n,
 		}),
 		false,
 	)
+	for (const [from, to] of [
+		['people-polkadot', 'hydration'],
+		['hydration', 'people-polkadot'],
+	] as const) {
+		for (const dropdown of [2, 3]) {
+			const trigger =
+				container.querySelectorAll<HTMLButtonElement>('[aria-expanded]')[
+					dropdown
+				]
+			await click(trigger)
+			expect(
+				[...trigger.parentElement!.querySelectorAll('button')].map(
+					(button) => button.textContent,
+				),
+			).toEqual(['DOT', 'DOT'])
+			await click(trigger)
+		}
+		await enterAmount('1.2345678901')
+		expect(mocked.prepare).toHaveBeenLastCalledWith(
+			expect.objectContaining({
+				from,
+				to,
+				symbol: 'DOT',
+				feeAsset: 'DOT',
+				amount: 12_345_678_901n,
+			}),
+			true,
+		)
+		await click(
+			container.querySelector<HTMLButtonElement>(
+				'[aria-label="reverseChains"]',
+			)!,
+		)
+		expect(mocked.prepare).toHaveBeenLastCalledWith(
+			expect.objectContaining({ from: to, to: from, amount: 0n }),
+			false,
+		)
+	}
+})
+
+test('selecting the current destination as the source falls back to another chain', async () => {
+	await render()
+	await enterAmount('1')
 	await selectOption(0, 'Hydration')
 	expect(mocked.prepare).toHaveBeenLastCalledWith(
 		expect.objectContaining({
 			from: 'hydration',
 			to: 'statemint',
-			symbol: 'DOT',
+			amount: 0n,
 		}),
 		false,
 	)

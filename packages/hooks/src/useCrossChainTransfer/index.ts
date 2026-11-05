@@ -31,6 +31,7 @@ export const useCrossChainTransfer = (
 		if (!enabled || !xcm) return
 		let stale = false
 		let running = false
+		let cancel: (() => void) | undefined
 		const fetch = async () => {
 			if (running) return
 			running = true
@@ -39,7 +40,7 @@ export const useCrossChainTransfer = (
 				loading: true,
 				error: undefined,
 			}))
-			try {
+			const prepare = async () => {
 				const quote = await xcm.prepare(request)
 				if (stale) return
 				const networkFee = await serviceApi.stablecoins.fee.estimate({
@@ -52,9 +53,18 @@ export const useCrossChainTransfer = (
 						request.feeAsset,
 					),
 				})
-				if (!stale) {
-					setState({ request, quote, networkFee, loading: false })
-					return quote
+				return { quote, networkFee }
+			}
+			try {
+				const prepared = await Promise.race([
+					prepare(),
+					new Promise<undefined>((resolve) => {
+						cancel = () => resolve(undefined)
+					}),
+				])
+				if (!stale && prepared) {
+					setState({ request, ...prepared, loading: false })
+					return prepared.quote
 				}
 			} catch (error) {
 				if (!stale)
@@ -67,6 +77,7 @@ export const useCrossChainTransfer = (
 								: 'Unable to prepare cross-chain transfer',
 					})
 			} finally {
+				cancel = undefined
 				running = false
 			}
 		}
@@ -74,6 +85,7 @@ export const useCrossChainTransfer = (
 		const timer = setTimeout(fetch, CrossChainQuoteDebounceMs)
 		return () => {
 			stale = true
+			cancel?.()
 			fetchRef.current = undefined
 			clearTimeout(timer)
 		}
