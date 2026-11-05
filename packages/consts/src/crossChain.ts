@@ -26,8 +26,5 @@ export const isCrossChainAssetSupported = (
 // Wait for the user to pause editing before simulating a new transfer.
 export const CrossChainQuoteDebounceMs = 400
 
-// Bound client initialization, simulation, and network fee estimation together.
-export const CrossChainQuoteTimeoutMs = 45_000
-
 // Destination confirmation window after the source transaction finalizes.
 export const CrossChainDeliveryTimeoutMs = 120_000

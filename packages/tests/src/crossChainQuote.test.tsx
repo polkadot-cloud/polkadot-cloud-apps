@@ -6,7 +6,6 @@ import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { CrossChainQuoteTimeoutMs } from '../../consts/src/crossChain'
 import { useCrossChainTransfer } from '../../hooks/src/useCrossChainTransfer'
 
 const api = vi.hoisted(() => ({
@@ -193,72 +192,18 @@ test('disabling preparation while fee currency changes immediately invalidates t
 	expect(api.stablecoins.xcm.prepare).toHaveBeenCalledOnce()
 })
 
-test.each(['preparation', 'network fee'])(
-	'a stalled %s request times out, allows retry, and ignores its late result',
-	async (stage) => {
-		let resolveQuote!: (value: CrossChainTransfer) => void
-		let resolveFee!: (value: bigint) => void
-		api.stablecoins.xcm.prepare.mockResolvedValue(quote(2_000_000n))
-		if (stage === 'preparation') {
-			api.stablecoins.xcm.prepare.mockReturnValueOnce(
-				new Promise<CrossChainTransfer>((resolve) => {
-					resolveQuote = resolve
-				}),
-			)
-		} else {
-			api.stablecoins.fee.estimate.mockReturnValueOnce(
-				new Promise<bigint>((resolve) => {
-					resolveFee = resolve
-				}),
-			)
-		}
-		await render()
-		await advance(400)
-		await advance(CrossChainQuoteTimeoutMs - 1)
-		expect(result.loading).toBe(true)
-		await advance(1)
-		expect(result.loading).toBe(false)
-		expect(result.error).toBe('Cross-chain checks timed out. Please retry.')
-		expect(result.quote).toBeUndefined()
-		expect(result.networkFee).toBeUndefined()
-
-		let resolveRetry!: (value: CrossChainTransfer) => void
-		api.stablecoins.xcm.prepare.mockReturnValueOnce(
-			new Promise<CrossChainTransfer>((resolve) => {
-				resolveRetry = resolve
-			}),
-		)
-		let retry!: Promise<CrossChainTransfer | undefined>
-		await act(async () => {
-			retry = result.refresh()
-		})
-		await act(async () => {
-			if (stage === 'preparation') resolveQuote(quote(1_000_000n))
-			else resolveFee(999n)
-		})
-		expect(result.loading).toBe(true)
-		expect(result.quote).toBeUndefined()
-		await act(async () => result.refresh())
-		expect(api.stablecoins.xcm.prepare).toHaveBeenCalledTimes(2)
-		await act(async () => resolveRetry(quote(3_000_000n)))
-		expect(await retry).toBe(result.quote)
-		expect(result.quote?.receivedAmount).toBe(3_000_000n)
-		expect(result.networkFee).toBe(10n)
-		expect(result.error).toBeUndefined()
-		expect(result.loading).toBe(false)
-		expect(api.stablecoins.fee.estimate).toHaveBeenCalledTimes(
-			stage === 'preparation' ? 1 : 2,
-		)
-		expect(vi.getTimerCount()).toBe(0)
-	},
-)
-
-test('changing the route releases a stalled request and its timeout', async () => {
-	api.stablecoins.xcm.prepare.mockReturnValueOnce(new Promise(() => {}))
+test('changing the route releases a stalled revalidation', async () => {
+	api.stablecoins.xcm.prepare.mockResolvedValue(quote(1_000_000n))
 	await render()
 	await advance(400)
-	expect(vi.getTimerCount()).toBe(1)
+	api.stablecoins.xcm.prepare.mockReturnValueOnce(new Promise(() => {}))
+	let pending!: Promise<CrossChainTransfer | undefined>
+	await act(async () => {
+		pending = result.refresh()
+	})
+	expect(result.loading).toBe(true)
 	await render(original, false)
+	expect(await pending).toBeUndefined()
 	expect(result.loading).toBe(false)
 	expect(vi.getTimerCount()).toBe(0)
 })

@@ -1,10 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import {
-	CrossChainQuoteDebounceMs,
-	CrossChainQuoteTimeoutMs,
-} from 'consts/crossChain'
+import { CrossChainQuoteDebounceMs } from 'consts/crossChain'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CrossChainTransfer, CrossChainTransferInput } from 'types'
 import { useApi } from '../useApi'
@@ -38,8 +35,6 @@ export const useCrossChainTransfer = (
 		const fetch = async () => {
 			if (running) return
 			running = true
-			let expired = false
-			let timeout: ReturnType<typeof setTimeout> | undefined
 			setState((previous) => ({
 				...(previous?.request === request ? previous : { request }),
 				loading: true,
@@ -47,7 +42,7 @@ export const useCrossChainTransfer = (
 			}))
 			const prepare = async () => {
 				const quote = await xcm.prepare(request)
-				if (stale || expired) return
+				if (stale) return
 				const networkFee = await serviceApi.stablecoins.fee.estimate({
 					chain: request.from,
 					symbol: request.feeAsset,
@@ -63,15 +58,8 @@ export const useCrossChainTransfer = (
 			try {
 				const prepared = await Promise.race([
 					prepare(),
-					new Promise<undefined>((resolve, reject) => {
-						cancel = () => {
-							expired = true
-							resolve(undefined)
-						}
-						timeout = setTimeout(() => {
-							expired = true
-							reject(new Error('Cross-chain checks timed out. Please retry.'))
-						}, CrossChainQuoteTimeoutMs)
+					new Promise<undefined>((resolve) => {
+						cancel = () => resolve(undefined)
 					}),
 				])
 				if (!stale && prepared) {
@@ -89,7 +77,6 @@ export const useCrossChainTransfer = (
 								: 'Unable to prepare cross-chain transfer',
 					})
 			} finally {
-				clearTimeout(timeout)
 				cancel = undefined
 				running = false
 			}
