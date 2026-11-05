@@ -63,13 +63,17 @@ const formatRate = (rate: number, locale?: string) =>
 	`${rate.toLocaleString(locale, { maximumFractionDigits: 1 })}%`
 
 const getCompoundRateColor = (rate: number) =>
-	rate > 0 ? 'var(--status-success)' : 'var(--status-danger)'
+	rate === 0
+		? 'var(--text-tertiary)'
+		: rate > 0
+			? 'var(--status-success)'
+			: 'var(--status-danger)'
 
 const getRateTrendIcon = (rate: number) =>
 	rate >= 75 ? faArrowTrendUp : rate < 25 ? faArrowTrendDown : undefined
 
 const getCompoundRateTrendIcon = (rate: number) =>
-	rate > 0 ? faArrowTrendUp : faArrowTrendDown
+	rate === 0 ? undefined : rate > 0 ? faArrowTrendUp : faArrowTrendDown
 
 const getRateStat = ({
 	getColor = getRateColor,
