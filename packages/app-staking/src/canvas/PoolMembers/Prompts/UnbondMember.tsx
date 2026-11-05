@@ -41,7 +41,7 @@ export const UnbondMember = ({
 	const { activeAddress, activeAccount } = useActiveAccount()
 
 	const { points } = member
-	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration('pool')
 	const freeToUnbond = planckToUnitBn(new BigNumber(points), units)
 	const unbondDurationFormatted = formatUnbondDuration(t)
 

@@ -35,7 +35,8 @@ export const Unstake = () => {
 	const { activeAddress, activeAccount } = useActiveAccount()
 
 	const { balances } = useAccountBalances(activeAddress)
-	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
+	const { unbondDuration, formatUnbondDuration } =
+		useUnbondDuration('nominator')
 	const { unit, units } = getStakingChainData(network)
 	const nominations = getNominations(activeAddress)
 	const { active } = balances.nominator
