@@ -131,6 +131,24 @@ describe('Cross-chain preflight', () => {
 			undefined,
 		],
 		[
+			'people-polkadot',
+			'hydration',
+			'DOT',
+			'PeoplePolkadot',
+			'Hydration',
+			undefined,
+			5,
+		],
+		[
+			'hydration',
+			'people-polkadot',
+			'DOT',
+			'Hydration',
+			'PeoplePolkadot',
+			5,
+			undefined,
+		],
+		[
 			'statemint',
 			'hydration',
 			'USDC',
@@ -270,19 +288,26 @@ describe('Cross-chain preflight', () => {
 	test('rejects same-chain, unsupported-token and nonpositive transfers', async () => {
 		for (const changes of [
 			{ to: 'statemint' },
+			{ from: 'hydration', to: 'hydration' },
+			{
+				from: 'people-polkadot',
+				to: 'people-polkadot',
+				symbol: 'DOT',
+				feeAsset: 'DOT',
+			},
 			{ to: 'people-polkadot' },
 			{ to: 'people-polkadot', symbol: 'DOT', feeAsset: 'USDC' },
 			{
 				from: 'people-polkadot',
 				to: 'hydration',
-				symbol: 'DOT',
+				symbol: 'USDC',
 				feeAsset: 'DOT',
 			},
 			{
 				from: 'hydration',
 				to: 'people-polkadot',
 				symbol: 'DOT',
-				feeAsset: 'DOT',
+				feeAsset: 'USDC',
 			},
 			{ symbol: 'HOLLAR' },
 			{ symbol: 'dotUSD' },

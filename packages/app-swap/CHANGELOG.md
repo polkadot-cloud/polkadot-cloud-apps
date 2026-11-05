@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add DOT, USDC and USDT bridging between Polkadot Asset Hub and Hydration, with XCM preflight, fee estimates, wallet signing, and destination balance monitoring.
+- Allow DOT bridging in both directions between Polkadot People and Hydration.
 - Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-swap-v0.2.0...app-swap-v0.3.0) (2026-10-28)
