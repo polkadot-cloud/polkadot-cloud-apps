@@ -38,7 +38,7 @@ export const Chunk = ({ chunk, bondFor, onRebond }: ChunkProps) => {
 
 	const { unit, units } = getStakingChainData(network)
 	const { bondDuration } = getConsts(network)
-	const { unbondDuration } = useUnbondDuration()
+	const { unbondDuration } = useUnbondDuration(bondFor)
 	const isStaking = bondFor === 'nominator'
 	const { era, value } = chunk
 	const left = new BigNumber(era).minus(activeEra.index)
@@ -49,10 +49,9 @@ export const Chunk = ({ chunk, bondFor, onRebond }: ChunkProps) => {
 	const dateTo = fromUnixTime(start + erasDuration)
 	const formatted = formatTimeleft(t, timeleft.raw)
 
-	// Calculate unbonding progress percentage. Chunks unlocking within the
-	// effective unbond duration span that duration; chunks with more eras
-	// remaining (validators, or chunks created before fast unbonding was
-	// enabled) span the full bond duration.
+	// Calculate unbonding progress percentage. Chunks unlocking within the effective unbond duration
+	// span that duration; chunks with more eras remaining (created before fast unbonding was enabled)
+	// span the full bond duration. Validator chunks always use the full bond duration.
 	const isUnlocked = left.isLessThanOrEqualTo(0)
 	const chunkDuration = left.isGreaterThan(unbondDuration)
 		? bondDuration

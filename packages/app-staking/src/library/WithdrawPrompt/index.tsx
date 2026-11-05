@@ -21,7 +21,7 @@ export const WithdrawPrompt = ({ bondFor }: { bondFor: BondFor }) => {
 	const { getThemeValue } = useThemeValues()
 
 	const { activeAddress } = useActiveAccount()
-	const { formatUnbondDuration } = useUnbondDuration()
+	const { formatUnbondDuration } = useUnbondDuration(bondFor)
 	const { state } = activePool?.bondedPool || {}
 
 	const { balances } = useAccountBalances(activeAddress)

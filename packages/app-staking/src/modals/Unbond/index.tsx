@@ -45,7 +45,7 @@ export const Unbond = () => {
 		config: { options },
 	} = useOverlay().modal
 	const { bondFor } = options
-	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration(bondFor)
 	const { unit, units } = getStakingChainData(network)
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 

@@ -36,7 +36,7 @@ export const Overview = forwardRef(
 		const { t } = useTranslation('modals')
 		const { network } = useNetwork()
 		const { activeEra } = useApi()
-		const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
+		const { unbondDuration, formatUnbondDuration } = useUnbondDuration(bondFor)
 
 		const { unit, units } = getStakingChainData(network)
 		const unbondDurationFormatted = formatUnbondDuration(t)

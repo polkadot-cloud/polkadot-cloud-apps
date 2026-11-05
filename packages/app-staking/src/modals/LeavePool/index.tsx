@@ -43,7 +43,7 @@ export const LeavePool = ({
 
 	const { unit, units } = getStakingChainData(network)
 	const { active: activeBn } = balances.pool
-	const { unbondDuration, formatUnbondDuration } = useUnbondDuration()
+	const { unbondDuration, formatUnbondDuration } = useUnbondDuration('pool')
 	const pendingRewards = getPendingPoolRewards(activeAddress)
 	const { membership } = getPoolMembership(activeAddress)
 	const unbondDurationFormatted = formatUnbondDuration(t)
