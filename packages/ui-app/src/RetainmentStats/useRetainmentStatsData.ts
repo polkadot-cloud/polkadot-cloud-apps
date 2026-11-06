@@ -189,6 +189,29 @@ export const useRetainmentRateData = (
 	}
 }
 
+export const useNetOutflowData = ({
+	period,
+	unit,
+	units,
+}: {
+	period?: Pick<RetainmentPeriodData, 'netInflow'>
+	unit: string
+	units: number
+}): RetainmentStatData => {
+	const { t, i18n } = useTranslation('app')
+	const netInflow = period
+		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
+		: undefined
+
+	return getSignedAmountStat({
+		label: t('netOutflow'),
+		locale: i18n.resolvedLanguage,
+		maximumLabel: t('maximum'),
+		unit,
+		value: netInflow === undefined ? undefined : Math.min(netInflow, 0),
+	})
+}
+
 export const useRetainmentStatsData = ({
 	period,
 	selfStakeMax,
@@ -198,16 +221,12 @@ export const useRetainmentStatsData = ({
 }: RetainmentStatsDataProps): RetainmentStatsData => {
 	const { t, i18n } = useTranslation('app')
 	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
+	const netOutflow = useNetOutflowData({ period, unit, units })
 	const locale = i18n.resolvedLanguage
 	const displaySelfStakeMax = period !== undefined && selfStakeMax
 	const selfStakeChange = period
 		? planckToUnitBn(new BigNumber(period.selfStakeChange), units).toNumber()
 		: undefined
-	const netInflow = period
-		? planckToUnitBn(new BigNumber(period.netInflow), units).toNumber()
-		: undefined
-	const netOutflow =
-		netInflow === undefined ? undefined : Math.min(netInflow, 0)
 	const monthDate = period ? new Date(period.fromTimestamp * 1000) : undefined
 	const month = monthDate
 		? {
@@ -232,13 +251,7 @@ export const useRetainmentStatsData = ({
 			rate: period?.compoundRate,
 		}),
 		month,
-		netOutflow: getSignedAmountStat({
-			label: t('netOutflow'),
-			locale,
-			maximumLabel,
-			unit,
-			value: netOutflow,
-		}),
+		netOutflow,
 		retainmentLabel,
 		retainmentRate,
 		selfStakeChange: getSignedAmountStat({

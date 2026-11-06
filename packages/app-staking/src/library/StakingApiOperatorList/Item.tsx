@@ -12,7 +12,9 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DetailedCard, ListItem } from 'ui-app/ListItem'
 import {
+	RetainmentMetric,
 	RetainmentWindowToggle,
+	useNetOutflowData,
 	useRetainmentRateData,
 	useRetainmentWindow,
 } from 'ui-app/RetainmentStats'
@@ -63,6 +65,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 		setWindow: setRetainmentWindow,
 	} = useRetainmentWindow(operator.retainment)
 	const { retainmentLabel, retainmentRate } = useRetainmentRateData(period)
+	const netOutflow = useNetOutflowData({ period, unit, units })
 	const retainmentWindowToggle = (
 		<RetainmentWindowToggle
 			alignEnd
@@ -148,6 +151,9 @@ export const Item = ({ format, operator }: ItemProps) => {
 			{retainmentRate.valueText}
 		</OperatorMetric>
 	)
+	const netOutflowMetric = (
+		<RetainmentMetric isPreloading={false} stat={netOutflow} unit={unit} />
+	)
 
 	if (format === 'row') {
 		return (
@@ -170,6 +176,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 				</ListItem.RowMetricGroup>
 				<ListItem.RowMetricGroup data-section="retainment">
 					{retainmentMetric}
+					{netOutflowMetric}
 				</ListItem.RowMetricGroup>
 				<RowActionsMenu operator={operator} />
 			</ListItem.Row>
@@ -186,6 +193,7 @@ export const Item = ({ format, operator }: ItemProps) => {
 				<CardSummary aria-label={t('operatorSummary')}>
 					{validatorMetricNodes}
 					{retainmentMetric}
+					{netOutflowMetric}
 				</CardSummary>
 			</DetailedCard.Top>
 		</DetailedCard.Root>

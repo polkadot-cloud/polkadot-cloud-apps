@@ -16,6 +16,7 @@ export type {
 	RetainmentStatsData,
 } from './useRetainmentStatsData'
 export {
+	useNetOutflowData,
 	useRetainmentRateData,
 	useRetainmentStatsData,
 } from './useRetainmentStatsData'
