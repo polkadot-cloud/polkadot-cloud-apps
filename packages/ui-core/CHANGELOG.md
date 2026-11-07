@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.8.0...ui-core-v1.9.0) (2026-11-07)
+
+
+### Features
+
+* `app-swap` People chain support in Send & Bridge  ([#3905](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3905)) ([f7c3a04](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f7c3a047764deb310b5ef5c65e7d1480ae65b6de))
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+
 ## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-core-v1.7.0...ui-core-v1.8.0) (2026-10-28)
 
 ### Features
