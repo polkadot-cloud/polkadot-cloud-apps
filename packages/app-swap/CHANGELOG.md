@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Always use enabled Polkadot Cloud RPCs for Hub and People, overriding saved connection settings.
 - Add DOT, USDC and USDT bridging between Polkadot Asset Hub and Hydration, with XCM preflight, fee estimates, wallet signing, and destination balance monitoring.
 - Allow DOT bridging in both directions between Polkadot People and Hydration using ParaSpell 14.5.1.
 - Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.

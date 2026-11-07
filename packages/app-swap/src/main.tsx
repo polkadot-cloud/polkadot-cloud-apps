@@ -28,6 +28,7 @@ clearDisabledExtensionsLocal()
 
 initDedotService({
 	network: 'polkadot',
+	forceCloudRpc: true,
 	nominationPools: false,
 	staking: false,
 	swap: true,

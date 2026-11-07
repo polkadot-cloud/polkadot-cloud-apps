@@ -20,6 +20,8 @@ import type { StakingLedgerQuery } from '../subscribe/stakingLedger'
 export type DedotServiceConfig = {
 	// Restricts the service and shared network state to a single network.
 	network?: DefaultServiceNetworkId
+	// Uses enabled Cloud RPCs regardless of saved endpoint, Auto RPC or light-client settings.
+	forceCloudRpc?: boolean
 	nominationPools?: boolean
 	staking?: boolean
 	swap?: boolean
