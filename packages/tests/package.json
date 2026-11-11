@@ -26,6 +26,6 @@
 		"react-i18next": "^17.1.10",
 		"types": "workspace:*",
 		"typescript": "^7.0.2",
-		"vitest": "^5.0.5"
+		"vitest": "^5.1.0"
 	}
 }
