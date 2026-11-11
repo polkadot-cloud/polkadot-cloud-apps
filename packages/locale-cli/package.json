@@ -14,7 +14,7 @@
 		"remove-locale": "tsx ./src/cli.ts remove-locale"
 	},
 	"dependencies": {
-		"commander": "^15.0.0",
+		"commander": "^15.1.0",
 		"consts": "workspace:*",
 		"dotenv": "^18.0.9",
 		"openai": "^7.47.0"
