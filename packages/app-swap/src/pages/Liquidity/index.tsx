@@ -1,10 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import classNames from 'classnames'
 import { AssetHubPoolTokens } from 'consts/assetHub'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
-import { AccountField, useAssetHubMarket } from 'library/AssetHub'
+import { useAssetHubMarket } from 'library/AssetHub'
 import { useTranslation } from 'react-i18next'
 import {
 	Link,
@@ -16,15 +17,15 @@ import {
 import { Page } from 'ui-core/base'
 import { SendForm } from 'ui-core/input'
 import { ExchangeNotice } from '../../library/ExchangeNotice'
-import { useSendAccounts } from '../Send/hooks/useSendAccounts'
 import classes from './index.module.scss'
 import { LiquidityEditor } from './LiquidityEditor'
 import { PoolList } from './PoolList'
 
 export const Liquidity = () => {
 	const { t } = useTranslation('swap')
-	const accounts = useSendAccounts()
-	const account = accounts.fromAccount
+	const { activeAccount } = useActiveAccount()
+	const { getAccount, accountHasSigner } = useImportedAccounts()
+	const account = getAccount(activeAccount)
 	const { market, exchange, error } = useAssetHubMarket(account?.address)
 	const expired = useQuoteExpired(market?.fetchedAt)
 	const { asset } = useParams<{ asset: string }>()
@@ -56,11 +57,6 @@ export const Liquidity = () => {
 					title={selected ? `DOT / ${selected}` : t('liquidity')}
 					subtitle={t(selected ? 'manageLiquidity' : 'liquidityDescription')}
 				/>
-				<AccountField
-					account={account}
-					accounts={accounts.accountsWithSigners}
-					onSelect={accounts.setFromAccount}
-				/>
 				{error && <ExchangeNotice status="danger">{error}</ExchangeNotice>}
 				{!market && !error && (
 					<p className={classes.notice} role="status">
@@ -74,6 +70,7 @@ export const Liquidity = () => {
 							pool={pool}
 							exchange={exchange}
 							account={account}
+							canSign={accountHasSigner(activeAccount)}
 							fresh={!!market && !expired}
 						/>
 					) : (

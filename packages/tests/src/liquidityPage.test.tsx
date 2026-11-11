@@ -21,6 +21,7 @@ const mocked = vi.hoisted(() => ({
 		address: 'first-account',
 		source: 'extension',
 	} as ImportedAccount | null,
+	canSign: true,
 	listeners: [] as {
 		address?: string
 		onUpdate: (market: AssetHubMarket) => void
@@ -54,18 +55,30 @@ const snapshot = (lpBalance = 100_000n): AssetHubMarket => ({
 vi.mock('../../hooks/src/index', () => ({
 	useApi: () => ({ serviceApi: mocked.serviceApi }),
 }))
-vi.mock('../../app-swap/src/pages/Send/hooks/useSendAccounts', () => ({
-	useSendAccounts: () => ({
-		fromAccount: mocked.account,
-		accountsWithSigners: mocked.account ? [mocked.account] : [],
-		setFromAccount: vi.fn(),
+vi.mock('../../app-swap/node_modules/@polkadot-cloud/connect/index.js', () => ({
+	useActiveAccount: () => ({ activeAccount: mocked.account }),
+	useImportedAccounts: () => ({
+		getAccount: () => mocked.account,
+		accountHasSigner: () => mocked.canSign,
 	}),
 }))
 vi.mock('../../app-swap/src/pages/Liquidity/LiquidityEditor', () => ({
-	LiquidityEditor: ({ pool }: { pool: AssetHubMarket['pools'][number] }) =>
+	LiquidityEditor: ({
+		pool,
+		account,
+		canSign,
+	}: {
+		pool: AssetHubMarket['pools'][number]
+		account: ImportedAccount | null
+		canSign: boolean
+	}) =>
 		createElement(
 			'section',
-			{ 'aria-label': 'liquidity-editor' },
+			{
+				'aria-label': 'liquidity-editor',
+				'data-account': account?.address,
+				'data-can-sign': canSign,
+			},
 			pool.lpBalance.toString(),
 		),
 }))
@@ -131,6 +144,7 @@ beforeEach(() => {
 		address: 'first-account',
 		source: 'extension',
 	} as ImportedAccount
+	mocked.canSign = true
 	mocked.listeners.length = 0
 	mocked.serviceApi.assetHub.subscribeMarket.mockImplementation(
 		(address, onUpdate, onError) => {
@@ -214,6 +228,7 @@ test('subscription updates remove closed positions and recover from errors witho
 test('account changes unsubscribe and ignore late updates from the previous account', async () => {
 	await render('/liquidity/USDT')
 	const previous = mocked.listeners[0]
+	expect(previous.address).toBe('first-account')
 	mocked.account = {
 		address: 'second-account',
 		source: 'extension',
@@ -221,6 +236,11 @@ test('account changes unsubscribe and ignore late updates from the previous acco
 	await render('/liquidity/USDT')
 	expect(previous.stop).toHaveBeenCalledOnce()
 	expect(mocked.listeners[1].address).toBe('second-account')
+	expect(
+		container
+			.querySelector('[aria-label="liquidity-editor"]')
+			?.getAttribute('data-account'),
+	).toBe('second-account')
 	await act(async () => mocked.listeners[1].onUpdate(snapshot(50n)))
 	await act(async () => previous.onUpdate(snapshot(9_999n)))
 	expect(
@@ -236,4 +256,16 @@ test('the positions tab prompts for an account when none is connected', async ()
 	await render('/liquidity?tab=positions')
 	expect(container.textContent).toContain('selectAccountForPositions')
 	expect(container.querySelector('table')).toBeNull()
+	expect(mocked.listeners[0].address).toBeUndefined()
+})
+
+test('read-only active accounts can view their positions without enabling signing', async () => {
+	mocked.canSign = false
+	await render('/liquidity/USDT')
+	expect(mocked.listeners[0].address).toBe('first-account')
+	expect(
+		container
+			.querySelector('[aria-label="liquidity-editor"]')
+			?.getAttribute('data-can-sign'),
+	).toBe('false')
 })

@@ -27,9 +27,8 @@ export const Router = () => (
 			<Page.Main>
 				<HelmetProvider>
 					<Headers
-						showAccount={false}
+						AccountComponent={AccountsButton}
 						NodesLeft={{ sync: Sync }}
-						NodesRight={{ accounts: AccountsButton }}
 						menuPopoverFeatures={{
 							network: false,
 							advancedMode: false,

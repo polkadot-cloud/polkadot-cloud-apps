@@ -38,11 +38,13 @@ export const LiquidityEditor = ({
 	pool,
 	exchange,
 	account,
+	canSign,
 	fresh,
 }: {
 	pool: AssetHubPool
 	exchange: AssetHubExchange
 	account: ImportedAccount | null
+	canSign: boolean
 	fresh: boolean
 }) => {
 	const { t } = useTranslation('swap')
@@ -231,7 +233,7 @@ export const LiquidityEditor = ({
 					spends={
 						mode === 'add' ? { DOT: dotAmount, [pool.asset]: assetAmount } : {}
 					}
-					valid={!!amounts && !error && fresh && !complete}
+					valid={canSign && !!amounts && !error && fresh && !complete}
 					label={t(mode === 'add' ? 'addLiquidity' : 'removeLiquidity')}
 					onComplete={() => {
 						setDot('')

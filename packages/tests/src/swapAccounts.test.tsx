@@ -10,6 +10,7 @@ import {
 	Suspense,
 } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
+import { MemoryRouter, useNavigate } from 'react-router-dom'
 import type { ImportedAccount, StablecoinBalance } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { AccountsButton } from '../../app-swap/src/library/Accounts'
@@ -89,6 +90,9 @@ vi.mock('../../ui-overlay/src/index', async () => {
 vi.mock('../../ui-app/src/ModalTitle', () => ({
 	ModalTitle: ({ title }: { title: string }) =>
 		createElement('h2', null, title),
+}))
+vi.mock('../../ui-app/src/Headers', () => ({
+	Account: () => createElement('button', { type: 'button' }, 'active-account'),
 }))
 vi.mock('../../ui-app/src/ButtonCopy', () => ({
 	ButtonCopy: () => createElement('button', { type: 'button' }, 'Copy'),
@@ -221,6 +225,36 @@ const accountRows = () => [
 ]
 const balanceAccount = () =>
 	container.querySelector('[data-balances]')?.getAttribute('data-balances')
+
+const HeaderNavigation = () => {
+	const navigate = useNavigate()
+	return createElement(
+		'nav',
+		null,
+		...['/', '/send', '/bridge', '/liquidity', '/liquidity/USDT'].map((path) =>
+			createElement(
+				'button',
+				{ key: path, type: 'button', onClick: () => navigate(path) },
+				path,
+			),
+		),
+	)
+}
+const renderHeader = (path = '/') =>
+	act(async () =>
+		root.render(
+			createElement(
+				MemoryRouter,
+				{ initialEntries: [path] },
+				createElement(AccountsButton, {
+					openConnect: false,
+					setOpenConnect: vi.fn(),
+					sendModal: false,
+				}),
+				createElement(HeaderNavigation),
+			),
+		),
+	)
 
 beforeEach(() => {
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -431,7 +465,7 @@ test('handles an empty account list without displaying another account balances'
 })
 
 test('the Accounts header opens AccountBalances and remembers the last browsed account', async () => {
-	await act(async () => root.render(createElement(AccountsButton)))
+	await renderHeader()
 	const button = container.querySelector('button')!
 	expect(button.textContent).toBe('accounts')
 	await act(async () => button.click())
@@ -443,6 +477,43 @@ test('the Accounts header opens AccountBalances and remembers the last browsed a
 	await act(async () => openModal.mock.calls.at(-1)![0].options.onSelect(alice))
 	await act(async () => button.click())
 	expect(openModal.mock.calls.at(-1)![0].options.initialAccount).toEqual(alice)
+})
+
+test.each(['/liquidity', '/liquidity/USDT?tab=positions'])(
+	'the header uses the staking account control on %s',
+	async (path) => {
+		await renderHeader(path)
+		expect(container.querySelector('button')?.textContent).toBe(
+			'active-account',
+		)
+	},
+)
+
+test('navigation changes the header account context and preserves the browsed account', async () => {
+	await renderHeader()
+	await act(async () => container.querySelector('button')!.click())
+	await act(async () => openModal.mock.calls.at(-1)![0].options.onSelect(alice))
+	const navigate = (path: string) =>
+		act(async () =>
+			[...container.querySelectorAll('nav button')]
+				.find((button) => button.textContent === path)!
+				.click(),
+		)
+	for (const path of [
+		'/liquidity',
+		'/liquidity/USDT',
+		'/send',
+		'/bridge',
+		'/',
+	]) {
+		await navigate(path)
+		expect(container.querySelector('button')?.textContent).toBe(
+			path.startsWith('/liquidity') ? 'active-account' : 'accounts',
+		)
+	}
+	await act(async () => container.querySelector('button')!.click())
+	expect(openModal.mock.calls.at(-1)![0].options.initialAccount).toEqual(alice)
+	expect(setActiveAccount).not.toHaveBeenCalled()
 })
 
 test('groups funded Hub accounts first by stablecoin balance and ignores DOT and Hydration holdings', async () => {

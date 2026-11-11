@@ -1,0 +1,25 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.control {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	animation: account-reveal 240ms ease-out;
+
+	@media (prefers-reduced-motion: reduce) {
+		animation: none;
+	}
+}
+
+@keyframes account-reveal {
+	from {
+		opacity: 0;
+		transform: translateY(0.35rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

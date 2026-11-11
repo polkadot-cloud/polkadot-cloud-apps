@@ -10,13 +10,12 @@ import { ButtonAccount } from 'ui-buttons'
 import { Popover } from 'ui-core/popover'
 import { useOverlay } from 'ui-overlay'
 import { AccountPopover } from './Popovers/AccountPopover'
-import type { ToggleConnectProps } from './Popovers/types'
-import type { MenuPopoverFeatureFlags } from './types'
+import type { HeaderAccountProps } from './types'
 
 export const Account = ({
 	setOpenConnect,
 	sendModal = true,
-}: ToggleConnectProps & Pick<MenuPopoverFeatureFlags, 'sendModal'>) => {
+}: HeaderAccountProps) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
 	const { activeProxy } = useActiveProxy()
