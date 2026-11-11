@@ -784,8 +784,8 @@ importers:
         specifier: ^0.280.0
         version: 0.280.0(dedot@1.4.0(typescript@7.0.2))
       '@paraspell/sdk-dedot':
-        specifier: 14.5.1
-        version: 14.5.1(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)
+        specifier: 14.5.2
+        version: 14.5.2(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)
       '@polkadot-cloud/connect-core':
         specifier: ^2.0.0
         version: 2.0.0(dedot@1.4.0(typescript@7.0.2))(rxjs@7.8.2)
@@ -1024,8 +1024,8 @@ importers:
         version: link:../utils
     devDependencies:
       '@paraspell/sdk-dedot':
-        specifier: 14.5.1
-        version: 14.5.1(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)
+        specifier: 14.5.2
+        version: 14.5.2(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)
       '@tanstack/react-query':
         specifier: ^5.105.1
         version: 5.105.1(@types/react@19.3.0)(react@19.3.1)
@@ -2263,20 +2263,20 @@ packages:
   '@oxc-project/types@0.155.0':
     resolution: {integrity: sha512-SeE8JPwW1xs1tHeNycjUtUBdhorRa8o4jlvjwk49R7/Z291i+4DQa7JJIgOm/TaYQZx+QrPQbVJ/9c8dMIZN8Q==}
 
-  '@paraspell/assets@14.5.1':
-    resolution: {integrity: sha512-uRhzcL5viG7N5hNeF2WZtWGBWNhaZr6i1AZHD4fjaVXH3915wgogv6v1teW2F+sd3osk6XKIzdCrKpohOhZPbA==}
+  '@paraspell/assets@14.5.2':
+    resolution: {integrity: sha512-1eXxXtPrBdPKCou+tE3ANDNvfDGnwRIdX3BKQA0bdn/qJiR3Rmp2gC/1JH9A6VmSNuquTUoQvKAQwOF1Cj27uw==}
 
-  '@paraspell/pallets@14.5.1':
-    resolution: {integrity: sha512-4/kc5uym7bv4ABbBPIbLDwseCEYskqWQPpclL3IkrJB+E8F1vJ8WrilwbXKUwDs+i88bZTPLtI1TBPFxnOTKZw==}
+  '@paraspell/pallets@14.5.2':
+    resolution: {integrity: sha512-G7L9E6nP50Dmc20kpD4yPHhPgygF+6NbZvp+z3hqCf6jxhvl41k9Lv1rIXQh2WFIDUJfA9k0BWjZD5ZHZKZCmg==}
 
-  '@paraspell/sdk-common@14.5.1':
-    resolution: {integrity: sha512-4BowdkBrgt/f4NKaZ8A8JhOCqua2+4uTgvDu+PE6FJ+i+1S1DlXt8/YLkzJ2KKJVOwNW6o1xYpOYwU76xQMyTA==}
+  '@paraspell/sdk-common@14.5.2':
+    resolution: {integrity: sha512-FdBy9mcTVBS8x8abj4fVs5Px6zV2F92sZtBYSEbdmObEV3l01eR3CKXsI2HFMI5aHY0ZXYT7BBFPLzCLdPMLrw==}
 
-  '@paraspell/sdk-core@14.5.1':
-    resolution: {integrity: sha512-J8jgQfPeUsEyRGED1+VVS2KISEz5PAjsnLNyv6Nm9aM06+kzcnc/mlOEDvngxBf+GdaJ0w8kq4W6u2hwEJfSiw==}
+  '@paraspell/sdk-core@14.5.2':
+    resolution: {integrity: sha512-VMw3p1y6a+6qsHwZJy7R8UCTxkJHaJRn+dZEO+B+JomssUn0z/UI3PZVCIwNM5fUtbFEIJysQRqGuK/NBPOaSA==}
 
-  '@paraspell/sdk-dedot@14.5.1':
-    resolution: {integrity: sha512-CxxyIRDXfSIYnU5ITvBcgouoI7eKvppVywCKsE16qUQwVC1iDB3tZ/5scwS2tPAyUtQU08kdEXBDuP4V8LRZ1A==}
+  '@paraspell/sdk-dedot@14.5.2':
+    resolution: {integrity: sha512-XxNsbFVDvDTDjY9RiFUu2xXXDm4wfJwvcE1RRPQATn83JDoLfJEvfGHb4RUALQ+zOssGn/3novRHRwh2JpONoQ==}
     peerDependencies:
       '@polkadot/keyring': '>= 14'
       dedot: '>= 1.4.0'
@@ -5975,22 +5975,22 @@ snapshots:
 
   '@oxc-project/types@0.155.0': {}
 
-  '@paraspell/assets@14.5.1':
+  '@paraspell/assets@14.5.2':
     dependencies:
-      '@paraspell/sdk-common': 14.5.1
+      '@paraspell/sdk-common': 14.5.2
 
-  '@paraspell/pallets@14.5.1':
+  '@paraspell/pallets@14.5.2':
     dependencies:
-      '@paraspell/sdk-common': 14.5.1
+      '@paraspell/sdk-common': 14.5.2
 
-  '@paraspell/sdk-common@14.5.1': {}
+  '@paraspell/sdk-common@14.5.2': {}
 
-  '@paraspell/sdk-core@14.5.1(typescript@7.0.2)':
+  '@paraspell/sdk-core@14.5.2(typescript@7.0.2)':
     dependencies:
       '@noble/hashes': 2.4.0
-      '@paraspell/assets': 14.5.1
-      '@paraspell/pallets': 14.5.1
-      '@paraspell/sdk-common': 14.5.1
+      '@paraspell/assets': 14.5.2
+      '@paraspell/pallets': 14.5.2
+      '@paraspell/sdk-common': 14.5.2
       '@scure/base': 2.4.0
       viem: 2.57.14(typescript@7.0.2)
     transitivePeerDependencies:
@@ -5999,10 +5999,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@paraspell/sdk-dedot@14.5.1(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)':
+  '@paraspell/sdk-dedot@14.5.2(@polkadot/keyring@14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3))(dedot@1.4.0(typescript@7.0.2))(typescript@7.0.2)':
     dependencies:
-      '@paraspell/sdk-common': 14.5.1
-      '@paraspell/sdk-core': 14.5.1(typescript@7.0.2)
+      '@paraspell/sdk-common': 14.5.2
+      '@paraspell/sdk-core': 14.5.2(typescript@7.0.2)
       '@polkadot/keyring': 14.0.3(@polkadot/util-crypto@14.0.3(@polkadot/util@14.0.3))(@polkadot/util@14.0.3)
       dedot: 1.4.0(typescript@7.0.2)
     transitivePeerDependencies:
