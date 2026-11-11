@@ -1,7 +1,6 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { CrossChainDestinations } from 'consts/crossChain'
 import { useState } from 'react'
 import type {
 	CrossChainAsset,
@@ -32,9 +31,10 @@ export const useBridgeSelection = () => {
 		source: StablecoinChainId,
 		destination: StablecoinChainId,
 	) => {
-		const nextDestination = CrossChainDestinations[source].includes(destination)
-			? destination
-			: CrossChainDestinations[source][0]
+		const nextDestination =
+			source !== destination
+				? destination
+				: chainOptions.find(({ value }) => value !== source)!.value
 		const { tokenOptions, feeTokenOptions } = getBridgeOptions(
 			source,
 			nextDestination,
@@ -51,9 +51,7 @@ export const useBridgeSelection = () => {
 	return {
 		...selection,
 		...getBridgeOptions(from, to),
-		destinationOptions: chainOptions.filter(({ value }) =>
-			CrossChainDestinations[from].includes(value),
-		),
+		destinationOptions: chainOptions.filter(({ value }) => value !== from),
 		selectFrom: (source: StablecoinChainId) => selectRoute(source, to),
 		selectTo: (destination: StablecoinChainId) =>
 			selectRoute(from, destination),

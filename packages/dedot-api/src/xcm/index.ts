@@ -118,11 +118,12 @@ export const prepareCrossChainTransfer = async (
 			)
 		}
 		const received = info.destination.receivedCurrency
+		// getTransferInfo already checks the received amount against the destination ED.
+		// verifyEdOnDestination repeats the full XCM fee simulation.
 		if (
 			received.sufficient !== true ||
 			typeof received.receivedAmount !== 'bigint' ||
-			received.receivedAmount <= 0n ||
-			!(await builder.verifyEdOnDestination())
+			received.receivedAmount <= 0n
 		) {
 			throw new Error(
 				'The recipient would receive less than the destination minimum balance',

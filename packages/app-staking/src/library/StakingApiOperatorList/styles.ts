@@ -46,12 +46,21 @@ export const CardSummary = styled(ListItem.Summary)`
     text-transform: none;
   }
 
-  > div:last-child {
+  > div:nth-child(n + 5) {
     border-block-end: 0;
-    border-inline-start: 0;
-    grid-column: 1 / -1;
+    grid-column: span 2;
     padding-block-start: 1.25rem;
-    padding-inline: 0;
+  }
+
+  > div:nth-child(5) {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+
+  @container list-item-card (max-width: 31rem) {
+    > div:nth-child(n + 5) {
+      grid-column: auto;
+    }
   }
 `
 

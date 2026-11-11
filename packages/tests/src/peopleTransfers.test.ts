@@ -12,6 +12,7 @@ import {
 } from '../../app-swap/src/library/AssetTransfer/options'
 import { useSendSelection } from '../../app-swap/src/pages/Send/hooks/useSendSelection'
 import { PolkadotService } from '../../dedot-api/src/services/polkadot'
+import { createStablecoinsInterface } from '../../dedot-api/src/stablecoins'
 import { createPeopleStablecoinAdapter } from '../../dedot-api/src/stablecoins/people'
 import { maxSendableBalance } from '../../utils/src'
 
@@ -223,6 +224,35 @@ test('a failed People connection rejects both consumers and can be retried', asy
 	expect(connect).toHaveBeenCalledTimes(2)
 })
 
+test('Hydration consumers share one pending client with metadata caching enabled', async () => {
+	type HydrationApi = Awaited<ReturnType<PolkadotService['getHydrationApi']>>
+	let resolve!: (api: HydrationApi) => void
+	const connect = vi.spyOn(DedotClient, 'new').mockImplementation(
+		() =>
+			new Promise<HydrationApi>((done) => {
+				resolve = done
+			}) as ReturnType<typeof DedotClient.new>,
+	)
+	const service = createService(true, true, true)
+	const first = service.getHydrationApi()
+	const second = service.getHydrationApi()
+	expect(second).toBe(first)
+	expect(connect).toHaveBeenCalledOnce()
+	expect(connect).toHaveBeenCalledWith({
+		provider: expect.any(Object),
+		cacheMetadata: true,
+	})
+	const hydration = {
+		runtimeVersion: { specName: 'hydradx' },
+	} as HydrationApi
+	resolve(hydration)
+	expect(await first).toBe(hydration)
+	expect(await second).toBe(hydration)
+	expect(await service.getHydrationApi()).toBe(hydration)
+	expect(service.getSigningApi('hydradx')).toBe(hydration)
+	expect(connect).toHaveBeenCalledOnce()
+})
+
 test('disabling People leaves its balance service and connection unused', async () => {
 	const connect = vi.spyOn(DedotClient, 'new')
 	const service = createService(false, true)
@@ -281,6 +311,53 @@ test('People–Hub preparation reuses the configured clients without opening Hyd
 		provider: service.providerPeople,
 		cacheMetadata: true,
 	})
+})
+
+test.each([
+	['people-polkadot', 'hydration'],
+	['hydration', 'people-polkadot'],
+] as const)('%s → %s connects both chains concurrently', async (from, to) => {
+	let resolveHydration!: (
+		api: Awaited<ReturnType<Parameters<typeof createStablecoinsInterface>[1]>>,
+	) => void
+	const hydration = {} as Parameters<typeof resolveHydration>[0]
+	const people = {} as PeopleApi
+	const getHydrationApi = vi.fn(
+		() =>
+			new Promise<typeof hydration>((resolve) => {
+				resolveHydration = resolve
+			}),
+	)
+	const getPeopleApi = vi.fn().mockResolvedValue(people)
+	const hub = {} as Parameters<typeof createStablecoinsInterface>[0]
+	const service = createStablecoinsInterface(
+		hub,
+		getHydrationApi,
+		getPeopleApi,
+		{
+			assetHub: true,
+			hydration: true,
+			people: true,
+		},
+	)
+	const input = {
+		from,
+		to,
+		symbol: 'DOT',
+		feeAsset: 'DOT',
+		amount: 10_000_000_000n,
+		sender: 'sender',
+		recipient: 'recipient',
+	} as const
+	const preparing = service.xcm!.prepare(input)
+	await vi.waitFor(() => expect(getHydrationApi).toHaveBeenCalledOnce())
+	expect(getPeopleApi).toHaveBeenCalledOnce()
+	resolveHydration(hydration)
+	await preparing
+	expect(mocked.prepare).toHaveBeenLastCalledWith(
+		{ statemint: hub, hydration, 'people-polkadot': people },
+		input,
+	)
 })
 
 test('disconnecting during People initialization releases the client when it becomes ready', async () => {

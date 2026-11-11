@@ -222,9 +222,10 @@ export class PolkadotService
 
 	getHydrationApi = () => {
 		if (!this.apiHydrationPromise) {
-			this.apiHydrationPromise = DedotClient.new<HydrationApi>(
-				new WsProvider(getRpcEndpointList('hydration')),
-			)
+			this.apiHydrationPromise = DedotClient.new<HydrationApi>({
+				provider: new WsProvider(getRpcEndpointList('hydration')),
+				cacheMetadata: true,
+			})
 				.then((api) => {
 					this.apiHydration = api
 					return api

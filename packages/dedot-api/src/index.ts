@@ -9,8 +9,9 @@ import {
 	setServiceInterface,
 } from 'global-bus'
 import { getInitialNetworkConfig } from 'global-bus/util'
-import { pairwise, startWith } from 'rxjs'
+import { distinctUntilChanged, map, pairwise, startWith } from 'rxjs'
 import { runMigrations } from 'utils'
+import { resolveServiceNetworkConfig } from './networkConfig'
 import { onNetworkReset } from './reset'
 import { getDefaultService } from './start'
 import type { DedotServiceConfig, ServiceClass } from './types'
@@ -24,7 +25,11 @@ const proxiesLifecycle = createProxiesLifecycle()
 
 // Start service for the current network
 export const initDedotService = async (features: DedotServiceConfig = {}) => {
-	const { network: fixedNetwork, ...serviceFeatures } = features
+	const {
+		network: fixedNetwork,
+		forceCloudRpc = false,
+		...serviceFeatures
+	} = features
 
 	// Apply global storage migrations before reading the initial RPC configuration.
 	runMigrations()
@@ -36,7 +41,10 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 	}
 
 	// Populate network config with sanitized RPC endpoints
-	const config = await getInitialNetworkConfig(fixedNetwork)
+	const config = resolveServiceNetworkConfig(
+		await getInitialNetworkConfig(fixedNetwork),
+		forceCloudRpc,
+	)
 	setNetworkConfig(
 		config.network,
 		config.rpcEndpoints,
@@ -46,7 +54,22 @@ export const initDedotService = async (features: DedotServiceConfig = {}) => {
 
 	// Subscribe to network config changes
 	networkConfig$
-		.pipe(startWith(config), pairwise())
+		.pipe(
+			map((config) => resolveServiceNetworkConfig(config, forceCloudRpc)),
+			distinctUntilChanged(
+				(prev, cur) =>
+					prev.network === cur.network &&
+					prev.providerType === cur.providerType &&
+					prev.autoRpc === cur.autoRpc &&
+					Object.keys(prev.rpcEndpoints).length ===
+						Object.keys(cur.rpcEndpoints).length &&
+					Object.entries(prev.rpcEndpoints).every(
+						([chain, provider]) => cur.rpcEndpoints[chain] === provider,
+					),
+			),
+			startWith(config),
+			pairwise(),
+		)
 		.subscribe(async ([prev, cur]) => {
 			// Unsubscribe from previous service if on new network config, and clear stale global state
 			if (

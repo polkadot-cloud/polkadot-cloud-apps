@@ -21,6 +21,11 @@ minimumReleaseAgeExclude:
   - '@polkadot-cloud/ui@1.0.0'
   - '@polkadot-cloud/util-dedot@1.0.0'
   - '@polkadot-cloud/utils@1.0.0'
+  - '@paraspell/assets@14.5.1'
+  - '@paraspell/pallets@14.5.1'
+  - '@paraspell/sdk-common@14.5.1'
+  - '@paraspell/sdk-core@14.5.1'
+  - '@paraspell/sdk-dedot@14.5.1'
 patchedDependencies:
   '@dedot/api@1.4.0': patches/@dedot__api@1.4.0.patch
   '@dedot/merkleized-metadata@1.4.0': patches/@dedot__merkleized-metadata@1.4.0.patch

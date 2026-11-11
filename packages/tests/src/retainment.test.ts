@@ -12,6 +12,7 @@ import type {
 	ValidatorWarningType,
 } from '../../plugin-staking-api/src/types'
 import {
+	useNetOutflowData,
 	useRetainmentRateData,
 	useRetainmentStatsData,
 } from '../../ui-app/src/RetainmentStats/useRetainmentStatsData'
@@ -167,6 +168,35 @@ test('missing retainment windows display unavailable rates without a month count
 	expect(retainmentRate.valueText).toBe('—')
 	expect(retainmentRate.color).toBe('var(--text-tertiary)')
 })
+
+test.each([
+	{ netInflow: '-12500000000', value: -1.25, prefix: '−', text: '1.3' },
+	{ netInflow: '12500000000', value: 0, prefix: '', text: '0' },
+	{ netInflow: '0', value: 0, prefix: '', text: '0' },
+	{ netInflow: undefined, value: undefined, prefix: '', text: '—' },
+])(
+	'operator graph-only net outflow agrees with validator stats for $netInflow',
+	({ netInflow, value, prefix, text }) => {
+		const period = netInflow === undefined ? undefined : { netInflow }
+		const operator = useNetOutflowData({ period, unit: 'DOT', units: 10 })
+		const validator = useRetainmentStatsData({
+			period: period ? window(period) : undefined,
+			selfStakeMax: false,
+			unit: 'DOT',
+			units: 10,
+		})
+
+		expect(operator.value).toBe(value)
+		expect(operator.prefix).toBe(prefix)
+		expect(operator.valueText).toBe(text)
+		expect(operator.color).toBe(
+			value !== undefined && value < 0
+				? 'var(--status-danger)'
+				: 'var(--text-tertiary)',
+		)
+		expect(operator).toEqual(validator.netOutflow)
+	},
+)
 
 test.each<
 	[

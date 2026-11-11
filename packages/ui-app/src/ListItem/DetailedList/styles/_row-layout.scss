@@ -58,10 +58,10 @@
 .barLayout[data-row-variant='operator'] {
 	grid-template-columns:
 		minmax(14rem, 1.5fr)
-		minmax(33rem, 3.5fr) minmax(10rem, 1fr) auto;
+		minmax(33rem, 3.5fr) minmax(18rem, 1.8fr) auto;
 
 	> .barMetricGroup[data-section='retainment'] {
-		grid-template-columns: minmax(0, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 

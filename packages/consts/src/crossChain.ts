@@ -13,23 +13,13 @@ export const CrossChainAssets: readonly CrossChainAsset[] = [
 export const isCrossChainAsset = (symbol: string): symbol is CrossChainAsset =>
 	CrossChainAssets.some((asset) => asset === symbol)
 
-// People transfers use the supported system-chain route through Polkadot Hub.
-export const CrossChainDestinations: Record<
-	StablecoinChainId,
-	readonly [StablecoinChainId, ...StablecoinChainId[]]
-> = {
-	statemint: ['hydration', 'people-polkadot'],
-	hydration: ['statemint'],
-	'people-polkadot': ['statemint'],
-}
-
 export const isCrossChainAssetSupported = (
 	from: StablecoinChainId,
 	to: StablecoinChainId,
 	symbol: string,
 ): symbol is CrossChainAsset =>
 	isCrossChainAsset(symbol) &&
-	CrossChainDestinations[from].includes(to) &&
+	from !== to &&
 	!!getStablecoinAssetConfig(from, symbol) &&
 	!!getStablecoinAssetConfig(to, symbol)
 
