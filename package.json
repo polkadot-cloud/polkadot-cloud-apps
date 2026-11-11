@@ -21,7 +21,7 @@
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.7",
 		"@types/react-helmet": "^6.1.11",
-		"@vitejs/plugin-react": "^6.1.2",
+		"@vitejs/plugin-react": "^6.2.1",
 		"globals": "^17.14.0",
 		"postcss": "^8.5.32",
 		"postcss-scss": "^4.0.9",
