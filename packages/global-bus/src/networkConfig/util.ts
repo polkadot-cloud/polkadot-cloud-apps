@@ -44,7 +44,13 @@ export const getInitialRpcEndpoints = async (
 	network: NetworkId,
 ): Promise<RpcEndpoints> => {
 	// Validates local RPC endpoints by checking against the default values
-	const validateRpcEndpoints = (a: object, b: object) => {
+	const validateRpcEndpoints = (
+		a: unknown,
+		b: RpcEndpoints,
+	): a is RpcEndpoints => {
+		if (a === null || typeof a !== 'object' || Array.isArray(a)) {
+			return false
+		}
 		const typeCheck =
 			JSON.stringify(Object.keys(a).sort()) ===
 				JSON.stringify(Object.keys(b).sort()) &&
@@ -60,18 +66,18 @@ export const getInitialRpcEndpoints = async (
 	}
 
 	// Get the local and fallback RPC endpoints
-	const local = localStorageOrDefault<RpcEndpoints>(
-		rpcEndpointKey(network),
-		{},
-		true,
-	) as RpcEndpoints
 	const fallback = getDefaultRpcEndpoints(network)
+	let local: unknown
+	try {
+		local = localStorageOrDefault<unknown>(rpcEndpointKey(network), null, true)
+	} catch {
+		// Empty or malformed saved JSON must not prevent the service from starting.
+		return fallback
+	}
 
 	// Return local endpoints if valid
-	if (local) {
-		if (validateRpcEndpoints(local, fallback)) {
-			return local
-		}
+	if (validateRpcEndpoints(local, fallback)) {
+		return local
 	}
 	// Return fallback endpoints
 	return fallback
