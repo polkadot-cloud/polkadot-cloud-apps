@@ -49,6 +49,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+	vi.restoreAllMocks()
 	vi.unstubAllEnvs()
 	localStorage.clear()
 })
@@ -59,6 +60,49 @@ const startService = async (forceCloudRpc = true) => {
 	await vi.waitFor(() => expect(mocked.start).toHaveBeenCalledOnce())
 	return import('../../global-bus/src/networkConfig')
 }
+
+test.each([
+	null,
+	'',
+	'   ',
+	'{"polkadot":',
+	'not JSON',
+	'null',
+	'[]',
+	'"LuckyFriday"',
+	'42',
+	'true',
+	'{}',
+	JSON.stringify({ polkadot: 'LuckyFriday' }),
+	JSON.stringify({ ...savedEndpoints, statemint: 'Unknown provider' }),
+	JSON.stringify({ ...savedEndpoints, statemint: 42 }),
+])(
+	'local swap starts with default RPCs when saved endpoints are %j',
+	async (saved) => {
+		vi.stubEnv('PROD', false)
+		vi.spyOn(Math, 'random').mockReturnValue(0)
+		if (saved === null) {
+			localStorage.removeItem('polkadotRpcEndpoints')
+		} else {
+			localStorage.setItem('polkadotRpcEndpoints', saved)
+		}
+		const { getDefaultRpcEndpoints } = await import('../../consts/src/util/rpc')
+		const defaults = getDefaultRpcEndpoints('polkadot')
+		const { getNetworkConfig } = await startService()
+		expect(mocked.getDefaultService).toHaveBeenCalledExactlyOnceWith(
+			'polkadot',
+			{
+				rpcEndpoints: defaults,
+				providerType: 'ws',
+				autoRpc: false,
+			},
+		)
+		expect(getNetworkConfig().rpcEndpoints).toEqual(defaults)
+		expect(JSON.parse(localStorage.getItem('polkadotRpcEndpoints')!)).toEqual(
+			defaults,
+		)
+	},
+)
 
 test.each([
 	['ws', false],
