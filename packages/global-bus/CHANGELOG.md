@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/global-bus-v0.11.0...global-bus-v0.11.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* recover from malformed saved RPC endpoints ([3f45382](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/3f45382bd7333a34d1bc63a2448ade7d6f172952))
+
 ## [0.11.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/global-bus-v0.10.0...global-bus-v0.11.0) (2026-10-28)
 
 ### Features
