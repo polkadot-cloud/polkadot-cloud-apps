@@ -7,6 +7,15 @@
 - Allow DOT bridging in both directions between Polkadot People and Hydration using ParaSpell 14.5.1.
 - Upgrade to Connect Ledger 2.0.0, using Ledger's Device Management Kit for hardware wallet support.
 
+## [0.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-swap-v0.3.0...app-swap-v0.4.0) (2026-11-11)
+
+
+### Features
+
+* `app-swap` People chain support in Send & Bridge  ([#3905](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3905)) ([f7c3a04](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f7c3a047764deb310b5ef5c65e7d1480ae65b6de))
+* enable two-way DOT bridging between Polkadot People and Hydration ([#3917](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3917)) ([d4f4714](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d4f47143163447f9e735ebc3b3f2939d39c7dc6a))
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/app-swap-v0.2.0...app-swap-v0.3.0) (2026-10-28)
 
 ### Features

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.3.0...hooks-v0.4.0) (2026-11-11)
+
+
+### Features
+
+* enable two-way DOT bridging between Polkadot People and Hydration ([#3917](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3917)) ([d4f4714](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d4f47143163447f9e735ebc3b3f2939d39c7dc6a))
+
 ## [0.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/hooks-v0.2.0...hooks-v0.3.0) (2026-10-28)
 
 ### Features

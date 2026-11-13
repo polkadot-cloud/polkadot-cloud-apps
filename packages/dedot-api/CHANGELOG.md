@@ -4,6 +4,14 @@
 
 - Add `stablecoins.xcm.prepare` for DOT, USDC and USDT using the Dedot ParaSpell SDK and existing service clients for Asset Hub and Hydration.
 
+## [0.12.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/dedot-api-v0.11.0...dedot-api-v0.12.0) (2026-11-11)
+
+
+### Features
+
+* `app-swap` People chain support in Send & Bridge  ([#3905](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3905)) ([f7c3a04](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f7c3a047764deb310b5ef5c65e7d1480ae65b6de))
+* enable two-way DOT bridging between Polkadot People and Hydration ([#3917](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3917)) ([d4f4714](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d4f47143163447f9e735ebc3b3f2939d39c7dc6a))
+
 ## [0.11.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/dedot-api-v0.10.0...dedot-api-v0.11.0) (2026-10-28)
 
 ### Features
