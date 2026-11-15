@@ -23,7 +23,7 @@
 		"radix-ui": "^1.8.1",
 		"react": "^19.3.1",
 		"react-dom": "^19.3.1",
-		"react-i18next": "^17.1.10",
+		"react-i18next": "^18.0.1",
 		"types": "workspace:*",
 		"typescript": "^7.0.2",
 		"vitest": "^5.1.0"
