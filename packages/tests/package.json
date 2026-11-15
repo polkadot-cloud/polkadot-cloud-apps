@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@paraspell/sdk-dedot": "14.5.2",
-		"@tanstack/react-query": "^5.105.1",
+		"@tanstack/react-query": "^5.107.1",
 		"@types/jsdom": "^30.0.0",
 		"dedot": "^1.4.0",
 		"jsdom": "30.1.3",

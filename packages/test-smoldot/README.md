@@ -76,6 +76,7 @@ The script will log detailed error information to help identify where in the sig
 ## Architecture
 
 This test script mimics the exact chain topology used by the dashboard:
+
 - Relay chain (Polkadot) is initialized first
 - System chains (Asset Hub, People) are added with `potentialRelayChains` pointing to the relay chain
 - Dedot client connects to Asset Hub for transaction submission
