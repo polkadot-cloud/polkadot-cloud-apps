@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 
+import { Tooltip as RadixTooltip } from 'radix-ui'
 import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import {
@@ -38,8 +39,8 @@ const snapshot = (lpBalance = 100_000n): AssetHubMarket => ({
 		{
 			asset: 'USDT',
 			lpToken: 0,
-			reserveDot: 1_000_000_000n,
-			reserveAsset: 2_000_000_000n,
+			reserveDot: 1_001_234_567n,
+			reserveAsset: 2_000_123_456n,
 			lpSupply: 1_000_000n,
 			lpBalance,
 			lpMinBalance: 1n,
@@ -88,7 +89,9 @@ vi.mock('../../ui-app/src/AccountDropdown', () => ({
 vi.mock('../../ui-app/src/SubmitTx', () => ({ SubmitTx: () => null }))
 vi.mock('../../ui-core/src/base', async () => {
 	const { Row } = await import('../../ui-core/src/base/Page/Row')
-	return { Page: { Row } }
+	const { DataTable } = await import('../../ui-core/src/base/DataTable')
+	const { Tooltip } = await import('../../ui-core/src/base/Tooltip')
+	return { Page: { Row }, DataTable, Tooltip }
 })
 vi.mock('../../ui-core/src/input', async () => {
 	const { SendForm } = await import('../../ui-core/src/input/SendForm')
@@ -117,17 +120,21 @@ const render = (path = '/liquidity') =>
 	act(async () => {
 		root.render(
 			createElement(
-				MemoryRouter,
-				{ initialEntries: [path] },
+				RadixTooltip.Provider,
+				null,
 				createElement(
-					Routes,
-					null,
-					createElement(Route, {
-						path: '/liquidity/:asset?',
-						element: createElement(Liquidity),
-					}),
+					MemoryRouter,
+					{ initialEntries: [path] },
+					createElement(
+						Routes,
+						null,
+						createElement(Route, {
+							path: '/liquidity/:asset?',
+							element: createElement(Liquidity),
+						}),
+					),
+					createElement(Location),
 				),
-				createElement(Location),
 			),
 		)
 	})
@@ -166,7 +173,16 @@ afterEach(async () => {
 
 test('pool management has its own URL and breadcrumb, returning to the selected list tab', async () => {
 	await render()
-	expect(container.querySelector('table')).not.toBeNull()
+	const table = container.querySelector('table[aria-label="pools"]')!
+	expect(
+		Array.from(
+			table.querySelectorAll('thead th[scope="col"]'),
+			(cell) => cell.textContent,
+		),
+	).toEqual(['pool', 'reserves', 'swapFee', 'yourShare', 'options'])
+	expect(table.querySelector('tbody th[scope="row"]')?.textContent).toContain(
+		'DOT / USDT',
+	)
 	expect(container.querySelector('[aria-label="liquidity-editor"]')).toBeNull()
 	expect(button('refresh')).toBeUndefined()
 	await click(button('yourPositions'))
@@ -191,6 +207,30 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	expect(container.querySelector('table')).not.toBeNull()
 	expect(button('yourPositions').getAttribute('aria-pressed')).toBe('true')
 	expect(mocked.serviceApi.assetHub.subscribeMarket).toHaveBeenCalledOnce()
+})
+
+test('pool reserves show four decimal places at most and reveal exact amounts on focus', async () => {
+	vi.stubGlobal(
+		'ResizeObserver',
+		class {
+			observe = vi.fn()
+			unobserve = vi.fn()
+			disconnect = vi.fn()
+		},
+	)
+	await render()
+	const trigger = container.querySelector<HTMLButtonElement>('tbody td button')!
+	expect(Array.from(trigger.children, (amount) => amount.textContent)).toEqual([
+		'0.1001 DOT',
+		'2000.1235 USDT',
+	])
+	await act(async () => trigger.focus())
+	const tooltip = document.getElementById(
+		trigger.getAttribute('aria-describedby') ?? '',
+	)
+	expect(tooltip?.getAttribute('role')).toBe('tooltip')
+	expect(tooltip?.textContent).toContain('0.1001234567 DOT')
+	expect(tooltip?.textContent).toContain('2000.123456 USDT')
 })
 
 test('a direct pool URL and browser back navigation work', async () => {

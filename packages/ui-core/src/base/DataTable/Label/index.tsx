@@ -4,8 +4,8 @@
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
-export const Root = ({ children, style }: ComponentBase) => (
-	<div className={classes.root} style={style}>
+export const Label = ({ children, style }: ComponentBase) => (
+	<span className={classes.label} style={style}>
 		{children}
-	</div>
+	</span>
 )

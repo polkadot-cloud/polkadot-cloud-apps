@@ -30,10 +30,11 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from 'ui-app/Card'
 import { Stat } from 'ui-app/Stat'
-import { CardHeader, Page, RewardGrid, Separator } from 'ui-core/base'
+import { CardHeader, DataTable, Page, Separator } from 'ui-core/base'
 import { REWARD_PERIODS } from '../constants'
 import type { PayoutHistoryProps } from '../types'
 import { IncomingPayouts } from './IncomingPayouts'
+import styles from './index.module.scss'
 import { AccountPayouts } from './PayoutGraph'
 import { RewardTrend } from './RewardTrend'
 
@@ -131,7 +132,7 @@ export const Overview = (props: PayoutHistoryProps) => {
 		currentStake + (includeIncomingProjection ? incomingStakedBalance : 0)
 
 	const renderProjectedReward = (value: number, fiat = false) => (
-		<h3>
+		<h3 className={styles.projectedAmount}>
 			{projectionPlaceholder === undefined &&
 				value > 0 &&
 				(!fiat || tokenPrice > 0) && <FontAwesomeIcon icon={faCaretUp} />}
@@ -219,34 +220,42 @@ export const Overview = (props: PayoutHistoryProps) => {
 							<Separator transparent />
 							<AnnouncementsList items={projectedRewardAnnouncements} />
 							<Separator transparent />
-							<RewardGrid.Root>
-								<RewardGrid.Head>
-									<RewardGrid.Cells
+							<DataTable.Root
+								label={t('projectedRewards')}
+								style={{ tableLayout: 'fixed' }}
+							>
+								<DataTable.Head>
+									<DataTable.Cells
+										scope="col"
 										items={[
-											<h4>{t('period')}</h4>,
-											<h4>
+											t('period'),
+											<span className={styles.rewardUnit}>
 												<Token />
 												{unit}
-											</h4>,
-											<h4>{currency}</h4>,
+											</span>,
+											<span className={styles.rewardUnit}>{currency}</span>,
 										]}
 									/>
-								</RewardGrid.Head>
-								{REWARD_PERIODS.map(([period, divisor]) => {
-									const reward = annualReward / divisor
-									return (
-										<RewardGrid.Row key={period}>
-											<RewardGrid.Cells
-												items={[
-													<RewardGrid.Label>{t(period)}</RewardGrid.Label>,
-													renderProjectedReward(reward),
-													renderProjectedReward(reward, true),
-												]}
-											/>
-										</RewardGrid.Row>
-									)
-								})}
-							</RewardGrid.Root>
+								</DataTable.Head>
+								<tbody>
+									{REWARD_PERIODS.map(([period, divisor]) => {
+										const reward = annualReward / divisor
+										return (
+											<DataTable.Row key={period}>
+												<DataTable.Cell scope="row">
+													<DataTable.Label>{t(period)}</DataTable.Label>
+												</DataTable.Cell>
+												<DataTable.Cell>
+													{renderProjectedReward(reward)}
+												</DataTable.Cell>
+												<DataTable.Cell>
+													{renderProjectedReward(reward, true)}
+												</DataTable.Cell>
+											</DataTable.Row>
+										)
+									})}
+								</tbody>
+							</DataTable.Root>
 						</CardWrapper>
 					</Page.Row>
 				</>

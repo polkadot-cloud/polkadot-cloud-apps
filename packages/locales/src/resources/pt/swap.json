@@ -55,6 +55,7 @@
 		"noPositionInPool": "Esta conta não tem posição neste pool.",
 		"noPositions": "Nenhuma posição de liquidez nos pools compatíveis.",
 		"noRoute": "Não há rota disponível para este valor. Verifique a liquidez dos pools ou os limites do PSM.",
+		"options": "Opções",
 		"originXcmFee": "Taxa XCM de origem",
 		"pay": "Pagar",
 		"payFeesIn": "Pagar taxas em",

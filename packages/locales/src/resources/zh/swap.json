@@ -55,6 +55,7 @@
 		"noPositionInPool": "此账户在该资金池中没有头寸。",
 		"noPositions": "支持的资金池中没有流动性头寸。",
 		"noRoute": "此金额没有可用的兑换路径。请检查资金池流动性或 PSM 限额。",
+		"options": "选项",
 		"originXcmFee": "来源链 XCM 费用",
 		"pay": "支付",
 		"payFeesIn": "支付手续费的代币",

@@ -55,6 +55,7 @@
 		"noPositionInPool": "이 계정은 이 풀에 포지션이 없습니다.",
 		"noPositions": "지원되는 풀에 유동성 포지션이 없습니다.",
 		"noRoute": "이 금액에 사용 가능한 경로가 없습니다. 풀 유동성이나 PSM 한도를 확인하세요.",
+		"options": "옵션",
 		"originXcmFee": "출발 체인 XCM 수수료",
 		"pay": "지불",
 		"payFeesIn": "수수료 결제 자산",

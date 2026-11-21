@@ -2,5 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 .label {
+	display: block;
 	color: var(--gray-900);
+	font-family: var(--font-family-default);
+	font-size: 1.35rem;
+	font-weight: 500;
+	line-height: 1.6rem;
 }

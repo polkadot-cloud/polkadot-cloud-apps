@@ -4,8 +4,10 @@
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
-export const Cell = ({ children, style }: ComponentBase) => (
-	<div className={classes.cell} style={style}>
-		{children}
-	</div>
+export const Head = ({ children, style }: ComponentBase) => (
+	<thead>
+		<tr className={classes.head} style={style}>
+			{children}
+		</tr>
+	</thead>
 )

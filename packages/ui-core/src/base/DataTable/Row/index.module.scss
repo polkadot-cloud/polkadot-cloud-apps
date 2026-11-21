@@ -3,12 +3,16 @@
 
 .body {
 	border-bottom: 1px solid var(--gray-500);
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	padding: 1.05rem 0;
+
+	> :is(th, td) {
+		padding-block: 1.05rem;
+	}
 
 	&:last-child {
 		border-bottom: none;
-		padding-bottom: 0.5rem;
+
+		> :is(th, td) {
+			padding-bottom: 0.5rem;
+		}
 	}
 }

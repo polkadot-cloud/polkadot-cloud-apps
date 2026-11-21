@@ -8,7 +8,7 @@ import { Label } from './Label'
 import { Root } from './Root'
 import { Row } from './Row'
 
-export const RewardGrid = {
+export const DataTable = {
 	Root,
 	Head,
 	Row,
@@ -16,5 +16,3 @@ export const RewardGrid = {
 	Cells,
 	Label,
 }
-
-export default RewardGrid

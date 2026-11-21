@@ -1,15 +1,58 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import classNames from 'classnames'
+import { assetHubDecimals } from 'consts/assetHub'
+import { getThemeElement } from 'hooks/useTheme'
 import { formatUnits, percentage, tokenAmount } from 'library/AssetHub'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import type { AssetHubPool, ImportedAccount } from 'types'
+import type { AssetHubPool, AssetHubToken, ImportedAccount } from 'types'
+import { CardWrapper } from 'ui-app/Card'
 import { PageTabs } from 'ui-app/PageTabs'
 import { ButtonSecondary } from 'ui-buttons'
+import { DataTable, Tooltip } from 'ui-core/base'
 import styles from './index.module.scss'
 
 type PoolTab = 'pools' | 'positions'
+
+const reserveDisplayDecimals = 4
+
+const formatReserve = (amount: bigint, token: AssetHubToken) => {
+	const scale = 10n ** BigInt(assetHubDecimals(token) - reserveDisplayDecimals)
+	if (amount > 0n && amount < scale) {
+		return `<${formatUnits(1n, reserveDisplayDecimals)}`
+	}
+	return formatUnits((amount + scale / 2n) / scale, reserveDisplayDecimals)
+}
+
+const PoolReserves = ({ pool }: { pool: AssetHubPool }) => (
+	<Tooltip
+		container={getThemeElement() ?? undefined}
+		text={
+			<>
+				<span className={styles.reserveAmount}>
+					{tokenAmount(pool.reserveDot, 'DOT')} DOT
+				</span>
+				<span className={styles.reserveAmount}>
+					{tokenAmount(pool.reserveAsset, pool.asset)} {pool.asset}
+				</span>
+			</>
+		}
+	>
+		<button
+			type="button"
+			className={classNames(styles.tableValue, styles.reserveTrigger)}
+		>
+			<span className={styles.reserveAmount}>
+				{formatReserve(pool.reserveDot, 'DOT')} DOT
+			</span>
+			<span className={classNames(styles.reserveAmount, styles.reserveAsset)}>
+				{formatReserve(pool.reserveAsset, pool.asset)} {pool.asset}
+			</span>
+		</button>
+	</Tooltip>
+)
 
 export const PoolList = ({
 	pools,
@@ -47,43 +90,47 @@ export const PoolList = ({
 				<p className={styles.notice}>{t('selectAccountForPositions')}</p>
 			) : (
 				pools && (
-					<div className={styles.tableWrap}>
-						<table className={styles.table}>
-							<caption className={styles.tableCaption}>
-								{t(tab === 'positions' ? 'yourPositions' : 'pools')}
-							</caption>
-							<thead>
-								<tr>
-									<th scope="col">{t('pool')}</th>
-									<th scope="col">{t('reserves')}</th>
-									<th scope="col">{t('swapFee')}</th>
-									<th scope="col">{t('yourShare')}</th>
-									<th scope="col">{t('manage')}</th>
-								</tr>
-							</thead>
+					<CardWrapper>
+						<DataTable.Root
+							label={t(tab === 'positions' ? 'yourPositions' : 'pools')}
+						>
+							<DataTable.Head>
+								<DataTable.Cells
+									scope="col"
+									items={[
+										t('pool'),
+										t('reserves'),
+										t('swapFee'),
+										t('yourShare'),
+										t('options'),
+									]}
+								/>
+							</DataTable.Head>
 							<tbody>
 								{shown?.map((pool) => (
-									<tr key={pool.asset}>
-										<th scope="row">
-											DOT / {pool.asset}
-											<small>
+									<DataTable.Row key={pool.asset}>
+										<DataTable.Cell scope="row">
+											<DataTable.Label>DOT / {pool.asset}</DataTable.Label>
+											<small className={styles.tableDetail}>
 												{t('lpToken')} #{pool.lpToken}
 											</small>
-										</th>
-										<td>
-											{tokenAmount(pool.reserveDot, 'DOT')} DOT
-											<small>
-												{tokenAmount(pool.reserveAsset, pool.asset)}{' '}
-												{pool.asset}
-											</small>
-										</td>
-										<td>{percentage(pool.fee)}</td>
-										<td>
-											{account && pool.lpSupply > 0n
-												? `${formatUnits((pool.lpBalance * 1_000_000n) / pool.lpSupply, 4)}%`
-												: '—'}
+										</DataTable.Cell>
+										<DataTable.Cell>
+											<PoolReserves pool={pool} />
+										</DataTable.Cell>
+										<DataTable.Cell>
+											<span className={styles.tableValue}>
+												{percentage(pool.fee)}
+											</span>
+										</DataTable.Cell>
+										<DataTable.Cell>
+											<span className={styles.tableValue}>
+												{account && pool.lpSupply > 0n
+													? `${formatUnits((pool.lpBalance * 1_000_000n) / pool.lpSupply, 4)}%`
+													: '—'}
+											</span>
 											{pool.lpBalance > 0n && pool.lpSupply > 0n && (
-												<small>
+												<small className={styles.tableDetail}>
 													{tokenAmount(
 														(pool.lpBalance * pool.reserveAsset) /
 															pool.lpSupply,
@@ -97,25 +144,25 @@ export const PoolList = ({
 													DOT
 												</small>
 											)}
-										</td>
-										<td>
+										</DataTable.Cell>
+										<DataTable.Cell>
 											<ButtonSecondary
 												text={t('manage')}
 												onClick={() =>
 													navigate(`/liquidity/${pool.asset}${search}`)
 												}
 											/>
-										</td>
-									</tr>
+										</DataTable.Cell>
+									</DataTable.Row>
 								))}
 							</tbody>
-						</table>
+						</DataTable.Root>
 						{shown?.length === 0 && (
 							<p className={styles.notice}>
 								{t(tab === 'positions' ? 'noPositions' : 'noPools')}
 							</p>
 						)}
-					</div>
+					</CardWrapper>
 				)
 			)}
 		</>

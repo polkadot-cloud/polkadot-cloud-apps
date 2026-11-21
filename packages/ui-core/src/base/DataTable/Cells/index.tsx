@@ -7,8 +7,10 @@ import { Cell } from '../Cell'
 
 export const Cells = ({
 	items,
+	scope,
 }: ComponentBase & {
-	items: React.ReactNode[]
+	items: ReactNode[]
+	scope?: 'col'
 }): ReactNode =>
 	items.map((item, i) => (
 		<Cell
@@ -16,6 +18,7 @@ export const Cells = ({
 				// biome-ignore lint/suspicious/noArrayIndexKey: <passing react node array without unique key is not an issue here>
 				i
 			}`}
+			scope={scope}
 		>
 			{item}
 		</Cell>

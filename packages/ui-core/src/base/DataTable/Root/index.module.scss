@@ -2,6 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 .root {
+	overflow-x: auto;
 	margin-top: 0.5rem;
 	padding: 0 0.5rem;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	color: var(--gray-1000);
+	text-align: start;
 }

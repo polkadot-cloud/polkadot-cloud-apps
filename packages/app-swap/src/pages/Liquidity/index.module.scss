@@ -15,48 +15,37 @@
 	margin: 0 auto;
 }
 
-.tableWrap {
-	overflow-x: auto;
-	margin-top: 1rem;
-	border: 1px solid var(--gray-500);
-	border-radius: 1rem;
+.tableDetail {
+	display: block;
+	color: var(--text-tertiary);
+	font-weight: 400;
+	line-height: 1.6;
 }
 
-.tableCaption {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip-path: inset(50%);
+.tableValue {
+	font-size: 1.35rem;
+	font-weight: 500;
+	line-height: 1.6rem;
 }
 
-.table {
-	width: 100%;
-	border-collapse: collapse;
-	color: var(--gray-1000);
-	text-align: left;
+.reserveTrigger {
+	color: inherit;
+	cursor: help;
+	text-align: start;
 
-	th,
-	td {
-		padding: 1rem;
-		border-bottom: 1px solid var(--gray-400);
-		line-height: 1.6;
+	&:focus-visible {
+		border-radius: 0.2rem;
+		outline: 2px solid var(--accent-700);
+		outline-offset: 3px;
 	}
+}
 
-	thead th {
-		color: var(--text-tertiary);
-		font-size: 0.85rem;
-		font-weight: 500;
-	}
+.reserveAmount {
+	display: block;
+}
 
-	tbody th {
-		font-weight: 500;
-	}
-
-	small {
-		display: block;
-		color: var(--text-tertiary);
-	}
+.reserveAsset {
+	color: var(--text-tertiary);
 }
 
 .poolScreen {

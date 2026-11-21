@@ -4,8 +4,8 @@
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
-export const Label = ({ children, style }: ComponentBase) => (
-	<h3 className={classes.label} style={style}>
+export const Row = ({ children, style }: ComponentBase) => (
+	<tr className={classes.body} style={style}>
 		{children}
-	</h3>
+	</tr>
 )

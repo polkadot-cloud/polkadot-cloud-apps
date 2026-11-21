@@ -3,18 +3,13 @@
 
 .head {
 	border-bottom: 1px solid var(--gray-500);
-	grid-template-columns: repeat(3, 1fr);
-	display: grid;
 
-	> div > h4 {
+	> th {
+		padding-block: 0.6rem;
 		color: var(--text-tertiary);
 		font-family: var(--font-family-semibold);
-	}
-
-	> div:nth-child(2),
-	> div:nth-child(3) {
-		> h4 {
-			font-family: var(--font-family-mono);
-		}
+		font-size: 1.14rem;
+		font-weight: 500;
+		line-height: 1.71rem;
 	}
 }

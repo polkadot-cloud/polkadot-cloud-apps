@@ -55,6 +55,7 @@
 		"noPositionInPool": "Dieses Konto hat keine Position in diesem Pool.",
 		"noPositions": "Keine Liquiditätspositionen in den unterstützten Pools.",
 		"noRoute": "Für diesen Betrag ist keine Route verfügbar. Bitte Pool-Liquidität oder PSM-Limits prüfen.",
+		"options": "Optionen",
 		"originXcmFee": "XCM-Gebühr am Ursprung",
 		"pay": "Bezahlen",
 		"payFeesIn": "Gebühren bezahlen mit",

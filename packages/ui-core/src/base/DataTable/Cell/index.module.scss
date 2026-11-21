@@ -1,6 +1,11 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-.row {
-	padding: 0.6rem 0;
+.cell {
+	padding-inline: 0 1rem;
+	text-align: inherit;
+
+	&:last-child {
+		padding-inline-end: 0;
+	}
 }

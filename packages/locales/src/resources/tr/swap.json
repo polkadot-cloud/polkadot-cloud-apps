@@ -55,6 +55,7 @@
 		"noPositionInPool": "Bu hesabın bu havuzda pozisyonu yok.",
 		"noPositions": "Desteklenen havuzlarda likidite pozisyonu yok.",
 		"noRoute": "Bu tutar için kullanılabilir rota yok. Havuz likiditesini veya PSM limitlerini kontrol edin.",
+		"options": "Seçenekler",
 		"originXcmFee": "Kaynak XCM ücreti",
 		"pay": "Öde",
 		"payFeesIn": "Ücretleri Şununla Öde",
