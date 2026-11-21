@@ -3,7 +3,7 @@
 
 .root {
 	overflow-x: auto;
-	margin-top: 0.5rem;
+	margin-block-start: var(--data-table-margin-block-start, 0.5rem);
 	padding-inline: var(--data-table-padding-inline, 0.5rem);
 }
 

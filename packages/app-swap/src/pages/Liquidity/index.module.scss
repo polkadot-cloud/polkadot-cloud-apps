@@ -18,15 +18,13 @@
 }
 
 .poolCard {
+	--data-table-margin-block-start: 0.8rem;
 	--data-table-padding-inline: 0;
 	--data-table-cell-edge-padding: 2rem;
+	--data-table-row-padding-block: 1.5rem;
 
 	@media (max-width: $page-width-medium-threshold) {
 		--data-table-cell-edge-padding: 1.5rem;
-	}
-
-	tbody > tr:last-child > :is(th, td) {
-		padding-block: 0.8rem;
 	}
 
 	.notice {

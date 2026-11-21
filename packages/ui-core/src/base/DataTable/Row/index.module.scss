@@ -5,14 +5,14 @@
 	border-bottom: 1px solid var(--gray-500);
 
 	> :is(th, td) {
-		padding-block: 1.05rem;
+		padding-block: var(--data-table-row-padding-block, 1.05rem);
 	}
 
 	&:last-child {
 		border-bottom: none;
 
 		> :is(th, td) {
-			padding-bottom: 0.5rem;
+			padding-block-end: var(--data-table-row-padding-block, 0.5rem);
 		}
 	}
 }

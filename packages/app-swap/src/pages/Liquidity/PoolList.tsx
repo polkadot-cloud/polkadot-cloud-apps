@@ -102,7 +102,10 @@ export const PoolList = ({
 				<p className={styles.notice}>{t('selectAccountForPositions')}</p>
 			) : (
 				pools && (
-					<CardWrapper className={styles.poolCard} style={{ paddingInline: 0 }}>
+					<CardWrapper
+						className={styles.poolCard}
+						style={{ padding: '0.75rem 0' }}
+					>
 						<DataTable.Root
 							label={t(tab === 'positions' ? 'yourPositions' : 'pools')}
 						>
@@ -120,7 +123,9 @@ export const PoolList = ({
 										<DataTable.HeaderLabel numeric>
 											{t('yourShare')}
 										</DataTable.HeaderLabel>,
-										<DataTable.HeaderLabel>
+										<DataTable.HeaderLabel
+											style={{ justifyContent: 'flex-end' }}
+										>
 											{t('options')}
 										</DataTable.HeaderLabel>,
 									]}
@@ -176,6 +181,10 @@ export const PoolList = ({
 										<DataTable.Cell>
 											<ButtonSecondary
 												text={t('manage')}
+												style={{
+													marginInlineStart: 'auto',
+													width: 'fit-content',
+												}}
 												onClick={() =>
 													navigate(`/liquidity/${pool.asset}${search}`)
 												}
