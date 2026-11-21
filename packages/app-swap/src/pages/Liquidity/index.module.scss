@@ -51,6 +51,7 @@
 	}
 
 	.notice {
+		padding-block-start: var(--data-table-row-padding-block);
 		padding-inline: var(--data-table-cell-edge-padding);
 	}
 }
