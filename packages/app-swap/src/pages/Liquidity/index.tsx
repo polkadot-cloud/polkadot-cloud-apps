@@ -1,6 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
 import { AssetHubPoolTokens } from 'consts/assetHub'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
@@ -38,21 +40,36 @@ export const Liquidity = () => {
 
 	const liquidityLabel = t('liquidity')
 	const title = selected ? `DOT / ${selected}` : liquidityLabel
+	const homeCrumb = (
+		<>
+			<FontAwesomeIcon icon={faHome} aria-hidden="true" />
+			{liquidityLabel}
+		</>
+	)
 
 	return (
 		<Page.Row>
 			<div className={classes.layout}>
 				<nav className={classes.breadcrumb} aria-label={liquidityLabel}>
 					<ol>
+						<li aria-current={selected ? undefined : 'page'}>
+							{selected ? (
+								<Link
+									className={classes.breadcrumbHome}
+									to={`/liquidity${search}`}
+								>
+									{homeCrumb}
+								</Link>
+							) : (
+								<span className={classes.breadcrumbHome}>{homeCrumb}</span>
+							)}
+						</li>
 						{selected && (
 							<>
-								<li>
-									<Link to={`/liquidity${search}`}>{liquidityLabel}</Link>
-								</li>
 								<li aria-hidden="true">›</li>
+								<li aria-current="page">{title}</li>
 							</>
 						)}
-						<li aria-current="page">{title}</li>
 					</ol>
 				</nav>
 				<div className={classes.view} key={selected ?? 'list'}>

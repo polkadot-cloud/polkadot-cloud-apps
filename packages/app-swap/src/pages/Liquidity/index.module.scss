@@ -212,3 +212,14 @@
 		}
 	}
 }
+
+.breadcrumbHome {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+
+	> svg {
+		flex: none;
+		font-size: 0.9em;
+	}
+}
