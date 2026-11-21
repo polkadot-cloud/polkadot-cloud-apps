@@ -6,6 +6,7 @@ import { assetHubDecimals } from 'consts/assetHub'
 import { getFeeTokenIcon } from 'consts/stablecoins'
 import { getThemeElement } from 'hooks/useTheme'
 import { formatUnits, percentage, tokenAmount } from 'library/AssetHub'
+import { VisuallyHidden } from 'radix-ui'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import type { AssetHubPool, AssetHubToken, ImportedAccount } from 'types'
@@ -123,11 +124,7 @@ export const PoolList = ({
 										<DataTable.HeaderLabel numeric>
 											{t('yourShare')}
 										</DataTable.HeaderLabel>,
-										<DataTable.HeaderLabel
-											style={{ justifyContent: 'flex-end' }}
-										>
-											{t('options')}
-										</DataTable.HeaderLabel>,
+										<VisuallyHidden.Root>{t('options')}</VisuallyHidden.Root>,
 									]}
 								/>
 							</DataTable.Head>
