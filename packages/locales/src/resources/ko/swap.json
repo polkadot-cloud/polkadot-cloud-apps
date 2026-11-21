@@ -41,7 +41,7 @@
 		"loadingPools": "풀 불러오는 중…",
 		"lpToken": "LP 토큰",
 		"manage": "관리",
-		"manageLiquidity": "유동성 포지션 관리",
+		"manageLiquidity": "{{pair}} 풀에서 유동성을 추가하거나 인출하세요.",
 		"maximumSpent": "최대 지불액",
 		"minimumAmounts": "최소 금액",
 		"minimumConversion": "최소 교환 금액",

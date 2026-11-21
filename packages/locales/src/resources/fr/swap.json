@@ -41,7 +41,7 @@
 		"loadingPools": "Chargement des pools…",
 		"lpToken": "Jeton LP",
 		"manage": "Gérer",
-		"manageLiquidity": "Gérer votre position de liquidité",
+		"manageLiquidity": "Ajoutez ou retirez des liquidités dans le pool {{pair}}.",
 		"maximumSpent": "Dépense maximale",
 		"minimumAmounts": "Montants minimaux",
 		"minimumConversion": "Montant minimal de conversion",

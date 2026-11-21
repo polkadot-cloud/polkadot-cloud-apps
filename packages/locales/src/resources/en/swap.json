@@ -41,7 +41,7 @@
 		"loadingPools": "Loading pools…",
 		"lpToken": "LP token",
 		"manage": "Manage",
-		"manageLiquidity": "Manage your liquidity position",
+		"manageLiquidity": "Add or remove liquidity in the {{pair}} pool.",
 		"maximumSpent": "Maximum spent",
 		"minimumAmounts": "Minimum amounts",
 		"minimumConversion": "Minimum conversion",

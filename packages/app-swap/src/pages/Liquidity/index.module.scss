@@ -15,6 +15,11 @@
 	width: 100%;
 	max-width: 76rem;
 	margin: 0 auto;
+	padding-top: 5.5rem;
+
+	> header {
+		margin-top: 0;
+	}
 }
 
 .poolCard {
@@ -110,19 +115,58 @@
 	color: var(--text-tertiary);
 }
 
-.poolScreen {
-	max-width: 600px;
-	padding-top: 5.5rem;
+.withdrawAmount {
+	padding: 1rem;
+}
 
-	> header {
-		margin-top: 0;
+.withdrawSlider {
+	display: grid;
+	gap: 0.5rem;
+	color: var(--text-tertiary);
+	font-size: 1.15rem;
+
+	> input {
+		width: 100%;
+		min-height: 2rem;
+		margin: 0;
+		padding: 0;
+		accent-color: var(--accent-700);
+		cursor: pointer;
+
+		&:focus-visible {
+			border-radius: 0.3rem;
+			outline: 2px solid var(--accent-700);
+		}
+	}
+}
+
+.withdrawSliderHeading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.withdrawPercent {
+	color: var(--gray-1000);
+	font-family: var(--font-family-mono);
+	font-size: 1.35rem;
+}
+
+.withdrawPreset {
+	flex: 1 1 0;
+	min-width: 0;
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-700);
+		outline-offset: -2px;
 	}
 }
 
 .breadcrumb {
 	margin: 0 0 1rem;
 	color: var(--text-tertiary);
-	font-size: 1rem;
+	font-size: 1.2rem;
 
 	ol {
 		display: flex;

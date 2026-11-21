@@ -56,6 +56,17 @@ const snapshot = (lpBalance = 100_000n): AssetHubMarket => ({
 
 vi.mock('../../hooks/src/index', () => ({
 	useApi: () => ({ serviceApi: mocked.serviceApi }),
+	useStablecoinBalances: () => ({
+		getBalance: () => undefined,
+		loading: false,
+		refresh: () => Promise.resolve(),
+	}),
+}))
+vi.mock('../../app-swap/src/library/AssetHub', async (importOriginal) => ({
+	...(await importOriginal<
+		typeof import('../../app-swap/src/library/AssetHub')
+	>()),
+	TransactionAction: () => null,
 }))
 vi.mock('../../app-swap/node_modules/@polkadot-cloud/connect/index.js', () => ({
 	useActiveAccount: () => ({ activeAccount: mocked.account }),
@@ -99,7 +110,10 @@ vi.mock('../../ui-core/src/input', async () => {
 	return { SendForm }
 })
 vi.mock('react-i18next', () => ({
-	useTranslation: () => ({ t: (key: string) => key }),
+	useTranslation: () => ({
+		t: (key: string, options?: { pair: string }) =>
+			options?.pair ? `${key} ${options.pair}` : key,
+	}),
 }))
 
 let root: Root
@@ -174,6 +188,11 @@ afterEach(async () => {
 
 test('pool management has its own URL and breadcrumb, returning to the selected list tab', async () => {
 	await render()
+	const listBreadcrumb = container.querySelector('nav[aria-label="liquidity"]')!
+	expect(
+		listBreadcrumb.querySelector('[aria-current="page"]')?.textContent,
+	).toBe('liquidity')
+	expect(listBreadcrumb.querySelector('a')).toBeNull()
 	const table = container.querySelector('table[aria-label="pools"]')!
 	expect(
 		Array.from(
@@ -207,6 +226,9 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	expect(breadcrumb.closest('header')).toBeNull()
 	expect(breadcrumb.nextElementSibling?.querySelector('h1')?.textContent).toBe(
 		'DOT / USDT',
+	)
+	expect(breadcrumb.nextElementSibling?.querySelector('p')?.textContent).toBe(
+		'manageLiquidity DOT / USDT',
 	)
 	await click(container.querySelector('nav a')!)
 	expect(container.querySelector('table')).not.toBeNull()
@@ -253,6 +275,57 @@ test('a direct pool URL and browser back navigation work', async () => {
 	await click(button('manage'))
 	await click(container.querySelector('[aria-label="history-back"]')!)
 	expect(container.querySelector('table')).not.toBeNull()
+})
+
+test('liquidity mode tabs sit above the card and switch the form inside it', async () => {
+	const { LiquidityEditor } = await vi.importActual<
+		typeof import('../../app-swap/src/pages/Liquidity/LiquidityEditor')
+	>('../../app-swap/src/pages/Liquidity/LiquidityEditor')
+	await act(async () => {
+		root.render(
+			createElement(LiquidityEditor, {
+				pool: snapshot().pools[0],
+				exchange: {
+					...mocked.serviceApi.assetHub,
+					market: vi.fn(),
+					quotes: vi.fn(),
+					swap: vi.fn(),
+					addLiquidity: vi.fn(),
+					removeLiquidity: vi.fn(),
+				},
+				account: null,
+				canSign: false,
+				fresh: false,
+			}),
+		)
+	})
+	const addTab = button('addLiquidity')
+	const removeTab = button('removeLiquidity')
+	const tabs = addTab.closest('section')!
+	const card = tabs.nextElementSibling!
+	expect(tabs.contains(removeTab)).toBe(true)
+	expect(addTab.getAttribute('aria-pressed')).toBe('true')
+	expect(card.textContent).toContain('depositDot')
+	await click(removeTab)
+	expect(removeTab.getAttribute('aria-pressed')).toBe('true')
+	const slider = card.querySelector<HTMLInputElement>('input[type="range"]')!
+	expect(slider.value).toBe('100')
+	const half = button('50%')
+	await click(half)
+	expect(half.getAttribute('aria-pressed')).toBe('true')
+	expect(slider.value).toBe('50')
+	expect(slider.getAttribute('aria-valuetext')).toBe('50%')
+	await act(async () => {
+		Object.getOwnPropertyDescriptor(
+			HTMLInputElement.prototype,
+			'value',
+		)!.set!.call(slider, '60')
+		slider.dispatchEvent(new Event('input', { bubbles: true }))
+	})
+	expect(slider.getAttribute('aria-valuetext')).toBe('60%')
+	expect(half.getAttribute('aria-pressed')).toBe('false')
+	await click(addTab)
+	expect(card.textContent).toContain('depositDot')
 })
 
 test('invalid pool URLs return to Liquidity', async () => {

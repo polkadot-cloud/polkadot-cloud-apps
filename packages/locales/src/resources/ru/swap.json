@@ -41,7 +41,7 @@
 		"loadingPools": "Загрузка пулов…",
 		"lpToken": "LP-токен",
 		"manage": "Управлять",
-		"manageLiquidity": "Управление позицией ликвидности",
+		"manageLiquidity": "Добавляйте или выводите ликвидность в пуле {{pair}}.",
 		"maximumSpent": "Максимум к оплате",
 		"minimumAmounts": "Минимальные суммы",
 		"minimumConversion": "Минимальная сумма обмена",

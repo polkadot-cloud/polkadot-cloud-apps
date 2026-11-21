@@ -13,7 +13,6 @@ import {
 	messageOf,
 	percentage,
 	SlippageField,
-	exchangeClasses as styles,
 	TransactionAction,
 	tokenAmount,
 	tokenOptions,
@@ -97,24 +96,30 @@ export const LiquidityEditor = ({
 		setMode(value)
 		setComplete(false)
 	}
+	const chooseRemovePercent = (value: number) => {
+		setRemovePercent(value)
+		setComplete(false)
+	}
 	return (
-		<SendForm.Container className={formClasses.form}>
-			<SendForm.Card>
-				<PageTabs
-					inline
-					tabs={[
-						{
-							title: t('addLiquidity'),
-							active: mode === 'add',
-							onClick: () => chooseMode('add'),
-						},
-						{
-							title: t('removeLiquidity'),
-							active: mode === 'remove',
-							onClick: () => chooseMode('remove'),
-						},
-					]}
-				/>
+		<SendForm.Container
+			className={formClasses.form}
+			style={{ maxWidth: 'none' }}
+		>
+			<PageTabs
+				tabs={[
+					{
+						title: t('addLiquidity'),
+						active: mode === 'add',
+						onClick: () => chooseMode('add'),
+					},
+					{
+						title: t('removeLiquidity'),
+						active: mode === 'remove',
+						onClick: () => chooseMode('remove'),
+					},
+				]}
+			/>
+			<SendForm.Card style={{ marginTop: '1.4rem' }}>
 				{mode === 'add' ? (
 					<>
 						<BalanceInputMulti
@@ -166,32 +171,35 @@ export const LiquidityEditor = ({
 					</>
 				) : (
 					<>
-						<label className={styles.setting}>
-							{t('withdrawPercentage')}
-							<input
-								type="range"
-								aria-label={t('withdrawPercentage')}
-								min={1}
-								max={100}
-								value={removePercent}
-								onChange={(event) => {
-									setComplete(false)
-									setRemovePercent(Number(event.target.value))
-								}}
+						<div className={classes.withdrawAmount}>
+							<label className={classes.withdrawSlider}>
+								<span className={classes.withdrawSliderHeading}>
+									{t('withdrawPercentage')}
+									<span className={classes.withdrawPercent} aria-hidden="true">
+										{removePercent}%
+									</span>
+								</span>
+								<input
+									type="range"
+									aria-valuetext={`${removePercent}%`}
+									min={1}
+									max={100}
+									value={removePercent}
+									onChange={(event) =>
+										chooseRemovePercent(Number(event.target.value))
+									}
+								/>
+							</label>
+							<PageTabs
+								inline
+								tabClassName={classes.withdrawPreset}
+								tabs={[25, 50, 75, 100].map((value) => ({
+									title: `${value}%`,
+									active: removePercent === value,
+									onClick: () => chooseRemovePercent(value),
+								}))}
 							/>
-							<span>{removePercent}%</span>
-						</label>
-						<PageTabs
-							inline
-							tabs={[25, 50, 75, 100].map((value) => ({
-								title: `${value}%`,
-								active: removePercent === value,
-								onClick: () => {
-									setComplete(false)
-									setRemovePercent(value)
-								},
-							}))}
-						/>
+						</div>
 						{pool.lpBalance === 0n && (
 							<p className={classes.notice}>{t('noPositionInPool')}</p>
 						)}

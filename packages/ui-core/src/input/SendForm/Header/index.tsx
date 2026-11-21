@@ -5,7 +5,7 @@ import classes from './index.module.scss'
 
 export type SendFormHeaderProps = {
 	title: string
-	subtitle: string
+	subtitle?: string
 	label?: string
 }
 
@@ -15,6 +15,6 @@ export const Header = ({ title, subtitle, label }: SendFormHeaderProps) => (
 			{title}
 			{label && <span className={classes.label}>{label}</span>}
 		</h1>
-		<p className={classes.subtitle}>{subtitle}</p>
+		{subtitle && <p className={classes.subtitle}>{subtitle}</p>}
 	</header>
 )

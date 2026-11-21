@@ -41,7 +41,7 @@
 		"loadingPools": "正在加载资金池…",
 		"lpToken": "LP 代币",
 		"manage": "管理",
-		"manageLiquidity": "管理流动性头寸",
+		"manageLiquidity": "在 {{pair}} 资金池中添加或移除流动性。",
 		"maximumSpent": "最高支付金额",
 		"minimumAmounts": "最低金额",
 		"minimumConversion": "最低兑换金额",

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useActiveAccount, useImportedAccounts } from '@polkadot-cloud/connect'
-import classNames from 'classnames'
 import { AssetHubPoolTokens } from 'consts/assetHub'
 import { useQuoteExpired } from 'hooks/useQuoteExpired'
 import { useAssetHubMarket } from 'library/AssetHub'
@@ -37,25 +36,32 @@ export const Liquidity = () => {
 
 	if (asset && !selected) return <Navigate to={`/liquidity${search}`} replace />
 
+	const liquidityLabel = t('liquidity')
+	const title = selected ? `DOT / ${selected}` : liquidityLabel
+
 	return (
 		<Page.Row>
-			<div
-				className={classNames(classes.layout, selected && classes.poolScreen)}
-			>
-				{selected && (
-					<nav className={classes.breadcrumb} aria-label={t('liquidity')}>
-						<ol>
-							<li>
-								<Link to={`/liquidity${search}`}>{t('liquidity')}</Link>
-							</li>
-							<li aria-hidden="true">›</li>
-							<li aria-current="page">DOT / {selected}</li>
-						</ol>
-					</nav>
-				)}
+			<div className={classes.layout}>
+				<nav className={classes.breadcrumb} aria-label={liquidityLabel}>
+					<ol>
+						{selected && (
+							<>
+								<li>
+									<Link to={`/liquidity${search}`}>{liquidityLabel}</Link>
+								</li>
+								<li aria-hidden="true">›</li>
+							</>
+						)}
+						<li aria-current="page">{title}</li>
+					</ol>
+				</nav>
 				<SendForm.Header
-					title={selected ? `DOT / ${selected}` : t('liquidity')}
-					subtitle={t(selected ? 'manageLiquidity' : 'liquidityDescription')}
+					title={title}
+					subtitle={
+						selected
+							? t('manageLiquidity', { pair: title })
+							: t('liquidityDescription')
+					}
 				/>
 				{error && <ExchangeNotice status="danger">{error}</ExchangeNotice>}
 				{!market && !error && (

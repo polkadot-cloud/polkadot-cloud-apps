@@ -41,7 +41,7 @@
 		"loadingPools": "プールを読み込み中…",
 		"lpToken": "LPトークン",
 		"manage": "管理",
-		"manageLiquidity": "流動性ポジションを管理",
+		"manageLiquidity": "{{pair}} プールへの流動性の追加や引き出しができます。",
 		"maximumSpent": "最大支払額",
 		"minimumAmounts": "最低金額",
 		"minimumConversion": "最低交換額",
