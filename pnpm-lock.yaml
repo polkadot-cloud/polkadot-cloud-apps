@@ -1050,6 +1050,9 @@ importers:
       react-i18next:
         specifier: ^18.0.1
         version: 18.0.1(@types/react@19.3.0)(i18next@27.1.2(typescript@7.0.2))(react@19.3.1)(typescript@7.0.2)
+      react-router-dom:
+        specifier: ^7.18.4
+        version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       types:
         specifier: workspace:*
         version: link:../types
