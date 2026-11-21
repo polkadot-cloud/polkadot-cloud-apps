@@ -16,9 +16,27 @@
 	max-width: 76rem;
 	margin: 0 auto;
 	padding-top: 5.5rem;
+}
 
+.view {
 	> header {
 		margin-top: 0;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: reveal-view 160ms ease-out;
+	}
+}
+
+@keyframes reveal-view {
+	from {
+		opacity: 0.8;
+		transform: translateY(0.25rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 

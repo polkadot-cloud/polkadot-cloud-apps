@@ -189,6 +189,7 @@ afterEach(async () => {
 test('pool management has its own URL and breadcrumb, returning to the selected list tab', async () => {
 	await render()
 	const listBreadcrumb = container.querySelector('nav[aria-label="liquidity"]')!
+	const listView = listBreadcrumb.nextElementSibling
 	expect(
 		listBreadcrumb.querySelector('[aria-current="page"]')?.textContent,
 	).toBe('liquidity')
@@ -211,6 +212,7 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	expect(button('refresh')).toBeUndefined()
 	await click(button('yourPositions'))
 	expect(button('yourPositions').getAttribute('aria-pressed')).toBe('true')
+	expect(listBreadcrumb.nextElementSibling).toBe(listView)
 	await click(button('manage'))
 	expect(
 		container.querySelector('[aria-label="history-back"]')?.textContent,
@@ -223,6 +225,8 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 		'DOT / USDT',
 	)
 	const breadcrumb = container.querySelector('nav')!
+	expect(breadcrumb).toBe(listBreadcrumb)
+	expect(breadcrumb.nextElementSibling).not.toBe(listView)
 	expect(breadcrumb.closest('header')).toBeNull()
 	expect(breadcrumb.nextElementSibling?.querySelector('h1')?.textContent).toBe(
 		'DOT / USDT',

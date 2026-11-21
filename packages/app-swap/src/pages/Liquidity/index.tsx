@@ -55,50 +55,52 @@ export const Liquidity = () => {
 						<li aria-current="page">{title}</li>
 					</ol>
 				</nav>
-				<SendForm.Header
-					title={title}
-					subtitle={
-						selected
-							? t('manageLiquidity', { pair: title })
-							: t('liquidityDescription')
-					}
-				/>
-				{error && <ExchangeNotice status="danger">{error}</ExchangeNotice>}
-				{!market && !error && (
-					<p className={classes.notice} role="status">
-						{t('loadingPools')}
-					</p>
-				)}
-				{selected ? (
-					pool && exchange ? (
-						<LiquidityEditor
-							key={`${pool.asset}:${account?.address}:${account?.source}`}
-							pool={pool}
-							exchange={exchange}
-							account={account}
-							canSign={accountHasSigner(activeAccount)}
-							fresh={!!market && !expired}
-						/>
-					) : (
-						market && <p className={classes.notice}>{t('noPools')}</p>
-					)
-				) : (
-					<PoolList
-						pools={market?.pools}
-						account={account}
-						tab={tab}
-						onTabChange={(value) => {
-							setSearchParams(
-								(previous) => {
-									const next = new URLSearchParams(previous)
-									next.set('tab', value)
-									return next
-								},
-								{ replace: true },
-							)
-						}}
+				<div className={classes.view} key={selected ?? 'list'}>
+					<SendForm.Header
+						title={title}
+						subtitle={
+							selected
+								? t('manageLiquidity', { pair: title })
+								: t('liquidityDescription')
+						}
 					/>
-				)}
+					{error && <ExchangeNotice status="danger">{error}</ExchangeNotice>}
+					{!market && !error && (
+						<p className={classes.notice} role="status">
+							{t('loadingPools')}
+						</p>
+					)}
+					{selected ? (
+						pool && exchange ? (
+							<LiquidityEditor
+								key={`${pool.asset}:${account?.address}:${account?.source}`}
+								pool={pool}
+								exchange={exchange}
+								account={account}
+								canSign={accountHasSigner(activeAccount)}
+								fresh={!!market && !expired}
+							/>
+						) : (
+							market && <p className={classes.notice}>{t('noPools')}</p>
+						)
+					) : (
+						<PoolList
+							pools={market?.pools}
+							account={account}
+							tab={tab}
+							onTabChange={(value) => {
+								setSearchParams(
+									(previous) => {
+										const next = new URLSearchParams(previous)
+										next.set('tab', value)
+										return next
+									},
+									{ replace: true },
+								)
+							}}
+						/>
+					)}
+				</div>
 			</div>
 		</Page.Row>
 	)
