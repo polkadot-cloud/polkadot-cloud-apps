@@ -15,6 +15,7 @@ import {
 import type { AssetHubMarket, ImportedAccount } from 'types'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { Liquidity } from '../../app-swap/src/pages/Liquidity'
+import { getFeeTokenIcon } from '../../consts/src/stablecoins'
 
 const mocked = vi.hoisted(() => ({
 	serviceApi: { assetHub: { subscribeMarket: vi.fn() } },
@@ -39,7 +40,7 @@ const snapshot = (lpBalance = 100_000n): AssetHubMarket => ({
 		{
 			asset: 'USDT',
 			lpToken: 0,
-			reserveDot: 1_001_234_567n,
+			reserveDot: 12_878_301_225_779_509n,
 			reserveAsset: 2_000_123_456n,
 			lpSupply: 1_000_000n,
 			lpBalance,
@@ -180,9 +181,13 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 			(cell) => cell.textContent,
 		),
 	).toEqual(['pool', 'reserves', 'swapFee', 'yourShare', 'options'])
-	expect(table.querySelector('tbody th[scope="row"]')?.textContent).toContain(
-		'DOT / USDT',
-	)
+	const poolHeader = table.querySelector('tbody th[scope="row"]')!
+	expect(poolHeader.textContent).toContain('DOT / USDT')
+	expect(
+		Array.from(poolHeader.querySelectorAll('img'), (icon) =>
+			icon.getAttribute('src'),
+		),
+	).toEqual([getFeeTokenIcon('DOT'), getFeeTokenIcon('USDT')])
 	expect(container.querySelector('[aria-label="liquidity-editor"]')).toBeNull()
 	expect(button('refresh')).toBeUndefined()
 	await click(button('yourPositions'))
@@ -209,7 +214,7 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	expect(mocked.serviceApi.assetHub.subscribeMarket).toHaveBeenCalledOnce()
 })
 
-test('pool reserves show four decimal places at most and reveal exact amounts on focus', async () => {
+test('pool reserves use K and M with up to four decimal places and reveal exact amounts on focus', async () => {
 	vi.stubGlobal(
 		'ResizeObserver',
 		class {
@@ -221,16 +226,24 @@ test('pool reserves show four decimal places at most and reveal exact amounts on
 	await render()
 	const trigger = container.querySelector<HTMLButtonElement>('tbody td button')!
 	expect(Array.from(trigger.children, (amount) => amount.textContent)).toEqual([
-		'0.1001 DOT',
-		'2000.1235 USDT',
+		'1.2878M',
+		'2.0001K',
+	])
+	const reserveIcons = Array.from(trigger.querySelectorAll('img'), (icon) => [
+		icon.alt,
+		icon.getAttribute('src'),
+	])
+	expect(reserveIcons).toEqual([
+		['DOT', getFeeTokenIcon('DOT')],
+		['USDT', getFeeTokenIcon('USDT')],
 	])
 	await act(async () => trigger.focus())
 	const tooltip = document.getElementById(
 		trigger.getAttribute('aria-describedby') ?? '',
 	)
 	expect(tooltip?.getAttribute('role')).toBe('tooltip')
-	expect(tooltip?.textContent).toContain('0.1001234567 DOT')
-	expect(tooltip?.textContent).toContain('2000.123456 USDT')
+	expect(tooltip?.textContent).toContain('1,287,830.1225779509 DOT')
+	expect(tooltip?.textContent).toContain('2,000.123456 USDT')
 })
 
 test('a direct pool URL and browser back navigation work', async () => {

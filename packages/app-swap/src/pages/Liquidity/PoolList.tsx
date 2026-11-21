@@ -3,6 +3,7 @@
 
 import classNames from 'classnames'
 import { assetHubDecimals } from 'consts/assetHub'
+import { getFeeTokenIcon } from 'consts/stablecoins'
 import { getThemeElement } from 'hooks/useTheme'
 import { formatUnits, percentage, tokenAmount } from 'library/AssetHub'
 import { useTranslation } from 'react-i18next'
@@ -12,18 +13,26 @@ import { CardWrapper } from 'ui-app/Card'
 import { PageTabs } from 'ui-app/PageTabs'
 import { ButtonSecondary } from 'ui-buttons'
 import { DataTable, Tooltip } from 'ui-core/base'
+import { formatCompactNumber } from 'utils'
 import styles from './index.module.scss'
 
 type PoolTab = 'pools' | 'positions'
 
 const reserveDisplayDecimals = 4
 
+const groupReserveAmount = (amount: string) =>
+	amount.replace(/^\d+/, (whole) => BigInt(whole).toLocaleString('en-US'))
+
 const formatReserve = (amount: bigint, token: AssetHubToken) => {
 	const scale = 10n ** BigInt(assetHubDecimals(token) - reserveDisplayDecimals)
 	if (amount > 0n && amount < scale) {
 		return `<${formatUnits(1n, reserveDisplayDecimals)}`
 	}
-	return formatUnits((amount + scale / 2n) / scale, reserveDisplayDecimals)
+	return formatCompactNumber(
+		Number(tokenAmount(amount, token)),
+		'en-US',
+		reserveDisplayDecimals,
+	)
 }
 
 const PoolReserves = ({ pool }: { pool: AssetHubPool }) => (
@@ -32,10 +41,11 @@ const PoolReserves = ({ pool }: { pool: AssetHubPool }) => (
 		text={
 			<>
 				<span className={styles.reserveAmount}>
-					{tokenAmount(pool.reserveDot, 'DOT')} DOT
+					{groupReserveAmount(tokenAmount(pool.reserveDot, 'DOT'))} DOT
 				</span>
 				<span className={styles.reserveAmount}>
-					{tokenAmount(pool.reserveAsset, pool.asset)} {pool.asset}
+					{groupReserveAmount(tokenAmount(pool.reserveAsset, pool.asset))}{' '}
+					{pool.asset}
 				</span>
 			</>
 		}
@@ -45,10 +55,12 @@ const PoolReserves = ({ pool }: { pool: AssetHubPool }) => (
 			className={classNames(styles.tableValue, styles.reserveTrigger)}
 		>
 			<span className={styles.reserveAmount}>
-				{formatReserve(pool.reserveDot, 'DOT')} DOT
+				<img src={getFeeTokenIcon('DOT')} alt="DOT" />
+				{formatReserve(pool.reserveDot, 'DOT')}
 			</span>
 			<span className={classNames(styles.reserveAmount, styles.reserveAsset)}>
-				{formatReserve(pool.reserveAsset, pool.asset)} {pool.asset}
+				<img src={getFeeTokenIcon(pool.asset)} alt={pool.asset} />
+				{formatReserve(pool.reserveAsset, pool.asset)}
 			</span>
 		</button>
 	</Tooltip>
@@ -90,7 +102,7 @@ export const PoolList = ({
 				<p className={styles.notice}>{t('selectAccountForPositions')}</p>
 			) : (
 				pools && (
-					<CardWrapper>
+					<CardWrapper className={styles.poolCard} style={{ paddingInline: 0 }}>
 						<DataTable.Root
 							label={t(tab === 'positions' ? 'yourPositions' : 'pools')}
 						>
@@ -98,11 +110,19 @@ export const PoolList = ({
 								<DataTable.Cells
 									scope="col"
 									items={[
-										t('pool'),
-										t('reserves'),
-										t('swapFee'),
-										t('yourShare'),
-										t('options'),
+										<DataTable.HeaderLabel>{t('pool')}</DataTable.HeaderLabel>,
+										<DataTable.HeaderLabel numeric>
+											{t('reserves')}
+										</DataTable.HeaderLabel>,
+										<DataTable.HeaderLabel numeric>
+											{t('swapFee')}
+										</DataTable.HeaderLabel>,
+										<DataTable.HeaderLabel numeric>
+											{t('yourShare')}
+										</DataTable.HeaderLabel>,
+										<DataTable.HeaderLabel>
+											{t('options')}
+										</DataTable.HeaderLabel>,
 									]}
 								/>
 							</DataTable.Head>
@@ -110,10 +130,18 @@ export const PoolList = ({
 								{shown?.map((pool) => (
 									<DataTable.Row key={pool.asset}>
 										<DataTable.Cell scope="row">
-											<DataTable.Label>DOT / {pool.asset}</DataTable.Label>
-											<small className={styles.tableDetail}>
-												{t('lpToken')} #{pool.lpToken}
-											</small>
+											<div className={styles.poolIdentity}>
+												<span className={styles.poolIcons} aria-hidden="true">
+													<img src={getFeeTokenIcon('DOT')} alt="" />
+													<img src={getFeeTokenIcon(pool.asset)} alt="" />
+												</span>
+												<div>
+													<DataTable.Label>DOT / {pool.asset}</DataTable.Label>
+													<small className={styles.tableDetail}>
+														{t('lpToken')} #{pool.lpToken}
+													</small>
+												</div>
+											</div>
 										</DataTable.Cell>
 										<DataTable.Cell>
 											<PoolReserves pool={pool} />

@@ -1,3 +1,5 @@
+@use "ui-styles/theme/variables" as *;
+
 .notice {
 	margin: 0;
 	padding: 0.8rem 1rem;
@@ -13,6 +15,50 @@
 	width: 100%;
 	max-width: 76rem;
 	margin: 0 auto;
+}
+
+.poolCard {
+	--data-table-padding-inline: 0;
+	--data-table-cell-edge-padding: 2rem;
+
+	@media (max-width: $page-width-medium-threshold) {
+		--data-table-cell-edge-padding: 1.5rem;
+	}
+
+	tbody > tr:last-child > :is(th, td) {
+		padding-block: 0.8rem;
+	}
+
+	.notice {
+		padding-inline: var(--data-table-cell-edge-padding);
+	}
+}
+
+.poolIdentity {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+
+	.tableDetail {
+		font-size: 0.95rem;
+	}
+}
+
+.poolIcons {
+	display: flex;
+	flex: none;
+
+	> img {
+		width: 2rem;
+		height: 2rem;
+		border: 2px solid var(--bg-primary);
+		border-radius: 50%;
+		background: var(--bg-primary);
+
+		& + img {
+			margin-inline-start: -0.45rem;
+		}
+	}
 }
 
 .tableDetail {
@@ -32,6 +78,24 @@
 	color: inherit;
 	cursor: help;
 	text-align: start;
+
+	.reserveAmount {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+
+		& + .reserveAmount {
+			margin-block-start: 0.3rem;
+			padding-block-start: 0.3rem;
+			border-block-start: 1px dashed var(--gray-500);
+		}
+
+		> img {
+			flex: none;
+			width: 1.2rem;
+			height: 1.2rem;
+		}
+	}
 
 	&:focus-visible {
 		border-radius: 0.2rem;

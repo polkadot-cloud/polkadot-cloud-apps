@@ -4,10 +4,14 @@
 import { planckToUnit, rmCommas } from '@polkadot-cloud/utils'
 import BigNumber from 'bignumber.js'
 
-export const formatCompactNumber = (value: number, locale?: string) =>
+export const formatCompactNumber = (
+	value: number,
+	locale?: string,
+	maximumFractionDigits = 1,
+) =>
 	value.toLocaleString(locale, {
 		notation: 'compact',
-		maximumFractionDigits: 1,
+		maximumFractionDigits,
 	})
 
 // Return `planckToUnit` as a BigNumber

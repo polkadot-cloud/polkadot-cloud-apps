@@ -4,7 +4,7 @@
 .root {
 	overflow-x: auto;
 	margin-top: 0.5rem;
-	padding: 0 0.5rem;
+	padding-inline: var(--data-table-padding-inline, 0.5rem);
 }
 
 .table {

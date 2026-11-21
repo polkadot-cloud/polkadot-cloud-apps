@@ -13,3 +13,17 @@
 		line-height: 1.71rem;
 	}
 }
+
+.label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	> svg {
+		width: 1.5rem;
+	}
+}
+
+.numeric {
+	font-family: var(--font-family-mono);
+}

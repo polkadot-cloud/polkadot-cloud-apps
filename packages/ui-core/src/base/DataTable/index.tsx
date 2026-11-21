@@ -3,7 +3,7 @@
 
 import { Cell } from './Cell'
 import { Cells } from './Cells'
-import { Head } from './Head'
+import { Head, HeaderLabel } from './Head'
 import { Label } from './Label'
 import { Root } from './Root'
 import { Row } from './Row'
@@ -11,6 +11,7 @@ import { Row } from './Row'
 export const DataTable = {
 	Root,
 	Head,
+	HeaderLabel,
 	Row,
 	Cell,
 	Cells,

@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import classNames from 'classnames'
 import type { ComponentBase } from 'types'
 import classes from './index.module.scss'
 
@@ -10,4 +11,17 @@ export const Head = ({ children, style }: ComponentBase) => (
 			{children}
 		</tr>
 	</thead>
+)
+
+export const HeaderLabel = ({
+	children,
+	numeric,
+	style,
+}: ComponentBase & { numeric?: boolean }) => (
+	<span
+		className={classNames(classes.label, numeric && classes.numeric)}
+		style={style}
+	>
+		{children}
+	</span>
 )

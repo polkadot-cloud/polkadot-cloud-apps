@@ -228,12 +228,16 @@ export const Overview = (props: PayoutHistoryProps) => {
 									<DataTable.Cells
 										scope="col"
 										items={[
-											t('period'),
-											<span className={styles.rewardUnit}>
+											<DataTable.HeaderLabel>
+												{t('period')}
+											</DataTable.HeaderLabel>,
+											<DataTable.HeaderLabel numeric>
 												<Token />
 												{unit}
-											</span>,
-											<span className={styles.rewardUnit}>{currency}</span>,
+											</DataTable.HeaderLabel>,
+											<DataTable.HeaderLabel numeric>
+												{currency}
+											</DataTable.HeaderLabel>,
 										]}
 									/>
 								</DataTable.Head>

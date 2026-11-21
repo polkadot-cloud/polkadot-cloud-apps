@@ -4,8 +4,13 @@
 .cell {
 	padding-inline: 0 1rem;
 	text-align: inherit;
+	vertical-align: middle;
+
+	&:first-child {
+		padding-inline-start: var(--data-table-cell-edge-padding, 0);
+	}
 
 	&:last-child {
-		padding-inline-end: 0;
+		padding-inline-end: var(--data-table-cell-edge-padding, 0);
 	}
 }
