@@ -119,8 +119,8 @@ $gray-dark: (
 
 	/* Buttons */
 	--btn-bg-secondary: var(--gray-200);
-	--btn-tab: var(--bg-selected);
-	--btn-canvas-tab: var(--bg-selected);
+	--btn-tab: #e6ebf0;
+	--btn-canvas-tab: var(--btn-tab);
 	--btn-popover-tab-bg: var(--gray-200);
 	--btn-help-bg: var(--gray-400);
 	--btn-quick-action-bg: var(--gray-100);
