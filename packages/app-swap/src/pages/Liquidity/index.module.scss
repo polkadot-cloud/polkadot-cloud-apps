@@ -105,6 +105,8 @@
 		display: flex;
 		align-items: center;
 		gap: 0.4rem;
+		font-family: var(--font-family-semibold);
+		font-weight: 600;
 
 		& + .reserveAmount {
 			margin-block-start: 0.3rem;

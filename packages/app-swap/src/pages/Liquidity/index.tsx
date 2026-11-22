@@ -23,7 +23,7 @@ import { LiquidityEditor } from './LiquidityEditor'
 import { PoolList } from './PoolList'
 
 export const Liquidity = () => {
-	const { t } = useTranslation('swap')
+	const { t } = useTranslation(['swap', 'app'])
 	const { activeAccount } = useActiveAccount()
 	const { getAccount, accountHasSigner } = useImportedAccounts()
 	const account = getAccount(activeAccount)
@@ -43,7 +43,7 @@ export const Liquidity = () => {
 	const homeCrumb = (
 		<>
 			<FontAwesomeIcon icon={faHome} aria-hidden="true" />
-			{liquidityLabel}
+			{t('overview', { ns: 'app' })}
 		</>
 	)
 

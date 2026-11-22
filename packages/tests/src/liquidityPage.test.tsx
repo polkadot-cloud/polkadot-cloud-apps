@@ -192,7 +192,8 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	const listView = listBreadcrumb.nextElementSibling
 	expect(
 		listBreadcrumb.querySelector('[aria-current="page"]')?.textContent,
-	).toBe('liquidity')
+	).toBe('overview')
+	expect(listView?.querySelector('h1')?.textContent).toBe('liquidity')
 	expect(
 		listBreadcrumb.querySelector(
 			'[aria-current="page"] svg[aria-hidden="true"]',
@@ -231,6 +232,7 @@ test('pool management has its own URL and breadcrumb, returning to the selected 
 	)
 	const breadcrumb = container.querySelector('nav')!
 	expect(breadcrumb).toBe(listBreadcrumb)
+	expect(breadcrumb.querySelector('a')?.textContent).toBe('overview')
 	expect(breadcrumb.querySelector('a svg[aria-hidden="true"]')).not.toBeNull()
 	expect(breadcrumb.nextElementSibling).not.toBe(listView)
 	expect(breadcrumb.closest('header')).toBeNull()
