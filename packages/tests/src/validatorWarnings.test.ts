@@ -59,7 +59,7 @@ test('overlapping health issues remove each selected validator once in selection
 	expect(result.validatorsWithIssues).toEqual([sunsetting, both, low])
 })
 
-test.each(['ZUG_VALIDATOR', 'HETZNER', 'LOW_HISTORICAL_BACKING'] as const)(
+test.each(['ZUG_VALIDATOR', 'HETZNER'] as const)(
 	'%s warnings still apply when retainment data is unavailable',
 	(type) => {
 		const flagged = validator('flagged')
@@ -74,7 +74,7 @@ test.each(['ZUG_VALIDATOR', 'HETZNER', 'LOW_HISTORICAL_BACKING'] as const)(
 	},
 )
 
-test('page warnings include historical backing advisories while Hetzner stays in the generator', () => {
+test('staking pages show danger warnings and the generator also shows Hetzner advisories', () => {
 	const validators = [
 		validator('hetzner'),
 		validator('zug'),
@@ -86,20 +86,10 @@ test('page warnings include historical backing advisories while Hetzner stays in
 		historical: ['LOW_HISTORICAL_BACKING'],
 	}
 	const pageWarnings = getPageValidatorWarningGroups(validators, warnings)
-	expect(pageWarnings.map(({ type }) => type)).toEqual([
-		'ZUG_VALIDATOR',
-		'LOW_HISTORICAL_BACKING',
-	])
+	expect(pageWarnings.map(({ type }) => type)).toEqual(['ZUG_VALIDATOR'])
 	expect(
-		getPageValidatorWarningGroups(validators, { hetzner: ['HETZNER'] }),
-	).toEqual([])
-	expect(getValidatorWarningGroups(validators, warnings)).toContainEqual({
-		type: 'HETZNER',
-		messageKey: 'hetznerValidatorWarning',
-		labelKey: 'hetznerValidatorWarningLabel',
-		severity: 'warning',
-		validators: [validators[0]],
-	})
+		getValidatorWarningGroups(validators, warnings).map(({ type }) => type),
+	).toEqual(['ZUG_VALIDATOR', 'HETZNER'])
 })
 
 test.each(['HETZNER', 'LOW_HISTORICAL_BACKING'] as const)(

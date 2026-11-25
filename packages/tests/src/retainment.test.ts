@@ -206,8 +206,8 @@ test.each<
 		'warning' | 'danger' | undefined,
 	]
 >([
-	[['LOW_HISTORICAL_BACKING'], null, true, 'warning'],
-	[['LOW_HISTORICAL_BACKING'], 90, true, 'warning'],
+	[['LOW_HISTORICAL_BACKING'], null, true, undefined],
+	[['LOW_HISTORICAL_BACKING'], 90, true, undefined],
 	[['LOW_HISTORICAL_BACKING'], 40, true, 'danger'],
 	[['HETZNER'], null, true, 'warning'],
 	[['HETZNER'], 90, true, 'warning'],
@@ -243,7 +243,10 @@ test('item badges preserve overlapping issues in severity order using three-mont
 		window({ retainmentRate: 10 }),
 	)
 	expect(
-		getValidatorItemWarnings(['HETZNER', 'ZUG_VALIDATOR'], retainment),
+		getValidatorItemWarnings(
+			['HETZNER', 'ZUG_VALIDATOR', 'LOW_HISTORICAL_BACKING'],
+			retainment,
+		),
 	).toMatchObject([
 		{
 			type: 'ZUG_VALIDATOR',
