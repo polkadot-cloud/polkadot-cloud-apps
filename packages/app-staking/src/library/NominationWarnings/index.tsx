@@ -43,10 +43,7 @@ export const NominationWarnings = () => {
 						icon={faCircleExclamation}
 						iconFrame={false}
 						status={
-							dangerCount > 0 ||
-							validatorWarningGroups.some(
-								({ severity }) => severity === 'danger',
-							)
+							dangerCount > 0 || validatorWarningGroups.length > 0
 								? 'danger'
 								: 'warning'
 						}
@@ -69,13 +66,12 @@ export const NominationWarnings = () => {
 	return (
 		<>
 			{validatorWarningGroups.map(
-				({ type, messageKey, severity, validators, readMoreUrl }) => (
+				({ type, messageKey, validators, readMoreUrl }) => (
 					<Page.Row key={type} yMargin="compact">
 						<Page.RowSection standalone>
 							<ValidatorWarning
-								severity={severity}
+								onFix={canFix ? handleFix : undefined}
 								readMoreUrl={readMoreUrl}
-								onFix={canFix && severity === 'danger' ? handleFix : undefined}
 							>
 								{t(messageKey, { count: validators.length })}
 							</ValidatorWarning>
