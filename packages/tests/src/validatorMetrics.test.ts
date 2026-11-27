@@ -3,12 +3,12 @@
 
 import { act, createElement, useSyncExternalStore } from 'react'
 import { createRoot } from 'react-dom/client'
-import { renderToStaticMarkup } from 'react-dom/server'
 import type { ValidatorOverviews } from 'types'
 import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { ValidatorMetrics } from '../../app-staking/src/canvas/ValidatorMetrics'
 import { Metrics } from '../../app-staking/src/library/ListItem/Buttons/Metrics'
 import { RowActionsMenu } from '../../app-staking/src/library/ValidatorList/RowActionsMenu'
+import { formatFiatCurrency } from '../../locales/src/util/currency'
 import { Menu } from '../../ui-app/src/Menu'
 
 const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
@@ -21,7 +21,7 @@ const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
 			dom,
 			query: vi.fn(),
 			selfStakeQuery: vi.fn(),
-			state: { api: true },
+			state: { api: true, price: 2 },
 			listeners: new Set<() => void>(),
 			openCanvas: vi.fn(),
 		}
@@ -39,6 +39,12 @@ vi.mock('../../data-gate/src/index', () => ({
 }))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
+}))
+vi.mock('../../hooks/src/useCurrency', () => ({
+	useCurrency: () => ({ currency: 'GBP' }),
+}))
+vi.mock('../../hooks/src/useTokenPrices', () => ({
+	useTokenPrices: () => ({ price: state.price }),
 }))
 vi.mock('../../hooks/src/usePlugins', () => {
 	const subscribe = (listener: () => void) => {
@@ -82,6 +88,10 @@ vi.mock('library/StatusLabel', () => ({
 	StatusLabel: ({ title }: { title: string }) => title,
 }))
 vi.mock(
+	'library/Balance',
+	() => import('../../app-staking/src/library/Balance'),
+)
+vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
 	() => ({ ActiveGraph: () => null }),
 )
@@ -114,6 +124,7 @@ let container: HTMLDivElement
 beforeEach(() => {
 	vi.clearAllMocks()
 	state.api = true
+	state.price = 2
 	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.stubGlobal('window', dom.window)
@@ -137,62 +148,96 @@ const setApiEnabled = async (enabled: boolean) => {
 	})
 }
 
-const renderMetrics = () =>
-	renderToStaticMarkup(createElement(ValidatorMetrics))
-		.replace(/<[^>]+>/g, '')
-		.replace(/\s+/g, ' ')
+const renderMetrics = async () => {
+	await act(async () => root.render(createElement(ValidatorMetrics)))
+	return Object.fromEntries(
+		Array.from(container.querySelectorAll('h4'), (label) => {
+			const stat = label.parentElement!
+			return [
+				label.textContent,
+				{
+					stake:
+						stat.querySelector('.odometer')?.textContent ??
+						stat.querySelector('span')?.textContent,
+					fiat: stat.querySelector('h3')?.textContent,
+				},
+			]
+		}),
+	)
+}
 
 test.each([
 	{ loading: true, error: null, label: 'syncing' },
 	{ loading: false, error: new Error('offline'), label: '—' },
-])('unavailable metrics show $label without false zero stakes', (state) => {
-	query.mockReturnValue({ ...state, data: undefined })
-	selfStakeQuery.mockReturnValue({ data: undefined, loading: state.loading })
-	const text = renderMetrics()
-	expect(text).toContain(`selfStake: ${state.label}`)
-	expect(text).toContain(`nominatorStake: ${state.label}`)
-	expect(text).not.toContain('0 DOT')
-	expect(query).toHaveBeenCalledWith(['validator'])
-	expect(selfStakeQuery).toHaveBeenCalledWith('validator')
-})
+])(
+	'unavailable metrics show $label without false zero stakes',
+	async (state) => {
+		query.mockReturnValue({ ...state, data: undefined })
+		selfStakeQuery.mockReturnValue({ data: undefined, loading: state.loading })
+		expect(await renderMetrics()).toEqual({
+			selfStake: { stake: state.label, fiat: undefined },
+			nominatorStake: { stake: state.label, fiat: undefined },
+		})
+		expect(query).toHaveBeenCalledWith(['validator'])
+		expect(selfStakeQuery).toHaveBeenCalledWith('validator')
+	},
+)
 
 test.each([null, new Error('refresh failed')])(
 	'loaded metrics retain stake through refresh errors: %s',
-	(error) => {
+	async (error) => {
 		const data: ValidatorOverviews = new Map([
 			[
 				'validator',
 				{
 					own: 25000000000n,
-					total: 125000000000n,
+					total: 125123450000n,
 					nominatorCount: 1,
 					pageCount: 1,
 				},
 			],
 		])
 		query.mockReturnValue({ data, loading: false, error })
-		selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
-		const text = renderMetrics()
-		expect(text).toContain('selfStake: 3.5 DOT')
-		expect(text).toContain('nominatorStake: 10 DOT')
+		selfStakeQuery.mockReturnValue({
+			data: 123456789123456789n,
+			loading: false,
+		})
+		expect(await renderMetrics()).toEqual({
+			selfStake: {
+				stake: '12,345,678.9123456789',
+				fiat: formatFiatCurrency(24_691_357.82, 'GBP'),
+			},
+			nominatorStake: {
+				stake: '10.0123450000',
+				fiat: formatFiatCurrency(20.02, 'GBP'),
+			},
+		})
 	},
 )
 
-test('a waiting validator shows its ledger total and zero nominator stake', () => {
+test('a waiting validator shows its ledger total and zero nominator stake without a price', async () => {
 	query.mockReturnValue({ data: new Map(), loading: false, error: null })
 	selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
-	const text = renderMetrics()
-	expect(text).toContain('selfStake: 3.5 DOT')
-	expect(text).toContain('nominatorStake: 0 DOT')
+	state.price = 0
+	expect(await renderMetrics()).toEqual({
+		selfStake: { stake: '3.50', fiat: '—' },
+		nominatorStake: { stake: '0.00', fiat: '—' },
+	})
 })
 
-test('a missing ledger is distinct from a zero ledger total', () => {
+test('a missing ledger is distinct from a zero ledger total', async () => {
 	query.mockReturnValue({ data: new Map(), loading: false, error: null })
 	selfStakeQuery.mockReturnValue({ data: null, loading: false })
-	expect(renderMetrics()).toContain('selfStake: —')
+	expect((await renderMetrics()).selfStake).toEqual({
+		stake: '—',
+		fiat: undefined,
+	})
 
 	selfStakeQuery.mockReturnValue({ data: 0n, loading: false })
-	expect(renderMetrics()).toContain('selfStake: 0 DOT')
+	expect((await renderMetrics()).selfStake).toEqual({
+		stake: '0.00',
+		fiat: formatFiatCurrency(0, 'GBP'),
+	})
 })
 
 test('disabling the API hides the metrics button while the canvas stays open', async () => {

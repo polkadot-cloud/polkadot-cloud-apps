@@ -7,8 +7,10 @@ import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useValidatorOverviews, useValidatorSelfStake } from 'data-gate'
 import { useApi } from 'hooks/useApi'
+import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
+import { Balance } from 'library/Balance'
 import { StatusLabel } from 'library/StatusLabel'
 import { useTranslation } from 'react-i18next'
 import {
@@ -17,7 +19,8 @@ import {
 	GraphInner,
 	Head,
 	Main,
-	Stat,
+	StatCard,
+	StatGrid,
 	Subheading,
 } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
@@ -37,6 +40,7 @@ export const ValidatorMetrics = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { activeEra } = useApi()
+	const { currency } = useCurrency()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
 	const { unit, units } = getStakingChainData(network)
@@ -83,22 +87,33 @@ export const ValidatorMetrics = () => {
 			</AccountTitle>
 			<GraphContainer>
 				<Subheading>
-					<h4>
-						<Stat withIcon>
-							<Token />
-							{t('selfStake', { ns: 'modals' })}:{' '}
-							{validatorOwnStake != null
-								? `${planckToUnitBn(new BigNumber(validatorOwnStake), units).toFormat()} ${unit}`
-								: selfStakePlaceholder}
-						</Stat>
-						<Stat withIcon>
-							<Token />
-							{t('nominatorStake', { ns: 'modals' })}:{' '}
-							{overviews
-								? `${planckToUnitBn(otherStake, units).decimalPlaces(0).toFormat()} ${unit}`
-								: nominatorStakePlaceholder}
-						</Stat>
-					</h4>
+					<StatGrid>
+						<StatCard title={t('selfStake', { ns: 'modals' })}>
+							{validatorOwnStake != null ? (
+								<Balance.WithFiat
+									Token={<Token role="img" aria-label={unit} />}
+									value={planckToUnitBn(
+										new BigNumber(validatorOwnStake),
+										units,
+									)}
+									currency={currency}
+								/>
+							) : (
+								<span>{selfStakePlaceholder}</span>
+							)}
+						</StatCard>
+						<StatCard title={t('nominatorStake', { ns: 'modals' })}>
+							{overviews ? (
+								<Balance.WithFiat
+									Token={<Token role="img" aria-label={unit} />}
+									value={planckToUnitBn(otherStake, units)}
+									currency={currency}
+								/>
+							) : (
+								<span>{nominatorStakePlaceholder}</span>
+							)}
+						</StatCard>
+					</StatGrid>
 				</Subheading>
 			</GraphContainer>
 			<div className={classes.sections}>

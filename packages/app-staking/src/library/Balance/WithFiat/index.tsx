@@ -20,7 +20,7 @@ export const WithFiat = ({
 	caretAsUnit = false,
 }: {
 	Token: ReactNode
-	value: number
+	value: number | BigNumber
 	currency: string
 	label?: ReactNode
 	caretAsUnit?: boolean
@@ -28,12 +28,12 @@ export const WithFiat = ({
 	const { network } = useNetwork()
 	const { units } = getStakingChainData(network)
 
-	const valueFormatted =
-		String(value) === '0' ? 0 : new BigNumber(value).toFormat(units)
+	const amount = new BigNumber(value)
+	const valueFormatted = amount.isZero() ? 0 : amount.toFormat(units)
 	const labelDisplay = caretAsUnit ? (
-		value > 0 ? (
+		amount.gt(0) ? (
 			<FontAwesomeIcon icon={faCaretUp} color="var(--status-success)" />
-		) : value < 0 ? (
+		) : amount.lt(0) ? (
 			<FontAwesomeIcon icon={faCaretDown} color="var(--status-danger)" />
 		) : null
 	) : (

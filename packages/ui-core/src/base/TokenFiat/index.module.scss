@@ -9,8 +9,8 @@
 
 	> div {
 		&:first-child {
-			width: 3rem;
-			max-width: 3rem;
+			width: var(--token-fiat-icon-size, 3rem);
+			max-width: var(--token-fiat-icon-size, 3rem);
 		}
 
 		&:last-child {
@@ -20,7 +20,7 @@
 			> h1 {
 				color: var(--gray-900);
 				font-family: var(--font-family-mono);
-				font-size: 1.5rem;
+				font-size: var(--token-fiat-amount-font-size, 1.5rem);
 				margin-bottom: 0.3rem;
 				display: flex;
 				align-items: center;
@@ -29,7 +29,7 @@
 			> h3 {
 				color: var(--gray-900);
 				font-family: var(--font-family-mono);
-				font-size: 1.2rem;
+				font-size: var(--token-fiat-currency-font-size, 1.2rem);
 			}
 		}
 	}
