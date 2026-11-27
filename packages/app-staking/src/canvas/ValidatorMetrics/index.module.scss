@@ -1,0 +1,20 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.sections {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	margin: 1.5rem 0 3rem;
+}
+
+.graphPanel {
+	background-color: color-mix(in srgb, var(--bg-primary), var(--gray-500) 20%);
+	border-radius: 1.5rem;
+	padding: 2rem 1.5rem 0.5rem 0.8rem;
+	margin-top: 1rem;
+
+	@media (width <= 600px) {
+		padding: 0.75rem;
+	}
+}
