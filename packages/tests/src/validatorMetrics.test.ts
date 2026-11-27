@@ -1,20 +1,55 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { act, createElement, useSyncExternalStore } from 'react'
+import { createRoot } from 'react-dom/client'
+import { renderToStaticMarkup } from 'react-dom/server'
 import type { ValidatorOverviews } from 'types'
-import { beforeEach, expect, test, vi } from 'vitest'
-import { createElement } from '../../app-staking/node_modules/react/index.js'
-import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { ValidatorMetrics } from '../../app-staking/src/canvas/ValidatorMetrics'
+import { Metrics } from '../../app-staking/src/library/ListItem/Buttons/Metrics'
+import { RowActionsMenu } from '../../app-staking/src/library/ValidatorList/RowActionsMenu'
+import { Menu } from '../../ui-app/src/Menu'
 
-const { query } = vi.hoisted(() => ({ query: vi.fn() }))
+const { dom, query, state, listeners, openCanvas } = await vi.hoisted(
+	async () => {
+		const { JSDOM } = await import('jsdom')
+		const dom = new JSDOM('<!doctype html><html><body></body></html>')
+		vi.stubGlobal('window', dom.window)
+		vi.stubGlobal('document', dom.window.document)
+		return {
+			dom,
+			query: vi.fn(),
+			state: { api: true },
+			listeners: new Set<() => void>(),
+			openCanvas: vi.fn(),
+		}
+	},
+)
+vi.mock('library/Prompt/Confirm', () => ({ Confirm: () => null }))
+vi.mock('../../global-bus/src/index', () => ({
+	emitNotification: vi.fn(),
+}))
+vi.mock('../../hooks/src/useFavoriteValidators', () => ({
+	useFavoriteValidators: () => ({ favorites: [] }),
+}))
 vi.mock('../../data-gate/src/index', () => ({ useValidatorOverviews: query }))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
 }))
-vi.mock('../../hooks/src/usePlugins', () => ({
-	usePlugins: () => ({ pluginEnabled: () => true }),
-}))
+vi.mock('../../hooks/src/usePlugins', () => {
+	const subscribe = (listener: () => void) => {
+		listeners.add(listener)
+		return () => listeners.delete(listener)
+	}
+	const getSnapshot = () => state.api
+	return {
+		usePlugins: () => {
+			const enabled = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
+			return { pluginEnabled: () => enabled }
+		},
+	}
+})
 vi.mock('../../hooks/src/useApi', () => ({
 	useApi: () => ({ activeEra: { index: 100 } }),
 }))
@@ -27,8 +62,10 @@ vi.mock('../../assets/src/index', () => ({
 }))
 vi.mock('../../ui-overlay/src/index', () => ({
 	CloseCanvas: () => null,
+	usePrompt: () => ({}),
 	useOverlay: () => ({
 		canvas: {
+			openCanvas,
 			config: { options: { validator: 'validator', identity: 'Alice' } },
 		},
 	}),
@@ -42,7 +79,9 @@ vi.mock(
 		Polkicon: () => null,
 	}),
 )
-vi.mock('library/StatusLabel', () => ({ StatusLabel: () => null }))
+vi.mock('library/StatusLabel', () => ({
+	StatusLabel: ({ title }: { title: string }) => title,
+}))
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
 	() => ({ ActiveGraph: () => null }),
@@ -70,7 +109,33 @@ vi.mock(
 	}),
 )
 
-beforeEach(() => vi.clearAllMocks())
+let root: ReturnType<typeof createRoot>
+let container: HTMLDivElement
+
+beforeEach(() => {
+	vi.clearAllMocks()
+	state.api = true
+	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
+	vi.stubGlobal('window', dom.window)
+	vi.stubGlobal('document', dom.window.document)
+	container = document.createElement('div')
+	document.body.append(container)
+	root = createRoot(container)
+})
+
+afterEach(async () => {
+	await act(async () => root.unmount())
+	container.remove()
+	vi.unstubAllGlobals()
+})
+afterAll(() => dom.window.close())
+
+const setApiEnabled = async (enabled: boolean) => {
+	await act(async () => {
+		state.api = enabled
+		for (const listener of listeners) listener()
+	})
+}
 
 const renderMetrics = () =>
 	renderToStaticMarkup(createElement(ValidatorMetrics))
@@ -115,4 +180,61 @@ test('a completed snapshot without the validator has zero active-era stake', () 
 	const text = renderMetrics()
 	expect(text).toContain('selfStake: 0 DOT')
 	expect(text).toContain('nominatorStake: 0 DOT')
+})
+
+test('disabling the API hides the metrics button while the canvas stays open', async () => {
+	query.mockReturnValue({ data: new Map(), loading: false, error: null })
+	await act(async () => {
+		root.render([
+			createElement(Metrics, {
+				key: 'button',
+				address: 'validator',
+				display: 'Alice',
+				wide: true,
+			}),
+			createElement(ValidatorMetrics, { key: 'canvas' }),
+		])
+	})
+	const button = container.querySelector('button')!
+	expect(button.textContent).toBe('metrics')
+	await act(async () => button.click())
+	expect(openCanvas).toHaveBeenCalledWith({
+		key: 'ValidatorMetrics',
+		options: { validator: 'validator', identity: 'Alice' },
+		size: 'xl',
+	})
+	expect(container.textContent).toContain('selfStake')
+
+	await setApiEnabled(false)
+	expect(container.querySelector('button')).toBeNull()
+	expect(container.textContent).toContain('selfStake')
+	expect(container.textContent).toContain('stakingApiDisabled')
+})
+
+test('an open row menu hides the metrics action when the API is disabled', async () => {
+	await act(async () => {
+		root.render([
+			createElement(RowActionsMenu, {
+				key: 'trigger',
+				address: 'validator',
+				display: 'Alice',
+				showFavorite: false,
+				showMetrics: true,
+			}),
+			createElement(Menu, { key: 'menu' }),
+		])
+	})
+	await act(async () => container.querySelector('button')!.click())
+	expect(container.textContent).toContain('metrics')
+
+	await setApiEnabled(false)
+	expect(container.textContent).not.toContain('metrics')
+	expect(container.textContent).toContain('copyAddress')
+
+	await setApiEnabled(true)
+	const metricsButton = Array.from(container.querySelectorAll('button')).find(
+		(button) => button.textContent === 'metrics',
+	)
+	await act(async () => metricsButton!.click())
+	expect(openCanvas).toHaveBeenCalledOnce()
 })

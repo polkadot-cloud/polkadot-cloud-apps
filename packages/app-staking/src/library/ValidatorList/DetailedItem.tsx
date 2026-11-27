@@ -134,9 +134,7 @@ export const DetailedItem = ({
 			)}
 
 			{displayFor === 'default' && (
-				<ListItem.Action wide>
-					<Metrics address={address} display={validatorDisplay} />
-				</ListItem.Action>
+				<Metrics address={address} display={validatorDisplay} wide />
 			)}
 			{showRetainmentHistory && (
 				<ListItem.Action wide>
