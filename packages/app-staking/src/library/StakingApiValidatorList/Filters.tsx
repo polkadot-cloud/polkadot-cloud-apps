@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTheme } from 'hooks/useTheme'
 import { Popover } from 'radix-ui'
 import { useTranslation } from 'react-i18next'
-import { type BrowserFilters, getGroupOptions } from './filtersConfig'
+import {
+	type BrowserFilters,
+	exclusionSwitches,
+	getGroupOptions,
+} from './filtersConfig'
 import {
 	ApiFilterRow,
 	FilterButton,
@@ -29,46 +33,93 @@ interface FilterProps {
 	onChange: (changes: Partial<BrowserFilters>) => void
 }
 
-export const FilterSwitch = ({
-	label,
-	enabled,
-	onClick,
-}: {
-	label: string
-	enabled: boolean
-	onClick: () => void
-}) => (
-	<FilterButton type="button" aria-pressed={enabled} onClick={onClick}>
-		<SwitchTrack $active={enabled} aria-hidden />
-		{label}
-	</FilterButton>
-)
+const nodeSwitches = [
+	{ key: 'active', label: 'activeValidators' } as const,
+	...exclusionSwitches,
+]
 
-export const Exclusions = ({ filters, onChange }: FilterProps) => {
+export const FilterSwitches = ({
+	filters,
+	onChange,
+	includeActive = false,
+}: FilterProps & { includeActive?: boolean }) => {
 	const { t } = useTranslation('app')
 	return (
-		<>
-			<FilterSwitch
-				label={t('blockedNominations')}
-				enabled={filters.excludeBlocked}
-				onClick={() => onChange({ excludeBlocked: !filters.excludeBlocked })}
-			/>
-			<FilterSwitch
-				label={t('missingIdentity')}
-				enabled={filters.excludeMissingIdentity}
-				onClick={() =>
-					onChange({ excludeMissingIdentity: !filters.excludeMissingIdentity })
-				}
-			/>
-		</>
+		<FilterGroup>
+			<legend>{t(includeActive ? 'filter' : 'exclude')}</legend>
+			<FilterButtons>
+				{(includeActive ? nodeSwitches : exclusionSwitches).map(
+					({ key, label }) => {
+						const enabled = !!filters[key]
+						// Turning off the node browser's active-only switch restores all statuses.
+						const value = key === 'active' && enabled ? undefined : !enabled
+						return (
+							<FilterButton
+								key={key}
+								type="button"
+								aria-pressed={enabled}
+								onClick={() => onChange({ [key]: value })}
+							>
+								<SwitchTrack aria-hidden />
+								{t(label)}
+							</FilterButton>
+						)
+					},
+				)}
+			</FilterButtons>
+		</FilterGroup>
 	)
 }
 
-export const ApiFilters = ({ filters, onChange }: FilterProps) => {
+const ShowOnly = ({ filters, onChange }: FilterProps) => {
 	const { t } = useTranslation('app')
 	const { themeElementRef } = useTheme()
 	const groups = getGroupOptions(filters)
 	const { matchAny = [] } = filters
+	return (
+		<Popover.Root>
+			<Popover.Trigger asChild>
+				<FilterButton
+					type="button"
+					disabled={groups.every(({ disabled }) => disabled)}
+				>
+					{t('showOnly')}
+					{matchAny.length > 0 && ` (${matchAny.length})`}
+					<FontAwesomeIcon icon={faCaretDown} aria-hidden />
+				</FilterButton>
+			</Popover.Trigger>
+			<Popover.Portal container={themeElementRef.current}>
+				<FilterPopover
+					align="start"
+					sideOffset={4}
+					collisionPadding={12}
+					aria-label={t('showOnly')}
+				>
+					{groups.map(({ group, label, disabled }) => (
+						<label key={group}>
+							<input
+								type="checkbox"
+								disabled={disabled}
+								checked={matchAny.includes(group)}
+								onChange={({ currentTarget: { checked } }) =>
+									onChange({
+										matchAny: checked
+											? [...matchAny, group]
+											: matchAny.filter((item) => item !== group),
+									})
+								}
+							/>
+							{t(label)}
+						</label>
+					))}
+				</FilterPopover>
+			</Popover.Portal>
+		</Popover.Root>
+	)
+}
+
+export const ApiFilters = (props: FilterProps) => {
+	const { t } = useTranslation('app')
 	return (
 		<ApiFilterRow>
 			<FilterGroup>
@@ -78,59 +129,16 @@ export const ApiFilters = ({ filters, onChange }: FilterProps) => {
 						<OrderTab
 							key={label}
 							type="button"
-							$active={filters.active === active}
-							aria-pressed={filters.active === active}
-							onClick={() => onChange({ active })}
+							aria-pressed={props.filters.active === active}
+							onClick={() => props.onChange({ active })}
 						>
 							{t(label)}
 						</OrderTab>
 					))}
 				</OrderTabs>
 			</FilterGroup>
-			<FilterGroup>
-				<legend>{t('exclude')}</legend>
-				<FilterButtons>
-					<Exclusions filters={filters} onChange={onChange} />
-				</FilterButtons>
-			</FilterGroup>
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<FilterButton
-						type="button"
-						disabled={groups.every(({ disabled }) => disabled)}
-					>
-						{t('showOnly')}
-						{matchAny.length > 0 && ` (${matchAny.length})`}
-						<FontAwesomeIcon icon={faCaretDown} aria-hidden />
-					</FilterButton>
-				</Popover.Trigger>
-				<Popover.Portal container={themeElementRef.current}>
-					<FilterPopover
-						align="start"
-						sideOffset={4}
-						collisionPadding={12}
-						aria-label={t('showOnly')}
-					>
-						{groups.map(({ group, label, disabled }) => (
-							<label key={group}>
-								<input
-									type="checkbox"
-									disabled={disabled}
-									checked={matchAny.includes(group)}
-									onChange={({ currentTarget: { checked } }) =>
-										onChange({
-											matchAny: checked
-												? [...matchAny, group]
-												: matchAny.filter((item) => item !== group),
-										})
-									}
-								/>
-								{t(label)}
-							</label>
-						))}
-					</FilterPopover>
-				</Popover.Portal>
-			</Popover.Root>
+			<FilterSwitches {...props} />
+			<ShowOnly {...props} />
 		</ApiFilterRow>
 	)
 }

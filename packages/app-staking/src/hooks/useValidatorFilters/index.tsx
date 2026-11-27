@@ -4,7 +4,7 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useValidatorOverviews } from 'data-gate'
 import type { AnyFilter } from 'library/Filter/types'
-import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
+import type { ValidatorListConfig } from 'library/StakingApiValidatorList/filtersConfig'
 import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = (addresses: string[] = []) => {

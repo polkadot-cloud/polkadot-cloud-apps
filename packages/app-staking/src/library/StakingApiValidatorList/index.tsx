@@ -24,11 +24,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { ButtonSecondary } from 'ui-buttons'
+import { Controls } from './Controls'
 import {
-	Controls,
 	DEFAULT_VALIDATOR_LIST_CONFIG,
 	type ValidatorListConfig,
-} from './Controls'
+} from './filtersConfig'
 import { Item } from './Item'
 import { ListStatus, ResultSummary } from './styles'
 

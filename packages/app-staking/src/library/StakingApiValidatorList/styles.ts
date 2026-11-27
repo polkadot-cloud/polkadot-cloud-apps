@@ -134,9 +134,8 @@ export const FilterPopover = styled(Popover.Content)`
   }
 `
 
-export const SwitchTrack = styled.span<{ $active: boolean }>`
-  background: ${(props) =>
-		props.$active ? 'var(--gray-1000)' : 'var(--gray-700)'};
+export const SwitchTrack = styled.span`
+  background: var(--gray-700);
   border-radius: 1rem;
   display: flex;
   flex: 0 0 auto;
@@ -151,9 +150,16 @@ export const SwitchTrack = styled.span<{ $active: boolean }>`
     box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
     content: '';
     height: 0.87rem;
-    transform: translateX(${(props) => (props.$active ? '0.95rem' : '0')});
     transition: transform var(--transition-duration);
     width: 0.87rem;
+  }
+
+  [aria-pressed='true'] > & {
+    background: var(--gray-1000);
+
+    &::after {
+      transform: translateX(0.95rem);
+    }
   }
 `
 
@@ -169,12 +175,11 @@ export const OrderTabs = styled.div<{ $columns?: number }>`
   padding: 0.25rem;
 `
 
-export const OrderTab = styled.button<{ $active: boolean }>`
-  background: ${(props) =>
-		props.$active ? 'var(--bg-primary)' : 'transparent'};
+export const OrderTab = styled.button`
+  background: transparent;
   border: 0;
   border-radius: 0.6rem;
-  color: ${(props) => (props.$active ? 'var(--gray-1000)' : 'var(--gray-900)')};
+  color: var(--gray-900);
   cursor: pointer;
   font-family: var(--font-family-semibold);
   font-size: 1rem;
@@ -185,6 +190,11 @@ export const OrderTab = styled.button<{ $active: boolean }>`
     background var(--transition-duration),
     color var(--transition-duration);
   white-space: nowrap;
+
+  &:is([aria-pressed='true'], [aria-selected='true']) {
+    background: var(--bg-primary);
+    color: var(--gray-1000);
+  }
 
   &:hover {
     background: var(--bg-primary);

@@ -3,7 +3,7 @@
 
 import type { ListFormat } from 'contexts/List/types'
 import type { ValidatorListEntry } from 'contexts/Validators/types'
-import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
+import type { ValidatorListConfig } from 'library/StakingApiValidatorList/filtersConfig'
 import type {
 	ValidatorAvgRewardRateBatch,
 	ValidatorEraPoints,
