@@ -420,6 +420,7 @@
 		"selfStakeChange": "自己ステークの変化",
 		"send": "送金",
 		"share": "共有",
+		"showOnly": "絞り込み",
 		"sign": "署名",
 		"signPolkadotVault": "Polkadot Vaultから署名",
 		"signedByController": "コントローラーによって署名済み",

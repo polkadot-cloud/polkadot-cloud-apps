@@ -421,6 +421,7 @@
 		"selfStakeChange": "Variation du stake personnel",
 		"send": "Envoyer",
 		"share": "Partager",
+		"showOnly": "Afficher uniquement",
 		"sign": "Signer",
 		"signPolkadotVault": "Signer depuis Polkadot Vault",
 		"signedByController": "Signé par le contrôleur",

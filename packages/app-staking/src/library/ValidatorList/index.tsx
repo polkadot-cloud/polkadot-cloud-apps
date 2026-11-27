@@ -31,7 +31,6 @@ import { useValidatorDetails } from './useValidatorDetails'
 
 const DEFAULT_CONFIG: ValidatorListConfig = {
 	filters: {
-		activeOnly: false,
 		excludeBlocked: false,
 		excludeMissingIdentity: false,
 	},

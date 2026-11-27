@@ -420,6 +420,7 @@
 		"selfStakeChange": "Self stake change",
 		"send": "Send",
 		"share": "Share",
+		"showOnly": "Show only",
 		"sign": "Sign",
 		"signPolkadotVault": "Sign From Polkadot Vault",
 		"signedByController": "Signed by Controller",

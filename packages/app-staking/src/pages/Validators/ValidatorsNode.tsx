@@ -60,7 +60,7 @@ export const ValidatorsNode = ({
 									selectable={false}
 									defaultConfig={{
 										filters: {
-											activeOnly: true,
+											active: true,
 											excludeBlocked: true,
 											excludeMissingIdentity: true,
 										},

@@ -170,6 +170,7 @@ export const StakingApiValidatorListInner = ({
 		<ListWrapper>
 			<List $flexBasisLarge="50%" $twoColumnMinWidth={1350}>
 				<Controls
+					apiFilters
 					config={config}
 					disabled={loading}
 					onApply={applyConfig}

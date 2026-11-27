@@ -420,6 +420,7 @@
 		"selfStakeChange": "Änderung des Selbsteinsatzes",
 		"send": "Senden",
 		"share": "Teilen",
+		"showOnly": "Nur anzeigen",
 		"sign": "Signieren",
 		"signPolkadotVault": "Von Polkadot Vault signieren",
 		"signedByController": "Signiert vom Controller",

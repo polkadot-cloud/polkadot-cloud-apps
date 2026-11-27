@@ -428,6 +428,7 @@
 		"selfStakeChange": "Изменение собственного стейка",
 		"send": "Отправить",
 		"share": "Поделиться",
+		"showOnly": "Показать только",
 		"sign": "Подписать",
 		"signPolkadotVault": "Подписать из Polkadot Vault",
 		"signedByController": "Подписано контроллером",

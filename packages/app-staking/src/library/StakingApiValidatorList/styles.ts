@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { Popover } from 'radix-ui'
 import styled from 'styled-components'
 
 export const ControlsForm = styled.form`
@@ -27,11 +28,14 @@ export const SearchField = styled.label`
   }
 `
 
-export const ConfigRow = styled.div`
+export const ConfigRow = styled.div<{ $apiFilters: boolean }>`
   align-items: end;
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: max-content minmax(31rem, 36rem) auto;
+  grid-template-columns: ${({ $apiFilters }) =>
+		$apiFilters
+			? 'minmax(0, 36rem) auto'
+			: 'max-content minmax(31rem, 36rem) auto'};
   justify-content: space-between;
 
   @media (max-width: 1350px) {
@@ -60,7 +64,7 @@ export const FilterGroup = styled.fieldset`
 
 export const FilterButtons = styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.55rem;
 `
 
@@ -84,9 +88,49 @@ export const FilterButton = styled.button`
     transform var(--transition-duration);
   white-space: nowrap;
 
-  &:hover {
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:hover:not(:disabled) {
     border-color: var(--gray-700);
     transform: translateY(-1px);
+  }
+`
+
+export const ApiFilterRow = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+`
+
+export const FilterPopover = styled(Popover.Content)`
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-500);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 2rem);
+  padding: 0.9rem;
+  z-index: 99;
+
+  label {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 0.55rem;
+    padding: 0.5rem 0;
+    color: var(--gray-900);
+  }
+
+  label:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  input {
+    accent-color: var(--gray-1000);
   }
 `
 

@@ -416,6 +416,7 @@
 		"selfStakeChange": "自有质押变化",
 		"send": "发送",
 		"share": "分享",
+		"showOnly": "仅显示",
 		"sign": "签署",
 		"signPolkadotVault": "请在Polkadot Vault上签名",
 		"signedByController": "由Controller签署",
