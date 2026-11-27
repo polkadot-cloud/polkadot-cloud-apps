@@ -62,6 +62,7 @@ export const useValidatorFromUrl = () => {
 				identity,
 			},
 			size: 'xl' as const,
+			variant: 'card' as const,
 		}
 
 		openedRef.current = validator

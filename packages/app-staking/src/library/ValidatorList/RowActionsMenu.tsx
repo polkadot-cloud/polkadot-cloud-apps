@@ -165,6 +165,7 @@ export const RowActionsMenu = ({
 					identity: display,
 				},
 				size: 'xl',
+				variant: 'card',
 			}),
 	}
 

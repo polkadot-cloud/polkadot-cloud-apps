@@ -27,6 +27,7 @@ export const Metrics = ({ display, address, outline, wide }: MetricsProps) => {
 							identity: display,
 						},
 						size: 'xl',
+						variant: 'card',
 					})
 				}
 			>

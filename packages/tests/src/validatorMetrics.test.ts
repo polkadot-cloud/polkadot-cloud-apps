@@ -56,7 +56,6 @@ vi.mock('../../hooks/src/usePlugins', () => {
 vi.mock('../../hooks/src/useApi', () => ({
 	useApi: () => ({ activeEra: { index: 100 } }),
 }))
-vi.mock('../../hooks/src/useUi', () => ({ useUi: () => ({}) }))
 vi.mock('../../consts/src/util', () => ({
 	getStakingChainData: () => ({ unit: 'DOT', units: 10 }),
 }))
@@ -72,9 +71,6 @@ vi.mock('../../ui-overlay/src/index', () => ({
 			config: { options: { validator: 'validator', identity: 'Alice' } },
 		},
 	}),
-}))
-vi.mock('../../hooks/src/useSize', () => ({
-	useSize: () => ({ width: 400, height: 250 }),
 }))
 vi.mock(
 	'../../app-staking/node_modules/@polkadot-cloud/ui/polkicon/index.js',
@@ -219,6 +215,7 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 		key: 'ValidatorMetrics',
 		options: { validator: 'validator', identity: 'Alice' },
 		size: 'xl',
+		variant: 'card',
 	})
 	expect(container.textContent).toContain('selfStake')
 
@@ -253,5 +250,7 @@ test('an open row menu hides the metrics action when the API is disabled', async
 		(button) => button.textContent === 'metrics',
 	)
 	await act(async () => metricsButton!.click())
-	expect(openCanvas).toHaveBeenCalledOnce()
+	expect(openCanvas).toHaveBeenCalledExactlyOnceWith(
+		expect.objectContaining({ variant: 'card' }),
+	)
 })
