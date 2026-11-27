@@ -2,34 +2,57 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { ellipsisFn, maxBigInt } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useValidatorOverviews } from 'data-gate'
+import {
+	useValidatorOverviews,
+	useValidatorSelfStake,
+	useValidatorTotalBacking,
+} from 'data-gate'
 import { useApi } from 'hooks/useApi'
+import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
-import { useSize } from 'hooks/useSize'
-import { useUi } from 'hooks/useUi'
+import { useTheme } from 'hooks/useTheme'
+import { Balance } from 'library/Balance'
+import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { StatusLabel } from 'library/StatusLabel'
-import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Tooltip } from 'ui-core/base'
 import {
 	AccountTitle,
 	GraphContainer,
 	GraphInner,
 	Head,
 	Main,
-	Stat,
+	StatCard,
+	StatGrid,
 	Subheading,
 } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
-import { formatSize, planckToUnitBn } from 'utils'
+import { planckToUnitBn } from 'utils'
 import { ActiveGraph as ActiveGraphEraPoints } from './EraPoints/ActiveGraph'
 import { InactiveGraph as InactiveGraphEraPoints } from './EraPoints/InactiveGraph'
+import classes from './index.module.scss'
 import { ActiveGraph as ActiveGraphRewards } from './Rewards/ActiveGraph'
 import { InactiveGraph as InactiveGraphRewards } from './Rewards/InactiveGraph'
 import { ValidatorDiscovery } from './ValidatorDiscovery'
+
+const graphSize = { width: '100%', height: 250 }
+const charts = [
+	{
+		title: 'recentPerformance',
+		ActiveGraph: ActiveGraphEraPoints,
+		InactiveGraph: InactiveGraphEraPoints,
+	},
+	{
+		title: 'rewardHistory',
+		ActiveGraph: ActiveGraphRewards,
+		InactiveGraph: InactiveGraphRewards,
+	},
+] as const
 
 export const ValidatorMetrics = () => {
 	const { t } = useTranslation()
@@ -37,149 +60,139 @@ export const ValidatorMetrics = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { activeEra } = useApi()
+	const { currency } = useCurrency()
 	const { network } = useNetwork()
-	const { containerRefs } = useUi()
 	const { pluginEnabled } = usePlugins()
+	const { themeElementRef } = useTheme()
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
-	const validator = options!.validator
-	const { data: overviews, loading } = useValidatorOverviews([validator])
-	const identity = options!.identity
-	const stakePlaceholder = loading ? t('syncing', { ns: 'app' }) : '—'
+	const { validator, identity } = options!
+	const { data: overviews, loading: overviewsLoading } = useValidatorOverviews([
+		validator,
+	])
+	const selfStake = useValidatorSelfStake(validator)
+	const totalBacking = useValidatorTotalBacking(validator)
+	const stakingApiEnabled = pluginEnabled('staking_api')
+	const displayName = typeof identity === 'string' ? identity.trim() : identity
+	const shortAddress = validator ? ellipsisFn(validator) : ''
+	const title =
+		displayName || shortAddress || t('validatorMetrics', { ns: 'modals' })
 
 	const overview = overviews?.get(validator)
-	const validatorOwnStake = new BigNumber(overview?.own ?? 0n)
-	const otherStake = BigNumber.max(
-		0,
-		new BigNumber(overview?.total ?? 0n).minus(validatorOwnStake),
-	)
-
-	const GRAPH_HEIGHT = 250
-
-	// Era points graph ref & sizing
-	const graphEraPointsRef = useRef<HTMLDivElement | null>(null)
-	const sizeEraPoints = useSize(graphEraPointsRef, {
-		outerElement: containerRefs?.mainInterface,
-	})
-	const graphSizeEraPoints = formatSize(sizeEraPoints, GRAPH_HEIGHT)
-
-	// token earned graph ref & sizing
-	const graphRewardsRef = useRef<HTMLDivElement | null>(null)
-	const sizeRewards = useSize(graphRewardsRef, {
-		outerElement: containerRefs?.mainInterface,
-	})
-	const graphSizeRewards = formatSize(sizeRewards, GRAPH_HEIGHT)
+	const stats = [
+		{ title: 'selfStake', ...selfStake },
+		{ title: 'totalBacking', ...totalBacking },
+		{
+			title: 'activeBacking',
+			data:
+				overviews &&
+				maxBigInt((overview?.total ?? 0n) - (overview?.own ?? 0n), 0n),
+			loading: overviewsLoading,
+		},
+	] as const
 
 	return (
-		<Main>
-			<Head>
-				<CloseCanvas />
-			</Head>
-			<AccountTitle>
-				<div>
+		<Main style={{ paddingTop: 0 }}>
+			<header className={classes.header}>
+				<Head>
+					<CloseCanvas />
+				</Head>
+				<AccountTitle
+					style={{
+						margin: '0',
+						paddingBottom: '1.25rem',
+						// The card clips the divider at its edges.
+						borderImage:
+							'linear-gradient(var(--gray-500), var(--gray-500)) 1 / 1 / 0 100vw',
+					}}
+				>
 					<div>
-						<Polkicon
-							address={validator}
-							background="transparent"
-							fontSize="4rem"
-						/>
+						<div>
+							<Polkicon
+								address={validator}
+								background="transparent"
+								fontSize="4rem"
+							/>
+						</div>
+						<div className={classes.identity}>
+							<h1>{title}</h1>
+							{validator && (
+								<h2 className={classes.address}>
+									<Tooltip
+										align="start"
+										container={themeElementRef.current || undefined}
+										side="top"
+										text={validator}
+									>
+										{/* biome-ignore lint/a11y/noNoninteractiveTabindex: Keyboard users need access to the full address tooltip. */}
+										<span tabIndex={0}>{shortAddress}</span>
+									</Tooltip>
+									<CopyAddress address={validator} />
+								</h2>
+							)}
+						</div>
 					</div>
-					<div>
-						<h1>{identity}</h1>
-					</div>
-				</div>
-			</AccountTitle>
+				</AccountTitle>
+			</header>
 			<GraphContainer>
 				<Subheading>
-					<h4>
-						<Stat withIcon>
-							<Token />
-							{t('selfStake', { ns: 'modals' })}:{' '}
-							{overviews
-								? `${planckToUnitBn(validatorOwnStake, units).toFormat()} ${unit}`
-								: stakePlaceholder}
-						</Stat>
-						<Stat withIcon>
-							<Token />
-							{t('nominatorStake', { ns: 'modals' })}:{' '}
-							{overviews
-								? `${planckToUnitBn(otherStake, units).decimalPlaces(0).toFormat()} ${unit}`
-								: stakePlaceholder}
-						</Stat>
-					</h4>
+					<h3>{t('backingOverview', { ns: 'app' })}</h3>
+					<StatGrid style={{ marginTop: '1rem' }}>
+						{stats.map(({ title, data, loading }) => (
+							<StatCard key={title} title={t(title, { ns: 'modals' })}>
+								{data == null ? (
+									<span>{loading ? t('syncing', { ns: 'app' }) : '—'}</span>
+								) : (
+									<Balance.WithFiat
+										compact
+										Token={<Token role="img" aria-label={unit} />}
+										value={planckToUnitBn(new BigNumber(data), units)}
+										currency={currency}
+									/>
+								)}
+							</StatCard>
+						))}
+					</StatGrid>
 				</Subheading>
 			</GraphContainer>
-			<div style={{ margin: '1.5rem 0 3rem 0' }}>
-				<Subheading>
-					<h3>{t('recentPerformance', { ns: 'app' })}</h3>
-				</Subheading>
-				<GraphInner
-					ref={graphEraPointsRef}
-					width={graphSizeEraPoints.width}
-					height={graphSizeEraPoints.height}
-				>
-					{pluginEnabled('staking_api') ? (
-						<ActiveGraphEraPoints
-							network={network}
-							validator={validator}
-							fromEra={Math.max(activeEra.index - 1, 0)}
-							width={graphSizeEraPoints.width}
-							height={graphSizeEraPoints.height}
-						/>
-					) : (
-						<>
-							<StatusLabel
-								status="active_service"
-								statusFor="staking_api"
-								title={t('stakingApiDisabled', { ns: 'pages' })}
-								topOffset="37%"
-							/>
-							<InactiveGraphEraPoints
-								width={graphSizeEraPoints.width}
-								height={graphSizeEraPoints.height}
-							/>
-						</>
-					)}
-				</GraphInner>
-				<Subheading>
-					<h3>{t('rewardHistory', { ns: 'app' })}</h3>
-				</Subheading>
-				<GraphInner
-					ref={graphRewardsRef}
-					width={graphSizeRewards.width}
-					height={graphSizeRewards.height}
-				>
-					{pluginEnabled('staking_api') ? (
-						<ActiveGraphRewards
-							network={network}
-							validator={validator}
-							fromEra={Math.max(activeEra.index - 1, 0)}
-							width={graphSizeRewards.width}
-							height={graphSizeRewards.height}
-						/>
-					) : (
-						<>
-							<StatusLabel
-								status="active_service"
-								statusFor="staking_api"
-								title={t('stakingApiDisabled', { ns: 'pages' })}
-								topOffset="37%"
-							/>
-							<InactiveGraphRewards
-								width={graphSizeRewards.width}
-								height={graphSizeRewards.height}
-							/>
-						</>
-					)}
-				</GraphInner>
-				{pluginEnabled('staking_api') && (
-					<>
-						<Subheading style={{ marginTop: '1rem' }}>
+			<div className={classes.sections}>
+				{charts.map(({ title, ActiveGraph, InactiveGraph }) => (
+					<section key={title}>
+						<Subheading>
+							<h3>{t(title, { ns: 'app' })}</h3>
+						</Subheading>
+						<div className={classes.graphPanel}>
+							<GraphInner {...graphSize} noSpacing>
+								{stakingApiEnabled ? (
+									<ActiveGraph
+										network={network}
+										validator={validator}
+										fromEra={Math.max(activeEra.index - 1, 0)}
+										{...graphSize}
+									/>
+								) : (
+									<>
+										<StatusLabel
+											status="active_service"
+											statusFor="staking_api"
+											title={t('stakingApiDisabled', { ns: 'pages' })}
+											topOffset="37%"
+										/>
+										<InactiveGraph {...graphSize} />
+									</>
+								)}
+							</GraphInner>
+						</div>
+					</section>
+				))}
+				{stakingApiEnabled && (
+					<section>
+						<Subheading>
 							<h3>{t('operatorDetails', { ns: 'app' })}</h3>
 						</Subheading>
 						<ValidatorDiscovery network={network} address={validator} />
-					</>
+					</section>
 				)}
 			</div>
 		</Main>

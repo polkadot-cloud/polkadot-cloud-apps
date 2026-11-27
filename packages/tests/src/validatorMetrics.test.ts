@@ -1,24 +1,84 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { Tooltip } from 'radix-ui'
+import { act, createElement, type ReactNode, useSyncExternalStore } from 'react'
+import { createRoot } from 'react-dom/client'
 import type { ValidatorOverviews } from 'types'
-import { beforeEach, expect, test, vi } from 'vitest'
-import { createElement } from '../../app-staking/node_modules/react/index.js'
-import { renderToStaticMarkup } from '../../app-staking/node_modules/react-dom/server.node.js'
+import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { ValidatorMetrics } from '../../app-staking/src/canvas/ValidatorMetrics'
+import { Metrics } from '../../app-staking/src/library/ListItem/Buttons/Metrics'
+import { RowActionsMenu } from '../../app-staking/src/library/ValidatorList/RowActionsMenu'
+import { formatFiatCurrency } from '../../locales/src/util/currency'
+import { Menu } from '../../ui-app/src/Menu'
 
-const { query } = vi.hoisted(() => ({ query: vi.fn() }))
-vi.mock('../../data-gate/src/index', () => ({ useValidatorOverviews: query }))
+const {
+	dom,
+	query,
+	selfStakeQuery,
+	totalBackingQuery,
+	state,
+	listeners,
+	openCanvas,
+} = await vi.hoisted(async () => {
+	const { JSDOM } = await import('jsdom')
+	const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+		pretendToBeVisual: true,
+	})
+	vi.stubGlobal('window', dom.window)
+	vi.stubGlobal('document', dom.window.document)
+	return {
+		dom,
+		query: vi.fn(),
+		selfStakeQuery: vi.fn(),
+		totalBackingQuery: vi.fn(),
+		state: {
+			api: true,
+			price: 2,
+			validator: 'validator',
+			identity: 'Alice' as ReactNode,
+		},
+		listeners: new Set<() => void>(),
+		openCanvas: vi.fn(),
+	}
+})
+vi.mock('library/Prompt/Confirm', () => ({ Confirm: () => null }))
+vi.mock('../../global-bus/src/index', () => ({
+	emitNotification: vi.fn(),
+}))
+vi.mock('../../hooks/src/useFavoriteValidators', () => ({
+	useFavoriteValidators: () => ({ favorites: [] }),
+}))
+vi.mock('../../data-gate/src/index', () => ({
+	useValidatorOverviews: query,
+	useValidatorSelfStake: selfStakeQuery,
+	useValidatorTotalBacking: totalBackingQuery,
+}))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
 }))
-vi.mock('../../hooks/src/usePlugins', () => ({
-	usePlugins: () => ({ pluginEnabled: () => true }),
+vi.mock('../../hooks/src/useCurrency', () => ({
+	useCurrency: () => ({ currency: 'GBP' }),
 }))
+vi.mock('../../hooks/src/useTokenPrices', () => ({
+	useTokenPrices: () => ({ price: state.price }),
+}))
+vi.mock('../../hooks/src/usePlugins', () => {
+	const subscribe = (listener: () => void) => {
+		listeners.add(listener)
+		return () => listeners.delete(listener)
+	}
+	const getSnapshot = () => state.api
+	return {
+		usePlugins: () => {
+			const enabled = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
+			return { pluginEnabled: () => enabled }
+		},
+	}
+})
 vi.mock('../../hooks/src/useApi', () => ({
 	useApi: () => ({ activeEra: { index: 100 } }),
 }))
-vi.mock('../../hooks/src/useUi', () => ({ useUi: () => ({}) }))
 vi.mock('../../consts/src/util', () => ({
 	getStakingChainData: () => ({ unit: 'DOT', units: 10 }),
 }))
@@ -27,14 +87,15 @@ vi.mock('../../assets/src/index', () => ({
 }))
 vi.mock('../../ui-overlay/src/index', () => ({
 	CloseCanvas: () => null,
+	usePrompt: () => ({}),
 	useOverlay: () => ({
 		canvas: {
-			config: { options: { validator: 'validator', identity: 'Alice' } },
+			openCanvas,
+			config: {
+				options: { validator: state.validator, identity: state.identity },
+			},
 		},
 	}),
-}))
-vi.mock('../../hooks/src/useSize', () => ({
-	useSize: () => ({ width: 400, height: 250 }),
 }))
 vi.mock(
 	'../../app-staking/node_modules/@polkadot-cloud/ui/polkicon/index.js',
@@ -42,22 +103,32 @@ vi.mock(
 		Polkicon: () => null,
 	}),
 )
-vi.mock('library/StatusLabel', () => ({ StatusLabel: () => null }))
+vi.mock('library/StatusLabel', () => ({
+	StatusLabel: ({ title }: { title: string }) => title,
+}))
+vi.mock(
+	'library/Balance',
+	() => import('../../app-staking/src/library/Balance'),
+)
+vi.mock(
+	'library/ListItem/Buttons/CopyAddress',
+	() => import('../../app-staking/src/library/ListItem/Buttons/CopyAddress'),
+)
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
-	() => ({ ActiveGraph: () => null }),
+	() => ({ ActiveGraph: () => 'EraPointsActiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/InactiveGraph',
-	() => ({ InactiveGraph: () => null }),
+	() => ({ InactiveGraph: () => 'EraPointsInactiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/Rewards/ActiveGraph',
-	() => ({ ActiveGraph: () => null }),
+	() => ({ ActiveGraph: () => 'RewardsActiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/Rewards/InactiveGraph',
-	() => ({ InactiveGraph: () => null }),
+	() => ({ InactiveGraph: () => 'RewardsInactiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/ValidatorDiscovery',
@@ -66,53 +137,284 @@ vi.mock(
 vi.mock(
 	'../../app-staking/node_modules/react-i18next/dist/es/index.js',
 	() => ({
-		useTranslation: () => ({ t: (key: string) => key }),
+		useTranslation: () => ({
+			t: (key: string) => key,
+			i18n: { resolvedLanguage: 'en' },
+		}),
 	}),
 )
 
-beforeEach(() => vi.clearAllMocks())
+let root: ReturnType<typeof createRoot>
+let container: HTMLDivElement
 
-const renderMetrics = () =>
-	renderToStaticMarkup(createElement(ValidatorMetrics))
-		.replace(/<[^>]+>/g, '')
-		.replace(/\s+/g, ' ')
+beforeEach(() => {
+	vi.clearAllMocks()
+	state.api = true
+	state.price = 2
+	state.validator = 'validator'
+	state.identity = 'Alice'
+	query.mockReturnValue({ data: undefined, loading: false })
+	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
+	totalBackingQuery.mockReturnValue({ data: null, loading: false })
+	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
+	vi.stubGlobal('window', dom.window)
+	vi.stubGlobal('document', dom.window.document)
+	vi.stubGlobal('open', dom.window.open)
+	container = document.createElement('div')
+	document.body.append(container)
+	root = createRoot(container)
+})
+
+afterEach(async () => {
+	await act(async () => root.unmount())
+	container.remove()
+	vi.unstubAllGlobals()
+})
+afterAll(() => dom.window.close())
+
+const setApiEnabled = async (enabled: boolean) => {
+	await act(async () => {
+		state.api = enabled
+		for (const listener of listeners) listener()
+	})
+}
+
+const metricsCanvas = () =>
+	createElement(
+		Tooltip.Provider,
+		{ key: 'canvas' },
+		createElement(ValidatorMetrics),
+	)
+
+const renderMetrics = async () => {
+	await act(async () => root.render(metricsCanvas()))
+	return Object.fromEntries(
+		Array.from(container.querySelectorAll('h4'), (label) => {
+			const stat = label.parentElement!
+			return [
+				label.textContent,
+				{
+					stake:
+						stat.querySelector('.odometer')?.textContent ??
+						stat.querySelector('h1')?.textContent ??
+						stat.querySelector('span')?.textContent,
+					fiat: stat.querySelector('h3')?.textContent,
+				},
+			]
+		}),
+	)
+}
+
+const address = '5GrwvaEF5zXb26Fz9rcQpDWS9rLLK46TzRxFxt2apDudsKjU'
+const shortAddress = '5Grwva...udsKjU'
+
+test.each([undefined, null, '  '])(
+	'uses the truncated address when the display name is %s',
+	async (identity) => {
+		state.validator = address
+		state.identity = identity
+		await renderMetrics()
+		expect(container.querySelector('h1')?.textContent).toBe(shortAddress)
+		expect(container.querySelector('h2')?.textContent).toBe(shortAddress)
+	},
+)
+
+test('shows the display name and copies the full address from the subtitle', async () => {
+	state.validator = address
+	state.identity = createElement('span', null, 'Alice')
+	const writeText = vi.fn().mockResolvedValue(undefined)
+	vi.stubGlobal('navigator', { clipboard: { writeText } })
+	await renderMetrics()
+	expect(container.querySelector('h1')?.textContent).toBe('Alice')
+	const subtitle = container.querySelector('h2')!
+	expect(subtitle.textContent).toBe(shortAddress)
+	const copyButton = subtitle.querySelector<HTMLButtonElement>(
+		'button[aria-label="copyAddress"]',
+	)!
+	await act(async () => copyButton.click())
+	expect(writeText).toHaveBeenCalledExactlyOnceWith(address)
+})
+
+test('shows the full address when the subtitle address receives focus', async () => {
+	state.validator = address
+	vi.stubGlobal('CustomEvent', dom.window.CustomEvent)
+	vi.stubGlobal('Element', dom.window.Element)
+	vi.stubGlobal('HTMLElement', dom.window.HTMLElement)
+	vi.stubGlobal('Node', dom.window.Node)
+	vi.stubGlobal('getComputedStyle', dom.window.getComputedStyle)
+	vi.stubGlobal(
+		'ResizeObserver',
+		class {
+			observe() {}
+			unobserve() {}
+			disconnect() {}
+		},
+	)
+	await renderMetrics()
+	const trigger = container.querySelector<HTMLElement>('h2 [tabindex="0"]')!
+	await act(async () => trigger.focus())
+	expect(document.querySelector('[role="tooltip"]')?.textContent).toBe(address)
+})
+
+test('omits the address subtitle when there is no address', async () => {
+	state.validator = ''
+	await renderMetrics()
+	expect(container.querySelector('h1')?.textContent).toBe('Alice')
+	expect(container.querySelector('h2')).toBeNull()
+})
 
 test.each([
 	{ loading: true, error: null, label: 'syncing' },
 	{ loading: false, error: new Error('offline'), label: '—' },
-])('unavailable metrics show $label without false zero stakes', (state) => {
-	query.mockReturnValue({ ...state, data: undefined })
-	const text = renderMetrics()
-	expect(text).toContain(`selfStake: ${state.label}`)
-	expect(text).toContain(`nominatorStake: ${state.label}`)
-	expect(text).not.toContain('0 DOT')
-	expect(query).toHaveBeenCalledWith(['validator'])
-})
+])(
+	'unavailable metrics show $label without false zero stakes',
+	async (state) => {
+		query.mockReturnValue({ ...state, data: undefined })
+		selfStakeQuery.mockReturnValue({ data: undefined, loading: state.loading })
+		totalBackingQuery.mockReturnValue({ data: null, loading: state.loading })
+		expect(await renderMetrics()).toEqual({
+			selfStake: { stake: state.label, fiat: undefined },
+			totalBacking: { stake: state.label, fiat: undefined },
+			activeBacking: { stake: state.label, fiat: undefined },
+		})
+		expect(query).toHaveBeenCalledWith(['validator'])
+		expect(selfStakeQuery).toHaveBeenCalledWith('validator')
+		expect(totalBackingQuery).toHaveBeenCalledWith('validator')
+	},
+)
 
 test.each([null, new Error('refresh failed')])(
-	'loaded metrics retain stake through refresh errors: %s',
-	(error) => {
+	'loaded metrics retain compact stake and exact fiat values through refresh errors: %s',
+	async (error) => {
 		const data: ValidatorOverviews = new Map([
 			[
 				'validator',
 				{
 					own: 25000000000n,
-					total: 125000000000n,
+					total: 125123450000n,
 					nominatorCount: 1,
 					pageCount: 1,
 				},
 			],
 		])
 		query.mockReturnValue({ data, loading: false, error })
-		const text = renderMetrics()
-		expect(text).toContain('selfStake: 2.5 DOT')
-		expect(text).toContain('nominatorStake: 10 DOT')
+		selfStakeQuery.mockReturnValue({
+			data: 123456789123456789n,
+			loading: false,
+		})
+		totalBackingQuery.mockReturnValue({ data: 54012345000000n, loading: false })
+		const metrics = await renderMetrics()
+		expect(Object.keys(metrics)).toEqual([
+			'selfStake',
+			'totalBacking',
+			'activeBacking',
+		])
+		expect(metrics).toEqual({
+			selfStake: {
+				stake: '12.3M',
+				fiat: formatFiatCurrency(24_691_357.82, 'GBP'),
+			},
+			totalBacking: {
+				stake: '5.4K',
+				fiat: formatFiatCurrency(10_802.47, 'GBP'),
+			},
+			activeBacking: {
+				stake: '10.0123450000',
+				fiat: formatFiatCurrency(20.02, 'GBP'),
+			},
+		})
 	},
 )
 
-test('a completed snapshot without the validator has zero active-era stake', () => {
+test('a waiting validator shows its ledger total and zero active backing without a price', async () => {
 	query.mockReturnValue({ data: new Map(), loading: false, error: null })
-	const text = renderMetrics()
-	expect(text).toContain('selfStake: 0 DOT')
-	expect(text).toContain('nominatorStake: 0 DOT')
+	selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
+	totalBackingQuery.mockReturnValue({ data: 52000000000n, loading: false })
+	state.price = 0
+	expect(await renderMetrics()).toEqual({
+		selfStake: { stake: '3.50', fiat: '—' },
+		totalBacking: { stake: '5.20', fiat: '—' },
+		activeBacking: { stake: '0.00', fiat: '—' },
+	})
+})
+
+test('a missing ledger is distinct from a zero ledger total', async () => {
+	query.mockReturnValue({ data: new Map(), loading: false, error: null })
+	selfStakeQuery.mockReturnValue({ data: null, loading: false })
+	expect((await renderMetrics()).selfStake).toEqual({
+		stake: '—',
+		fiat: undefined,
+	})
+
+	selfStakeQuery.mockReturnValue({ data: 0n, loading: false })
+	expect((await renderMetrics()).selfStake).toEqual({
+		stake: '0.00',
+		fiat: formatFiatCurrency(0, 'GBP'),
+	})
+})
+
+test('disabling the API hides the metrics button while the canvas stays open', async () => {
+	await act(async () => {
+		root.render([
+			createElement(Metrics, {
+				key: 'button',
+				address: 'validator',
+				display: 'Alice',
+				wide: true,
+			}),
+			metricsCanvas(),
+		])
+	})
+	const button = container.querySelector('button')!
+	expect(button.textContent).toBe('metrics')
+	await act(async () => button.click())
+	expect(openCanvas).toHaveBeenCalledWith({
+		key: 'ValidatorMetrics',
+		options: { validator: 'validator', identity: 'Alice' },
+		size: 'xl',
+		variant: 'card',
+	})
+	const sections = container.querySelectorAll('section')
+	expect(sections[0].textContent).toContain('EraPointsActiveGraph')
+	expect(sections[1].textContent).toContain('RewardsActiveGraph')
+
+	await setApiEnabled(false)
+	expect(
+		container.querySelector('button[aria-label="copyAddress"]'),
+	).not.toBeNull()
+	expect(container.textContent).not.toContain('metrics')
+	expect(container.textContent).toContain('selfStake')
+	expect(container.textContent).toContain('stakingApiDisabled')
+	expect(sections[0].textContent).toContain('EraPointsInactiveGraph')
+	expect(sections[1].textContent).toContain('RewardsInactiveGraph')
+})
+
+test('an open row menu hides the metrics action when the API is disabled', async () => {
+	await act(async () => {
+		root.render([
+			createElement(RowActionsMenu, {
+				key: 'trigger',
+				address: 'validator',
+				display: 'Alice',
+				showFavorite: false,
+				showMetrics: true,
+			}),
+			createElement(Menu, { key: 'menu' }),
+		])
+	})
+	await act(async () => container.querySelector('button')!.click())
+	expect(container.textContent).toContain('metrics')
+
+	await setApiEnabled(false)
+	expect(container.textContent).not.toContain('metrics')
+	expect(container.textContent).toContain('copyAddress')
+
+	await setApiEnabled(true)
+	const metricsButton = Array.from(container.querySelectorAll('button')).find(
+		(button) => button.textContent === 'metrics',
+	)
+	await act(async () => metricsButton!.click())
+	expect(openCanvas).toHaveBeenCalledExactlyOnceWith(
+		expect.objectContaining({ variant: 'card' }),
+	)
 })

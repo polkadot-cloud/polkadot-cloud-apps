@@ -26,6 +26,7 @@ export type FavoriteProps = Outline & {
 export type MetricsProps = Outline & {
 	display: ReactNode | null
 	address: string
+	wide?: boolean
 }
 
 export type MoreProps = Outline & {

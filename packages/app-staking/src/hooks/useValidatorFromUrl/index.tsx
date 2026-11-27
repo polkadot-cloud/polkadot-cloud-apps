@@ -10,6 +10,7 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { useOverlay } from 'ui-overlay'
+import { validatorMetricsConfig } from '../../canvas/ValidatorMetrics/config'
 
 export const useValidatorFromUrl = () => {
 	const { t } = useTranslation('app')
@@ -38,9 +39,8 @@ export const useValidatorFromUrl = () => {
 			return
 		const prefs = getValidatorPrefs(validator)
 		if (prefs === undefined) return
-		const exists = prefs !== null
 
-		if (!exists) {
+		if (prefs === null) {
 			emitNotification({
 				title: t('invalidValidator'),
 				subtitle: `${t('validatorNotFound')}: ${validator.substring(0, 16)}...`,
@@ -53,16 +53,10 @@ export const useValidatorFromUrl = () => {
 			validatorIdentities[validator],
 			validatorSupers[validator],
 		)
-		const identity = identityDisplay.data?.display || validator
-
-		const config = {
-			key: 'ValidatorMetrics',
-			options: {
-				validator,
-				identity,
-			},
-			size: 'xl' as const,
-		}
+		const config = validatorMetricsConfig(
+			validator,
+			identityDisplay.data?.display,
+		)
 
 		openedRef.current = validator
 

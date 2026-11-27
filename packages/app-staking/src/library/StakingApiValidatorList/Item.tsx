@@ -180,9 +180,7 @@ export const Item = ({
 					<FavoriteValidator address={address} />
 				</ListItem.Action>
 			)}
-			<ListItem.Action wide>
-				<Metrics address={address} display={validatorDisplay} />
-			</ListItem.Action>
+			<Metrics address={address} display={validatorDisplay} wide />
 			{showRetainment && (
 				<ListItem.Action wide>
 					<RetainmentHistory

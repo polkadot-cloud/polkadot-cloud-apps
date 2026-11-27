@@ -1,0 +1,54 @@
+// Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+.header {
+	--header-background: color-mix(in srgb, var(--bg-primary), var(--gray-500) 12%);
+
+	// Paint to the card edges while the header content stays centered.
+	border-image: linear-gradient(var(--header-background) 0 0) 0 fill / 0 / 0 100vw;
+	margin-bottom: 1rem;
+	padding-top: 1.75rem;
+
+	@media (width <= 600px) {
+		padding-top: 2.5rem;
+	}
+}
+
+.identity {
+	min-width: 0;
+
+	> h1 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.address {
+	display: flex;
+	align-items: center;
+	column-gap: 0.2rem;
+	margin-top: 0.75rem;
+	color: var(--text-tertiary);
+	font-family: var(--font-family-mono);
+	font-size: 1.05rem;
+	line-height: 1.4rem;
+}
+
+.sections {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	margin: 1.5rem 0 3rem;
+}
+
+.graphPanel {
+	background-color: color-mix(in srgb, var(--bg-primary), var(--gray-500) 20%);
+	border-radius: 1.5rem;
+	padding: 2rem 1.5rem 0.5rem 0.8rem;
+	margin-top: 1rem;
+
+	@media (width <= 600px) {
+		padding: 0.75rem;
+	}
+}

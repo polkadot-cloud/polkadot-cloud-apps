@@ -68,6 +68,7 @@ export const ButtonCopy = ({
 					!children ? { ...style, width: size, height: size } : { ...style }
 				}
 				type="button"
+				aria-label={children == null ? tooltipText.copy : undefined}
 				ref={buttonRef}
 				className={baseClasses}
 				onClick={() => {

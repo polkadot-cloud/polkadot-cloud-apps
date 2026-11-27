@@ -164,13 +164,12 @@ export const DetailedItem = ({
 				</ListItem.Action>
 			)}
 			{displayFor !== 'canvas' && (
-				<ListItem.Action wide>
-					<Metrics
-						address={address}
-						display={validatorDisplay}
-						outline={outline}
-					/>
-				</ListItem.Action>
+				<Metrics
+					address={address}
+					display={validatorDisplay}
+					outline={outline}
+					wide
+				/>
 			)}
 			{showRetainmentHistory && (
 				<ListItem.Action wide>

@@ -16,6 +16,7 @@ import { StakingProductionURL } from 'consts'
 import { emitNotification } from 'global-bus'
 import { useFavoriteValidators } from 'hooks/useFavoriteValidators'
 import { type MenuItem, useMenu } from 'hooks/useMenu'
+import { usePlugins } from 'hooks/usePlugins'
 import { Confirm } from 'library/Prompt/Confirm'
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
@@ -23,6 +24,23 @@ import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { MenuList } from 'ui-app/Menu'
 import { useOverlay, usePrompt } from 'ui-overlay'
+import { validatorMetricsConfig } from '../../canvas/ValidatorMetrics/config'
+
+// The menu stores its content when opened, so check availability inside it.
+const RowActionsMenuList = ({
+	items,
+	metricsItem,
+}: {
+	items: MenuItem[]
+	metricsItem?: MenuItem
+}) => {
+	const { pluginEnabled } = usePlugins()
+	const visibleItems =
+		metricsItem && pluginEnabled('staking_api')
+			? [...items, metricsItem]
+			: items
+	return <MenuList items={visibleItems} secondaryBg />
+}
 
 interface RowActionsMenuProps {
 	address: string
@@ -126,44 +144,33 @@ export const RowActionsMenu = ({
 		})
 	}
 
-	const detailItems: MenuItem[] = []
-
 	if (onRetainmentHistory) {
-		detailItems.push({
+		menuItems.push({
 			disabled: retainmentHistoryDisabled,
 			icon: <FontAwesomeIcon icon={faClockRotateLeft} transform="shrink-3" />,
 			title: t('retainmentHistory'),
 			cb: onRetainmentHistory,
+			separatorBefore: true,
 		})
 	}
 
-	if (showMetrics) {
-		detailItems.push({
-			icon: <FontAwesomeIcon icon={faChartLine} transform="shrink-3" />,
-			title: t('metrics'),
-			cb: () =>
-				openCanvas({
-					key: 'ValidatorMetrics',
-					options: {
-						validator: address,
-						identity: display,
-					},
-					size: 'xl',
-				}),
-		})
+	const metricsItem: MenuItem = {
+		icon: <FontAwesomeIcon icon={faChartLine} transform="shrink-3" />,
+		title: t('metrics'),
+		separatorBefore: !onRetainmentHistory,
+		cb: () => openCanvas(validatorMetricsConfig(address, display)),
 	}
-
-	menuItems.push(
-		...detailItems.map((item, index) => ({
-			...item,
-			separatorBefore: index === 0,
-		})),
-	)
 
 	const toggleMenu = (event: ReactMouseEvent<HTMLButtonElement>) => {
 		if (!open) {
 			setOwnsOpenMenu(true)
-			openMenu(event, <MenuList items={menuItems} secondaryBg />)
+			openMenu(
+				event,
+				<RowActionsMenuList
+					items={menuItems}
+					metricsItem={showMetrics ? metricsItem : undefined}
+				/>,
+			)
 		}
 	}
 

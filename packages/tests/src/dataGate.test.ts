@@ -22,6 +22,8 @@ import { dataPointOptions } from '../../data-gate/src/query'
 import { createDataGateStore } from '../../data-gate/src/state'
 import type { DataGateState, DataPointConfig } from '../../data-gate/src/types'
 import { useDataPoint } from '../../data-gate/src/useDataPoint'
+import { useValidatorSelfStake } from '../../data-gate/src/validatorSelfStake'
+import { useValidatorTotalBacking } from '../../data-gate/src/validatorTotalBacking'
 import { resetActiveEra, setActiveEra } from '../../global-bus/src/activeEra'
 import { resetApiStatus, setApiStatus } from '../../global-bus/src/apiStatus'
 import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
@@ -37,6 +39,11 @@ import {
 	setServiceInterface,
 } from '../../global-bus/src/serviceInterface'
 import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
+import {
+	defaultStakingLedger,
+	resetStakingLedgers,
+	setStakingLedger,
+} from '../../global-bus/src/stakingLedgers'
 import { HookProbe } from './HookProbe'
 
 const { apiQuery, storage } = vi.hoisted(() => {
@@ -65,6 +72,7 @@ vi.mock('../../global-bus/src/index', async () => ({
 	...(await import('../../global-bus/src/activeEra')),
 	...(await import('../../global-bus/src/apiStatus')),
 	...(await import('../../global-bus/src/serviceInterface')),
+	...(await import('../../global-bus/src/stakingLedgers')),
 }))
 vi.mock('../../plugin-staking-api/src/Client', () => ({
 	client: { query: apiQuery },
@@ -77,6 +85,29 @@ const createClient = () => {
 	clients.push(client)
 	return client
 }
+const renderDataGateHook = <T>(
+	input: DataGateState,
+	client: QueryClient,
+	read: () => T,
+) => {
+	let result!: T
+	const probe = () => {
+		result = read()
+	}
+	renderToStaticMarkup(
+		createElement(
+			DataGateContext.Provider,
+			{ value: input },
+			createElement(
+				QueryClientProvider,
+				{ client },
+				createElement(HookProbe, { callback: probe }),
+			),
+		),
+	)
+	return result
+}
+
 const deferred = <T>() => {
 	let resolve!: (value: T) => void
 	const promise = new Promise<T>((done) => {
@@ -131,8 +162,57 @@ beforeEach(() => {
 	apiQuery.mockReset()
 })
 afterEach(() => {
+	resetStakingLedgers()
 	for (const observer of observers.splice(0)) observer.destroy()
 	for (const client of clients.splice(0)) client.clear()
+})
+
+test('validator self stake reuses the subscribed ledger total for the selected stash', () => {
+	const input = config(true)
+	const client = createClient()
+	client.setQueryData(['validator-self-stake', 'polkadot', 'validator'], 90n)
+	setStakingLedger('validator', {
+		...defaultStakingLedger,
+		ledger: {
+			stash: 'validator',
+			total: 120n,
+			active: 100n,
+			unlocking: [{ value: 20n, era: 101 }],
+		},
+	})
+
+	const result = renderDataGateHook(input, client, () =>
+		useValidatorSelfStake('validator'),
+	)
+	expect(result).toEqual({ data: 120n, loading: false })
+})
+
+test('validator total backing uses the dedicated API query and exposes null with no node fallback', async () => {
+	const input = config(true)
+	const client = createClient()
+	apiQuery.mockResolvedValue({
+		data: { validatorTotalBacking: '90071992547409931' },
+	})
+	const render = () =>
+		renderDataGateHook(input, client, () =>
+			useValidatorTotalBacking('validator'),
+		)
+	const result = render()
+	expect(result).toMatchObject({ data: null, loading: true })
+	expect((await result.refetch()).data).toBe(90071992547409931n)
+	expect(apiQuery).toHaveBeenCalledExactlyOnceWith(
+		expect.objectContaining({
+			variables: { network: 'polkadot', validator: 'validator' },
+		}),
+	)
+	expect(apiQuery.mock.calls[0]?.[0].query.loc.source.body).toContain(
+		'validatorTotalBacking(network: $network, validator: $validator)',
+	)
+
+	setPlugins([])
+	expect(render()).toMatchObject({ data: null, loading: false })
+	expect(apiQuery).toHaveBeenCalledOnce()
+	expectNoNodeQueries(input.node)
 })
 
 test('provider state reads current bus values and follows all source changes', () => {
@@ -994,23 +1074,7 @@ const renderValidatorPrefs = async (
 	const { useValidatorPrefs } = await import(
 		'../../data-gate/src/validatorPrefs'
 	)
-	let result!: ReturnType<typeof useValidatorPrefs>
-	const probe = () => {
-		result = useValidatorPrefs(addresses)
-		return null
-	}
-	renderToStaticMarkup(
-		createElement(
-			DataGateContext.Provider,
-			{ value: input },
-			createElement(
-				QueryClientProvider,
-				{ client },
-				createElement(HookProbe, { callback: probe }),
-			),
-		),
-	)
-	return result
+	return renderDataGateHook(input, client, () => useValidatorPrefs(addresses))
 }
 
 test.each([true, false])(
