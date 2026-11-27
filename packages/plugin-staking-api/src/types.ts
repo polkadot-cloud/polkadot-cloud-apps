@@ -56,10 +56,18 @@ export type ValidatorListOrder =
 	| 'RETAINMENT_HIGH'
 	| 'RETAINMENT_LOW'
 
+export type ValidatorListGroup =
+	| 'ACTIVE'
+	| 'INACTIVE'
+	| 'MISSING_IDENTITY'
+	| 'BLOCKED_NOMINATIONS'
+
 export interface ValidatorListFilters {
 	excludeBlocked?: boolean
 	excludeMissingIdentity?: boolean
 	activeOnly?: boolean
+	active?: boolean
+	matchAny?: ValidatorListGroup[]
 	search?: string
 }
 

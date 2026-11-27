@@ -420,6 +420,7 @@
 		"selfStakeChange": "Öz stake değişimi",
 		"send": "Gönder",
 		"share": "Paylaş",
+		"showOnly": "Yalnızca göster",
 		"sign": "İmzala",
 		"signPolkadotVault": "Polkadot Vault'tan İmzala",
 		"signedByController": "Controller Tarafından İmzalandı",

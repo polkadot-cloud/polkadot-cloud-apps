@@ -1,55 +1,30 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonSecondary, ButtonSubmit } from 'ui-buttons'
+import { ApiFilters, FilterSwitches } from './Filters'
+import {
+	type BrowserFilters,
+	DEFAULT_VALIDATOR_LIST_CONFIG,
+	filtersChanged,
+	UNFILTERED_CONFIG,
+	updateFilters,
+	type ValidatorListConfig,
+} from './filtersConfig'
 import {
 	Actions,
 	ConfigRow,
 	ControlsForm,
-	FilterButton,
-	FilterButtons,
-	FilterGroup,
 	OrderField,
 	OrderTab,
 	OrderTabs,
 	SearchField,
-	SwitchTrack,
 } from './styles'
 
-export interface ValidatorListConfig {
-	filters: {
-		activeOnly: boolean
-		excludeBlocked: boolean
-		excludeMissingIdentity: boolean
-	}
-	order: string
-	search: string
-}
-
-export const DEFAULT_VALIDATOR_LIST_CONFIG: ValidatorListConfig = {
-	filters: {
-		activeOnly: false,
-		excludeBlocked: true,
-		excludeMissingIdentity: true,
-	},
-	order: 'RETAINMENT_HIGH',
-	search: '',
-}
-
-const CLEARED_VALIDATOR_LIST_CONFIG: ValidatorListConfig = {
-	filters: {
-		activeOnly: false,
-		excludeBlocked: false,
-		excludeMissingIdentity: false,
-	},
-	order: 'RETAINMENT_HIGH',
-	search: '',
-}
-
 interface ControlsProps {
+	apiFilters?: boolean
 	config: ValidatorListConfig
 	disabled: boolean
 	onApply: (config: ValidatorListConfig) => void
@@ -57,6 +32,7 @@ interface ControlsProps {
 }
 
 export const Controls = ({
+	apiFilters = false,
 	config,
 	disabled,
 	onApply,
@@ -65,108 +41,59 @@ export const Controls = ({
 	const { t } = useTranslation('app')
 	const [draft, setDraft] = useState(config)
 
-	const setFilter = (filter: keyof ValidatorListConfig['filters']) => {
-		setDraft((current) => ({
-			...current,
-			filters: {
-				...current.filters,
-				[filter]: !current.filters[filter],
-			},
-		}))
+	const filterProps = {
+		filters: draft.filters,
+		onChange: (changes: Partial<BrowserFilters>) =>
+			setDraft((current) => ({
+				...current,
+				filters: updateFilters(current.filters, changes),
+			})),
 	}
-	const filterOptions: Array<{
-		key: keyof ValidatorListConfig['filters']
-		label: string
-	}> = [
-		{
-			key: 'activeOnly',
-			label: t('activeValidators'),
-		},
-		{
-			key: 'excludeBlocked',
-			label: t('blockedNominations'),
-		},
-		{
-			key: 'excludeMissingIdentity',
-			label: t('missingIdentity'),
-		},
-	]
-	const defaultOrderOptions = [
-		{
-			key: 'RETAINMENT_HIGH',
-			label: t('highRetainment'),
-		},
-		{
-			key: 'RETAINMENT_LOW',
-			label: t('lowRetainment'),
-		},
+	const orderOptions = suppliedOrderOptions ?? [
+		{ key: 'RETAINMENT_HIGH', label: t('highRetainment') },
+		{ key: 'RETAINMENT_LOW', label: t('lowRetainment') },
 		{ key: 'ACTIVITY', label: t('activity') },
 	]
-	const orderOptions = suppliedOrderOptions ?? defaultOrderOptions
 	const nextConfig = { ...draft, search: draft.search.trim() }
-	const hasChanges =
-		nextConfig.search !== config.search ||
-		nextConfig.order !== config.order ||
-		nextConfig.filters.activeOnly !== config.filters.activeOnly ||
-		nextConfig.filters.excludeBlocked !== config.filters.excludeBlocked ||
-		nextConfig.filters.excludeMissingIdentity !==
-			config.filters.excludeMissingIdentity
-
+	const canApply =
+		!disabled &&
+		(nextConfig.search !== config.search ||
+			nextConfig.order !== config.order ||
+			filtersChanged(draft.filters, config.filters))
 	const apply = () => {
-		if (!disabled && hasChanges) {
-			onApply(nextConfig)
-		}
+		if (canApply) onApply(nextConfig)
 	}
-
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
-		apply()
-	}
-
 	const clear = () => {
+		const preferred = orderOptions.find(
+			({ key }) => key === DEFAULT_VALIDATOR_LIST_CONFIG.order,
+		)
 		setDraft({
-			...CLEARED_VALIDATOR_LIST_CONFIG,
-			order: orderOptions.some(
-				({ key }) => key === CLEARED_VALIDATOR_LIST_CONFIG.order,
-			)
-				? CLEARED_VALIDATOR_LIST_CONFIG.order
-				: (orderOptions[0]?.key ?? config.order),
+			...UNFILTERED_CONFIG,
+			order: preferred?.key ?? orderOptions[0]?.key ?? config.order,
 		})
 	}
 
 	return (
-		<ControlsForm onSubmit={handleSubmit}>
+		<ControlsForm
+			onSubmit={(event) => {
+				event.preventDefault()
+				apply()
+			}}
+		>
 			<SearchField>
 				<input
 					type="search"
 					value={draft.search}
 					aria-label={t('validatorSearch.searchValidators')}
 					placeholder={t('searchAddress')}
-					onChange={({ currentTarget }) =>
-						setDraft((current) => ({
-							...current,
-							search: currentTarget.value,
-						}))
+					onChange={({ currentTarget: { value } }) =>
+						setDraft((current) => ({ ...current, search: value }))
 					}
 				/>
 			</SearchField>
-			<ConfigRow>
-				<FilterGroup>
-					<legend>{t('filter')}</legend>
-					<FilterButtons>
-						{filterOptions.map(({ key, label }) => (
-							<FilterButton
-								key={key}
-								type="button"
-								aria-pressed={draft.filters[key]}
-								onClick={() => setFilter(key)}
-							>
-								<SwitchTrack $active={draft.filters[key]} aria-hidden="true" />
-								<span>{label}</span>
-							</FilterButton>
-						))}
-					</FilterButtons>
-				</FilterGroup>
+			{apiFilters && <ApiFilters {...filterProps} />}
+			<ConfigRow $apiFilters={apiFilters}>
+				{!apiFilters && <FilterSwitches {...filterProps} includeActive />}
 				<OrderField>
 					<legend>{t('order')}</legend>
 					<OrderTabs
@@ -179,7 +106,6 @@ export const Controls = ({
 								key={key}
 								type="button"
 								role="tab"
-								$active={draft.order === key}
 								aria-selected={draft.order === key}
 								onClick={() =>
 									setDraft((current) => ({ ...current, order: key }))
@@ -194,8 +120,8 @@ export const Controls = ({
 					<ButtonSecondary text={t('clear')} onClick={clear} />
 					<ButtonSubmit
 						text={t('apply')}
-						disabled={disabled || !hasChanges}
-						pulse={hasChanges && !disabled}
+						disabled={!canApply}
+						pulse={canApply}
 						onClick={apply}
 					/>
 				</Actions>

@@ -4,7 +4,7 @@
 import { useValidators } from 'contexts/Validators/ValidatorEntries'
 import { useValidatorOverviews } from 'data-gate'
 import type { AnyFilter } from 'library/Filter/types'
-import type { ValidatorListConfig } from 'library/StakingApiValidatorList/Controls'
+import type { ValidatorListConfig } from 'library/StakingApiValidatorList/filtersConfig'
 import { useCallback, useMemo } from 'react'
 
 export const useValidatorFilters = (addresses: string[] = []) => {
@@ -88,7 +88,7 @@ export const useValidatorFilters = (addresses: string[] = []) => {
 	const applyConfig = useCallback(
 		(config: ValidatorListConfig, list: AnyFilter) => {
 			const { filters, order, search } = config
-			const includes = filters.activeOnly ? ['active'] : null
+			const includes = filters.active ? ['active'] : null
 			const excludes = [
 				...(filters.excludeBlocked ? ['blocked_nominations'] : []),
 				...(filters.excludeMissingIdentity ? ['missing_identity'] : []),

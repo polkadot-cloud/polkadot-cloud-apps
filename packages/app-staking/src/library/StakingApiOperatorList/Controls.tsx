@@ -88,7 +88,6 @@ export const Controls = ({ config, disabled, onApply }: ControlsProps) => {
 								key={key}
 								type="button"
 								role="tab"
-								$active={draft.order === key}
 								aria-selected={draft.order === key}
 								onClick={() =>
 									setDraft((current) => ({ ...current, order: key }))

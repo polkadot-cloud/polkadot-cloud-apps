@@ -14,10 +14,11 @@ import { MotionContainer, MotionItem } from 'library/List/MotionContainer'
 import { Pagination } from 'library/List/Pagination'
 import { EMPTY_ERA_POINTS } from 'library/List/Utils'
 import { useForceCardLayout } from 'library/List/useForceCardLayout'
+import { Controls } from 'library/StakingApiValidatorList/Controls'
 import {
-	Controls,
+	UNFILTERED_CONFIG,
 	type ValidatorListConfig,
-} from 'library/StakingApiValidatorList/Controls'
+} from 'library/StakingApiValidatorList/filtersConfig'
 import { ResultSummary } from 'library/StakingApiValidatorList/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,16 +29,6 @@ import { Item } from './Item'
 import { injectValidatorListData } from './overview'
 import type { ValidatorListProps } from './types'
 import { useValidatorDetails } from './useValidatorDetails'
-
-const DEFAULT_CONFIG: ValidatorListConfig = {
-	filters: {
-		activeOnly: false,
-		excludeBlocked: false,
-		excludeMissingIdentity: false,
-	},
-	order: 'default',
-	search: '',
-}
 
 export const ValidatorListInner = ({
 	// Default list values.
@@ -74,7 +65,7 @@ export const ValidatorListInner = ({
 		pagination: { page, setPage },
 	} = useList()
 	const showControls = displayFor === 'default' && !selectable
-	const [config, setConfig] = useState(() => defaultConfig ?? DEFAULT_CONFIG)
+	const [config, setConfig] = useState(() => defaultConfig ?? UNFILTERED_CONFIG)
 	const controlsOrderOptions = [
 		{ key: 'ACTIVITY', label: t('activity', { ns: 'app' }) },
 		{ key: 'default', label: t('unordered', { ns: 'app' }) },

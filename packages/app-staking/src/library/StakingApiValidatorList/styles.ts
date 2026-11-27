@@ -1,6 +1,7 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { Popover } from 'radix-ui'
 import styled from 'styled-components'
 
 export const ControlsForm = styled.form`
@@ -27,11 +28,14 @@ export const SearchField = styled.label`
   }
 `
 
-export const ConfigRow = styled.div`
+export const ConfigRow = styled.div<{ $apiFilters: boolean }>`
   align-items: end;
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: max-content minmax(31rem, 36rem) auto;
+  grid-template-columns: ${({ $apiFilters }) =>
+		$apiFilters
+			? 'minmax(0, 36rem) auto'
+			: 'max-content minmax(31rem, 36rem) auto'};
   justify-content: space-between;
 
   @media (max-width: 1350px) {
@@ -60,7 +64,7 @@ export const FilterGroup = styled.fieldset`
 
 export const FilterButtons = styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.55rem;
 `
 
@@ -84,15 +88,54 @@ export const FilterButton = styled.button`
     transform var(--transition-duration);
   white-space: nowrap;
 
-  &:hover {
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:hover:not(:disabled) {
     border-color: var(--gray-700);
     transform: translateY(-1px);
   }
 `
 
-export const SwitchTrack = styled.span<{ $active: boolean }>`
-  background: ${(props) =>
-		props.$active ? 'var(--gray-1000)' : 'var(--gray-700)'};
+export const ApiFilterRow = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+`
+
+export const FilterPopover = styled(Popover.Content)`
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-500);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 2rem);
+  padding: 0.9rem;
+  z-index: 99;
+
+  label {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 0.55rem;
+    padding: 0.5rem 0;
+    color: var(--gray-900);
+  }
+
+  label:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  input {
+    accent-color: var(--gray-1000);
+  }
+`
+
+export const SwitchTrack = styled.span`
+  background: var(--gray-700);
   border-radius: 1rem;
   display: flex;
   flex: 0 0 auto;
@@ -107,9 +150,16 @@ export const SwitchTrack = styled.span<{ $active: boolean }>`
     box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
     content: '';
     height: 0.87rem;
-    transform: translateX(${(props) => (props.$active ? '0.95rem' : '0')});
     transition: transform var(--transition-duration);
     width: 0.87rem;
+  }
+
+  [aria-pressed='true'] > & {
+    background: var(--gray-1000);
+
+    &::after {
+      transform: translateX(0.95rem);
+    }
   }
 `
 
@@ -125,12 +175,11 @@ export const OrderTabs = styled.div<{ $columns?: number }>`
   padding: 0.25rem;
 `
 
-export const OrderTab = styled.button<{ $active: boolean }>`
-  background: ${(props) =>
-		props.$active ? 'var(--bg-primary)' : 'transparent'};
+export const OrderTab = styled.button`
+  background: transparent;
   border: 0;
   border-radius: 0.6rem;
-  color: ${(props) => (props.$active ? 'var(--gray-1000)' : 'var(--gray-900)')};
+  color: var(--gray-900);
   cursor: pointer;
   font-family: var(--font-family-semibold);
   font-size: 1rem;
@@ -141,6 +190,11 @@ export const OrderTab = styled.button<{ $active: boolean }>`
     background var(--transition-duration),
     color var(--transition-duration);
   white-space: nowrap;
+
+  &:is([aria-pressed='true'], [aria-selected='true']) {
+    background: var(--bg-primary);
+    color: var(--gray-1000);
+  }
 
   &:hover {
     background: var(--bg-primary);

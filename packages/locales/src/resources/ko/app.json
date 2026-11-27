@@ -420,6 +420,7 @@
 		"selfStakeChange": "자체 스테이크 변동",
 		"send": "전송",
 		"share": "공유",
+		"showOnly": "선택한 그룹만 표시",
 		"sign": "서명",
 		"signPolkadotVault": "Polkadot Vault에서 서명",
 		"signedByController": "컨트롤러에 의해 서명됨",
