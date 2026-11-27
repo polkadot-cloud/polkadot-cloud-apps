@@ -126,7 +126,7 @@ export const ValidatorMetrics = () => {
 			</header>
 			<GraphContainer>
 				<Subheading>
-					<h3>{t('backing', { ns: 'app' })}</h3>
+					<h3>{t('backingOverview', { ns: 'app' })}</h3>
 					<StatGrid style={{ marginTop: '1rem' }}>
 						<StatCard title={t('selfStake', { ns: 'modals' })}>
 							{validatorOwnStake != null ? (
