@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/global-bus-v0.11.0...global-bus-v0.12.0) (2026-11-27)
+
+
+### Features
+
+* Validator metrics enhancements ([#3957](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3957)) ([6671fdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6671fdd2f645a4a05ef3e9cb342ecd6e803b75f0))
+
+
+### Bug Fixes
+
+* recover from malformed saved RPC endpoints ([3f45382](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/3f45382bd7333a34d1bc63a2448ade7d6f172952))
+
 ## [0.11.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/global-bus-v0.10.0...global-bus-v0.11.0) (2026-10-28)
 
 ### Features

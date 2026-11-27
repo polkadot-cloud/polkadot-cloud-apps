@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.7.0...types-v1.8.0) (2026-11-27)
+
+
+### Features
+
+* `app-swap` People chain support in Send & Bridge  ([#3905](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3905)) ([f7c3a04](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f7c3a047764deb310b5ef5c65e7d1480ae65b6de))
+* Validator metrics enhancements ([#3957](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3957)) ([6671fdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6671fdd2f645a4a05ef3e9cb342ecd6e803b75f0))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/types-v1.6.0...types-v1.7.0) (2026-10-28)
 
 ### Features

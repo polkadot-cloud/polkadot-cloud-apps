@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.6.0...ui-graphs-v1.7.0) (2026-11-27)
+
+
+### Features
+
+* validator backing history ([eb7adbb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/eb7adbb5067aa5e751819e54dbce8dd7f88d46b6))
+
 ## [1.6.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-graphs-v1.5.0...ui-graphs-v1.6.0) (2026-10-28)
 
 ### Features

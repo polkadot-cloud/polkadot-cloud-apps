@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.2.0...tests-v1.3.0) (2026-11-27)
+
+
+### Features
+
+* `app-swap` People chain support in Send & Bridge  ([#3905](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3905)) ([f7c3a04](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/f7c3a047764deb310b5ef5c65e7d1480ae65b6de))
+* enable two-way DOT bridging between Polkadot People and Hydration ([#3917](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3917)) ([d4f4714](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/d4f47143163447f9e735ebc3b3f2939d39c7dc6a))
+* Enhance validator list filters ([#3958](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3958)) ([4ea8166](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4ea81662e904aac3676cc1ca293589dd8e8e6e87))
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+* validator backing history ([eb7adbb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/eb7adbb5067aa5e751819e54dbce8dd7f88d46b6))
+* Validator metrics enhancements ([#3957](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3957)) ([6671fdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6671fdd2f645a4a05ef3e9cb342ecd6e803b75f0))
+
+
+### Bug Fixes
+
+* recover from malformed saved RPC endpoints ([3f45382](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/3f45382bd7333a34d1bc63a2448ade7d6f172952))
+
 ## [1.2.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/tests-v1.1.0...tests-v1.2.0) (2026-10-28)
 
 ### Features
