@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-buttons-v1.7.0...ui-buttons-v1.8.0) (2026-11-27)
+
+
+### Features
+
+* Validator metrics enhancements ([#3957](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3957)) ([6671fdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6671fdd2f645a4a05ef3e9cb342ecd6e803b75f0))
+
 ## [1.7.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/ui-buttons-v1.6.0...ui-buttons-v1.7.0) (2026-10-28)
 
 ### Features

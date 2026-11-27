@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.8.0...locales-v1.9.0) (2026-11-27)
+
+
+### Features
+
+* Enhance validator list filters ([#3958](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3958)) ([4ea8166](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/4ea81662e904aac3676cc1ca293589dd8e8e6e87))
+* **ux:** Explore Polkadot Cloud modal  ([#3902](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3902)) ([b8a65dc](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/b8a65dc3da24c1e3754c88b737e6217a6d92e433))
+* validator backing history ([eb7adbb](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/eb7adbb5067aa5e751819e54dbce8dd7f88d46b6))
+* Validator metrics enhancements ([#3957](https://github.com/polkadot-cloud/polkadot-cloud-apps/issues/3957)) ([6671fdd](https://github.com/polkadot-cloud/polkadot-cloud-apps/commit/6671fdd2f645a4a05ef3e9cb342ecd6e803b75f0))
+
 ## [1.8.0](https://github.com/polkadot-cloud/polkadot-cloud-apps/compare/locales-v1.7.0...locales-v1.8.0) (2026-10-28)
 
 ### Features
