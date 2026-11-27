@@ -12,28 +12,36 @@ import { RowActionsMenu } from '../../app-staking/src/library/ValidatorList/RowA
 import { formatFiatCurrency } from '../../locales/src/util/currency'
 import { Menu } from '../../ui-app/src/Menu'
 
-const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
-	await vi.hoisted(async () => {
-		const { JSDOM } = await import('jsdom')
-		const dom = new JSDOM('<!doctype html><html><body></body></html>', {
-			pretendToBeVisual: true,
-		})
-		vi.stubGlobal('window', dom.window)
-		vi.stubGlobal('document', dom.window.document)
-		return {
-			dom,
-			query: vi.fn(),
-			selfStakeQuery: vi.fn(),
-			state: {
-				api: true,
-				price: 2,
-				validator: 'validator',
-				identity: 'Alice' as ReactNode,
-			},
-			listeners: new Set<() => void>(),
-			openCanvas: vi.fn(),
-		}
+const {
+	dom,
+	query,
+	selfStakeQuery,
+	totalBackingQuery,
+	state,
+	listeners,
+	openCanvas,
+} = await vi.hoisted(async () => {
+	const { JSDOM } = await import('jsdom')
+	const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+		pretendToBeVisual: true,
 	})
+	vi.stubGlobal('window', dom.window)
+	vi.stubGlobal('document', dom.window.document)
+	return {
+		dom,
+		query: vi.fn(),
+		selfStakeQuery: vi.fn(),
+		totalBackingQuery: vi.fn(),
+		state: {
+			api: true,
+			price: 2,
+			validator: 'validator',
+			identity: 'Alice' as ReactNode,
+		},
+		listeners: new Set<() => void>(),
+		openCanvas: vi.fn(),
+	}
+})
 vi.mock('library/Prompt/Confirm', () => ({ Confirm: () => null }))
 vi.mock('../../global-bus/src/index', () => ({
 	emitNotification: vi.fn(),
@@ -44,6 +52,7 @@ vi.mock('../../hooks/src/useFavoriteValidators', () => ({
 vi.mock('../../data-gate/src/index', () => ({
 	useValidatorOverviews: query,
 	useValidatorSelfStake: selfStakeQuery,
+	useValidatorTotalBacking: totalBackingQuery,
 }))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
@@ -128,7 +137,10 @@ vi.mock(
 vi.mock(
 	'../../app-staking/node_modules/react-i18next/dist/es/index.js',
 	() => ({
-		useTranslation: () => ({ t: (key: string) => key }),
+		useTranslation: () => ({
+			t: (key: string) => key,
+			i18n: { resolvedLanguage: 'en' },
+		}),
 	}),
 )
 
@@ -142,6 +154,7 @@ beforeEach(() => {
 	state.validator = 'validator'
 	state.identity = 'Alice'
 	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
+	totalBackingQuery.mockReturnValue({ data: null, loading: false })
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.stubGlobal('window', dom.window)
 	vi.stubGlobal('document', dom.window.document)
@@ -182,6 +195,7 @@ const renderMetrics = async () => {
 				{
 					stake:
 						stat.querySelector('.odometer')?.textContent ??
+						stat.querySelector('h1')?.textContent ??
 						stat.querySelector('span')?.textContent,
 					fiat: stat.querySelector('h3')?.textContent,
 				},
@@ -260,17 +274,20 @@ test.each([
 	async (state) => {
 		query.mockReturnValue({ ...state, data: undefined })
 		selfStakeQuery.mockReturnValue({ data: undefined, loading: state.loading })
+		totalBackingQuery.mockReturnValue({ data: null, loading: state.loading })
 		expect(await renderMetrics()).toEqual({
 			selfStake: { stake: state.label, fiat: undefined },
-			nominatorStake: { stake: state.label, fiat: undefined },
+			totalBacking: { stake: state.label, fiat: undefined },
+			activeBacking: { stake: state.label, fiat: undefined },
 		})
 		expect(query).toHaveBeenCalledWith(['validator'])
 		expect(selfStakeQuery).toHaveBeenCalledWith('validator')
+		expect(totalBackingQuery).toHaveBeenCalledWith('validator')
 	},
 )
 
 test.each([null, new Error('refresh failed')])(
-	'loaded metrics retain stake through refresh errors: %s',
+	'loaded metrics retain compact stake and exact fiat values through refresh errors: %s',
 	async (error) => {
 		const data: ValidatorOverviews = new Map([
 			[
@@ -288,12 +305,23 @@ test.each([null, new Error('refresh failed')])(
 			data: 123456789123456789n,
 			loading: false,
 		})
-		expect(await renderMetrics()).toEqual({
+		totalBackingQuery.mockReturnValue({ data: 54012345000000n, loading: false })
+		const metrics = await renderMetrics()
+		expect(Object.keys(metrics)).toEqual([
+			'selfStake',
+			'totalBacking',
+			'activeBacking',
+		])
+		expect(metrics).toEqual({
 			selfStake: {
-				stake: '12,345,678.9123456789',
+				stake: '12.3M',
 				fiat: formatFiatCurrency(24_691_357.82, 'GBP'),
 			},
-			nominatorStake: {
+			totalBacking: {
+				stake: '5.4K',
+				fiat: formatFiatCurrency(10_802.47, 'GBP'),
+			},
+			activeBacking: {
 				stake: '10.0123450000',
 				fiat: formatFiatCurrency(20.02, 'GBP'),
 			},
@@ -301,13 +329,15 @@ test.each([null, new Error('refresh failed')])(
 	},
 )
 
-test('a waiting validator shows its ledger total and zero nominator stake without a price', async () => {
+test('a waiting validator shows its ledger total and zero active backing without a price', async () => {
 	query.mockReturnValue({ data: new Map(), loading: false, error: null })
 	selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
+	totalBackingQuery.mockReturnValue({ data: 52000000000n, loading: false })
 	state.price = 0
 	expect(await renderMetrics()).toEqual({
 		selfStake: { stake: '3.50', fiat: '—' },
-		nominatorStake: { stake: '0.00', fiat: '—' },
+		totalBacking: { stake: '5.20', fiat: '—' },
+		activeBacking: { stake: '0.00', fiat: '—' },
 	})
 })
 

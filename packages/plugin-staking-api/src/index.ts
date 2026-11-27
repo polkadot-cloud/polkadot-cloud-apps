@@ -45,5 +45,6 @@ export * from './queries/validatorRecords'
 export * from './queries/validatorRetainment'
 export * from './queries/validatorRewards'
 export * from './queries/validatorStats'
+export * from './queries/validatorTotalBacking'
 export * from './util'
 export { ApolloProvider }

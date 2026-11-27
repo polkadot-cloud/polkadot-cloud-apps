@@ -6,7 +6,11 @@ import { ellipsisFn } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useValidatorOverviews, useValidatorSelfStake } from 'data-gate'
+import {
+	useValidatorOverviews,
+	useValidatorSelfStake,
+	useValidatorTotalBacking,
+} from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
@@ -57,6 +61,8 @@ export const ValidatorMetrics = () => {
 	])
 	const { data: validatorOwnStake, loading: selfStakeLoading } =
 		useValidatorSelfStake(validator)
+	const { data: totalBacking, loading: totalBackingLoading } =
+		useValidatorTotalBacking(validator)
 	const identity = options!.identity
 	const displayName = typeof identity === 'string' ? identity.trim() : identity
 	const shortAddress = validator ? ellipsisFn(validator) : ''
@@ -65,12 +71,12 @@ export const ValidatorMetrics = () => {
 	const selfStakePlaceholder = selfStakeLoading
 		? t('syncing', { ns: 'app' })
 		: '—'
-	const nominatorStakePlaceholder = overviewsLoading
+	const activeBackingPlaceholder = overviewsLoading
 		? t('syncing', { ns: 'app' })
 		: '—'
 
 	const overview = overviews?.get(validator)
-	const otherStake = BigNumber.max(
+	const activeBacking = BigNumber.max(
 		0,
 		new BigNumber(overview?.total ?? 0n).minus(overview?.own ?? 0n),
 	)
@@ -87,7 +93,7 @@ export const ValidatorMetrics = () => {
 						paddingBottom: '1.25rem',
 						// The card clips the divider at its edges.
 						borderImage:
-							'linear-gradient(var(--gray-600), var(--gray-600)) 1 / 1 / 0 100vw',
+							'linear-gradient(var(--gray-500), var(--gray-500)) 1 / 1 / 0 100vw',
 					}}
 				>
 					<div>
@@ -120,10 +126,12 @@ export const ValidatorMetrics = () => {
 			</header>
 			<GraphContainer>
 				<Subheading>
-					<StatGrid>
+					<h3>{t('backing', { ns: 'app' })}</h3>
+					<StatGrid style={{ marginTop: '1rem' }}>
 						<StatCard title={t('selfStake', { ns: 'modals' })}>
 							{validatorOwnStake != null ? (
 								<Balance.WithFiat
+									compact
 									Token={<Token role="img" aria-label={unit} />}
 									value={planckToUnitBn(
 										new BigNumber(validatorOwnStake),
@@ -135,15 +143,30 @@ export const ValidatorMetrics = () => {
 								<span>{selfStakePlaceholder}</span>
 							)}
 						</StatCard>
-						<StatCard title={t('nominatorStake', { ns: 'modals' })}>
-							{overviews ? (
+						<StatCard title={t('totalBacking', { ns: 'modals' })}>
+							{totalBacking !== null ? (
 								<Balance.WithFiat
+									compact
 									Token={<Token role="img" aria-label={unit} />}
-									value={planckToUnitBn(otherStake, units)}
+									value={planckToUnitBn(new BigNumber(totalBacking), units)}
 									currency={currency}
 								/>
 							) : (
-								<span>{nominatorStakePlaceholder}</span>
+								<span>
+									{totalBackingLoading ? t('syncing', { ns: 'app' }) : '—'}
+								</span>
+							)}
+						</StatCard>
+						<StatCard title={t('activeBacking', { ns: 'modals' })}>
+							{overviews ? (
+								<Balance.WithFiat
+									compact
+									Token={<Token role="img" aria-label={unit} />}
+									value={planckToUnitBn(activeBacking, units)}
+									currency={currency}
+								/>
+							) : (
+								<span>{activeBackingPlaceholder}</span>
 							)}
 						</StatCard>
 					</StatGrid>

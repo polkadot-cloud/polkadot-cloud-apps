@@ -9,7 +9,9 @@ import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
 import { useNetwork } from 'hooks/useNetwork'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CardLabel, TokenFiat } from 'ui-core/base'
+import { formatCompactNumber } from 'utils'
 import { Value } from '../Value'
 
 export const WithFiat = ({
@@ -18,13 +20,16 @@ export const WithFiat = ({
 	currency,
 	label,
 	caretAsUnit = false,
+	compact = false,
 }: {
 	Token: ReactNode
 	value: number | BigNumber
 	currency: string
 	label?: ReactNode
 	caretAsUnit?: boolean
+	compact?: boolean
 }) => {
+	const { i18n } = useTranslation()
 	const { network } = useNetwork()
 	const { units } = getStakingChainData(network)
 
@@ -44,10 +49,14 @@ export const WithFiat = ({
 	return (
 		<TokenFiat Token={Token}>
 			<h1>
-				<Odometer
-					value={minDecimalPlaces(valueFormatted, 2)}
-					zeroDecimals={2}
-				/>
+				{compact && amount.abs().gte(1000) ? (
+					formatCompactNumber(amount.toNumber(), i18n.resolvedLanguage)
+				) : (
+					<Odometer
+						value={minDecimalPlaces(valueFormatted, 2)}
+						zeroDecimals={2}
+					/>
+				)}
 				{labelDisplay && <CardLabel>{labelDisplay}</CardLabel>}
 			</h1>
 			<h3>
