@@ -1,7 +1,8 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { act, createElement, useSyncExternalStore } from 'react'
+import { Tooltip } from 'radix-ui'
+import { act, createElement, type ReactNode, useSyncExternalStore } from 'react'
 import { createRoot } from 'react-dom/client'
 import type { ValidatorOverviews } from 'types'
 import { afterAll, afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -21,7 +22,12 @@ const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
 			dom,
 			query: vi.fn(),
 			selfStakeQuery: vi.fn(),
-			state: { api: true, price: 2 },
+			state: {
+				api: true,
+				price: 2,
+				validator: 'validator',
+				identity: 'Alice' as ReactNode,
+			},
 			listeners: new Set<() => void>(),
 			openCanvas: vi.fn(),
 		}
@@ -74,7 +80,9 @@ vi.mock('../../ui-overlay/src/index', () => ({
 	useOverlay: () => ({
 		canvas: {
 			openCanvas,
-			config: { options: { validator: 'validator', identity: 'Alice' } },
+			config: {
+				options: { validator: state.validator, identity: state.identity },
+			},
 		},
 	}),
 }))
@@ -90,6 +98,10 @@ vi.mock('library/StatusLabel', () => ({
 vi.mock(
 	'library/Balance',
 	() => import('../../app-staking/src/library/Balance'),
+)
+vi.mock(
+	'library/ListItem/Buttons/CopyAddress',
+	() => import('../../app-staking/src/library/ListItem/Buttons/CopyAddress'),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
@@ -125,10 +137,13 @@ beforeEach(() => {
 	vi.clearAllMocks()
 	state.api = true
 	state.price = 2
+	state.validator = 'validator'
+	state.identity = 'Alice'
 	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.stubGlobal('window', dom.window)
 	vi.stubGlobal('document', dom.window.document)
+	vi.stubGlobal('open', dom.window.open)
 	container = document.createElement('div')
 	document.body.append(container)
 	root = createRoot(container)
@@ -148,8 +163,15 @@ const setApiEnabled = async (enabled: boolean) => {
 	})
 }
 
+const metricsCanvas = () =>
+	createElement(
+		Tooltip.Provider,
+		{ key: 'canvas' },
+		createElement(ValidatorMetrics),
+	)
+
 const renderMetrics = async () => {
-	await act(async () => root.render(createElement(ValidatorMetrics)))
+	await act(async () => root.render(metricsCanvas()))
 	return Object.fromEntries(
 		Array.from(container.querySelectorAll('h4'), (label) => {
 			const stat = label.parentElement!
@@ -165,6 +187,46 @@ const renderMetrics = async () => {
 		}),
 	)
 }
+
+const address = '5GrwvaEF5zXb26Fz9rcQpDWS9rLLK46TzRxFxt2apDudsKjU'
+const shortAddress = '5Grwva...udsKjU'
+
+test.each([undefined, null, '  '])(
+	'uses the truncated address when the display name is %s',
+	async (identity) => {
+		state.validator = address
+		state.identity = identity
+		query.mockReturnValue({ data: undefined, loading: false })
+		await renderMetrics()
+		expect(container.querySelector('h1')?.textContent).toBe(shortAddress)
+		expect(container.querySelector('h2')?.textContent).toBe(shortAddress)
+	},
+)
+
+test('shows the display name and copies the full address from the subtitle', async () => {
+	state.validator = address
+	state.identity = createElement('span', null, 'Alice')
+	query.mockReturnValue({ data: undefined, loading: false })
+	const writeText = vi.fn().mockResolvedValue(undefined)
+	vi.stubGlobal('navigator', { clipboard: { writeText } })
+	await renderMetrics()
+	expect(container.querySelector('h1')?.textContent).toBe('Alice')
+	const subtitle = container.querySelector('h2')!
+	expect(subtitle.textContent).toBe(shortAddress)
+	const copyButton = subtitle.querySelector<HTMLButtonElement>(
+		'button[aria-label="copyAddress"]',
+	)!
+	await act(async () => copyButton.click())
+	expect(writeText).toHaveBeenCalledExactlyOnceWith(address)
+})
+
+test('omits the address subtitle when there is no address', async () => {
+	state.validator = ''
+	query.mockReturnValue({ data: undefined, loading: false })
+	await renderMetrics()
+	expect(container.querySelector('h1')?.textContent).toBe('Alice')
+	expect(container.querySelector('h2')).toBeNull()
+})
 
 test.each([
 	{ loading: true, error: null, label: 'syncing' },
@@ -250,7 +312,7 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 				display: 'Alice',
 				wide: true,
 			}),
-			createElement(ValidatorMetrics, { key: 'canvas' }),
+			metricsCanvas(),
 		])
 	})
 	const button = container.querySelector('button')!
@@ -265,7 +327,10 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 	expect(container.textContent).toContain('selfStake')
 
 	await setApiEnabled(false)
-	expect(container.querySelector('button')).toBeNull()
+	expect(
+		container.querySelector('button[aria-label="copyAddress"]'),
+	).not.toBeNull()
+	expect(container.textContent).not.toContain('metrics')
 	expect(container.textContent).toContain('selfStake')
 	expect(container.textContent).toContain('stakingApiDisabled')
 })

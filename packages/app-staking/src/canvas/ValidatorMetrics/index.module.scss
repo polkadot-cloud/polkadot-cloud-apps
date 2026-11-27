@@ -1,6 +1,27 @@
 // Copyright 2026 @polkadot-cloud/polkadot-cloud-apps authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+.identity {
+	min-width: 0;
+
+	> h1 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.address {
+	display: flex;
+	align-items: center;
+	column-gap: 0.2rem;
+	margin-top: 0.55rem;
+	color: var(--text-tertiary);
+	font-family: var(--font-family-mono);
+	font-size: 1.05rem;
+	line-height: 1.4rem;
+}
+
 .sections {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);

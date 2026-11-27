@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
+import { ellipsisFn } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
@@ -11,6 +12,7 @@ import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
 import { Balance } from 'library/Balance'
+import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { StatusLabel } from 'library/StatusLabel'
 import { useTranslation } from 'react-i18next'
 import {
@@ -53,6 +55,10 @@ export const ValidatorMetrics = () => {
 	const { data: validatorOwnStake, loading: selfStakeLoading } =
 		useValidatorSelfStake(validator)
 	const identity = options!.identity
+	const displayName = typeof identity === 'string' ? identity.trim() : identity
+	const shortAddress = validator ? ellipsisFn(validator) : ''
+	const title =
+		displayName || shortAddress || t('validatorMetrics', { ns: 'modals' })
 	const selfStakePlaceholder = selfStakeLoading
 		? t('syncing', { ns: 'app' })
 		: '—'
@@ -71,7 +77,7 @@ export const ValidatorMetrics = () => {
 			<Head>
 				<CloseCanvas />
 			</Head>
-			<AccountTitle>
+			<AccountTitle style={{ paddingBottom: '0.55rem' }}>
 				<div>
 					<div>
 						<Polkicon
@@ -80,8 +86,14 @@ export const ValidatorMetrics = () => {
 							fontSize="4rem"
 						/>
 					</div>
-					<div>
-						<h1>{identity}</h1>
+					<div className={classes.identity}>
+						<h1>{title}</h1>
+						{validator && (
+							<h2 className={classes.address}>
+								{shortAddress}
+								<CopyAddress address={validator} />
+							</h2>
+						)}
 					</div>
 				</div>
 			</AccountTitle>

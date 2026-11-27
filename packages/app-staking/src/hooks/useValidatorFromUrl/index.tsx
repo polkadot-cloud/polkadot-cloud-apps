@@ -53,13 +53,11 @@ export const useValidatorFromUrl = () => {
 			validatorIdentities[validator],
 			validatorSupers[validator],
 		)
-		const identity = identityDisplay.data?.display || validator
-
 		const config = {
 			key: 'ValidatorMetrics',
 			options: {
 				validator,
-				identity,
+				identity: identityDisplay.data?.display,
 			},
 			size: 'xl' as const,
 			variant: 'card' as const,
