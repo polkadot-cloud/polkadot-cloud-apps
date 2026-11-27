@@ -11,10 +11,12 @@ import { useApi } from 'hooks/useApi'
 import { useCurrency } from 'hooks/useCurrency'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
+import { useTheme } from 'hooks/useTheme'
 import { Balance } from 'library/Balance'
 import { CopyAddress } from 'library/ListItem/Buttons/CopyAddress'
 import { StatusLabel } from 'library/StatusLabel'
 import { useTranslation } from 'react-i18next'
+import { Tooltip } from 'ui-core/base'
 import {
 	AccountTitle,
 	GraphContainer,
@@ -45,6 +47,7 @@ export const ValidatorMetrics = () => {
 	const { currency } = useCurrency()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
+	const { themeElementRef } = useTheme()
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
@@ -73,30 +76,48 @@ export const ValidatorMetrics = () => {
 	)
 
 	return (
-		<Main>
-			<Head>
-				<CloseCanvas />
-			</Head>
-			<AccountTitle style={{ paddingBottom: '0.55rem' }}>
-				<div>
+		<Main style={{ paddingTop: 0 }}>
+			<header className={classes.header}>
+				<Head>
+					<CloseCanvas />
+				</Head>
+				<AccountTitle
+					style={{
+						margin: '0',
+						paddingBottom: '1.25rem',
+						// The card clips the divider at its edges.
+						borderImage:
+							'linear-gradient(var(--gray-600), var(--gray-600)) 1 / 1 / 0 100vw',
+					}}
+				>
 					<div>
-						<Polkicon
-							address={validator}
-							background="transparent"
-							fontSize="4rem"
-						/>
+						<div>
+							<Polkicon
+								address={validator}
+								background="transparent"
+								fontSize="4rem"
+							/>
+						</div>
+						<div className={classes.identity}>
+							<h1>{title}</h1>
+							{validator && (
+								<h2 className={classes.address}>
+									<Tooltip
+										align="start"
+										container={themeElementRef.current || undefined}
+										side="top"
+										text={validator}
+									>
+										{/* biome-ignore lint/a11y/noNoninteractiveTabindex: Keyboard users need access to the full address tooltip. */}
+										<span tabIndex={0}>{shortAddress}</span>
+									</Tooltip>
+									<CopyAddress address={validator} />
+								</h2>
+							)}
+						</div>
 					</div>
-					<div className={classes.identity}>
-						<h1>{title}</h1>
-						{validator && (
-							<h2 className={classes.address}>
-								{shortAddress}
-								<CopyAddress address={validator} />
-							</h2>
-						)}
-					</div>
-				</div>
-			</AccountTitle>
+				</AccountTitle>
+			</header>
 			<GraphContainer>
 				<Subheading>
 					<StatGrid>

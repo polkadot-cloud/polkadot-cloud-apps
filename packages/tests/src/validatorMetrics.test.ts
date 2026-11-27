@@ -15,7 +15,9 @@ import { Menu } from '../../ui-app/src/Menu'
 const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
 	await vi.hoisted(async () => {
 		const { JSDOM } = await import('jsdom')
-		const dom = new JSDOM('<!doctype html><html><body></body></html>')
+		const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+			pretendToBeVisual: true,
+		})
 		vi.stubGlobal('window', dom.window)
 		vi.stubGlobal('document', dom.window.document)
 		return {
@@ -218,6 +220,28 @@ test('shows the display name and copies the full address from the subtitle', asy
 	)!
 	await act(async () => copyButton.click())
 	expect(writeText).toHaveBeenCalledExactlyOnceWith(address)
+})
+
+test('shows the full address when the subtitle address receives focus', async () => {
+	state.validator = address
+	query.mockReturnValue({ data: undefined, loading: false })
+	vi.stubGlobal('CustomEvent', dom.window.CustomEvent)
+	vi.stubGlobal('Element', dom.window.Element)
+	vi.stubGlobal('HTMLElement', dom.window.HTMLElement)
+	vi.stubGlobal('Node', dom.window.Node)
+	vi.stubGlobal('getComputedStyle', dom.window.getComputedStyle)
+	vi.stubGlobal(
+		'ResizeObserver',
+		class {
+			observe() {}
+			unobserve() {}
+			disconnect() {}
+		},
+	)
+	await renderMetrics()
+	const trigger = container.querySelector<HTMLElement>('h2 [tabindex="0"]')!
+	await act(async () => trigger.focus())
+	expect(document.querySelector('[role="tooltip"]')?.textContent).toBe(address)
 })
 
 test('omits the address subtitle when there is no address', async () => {
