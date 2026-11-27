@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { MenuList } from 'ui-app/Menu'
 import { useOverlay, usePrompt } from 'ui-overlay'
+import { validatorMetricsConfig } from '../../canvas/ValidatorMetrics/config'
 
 // The menu stores its content when opened, so check availability inside it.
 const RowActionsMenuList = ({
@@ -157,16 +158,7 @@ export const RowActionsMenu = ({
 		icon: <FontAwesomeIcon icon={faChartLine} transform="shrink-3" />,
 		title: t('metrics'),
 		separatorBefore: !onRetainmentHistory,
-		cb: () =>
-			openCanvas({
-				key: 'ValidatorMetrics',
-				options: {
-					validator: address,
-					identity: display,
-				},
-				size: 'xl',
-				variant: 'card',
-			}),
+		cb: () => openCanvas(validatorMetricsConfig(address, display)),
 	}
 
 	const toggleMenu = (event: ReactMouseEvent<HTMLButtonElement>) => {

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Polkicon } from '@polkadot-cloud/ui/polkicon'
-import { ellipsisFn } from '@polkadot-cloud/utils'
+import { ellipsisFn, maxBigInt } from '@polkadot-cloud/utils'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
@@ -40,7 +40,19 @@ import { ActiveGraph as ActiveGraphRewards } from './Rewards/ActiveGraph'
 import { InactiveGraph as InactiveGraphRewards } from './Rewards/InactiveGraph'
 import { ValidatorDiscovery } from './ValidatorDiscovery'
 
-const GRAPH_HEIGHT = 250
+const graphSize = { width: '100%', height: 250 }
+const charts = [
+	{
+		title: 'recentPerformance',
+		ActiveGraph: ActiveGraphEraPoints,
+		InactiveGraph: InactiveGraphEraPoints,
+	},
+	{
+		title: 'rewardHistory',
+		ActiveGraph: ActiveGraphRewards,
+		InactiveGraph: InactiveGraphRewards,
+	},
+] as const
 
 export const ValidatorMetrics = () => {
 	const { t } = useTranslation()
@@ -55,31 +67,30 @@ export const ValidatorMetrics = () => {
 	const { unit, units } = getStakingChainData(network)
 
 	const Token = getChainIcons(network).token
-	const validator = options!.validator
+	const { validator, identity } = options!
 	const { data: overviews, loading: overviewsLoading } = useValidatorOverviews([
 		validator,
 	])
-	const { data: validatorOwnStake, loading: selfStakeLoading } =
-		useValidatorSelfStake(validator)
-	const { data: totalBacking, loading: totalBackingLoading } =
-		useValidatorTotalBacking(validator)
-	const identity = options!.identity
+	const selfStake = useValidatorSelfStake(validator)
+	const totalBacking = useValidatorTotalBacking(validator)
+	const stakingApiEnabled = pluginEnabled('staking_api')
 	const displayName = typeof identity === 'string' ? identity.trim() : identity
 	const shortAddress = validator ? ellipsisFn(validator) : ''
 	const title =
 		displayName || shortAddress || t('validatorMetrics', { ns: 'modals' })
-	const selfStakePlaceholder = selfStakeLoading
-		? t('syncing', { ns: 'app' })
-		: '—'
-	const activeBackingPlaceholder = overviewsLoading
-		? t('syncing', { ns: 'app' })
-		: '—'
 
 	const overview = overviews?.get(validator)
-	const activeBacking = BigNumber.max(
-		0,
-		new BigNumber(overview?.total ?? 0n).minus(overview?.own ?? 0n),
-	)
+	const stats = [
+		{ title: 'selfStake', ...selfStake },
+		{ title: 'totalBacking', ...totalBacking },
+		{
+			title: 'activeBacking',
+			data:
+				overviews &&
+				maxBigInt((overview?.total ?? 0n) - (overview?.own ?? 0n), 0n),
+			loading: overviewsLoading,
+		},
+	] as const
 
 	return (
 		<Main style={{ paddingTop: 0 }}>
@@ -128,108 +139,54 @@ export const ValidatorMetrics = () => {
 				<Subheading>
 					<h3>{t('backingOverview', { ns: 'app' })}</h3>
 					<StatGrid style={{ marginTop: '1rem' }}>
-						<StatCard title={t('selfStake', { ns: 'modals' })}>
-							{validatorOwnStake != null ? (
-								<Balance.WithFiat
-									compact
-									Token={<Token role="img" aria-label={unit} />}
-									value={planckToUnitBn(
-										new BigNumber(validatorOwnStake),
-										units,
-									)}
-									currency={currency}
-								/>
-							) : (
-								<span>{selfStakePlaceholder}</span>
-							)}
-						</StatCard>
-						<StatCard title={t('totalBacking', { ns: 'modals' })}>
-							{totalBacking !== null ? (
-								<Balance.WithFiat
-									compact
-									Token={<Token role="img" aria-label={unit} />}
-									value={planckToUnitBn(new BigNumber(totalBacking), units)}
-									currency={currency}
-								/>
-							) : (
-								<span>
-									{totalBackingLoading ? t('syncing', { ns: 'app' }) : '—'}
-								</span>
-							)}
-						</StatCard>
-						<StatCard title={t('activeBacking', { ns: 'modals' })}>
-							{overviews ? (
-								<Balance.WithFiat
-									compact
-									Token={<Token role="img" aria-label={unit} />}
-									value={planckToUnitBn(activeBacking, units)}
-									currency={currency}
-								/>
-							) : (
-								<span>{activeBackingPlaceholder}</span>
-							)}
-						</StatCard>
+						{stats.map(({ title, data, loading }) => (
+							<StatCard key={title} title={t(title, { ns: 'modals' })}>
+								{data == null ? (
+									<span>{loading ? t('syncing', { ns: 'app' }) : '—'}</span>
+								) : (
+									<Balance.WithFiat
+										compact
+										Token={<Token role="img" aria-label={unit} />}
+										value={planckToUnitBn(new BigNumber(data), units)}
+										currency={currency}
+									/>
+								)}
+							</StatCard>
+						))}
 					</StatGrid>
 				</Subheading>
 			</GraphContainer>
 			<div className={classes.sections}>
-				<section>
-					<Subheading>
-						<h3>{t('recentPerformance', { ns: 'app' })}</h3>
-					</Subheading>
-					<div className={classes.graphPanel}>
-						<GraphInner width="100%" height={GRAPH_HEIGHT} noSpacing>
-							{pluginEnabled('staking_api') ? (
-								<ActiveGraphEraPoints
-									network={network}
-									validator={validator}
-									fromEra={Math.max(activeEra.index - 1, 0)}
-									width="100%"
-									height={GRAPH_HEIGHT}
-								/>
-							) : (
-								<>
-									<StatusLabel
-										status="active_service"
-										statusFor="staking_api"
-										title={t('stakingApiDisabled', { ns: 'pages' })}
-										topOffset="37%"
+				{charts.map(({ title, ActiveGraph, InactiveGraph }) => (
+					<section key={title}>
+						<Subheading>
+							<h3>{t(title, { ns: 'app' })}</h3>
+						</Subheading>
+						<div className={classes.graphPanel}>
+							<GraphInner {...graphSize} noSpacing>
+								{stakingApiEnabled ? (
+									<ActiveGraph
+										network={network}
+										validator={validator}
+										fromEra={Math.max(activeEra.index - 1, 0)}
+										{...graphSize}
 									/>
-									<InactiveGraphEraPoints width="100%" height={GRAPH_HEIGHT} />
-								</>
-							)}
-						</GraphInner>
-					</div>
-				</section>
-				<section>
-					<Subheading>
-						<h3>{t('rewardHistory', { ns: 'app' })}</h3>
-					</Subheading>
-					<div className={classes.graphPanel}>
-						<GraphInner width="100%" height={GRAPH_HEIGHT} noSpacing>
-							{pluginEnabled('staking_api') ? (
-								<ActiveGraphRewards
-									network={network}
-									validator={validator}
-									fromEra={Math.max(activeEra.index - 1, 0)}
-									width="100%"
-									height={GRAPH_HEIGHT}
-								/>
-							) : (
-								<>
-									<StatusLabel
-										status="active_service"
-										statusFor="staking_api"
-										title={t('stakingApiDisabled', { ns: 'pages' })}
-										topOffset="37%"
-									/>
-									<InactiveGraphRewards width="100%" height={GRAPH_HEIGHT} />
-								</>
-							)}
-						</GraphInner>
-					</div>
-				</section>
-				{pluginEnabled('staking_api') && (
+								) : (
+									<>
+										<StatusLabel
+											status="active_service"
+											statusFor="staking_api"
+											title={t('stakingApiDisabled', { ns: 'pages' })}
+											topOffset="37%"
+										/>
+										<InactiveGraph {...graphSize} />
+									</>
+								)}
+							</GraphInner>
+						</div>
+					</section>
+				))}
+				{stakingApiEnabled && (
 					<section>
 						<Subheading>
 							<h3>{t('operatorDetails', { ns: 'app' })}</h3>

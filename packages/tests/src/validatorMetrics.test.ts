@@ -116,19 +116,19 @@ vi.mock(
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
-	() => ({ ActiveGraph: () => null }),
+	() => ({ ActiveGraph: () => 'EraPointsActiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/InactiveGraph',
-	() => ({ InactiveGraph: () => null }),
+	() => ({ InactiveGraph: () => 'EraPointsInactiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/Rewards/ActiveGraph',
-	() => ({ ActiveGraph: () => null }),
+	() => ({ ActiveGraph: () => 'RewardsActiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/Rewards/InactiveGraph',
-	() => ({ InactiveGraph: () => null }),
+	() => ({ InactiveGraph: () => 'RewardsInactiveGraph' }),
 )
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/ValidatorDiscovery',
@@ -153,6 +153,7 @@ beforeEach(() => {
 	state.price = 2
 	state.validator = 'validator'
 	state.identity = 'Alice'
+	query.mockReturnValue({ data: undefined, loading: false })
 	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
 	totalBackingQuery.mockReturnValue({ data: null, loading: false })
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -212,7 +213,6 @@ test.each([undefined, null, '  '])(
 	async (identity) => {
 		state.validator = address
 		state.identity = identity
-		query.mockReturnValue({ data: undefined, loading: false })
 		await renderMetrics()
 		expect(container.querySelector('h1')?.textContent).toBe(shortAddress)
 		expect(container.querySelector('h2')?.textContent).toBe(shortAddress)
@@ -222,7 +222,6 @@ test.each([undefined, null, '  '])(
 test('shows the display name and copies the full address from the subtitle', async () => {
 	state.validator = address
 	state.identity = createElement('span', null, 'Alice')
-	query.mockReturnValue({ data: undefined, loading: false })
 	const writeText = vi.fn().mockResolvedValue(undefined)
 	vi.stubGlobal('navigator', { clipboard: { writeText } })
 	await renderMetrics()
@@ -238,7 +237,6 @@ test('shows the display name and copies the full address from the subtitle', asy
 
 test('shows the full address when the subtitle address receives focus', async () => {
 	state.validator = address
-	query.mockReturnValue({ data: undefined, loading: false })
 	vi.stubGlobal('CustomEvent', dom.window.CustomEvent)
 	vi.stubGlobal('Element', dom.window.Element)
 	vi.stubGlobal('HTMLElement', dom.window.HTMLElement)
@@ -260,7 +258,6 @@ test('shows the full address when the subtitle address receives focus', async ()
 
 test('omits the address subtitle when there is no address', async () => {
 	state.validator = ''
-	query.mockReturnValue({ data: undefined, loading: false })
 	await renderMetrics()
 	expect(container.querySelector('h1')?.textContent).toBe('Alice')
 	expect(container.querySelector('h2')).toBeNull()
@@ -357,7 +354,6 @@ test('a missing ledger is distinct from a zero ledger total', async () => {
 })
 
 test('disabling the API hides the metrics button while the canvas stays open', async () => {
-	query.mockReturnValue({ data: new Map(), loading: false, error: null })
 	await act(async () => {
 		root.render([
 			createElement(Metrics, {
@@ -378,7 +374,9 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 		size: 'xl',
 		variant: 'card',
 	})
-	expect(container.textContent).toContain('selfStake')
+	const sections = container.querySelectorAll('section')
+	expect(sections[0].textContent).toContain('EraPointsActiveGraph')
+	expect(sections[1].textContent).toContain('RewardsActiveGraph')
 
 	await setApiEnabled(false)
 	expect(
@@ -387,6 +385,8 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 	expect(container.textContent).not.toContain('metrics')
 	expect(container.textContent).toContain('selfStake')
 	expect(container.textContent).toContain('stakingApiDisabled')
+	expect(sections[0].textContent).toContain('EraPointsInactiveGraph')
+	expect(sections[1].textContent).toContain('RewardsInactiveGraph')
 })
 
 test('an open row menu hides the metrics action when the API is disabled', async () => {

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { ListItem } from 'ui-app/ListItem'
 import { HeaderButton } from 'ui-core/list'
 import { useOverlay } from 'ui-overlay'
+import { validatorMetricsConfig } from '../../../canvas/ValidatorMetrics/config'
 import type { MetricsProps } from '../types'
 
 export const Metrics = ({ display, address, outline, wide }: MetricsProps) => {
@@ -19,17 +20,7 @@ export const Metrics = ({ display, address, outline, wide }: MetricsProps) => {
 		<HeaderButton outline={outline} withText>
 			<button
 				type="button"
-				onClick={() =>
-					openCanvas({
-						key: 'ValidatorMetrics',
-						options: {
-							validator: address,
-							identity: display,
-						},
-						size: 'xl',
-						variant: 'card',
-					})
-				}
+				onClick={() => openCanvas(validatorMetricsConfig(address, display))}
 			>
 				{t('metrics', { ns: 'app' })}
 			</button>

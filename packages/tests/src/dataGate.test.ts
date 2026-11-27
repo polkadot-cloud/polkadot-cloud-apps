@@ -85,6 +85,29 @@ const createClient = () => {
 	clients.push(client)
 	return client
 }
+const renderDataGateHook = <T>(
+	input: DataGateState,
+	client: QueryClient,
+	read: () => T,
+) => {
+	let result!: T
+	const probe = () => {
+		result = read()
+	}
+	renderToStaticMarkup(
+		createElement(
+			DataGateContext.Provider,
+			{ value: input },
+			createElement(
+				QueryClientProvider,
+				{ client },
+				createElement(HookProbe, { callback: probe }),
+			),
+		),
+	)
+	return result
+}
+
 const deferred = <T>() => {
 	let resolve!: (value: T) => void
 	const promise = new Promise<T>((done) => {
@@ -158,21 +181,8 @@ test('validator self stake reuses the subscribed ledger total for the selected s
 		},
 	})
 
-	let result!: ReturnType<typeof useValidatorSelfStake>
-	renderToStaticMarkup(
-		createElement(
-			DataGateContext.Provider,
-			{ value: input },
-			createElement(
-				QueryClientProvider,
-				{ client },
-				createElement(HookProbe, {
-					callback: () => {
-						result = useValidatorSelfStake('validator')
-					},
-				}),
-			),
-		),
+	const result = renderDataGateHook(input, client, () =>
+		useValidatorSelfStake('validator'),
 	)
 	expect(result).toEqual({ data: 120n, loading: false })
 })
@@ -183,24 +193,11 @@ test('validator total backing uses the dedicated API query and exposes null with
 	apiQuery.mockResolvedValue({
 		data: { validatorTotalBacking: '90071992547409931' },
 	})
-	let result!: ReturnType<typeof useValidatorTotalBacking>
 	const render = () =>
-		renderToStaticMarkup(
-			createElement(
-				DataGateContext.Provider,
-				{ value: input },
-				createElement(
-					QueryClientProvider,
-					{ client },
-					createElement(HookProbe, {
-						callback: () => {
-							result = useValidatorTotalBacking('validator')
-						},
-					}),
-				),
-			),
+		renderDataGateHook(input, client, () =>
+			useValidatorTotalBacking('validator'),
 		)
-	render()
+	const result = render()
 	expect(result).toMatchObject({ data: null, loading: true })
 	expect((await result.refetch()).data).toBe(90071992547409931n)
 	expect(apiQuery).toHaveBeenCalledExactlyOnceWith(
@@ -213,8 +210,7 @@ test('validator total backing uses the dedicated API query and exposes null with
 	)
 
 	setPlugins([])
-	render()
-	expect(result).toMatchObject({ data: null, loading: false })
+	expect(render()).toMatchObject({ data: null, loading: false })
 	expect(apiQuery).toHaveBeenCalledOnce()
 	expectNoNodeQueries(input.node)
 })
@@ -1078,23 +1074,7 @@ const renderValidatorPrefs = async (
 	const { useValidatorPrefs } = await import(
 		'../../data-gate/src/validatorPrefs'
 	)
-	let result!: ReturnType<typeof useValidatorPrefs>
-	const probe = () => {
-		result = useValidatorPrefs(addresses)
-		return null
-	}
-	renderToStaticMarkup(
-		createElement(
-			DataGateContext.Provider,
-			{ value: input },
-			createElement(
-				QueryClientProvider,
-				{ client },
-				createElement(HookProbe, { callback: probe }),
-			),
-		),
-	)
-	return result
+	return renderDataGateHook(input, client, () => useValidatorPrefs(addresses))
 }
 
 test.each([true, false])(
