@@ -22,6 +22,7 @@ import { dataPointOptions } from '../../data-gate/src/query'
 import { createDataGateStore } from '../../data-gate/src/state'
 import type { DataGateState, DataPointConfig } from '../../data-gate/src/types'
 import { useDataPoint } from '../../data-gate/src/useDataPoint'
+import { useValidatorSelfStake } from '../../data-gate/src/validatorSelfStake'
 import { resetActiveEra, setActiveEra } from '../../global-bus/src/activeEra'
 import { resetApiStatus, setApiStatus } from '../../global-bus/src/apiStatus'
 import { getNetwork, setNetwork } from '../../global-bus/src/networkConfig'
@@ -37,6 +38,11 @@ import {
 	setServiceInterface,
 } from '../../global-bus/src/serviceInterface'
 import { defaultServiceInterface } from '../../global-bus/src/serviceInterface/default'
+import {
+	defaultStakingLedger,
+	resetStakingLedgers,
+	setStakingLedger,
+} from '../../global-bus/src/stakingLedgers'
 import { HookProbe } from './HookProbe'
 
 const { apiQuery, storage } = vi.hoisted(() => {
@@ -65,6 +71,7 @@ vi.mock('../../global-bus/src/index', async () => ({
 	...(await import('../../global-bus/src/activeEra')),
 	...(await import('../../global-bus/src/apiStatus')),
 	...(await import('../../global-bus/src/serviceInterface')),
+	...(await import('../../global-bus/src/stakingLedgers')),
 }))
 vi.mock('../../plugin-staking-api/src/Client', () => ({
 	client: { query: apiQuery },
@@ -131,8 +138,42 @@ beforeEach(() => {
 	apiQuery.mockReset()
 })
 afterEach(() => {
+	resetStakingLedgers()
 	for (const observer of observers.splice(0)) observer.destroy()
 	for (const client of clients.splice(0)) client.clear()
+})
+
+test('validator self stake reuses the subscribed ledger total for the selected stash', () => {
+	const input = config(true)
+	const client = createClient()
+	client.setQueryData(['validator-self-stake', 'polkadot', 'validator'], 90n)
+	setStakingLedger('validator', {
+		...defaultStakingLedger,
+		ledger: {
+			stash: 'validator',
+			total: 120n,
+			active: 100n,
+			unlocking: [{ value: 20n, era: 101 }],
+		},
+	})
+
+	let result!: ReturnType<typeof useValidatorSelfStake>
+	renderToStaticMarkup(
+		createElement(
+			DataGateContext.Provider,
+			{ value: input },
+			createElement(
+				QueryClientProvider,
+				{ client },
+				createElement(HookProbe, {
+					callback: () => {
+						result = useValidatorSelfStake('validator')
+					},
+				}),
+			),
+		),
+	)
+	expect(result).toEqual({ data: 120n, loading: false })
 })
 
 test('provider state reads current bus values and follows all source changes', () => {

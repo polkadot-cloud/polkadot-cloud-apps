@@ -11,8 +11,8 @@ import { Metrics } from '../../app-staking/src/library/ListItem/Buttons/Metrics'
 import { RowActionsMenu } from '../../app-staking/src/library/ValidatorList/RowActionsMenu'
 import { Menu } from '../../ui-app/src/Menu'
 
-const { dom, query, state, listeners, openCanvas } = await vi.hoisted(
-	async () => {
+const { dom, query, selfStakeQuery, state, listeners, openCanvas } =
+	await vi.hoisted(async () => {
 		const { JSDOM } = await import('jsdom')
 		const dom = new JSDOM('<!doctype html><html><body></body></html>')
 		vi.stubGlobal('window', dom.window)
@@ -20,12 +20,12 @@ const { dom, query, state, listeners, openCanvas } = await vi.hoisted(
 		return {
 			dom,
 			query: vi.fn(),
+			selfStakeQuery: vi.fn(),
 			state: { api: true },
 			listeners: new Set<() => void>(),
 			openCanvas: vi.fn(),
 		}
-	},
-)
+	})
 vi.mock('library/Prompt/Confirm', () => ({ Confirm: () => null }))
 vi.mock('../../global-bus/src/index', () => ({
 	emitNotification: vi.fn(),
@@ -33,7 +33,10 @@ vi.mock('../../global-bus/src/index', () => ({
 vi.mock('../../hooks/src/useFavoriteValidators', () => ({
 	useFavoriteValidators: () => ({ favorites: [] }),
 }))
-vi.mock('../../data-gate/src/index', () => ({ useValidatorOverviews: query }))
+vi.mock('../../data-gate/src/index', () => ({
+	useValidatorOverviews: query,
+	useValidatorSelfStake: selfStakeQuery,
+}))
 vi.mock('../../hooks/src/useNetwork', () => ({
 	useNetwork: () => ({ network: 'polkadot' }),
 }))
@@ -115,6 +118,7 @@ let container: HTMLDivElement
 beforeEach(() => {
 	vi.clearAllMocks()
 	state.api = true
+	selfStakeQuery.mockReturnValue({ data: undefined, loading: false })
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 	vi.stubGlobal('window', dom.window)
 	vi.stubGlobal('document', dom.window.document)
@@ -147,11 +151,13 @@ test.each([
 	{ loading: false, error: new Error('offline'), label: '—' },
 ])('unavailable metrics show $label without false zero stakes', (state) => {
 	query.mockReturnValue({ ...state, data: undefined })
+	selfStakeQuery.mockReturnValue({ data: undefined, loading: state.loading })
 	const text = renderMetrics()
 	expect(text).toContain(`selfStake: ${state.label}`)
 	expect(text).toContain(`nominatorStake: ${state.label}`)
 	expect(text).not.toContain('0 DOT')
 	expect(query).toHaveBeenCalledWith(['validator'])
+	expect(selfStakeQuery).toHaveBeenCalledWith('validator')
 })
 
 test.each([null, new Error('refresh failed')])(
@@ -169,17 +175,28 @@ test.each([null, new Error('refresh failed')])(
 			],
 		])
 		query.mockReturnValue({ data, loading: false, error })
+		selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
 		const text = renderMetrics()
-		expect(text).toContain('selfStake: 2.5 DOT')
+		expect(text).toContain('selfStake: 3.5 DOT')
 		expect(text).toContain('nominatorStake: 10 DOT')
 	},
 )
 
-test('a completed snapshot without the validator has zero active-era stake', () => {
+test('a waiting validator shows its ledger total and zero nominator stake', () => {
 	query.mockReturnValue({ data: new Map(), loading: false, error: null })
+	selfStakeQuery.mockReturnValue({ data: 35000000000n, loading: false })
 	const text = renderMetrics()
-	expect(text).toContain('selfStake: 0 DOT')
+	expect(text).toContain('selfStake: 3.5 DOT')
 	expect(text).toContain('nominatorStake: 0 DOT')
+})
+
+test('a missing ledger is distinct from a zero ledger total', () => {
+	query.mockReturnValue({ data: new Map(), loading: false, error: null })
+	selfStakeQuery.mockReturnValue({ data: null, loading: false })
+	expect(renderMetrics()).toContain('selfStake: —')
+
+	selfStakeQuery.mockReturnValue({ data: 0n, loading: false })
+	expect(renderMetrics()).toContain('selfStake: 0 DOT')
 })
 
 test('disabling the API hides the metrics button while the canvas stays open', async () => {

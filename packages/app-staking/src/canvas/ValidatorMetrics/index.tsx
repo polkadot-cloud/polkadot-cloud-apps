@@ -5,7 +5,7 @@ import { Polkicon } from '@polkadot-cloud/ui/polkicon'
 import { getChainIcons } from 'assets'
 import BigNumber from 'bignumber.js'
 import { getStakingChainData } from 'consts/util'
-import { useValidatorOverviews } from 'data-gate'
+import { useValidatorOverviews, useValidatorSelfStake } from 'data-gate'
 import { useApi } from 'hooks/useApi'
 import { useNetwork } from 'hooks/useNetwork'
 import { usePlugins } from 'hooks/usePlugins'
@@ -44,15 +44,23 @@ export const ValidatorMetrics = () => {
 
 	const Token = getChainIcons(network).token
 	const validator = options!.validator
-	const { data: overviews, loading } = useValidatorOverviews([validator])
+	const { data: overviews, loading: overviewsLoading } = useValidatorOverviews([
+		validator,
+	])
+	const { data: validatorOwnStake, loading: selfStakeLoading } =
+		useValidatorSelfStake(validator)
 	const identity = options!.identity
-	const stakePlaceholder = loading ? t('syncing', { ns: 'app' }) : '—'
+	const selfStakePlaceholder = selfStakeLoading
+		? t('syncing', { ns: 'app' })
+		: '—'
+	const nominatorStakePlaceholder = overviewsLoading
+		? t('syncing', { ns: 'app' })
+		: '—'
 
 	const overview = overviews?.get(validator)
-	const validatorOwnStake = new BigNumber(overview?.own ?? 0n)
 	const otherStake = BigNumber.max(
 		0,
-		new BigNumber(overview?.total ?? 0n).minus(validatorOwnStake),
+		new BigNumber(overview?.total ?? 0n).minus(overview?.own ?? 0n),
 	)
 
 	const GRAPH_HEIGHT = 250
@@ -96,16 +104,16 @@ export const ValidatorMetrics = () => {
 						<Stat withIcon>
 							<Token />
 							{t('selfStake', { ns: 'modals' })}:{' '}
-							{overviews
-								? `${planckToUnitBn(validatorOwnStake, units).toFormat()} ${unit}`
-								: stakePlaceholder}
+							{validatorOwnStake != null
+								? `${planckToUnitBn(new BigNumber(validatorOwnStake), units).toFormat()} ${unit}`
+								: selfStakePlaceholder}
 						</Stat>
 						<Stat withIcon>
 							<Token />
 							{t('nominatorStake', { ns: 'modals' })}:{' '}
 							{overviews
 								? `${planckToUnitBn(otherStake, units).decimalPlaces(0).toFormat()} ${unit}`
-								: stakePlaceholder}
+								: nominatorStakePlaceholder}
 						</Stat>
 					</h4>
 				</Subheading>

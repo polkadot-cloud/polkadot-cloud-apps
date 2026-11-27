@@ -93,6 +93,8 @@ export class PaseoService
 					await query.poolMetadataMulti(this.apiHub, poolIds),
 				identityOfMulti: async (addresses) =>
 					await this.identityManager.identityOfMulti(addresses),
+				stakingLedgerTotal: (stash) =>
+					query.stakingLedgerTotal(this.apiHub, stash),
 				superOfMulti: async (addresses) =>
 					await this.identityManager.superOfMulti(addresses),
 				validatorEntries: async () => await query.validatorEntries(this.apiHub),
