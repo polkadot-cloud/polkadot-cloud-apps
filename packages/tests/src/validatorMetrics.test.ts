@@ -17,6 +17,8 @@ const {
 	query,
 	selfStakeQuery,
 	totalBackingQuery,
+	backingHistoryQuery,
+	drawBackingChart,
 	state,
 	listeners,
 	openCanvas,
@@ -32,8 +34,11 @@ const {
 		query: vi.fn(),
 		selfStakeQuery: vi.fn(),
 		totalBackingQuery: vi.fn(),
+		backingHistoryQuery: vi.fn(),
+		drawBackingChart: vi.fn((_props: unknown) => 'BackingHistoryChart'),
 		state: {
 			api: true,
+			network: 'polkadot',
 			price: 2,
 			validator: 'validator',
 			identity: 'Alice' as ReactNode,
@@ -43,6 +48,14 @@ const {
 	}
 })
 vi.mock('library/Prompt/Confirm', () => ({ Confirm: () => null }))
+vi.mock(
+	'library/Announcements/AnnouncementsList',
+	() => import('../../app-staking/src/library/Announcements/AnnouncementsList'),
+)
+vi.mock(
+	'library/Loader/Announcement',
+	() => import('../../app-staking/src/library/Loader/Announcement'),
+)
 vi.mock('../../global-bus/src/index', () => ({
 	emitNotification: vi.fn(),
 }))
@@ -55,7 +68,7 @@ vi.mock('../../data-gate/src/index', () => ({
 	useValidatorTotalBacking: totalBackingQuery,
 }))
 vi.mock('../../hooks/src/useNetwork', () => ({
-	useNetwork: () => ({ network: 'polkadot' }),
+	useNetwork: () => ({ network: state.network }),
 }))
 vi.mock('../../hooks/src/useCurrency', () => ({
 	useCurrency: () => ({ currency: 'GBP' }),
@@ -114,6 +127,15 @@ vi.mock(
 	'library/ListItem/Buttons/CopyAddress',
 	() => import('../../app-staking/src/library/ListItem/Buttons/CopyAddress'),
 )
+vi.mock('../../plugin-staking-api/src/index', () => ({
+	useValidatorBackingHistory: backingHistoryQuery,
+}))
+vi.mock('../../ui-graphs/src/index', () => ({
+	ValidatorBackingLine: drawBackingChart,
+}))
+vi.mock('../../hooks/src/useThemeValues', () => ({
+	useThemeValues: () => ({ getThemeValue: (key: string) => key }),
+}))
 vi.mock(
 	'../../app-staking/src/canvas/ValidatorMetrics/EraPoints/ActiveGraph',
 	() => ({ ActiveGraph: () => 'EraPointsActiveGraph' }),
@@ -149,7 +171,18 @@ let container: HTMLDivElement
 
 beforeEach(() => {
 	vi.clearAllMocks()
+	backingHistoryQuery.mockReturnValue({
+		data: {
+			validatorBackingHistory: [
+				{ era: 97, totalBacking: null, nominatorCount: null },
+				{ era: 98, totalBacking: '0', nominatorCount: 0 },
+				{ era: 99, totalBacking: '25000000000', nominatorCount: 12 },
+			],
+		},
+		loading: false,
+	})
 	state.api = true
+	state.network = 'polkadot'
 	state.price = 2
 	state.validator = 'validator'
 	state.identity = 'Alice'
@@ -188,8 +221,11 @@ const metricsCanvas = () =>
 
 const renderMetrics = async () => {
 	await act(async () => root.render(metricsCanvas()))
+	const overview = Array.from(container.querySelectorAll('h3')).find(
+		(heading) => heading.textContent === 'backingOverview',
+	)!.parentElement!
 	return Object.fromEntries(
-		Array.from(container.querySelectorAll('h4'), (label) => {
+		Array.from(overview.querySelectorAll('h4'), (label) => {
 			const stat = label.parentElement!
 			return [
 				label.textContent,
@@ -260,7 +296,7 @@ test('omits the address subtitle when there is no address', async () => {
 	state.validator = ''
 	await renderMetrics()
 	expect(container.querySelector('h1')?.textContent).toBe('Alice')
-	expect(container.querySelector('h2')).toBeNull()
+	expect(container.querySelector('header h2')).toBeNull()
 })
 
 test.each([
@@ -353,6 +389,78 @@ test('a missing ledger is distinct from a zero ledger total', async () => {
 	})
 })
 
+test('the chart uses the last completed era and preserves gaps and zero backing', async () => {
+	await renderMetrics()
+	expect(backingHistoryQuery).toHaveBeenCalledWith({
+		network: 'polkadot',
+		validator: 'validator',
+		toEra: 99,
+	})
+	expect(drawBackingChart.mock.lastCall?.[0]).toMatchObject({
+		unit: 'DOT',
+		entries: [
+			{ era: 97, backing: null, nominators: null },
+			{ era: 98, backing: 0, nominators: 0 },
+			{ era: 99, backing: 2.5, nominators: 12 },
+		],
+	})
+})
+
+test('Kusama skips the backing history chart and query', async () => {
+	state.network = 'kusama'
+	await renderMetrics()
+	expect(backingHistoryQuery).not.toHaveBeenCalled()
+	expect(container.textContent).not.toContain('backingHistory')
+	expect(container.textContent).not.toContain('totalNominators')
+	expect(container.textContent).toContain('RewardsActiveGraph')
+})
+
+test.each([
+	{
+		count: 1234,
+		value: '1,234',
+		backing: 234567891234567891n,
+		amount: '23,456,789.1234567891 DOT',
+	},
+	{ count: 0, value: '0', backing: 0n, amount: '0 DOT' },
+	{
+		count: null,
+		value: 'notAvailable',
+		backing: 1n,
+		amount: '0.0000000001 DOT',
+	},
+	{ count: 1, value: '1', backing: null, amount: 'notAvailable' },
+])(
+	'shows the latest nominator count and full backing ($amount) above operator details',
+	async ({ count, value, backing, amount }) => {
+		totalBackingQuery.mockReturnValue({ data: backing, loading: false })
+		backingHistoryQuery.mockReturnValue({
+			data: {
+				validatorBackingHistory: [
+					{ era: 98, totalBacking: '0', nominatorCount: count },
+					{ era: 99, totalBacking: null, nominatorCount: null },
+				],
+			},
+			loading: false,
+		})
+		await renderMetrics()
+		const history = Array.from(container.querySelectorAll('section')).find(
+			(section) =>
+				section.querySelector('h3')?.textContent === 'backingHistory',
+		)!
+		const stats = history.nextElementSibling!
+		expect(
+			Array.from(stats.querySelectorAll('h4'), (el) => el.textContent),
+		).toEqual(['totalNominators', 'totalBacking'])
+		expect(
+			Array.from(stats.querySelectorAll('h2'), (el) => el.textContent),
+		).toEqual([value, amount])
+		expect(stats.nextElementSibling?.querySelector('h3')?.textContent).toBe(
+			'operatorDetails',
+		)
+	},
+)
+
 test('disabling the API hides the metrics button while the canvas stays open', async () => {
 	await act(async () => {
 		root.render([
@@ -377,7 +485,7 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 	const sections = container.querySelectorAll('section')
 	expect(sections[0].textContent).toContain('EraPointsActiveGraph')
 	expect(sections[1].textContent).toContain('RewardsActiveGraph')
-
+	expect(sections[2].textContent).toContain('BackingHistoryChart')
 	await setApiEnabled(false)
 	expect(
 		container.querySelector('button[aria-label="copyAddress"]'),
@@ -387,6 +495,7 @@ test('disabling the API hides the metrics button while the canvas stays open', a
 	expect(container.textContent).toContain('stakingApiDisabled')
 	expect(sections[0].textContent).toContain('EraPointsInactiveGraph')
 	expect(sections[1].textContent).toContain('RewardsInactiveGraph')
+	expect(container.textContent).not.toContain('BackingHistoryChart')
 })
 
 test('an open row menu hides the metrics action when the API is disabled', async () => {

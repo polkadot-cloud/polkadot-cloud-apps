@@ -24,7 +24,6 @@ import { Tooltip } from 'ui-core/base'
 import {
 	AccountTitle,
 	GraphContainer,
-	GraphInner,
 	Head,
 	Main,
 	StatCard,
@@ -33,6 +32,8 @@ import {
 } from 'ui-core/canvas'
 import { CloseCanvas, useOverlay } from 'ui-overlay'
 import { planckToUnitBn } from 'utils'
+import { BackingHistory } from './BackingHistory'
+import { ChartSection, graphSize } from './ChartSection'
 import { ActiveGraph as ActiveGraphEraPoints } from './EraPoints/ActiveGraph'
 import { InactiveGraph as InactiveGraphEraPoints } from './EraPoints/InactiveGraph'
 import classes from './index.module.scss'
@@ -40,7 +41,6 @@ import { ActiveGraph as ActiveGraphRewards } from './Rewards/ActiveGraph'
 import { InactiveGraph as InactiveGraphRewards } from './Rewards/InactiveGraph'
 import { ValidatorDiscovery } from './ValidatorDiscovery'
 
-const graphSize = { width: '100%', height: 250 }
 const charts = [
 	{
 		title: 'recentPerformance',
@@ -60,6 +60,7 @@ export const ValidatorMetrics = () => {
 		config: { options },
 	} = useOverlay().canvas
 	const { activeEra } = useApi()
+	const lastCompletedEra = activeEra.index - 1
 	const { currency } = useCurrency()
 	const { network } = useNetwork()
 	const { pluginEnabled } = usePlugins()
@@ -158,34 +159,35 @@ export const ValidatorMetrics = () => {
 			</GraphContainer>
 			<div className={classes.sections}>
 				{charts.map(({ title, ActiveGraph, InactiveGraph }) => (
-					<section key={title}>
-						<Subheading>
-							<h3>{t(title, { ns: 'app' })}</h3>
-						</Subheading>
-						<div className={classes.graphPanel}>
-							<GraphInner {...graphSize} noSpacing>
-								{stakingApiEnabled ? (
-									<ActiveGraph
-										network={network}
-										validator={validator}
-										fromEra={Math.max(activeEra.index - 1, 0)}
-										{...graphSize}
-									/>
-								) : (
-									<>
-										<StatusLabel
-											status="active_service"
-											statusFor="staking_api"
-											title={t('stakingApiDisabled', { ns: 'pages' })}
-											topOffset="37%"
-										/>
-										<InactiveGraph {...graphSize} />
-									</>
-								)}
-							</GraphInner>
-						</div>
-					</section>
+					<ChartSection key={title} title={t(title, { ns: 'app' })}>
+						{stakingApiEnabled ? (
+							<ActiveGraph
+								network={network}
+								validator={validator}
+								fromEra={Math.max(lastCompletedEra, 0)}
+								{...graphSize}
+							/>
+						) : (
+							<>
+								<StatusLabel
+									status="active_service"
+									statusFor="staking_api"
+									title={t('stakingApiDisabled', { ns: 'pages' })}
+									topOffset="37%"
+								/>
+								<InactiveGraph {...graphSize} />
+							</>
+						)}
+					</ChartSection>
 				))}
+				{stakingApiEnabled && network === 'polkadot' && (
+					<BackingHistory
+						network={network}
+						validator={validator}
+						toEra={lastCompletedEra}
+						totalBacking={totalBacking}
+					/>
+				)}
 				{stakingApiEnabled && (
 					<section>
 						<Subheading>
