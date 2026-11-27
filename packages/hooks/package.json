@@ -18,7 +18,7 @@
 		"@polkadot-cloud/connect-core": "^2.0.0",
 		"@polkadot-cloud/connect-proxies": "^1.0.0",
 		"@polkadot-cloud/utils": "^1.0.0",
-		"@tanstack/react-query": "^5.107.1",
+		"@tanstack/react-query": "^5.108.3",
 		"bignumber.js": "^11.1.5",
 		"consts": "workspace:*",
 		"data-gate": "workspace:*",
@@ -28,14 +28,14 @@
 		"locales": "workspace:*",
 		"plugin-staking-api": "workspace:*",
 		"react": "^19.3.1",
-		"react-i18next": "^18.0.1",
+		"react-i18next": "^18.0.3",
 		"utils": "workspace:*"
 	},
 	"devDependencies": {
-		"react-router-dom": "^7.18.5",
+		"react-router-dom": "^7.18.6",
 		"types": "workspace:*"
 	},
 	"peerDependencies": {
-		"react-router-dom": "^7.18.5"
+		"react-router-dom": "^7.18.6"
 	}
 }

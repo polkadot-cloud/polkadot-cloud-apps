@@ -16,16 +16,16 @@
 	},
 	"devDependencies": {
 		"@paraspell/sdk-dedot": "14.5.3",
-		"@tanstack/react-query": "^5.107.1",
+		"@tanstack/react-query": "^5.108.3",
 		"@types/jsdom": "^30.0.0",
 		"dedot": "^1.4.0",
 		"jsdom": "31.0.1",
 		"radix-ui": "^1.8.1",
 		"react": "^19.3.1",
 		"react-dom": "^19.3.1",
-		"react-i18next": "^18.0.1",
+		"react-i18next": "^18.0.3",
 		"types": "workspace:*",
 		"typescript": "^7.0.2",
-		"vitest": "^5.1.0"
+		"vitest": "^5.1.1"
 	}
 }
